@@ -47,3 +47,4 @@ next-env.d.ts
 # archived originals (e.g. pre-white-background product photos) — local
 # backups only, not part of the shipped site
 /originals
+.env*.local
