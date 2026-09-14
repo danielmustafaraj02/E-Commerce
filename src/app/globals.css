@@ -1,0 +1,510 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+  --background: #ffffff;
+  --foreground: #171717;
+  --surface: #f7f7f8;
+  --danger: #dc2626;
+  --success: #15803d;
+  --warning: #b45309;
+  /* Raw admin-picked brand colors, set inline on <html> from StoreSettings. */
+  --store-primary: #111827;
+  --store-secondary: #4f46e5;
+}
+
+/* @theme inline values that are plain literals get inlined directly into the
+   generated utility (e.g. `.text-danger{color:#dc2626}`), which would make a
+   dark-mode override below a dead rule nobody reads. Routing every token
+   through a var() indirection (as background/foreground/primary/secondary
+   already do) keeps the utility classes theme-reactive. */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-primary: var(--store-primary);
+  --color-secondary: var(--store-secondary);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ---------------------------------------------------------------------------
+   Animations. Everything below is opacity/transform only (cheap to composite,
+   looks the same on the white default theme and the dark opt-in one since
+   neither keyframe references a color), and is fully disabled for visitors
+   who ask for reduced motion.
+   ------------------------------------------------------------------------- */
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Scroll-reveal: <Reveal> (src/components/reveal.tsx) toggles data-visible
+   once an element crosses the viewport. Starts pre-rendered/visible so
+   content is never hidden from a user whose JS hasn't run yet (no-JS,
+   crawlers, slow connections) — this only upgrades the entrance, it's not
+   load-bearing for visibility. */
+[data-reveal] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+      opacity 0.6s ease,
+      transform 0.6s ease;
+    transition-delay: var(--reveal-delay, 0s);
+  }
+  [data-reveal="true"] {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .animate-fade-up {
+    animation: fade-up 0.6s ease both;
+    animation-delay: var(--reveal-delay, 0s);
+  }
+  .animate-pop-in {
+    animation: pop-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  /* Cart count badge bump — CartLink toggles data-bump="true" briefly when
+     the item count changes, e.g. right after "Add to cart". */
+  [data-bump="true"] {
+    animation: pop-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  /* Lightweight page-transition fade, applied by app/template.tsx so each
+     route's content eases in on navigation instead of popping in instantly. */
+  .page-transition {
+    animation: fade-up 0.4s ease both;
+  }
+}
+
+/* Underline-grow hover for header/footer text links: a single ::after bar
+   scaled from 0 so it reads as "drawing in" rather than a hard color swap. */
+.link-underline {
+  position: relative;
+  width: fit-content;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.25s ease;
+}
+.link-underline:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ---------------------------------------------------------------------------
+   Form controls — one shared look for every text/number/email/password
+   input, <select>, and <textarea> in the app (`.field`), plus custom
+   checkbox/radio treatments, so no form hand-rolls its own border/focus
+   styling. Respects the store's brand color (--color-primary) and both
+   themes automatically since everything routes through existing tokens.
+
+   Wrapped in @layer components so Tailwind's own utility classes (`w-16`,
+   `flex-1`, etc.) always win over these base rules when combined on the same
+   element — e.g. `className="field w-16"` — instead of losing to `.field`'s
+   `width: 100%` by plain source order, which is what made the cart quantity
+   input balloon to full width.
+   ------------------------------------------------------------------------- */
+@layer components {
+
+.field {
+  width: 100%;
+  border-radius: 0.6rem;
+  border: 1.5px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+  background: color-mix(in srgb, var(--foreground) 3%, transparent);
+  padding: 0.55rem 0.85rem;
+  color: var(--foreground);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease,
+    transform 0.15s ease;
+}
+.field::placeholder {
+  color: color-mix(in srgb, var(--foreground) 42%, transparent);
+}
+.field:hover {
+  border-color: color-mix(in srgb, var(--foreground) 34%, transparent);
+}
+.field:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  background: var(--background);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 16%, transparent);
+  transform: translateY(-1px);
+}
+.field:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  transform: none;
+}
+textarea.field {
+  resize: vertical;
+  min-height: 5.5rem;
+}
+select.field {
+  cursor: pointer;
+}
+
+/* Checkbox — a real checkmark that pops in with a small overshoot, rather
+   than a hard show/hide, so ticking a box reads as an action, not a toggle. */
+.field-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-grid;
+  place-content: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  flex-shrink: 0;
+  border-radius: 0.4rem;
+  border: 1.5px solid color-mix(in srgb, var(--foreground) 32%, transparent);
+  background: color-mix(in srgb, var(--foreground) 3%, transparent);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.1s ease;
+}
+.field-checkbox::after {
+  content: "";
+  width: 0.72rem;
+  height: 0.72rem;
+  background-color: white;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+  transform: scale(0);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.field-checkbox:hover {
+  border-color: var(--color-primary);
+}
+.field-checkbox:checked {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+}
+.field-checkbox:checked::after {
+  transform: scale(1);
+}
+.field-checkbox:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 20%, transparent);
+}
+.field-checkbox:active {
+  transform: scale(0.88);
+}
+.field-checkbox:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* Radio — same language as the checkbox, circular, with a dot that pops in. */
+.field-radio {
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-grid;
+  place-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  border-radius: 999px;
+  border: 1.5px solid color-mix(in srgb, var(--foreground) 32%, transparent);
+  background: color-mix(in srgb, var(--foreground) 3%, transparent);
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    transform 0.1s ease;
+}
+.field-radio::after {
+  content: "";
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 999px;
+  background: var(--color-primary);
+  transform: scale(0);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.field-radio:hover {
+  border-color: var(--color-primary);
+}
+.field-radio:checked {
+  border-color: var(--color-primary);
+}
+.field-radio:checked::after {
+  transform: scale(1);
+}
+.field-radio:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 20%, transparent);
+}
+.field-radio:active {
+  transform: scale(0.88);
+}
+
+/* Color swatch inputs (brand color pickers) — same border language, but a
+   hover lift instead of a focus glow since the browser's own color picker
+   takes over on click. */
+.field-color {
+  width: 100%;
+  height: 2.75rem;
+  border-radius: 0.6rem;
+  border: 1.5px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+  background: color-mix(in srgb, var(--foreground) 3%, transparent);
+  padding: 0.3rem;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+}
+.field-color:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-1px);
+}
+.field-color:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 16%, transparent);
+}
+
+/* -------------------------------------------------------------------------
+   Shared button/alert/card primitives — every form in the app (customer and
+   admin) routes its buttons and status messages through these instead of
+   hand-rolling slightly different button/border/color combinations per file.
+   ------------------------------------------------------------------------- */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.6rem;
+  background: var(--color-primary);
+  color: white;
+  font-weight: 500;
+  padding: 0.6rem 1.1rem;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  opacity: 0.92;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--color-primary) 30%, transparent);
+}
+.btn-primary:active {
+  transform: translateY(0);
+}
+.btn-primary:disabled {
+  opacity: 0.55;
+  pointer-events: none;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.6rem;
+  border: 1.5px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+  background: transparent;
+  font-weight: 500;
+  padding: 0.55rem 1.05rem;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+.btn-secondary:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 6%, transparent);
+}
+.btn-secondary:disabled {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.btn-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.6rem;
+  background: var(--color-danger);
+  color: white;
+  font-weight: 500;
+  padding: 0.6rem 1.1rem;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+.btn-danger:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+.btn-danger:disabled {
+  opacity: 0.55;
+  pointer-events: none;
+  transform: none;
+}
+
+.btn-danger-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.6rem;
+  border: 1.5px solid color-mix(in srgb, var(--color-danger) 40%, transparent);
+  color: var(--color-danger);
+  font-weight: 500;
+  padding: 0.55rem 1.05rem;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+.btn-danger-outline:hover {
+  background: color-mix(in srgb, var(--color-danger) 8%, transparent);
+  border-color: var(--color-danger);
+}
+.btn-danger-outline:disabled {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* Alerts — small icon + message chip used for every inline form error and
+   success state, instead of bare colored text that's easy to miss. */
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  border-radius: 0.6rem;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.875rem;
+  line-height: 1.35;
+  animation: fade-up 0.25s ease both;
+}
+.alert-error {
+  background: color-mix(in srgb, var(--color-danger) 10%, transparent);
+  color: var(--color-danger);
+}
+.alert-success {
+  background: color-mix(in srgb, var(--color-success) 10%, transparent);
+  color: var(--color-success);
+}
+.alert svg {
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+/* Card — the standard wrapper for a standalone form (auth, checkout
+   sections, review form, admin panels) so forms read as a distinct object
+   on the page rather than floating loose against the background. */
+.form-card {
+  border-radius: 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+  background: var(--surface);
+  padding: 1.5rem;
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--foreground) 4%, transparent);
+}
+
+/* Selectable option card — radio-driven choices (shipping method, payment
+   method) presented as a clickable card with the whole row as the hit
+   target, not just the small radio dot. */
+.option-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-radius: 0.6rem;
+  border: 1.5px solid color-mix(in srgb, var(--foreground) 14%, transparent);
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+.option-card:hover {
+  border-color: color-mix(in srgb, var(--color-primary) 50%, transparent);
+}
+.option-card:has(:checked) {
+  border-color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 6%, transparent);
+}
+
+} /* end @layer components */
+
+/* Shared prev/next button for every homepage carousel (best sellers,
+   categories, testimonials — see carousel-nav-button.tsx). Rendered as a
+   normal flex sibling next to the Swiper track rather than Swiper's own
+   absolutely-positioned nav buttons, which float on top of slide content:
+   with text-heavy slides (testimonials) that clipped the card's own text
+   as soon as it ran close to the edge, at any padding/offset value. */
+.carousel-nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  color: var(--color-primary);
+  background: var(--background);
+  border: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--foreground) 12%, transparent);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    opacity 0.15s ease;
+}
+.carousel-nav-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 18%, transparent);
+}
+.carousel-nav-btn.swiper-button-disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+.testimonials-swiper .swiper-slide {
+  height: auto;
+}

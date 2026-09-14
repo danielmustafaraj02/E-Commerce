@@ -1,0 +1,51 @@
+"use server";
+
+import { z } from "zod";
+import { auth } from "@/auth";
+import { db } from "@/lib/db";
+import { canAccessOrder } from "@/lib/orders";
+import { writeAuditLog } from "@/lib/audit-log";
+
+const schema = z.object({ reason: z.string().min(1).max(2000) });
+
+const RETURNABLE_STATUSES = ["paid", "processing", "shipped", "delivered"];
+
+export async function requestReturn(orderNumber: string, _prevState: unknown, formData: FormData) {
+  const parsed = schema.safeParse({ reason: formData.get("reason") });
+  if (!parsed.success)
+    return { error: "Please describe the reason for your return", success: false };
+
+  const [session, order] = await Promise.all([
+    auth(),
+    db.order.findUnique({ where: { orderNumber }, include: { returnRequests: true } }),
+  ]);
+  if (!order || !canAccessOrder(order, session)) {
+    return { error: "Order not found", success: false };
+  }
+  if (!RETURNABLE_STATUSES.includes(order.status)) {
+    return { error: "This order isn't eligible for a return yet", success: false };
+  }
+  if (order.returnRequests.some((r) => r.status !== "rejected")) {
+    return { error: "A return request for this order is already in progress", success: false };
+  }
+
+  const returnRequest = await db.returnRequest.create({
+    data: {
+      orderId: order.id,
+      userId: session?.user?.id ?? null,
+      reason: parsed.data.reason,
+    },
+  });
+
+  if (session?.user) {
+    await writeAuditLog({
+      userId: session.user.id,
+      action: "return_request.create",
+      entityType: "ReturnRequest",
+      entityId: returnRequest.id,
+      after: { orderId: order.id, reason: parsed.data.reason },
+    });
+  }
+
+  return { error: null, success: true };
+}

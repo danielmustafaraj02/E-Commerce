@@ -1,0 +1,538 @@
+// Prisma schema for the white-label e-commerce platform.
+//
+// Dev uses SQLite (connection URL lives in prisma.config.ts + DATABASE_URL in
+// .env — Prisma 7 no longer accepts `url` inside the datasource block) so the
+// app can be built/tested without a local Postgres instance. For production,
+// change `provider` to "postgresql", point DATABASE_URL at your Postgres
+// instance (Railway/Supabase/Neon), and swap the driver adapter passed to
+// PrismaClient — every field type used here (String, Int, Float, Boolean,
+// DateTime) is portable across both providers.
+// Money is always stored as an Int in minor currency units (cents), matching
+// how Stripe represents amounts, to avoid floating point rounding bugs.
+//
+// Role/status fields are plain strings (not Prisma enums) validated with zod
+// at the application boundary — this keeps the schema 100% portable between
+// SQLite and Postgres regardless of connector-specific enum support.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// ---------------------------------------------------------------------------
+// White-label configuration — the single table that rebrands the whole store.
+// ---------------------------------------------------------------------------
+
+model StoreSettings {
+  id                     String   @id @default(cuid())
+  storeName              String   @default("My Store")
+  logoUrl                String?
+  primaryColor           String   @default("#111827")
+  secondaryColor         String   @default("#4F46E5")
+  fontFamily             String   @default("Inter")
+  defaultCurrency        String   @default("EUR")
+  defaultLocale          String   @default("en-US")
+  contactEmail           String   @default("hello@example.com")
+  vatNumber              String?
+  companyLegalName       String?
+  companyAddress         String?
+  pricesIncludeTax       Boolean  @default(true)
+  freeShippingThreshold  Int? // cents; null = disabled
+  // Short authenticity/trust line shown as a badge on product pages, near
+  // the price — e.g. "100% authentic, handmade in Murano." Free text (not a
+  // boolean) so it stays meaningful if the catalog changes to something
+  // that isn't Murano glass. Null = badge not shown.
+  trustBadgeText         String?
+  // Homepage "What customers say" shelf — real reviews only (never
+  // fabricated), but some stores launch before they have enough of them to
+  // look credible, so admins can hide the section entirely until then.
+  showTestimonials       Boolean  @default(true)
+
+  // SEO — Admin > Settings > SEO. All optional with fallbacks applied in
+  // src/lib/store-settings.ts and consumed by src/app/layout.tsx,
+  // sitemap.ts, and robots.ts.
+  siteUrl                String? // canonical base URL, e.g. https://shop.example.com — required for sitemap.xml/robots.txt/canonical links/absolute OG images to resolve correctly once deployed
+  metaDescription        String? // falls back to "Shop at {storeName}" if unset
+  ogImageUrl             String? // social share preview image (1200x630 recommended); falls back to logoUrl
+  googleSiteVerification String? // the "content" value from Search Console's HTML tag verification method
+
+  // Payment provider credentials, editable from Admin > Settings > Payments
+  // instead of requiring a redeploy with new env vars. src/lib/stripe.ts and
+  // src/lib/paypal.ts check these first, falling back to the env vars of the
+  // same name if unset — so either configuration path works.
+  stripeSecretKey      String?
+  stripePublishableKey String?
+  stripeWebhookSecret  String?
+  // Off by default: forcing "klarna" into a Checkout Session's
+  // payment_method_types when Klarna isn't activated on the Stripe account
+  // makes session creation fail outright, so this only takes effect once an
+  // admin has confirmed it's active in the Stripe Dashboard and opts in here
+  // — see src/app/api/checkout/pay/stripe/route.ts.
+  klarnaEnabled        Boolean @default(false)
+  paypalClientId       String?
+  paypalClientSecret   String?
+  paypalWebhookId      String?
+
+  // Same DB-first/env-fallback pattern for the rest of the integrations —
+  // Admin > Settings > Integrations.
+  resendApiKey         String?
+  emailFrom            String?
+  turnstileSiteKey     String?
+  turnstileSecretKey   String?
+  upstashRedisUrl      String?
+  upstashRedisToken    String?
+  googleClientId       String?
+  googleClientSecret   String?
+
+  // Offline payment methods — no gateway needed, so these are plain toggles
+  // + the details the customer needs to act on (bank details, COD surcharge)
+  // rather than API credentials.
+  bankTransferEnabled Boolean @default(false)
+  bankAccountHolder   String?
+  bankIban            String?
+  bankBic             String?
+  codEnabled          Boolean @default(false)
+  codFee              Int? // cents, added to the order total when COD is chosen
+
+  // Social links, shown in the footer when set — all optional.
+  facebookUrl  String?
+  instagramUrl String?
+  twitterUrl   String?
+  tiktokUrl    String?
+  youtubeUrl   String?
+  linkedinUrl  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ---------------------------------------------------------------------------
+// Auth (NextAuth / Auth.js v5 — Credentials + optional OAuth via adapter)
+// ---------------------------------------------------------------------------
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String? // null for OAuth-only accounts
+  name          String?
+  role          String    @default("customer") // customer | staff | admin
+  emailVerified DateTime?
+  image         String?
+
+  mfaSecret       String? // TOTP secret, set once admin/staff enrolls MFA
+  mfaEnabled      Boolean @default(false)
+  failedLoginCount Int    @default(0)
+  lockedUntil     DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  accounts       Account[]
+  sessions       Session[]
+  orders         Order[]
+  addresses      Address[]
+  reviews        Review[]
+  auditLogs      AuditLog[]
+  returnRequests ReturnRequest[]
+  consentLogs    ConsentLog[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ---------------------------------------------------------------------------
+// Catalog
+// ---------------------------------------------------------------------------
+
+model Category {
+  id       String  @id @default(cuid())
+  name     String
+  slug     String  @unique
+  parentId String?
+  parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  children Category[] @relation("CategoryTree")
+
+  products Product[]
+  taxRules TaxRule[]
+}
+
+model Product {
+  id                String   @id @default(cuid())
+  name              String
+  slug              String   @unique
+  description       String
+  price             Int // cents, tax-inclusive display price (see StoreSettings.pricesIncludeTax)
+  currency          String   @default("EUR")
+  sku               String   @unique
+  stockQty          Int      @default(0)
+  lowStockThreshold Int      @default(5)
+  active            Boolean  @default(true)
+
+  // Dropshipping: a product sourced from a supplier who ships directly to
+  // the customer. trackInventory=false skips the stock check/decrement at
+  // checkout entirely (supplier stock isn't ours to track), and costPrice
+  // (what we pay the supplier) drives margin reporting — never shown to
+  // customers.
+  supplierId     String?
+  supplier       Supplier? @relation(fields: [supplierId], references: [id])
+  supplierSku    String?
+  costPrice      Int? // cents, what we pay the supplier per unit
+  trackInventory Boolean @default(true)
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  images     ProductImage[]
+  orderItems OrderItem[]
+  reviews    Review[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ---------------------------------------------------------------------------
+// Dropshipping
+// ---------------------------------------------------------------------------
+
+model Supplier {
+  id      String  @id @default(cuid())
+  name    String
+  email   String? // where fulfillment requests get sent
+  website String?
+  notes   String?
+  active  Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products     Product[]
+  fulfillments Fulfillment[]
+}
+
+// Groups the order items from one order that belong to one supplier, so a
+// multi-supplier order can be routed/tracked per supplier independently.
+model Fulfillment {
+  id         String   @id @default(cuid())
+  orderId    String
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  supplierId String
+  supplier   Supplier @relation(fields: [supplierId], references: [id])
+
+  status String @default("pending")
+  // pending -> sent -> shipped -> delivered
+
+  trackingNumber String?
+  sentAt         DateTime?
+
+  items OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProductImage {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  altText   String  @default("")
+  position  Int     @default(0)
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+
+  @@unique([productId, userId])
+}
+
+// ---------------------------------------------------------------------------
+// Customers
+// ---------------------------------------------------------------------------
+
+model Address {
+  id         String  @id @default(cuid())
+  userId     String? // null for a guest-checkout address (not saved to any account)
+  user       User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName   String
+  street     String
+  city       String
+  postalCode String
+  country    String // ISO 3166-1 alpha-2
+  phone      String?
+  isDefault  Boolean @default(false)
+
+  orders Order[]
+}
+
+// ---------------------------------------------------------------------------
+// Shipping
+// ---------------------------------------------------------------------------
+
+model ShippingMethod {
+  id               String  @id @default(cuid())
+  name             String
+  basePrice        Int // cents
+  pricePerKg       Int     @default(0) // cents
+  estimatedDaysMin Int     @default(2)
+  estimatedDaysMax Int     @default(5)
+  active           Boolean @default(true)
+
+  zoneLinks ShippingZoneMethod[]
+  orders    Order[]
+}
+
+model ShippingZone {
+  id   String @id @default(cuid())
+  name String
+
+  countries ShippingZoneCountry[]
+  methods   ShippingZoneMethod[]
+}
+
+model ShippingZoneCountry {
+  id      String       @id @default(cuid())
+  zoneId  String
+  zone    ShippingZone @relation(fields: [zoneId], references: [id], onDelete: Cascade)
+  country String // ISO 3166-1 alpha-2
+
+  @@unique([zoneId, country])
+}
+
+model ShippingZoneMethod {
+  id       String         @id @default(cuid())
+  zoneId   String
+  zone     ShippingZone   @relation(fields: [zoneId], references: [id], onDelete: Cascade)
+  methodId String
+  method   ShippingMethod @relation(fields: [methodId], references: [id], onDelete: Cascade)
+
+  @@unique([zoneId, methodId])
+}
+
+// ---------------------------------------------------------------------------
+// Tax (VAT/IVA)
+// ---------------------------------------------------------------------------
+
+model TaxRule {
+  id          String   @id @default(cuid())
+  country     String // ISO 3166-1 alpha-2
+  region      String?
+  ratePercent Float
+  name        String // e.g. "IVA standard", "IVA ridotta"
+  categoryId  String? // null = applies store-wide for this country/region
+  category    Category? @relation(fields: [categoryId], references: [id])
+}
+
+// ---------------------------------------------------------------------------
+// Orders / payments
+// ---------------------------------------------------------------------------
+
+model Order {
+  id          String @id @default(cuid())
+  orderNumber String @unique
+
+  userId     String?
+  user       User?   @relation(fields: [userId], references: [id])
+  guestEmail String? // set when userId is null (guest checkout)
+
+  status String @default("pending")
+  // pending -> paid -> processing -> shipped -> delivered
+  // pending -> cancelled
+  // paid/processing/shipped -> refunded
+
+  subtotal       Int // cents
+  taxAmount      Int // cents
+  taxRatePercent Float?
+  shippingAmount Int // cents
+  discountAmount Int    @default(0) // cents
+  total          Int // cents
+  currency       String @default("EUR")
+
+  addressId String?
+  address   Address? @relation(fields: [addressId], references: [id])
+
+  shippingMethodId String?
+  shippingMethod   ShippingMethod? @relation(fields: [shippingMethodId], references: [id])
+  trackingNumber   String?
+
+  discountCodeId String?
+  discountCode   DiscountCode? @relation(fields: [discountCodeId], references: [id])
+
+  // Abandoned-order recovery (see src/lib/abandoned-orders.ts): a pending
+  // order is the cart at the moment checkout was submitted, so "abandoned
+  // cart" = a pending order that never got paid. Set once a reminder email
+  // goes out so the cron job doesn't email the same order twice; the order
+  // itself is auto-cancelled (and its reserved stock released) after a
+  // longer timeout.
+  abandonedEmailSentAt DateTime?
+
+  items          OrderItem[]
+  payments       Payment[]
+  returnRequests ReturnRequest[]
+  fulfillments   Fulfillment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderItem {
+  id          String  @id @default(cuid())
+  orderId     String
+  order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   String
+  product     Product @relation(fields: [productId], references: [id])
+  productName String // snapshot at time of purchase
+  quantity    Int
+  unitPrice   Int // cents, snapshot at time of purchase
+
+  // Dropshipping snapshots — captured at order time so a later change to the
+  // product's supplier/cost doesn't rewrite history for past orders.
+  supplierId String?
+  unitCost   Int? // cents, what we paid the supplier per unit at order time
+
+  fulfillmentId String?
+  fulfillment   Fulfillment? @relation(fields: [fulfillmentId], references: [id])
+}
+
+model Payment {
+  id                    String  @id @default(cuid())
+  orderId               String
+  order                 Order   @relation(fields: [orderId], references: [id])
+  provider              String // stripe | paypal
+  providerTransactionId String? @unique
+  status                String  @default("pending") // pending | succeeded | failed | refunded
+  amount                Int // cents
+  currency              String  @default("EUR")
+  createdAt             DateTime @default(now())
+}
+
+model DiscountCode {
+  id         String    @id @default(cuid())
+  code       String    @unique
+  percentOff Float? // 0-100
+  amountOff  Int? // cents
+  expiresAt  DateTime?
+  maxUses    Int?
+  usedCount  Int       @default(0)
+  active     Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+
+  orders Order[]
+}
+
+model ReturnRequest {
+  id      String  @id @default(cuid())
+  orderId String
+  order   Order   @relation(fields: [orderId], references: [id])
+  userId  String? // null for a guest order's return request
+  user    User?   @relation(fields: [userId], references: [id])
+  reason  String
+  status  String  @default("requested") // requested | approved | rejected | received | refunded
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ---------------------------------------------------------------------------
+// Compliance / security
+// ---------------------------------------------------------------------------
+
+model LegalPage {
+  id          String   @id @default(cuid())
+  slug        String   @unique // terms | privacy | returns | cookies
+  title       String
+  content     String
+  lastUpdated DateTime @updatedAt
+}
+
+model ConsentLog {
+  id          String   @id @default(cuid())
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id])
+  anonymousId String? // cookie-based id for guests
+  consentType String // functional | analytics | marketing
+  granted     Boolean
+  createdAt   DateTime @default(now())
+}
+
+// Marketing email list — deliberately separate from ConsentLog (which is
+// per-visit/per-cookie consent, no email address) since this is the actual
+// mailing list. Every subscribe still writes a ConsentLog row too
+// (consentType "marketing") so there's one consistent audit trail for
+// GDPR purposes across both cookie- and email-based marketing consent.
+model NewsletterSubscriber {
+  id             String    @id @default(cuid())
+  email          String    @unique
+  subscribedAt   DateTime  @default(now())
+  unsubscribedAt DateTime?
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id])
+  action     String // e.g. "product.update", "order.refund", "settings.update"
+  entityType String
+  entityId   String?
+  beforeData String? // JSON snapshot
+  afterData  String? // JSON snapshot
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+}
+
+// Internal "what still needs doing" backlog for Admin > Roadmap — staff jot
+// down site content/config that needs filling in or revisiting, and it's
+// also the one place meant to be read *and written* by an AI coding session
+// working on this repo, so ideas/todos survive between sessions instead of
+// living only in chat history. Not customer-facing.
+model ImprovementTask {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  priority    String    @default("medium") // low | medium | high
+  status      String    @default("open") // open | done
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  completedAt DateTime?
+}

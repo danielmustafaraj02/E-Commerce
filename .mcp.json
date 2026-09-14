@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "firefox-devtools": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@mozilla/firefox-devtools-mcp",
+        "--tools",
+        "pages",
+        "snapshot",
+        "input",
+        "network",
+        "console",
+        "screenshot",
+        "--startUrl",
+        "http://localhost:3000"
+      ]
+    }
+  }
+}
