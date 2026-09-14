@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaPg } from "@prisma/adapter-pg";
 
 // Next.js loads .env itself, but standalone scripts run via `tsx` (e.g. the
 // seed script) don't get that for free — load it defensively here too.
@@ -12,9 +12,8 @@ if (!process.env.DATABASE_URL) {
 }
 
 // Prisma 7 requires an explicit driver adapter (no more `url` in the
-// datasource block). Swap this for `@prisma/adapter-pg` + a Postgres
-// DATABASE_URL when deploying to production.
-const adapter = new PrismaBetterSqlite3({ url: process.env.DATABASE_URL! });
+// datasource block).
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 

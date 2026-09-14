@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.3",
-    "@prisma/adapter-better-sqlite3": "^7.10.0",
+    "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "7.10.0",
     "@radix-ui/react-slider": "^1.4.7",
     "@sentry/node": "^10.74.0",
@@ -62,8 +62,7 @@
     "@prisma/engines@7.10.0": true,
     "prisma@7.10.0": true,
     "esbuild@0.28.2": true,
-    "unrs-resolver@1.12.2": true,
-    "better-sqlite3@12.11.1": true
+    "unrs-resolver@1.12.2": true
   },
   "overrides": {
     "mysql2": "^3.24.4",

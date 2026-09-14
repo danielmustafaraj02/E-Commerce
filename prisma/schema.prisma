@@ -1,25 +1,19 @@
 // Prisma schema for the white-label e-commerce platform.
 //
-// Dev uses SQLite (connection URL lives in prisma.config.ts + DATABASE_URL in
-// .env — Prisma 7 no longer accepts `url` inside the datasource block) so the
-// app can be built/tested without a local Postgres instance. For production,
-// change `provider` to "postgresql", point DATABASE_URL at your Postgres
-// instance (Railway/Supabase/Neon), and swap the driver adapter passed to
-// PrismaClient — every field type used here (String, Int, Float, Boolean,
-// DateTime) is portable across both providers.
+// Postgres (connection URL lives in prisma.config.ts + DATABASE_URL in .env
+// — Prisma 7 no longer accepts `url` inside the datasource block).
 // Money is always stored as an Int in minor currency units (cents), matching
 // how Stripe represents amounts, to avoid floating point rounding bugs.
 //
 // Role/status fields are plain strings (not Prisma enums) validated with zod
-// at the application boundary — this keeps the schema 100% portable between
-// SQLite and Postgres regardless of connector-specific enum support.
+// at the application boundary.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 // ---------------------------------------------------------------------------
