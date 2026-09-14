@@ -132,7 +132,7 @@ This creates the seeded admin login: `admin@demo-store.example` / `ChangeMe123!`
 
 ## Ongoing operational tasks (not one-time)
 
-- **Cron:** `vercel.json` schedules `GET /api/cron/abandoned-orders` hourly via Vercel Cron, which sends `Authorization: Bearer $CRON_SECRET` automatically once that env var is set. On a non-Vercel host, point any cron service (GitHub Actions scheduled workflow, system crontab, etc.) at that URL with the same header.
+- **Cron:** `vercel.json` schedules `GET /api/cron/abandoned-orders` once daily (03:00 UTC) via Vercel Cron — Hobby plan only allows daily cron schedules, not hourly/minute-level ones; upgrade to Pro if you need finer granularity. It sends `Authorization: Bearer $CRON_SECRET` automatically once that env var is set. On a non-Vercel host, point any cron service (GitHub Actions scheduled workflow, system crontab, etc.) at that URL with the same header on whatever schedule you like.
 - **Dependency updates:** CI (`.github/workflows/ci.yml`) already runs `npm audit --omit=dev --audit-level=high` on every push/PR — don't let that start failing silently; review and bump flagged packages promptly.
 - **Key rotation:** treat Stripe/PayPal/Resend/Upstash keys as rotatable, not "set once" — rotating via **Admin → Settings** doesn't require a redeploy.
 - **Backups:** set up automated backups on whichever Postgres provider you chose (Railway/Supabase/Neon all offer this), and **actually test a restore** at least once before you need it for real.
