@@ -214,14 +214,73 @@ export default async function Home() {
             <h2 className="mb-6 text-lg font-medium">{dict.home.whyUsTitle}</h2>
             <div className="grid gap-6 sm:grid-cols-3">
               <div className="border-foreground/10 rounded-lg border p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+                <div
+                  className="mb-3 flex h-10 w-10 items-center justify-center rounded-full"
+                  style={{ background: "color-mix(in srgb, #f5c451 22%, transparent)" }}
+                  aria-hidden="true"
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#b8860b"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M3 7h11v9H3z" />
+                    <path d="M14 10h4l3 3v3h-7z" />
+                    <circle cx="7" cy="18" r="1.5" />
+                    <circle cx="17.5" cy="18" r="1.5" />
+                  </svg>
+                </div>
                 <h3 className="mb-2 font-medium">{dict.home.whyShipping}</h3>
                 <p className="text-foreground/70 text-sm">{dict.home.whyShippingBody}</p>
               </div>
               <div className="border-foreground/10 rounded-lg border p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+                <div
+                  className="mb-3 flex h-10 w-10 items-center justify-center rounded-full"
+                  style={{ background: "color-mix(in srgb, #7cc7c0 25%, transparent)" }}
+                  aria-hidden="true"
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#2f6f68"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z" />
+                    <path d="M9 12l2 2 4-4" />
+                  </svg>
+                </div>
                 <h3 className="mb-2 font-medium">{dict.home.whySecure}</h3>
                 <p className="text-foreground/70 text-sm">{dict.home.whySecureBody}</p>
               </div>
               <div className="border-foreground/10 rounded-lg border p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+                <div
+                  className="mb-3 flex h-10 w-10 items-center justify-center rounded-full"
+                  style={{ background: "color-mix(in srgb, #e8607f 20%, transparent)" }}
+                  aria-hidden="true"
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#c65b8a"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M3 12a9 9 0 1 0 3-6.7" />
+                    <path d="M3 4v5h5" />
+                  </svg>
+                </div>
                 <h3 className="mb-2 font-medium">{dict.home.whyReturns}</h3>
                 <p className="text-foreground/70 text-sm">{dict.home.whyReturnsBody}</p>
               </div>

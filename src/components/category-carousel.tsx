@@ -16,6 +16,11 @@ type Category = {
   image: { url: string; altText: string } | null;
 };
 
+// Same three colors used across the site's decorative backgrounds
+// (hero, newsletter, "why shop with us" icons) — cycled per card so the
+// row reads as a matched set rather than another plain white grid.
+const ACCENT_COLORS = ["#f5c451", "#7cc7c0", "#e8607f"];
+
 export function CategoryCarousel({
   categories,
   prevLabel,
@@ -42,11 +47,12 @@ export function CategoryCarousel({
         }}
         className="min-w-0 flex-1"
       >
-        {categories.map((category) => (
+        {categories.map((category, index) => (
           <SwiperSlide key={category.id}>
             <Link
               href={`/category/${category.slug}`}
-              className="border-foreground/10 group flex flex-col gap-3 rounded-xl border p-3 shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg"
+              style={{ borderTopColor: ACCENT_COLORS[index % ACCENT_COLORS.length] }}
+              className="border-foreground/10 group flex flex-col gap-3 rounded-xl border border-t-[3px] p-3 shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg"
             >
               <div className="bg-surface relative aspect-square w-full overflow-hidden rounded-lg">
                 {category.image ? (
