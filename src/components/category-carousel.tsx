@@ -46,9 +46,9 @@ export function CategoryCarousel({
           <SwiperSlide key={category.id}>
             <Link
               href={`/category/${category.slug}`}
-              className="group flex flex-col gap-2 transition-transform duration-300 ease-out hover:-translate-y-1"
+              className="border-foreground/10 group flex flex-col gap-3 rounded-xl border p-3 shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg"
             >
-              <div className="bg-surface relative aspect-[4/3] w-full overflow-hidden rounded-lg transition-shadow duration-300 group-hover:shadow-lg">
+              <div className="bg-surface relative aspect-square w-full overflow-hidden rounded-lg">
                 {category.image ? (
                   <Image
                     src={category.image.url}
@@ -67,7 +67,7 @@ export function CategoryCarousel({
                   />
                 )}
               </div>
-              <span className="group-hover:text-primary text-sm font-medium transition-colors">
+              <span className="group-hover:text-primary px-0.5 text-[0.95rem] font-semibold transition-colors">
                 {category.name}
               </span>
             </Link>

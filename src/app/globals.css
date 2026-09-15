@@ -505,11 +505,18 @@ select.field {
   opacity: 0.35;
   pointer-events: none;
 }
-/* Hero background: soft blurred glass-tone blobs behind the hero copy and
-   photo, evoking molten Murano glass without needing a photo of it. Pure
-   CSS (no generated asset) so it stays crisp at any size and costs nothing
-   to load. Purely decorative — aria-hidden in markup, never affects layout
-   (absolutely positioned, pointer-events: none). */
+/* Hero background: three soft glass-tone blobs, each in its own corner,
+   evoking molten Murano glass without needing a photo of it. Pure CSS
+   (no generated asset) so it stays crisp at any size and costs nothing
+   to load. Purely decorative — aria-hidden in markup, never affects
+   layout (absolutely positioned, pointer-events: none).
+
+   Originally had a third blob centered behind the hero copy — that
+   overlap with the other two muddied the colors right where the text
+   sits. Keeping each blob in its own corner (rather than removing the
+   third one) keeps the fuller three-color palette without any overlap:
+   the top-right one sits mostly behind the opaque product photo, so it
+   reads as a soft edge glow rather than competing with the text. */
 .hero-glass-bg {
   position: absolute;
   inset: 0;
@@ -523,41 +530,47 @@ select.field {
   content: "";
   position: absolute;
   border-radius: 999px;
-  filter: blur(60px);
-  opacity: 0.35;
+  filter: blur(44px);
+  opacity: 0.4;
+  /* Promotes each blob to its own compositor layer so the (expensive)
+     blur is rasterized once and the drift animation below just moves a
+     bitmap on the GPU instead of repainting a large blurred area every
+     frame — this is what actually costs performance here, not the CSS
+     itself. */
+  will-change: transform;
 }
 .hero-glass-bg::before {
-  width: 22rem;
-  height: 22rem;
-  top: -8rem;
-  left: -6rem;
+  width: 20rem;
+  height: 20rem;
+  top: -9rem;
+  left: -7rem;
   background: radial-gradient(circle, #f5c451 0%, transparent 70%);
 }
 .hero-glass-bg::after {
-  width: 26rem;
-  height: 26rem;
-  bottom: -10rem;
-  right: -8rem;
+  width: 22rem;
+  height: 22rem;
+  bottom: -11rem;
+  right: -9rem;
   background: radial-gradient(circle, #7cc7c0 0%, transparent 70%);
 }
 .hero-glass-bg span {
-  width: 18rem;
-  height: 18rem;
-  top: 30%;
-  left: 40%;
+  width: 16rem;
+  height: 16rem;
+  top: -6rem;
+  right: -5rem;
   background: radial-gradient(circle, #e8a0b4 0%, transparent 70%);
 }
 @media (prefers-reduced-motion: no-preference) {
   .hero-glass-bg::before,
   .hero-glass-bg::after,
   .hero-glass-bg span {
-    animation: hero-drift 22s ease-in-out infinite alternate;
+    animation: hero-drift 24s ease-in-out infinite alternate;
   }
   .hero-glass-bg::after {
-    animation-duration: 26s;
+    animation-duration: 28s;
   }
   .hero-glass-bg span {
-    animation-duration: 19s;
+    animation-duration: 20s;
   }
 }
 @keyframes hero-drift {
@@ -569,13 +582,60 @@ select.field {
   }
 }
 
+/* Newsletter section background — same colors and blob shape as
+   .hero-glass-bg, but static (no animation, no will-change layer). The
+   hero is the one place worth spending a continuous, infinitely-running
+   compositor animation on; stacking a second one this far down the page
+   only added GPU/battery cost without adding anything — a static section
+   doesn't drift, so it can't look "off" the way an undersized animated
+   copy of the hero blobs did here. */
+.section-glass-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.section-glass-bg::before,
+.section-glass-bg::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(36px);
+  opacity: 0.42;
+}
+.section-glass-bg::before {
+  width: 14rem;
+  height: 14rem;
+  top: -5rem;
+  left: -3rem;
+  background: radial-gradient(circle, #f5c451 0%, transparent 70%);
+}
+.section-glass-bg::after {
+  width: 16rem;
+  height: 16rem;
+  bottom: -6rem;
+  right: -4rem;
+  background: radial-gradient(circle, #7cc7c0 0%, transparent 70%);
+}
+
 /* Wave divider: same brand-color gradient as .hero-glass-bg, just a gentle
    horizontal sway so it doesn't feel static next to the animated blobs.
    Keeps the -scale-y-100 flip (applied via the img's own class) baked into
-   every frame, since an animated transform replaces the static one. */
+   every frame, since an animated transform replaces the static one.
+
+   Sliding a 100%-wide element sideways exposes a gap on the trailing
+   edge, so while animating it's widened to 110% (the parent wrapper
+   clips the overhang) and re-centered with a -5% left offset — the
+   translateX range below then stays within that overshoot, so the
+   image covers the full width at every point in the cycle, not just
+   at rest. */
 @media (prefers-reduced-motion: no-preference) {
   .animate-wave-drift {
+    width: 110%;
+    margin-left: -5%;
     animation: wave-drift 18s ease-in-out infinite alternate;
+    will-change: transform;
   }
 }
 @keyframes wave-drift {
@@ -583,7 +643,7 @@ select.field {
     transform: scaleY(-1) translateX(0);
   }
   to {
-    transform: scaleY(-1) translateX(3%);
+    transform: scaleY(-1) translateX(4%);
   }
 }
 

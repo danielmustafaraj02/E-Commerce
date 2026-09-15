@@ -95,6 +95,18 @@ export default async function Home() {
 
   return (
     <main className="flex flex-1 flex-col">
+      {/* Same wave divider as further down the page, bookending the hero
+          at the top of the homepage instead of between two sections. */}
+      <div className="h-16 w-full overflow-hidden sm:h-20">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/home/wave-divider.svg"
+          alt=""
+          aria-hidden="true"
+          className="animate-wave-drift h-16 w-full -scale-y-100 sm:h-20"
+        />
+      </div>
+
       <section className="bg-surface relative overflow-hidden">
         <div className="hero-glass-bg" aria-hidden="true">
           <span />
@@ -153,14 +165,17 @@ export default async function Home() {
       </section>
 
       {/* Decorative SVGs, plain <img> not next/image — see next.config.ts on
-          why local SVGs skip the optimizer. */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/home/wave-divider.svg"
-        alt=""
-        aria-hidden="true"
-        className="animate-wave-drift h-16 w-full -scale-y-100 sm:h-20"
-      />
+          why local SVGs skip the optimizer. The wrapper clips the drift
+          animation's horizontal overshoot (see .animate-wave-drift). */}
+      <div className="h-16 w-full overflow-hidden sm:h-20">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/home/wave-divider.svg"
+          alt=""
+          aria-hidden="true"
+          className="animate-wave-drift h-16 w-full -scale-y-100 sm:h-20"
+        />
+      </div>
 
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-16 px-4 py-16">
         {bestSellers.length > 0 && (
@@ -255,9 +270,7 @@ export default async function Home() {
 
       <Reveal>
         <section className="bg-surface relative overflow-hidden">
-          <div className="hero-glass-bg" aria-hidden="true">
-            <span />
-          </div>
+          <div className="section-glass-bg" aria-hidden="true" />
           <div className="relative mx-auto flex w-full max-w-5xl flex-col items-center gap-3 px-4 py-14 text-center">
             <h2 className="text-xl font-medium">{dict.home.newsletterCtaTitle}</h2>
             <p className="text-foreground/70 max-w-md text-sm">{dict.home.newsletterCtaBody}</p>
