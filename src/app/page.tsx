@@ -155,7 +155,12 @@ export default async function Home() {
       {/* Decorative SVGs, plain <img> not next/image — see next.config.ts on
           why local SVGs skip the optimizer. */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/home/wave-divider.svg" alt="" aria-hidden="true" className="h-16 w-full sm:h-20" />
+      <img
+        src="/home/wave-divider.svg"
+        alt=""
+        aria-hidden="true"
+        className="animate-wave-drift h-16 w-full -scale-y-100 sm:h-20"
+      />
 
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-16 px-4 py-16">
         {bestSellers.length > 0 && (
@@ -214,7 +219,7 @@ export default async function Home() {
               src="/home/bead-garland.svg"
               alt=""
               aria-hidden="true"
-              className="mb-6 h-8 w-full max-w-md opacity-80"
+              className="mb-6 h-16 w-full opacity-80 sm:h-20"
             />
             <h2 className="mb-6 text-lg font-medium">{dict.home.whyUsTitle}</h2>
             <div className="grid gap-6 sm:grid-cols-3">
@@ -250,13 +255,9 @@ export default async function Home() {
 
       <Reveal>
         <section className="bg-surface relative overflow-hidden">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/home/bokeh-glass.svg"
-            alt=""
-            aria-hidden="true"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
+          <div className="hero-glass-bg" aria-hidden="true">
+            <span />
+          </div>
           <div className="relative mx-auto flex w-full max-w-5xl flex-col items-center gap-3 px-4 py-14 text-center">
             <h2 className="text-xl font-medium">{dict.home.newsletterCtaTitle}</h2>
             <p className="text-foreground/70 max-w-md text-sm">{dict.home.newsletterCtaBody}</p>

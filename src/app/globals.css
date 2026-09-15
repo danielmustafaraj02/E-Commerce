@@ -569,6 +569,24 @@ select.field {
   }
 }
 
+/* Wave divider: same brand-color gradient as .hero-glass-bg, just a gentle
+   horizontal sway so it doesn't feel static next to the animated blobs.
+   Keeps the -scale-y-100 flip (applied via the img's own class) baked into
+   every frame, since an animated transform replaces the static one. */
+@media (prefers-reduced-motion: no-preference) {
+  .animate-wave-drift {
+    animation: wave-drift 18s ease-in-out infinite alternate;
+  }
+}
+@keyframes wave-drift {
+  from {
+    transform: scaleY(-1) translateX(0);
+  }
+  to {
+    transform: scaleY(-1) translateX(3%);
+  }
+}
+
 .testimonials-swiper .swiper-slide {
   height: auto;
 }
