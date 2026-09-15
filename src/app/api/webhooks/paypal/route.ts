@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { verifyPaypalWebhookSignature } from "@/lib/paypal";
 import { captureError } from "@/lib/monitoring";
+import { sendOrderStatusEmail } from "@/lib/email";
 
 export async function POST(request: Request) {
   const rawBody = await request.text();
@@ -32,13 +33,33 @@ export async function POST(request: Request) {
       });
 
       if (payment) {
-        await db.$transaction(async (tx) => {
-          const order = await tx.order.findUnique({ where: { id: payment.orderId } });
-          if (!order || order.status !== "pending") return;
+        const paidOrder = await db.$transaction(async (tx) => {
+          const order = await tx.order.findUnique({
+            where: { id: payment.orderId },
+            include: { user: { select: { email: true } } },
+          });
+          if (!order || order.status !== "pending") return null;
 
           await tx.order.update({ where: { id: order.id }, data: { status: "paid" } });
           await tx.payment.update({ where: { id: payment.id }, data: { status: "succeeded" } });
+          return order;
         });
+
+        // Outside the transaction and in its own try/catch — see the Stripe
+        // webhook for why an email failure must not fail this handler.
+        if (paidOrder) {
+          try {
+            await sendOrderStatusEmail({
+              orderNumber: paidOrder.orderNumber,
+              status: "paid",
+              trackingNumber: paidOrder.trackingNumber,
+              guestEmail: paidOrder.guestEmail,
+              user: paidOrder.user,
+            });
+          } catch (error) {
+            captureError(error, { scope: "paypal-webhook-email", orderNumber: paidOrder.orderNumber });
+          }
+        }
       }
     }
   } catch (error) {

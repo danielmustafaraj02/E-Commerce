@@ -505,6 +505,70 @@ select.field {
   opacity: 0.35;
   pointer-events: none;
 }
+/* Hero background: soft blurred glass-tone blobs behind the hero copy and
+   photo, evoking molten Murano glass without needing a photo of it. Pure
+   CSS (no generated asset) so it stays crisp at any size and costs nothing
+   to load. Purely decorative — aria-hidden in markup, never affects layout
+   (absolutely positioned, pointer-events: none). */
+.hero-glass-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.hero-glass-bg::before,
+.hero-glass-bg::after,
+.hero-glass-bg span {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(60px);
+  opacity: 0.35;
+}
+.hero-glass-bg::before {
+  width: 22rem;
+  height: 22rem;
+  top: -8rem;
+  left: -6rem;
+  background: radial-gradient(circle, #f5c451 0%, transparent 70%);
+}
+.hero-glass-bg::after {
+  width: 26rem;
+  height: 26rem;
+  bottom: -10rem;
+  right: -8rem;
+  background: radial-gradient(circle, #7cc7c0 0%, transparent 70%);
+}
+.hero-glass-bg span {
+  width: 18rem;
+  height: 18rem;
+  top: 30%;
+  left: 40%;
+  background: radial-gradient(circle, #e8a0b4 0%, transparent 70%);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-glass-bg::before,
+  .hero-glass-bg::after,
+  .hero-glass-bg span {
+    animation: hero-drift 22s ease-in-out infinite alternate;
+  }
+  .hero-glass-bg::after {
+    animation-duration: 26s;
+  }
+  .hero-glass-bg span {
+    animation-duration: 19s;
+  }
+}
+@keyframes hero-drift {
+  from {
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    transform: translate(4%, 6%) scale(1.08);
+  }
+}
+
 .testimonials-swiper .swiper-slide {
   height: auto;
 }

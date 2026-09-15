@@ -3,6 +3,7 @@ import type Stripe from "stripe";
 import { db } from "@/lib/db";
 import { getStripe, getStripeWebhookSecret } from "@/lib/stripe";
 import { captureError } from "@/lib/monitoring";
+import { sendOrderStatusEmail } from "@/lib/email";
 
 // The only place an order is trusted to actually be paid — never rely on
 // the client-side redirect alone (a buyer can close the tab, spoof the
@@ -32,9 +33,12 @@ export async function POST(request: Request) {
       const orderNumber = session.metadata?.orderNumber;
 
       if (orderNumber && session.payment_status === "paid") {
-        await db.$transaction(async (tx) => {
-          const order = await tx.order.findUnique({ where: { orderNumber } });
-          if (!order || order.status !== "pending") return;
+        const paidOrder = await db.$transaction(async (tx) => {
+          const order = await tx.order.findUnique({
+            where: { orderNumber },
+            include: { user: { select: { email: true } } },
+          });
+          if (!order || order.status !== "pending") return null;
 
           await tx.order.update({ where: { id: order.id }, data: { status: "paid" } });
           await tx.payment.updateMany({
@@ -45,7 +49,28 @@ export async function POST(request: Request) {
                 typeof session.payment_intent === "string" ? session.payment_intent : session.id,
             },
           });
+          return order;
         });
+
+        // Outside the transaction (a slow email provider shouldn't hold it
+        // open) and in its own try/catch: the order is already correctly
+        // marked paid, and since a retry will find it no longer "pending"
+        // and skip re-sending, an email failure must not 500 this handler —
+        // that would just make Stripe retry a webhook that can never send
+        // the email anyway.
+        if (paidOrder) {
+          try {
+            await sendOrderStatusEmail({
+              orderNumber: paidOrder.orderNumber,
+              status: "paid",
+              trackingNumber: paidOrder.trackingNumber,
+              guestEmail: paidOrder.guestEmail,
+              user: paidOrder.user,
+            });
+          } catch (error) {
+            captureError(error, { scope: "stripe-webhook-email", orderNumber: paidOrder.orderNumber });
+          }
+        }
       }
     }
   } catch (error) {

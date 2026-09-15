@@ -95,8 +95,11 @@ export default async function Home() {
 
   return (
     <main className="flex flex-1 flex-col">
-      <section className="bg-surface overflow-hidden">
-        <div className="mx-auto grid w-full max-w-5xl items-center gap-10 px-4 py-16 sm:grid-cols-2 sm:py-20">
+      <section className="bg-surface relative overflow-hidden">
+        <div className="hero-glass-bg" aria-hidden="true">
+          <span />
+        </div>
+        <div className="relative z-10 mx-auto grid w-full max-w-5xl items-center gap-10 px-4 py-16 sm:grid-cols-2 sm:py-20">
           <div className="flex flex-col gap-4">
             <p className="animate-fade-up text-primary text-sm font-medium">
               {dict.home.heroEyebrow}
