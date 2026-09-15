@@ -8,9 +8,8 @@ type Category = { id: string; slug: string; name: string };
 // /category/[slug] (already scoped to one category, so the picker is
 // hidden) — same price-range + in-stock filtering either way.
 //
-// Collapsed by default (a <details> disclosure, no JS needed) so it doesn't
-// push the product grid below the fold on mobile; opens automatically when
-// filters are already active so the user can see/adjust what's applied.
+// Always expanded — no collapse/toggle, so filters are visible and
+// adjustable at a glance rather than tucked behind a click.
 export function ProductFilterPanel({
   dict,
   categories,
@@ -41,29 +40,13 @@ export function ProductFilterPanel({
 
   return (
     <aside className="w-full shrink-0 sm:w-64">
-      <details open={hasActiveFilters} className="form-card group text-sm">
-        <summary className="flex list-none items-center justify-between font-semibold [&::-webkit-details-marker]:hidden">
-          <span className="flex items-center gap-2">
-            {dict.filtersTitle}
-            {hasActiveFilters && (
-              <span className="bg-primary inline-block h-1.5 w-1.5 rounded-full" aria-hidden="true" />
-            )}
-          </span>
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="text-foreground/50 shrink-0 transition-transform group-open:rotate-180"
-            aria-hidden="true"
-          >
-            <path d="M6 9l6 6 6-6" />
-          </svg>
-        </summary>
+      <div className="form-card text-sm">
+        <span className="flex items-center gap-2 font-semibold">
+          {dict.filtersTitle}
+          {hasActiveFilters && (
+            <span className="bg-primary inline-block h-1.5 w-1.5 rounded-full" aria-hidden="true" />
+          )}
+        </span>
 
         <form method="GET" className="mt-5 flex flex-col gap-5">
           {filters.q && <input type="hidden" name="q" value={filters.q} />}
@@ -127,7 +110,7 @@ export function ProductFilterPanel({
             )}
           </div>
         </form>
-      </details>
+      </div>
     </aside>
   );
 }

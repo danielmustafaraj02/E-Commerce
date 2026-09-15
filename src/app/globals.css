@@ -37,16 +37,6 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Breaks an element out to the true edge-to-edge viewport width no matter
-   what ancestor it sits in — computed from 100vw instead of the parent's
-   100%, so it can't fall short even if some ancestor turns out to be
-   narrower than the viewport (a scrollbar, a stray max-width, etc). */
-.full-bleed {
-  width: 100vw;
-  margin-left: 50%;
-  transform: translateX(-50%);
-}
-
 /* ---------------------------------------------------------------------------
    Animations. Everything below is opacity/transform only (cheap to composite,
    looks the same on the white default theme and the dark opt-in one since
@@ -627,34 +617,6 @@ select.field {
   bottom: -6rem;
   right: -4rem;
   background: radial-gradient(circle, #7cc7c0 0%, transparent 70%);
-}
-
-/* Wave divider: same brand-color gradient as .hero-glass-bg, just a gentle
-   horizontal sway so it doesn't feel static next to the animated blobs.
-   Keeps the -scale-y-100 flip (applied via the img's own class) baked into
-   every frame, since an animated transform replaces the static one.
-
-   Sliding a 100%-wide element sideways exposes a gap on the trailing
-   edge, so while animating it's widened to 110% (the parent wrapper
-   clips the overhang) and re-centered with a -5% left offset — the
-   translateX range below then stays within that overshoot, so the
-   image covers the full width at every point in the cycle, not just
-   at rest. */
-@media (prefers-reduced-motion: no-preference) {
-  .animate-wave-drift {
-    width: 110%;
-    margin-left: -5%;
-    animation: wave-drift 18s ease-in-out infinite alternate;
-    will-change: transform;
-  }
-}
-@keyframes wave-drift {
-  from {
-    transform: scaleY(-1) translateX(0);
-  }
-  to {
-    transform: scaleY(-1) translateX(4%);
-  }
 }
 
 .testimonials-swiper .swiper-slide {
