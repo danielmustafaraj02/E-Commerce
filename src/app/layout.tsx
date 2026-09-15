@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { getStoreSettings } from "@/lib/store-settings";
 import { toSafeJsonLd } from "@/lib/json-ld";
@@ -134,6 +136,8 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           }}
         />
         <CookieConsent dict={dict.cookieConsent} />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

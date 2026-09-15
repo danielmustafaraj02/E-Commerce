@@ -46,8 +46,8 @@ If it recurs often on this machine, two options:
 
 ## Other things that block local startup (checklist)
 
-1. **Missing `.env`** — copy it: `cp .env.example .env`. At minimum `DATABASE_URL`, `AUTH_SECRET`, `NEXTAUTH_URL` must be set or auth/DB calls fail at request time (not at boot, so the server *looks* fine until you click something). Generate a secret with `npx auth secret`.
-2. **No database / unapplied migrations** — `dev.db` (SQLite) doesn't exist yet or is missing tables: run `npm run db:migrate`, optionally `npm run db:seed` for demo data + the admin login.
+1. **Missing `.env`** — copy it: `cp .env.example .env`. At minimum `DATABASE_URL` (a real Postgres connection string — see [DEPLOYMENT.md](./DEPLOYMENT.md#1-provision-a-production-database-postgres) for the fastest way to get one, `vercel integration add neon`), `AUTH_SECRET`, `NEXTAUTH_URL` must be set or auth/DB calls fail at request time (not at boot, so the server *looks* fine until you click something). Generate a secret with `npx auth secret`.
+2. **No database / unapplied migrations** — tables don't exist yet in whatever Postgres `DATABASE_URL` points at: run `npm run db:migrate`, then `npm run db:seed` for the admin login + tax/shipping baseline data, and `npx tsx scripts/seed-murano-catalog.ts` to load the product catalog from the images already under `public/products/`.
 3. **Port 3000 already in use** — a previous `next dev` is still running in another terminal/tab. Check with `ss -ltnp | grep 3000` or `lsof -i :3000`, then either kill the stale process or run `npm run dev -- -p 3001`.
 4. **Slow-filesystem warning** (`⚠ Slow filesystem detected`) — harmless, just means `.next/dev` sits on a slower disk/mount than ideal; doesn't block startup, only makes cold compiles slower.
 5. **Stale Prisma client after a schema change** — if you edited `prisma/schema.prisma` and forgot to re-migrate, `npm run db:migrate` regenerates the client too (`postinstall` also runs `prisma generate`).
@@ -58,7 +58,7 @@ If it recurs often on this machine, two options:
 | --- | --- |
 | `npm run dev` | Start the dev server (Turbopack, hot reload) |
 | `rm -rf .next && npm run dev` | Hard reset if the dev server is misbehaving (see above) |
-| `npm run db:studio` | Prisma Studio — browse/edit local SQLite data in a UI |
+| `npm run db:studio` | Prisma Studio — browse/edit the database in a UI |
 | `npm run typecheck` | `tsc --noEmit` — catch type errors without a full build |
 | `npm run lint` / `npm run format` | ESLint / Prettier |
 | `npm test` / `npm run test:watch` | Vitest unit tests |

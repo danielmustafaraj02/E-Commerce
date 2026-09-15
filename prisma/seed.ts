@@ -7,7 +7,7 @@ async function main() {
     update: {},
     create: {
       id: "default",
-      storeName: "Demo Store",
+      storeName: "Gem Murano Glass",
       primaryColor: "#111827",
       secondaryColor: "#4F46E5",
       fontFamily: "Inter",

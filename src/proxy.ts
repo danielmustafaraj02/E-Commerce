@@ -32,7 +32,17 @@ const ADMIN_SESSION_MAX_AGE_SECONDS = Number(process.env.ADMIN_SESSION_MAX_AGE_M
 
 export default async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const token = await getToken({ req: request, secret: process.env.AUTH_SECRET });
+  // secureCookie must be forced rather than left to getToken()'s own
+  // protocol-sniffing: on Vercel's Edge runtime, the request as seen by
+  // middleware doesn't reliably report https, so auto-detection looks for
+  // the plain "authjs.session-token" cookie instead of the
+  // "__Secure-authjs.session-token" one NextAuth actually issues in
+  // production — silently failing to find a perfectly valid session.
+  const token = await getToken({
+    req: request,
+    secret: process.env.AUTH_SECRET,
+    secureCookie: process.env.NODE_ENV === "production",
+  });
   const role = token?.role as string | undefined;
 
   if (pathname.startsWith("/admin")) {

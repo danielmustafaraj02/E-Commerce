@@ -11,10 +11,14 @@
             "id": "2a2e98792783b2a3",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "docs/DEPLOYMENT.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "DEPLOYMENT"
             }
           }
         ]
@@ -183,16 +187,24 @@
   },
   "active": "8d292b643f2be145",
   "lastOpenFiles": [
-    "node_modules/effect/src/internal/hashMap/config.ts",
-    "node_modules/fast-uri/benchmark/equal.mjs",
-    "node_modules/effect/dist/cjs/SynchronizedRef.js",
-    "node_modules/swiper/shared/create-element-if-not-defined.mjs",
-    "node_modules/effect/dist/dts/TRef.d.ts.map",
-    "node_modules/@otplib/plugin-base32-scure/dist/metafile-esm.json",
-    "node_modules/@sentry/core/build/types-ts3.8/integrations/requestdata.d.ts",
-    "node_modules/@sentry/server-utils/build/types/orchestrion/config/google-genai.d.ts",
-    "node_modules/@opentelemetry/sdk-trace/build/src/SpanProcessor.js",
-    "node_modules/@opentelemetry/api/build/esnext/api/metrics.js",
-    "node_modules/next/dist/next-devtools/userspace/app/forward-logs-utils.d.ts"
+    "src/app/layout.tsx.tmp.12864.5b12e5f7966e",
+    "src/app/layout.tsx.tmp.12864.06ce9739d47c",
+    "node_modules/@vercel/analytics/package.json",
+    "node_modules/@vercel/analytics/LICENSE",
+    "node_modules/@vercel/analytics/test.setup.ts",
+    "node_modules/@vercel/analytics/vitest.config.mts",
+    "node_modules/@vercel/analytics/README.md",
+    "node_modules/@vercel/analytics/tsconfig.json",
+    "node_modules/@vercel/analytics/tsup.config.js",
+    "node_modules/@vercel/analytics/dist/nuxt/runtime/index.mjs.map",
+    "node_modules/@vercel/analytics/dist/nuxt/runtime/index.mjs",
+    "node_modules/@vercel/analytics/dist/nuxt/runtime/index.js.map",
+    "node_modules/@vercel/speed-insights/README.md",
+    "docs/README.md",
+    "docs/QA_BROWSER_TESTING.md",
+    "docs/LOCAL_DEV.md",
+    "docs/DEPLOYMENT.md",
+    "docs/specs/murano-storefront-improvement-prompt.md",
+    "docs/specs/ecommerce-build-prompt.md"
   ]
 }

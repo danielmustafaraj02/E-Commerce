@@ -25,20 +25,27 @@ git branch -M main
 git push -u origin main
 ```
 
-**Before your first commit**, double check `.gitignore` actually excludes secrets — `.env*` and `*.db`/`*.db-journal` are already listed, but if you ever added a file with real keys outside those patterns, scrub it first. `dev.db` in this folder is local seed/test data; don't let it become the thing production reads from (see step 1).
+**Before your first commit**, double check `.gitignore` actually excludes secrets — `.env*` (including `.env.local`, which `vercel env pull` writes real credentials into) is already listed, but if you ever added a file with real keys outside those patterns, scrub it first.
 
 ---
 
 ## 1. Provision a production database (Postgres)
 
-Local dev uses SQLite (`dev.db`) for zero-setup convenience. **Production must be Postgres** — SQLite is a single file with no concurrent-write story, not viable for a real multi-request server.
+`prisma/schema.prisma` and `src/lib/db.ts` are already wired for Postgres (`@prisma/adapter-pg`) — there's no SQLite-to-Postgres switch to make, just a real instance to point `DATABASE_URL` at.
 
-1. Create a Postgres instance on [Railway](https://railway.app), [Supabase](https://supabase.com), or [Neon](https://neon.tech) (all have a usable free/hobby tier). Copy the connection string it gives you.
-2. Switch the Prisma provider from SQLite to Postgres:
-   - `prisma/schema.prisma`: change the `datasource db` block's `provider` from `"sqlite"` to `"postgresql"`.
-   - `src/lib/db.ts`: swap the driver adapter import from `@prisma/adapter-better-sqlite3` to `@prisma/adapter-pg` (already a listed dependency-shape in `package.json`'s ecosystem — install `@prisma/adapter-pg` if it isn't already a dependency).
-3. Every field type currently used in `prisma/schema.prisma` is portable between SQLite and Postgres — no schema rewrite needed, just the provider/adapter swap above.
-4. **Do this switch on a branch and test locally against a real (free-tier) Postgres instance before deploying** — don't discover an adapter mismatch for the first time in production.
+Two ways to get one:
+
+- **Fastest — Vercel Marketplace, from the CLI**, once the project is linked (`vercel link`):
+  ```bash
+  vercel integration add neon
+  ```
+  This provisions a Neon Postgres database, connects it to the project, and injects `DATABASE_URL` (plus a few Neon/`POSTGRES_*` aliases) into **Production, Preview, and Development** env vars automatically — no manual copy-pasting a connection string into Vercel's dashboard. It does open a browser tab to accept Neon's marketplace terms once, per account.
+- **Manual** — create an instance on [Railway](https://railway.app), [Supabase](https://supabase.com), or [Neon](https://neon.tech) directly and copy its connection string into Vercel yourself (step 3).
+
+Either way, pull the resulting env vars locally when you need to run migrations/seeds against production from your machine:
+```bash
+vercel env pull .env.local   # writes DATABASE_URL etc.; already git-ignored
+```
 
 ---
 
@@ -84,7 +91,9 @@ Most payment/email/integration credentials can *also* be set later from **Admin 
 
 ## 4. Deploy
 
-Click **Deploy**. Vercel runs `npm run build`, which runs `prisma generate` automatically via the `postinstall` script. This step does **not** run migrations or seed data — that's steps 5–6, deliberately separate so a deploy never silently mutates the production schema.
+Click **Deploy**. Vercel runs `npm install` (which runs `prisma generate` via the `postinstall` script), then `npm run build`. This step does **not** run migrations or seed data — that's steps 5–6, deliberately separate so a deploy never silently mutates the production schema.
+
+**Set `DATABASE_URL` (step 3) *before* this first deploy, not after.** `prisma generate` itself tolerates a missing `DATABASE_URL` (it only reads the schema, doesn't connect), but `next build` prerenders pages — including `/robots.txt`, `/sitemap.xml`, and every product/category page — some of which query the database (`getStoreSettings()`, product listings) at build time. If `DATABASE_URL` isn't set and reachable from Vercel's build environment at that point, the build fails with a Prisma "Can't reach database server" error, not a clear "env var missing" one. If you do hit that, it almost always means `DATABASE_URL` is missing or scoped to the wrong environment (Production vs. Preview) in step 3 — check there first.
 
 ---
 
@@ -100,15 +109,24 @@ This does not happen automatically on every deploy — run it explicitly wheneve
 
 ---
 
-## 6. Seed the initial admin account
+## 6. Seed data
 
 ```bash
 DATABASE_URL="<production postgres url>" npx tsx prisma/seed.ts
 ```
 
-This creates the seeded admin login: `admin@demo-store.example` / `ChangeMe123!`.
+This creates store settings (storeName defaults to "Demo Store" — change it from **Admin → Settings** or it'll show on the live site), the tax/shipping baseline (IT standard VAT, EU shipping zone, standard/express methods), the seeded admin login (`admin@demo-store.example` / `ChangeMe123!`), and — worth knowing so it isn't a surprise — a generic "Electronics"/"Home Goods" category with 4 filler products, meant for previewing the template. Delete those from **Admin → Products/Categories** (or via Prisma Studio) once you've confirmed the seed ran; they're not part of the real catalog.
 
 **Immediately sign in and change that password** (or delete/replace the account from **Admin → Team**) — it's a well-known credential published in this repo's own README, not a secret. Do this before announcing the site publicly, not after.
+
+For the actual Murano jewelry catalog, run the dedicated import instead (the photos already live under `public/products/`, this just creates the matching database rows — see the script's own header comment for how the matching works):
+
+```bash
+DATABASE_URL="<production postgres url>" npx tsx scripts/seed-murano-catalog.ts --dry-run   # preview first
+DATABASE_URL="<production postgres url>" npx tsx scripts/seed-murano-catalog.ts             # then run for real
+```
+
+It's idempotent — re-running it skips any product whose image URL is already in the database, so it's safe to run again after adding new photos to `public/products/` and `scripts/murano-manifest.json`.
 
 ---
 
