@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
@@ -31,13 +30,13 @@ export async function Header({
         <div className="flex items-center justify-between gap-4">
           <Link href="/" className="flex shrink-0 items-center gap-2 text-lg font-semibold">
             {logoUrl ? (
-              <Image
-                src={logoUrl}
-                alt={storeName}
-                width={32}
-                height={32}
-                className="h-8 w-8 rounded object-contain"
-              />
+              // Plain <img>, not next/image: logoUrl is admin-settable and
+              // could be an SVG (its own URL field, unrestricted by design —
+              // see next.config.ts), which next/image's optimizer refuses by
+              // default (a deliberate XSS guard) rather than being worth
+              // reconfiguring for a fixed 32px mark.
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={logoUrl} alt={storeName} className="h-8 w-8 rounded object-contain" />
             ) : null}
             {storeName}
           </Link>
