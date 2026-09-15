@@ -96,8 +96,10 @@ export default async function Home() {
   return (
     <main className="flex flex-1 flex-col">
       {/* Same wave divider as further down the page, bookending the hero
-          at the top of the homepage instead of between two sections. */}
-      <div className="h-16 w-full overflow-hidden sm:h-20">
+          at the top of the homepage instead of between two sections.
+          Flipped so its flat edge sits against the header and its wavy
+          edge dips down into the hero. */}
+      <div className="full-bleed h-16 overflow-hidden sm:h-20">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/home/wave-divider.svg"
@@ -166,14 +168,17 @@ export default async function Home() {
 
       {/* Decorative SVGs, plain <img> not next/image — see next.config.ts on
           why local SVGs skip the optimizer. The wrapper clips the drift
-          animation's horizontal overshoot (see .animate-wave-drift). */}
-      <div className="h-16 w-full overflow-hidden sm:h-20">
+          animation's horizontal overshoot (see .animate-wave-drift).
+          Left unflipped (unlike the copy above the hero) so its wavy edge
+          faces up into the hero too — the hero ends up framed by wavy
+          edges on both sides instead of a flat one on this side. */}
+      <div className="full-bleed h-16 overflow-hidden sm:h-20">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/home/wave-divider.svg"
           alt=""
           aria-hidden="true"
-          className="animate-wave-drift h-16 w-full -scale-y-100 sm:h-20"
+          className="h-16 w-full sm:h-20"
         />
       </div>
 

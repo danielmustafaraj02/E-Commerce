@@ -37,6 +37,16 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Breaks an element out to the true edge-to-edge viewport width no matter
+   what ancestor it sits in — computed from 100vw instead of the parent's
+   100%, so it can't fall short even if some ancestor turns out to be
+   narrower than the viewport (a scrollbar, a stray max-width, etc). */
+.full-bleed {
+  width: 100vw;
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+
 /* ---------------------------------------------------------------------------
    Animations. Everything below is opacity/transform only (cheap to composite,
    looks the same on the white default theme and the dark opt-in one since
