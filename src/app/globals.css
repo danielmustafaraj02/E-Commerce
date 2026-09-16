@@ -183,345 +183,343 @@ button:not(:disabled),
    input balloon to full width.
    ------------------------------------------------------------------------- */
 @layer components {
-
-.field {
-  width: 100%;
-  border-radius: 0.6rem;
-  border: 1.5px solid color-mix(in srgb, var(--foreground) 18%, transparent);
-  /* Plain white fill — the warm-gold accent (same one used across the
+  .field {
+    width: 100%;
+    border-radius: 0.6rem;
+    border: 1.5px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+    /* Plain white fill — the warm-gold accent (same one used across the
      site's decorative bits: hero blobs, newsletter, category cards,
      .btn-primary hover) shows up in the border/glow only, not the fill,
      so the input stays white with just a colored shadow. */
-  background: var(--background);
-  padding: 0.55rem 0.85rem;
-  color: var(--foreground);
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    background-color 0.2s ease,
-    transform 0.15s ease;
-}
-.field::placeholder {
-  color: color-mix(in srgb, var(--foreground) 42%, transparent);
-}
-.field:hover {
-  border-color: color-mix(in srgb, #f5c451 55%, transparent);
-  box-shadow: 0 4px 14px -6px color-mix(in srgb, #f5c451 45%, transparent);
-}
-.field:focus {
-  outline: none;
-  border-color: #f5c451;
-  background: var(--background);
-  box-shadow: 0 0 0 4px color-mix(in srgb, #f5c451 22%, transparent);
-  transform: translateY(-1px);
-}
-.field:disabled {
-  cursor: not-allowed;
-  opacity: 0.55;
-  transform: none;
-}
-textarea.field {
-  resize: vertical;
-  min-height: 5.5rem;
-}
-select.field {
-  cursor: pointer;
-}
+    background: var(--background);
+    padding: 0.55rem 0.85rem;
+    color: var(--foreground);
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease,
+      background-color 0.2s ease,
+      transform 0.15s ease;
+  }
+  .field::placeholder {
+    color: color-mix(in srgb, var(--foreground) 42%, transparent);
+  }
+  .field:hover {
+    border-color: color-mix(in srgb, #f5c451 55%, transparent);
+    box-shadow: 0 4px 14px -6px color-mix(in srgb, #f5c451 45%, transparent);
+  }
+  .field:focus {
+    outline: none;
+    border-color: #f5c451;
+    background: var(--background);
+    box-shadow: 0 0 0 4px color-mix(in srgb, #f5c451 22%, transparent);
+    transform: translateY(-1px);
+  }
+  .field:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+    transform: none;
+  }
+  textarea.field {
+    resize: vertical;
+    min-height: 5.5rem;
+  }
+  select.field {
+    cursor: pointer;
+  }
 
-/* Checkbox — a real checkmark that pops in with a small overshoot, rather
+  /* Checkbox — a real checkmark that pops in with a small overshoot, rather
    than a hard show/hide, so ticking a box reads as an action, not a toggle. */
-.field-checkbox {
-  appearance: none;
-  -webkit-appearance: none;
-  display: inline-grid;
-  place-content: center;
-  width: 1.3rem;
-  height: 1.3rem;
-  flex-shrink: 0;
-  border-radius: 0.4rem;
-  border: 1.5px solid color-mix(in srgb, var(--foreground) 32%, transparent);
-  background: color-mix(in srgb, var(--foreground) 3%, transparent);
-  cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.1s ease;
-}
-.field-checkbox::after {
-  content: "";
-  width: 0.72rem;
-  height: 0.72rem;
-  background-color: white;
-  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
-  transform: scale(0);
-  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.field-checkbox:hover {
-  border-color: var(--color-primary);
-}
-.field-checkbox:checked {
-  border-color: var(--color-primary);
-  background: var(--color-primary);
-}
-.field-checkbox:checked::after {
-  transform: scale(1);
-}
-.field-checkbox:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 20%, transparent);
-}
-.field-checkbox:active {
-  transform: scale(0.88);
-}
-.field-checkbox:disabled {
-  cursor: not-allowed;
-  opacity: 0.55;
-}
+  .field-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    display: inline-grid;
+    place-content: center;
+    width: 1.3rem;
+    height: 1.3rem;
+    flex-shrink: 0;
+    border-radius: 0.4rem;
+    border: 1.5px solid color-mix(in srgb, var(--foreground) 32%, transparent);
+    background: color-mix(in srgb, var(--foreground) 3%, transparent);
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      transform 0.1s ease;
+  }
+  .field-checkbox::after {
+    content: "";
+    width: 0.72rem;
+    height: 0.72rem;
+    background-color: white;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    transform: scale(0);
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .field-checkbox:hover {
+    border-color: var(--color-primary);
+  }
+  .field-checkbox:checked {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+  }
+  .field-checkbox:checked::after {
+    transform: scale(1);
+  }
+  .field-checkbox:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 20%, transparent);
+  }
+  .field-checkbox:active {
+    transform: scale(0.88);
+  }
+  .field-checkbox:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
 
-/* Radio — same language as the checkbox, circular, with a dot that pops in. */
-.field-radio {
-  appearance: none;
-  -webkit-appearance: none;
-  display: inline-grid;
-  place-content: center;
-  width: 1.25rem;
-  height: 1.25rem;
-  flex-shrink: 0;
-  border-radius: 999px;
-  border: 1.5px solid color-mix(in srgb, var(--foreground) 32%, transparent);
-  background: color-mix(in srgb, var(--foreground) 3%, transparent);
-  cursor: pointer;
-  transition:
-    border-color 0.2s ease,
-    transform 0.1s ease;
-}
-.field-radio::after {
-  content: "";
-  width: 0.6rem;
-  height: 0.6rem;
-  border-radius: 999px;
-  background: var(--color-primary);
-  transform: scale(0);
-  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.field-radio:hover {
-  border-color: var(--color-primary);
-}
-.field-radio:checked {
-  border-color: var(--color-primary);
-}
-.field-radio:checked::after {
-  transform: scale(1);
-}
-.field-radio:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 20%, transparent);
-}
-.field-radio:active {
-  transform: scale(0.88);
-}
+  /* Radio — same language as the checkbox, circular, with a dot that pops in. */
+  .field-radio {
+    appearance: none;
+    -webkit-appearance: none;
+    display: inline-grid;
+    place-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+    border-radius: 999px;
+    border: 1.5px solid color-mix(in srgb, var(--foreground) 32%, transparent);
+    background: color-mix(in srgb, var(--foreground) 3%, transparent);
+    cursor: pointer;
+    transition:
+      border-color 0.2s ease,
+      transform 0.1s ease;
+  }
+  .field-radio::after {
+    content: "";
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 999px;
+    background: var(--color-primary);
+    transform: scale(0);
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .field-radio:hover {
+    border-color: var(--color-primary);
+  }
+  .field-radio:checked {
+    border-color: var(--color-primary);
+  }
+  .field-radio:checked::after {
+    transform: scale(1);
+  }
+  .field-radio:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 20%, transparent);
+  }
+  .field-radio:active {
+    transform: scale(0.88);
+  }
 
-/* Color swatch inputs (brand color pickers) — same border language, but a
+  /* Color swatch inputs (brand color pickers) — same border language, but a
    hover lift instead of a focus glow since the browser's own color picker
    takes over on click. */
-.field-color {
-  width: 100%;
-  height: 2.75rem;
-  border-radius: 0.6rem;
-  border: 1.5px solid color-mix(in srgb, var(--foreground) 18%, transparent);
-  background: color-mix(in srgb, var(--foreground) 3%, transparent);
-  padding: 0.3rem;
-  cursor: pointer;
-  transition:
-    border-color 0.2s ease,
-    transform 0.15s ease,
-    box-shadow 0.2s ease;
-}
-.field-color:hover {
-  border-color: var(--color-primary);
-  transform: translateY(-1px);
-}
-.field-color:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 16%, transparent);
-}
+  .field-color {
+    width: 100%;
+    height: 2.75rem;
+    border-radius: 0.6rem;
+    border: 1.5px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+    background: color-mix(in srgb, var(--foreground) 3%, transparent);
+    padding: 0.3rem;
+    cursor: pointer;
+    transition:
+      border-color 0.2s ease,
+      transform 0.15s ease,
+      box-shadow 0.2s ease;
+  }
+  .field-color:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-1px);
+  }
+  .field-color:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 16%, transparent);
+  }
 
-/* -------------------------------------------------------------------------
+  /* -------------------------------------------------------------------------
    Shared button/alert/card primitives — every form in the app (customer and
    admin) routes its buttons and status messages through these instead of
    hand-rolling slightly different button/border/color combinations per file.
    ------------------------------------------------------------------------- */
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  border-radius: 0.6rem;
-  border: 1.5px solid transparent;
-  background: var(--color-primary);
-  color: white;
-  font-weight: 500;
-  padding: 0.6rem 1.1rem;
-  transition:
-    transform 0.15s ease,
-    color 0.15s ease,
-    background-color 0.15s ease,
-    border-color 0.15s ease,
-    box-shadow 0.15s ease;
-}
-.btn-primary:hover {
-  transform: translateY(-1px);
-  /* Flips to white with black text and a warm gold border/glow (same
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.6rem;
+    border: 1.5px solid transparent;
+    background: var(--color-primary);
+    color: white;
+    font-weight: 500;
+    padding: 0.6rem 1.1rem;
+    transition:
+      transform 0.15s ease,
+      color 0.15s ease,
+      background-color 0.15s ease,
+      border-color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    /* Flips to white with black text and a warm gold border/glow (same
      accent used across the site's decorative bits — hero blobs,
      newsletter, category cards) instead of just dimming the whole button. */
-  background: white;
-  color: black;
-  border-color: #f5c451;
-  box-shadow: 0 10px 24px -8px color-mix(in srgb, #f5c451 70%, transparent);
-}
-.btn-primary:active {
-  transform: translateY(0);
-  background: color-mix(in srgb, #f5c451 14%, white);
-  box-shadow: 0 4px 10px -4px color-mix(in srgb, #f5c451 70%, transparent);
-}
-.btn-primary:disabled {
-  opacity: 0.55;
-  pointer-events: none;
-  transform: none;
-  box-shadow: none;
-}
+    background: white;
+    color: black;
+    border-color: #f5c451;
+    box-shadow: 0 10px 24px -8px color-mix(in srgb, #f5c451 70%, transparent);
+  }
+  .btn-primary:active {
+    transform: translateY(0);
+    background: color-mix(in srgb, #f5c451 14%, white);
+    box-shadow: 0 4px 10px -4px color-mix(in srgb, #f5c451 70%, transparent);
+  }
+  .btn-primary:disabled {
+    opacity: 0.55;
+    pointer-events: none;
+    transform: none;
+    box-shadow: none;
+  }
 
-.btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  border-radius: 0.6rem;
-  border: 1.5px solid color-mix(in srgb, var(--foreground) 18%, transparent);
-  background: transparent;
-  font-weight: 500;
-  padding: 0.55rem 1.05rem;
-  transition:
-    border-color 0.2s ease,
-    color 0.2s ease,
-    background-color 0.2s ease;
-}
-.btn-secondary:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-  background: color-mix(in srgb, var(--color-primary) 6%, transparent);
-}
-.btn-secondary:disabled {
-  opacity: 0.55;
-  pointer-events: none;
-}
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.6rem;
+    border: 1.5px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+    background: transparent;
+    font-weight: 500;
+    padding: 0.55rem 1.05rem;
+    transition:
+      border-color 0.2s ease,
+      color 0.2s ease,
+      background-color 0.2s ease;
+  }
+  .btn-secondary:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: color-mix(in srgb, var(--color-primary) 6%, transparent);
+  }
+  .btn-secondary:disabled {
+    opacity: 0.55;
+    pointer-events: none;
+  }
 
-.btn-danger {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  border-radius: 0.6rem;
-  background: var(--color-danger);
-  color: white;
-  font-weight: 500;
-  padding: 0.6rem 1.1rem;
-  transition:
-    opacity 0.15s ease,
-    transform 0.15s ease;
-}
-.btn-danger:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-.btn-danger:disabled {
-  opacity: 0.55;
-  pointer-events: none;
-  transform: none;
-}
+  .btn-danger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.6rem;
+    background: var(--color-danger);
+    color: white;
+    font-weight: 500;
+    padding: 0.6rem 1.1rem;
+    transition:
+      opacity 0.15s ease,
+      transform 0.15s ease;
+  }
+  .btn-danger:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+  .btn-danger:disabled {
+    opacity: 0.55;
+    pointer-events: none;
+    transform: none;
+  }
 
-.btn-danger-outline {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  border-radius: 0.6rem;
-  border: 1.5px solid color-mix(in srgb, var(--color-danger) 40%, transparent);
-  color: var(--color-danger);
-  font-weight: 500;
-  padding: 0.55rem 1.05rem;
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease;
-}
-.btn-danger-outline:hover {
-  background: color-mix(in srgb, var(--color-danger) 8%, transparent);
-  border-color: var(--color-danger);
-}
-.btn-danger-outline:disabled {
-  opacity: 0.55;
-  pointer-events: none;
-}
+  .btn-danger-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.6rem;
+    border: 1.5px solid color-mix(in srgb, var(--color-danger) 40%, transparent);
+    color: var(--color-danger);
+    font-weight: 500;
+    padding: 0.55rem 1.05rem;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease;
+  }
+  .btn-danger-outline:hover {
+    background: color-mix(in srgb, var(--color-danger) 8%, transparent);
+    border-color: var(--color-danger);
+  }
+  .btn-danger-outline:disabled {
+    opacity: 0.55;
+    pointer-events: none;
+  }
 
-/* Alerts — small icon + message chip used for every inline form error and
+  /* Alerts — small icon + message chip used for every inline form error and
    success state, instead of bare colored text that's easy to miss. */
-.alert {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.55rem;
-  border-radius: 0.6rem;
-  padding: 0.65rem 0.9rem;
-  font-size: 0.875rem;
-  line-height: 1.35;
-  animation: fade-up 0.25s ease both;
-}
-.alert-error {
-  background: color-mix(in srgb, var(--color-danger) 10%, transparent);
-  color: var(--color-danger);
-}
-.alert-success {
-  background: color-mix(in srgb, var(--color-success) 10%, transparent);
-  color: var(--color-success);
-}
-.alert svg {
-  flex-shrink: 0;
-  margin-top: 0.1rem;
-}
+  .alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    border-radius: 0.6rem;
+    padding: 0.65rem 0.9rem;
+    font-size: 0.875rem;
+    line-height: 1.35;
+    animation: fade-up 0.25s ease both;
+  }
+  .alert-error {
+    background: color-mix(in srgb, var(--color-danger) 10%, transparent);
+    color: var(--color-danger);
+  }
+  .alert-success {
+    background: color-mix(in srgb, var(--color-success) 10%, transparent);
+    color: var(--color-success);
+  }
+  .alert svg {
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
 
-/* Card — the standard wrapper for a standalone form (auth, checkout
+  /* Card — the standard wrapper for a standalone form (auth, checkout
    sections, review form, admin panels) so forms read as a distinct object
    on the page rather than floating loose against the background. */
-.form-card {
-  border-radius: 0.9rem;
-  border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
-  background: var(--surface);
-  padding: 1.5rem;
-  box-shadow: 0 1px 2px color-mix(in srgb, var(--foreground) 4%, transparent);
-}
+  .form-card {
+    border-radius: 0.9rem;
+    border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+    background: var(--surface);
+    padding: 1.5rem;
+    box-shadow: 0 1px 2px color-mix(in srgb, var(--foreground) 4%, transparent);
+  }
 
-/* Selectable option card — radio-driven choices (shipping method, payment
+  /* Selectable option card — radio-driven choices (shipping method, payment
    method) presented as a clickable card with the whole row as the hit
    target, not just the small radio dot. */
-.option-card {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  border-radius: 0.6rem;
-  border: 1.5px solid color-mix(in srgb, var(--foreground) 14%, transparent);
-  padding: 0.75rem 1rem;
-  cursor: pointer;
-  transition:
-    border-color 0.2s ease,
-    background-color 0.2s ease;
-}
-.option-card:hover {
-  border-color: color-mix(in srgb, var(--color-primary) 50%, transparent);
-}
-.option-card:has(:checked) {
-  border-color: var(--color-primary);
-  background: color-mix(in srgb, var(--color-primary) 6%, transparent);
-}
-
+  .option-card {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-radius: 0.6rem;
+    border: 1.5px solid color-mix(in srgb, var(--foreground) 14%, transparent);
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease;
+  }
+  .option-card:hover {
+    border-color: color-mix(in srgb, var(--color-primary) 50%, transparent);
+  }
+  .option-card:has(:checked) {
+    border-color: var(--color-primary);
+    background: color-mix(in srgb, var(--color-primary) 6%, transparent);
+  }
 } /* end @layer components */
 
 /* Shared prev/next button for every homepage carousel (best sellers,

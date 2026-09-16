@@ -46,7 +46,12 @@ export function CategoryCarousel({
         modules={[Navigation]}
         navigation={{ prevEl, nextEl }}
         spaceBetween={28}
-        slidesPerView={2.2}
+        // One full-width card at a time on mobile — swiped/paged through
+        // with the prev/next buttons rather than peeking at a sliver of
+        // the next card. Loops on every breakpoint so "next" past the
+        // last category wraps back to the first instead of dead-ending.
+        slidesPerView={1}
+        loop
         breakpoints={{
           640: { slidesPerView: 3.2 },
           1024: { slidesPerView: categories.length > 4 ? 4.2 : categories.length },
@@ -93,14 +98,8 @@ export function CategoryCarousel({
                     style={{ background: `linear-gradient(0deg, ${accent}40, transparent 60%)` }}
                   />
                 </div>
-                <span className="group-hover:text-primary flex items-center justify-between gap-2 px-0.5 text-[0.95rem] font-semibold transition-colors">
+                <span className="group-hover:text-primary px-0.5 text-[0.95rem] font-semibold transition-colors">
                   {category.name}
-                  <span
-                    aria-hidden
-                    className="text-primary -translate-x-1 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
-                  >
-                    →
-                  </span>
                 </span>
               </Link>
             </SwiperSlide>

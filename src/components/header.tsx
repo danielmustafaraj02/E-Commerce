@@ -27,7 +27,7 @@ export async function Header({
   return (
     <header className="border-foreground/10 bg-background/90 sticky top-0 z-40 border-b backdrop-blur-sm">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-3 px-4 py-3 sm:py-4">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
           <Link href="/" className="flex shrink-0 items-center gap-2 text-lg font-semibold">
             {logoUrl ? (
               // Plain <img>, not next/image: logoUrl is admin-settable and
@@ -41,7 +41,10 @@ export async function Header({
             {storeName}
           </Link>
 
-          <div className="flex shrink-0 items-center gap-3 text-sm">
+          {/* flex-wrap (not shrink-0) so this cluster drops to its own line
+              on narrow phones instead of clipping past the viewport edge —
+              it was overflowing next to the store name at ~375px wide. */}
+          <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 text-sm">
             <LocaleSwitcher current={locale} />
             <CartLink label={dict.nav.cart} />
             {isStaff && (
