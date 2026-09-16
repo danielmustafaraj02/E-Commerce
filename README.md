@@ -106,3 +106,4 @@ Yes, with one caveat — relevant here because the product copy still says "Mura
 | [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | The full step-by-step launch guide, env vars, security/legal checklist |
 | [docs/QA_BROWSER_TESTING.md](docs/QA_BROWSER_TESTING.md) | Checking the site in a real browser before/after launch |
 | [docs/specs/ecommerce-build-prompt.md](docs/specs/ecommerce-build-prompt.md) | Original architecture/schema/security spec |
+| [docs/100_POINT_CHECKLIST.md](docs/100_POINT_CHECKLIST.md) | 100-item checklist to make the store secure, reliable, fast, and profitable |

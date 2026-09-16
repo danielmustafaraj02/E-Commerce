@@ -56,6 +56,7 @@ This was asked for directly and partly overlaps with what's already done:
 - [x] **Featured/best-sellers carousel** on the homepage — done with Swiper (`src/components/best-sellers-carousel.tsx`), matches this recommendation exactly
 - [ ] Do **not** reach for a heavier "e-commerce UI kit" beyond that — the existing Tailwind v4 + custom `.field`/design-token system is already cohesive and brand-reactive (it derives from `StoreSettings.primaryColor`/`secondaryColor`); swapping to a third-party component library would fight that, not help it
 - [ ] Product card hover polish (image swap on hover once multiple images exist, quick-add-to-cart on hover) — nice-to-have, low priority until multi-image products exist
+- [x] "Shop by category" carousel entrance/hover animation — done 2026-09-16 (`src/components/category-carousel.tsx`): cards now stagger in (`.category-card`/`card-in` keyframe in `globals.css`, driven by the section's existing `<Reveal>` `data-reveal` flag rather than a second `IntersectionObserver`) and hover gets an accent-tinted glow shadow + image wash + sliding arrow, reusing the same three brand accent colors already cycled per card
 
 ## 6. Payments
 

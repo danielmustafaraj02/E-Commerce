@@ -127,7 +127,7 @@ export default async function Home() {
             <Link
               href="/products"
               style={{ "--reveal-delay": "280ms" } as React.CSSProperties}
-              className="animate-fade-up bg-primary mt-2 inline-block w-fit rounded px-6 py-3 font-medium text-white transition-all duration-200 hover:-translate-y-0.5 hover:opacity-90 active:translate-y-0"
+              className="btn-primary animate-fade-up mt-2 w-fit"
             >
               {dict.home.shopNow}
             </Link>

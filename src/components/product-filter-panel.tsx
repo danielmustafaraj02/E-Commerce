@@ -9,7 +9,11 @@ type Category = { id: string; slug: string; name: string };
 // hidden) — same price-range + in-stock filtering either way.
 //
 // Always expanded — no collapse/toggle, so filters are visible and
-// adjustable at a glance rather than tucked behind a click.
+// adjustable at a glance rather than tucked behind a click. Sticky on
+// desktop (sm:self-start keeps it from stretching to the grid's height,
+// which would otherwise make position:sticky a no-op) so it stays on
+// screen while the product grid scrolls; on mobile it's static, stacked
+// full-width above the grid.
 export function ProductFilterPanel({
   dict,
   categories,
@@ -39,9 +43,22 @@ export function ProductFilterPanel({
   );
 
   return (
-    <aside className="w-full shrink-0 sm:w-64">
-      <div className="form-card text-sm">
-        <span className="flex items-center gap-2 font-semibold">
+    <aside className="w-full shrink-0 sm:w-64 sm:sticky sm:top-24 sm:self-start">
+      <div className="rounded-2xl p-5 text-sm">
+        <span className="flex items-center gap-2 text-base font-semibold">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#f5c451"
+            strokeWidth="2.25"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <polygon points="4 4 20 4 14 12.5 14 19 10 21 10 12.5 4 4" />
+          </svg>
           {dict.filtersTitle}
           {hasActiveFilters && (
             <span className="bg-primary inline-block h-1.5 w-1.5 rounded-full" aria-hidden="true" />

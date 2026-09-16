@@ -7,6 +7,7 @@
 | [QA_BROWSER_TESTING.md](./QA_BROWSER_TESTING.md) | How to check the site in Firefox — automated (MCP) and manual |
 | [specs/ecommerce-build-prompt.md](./specs/ecommerce-build-prompt.md) | Original full build spec for this project (architecture, schema, security requirements) |
 | [specs/murano-storefront-improvement-prompt.md](./specs/murano-storefront-improvement-prompt.md) | Follow-up improvement spec (storefront UX, catalog) |
+| [100_POINT_CHECKLIST.md](./100_POINT_CHECKLIST.md) | 100-item checklist to make the store secure, reliable, fast, and profitable — grounded in this codebase's actual current gaps |
 
 QA findings/session logs live separately in [`../reports/`](../reports/) — that folder is *results*, this one is *how-to*.
 

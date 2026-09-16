@@ -52,15 +52,15 @@ export function PriceRangeSlider({
         onValueChange={(next) => setValue([next[0], next[1]])}
       >
         <Slider.Track className="bg-foreground/10 relative h-1.5 w-full grow overflow-hidden rounded-full">
-          <Slider.Range className="bg-primary absolute h-full rounded-full" />
+          <Slider.Range className="absolute h-full rounded-full bg-[linear-gradient(90deg,#e0a92e,#f5c451)]" />
         </Slider.Track>
         <Slider.Thumb
           aria-label="Minimum price"
-          className="border-primary bg-background focus-visible:ring-primary/25 block h-4.5 w-4.5 rounded-full border-2 shadow transition-transform hover:scale-110 focus-visible:ring-4 focus-visible:outline-none"
+          className="block h-4.5 w-4.5 rounded-full border-2 border-[#f5c451] bg-background shadow transition-transform hover:scale-110 focus-visible:ring-4 focus-visible:ring-[#f5c451]/25 focus-visible:outline-none"
         />
         <Slider.Thumb
           aria-label="Maximum price"
-          className="border-primary bg-background focus-visible:ring-primary/25 block h-4.5 w-4.5 rounded-full border-2 shadow transition-transform hover:scale-110 focus-visible:ring-4 focus-visible:outline-none"
+          className="block h-4.5 w-4.5 rounded-full border-2 border-[#f5c451] bg-background shadow transition-transform hover:scale-110 focus-visible:ring-4 focus-visible:ring-[#f5c451]/25 focus-visible:outline-none"
         />
       </Slider.Root>
 
