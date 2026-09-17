@@ -84,7 +84,12 @@ export function IntegrationsForm({
           configured={configured.emailFrom}
         />
         <p className="text-foreground/60 text-xs">
-          Without this, order-status and contact-form emails are logged instead of sent.
+          Get an API key at resend.com → API Keys. The &quot;From address&quot; must be on a domain
+          you&apos;ve verified in Resend (Domains tab) — an unverified domain will fail to send.
+        </p>
+        <p className="text-foreground/60 text-xs">
+          Without this, order-status, account-verification, and contact-form emails are logged
+          instead of sent.
         </p>
       </fieldset>
 
@@ -103,6 +108,10 @@ export function IntegrationsForm({
           configured={configured.turnstileSecretKey}
         />
         <p className="text-foreground/60 text-xs">
+          Get both keys at the Cloudflare dashboard → Turnstile → Add site (dash.cloudflare.com,
+          free Cloudflare account, no domain transfer needed — just add the site key to a widget).
+        </p>
+        <p className="text-foreground/60 text-xs">
           Without these, the CAPTCHA widget on login/register/checkout/contact simply doesn&apos;t
           render — verification is skipped, not broken.
         </p>
@@ -116,6 +125,11 @@ export function IntegrationsForm({
           label="REST token"
           configured={configured.upstashRedisToken}
         />
+        <p className="text-foreground/60 text-xs">
+          Create a free Redis database at upstash.com → Redis → Create database, then copy the
+          &quot;REST URL&quot; and &quot;REST token&quot; from its details page (not the regular
+          connection string — this app talks to it over HTTP, not the Redis wire protocol).
+        </p>
         <p className="text-foreground/60 text-xs">
           Without these, rate limiting falls back to a single-instance in-memory limiter — fine for
           one server, not for multiple.
@@ -137,8 +151,13 @@ export function IntegrationsForm({
           configured={configured.googleClientSecret}
         />
         <p className="text-foreground/60 text-xs">
-          Adds a &quot;Continue with Google&quot; button to the login page once both are set.
-          Authorized redirect URI: <code>/api/auth/callback/google</code>.
+          Create OAuth credentials at console.cloud.google.com/apis/credentials → Create
+          credentials → OAuth client ID (type: Web application).
+        </p>
+        <p className="text-foreground/60 text-xs">
+          Adds a &quot;Continue with Google&quot; button to the login page once both are set. Add
+          this as an Authorized redirect URI on that OAuth client:{" "}
+          <code>{"{your site URL}"}/api/auth/callback/google</code>.
         </p>
       </fieldset>
 

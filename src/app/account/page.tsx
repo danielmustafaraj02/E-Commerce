@@ -7,18 +7,25 @@ import { formatMoney } from "@/lib/format";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { DeleteAccountForm } from "./delete-account-form";
+import { ResendVerificationForm } from "./resend-verification-form";
+import { FormAlert } from "@/components/form-alert";
 
-export default async function AccountPage() {
+export default async function AccountPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ verified?: string }>;
+}) {
   const session = await auth();
   if (!session?.user) redirect("/login");
 
-  const [settings, uiLocale, user] = await Promise.all([
+  const [settings, uiLocale, user, { verified }] = await Promise.all([
     getStoreSettings(),
     getLocale(),
     db.user.findUnique({
       where: { id: session.user.id },
       include: { orders: { orderBy: { createdAt: "desc" }, take: 20 } },
     }),
+    searchParams,
   ]);
   if (!user) redirect("/login");
   const dict = getDictionary(uiLocale);
@@ -27,6 +34,28 @@ export default async function AccountPage() {
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-16">
       <h1 className="mb-2 text-2xl font-semibold">{dict.account.title}</h1>
       <p className="text-foreground/70">{dict.account.signedInAs(session.user.email!)}</p>
+
+      {verified === "1" && (
+        <div className="mt-4">
+          <FormAlert type="success">Email confirmed — thanks!</FormAlert>
+        </div>
+      )}
+      {verified === "expired" && (
+        <div className="mt-4">
+          <FormAlert type="error">
+            That confirmation link expired. Request a new one below.
+          </FormAlert>
+        </div>
+      )}
+
+      {!user.emailVerified && (
+        <div className="border-warning/30 bg-warning/5 mt-6 rounded-lg border p-4">
+          <p className="text-sm">
+            Please confirm your email address — check your inbox for a confirmation link.
+          </p>
+          <ResendVerificationForm />
+        </div>
+      )}
 
       <section className="mt-10">
         <h2 className="mb-3 text-lg font-medium">{dict.account.orderHistory}</h2>

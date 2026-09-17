@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { db } from "@/lib/db";
+import { sendEmail } from "@/lib/email";
+import { getStoreSettings } from "@/lib/store-settings";
 
 export const registerSchema = z.object({
   email: z.string().email(),
@@ -18,7 +20,44 @@ export async function registerUser(input: z.infer<typeof registerSchema>) {
   }
 
   const passwordHash = await bcrypt.hash(input.password, 12);
-  return db.user.create({
+  const user = await db.user.create({
     data: { email: input.email, passwordHash, name: input.name, role: "customer" },
+  });
+
+  // Best-effort — a transient email-provider hiccup shouldn't fail account
+  // creation itself (same graceful-degradation stance as sendEmail already
+  // takes when Resend isn't configured at all).
+  try {
+    await sendVerificationEmail(user.email);
+  } catch (error) {
+    console.warn(`[register] Failed to send verification email to ${user.email}:`, error);
+  }
+
+  return user;
+}
+
+const VERIFICATION_TOKEN_TTL_MS = 24 * 60 * 60 * 1000;
+
+// Unauthenticated by design — an account made mostly of throwaway/victim
+// emails never confirming is exactly the bot-signup pattern this exists to
+// surface, not something to gate behind a login the bot already has.
+export async function sendVerificationEmail(email: string) {
+  // A fresh token replaces any still-outstanding one for the same address so
+  // an old, previously-emailed link can't be used after a resend.
+  await db.verificationToken.deleteMany({ where: { identifier: email } });
+
+  const token = crypto.randomUUID() + crypto.randomUUID();
+  await db.verificationToken.create({
+    data: { identifier: email, token, expires: new Date(Date.now() + VERIFICATION_TOKEN_TTL_MS) },
+  });
+
+  const settings = await getStoreSettings();
+  const base = settings.siteUrl || process.env.NEXTAUTH_URL || "http://localhost:3000";
+  const verifyUrl = `${base}/api/auth/verify-email?token=${token}`;
+
+  await sendEmail({
+    to: email,
+    subject: `Confirm your email — ${settings.storeName}`,
+    text: `Welcome to ${settings.storeName}!\n\nConfirm your email address by clicking the link below:\n${verifyUrl}\n\nThis link expires in 24 hours. If you didn't create this account, you can safely ignore this email.`,
   });
 }

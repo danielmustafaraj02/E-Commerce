@@ -22,6 +22,7 @@ export default async function AdminCustomersPage() {
                 <th className="py-3 pr-4 font-medium">Email</th>
                 <th className="py-3 pr-4 font-medium">Orders</th>
                 <th className="py-3 pr-4 font-medium">Wishlist</th>
+                <th className="py-3 pr-4 font-medium">Email verified</th>
                 <th className="py-3 pr-4 font-medium">Joined</th>
               </tr>
             </thead>
@@ -42,6 +43,13 @@ export default async function AdminCustomersPage() {
                   </td>
                   <td className="py-3 pr-4">{customer._count.orders}</td>
                   <td className="py-3 pr-4">{customer._count.wishlistItems}</td>
+                  <td className="py-3 pr-4">
+                    {customer.emailVerified ? (
+                      <span className="text-success">Verified</span>
+                    ) : (
+                      <span className="text-foreground/50">Unverified</span>
+                    )}
+                  </td>
                   <td className="text-foreground/70 py-3 pr-4">
                     {customer.createdAt.toLocaleDateString()}
                   </td>

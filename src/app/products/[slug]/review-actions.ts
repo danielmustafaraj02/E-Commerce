@@ -39,6 +39,14 @@ export async function submitReview(_prevState: unknown, formData: FormData) {
   const { success: withinLimit } = await rateLimit(`review:${session.user.id}`, 10, 60_000);
   if (!withinLimit) return { error: "Too many requests. Try again shortly.", success: false };
 
+  const account = await db.user.findUnique({
+    where: { id: session.user.id },
+    select: { emailVerified: true },
+  });
+  if (!account?.emailVerified) {
+    return { error: "Confirm your email address to leave a review", success: false };
+  }
+
   const parsed = schema.safeParse({
     productId: formData.get("productId"),
     slug: formData.get("slug"),

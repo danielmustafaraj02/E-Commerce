@@ -51,4 +51,14 @@ next-env.d.ts
 
 # private local-only notes — never commit/push (internal ideas/checklists,
 # not for public repo visibility)
-/PRIVATE_500_CHECKLIST.md
+/PRIVATE_*.md
+
+# Obsidian vault config — purely local editor state, not part of the project
+/.obsidian/
+
+# AI tool local configs — may contain local paths or tokens, not for the repo
+/.claude/
+/.mcp.json
+
+# internal QA/ops reports — working notes, not shipped source
+/reports/

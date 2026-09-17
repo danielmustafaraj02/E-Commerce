@@ -13,6 +13,14 @@ export async function toggleWishlist(productId: string, slug: string) {
   if (!withinLimit) return { error: "Too many requests. Try again shortly.", saved: false };
 
   const userId = session.user.id;
+
+  // Gated on a confirmed email, not just "signed in" — an unconfirmed
+  // account costs nothing for a bot to create, so this is the actual
+  // anti-abuse boundary for an otherwise-free, DB-writing action.
+  const account = await db.user.findUnique({ where: { id: userId }, select: { emailVerified: true } });
+  if (!account?.emailVerified) {
+    return { error: "Confirm your email address to use your wishlist", saved: false };
+  }
   const existing = await db.wishlistItem.findUnique({
     where: { productId_userId: { productId, userId } },
   });
