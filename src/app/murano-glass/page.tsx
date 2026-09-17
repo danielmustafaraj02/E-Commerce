@@ -6,6 +6,7 @@ import { getLocale } from "@/lib/i18n/locale";
 import { getMuranoGuideContent } from "@/lib/murano-guide-content";
 import { localizedName } from "@/lib/product-i18n";
 import { toSafeJsonLd } from "@/lib/json-ld";
+import { hreflangAlternates } from "@/lib/hreflang";
 
 export async function generateMetadata(): Promise<Metadata> {
   const [settings, locale] = await Promise.all([getStoreSettings(), getLocale()]);
@@ -14,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: content.metaTitle,
     description: content.metaDescription,
-    alternates: { canonical: "/murano-glass" },
+    alternates: { canonical: "/murano-glass", languages: hreflangAlternates("/murano-glass") },
     openGraph: {
       title: content.metaTitle,
       description: content.metaDescription,

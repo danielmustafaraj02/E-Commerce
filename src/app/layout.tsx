@@ -3,6 +3,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { getStoreSettings } from "@/lib/store-settings";
+import { hreflangAlternates } from "@/lib/hreflang";
 import { toSafeJsonLd } from "@/lib/json-ld";
 import { isStripeConfigured } from "@/lib/stripe";
 import { isPaypalConfigured } from "@/lib/paypal";
@@ -37,7 +38,7 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL(base),
     title: { default: settings.storeName, template: `%s | ${settings.storeName}` },
     description,
-    alternates: { canonical: "/" },
+    alternates: { canonical: "/", languages: hreflangAlternates("/") },
     openGraph: {
       title: settings.storeName,
       description,
@@ -102,6 +103,20 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
                     },
                   }
                 : {}),
+              // Only the social profiles actually configured (Admin >
+              // Settings) — an empty array is omitted rather than
+              // asserting placeholder links that don't exist.
+              ...((() => {
+                const sameAs = [
+                  settings.facebookUrl,
+                  settings.instagramUrl,
+                  settings.twitterUrl,
+                  settings.tiktokUrl,
+                  settings.youtubeUrl,
+                  settings.linkedinUrl,
+                ].filter((url): url is string => Boolean(url));
+                return sameAs.length > 0 ? { sameAs } : {};
+              })()),
             }),
           }}
         />

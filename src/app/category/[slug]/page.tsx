@@ -6,8 +6,9 @@ import { db } from "@/lib/db";
 import { getStoreSettings, ogImage } from "@/lib/store-settings";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-import { localizedName } from "@/lib/product-i18n";
+import { localizedName, localizedCardProduct } from "@/lib/product-i18n";
 import { toSafeJsonLd } from "@/lib/json-ld";
+import { hreflangAlternates } from "@/lib/hreflang";
 import { ProductCard } from "@/components/product-card";
 import { ProductFilterPanel } from "@/components/product-filter-panel";
 import { Pagination } from "@/components/pagination";
@@ -37,24 +38,32 @@ export async function generateMetadata({
   if (!category) return {};
 
   const name = localizedName(category, locale);
+  // "Murano Glass"/"Vetro di Murano" baked into the title deliberately —
+  // see the note on home.heroSubtitle in dictionaries.ts for why this
+  // store's pages carry store-specific keywords rather than the
+  // platform-generic default.
+  const title = locale === "en" ? `Murano Glass ${name}` : `${name} in Vetro di Murano`;
   const description =
     locale === "en"
-      ? `Shop ${name} at ${settings.storeName}, filterable by price and availability.`
-      : `Scopri i ${name.toLowerCase()} di ${settings.storeName}, filtrabili per prezzo e disponibilità.`;
+      ? `Shop handmade Murano glass ${name.toLowerCase()} at ${settings.storeName}, filterable by price and availability.`
+      : `Scopri i ${name.toLowerCase()} in vetro di Murano fatto a mano di ${settings.storeName}, filtrabili per prezzo e disponibilità.`;
   const image = ogImage(settings);
   return {
-    title: name,
+    title,
     description,
-    alternates: { canonical: `/category/${category.slug}` },
+    alternates: {
+      canonical: `/category/${category.slug}`,
+      languages: hreflangAlternates(`/category/${category.slug}`),
+    },
     openGraph: {
-      title: name,
+      title,
       description,
       type: "website",
       images: image ? [{ url: image }] : undefined,
     },
     twitter: {
       card: "summary_large_image",
-      title: name,
+      title,
       description,
       images: image ? [image] : undefined,
     },
@@ -102,21 +111,34 @@ export default async function CategoryPage({
     }),
   };
 
-  const [products, total, priceBounds] = await Promise.all([
-    db.product.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-      skip: (filters.page - 1) * PAGE_SIZE,
-      take: PAGE_SIZE,
-      include: { images: { take: 1, orderBy: { position: "asc" } } },
-    }),
-    db.product.count({ where }),
+  // See src/app/products/page.tsx for why this doesn't just add stockQty
+  // to the Prisma orderBy — pushes out-of-stock items to the end of the
+  // grid instead of leaving them wherever createdAt puts them.
+  const [allMatchingIds, priceBounds] = await Promise.all([
+    db.product.findMany({ where, orderBy: { createdAt: "desc" }, select: { id: true, stockQty: true } }),
     db.product.aggregate({
       where: { active: true, categoryId: category.id },
       _min: { price: true },
       _max: { price: true },
     }),
   ]);
+  const sortedIds = [...allMatchingIds].sort(
+    (a, b) => Number(b.stockQty > 0) - Number(a.stockQty > 0)
+  );
+  const total = sortedIds.length;
+  const pageIds = sortedIds
+    .slice((filters.page - 1) * PAGE_SIZE, filters.page * PAGE_SIZE)
+    .map((p) => p.id);
+
+  const pageProducts = pageIds.length
+    ? await db.product.findMany({
+        where: { id: { in: pageIds } },
+        include: { images: { take: 1, orderBy: { position: "asc" } } },
+      })
+    : [];
+  const productById = new Map(pageProducts.map((p) => [p.id, p]));
+  const products = pageIds.map((id) => productById.get(id)!).filter(Boolean);
+
   const priceMin = (priceBounds._min.price ?? 0) / 100;
   const priceMax = (priceBounds._max.price ?? 0) / 100;
 
@@ -211,7 +233,7 @@ export default async function CategoryPage({
             {products.map((product) => (
               <ProductCard
                 key={product.slug}
-                product={{ ...product, name: localizedName(product, uiLocale) }}
+                product={localizedCardProduct(product, uiLocale)}
                 locale={settings.defaultLocale}
                 outOfStockLabel={dict.product.outOfStock}
                 quickAddLabel={dict.product.addToCart}

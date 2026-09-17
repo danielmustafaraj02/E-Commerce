@@ -4,8 +4,9 @@ import { db } from "@/lib/db";
 import { getStoreSettings, ogImage } from "@/lib/store-settings";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-import { localizedName } from "@/lib/product-i18n";
+import { localizedName, localizedCardProduct } from "@/lib/product-i18n";
 import { toSafeJsonLd } from "@/lib/json-ld";
+import { hreflangAlternates } from "@/lib/hreflang";
 import { ProductCard } from "@/components/product-card";
 import { ProductFilterPanel } from "@/components/product-filter-panel";
 import { Pagination } from "@/components/pagination";
@@ -47,7 +48,7 @@ export async function generateMetadata({
   return {
     title: dict.products.allProducts,
     description,
-    alternates: { canonical },
+    alternates: { canonical, languages: hreflangAlternates(canonical) },
     openGraph: {
       title: dict.products.allProducts,
       description,
@@ -114,16 +115,34 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
     }),
   };
 
-  const [products, total] = await Promise.all([
-    db.product.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-      skip: (filters.page - 1) * PAGE_SIZE,
-      take: PAGE_SIZE,
-      include: { images: { take: 1, orderBy: { position: "asc" } } },
-    }),
-    db.product.count({ where }),
-  ]);
+  // Out-of-stock items are pushed to the end of the grid rather than left
+  // wherever their creation date puts them — a dead-end "out of stock"
+  // card mixed in with buyable ones just wastes the shopper's attention.
+  // Prisma can't express "in-stock first" as a single orderBy on a plain
+  // Int column, so this fetches the matching set's ids+stock cheaply,
+  // resorts in JS (a stable sort, so createdAt-desc order is preserved
+  // within each group), then fetches only the current page's ids in full.
+  const allMatchingIds = await db.product.findMany({
+    where,
+    orderBy: { createdAt: "desc" },
+    select: { id: true, stockQty: true },
+  });
+  const sortedIds = [...allMatchingIds].sort(
+    (a, b) => Number(b.stockQty > 0) - Number(a.stockQty > 0)
+  );
+  const total = sortedIds.length;
+  const pageIds = sortedIds
+    .slice((filters.page - 1) * PAGE_SIZE, filters.page * PAGE_SIZE)
+    .map((p) => p.id);
+
+  const pageProducts = pageIds.length
+    ? await db.product.findMany({
+        where: { id: { in: pageIds } },
+        include: { images: { take: 1, orderBy: { position: "asc" } } },
+      })
+    : [];
+  const productById = new Map(pageProducts.map((p) => [p.id, p]));
+  const products = pageIds.map((id) => productById.get(id)!).filter(Boolean);
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
@@ -187,7 +206,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
             {products.map((product) => (
               <ProductCard
                 key={product.slug}
-                product={{ ...product, name: localizedName(product, uiLocale) }}
+                product={localizedCardProduct(product, uiLocale)}
                 locale={settings.defaultLocale}
                 outOfStockLabel={dict.product.outOfStock}
                 quickAddLabel={dict.product.addToCart}

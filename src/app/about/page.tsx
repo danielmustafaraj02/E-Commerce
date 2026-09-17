@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { getStoreSettings, ogImage } from "@/lib/store-settings";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
+import { hreflangAlternates } from "@/lib/hreflang";
 
 export async function generateMetadata(): Promise<Metadata> {
   const [settings, locale] = await Promise.all([getStoreSettings(), getLocale()]);
@@ -20,7 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: dict.about.title,
     description,
-    alternates: { canonical: "/about" },
+    alternates: { canonical: "/about", languages: hreflangAlternates("/about") },
     openGraph: {
       title: dict.about.title,
       description,

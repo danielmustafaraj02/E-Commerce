@@ -21,3 +21,27 @@ export function localizedDescription(product: LocalizableProduct, locale: Locale
   if (locale === "en" && product.descriptionEn) return product.descriptionEn;
   return product.description ?? "";
 }
+
+// Image search (Google Images, and AI engines that read alt text as a
+// signal) rewards a descriptive alt over a bare product name. "Handmade
+// Murano glass" is store-specific wording, deliberately baked in here the
+// same way as home.heroSubtitle — see that dictionary entry's comment.
+export function productImageAlt(name: string, locale: Locale): string {
+  return locale === "en"
+    ? `${name} — handmade Murano glass jewelry`
+    : `${name} — gioiello artigianale in vetro di Murano`;
+}
+
+// Applies both of the above to a product-card-shaped object in one call —
+// every ProductCard call site needs the same localized name + alt text, so
+// this keeps that in one place instead of four near-identical inline maps.
+export function localizedCardProduct<
+  T extends LocalizableProduct & { images: { url: string; altText: string }[] },
+>(product: T, locale: Locale): T {
+  const name = localizedName(product, locale);
+  return {
+    ...product,
+    name,
+    images: product.images.map((image) => ({ ...image, altText: productImageAlt(name, locale) })),
+  };
+}

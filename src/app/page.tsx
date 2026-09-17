@@ -5,7 +5,9 @@ import { getStoreSettings } from "@/lib/store-settings";
 import { getHomepageData } from "@/lib/homepage-data";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-import { localizedName } from "@/lib/product-i18n";
+import { localizedName, localizedCardProduct } from "@/lib/product-i18n";
+import { formatMoney } from "@/lib/format";
+import { toSafeJsonLd } from "@/lib/json-ld";
 import { ProductCard } from "@/components/product-card";
 import { Reveal } from "@/components/reveal";
 import { TrustBadges } from "@/components/trust-badges";
@@ -38,6 +40,31 @@ export default async function Home() {
       authorName: review.user.name?.split(" ")[0] || dict.home.verifiedBuyer,
       productName: localizedName(review.product, locale),
     }));
+
+  const freeShippingAmount = settings.freeShippingThreshold
+    ? formatMoney(settings.freeShippingThreshold, settings.defaultCurrency, settings.defaultLocale)
+    : null;
+  const homeFaq = [
+    ...dict.home.faq,
+    ...(freeShippingAmount
+      ? [{ question: dict.home.faqShippingQuestion, answer: dict.home.faqShippingAnswer(freeShippingAmount) }]
+      : []),
+  ];
+  // Direct-answer FAQ content, marked up as FAQPage — the format AI answer
+  // engines (Perplexity, ChatGPT, etc.) lean on most for quoting a source
+  // directly, and it can also render as an expandable rich result in
+  // Google. Kept honest by only asserting what's actually configured
+  // (e.g. the shipping answer is skipped if no free-shipping threshold is
+  // set, rather than guessing at a number).
+  const homeFaqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: homeFaq.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  };
 
   return (
     <main className="flex flex-1 flex-col">
@@ -104,7 +131,7 @@ export default async function Home() {
             <section>
               <h2 className="mb-4 text-lg font-medium">{dict.home.bestSellers}</h2>
               <BestSellersCarousel
-                products={bestSellers.map((p) => ({ ...p, name: localizedName(p, locale) }))}
+                products={bestSellers.map((p) => localizedCardProduct(p, locale))}
                 locale={settings.defaultLocale}
                 outOfStockLabel={dict.product.outOfStock}
                 quickAddLabel={dict.product.addToCart}
@@ -136,7 +163,7 @@ export default async function Home() {
                 {products.map((product, i) => (
                   <Reveal key={product.slug} delayMs={i * 60}>
                     <ProductCard
-                      product={{ ...product, name: localizedName(product, locale) }}
+                      product={localizedCardProduct(product, locale)}
                       locale={settings.defaultLocale}
                       outOfStockLabel={dict.product.outOfStock}
                       quickAddLabel={dict.product.addToCart}
@@ -246,6 +273,31 @@ export default async function Home() {
             </section>
           </Reveal>
         )}
+
+        <Reveal>
+          <section>
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{ __html: toSafeJsonLd(homeFaqJsonLd) }}
+            />
+            <h2 className="mb-4 text-lg font-medium">{dict.home.faqTitle}</h2>
+            <div className="divide-foreground/10 flex flex-col divide-y">
+              {homeFaq.map((item) => (
+                <details key={item.question} className="group py-3">
+                  <summary className="cursor-pointer list-none text-sm font-medium marker:content-none">
+                    <span className="mr-2 inline-block transition-transform group-open:rotate-90">
+                      &rsaquo;
+                    </span>
+                    {item.question}
+                  </summary>
+                  <p className="text-foreground/70 mt-2 pl-5 text-sm leading-relaxed">
+                    {item.answer}
+                  </p>
+                </details>
+              ))}
+            </div>
+          </section>
+        </Reveal>
       </div>
 
       <Reveal>

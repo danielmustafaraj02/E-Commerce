@@ -11,8 +11,14 @@ import { toSafeJsonLd } from "@/lib/json-ld";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { applyTemplate } from "@/lib/i18n/format";
-import { localizedName, localizedDescription } from "@/lib/product-i18n";
+import {
+  localizedName,
+  localizedDescription,
+  localizedCardProduct,
+  productImageAlt,
+} from "@/lib/product-i18n";
 import { truncateAtWord } from "@/lib/text";
+import { hreflangAlternates } from "@/lib/hreflang";
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { WishlistButton } from "@/components/wishlist-button";
 import { ShareButtons } from "@/components/share-buttons";
@@ -21,6 +27,13 @@ import { ProductImageZoom } from "@/components/product-image-zoom";
 import { TrustBadges } from "@/components/trust-badges";
 import { ReviewForm } from "./review-form";
 import { hasPurchased } from "./review-actions";
+
+// Module-level, not computed inside the component (react-hooks/purity
+// flags Date.now() during render) — evaluated once per server instance,
+// which is more than fresh enough for a ~1-year-out validity window.
+const PRICE_VALID_UNTIL = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)
+  .toISOString()
+  .slice(0, 10);
 
 // cache() dedupes this between generateMetadata and the page component so a
 // single render only queries the DB once for the same slug.
@@ -50,17 +63,29 @@ export async function generateMetadata({
   const categoryName = product.category ? localizedName(product.category, locale) : null;
   // A distinct <title> per product/category, rather than the raw product
   // name alone, gives Google (and AI answer engines summarizing the page)
-  // a stronger, less generic signal for what the page is about.
-  const title = categoryName ? `${name} — ${categoryName}` : name;
+  // a stronger, less generic signal for what the page is about. "Murano
+  // Glass"/"vetro di Murano" is baked in deliberately (high-intent search
+  // terms for this specific store, not a generic platform default — see
+  // the note on home.heroSubtitle in dictionaries.ts).
+  const title = categoryName
+    ? locale === "en"
+      ? `${name} — Murano Glass ${categoryName}`
+      : `${name} — ${categoryName} in Vetro di Murano`
+    : name;
   const description =
     truncateAtWord(localizedDescription(product, locale), 155) ||
-    (locale === "en" ? `Buy ${name} at ${settings.storeName}` : `Acquista ${name} su ${settings.storeName}`);
+    (locale === "en"
+      ? `${name} — handmade Murano glass, from ${settings.storeName}.`
+      : `${name} — vetro di Murano fatto a mano, da ${settings.storeName}.`);
   const image = product.images[0]?.url;
 
   return {
     title,
     description,
-    alternates: { canonical: `/products/${product.slug}` },
+    alternates: {
+      canonical: `/products/${product.slug}`,
+      languages: hreflangAlternates(`/products/${product.slug}`),
+    },
     openGraph: {
       title: name,
       description,
@@ -152,6 +177,8 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
       "@type": "Offer",
       priceCurrency: product.currency,
       price: (product.price / 100).toFixed(2),
+      priceValidUntil: PRICE_VALID_UNTIL,
+      itemCondition: "https://schema.org/NewCondition",
       availability: outOfStock ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
       url: productUrl,
     },
@@ -202,7 +229,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
       <div className="grid gap-10 sm:grid-cols-2">
         <div className="flex flex-col gap-3">
           {product.images[0] && (
-            <ProductImageZoom src={product.images[0].url} alt={product.images[0].altText || name} />
+            <ProductImageZoom src={product.images[0].url} alt={productImageAlt(name, uiLocale)} />
           )}
           {product.images.length > 1 && (
             <div className="flex gap-2">
@@ -210,7 +237,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                 <div key={image.id} className="relative h-16 w-16 overflow-hidden rounded">
                   <Image
                     src={image.url}
-                    alt={image.altText || name}
+                    alt={productImageAlt(name, uiLocale)}
                     fill
                     sizes="64px"
                     className="object-cover"
@@ -333,7 +360,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
             {relatedProducts.map((related) => (
               <ProductCard
                 key={related.slug}
-                product={{ ...related, name: localizedName(related, uiLocale) }}
+                product={localizedCardProduct(related, uiLocale)}
                 locale={settings.defaultLocale}
                 outOfStockLabel={dict.product.outOfStock}
                 quickAddLabel={dict.product.addToCart}

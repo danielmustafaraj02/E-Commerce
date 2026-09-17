@@ -39,7 +39,15 @@ const en = {
   },
   home: {
     heroEyebrow: "Welcome",
-    heroSubtitle: "Quality goods, straightforward shopping.",
+    // Intentionally store-specific rather than the platform-generic
+    // wording this string used to carry — the store owner explicitly
+    // asked for these exact phrases ("authentic Venetian lampwork glass",
+    // "handmade in Murano/Venice, Italy") for AI answer engines (GEO) to
+    // pick up as an E-E-A-T signal. A future non-jewelry deployment of
+    // this codebase should replace this line, same as it would replace
+    // the product catalog itself.
+    heroSubtitle:
+      "Authentic Venetian lampwork glass, handmade in Murano, Italy — traditional Italian craftsmanship, one bead at a time.",
     shopNow: "Shop now",
     pricesIncludeTax: "All prices shown include VAT/IVA.",
     newArrivals: "New arrivals",
@@ -56,8 +64,25 @@ const en = {
     verifiedBuyer: "Verified buyer",
     previousSlide: "Previous",
     nextSlide: "Next",
-    newsletterCtaTitle: "Join the list",
-    newsletterCtaBody: "New pieces and the occasional offer — straight to your inbox.",
+    newsletterCtaTitle: "Get 10% off your first order",
+    newsletterCtaBody:
+      "Subscribe and use code WELCOME10 at checkout — plus new pieces and the occasional offer, straight to your inbox.",
+    faqTitle: "Common questions",
+    faq: [
+      {
+        question: "Is this real Murano glass?",
+        answer:
+          "Yes — every piece is hand-worked glass from Murano, Italy, using traditional lampworking and glassblowing techniques, never molded or mass-produced. Read our full guide to Murano glass for how to tell genuine glass from imitations.",
+      },
+      {
+        question: "Where are the products made?",
+        answer:
+          "On Murano, the small island in the Venetian lagoon that has been Italy's glassmaking center for over 700 years. Every piece is shaped by hand in a working furnace on the island.",
+      },
+    ],
+    faqShippingQuestion: "What shipping and returns options are available?",
+    faqShippingAnswer: (freeShippingAmount: string) =>
+      `Standard shipping (3–5 days) and express shipping (1–2 days) are both available at checkout, with free standard shipping on orders over ${freeShippingAmount}. Every order also includes the EU's 14-day right of withdrawal.`,
   },
   about: {
     title: "About us",
@@ -289,7 +314,8 @@ const it: Dictionary = {
   },
   home: {
     heroEyebrow: "Benvenuto",
-    heroSubtitle: "Prodotti di qualità, acquisti semplici.",
+    heroSubtitle:
+      "Vetro veneziano autentico lavorato a lume, fatto a mano a Murano, Italia — tradizione artigianale italiana, una perla alla volta.",
     shopNow: "Fai acquisti",
     pricesIncludeTax: "Tutti i prezzi mostrati includono IVA.",
     newArrivals: "Nuovi arrivi",
@@ -306,8 +332,25 @@ const it: Dictionary = {
     verifiedBuyer: "Acquirente verificato",
     previousSlide: "Precedente",
     nextSlide: "Successivo",
-    newsletterCtaTitle: "Iscriviti alla newsletter",
-    newsletterCtaBody: "Nuovi pezzi e offerte occasionali — direttamente nella tua email.",
+    newsletterCtaTitle: "Ottieni il 10% di sconto sul tuo primo ordine",
+    newsletterCtaBody:
+      "Iscriviti e usa il codice WELCOME10 al checkout — più nuovi pezzi e offerte occasionali, direttamente nella tua email.",
+    faqTitle: "Domande frequenti",
+    faq: [
+      {
+        question: "È vero vetro di Murano?",
+        answer:
+          "Sì — ogni pezzo è vetro lavorato a mano a Murano, Italia, con tecniche tradizionali di lavorazione a lume e soffiatura, mai stampato o prodotto in serie. Leggi la nostra guida completa al vetro di Murano per capire come riconoscere il vetro autentico dalle imitazioni.",
+      },
+      {
+        question: "Dove vengono realizzati i prodotti?",
+        answer:
+          "A Murano, la piccola isola della laguna veneziana che da oltre 700 anni è il centro della lavorazione del vetro in Italia. Ogni pezzo è modellato a mano in una fornace attiva sull'isola.",
+      },
+    ],
+    faqShippingQuestion: "Quali opzioni di spedizione e reso sono disponibili?",
+    faqShippingAnswer: (freeShippingAmount: string) =>
+      `Spedizione standard (3–5 giorni) ed espressa (1–2 giorni) sono entrambe disponibili al checkout, con spedizione standard gratuita per ordini superiori a ${freeShippingAmount}. Ogni ordine include inoltre il diritto di recesso di 14 giorni previsto dall'UE.`,
   },
   about: {
     title: "Chi siamo",

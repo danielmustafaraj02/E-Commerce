@@ -105,6 +105,14 @@ function withSecurityHeaders(response: NextResponse) {
   response.headers.set("X-Content-Type-Options", "nosniff");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  // Every page's <html lang> and content (product names/descriptions,
+  // titles) switch on Accept-Language (see src/lib/i18n/locale.ts) even
+  // though the URL stays the same — this is Google's documented "dynamic
+  // serving" pattern, and it's what makes the self-referencing hreflang
+  // alternates (see each page's `alternates.languages`) valid rather than
+  // misleading: without it, a shared cache could serve the wrong language
+  // to a crawler or visitor with different header/cookie state.
+  response.headers.append("Vary", "Accept-Language");
   if (process.env.NODE_ENV === "production") {
     response.headers.set(
       "Strict-Transport-Security",
