@@ -161,6 +161,13 @@ const en = {
     verifiedPurchaseOnly: "Only customers who've purchased this product can leave a review.",
     writeAReview: "Write a review",
     ratingRequired: "Pick a rating before submitting.",
+    ratingLabels: [
+      "Not for me",
+      "Could be better",
+      "It's nice",
+      "Really lovely",
+      "Absolutely stunning",
+    ] as [string, string, string, string, string],
     charactersLeft: "{n} characters left",
     returnsBadge: "14-day right of withdrawal",
     secureBadge: "Secure checkout",
@@ -171,9 +178,11 @@ const en = {
   },
   wishlist: {
     title: "Your wishlist",
+    subtitle: "Pieces you've set aside — ready whenever you are.",
+    itemCount: "{n} saved pieces",
     empty: "Nothing saved yet.",
     browse: "Browse products",
-    remove: "Remove",
+    remove: "Remove from wishlist",
   },
   cart: {
     title: "Your cart",
@@ -247,6 +256,13 @@ const en = {
     viewWishlist: "View your wishlist",
     signOut: "Sign out",
     dangerZone: "Danger zone",
+    deleteAccount: "Delete my account",
+    deleteAccountWarning:
+      "This permanently removes your personal data. Past orders are kept (anonymized) for legal record-keeping. Confirm your password to continue.",
+    currentPassword: "Current password",
+    deleting: "Deleting...",
+    confirmDeletion: "Confirm deletion",
+    cancel: "Cancel",
   },
   orderConfirmation: {
     almostThere: "Almost there",
@@ -434,6 +450,13 @@ const it: Dictionary = {
     verifiedPurchaseOnly: "Solo chi ha acquistato questo prodotto può lasciare una recensione.",
     writeAReview: "Scrivi una recensione",
     ratingRequired: "Scegli una valutazione prima di inviare.",
+    ratingLabels: [
+      "Non fa per me",
+      "Poteva andare meglio",
+      "Carino",
+      "Davvero bello",
+      "Semplicemente stupendo",
+    ] as [string, string, string, string, string],
     charactersLeft: "{n} caratteri rimasti",
     returnsBadge: "Diritto di recesso di 14 giorni",
     secureBadge: "Pagamento sicuro",
@@ -444,9 +467,11 @@ const it: Dictionary = {
   },
   wishlist: {
     title: "La tua lista desideri",
+    subtitle: "Pezzi che hai messo da parte — pronti quando vuoi tu.",
+    itemCount: "{n} pezzi salvati",
     empty: "Non hai ancora salvato nulla.",
     browse: "Sfoglia i prodotti",
-    remove: "Rimuovi",
+    remove: "Rimuovi dalla lista desideri",
   },
   cart: {
     title: "Il tuo carrello",
@@ -520,6 +545,13 @@ const it: Dictionary = {
     viewWishlist: "Vedi la tua lista desideri",
     signOut: "Esci",
     dangerZone: "Zona pericolosa",
+    deleteAccount: "Elimina il mio account",
+    deleteAccountWarning:
+      "Questa azione rimuove permanentemente i tuoi dati personali. Gli ordini passati vengono conservati (in forma anonima) per obblighi legali. Conferma la password per continuare.",
+    currentPassword: "Password attuale",
+    deleting: "Eliminazione...",
+    confirmDeletion: "Conferma eliminazione",
+    cancel: "Annulla",
   },
   orderConfirmation: {
     almostThere: "Ci siamo quasi",

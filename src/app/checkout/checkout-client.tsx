@@ -210,13 +210,13 @@ export function CheckoutClient({
           onChange={(e) => setStreet(e.target.value)}
           className="field"
         />
-        <div className="flex gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row">
           <input
             required
             placeholder={dict.city}
             value={city}
             onChange={(e) => setCity(e.target.value)}
-            className="field flex-1"
+            className="field sm:flex-1"
           />
           <input
             required
@@ -225,7 +225,7 @@ export function CheckoutClient({
             onChange={(e) => setPostalCode(e.target.value)}
             onBlur={() => setPostalCodeTouched(true)}
             aria-invalid={postalCodeTouched && !postalCodeValid}
-            className={`field w-32 ${
+            className={`field sm:w-32 ${
               postalCodeTouched && !postalCodeValid ? "border-danger" : ""
             }`}
           />

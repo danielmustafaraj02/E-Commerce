@@ -87,6 +87,22 @@ button:not(:disabled),
   }
 }
 
+@keyframes cart-bounce {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-8px) rotate(-4deg);
+  }
+  50% {
+    transform: translateY(0) rotate(0deg);
+  }
+  75% {
+    transform: translateY(-4px) rotate(4deg);
+  }
+}
+
 /* Scroll-reveal: <Reveal> (src/components/reveal.tsx) toggles data-visible
    once an element crosses the viewport. Starts pre-rendered/visible so
    content is never hidden from a user whose JS hasn't run yet (no-JS,
@@ -123,6 +139,13 @@ button:not(:disabled),
      the item count changes, e.g. right after "Add to cart". */
   [data-bump="true"] {
     animation: pop-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  /* Large empty-cart illustration (cart-client.tsx) — a gentle continuous
+     rock, not a one-shot entrance, since it's the only thing on the page. */
+  .animate-cart-bounce {
+    animation: cart-bounce 2.6s ease-in-out infinite;
+    transform-origin: 50% 90%;
   }
 
   /* Lightweight page-transition fade, applied by app/template.tsx so each

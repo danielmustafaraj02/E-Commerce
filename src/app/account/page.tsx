@@ -46,8 +46,8 @@ export default async function AccountPage({
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-16">
-      <div className="from-primary/10 to-primary/0 border-primary/10 flex items-center gap-4 rounded-xl border bg-gradient-to-br px-6 py-6">
-        <div className="bg-primary/15 text-primary flex size-12 shrink-0 items-center justify-center rounded-full text-lg font-semibold">
+      <div className="from-primary/15 via-secondary/10 to-primary/0 border-primary/10 flex items-center gap-4 rounded-xl border bg-gradient-to-br px-6 py-6">
+        <div className="from-primary to-secondary flex size-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br text-lg font-semibold text-white shadow-sm">
           {(user.name || user.email).charAt(0).toUpperCase()}
         </div>
         <div>
@@ -79,7 +79,25 @@ export default async function AccountPage({
       )}
 
       <section className="mt-10">
-        <h2 className="mb-3 text-lg font-medium">{dict.account.orderHistory}</h2>
+        <h2 className="mb-3 flex items-center gap-2 text-lg font-medium">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="text-primary"
+            aria-hidden="true"
+          >
+            <path d="M21 8 12 3 3 8l9 5 9-5Z" />
+            <path d="M3 8v8l9 5 9-5V8" />
+            <path d="M12 13v8" />
+          </svg>
+          {dict.account.orderHistory}
+        </h2>
         {user.orders.length === 0 ? (
           <div className="border-foreground/10 bg-surface rounded-lg border px-6 py-10 text-center">
             <p className="text-foreground/70 text-sm">{dict.account.noOrders}</p>
@@ -116,7 +134,23 @@ export default async function AccountPage({
 
       <section className="mt-10">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-lg font-medium">{dict.account.wishlist}</h2>
+          <h2 className="flex items-center gap-2 text-lg font-medium">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-danger"
+              aria-hidden="true"
+            >
+              <path d="M20.8 4.6c-1.9-1.6-4.6-1.4-6.3.4L12 7.5l-2.5-2.5c-1.7-1.8-4.4-2-6.3-.4-2.1 1.8-2.2 5-.3 6.9L12 21l9.1-9.5c1.9-1.9 1.8-5.1-.3-6.9Z" />
+            </svg>
+            {dict.account.wishlist}
+          </h2>
           <Link href="/account/wishlist" className="text-primary text-sm hover:underline">
             {dict.account.viewWishlist}
           </Link>
@@ -153,19 +187,55 @@ export default async function AccountPage({
       <section className="mt-10 grid gap-3 sm:grid-cols-2">
         <Link
           href="/account/mfa"
-          className="border-foreground/10 hover:border-primary/40 hover:bg-primary/5 rounded-lg border p-4 transition-colors"
+          className="border-foreground/10 hover:border-warning/40 hover:bg-warning/5 flex items-start gap-3 rounded-lg border p-4 transition-colors"
         >
-          <h2 className="text-sm font-medium">{dict.account.security}</h2>
-          <p className="text-primary mt-1 text-sm">
-            {user.mfaEnabled ? dict.account.manageMfa : dict.account.enableMfa}
-          </p>
+          <div className="bg-warning/10 text-warning flex size-9 shrink-0 items-center justify-center rounded-full">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M12 3 4.5 6v6c0 4.5 3.1 7.7 7.5 9 4.4-1.3 7.5-4.5 7.5-9V6L12 3Z" />
+              <path d="m9.5 12 1.8 1.8L15 10" />
+            </svg>
+          </div>
+          <div>
+            <h2 className="text-sm font-medium">{dict.account.security}</h2>
+            <p className="text-warning mt-1 text-sm">
+              {user.mfaEnabled ? dict.account.manageMfa : dict.account.enableMfa}
+            </p>
+          </div>
         </Link>
         <a
           href="/api/account/export"
-          className="border-foreground/10 hover:border-primary/40 hover:bg-primary/5 rounded-lg border p-4 transition-colors"
+          className="border-foreground/10 hover:border-secondary/40 hover:bg-secondary/5 flex items-start gap-3 rounded-lg border p-4 transition-colors"
         >
-          <h2 className="text-sm font-medium">{dict.account.yourData}</h2>
-          <p className="text-primary mt-1 text-sm">{dict.account.downloadData}</p>
+          <div className="bg-secondary/10 text-secondary flex size-9 shrink-0 items-center justify-center rounded-full">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M12 3v12m0 0-4-4m4 4 4-4" />
+              <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+            </svg>
+          </div>
+          <div>
+            <h2 className="text-sm font-medium">{dict.account.yourData}</h2>
+            <p className="text-secondary mt-1 text-sm">{dict.account.downloadData}</p>
+          </div>
         </a>
       </section>
 
@@ -183,7 +253,7 @@ export default async function AccountPage({
 
       <section className="border-foreground/10 mt-10 border-t pt-6">
         <h2 className="mb-3 text-lg font-medium">{dict.account.dangerZone}</h2>
-        <DeleteAccountForm />
+        <DeleteAccountForm dict={dict.account} />
       </section>
     </main>
   );

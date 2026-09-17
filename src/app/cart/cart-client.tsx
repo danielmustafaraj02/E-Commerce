@@ -23,12 +23,25 @@ export function CartClient({
 
   if (items.length === 0) {
     return (
-      <div className="border-foreground/10 bg-surface flex flex-col items-center gap-3 rounded-lg border px-6 py-16 text-center">
-        <p className="text-foreground/70 text-sm">{dict.empty}</p>
-        <Link
-          href="/products"
-          className="bg-primary rounded px-5 py-2.5 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:opacity-90"
+      <div className="border-foreground/10 bg-surface flex flex-col items-center gap-4 rounded-lg border px-6 py-16 text-center">
+        <svg
+          width="120"
+          height="120"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="text-primary animate-cart-bounce"
+          aria-hidden="true"
         >
+          <circle cx="9" cy="20" r="1" />
+          <circle cx="18" cy="20" r="1" />
+          <path d="M2.5 3h2l2.4 12.2a2 2 0 0 0 2 1.6h8.2a2 2 0 0 0 2-1.6L21 8H6" />
+        </svg>
+        <p className="text-foreground/70 text-sm">{dict.empty}</p>
+        <Link href="/products" className="btn-primary text-sm">
           {dict.browse}
         </Link>
       </div>
@@ -124,10 +137,7 @@ export function CartClient({
         </span>
       </div>
 
-      <Link
-        href="/checkout"
-        className="bg-primary rounded px-4 py-3 text-center font-medium text-white transition-all hover:-translate-y-0.5 hover:opacity-90"
-      >
+      <Link href="/checkout" className="btn-primary text-center">
         {dict.checkout}
       </Link>
     </div>

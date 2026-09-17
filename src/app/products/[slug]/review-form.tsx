@@ -34,12 +34,12 @@ function Star({
     >
       <svg
         viewBox="0 0 24 24"
-        width="30"
-        height="30"
+        width="32"
+        height="32"
         strokeWidth="1.5"
         className={
           filled
-            ? "fill-primary stroke-primary transition-all duration-150"
+            ? "fill-[#f5c451] stroke-[#f5c451] drop-shadow-[0_0_7px_rgba(245,196,81,0.6)] transition-all duration-150"
             : "stroke-foreground/30 fill-transparent transition-all duration-150"
         }
       >
@@ -72,17 +72,39 @@ export function ReviewForm({
   return (
     <form
       action={formAction}
-      className="form-card mt-6 flex max-w-md flex-col gap-4 transition-shadow duration-300 hover:shadow-md"
+      className="border-primary/10 from-secondary/10 via-surface to-primary/5 relative mt-6 flex max-w-md flex-col gap-4 overflow-hidden rounded-2xl border bg-gradient-to-br p-6 shadow-sm transition-shadow duration-300 hover:shadow-lg"
     >
-      <h3 className="font-semibold">{existing ? dict.updateReview : dict.writeAReview}</h3>
+      <div
+        aria-hidden="true"
+        className="absolute -top-10 -right-10 size-28 rounded-full bg-[#f5c451]/20 blur-2xl"
+      />
+
+      <div className="relative flex items-center gap-3">
+        <div className="from-primary to-secondary flex size-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br text-white shadow-sm">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M12 2.9l2.77 5.83 6.33.76-4.68 4.45 1.24 6.36L12 17.15l-5.66 3.15 1.24-6.36-4.68-4.45 6.33-.76L12 2.9z" />
+          </svg>
+        </div>
+        <h3 className="font-semibold">{existing ? dict.updateReview : dict.writeAReview}</h3>
+      </div>
 
       <input type="hidden" name="productId" value={productId} />
       <input type="hidden" name="slug" value={slug} />
       <input type="hidden" name="rating" value={rating} />
 
-      <div className="flex flex-col gap-1.5">
+      <div className="relative flex flex-col gap-1.5">
         <span className="text-sm font-medium">{dict.yourRating}</span>
-        <div className="flex items-center gap-1" onMouseLeave={() => setHoverRating(0)}>
+        <div className="flex flex-wrap items-center gap-1" onMouseLeave={() => setHoverRating(0)}>
           {[1, 2, 3, 4, 5].map((n) => (
             <Star
               key={n}
@@ -94,8 +116,11 @@ export function ReviewForm({
             />
           ))}
           {displayRating > 0 && (
-            <span className="text-foreground/60 animate-fade-up ml-1 text-sm">
-              {displayRating} / 5
+            <span
+              key={displayRating}
+              className="from-primary to-secondary animate-fade-up ml-1.5 bg-gradient-to-r bg-clip-text text-sm font-semibold text-transparent"
+            >
+              {dict.ratingLabels[displayRating - 1]}
             </span>
           )}
         </div>
