@@ -240,7 +240,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                     alt={productImageAlt(name, uiLocale)}
                     fill
                     sizes="64px"
-                    className="object-cover"
+                    className="object-contain"
                   />
                 </div>
               ))}

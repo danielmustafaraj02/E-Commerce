@@ -35,7 +35,7 @@ export function ProductImageZoom({ src, alt }: { src: string; alt: string }) {
         fill
         priority
         sizes="(min-width: 640px) 50vw, 100vw"
-        className="object-cover transition-transform duration-300 ease-out"
+        className="object-contain transition-transform duration-300 ease-out"
         style={{
           transformOrigin: origin,
           transform: zooming ? "scale(2.2)" : "scale(1)",

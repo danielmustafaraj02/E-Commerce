@@ -38,7 +38,7 @@ export function ProductCard({
             alt={product.images[0].altText || product.name}
             fill
             sizes="(min-width: 640px) 25vw, 50vw"
-            className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+            className="object-contain transition-transform duration-500 ease-out group-hover:scale-105"
           />
         )}
         {outOfStock && (
