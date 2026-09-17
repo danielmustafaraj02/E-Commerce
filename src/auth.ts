@@ -24,6 +24,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth(async () => {
 
   return {
     adapter: PrismaAdapter(db),
+    // Derive the base URL from the actual incoming request (Vercel's proxy
+    // sets a trustworthy Host header) instead of the fixed NEXTAUTH_URL env
+    // var — otherwise a stale/wrong NEXTAUTH_URL silently redirects every
+    // post-login visitor to whatever domain that var happens to hold,
+    // regardless of which domain/alias they actually signed in from.
+    trustHost: true,
     session: { strategy: "jwt" },
     pages: { signIn: "/login" },
     providers: [

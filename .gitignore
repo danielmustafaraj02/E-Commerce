@@ -48,3 +48,7 @@ next-env.d.ts
 # backups only, not part of the shipped site
 /originals
 .env*.local
+
+# private local-only notes — never commit/push (internal ideas/checklists,
+# not for public repo visibility)
+/PRIVATE_500_CHECKLIST.md
