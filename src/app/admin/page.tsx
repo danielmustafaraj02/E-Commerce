@@ -2,9 +2,11 @@ import Link from "next/link";
 import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
 import { formatMoney } from "@/lib/format";
+import { SalesTrendChart } from "@/components/sales-trend-chart";
 
 const REVENUE_STATUSES = ["paid", "processing", "shipped", "delivered"];
 const NOTIFICATION_WINDOW_MS = 24 * 60 * 60 * 1000;
+const TREND_DAYS = 30;
 
 export default async function AdminDashboardPage() {
   const settings = await getStoreSettings();
@@ -20,6 +22,7 @@ export default async function AdminDashboardPage() {
     dropshipItems,
     newOrders,
     newCustomers,
+    trendOrders,
   ] = await Promise.all([
     db.product.count(),
     db.order.count(),
@@ -60,7 +63,28 @@ export default async function AdminDashboardPage() {
       take: 5,
       select: { id: true, email: true, name: true, createdAt: true },
     }),
+    db.order.findMany({
+      where: {
+        status: { in: REVENUE_STATUSES },
+        createdAt: { gte: new Date(Date.now() - TREND_DAYS * 24 * 60 * 60 * 1000) },
+      },
+      select: { total: true, createdAt: true },
+    }),
   ]);
+
+  // Bucketed in JS rather than a DB-side date_trunc — keeps this portable
+  // across Postgres/SQLite without a raw query, and 30 days of rows is
+  // trivially small to fold client-side.
+  const revenueByDay = new Map<string, number>();
+  for (let i = TREND_DAYS - 1; i >= 0; i--) {
+    const day = new Date(Date.now() - i * 24 * 60 * 60 * 1000);
+    revenueByDay.set(day.toISOString().slice(0, 10), 0);
+  }
+  for (const order of trendOrders) {
+    const key = order.createdAt.toISOString().slice(0, 10);
+    revenueByDay.set(key, (revenueByDay.get(key) ?? 0) + order.total);
+  }
+  const trendData = [...revenueByDay.entries()].map(([date, revenue]) => ({ date, revenue }));
 
   const dropshipProfit = dropshipItems.reduce(
     (sum, item) => sum + (item.unitPrice - (item.unitCost ?? 0)) * item.quantity,
@@ -137,6 +161,15 @@ export default async function AdminDashboardPage() {
           </div>
         )}
       </dl>
+
+      <section className="border-foreground/10 mt-10 rounded-lg border p-4">
+        <h2 className="mb-3 text-lg font-medium">Revenue, last {TREND_DAYS} days</h2>
+        <SalesTrendChart
+          data={trendData}
+          currency={settings.defaultCurrency}
+          locale={settings.defaultLocale}
+        />
+      </section>
 
       <div className="mt-10 grid gap-10 sm:grid-cols-2">
         <section>
