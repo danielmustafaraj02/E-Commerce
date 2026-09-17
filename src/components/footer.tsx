@@ -201,6 +201,11 @@ export async function Footer({
                   </Link>
                 </li>
                 <li>
+                  <Link href="/murano-glass" className="hover:text-primary transition-colors">
+                    {dict.footer.muranoGuide}
+                  </Link>
+                </li>
+                <li>
                   <a href={`mailto:${contactEmail}`} className="hover:text-primary transition-colors">
                     {contactEmail}
                   </a>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
+import { Tabs } from "@/components/tabs";
 
 function Check({ ok, label, detail }: { ok: boolean; label: string; detail?: string }) {
   return (
@@ -107,106 +108,129 @@ export default async function AdminSeoPage() {
         &quot;Live indexing status&quot; below for that).
       </p>
 
-      <section className="mb-10">
-        <h2 className="mb-3 text-lg font-medium">Technical SEO readiness</h2>
-        <ul className="divide-foreground/10 divide-y">
-          {readiness.map((item) => (
-            <Check key={item.label} {...item} />
-          ))}
-        </ul>
-      </section>
-
-      <section className="mb-10">
-        <h2 className="mb-3 text-lg font-medium">Bilingual content (IT / EN)</h2>
-        <ul className="divide-foreground/10 divide-y">
-          {translationReadiness.map((item) => (
-            <Check key={item.label} {...item} />
-          ))}
-        </ul>
-      </section>
-
-      <section className="mb-10">
-        <h2 className="mb-3 text-lg font-medium">What&apos;s in your sitemap</h2>
-        <dl className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-          <div className="border-foreground/10 rounded border p-4">
-            <dt className="text-foreground/70 text-sm">Products</dt>
-            <dd className="text-xl font-semibold">{productCount}</dd>
-          </div>
-          <div className="border-foreground/10 rounded border p-4">
-            <dt className="text-foreground/70 text-sm">Categories</dt>
-            <dd className="text-xl font-semibold">{categoryCount}</dd>
-          </div>
-          <div className="border-foreground/10 rounded border p-4">
-            <dt className="text-foreground/70 text-sm">Legal pages</dt>
-            <dd className="text-xl font-semibold">{legalPageCount}</dd>
-          </div>
-          <div className="border-foreground/10 rounded border p-4">
-            <dt className="text-foreground/70 text-sm">Total URLs</dt>
-            <dd className="text-xl font-semibold">{sitemapUrlCount}</dd>
-          </div>
-        </dl>
-        <div className="mt-3 flex flex-wrap gap-4 text-sm">
-          <Link href="/sitemap.xml" target="_blank" className="text-primary hover:underline">
-            View sitemap.xml
-          </Link>
-          <Link href="/robots.txt" target="_blank" className="text-primary hover:underline">
-            View robots.txt
-          </Link>
-        </div>
-      </section>
-
-      <section>
-        <h2 className="mb-3 text-lg font-medium">Live indexing status</h2>
-        <p className="text-foreground/70 mb-3 text-sm">
-          Whether pages are actually indexed, how they rank, and real search impressions/clicks can
-          only come from Google itself — this app has no credentials wired up to Google&apos;s
-          Search Console API, so it can&apos;t show that data inline. Once{" "}
-          {base ? (
-            <>
-              <span className="font-medium">{base}</span>
-            </>
-          ) : (
-            "your production URL"
-          )}{" "}
-          is verified in Search Console (using the verification code above), check indexing there
-          directly:
-        </p>
-        <ul className="flex flex-col gap-2 text-sm">
-          <li>
-            <a
-              href="https://search.google.com/search-console"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline"
-            >
-              Google Search Console
-            </a>
-            <span className="text-foreground/70"> — Coverage / Pages report shows indexed vs. excluded URLs; Performance shows real clicks/impressions.</span>
-          </li>
-          <li>
-            <a
-              href="https://search.google.com/test/rich-results"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline"
-            >
-              Rich Results Test
-            </a>
-            <span className="text-foreground/70"> — paste a product URL to validate the Product/BreadcrumbList structured data.</span>
-          </li>
-          <li>
-            <a
-              href="https://pagespeed.web.dev/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline"
-            >
-              PageSpeed Insights
-            </a>
-            <span className="text-foreground/70"> — Core Web Vitals, a Google ranking factor.</span>
-          </li>
-        </ul>
-      </section>
+      <Tabs
+        tabs={[
+          {
+            label: "Technical SEO",
+            content: (
+              <section>
+                <h2 className="mb-3 text-lg font-medium">Technical SEO readiness</h2>
+                <ul className="divide-foreground/10 divide-y">
+                  {readiness.map((item) => (
+                    <Check key={item.label} {...item} />
+                  ))}
+                </ul>
+              </section>
+            ),
+          },
+          {
+            label: "Bilingual content",
+            content: (
+              <section>
+                <h2 className="mb-3 text-lg font-medium">Bilingual content (IT / EN)</h2>
+                <ul className="divide-foreground/10 divide-y">
+                  {translationReadiness.map((item) => (
+                    <Check key={item.label} {...item} />
+                  ))}
+                </ul>
+              </section>
+            ),
+          },
+          {
+            label: "Sitemap",
+            content: (
+              <section>
+                <h2 className="mb-3 text-lg font-medium">What&apos;s in your sitemap</h2>
+                <dl className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+                  <div className="border-foreground/10 rounded border p-4">
+                    <dt className="text-foreground/70 text-sm">Products</dt>
+                    <dd className="text-xl font-semibold">{productCount}</dd>
+                  </div>
+                  <div className="border-foreground/10 rounded border p-4">
+                    <dt className="text-foreground/70 text-sm">Categories</dt>
+                    <dd className="text-xl font-semibold">{categoryCount}</dd>
+                  </div>
+                  <div className="border-foreground/10 rounded border p-4">
+                    <dt className="text-foreground/70 text-sm">Legal pages</dt>
+                    <dd className="text-xl font-semibold">{legalPageCount}</dd>
+                  </div>
+                  <div className="border-foreground/10 rounded border p-4">
+                    <dt className="text-foreground/70 text-sm">Total URLs</dt>
+                    <dd className="text-xl font-semibold">{sitemapUrlCount}</dd>
+                  </div>
+                </dl>
+                <div className="mt-3 flex flex-wrap gap-4 text-sm">
+                  <Link href="/sitemap.xml" target="_blank" className="text-primary hover:underline">
+                    View sitemap.xml
+                  </Link>
+                  <Link href="/robots.txt" target="_blank" className="text-primary hover:underline">
+                    View robots.txt
+                  </Link>
+                </div>
+              </section>
+            ),
+          },
+          {
+            label: "Live indexing",
+            content: (
+              <section>
+                <h2 className="mb-3 text-lg font-medium">Live indexing status</h2>
+                <p className="text-foreground/70 mb-3 text-sm">
+                  Whether pages are actually indexed, how they rank, and real search
+                  impressions/clicks can only come from Google itself — this app has no credentials
+                  wired up to Google&apos;s Search Console API, so it can&apos;t show that data
+                  inline. Once{" "}
+                  {base ? <span className="font-medium">{base}</span> : "your production URL"} is
+                  verified in Search Console (using the verification code above), check indexing
+                  there directly:
+                </p>
+                <ul className="flex flex-col gap-2 text-sm">
+                  <li>
+                    <a
+                      href="https://search.google.com/search-console"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline"
+                    >
+                      Google Search Console
+                    </a>
+                    <span className="text-foreground/70">
+                      {" "}
+                      — Coverage / Pages report shows indexed vs. excluded URLs; Performance shows
+                      real clicks/impressions.
+                    </span>
+                  </li>
+                  <li>
+                    <a
+                      href="https://search.google.com/test/rich-results"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline"
+                    >
+                      Rich Results Test
+                    </a>
+                    <span className="text-foreground/70">
+                      {" "}
+                      — paste a product URL to validate the Product/BreadcrumbList structured data.
+                    </span>
+                  </li>
+                  <li>
+                    <a
+                      href="https://pagespeed.web.dev/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline"
+                    >
+                      PageSpeed Insights
+                    </a>
+                    <span className="text-foreground/70"> — Core Web Vitals, a Google ranking factor.</span>
+                  </li>
+                </ul>
+              </section>
+            ),
+          },
+        ]}
+      />
     </div>
   );
 }

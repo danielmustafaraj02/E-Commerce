@@ -277,7 +277,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
           <TrustBadges trustBadgeText={settings.trustBadgeText} dict={dict.product} />
 
           <Link
-            href="/about#authenticity"
+            href="/murano-glass#authenticity"
             className="text-foreground/60 hover:text-primary mt-2 inline-block text-xs underline"
           >
             {dict.product.authenticityLink}
