@@ -103,6 +103,33 @@ button:not(:disabled),
   }
 }
 
+@keyframes bracelet-sway {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-6deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(6deg);
+  }
+}
+
+@keyframes confetti-burst {
+  0% {
+    transform: translate(-50%, -50%) translate(0, 0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(0.4);
+    opacity: 0;
+  }
+}
+
 /* Scroll-reveal: <Reveal> (src/components/reveal.tsx) toggles data-visible
    once an element crosses the viewport. Starts pre-rendered/visible so
    content is never hidden from a user whose JS hasn't run yet (no-JS,
@@ -146,6 +173,27 @@ button:not(:disabled),
   .animate-cart-bounce {
     animation: cart-bounce 2.6s ease-in-out infinite;
     transform-origin: 50% 90%;
+  }
+
+  /* Empty-wishlist bracelet illustration (wishlist-empty-icon.tsx) — the
+     whole charm bracelet gently dangles/sways on a continuous loop, like it's
+     swinging from a hook, while each colored bead pops in with a stagger
+     (--bead-delay) for a one-shot "sparkling" entrance on mount. */
+  .animate-bracelet-sway {
+    animation: bracelet-sway 2.8s ease-in-out infinite;
+    transform-origin: 50% 8%;
+  }
+  .bracelet-bead {
+    animation: pop-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    animation-delay: var(--bead-delay, 0s);
+  }
+
+  /* Confetti burst (confetti-burst.tsx) — a one-shot "coriandoli" scatter
+     fired from the wishlist heart button the moment an item is saved. Each
+     piece flies out to its own --tx/--ty/--rot and fades, staggered slightly
+     per piece via animation-delay for a less mechanical, more scattered feel. */
+  .confetti-piece {
+    animation: confetti-burst 0.6s ease-out both;
   }
 
   /* Lightweight page-transition fade, applied by app/template.tsx so each

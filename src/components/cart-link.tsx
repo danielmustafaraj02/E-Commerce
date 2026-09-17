@@ -20,10 +20,30 @@ export function CartLink({ label }: { label: string }) {
   }, [count]);
 
   return (
-    <Link href="/cart" className="link-underline text-foreground/80 hover:text-primary">
-      {label}
+    <Link
+      href="/cart"
+      aria-label={label}
+      title={label}
+      className="group link-underline text-foreground/80 hover:text-primary flex items-center gap-1"
+    >
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="transition-transform duration-200 ease-out group-hover:-rotate-6 group-hover:scale-110"
+        aria-hidden="true"
+      >
+        <circle cx="9" cy="21" r="1" />
+        <circle cx="19" cy="21" r="1" />
+        <path d="M2.5 3h2l2.7 12.4a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L21.5 8H6.2" />
+      </svg>
       {count > 0 ? (
-        <span data-bump={bump} className="ml-1 inline-block">
+        <span data-bump={bump} className="inline-block">
           ({count})
         </span>
       ) : null}

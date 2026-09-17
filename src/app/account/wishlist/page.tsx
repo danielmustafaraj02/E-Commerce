@@ -10,6 +10,7 @@ import { applyTemplate } from "@/lib/i18n/format";
 import { formatMoney } from "@/lib/format";
 import { toggleWishlist } from "@/app/products/[slug]/wishlist-actions";
 import { QuickAddButton } from "@/components/quick-add-button";
+import { WishlistEmptyIcon } from "@/components/wishlist-empty-icon";
 
 export default async function WishlistPage() {
   const session = await auth();
@@ -52,9 +53,7 @@ export default async function WishlistPage() {
 
       {items.length === 0 ? (
         <div className="border-primary/15 from-surface to-background mt-8 flex flex-col items-center gap-3 rounded-xl border border-dashed bg-gradient-to-b px-6 py-20 text-center">
-          <span className="text-primary/30 text-5xl" aria-hidden="true">
-            ♡
-          </span>
+          <WishlistEmptyIcon />
           <p className="text-foreground/70 text-sm">{dict.wishlist.empty}</p>
           <Link href="/products" className="btn-primary mt-1 text-sm">
             {dict.wishlist.browse}

@@ -3,9 +3,21 @@
 import { useActionState, useState } from "react";
 import { deleteAccount } from "./actions";
 import { FormAlert } from "@/components/form-alert";
-import type { Dictionary } from "@/lib/i18n/dictionaries";
 
-export function DeleteAccountForm({ dict }: { dict: Dictionary["account"] }) {
+// A narrow, plain-data slice of Dictionary["account"] rather than the whole
+// object — that object also carries signedInAs(email), a function, and
+// functions can't cross the server->client props boundary (Next.js throws
+// "Functions cannot be passed directly to Client Components").
+type DeleteAccountDict = {
+  deleteAccount: string;
+  deleteAccountWarning: string;
+  currentPassword: string;
+  deleting: string;
+  confirmDeletion: string;
+  cancel: string;
+};
+
+export function DeleteAccountForm({ dict }: { dict: DeleteAccountDict }) {
   const [confirming, setConfirming] = useState(false);
   const [state, formAction, pending] = useActionState(deleteAccount, {
     error: null as string | null,

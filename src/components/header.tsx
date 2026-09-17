@@ -2,6 +2,7 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { CartLink } from "@/components/cart-link";
+import { GuestWishlistLink } from "@/components/guest-wishlist-link";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import type { Locale } from "@/lib/i18n/locale";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
@@ -53,25 +54,29 @@ export async function Header({
             {session?.user ? (
               <Link
                 href="/account/wishlist"
-                className="link-underline text-foreground/80 hover:text-primary flex items-center gap-1 transition-colors"
+                aria-label={dict.nav.wishlist}
+                title={dict.nav.wishlist}
+                className="group link-underline text-foreground/80 hover:text-danger flex items-center gap-1 transition-colors"
               >
                 <svg
-                  width="16"
-                  height="16"
+                  width="18"
+                  height="18"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
+                  className="transition-transform duration-200 ease-out group-hover:-rotate-12 group-hover:scale-125"
                   aria-hidden="true"
                 >
                   <path d="M20.8 4.6c-1.9-1.6-4.6-1.4-6.3.4L12 7.5l-2.5-2.5c-1.7-1.8-4.4-2-6.3-.4-2.1 1.8-2.2 5-.3 6.9L12 21l9.1-9.5c1.9-1.9 1.8-5.1-.3-6.9Z" />
                 </svg>
-                {dict.nav.wishlist}
                 {wishlistCount > 0 ? <span>({wishlistCount})</span> : null}
               </Link>
-            ) : null}
+            ) : (
+              <GuestWishlistLink label={dict.nav.wishlist} />
+            )}
             <CartLink label={dict.nav.cart} />
             {isStaff && (
               <Link
@@ -84,9 +89,25 @@ export async function Header({
             {session?.user ? (
               <Link
                 href="/account"
-                className="link-underline text-foreground/80 hover:text-primary transition-colors"
+                aria-label={dict.nav.account}
+                title={dict.nav.account}
+                className="group link-underline text-foreground/80 hover:text-primary flex items-center"
               >
-                {dict.nav.account}
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="transition-transform duration-200 ease-out group-hover:-translate-y-0.5 group-hover:scale-110"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="8" r="3.5" />
+                  <path d="M4.5 20c1.4-4 4.2-6 7.5-6s6.1 2 7.5 6" />
+                </svg>
               </Link>
             ) : (
               <>

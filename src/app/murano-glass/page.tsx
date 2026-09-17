@@ -8,6 +8,16 @@ import { localizedName } from "@/lib/product-i18n";
 import { toSafeJsonLd } from "@/lib/json-ld";
 import { hreflangAlternates } from "@/lib/hreflang";
 
+// Cycled across the numbered care-step badges below so the list reads as a
+// row of distinct steps at a glance, not one flat brand-colored repeat.
+const STEP_NUMBER_COLORS = [
+  "bg-primary/10 text-primary",
+  "bg-secondary/10 text-secondary",
+  "bg-warning/10 text-warning",
+  "bg-danger/10 text-danger",
+  "bg-success/10 text-success",
+];
+
 export async function generateMetadata(): Promise<Metadata> {
   const [settings, locale] = await Promise.all([getStoreSettings(), getLocale()]);
   const content = getMuranoGuideContent(locale);
@@ -148,7 +158,7 @@ export default async function MuranoGlassGuidePage() {
         {content.careSteps.map((step, index) => (
           <li key={step.name} className="flex gap-3">
             <span
-              className="bg-primary/10 text-primary flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-medium"
+              className={`${STEP_NUMBER_COLORS[index % STEP_NUMBER_COLORS.length]} flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-medium`}
               aria-hidden="true"
             >
               {index + 1}

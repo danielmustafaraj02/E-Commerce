@@ -38,7 +38,7 @@ export function AddToCartButton({
         setAdded(true);
         setTimeout(() => setAdded(false), 1500);
       }}
-      className="bg-primary mt-8 rounded px-6 py-3 text-white transition-transform duration-150 will-change-transform active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+      className="btn-primary mt-8 transition-transform duration-150 will-change-transform active:scale-95"
     >
       <span key={added ? "added" : "idle"} className="animate-pop-in inline-block">
         {product.outOfStock ? dict.outOfStock : added ? `✓ ${dict.added}` : dict.addToCart}

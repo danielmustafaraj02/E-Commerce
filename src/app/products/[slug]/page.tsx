@@ -294,11 +294,14 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
           <WishlistButton
             productId={product.id}
             slug={product.slug}
+            name={name}
+            price={product.price}
+            currency={product.currency}
+            imageUrl={product.images[0]?.url ?? null}
             initialSaved={Boolean(wishlistItem)}
             isSignedIn={Boolean(userId)}
             addLabel={dict.product.addToWishlist}
             removeLabel={dict.product.removeFromWishlist}
-            signInLabel={dict.product.signInToSaveWishlist}
           />
 
           <TrustBadges trustBadgeText={settings.trustBadgeText} dict={dict.product} />

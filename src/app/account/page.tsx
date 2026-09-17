@@ -253,7 +253,16 @@ export default async function AccountPage({
 
       <section className="border-foreground/10 mt-10 border-t pt-6">
         <h2 className="mb-3 text-lg font-medium">{dict.account.dangerZone}</h2>
-        <DeleteAccountForm dict={dict.account} />
+        <DeleteAccountForm
+          dict={{
+            deleteAccount: dict.account.deleteAccount,
+            deleteAccountWarning: dict.account.deleteAccountWarning,
+            currentPassword: dict.account.currentPassword,
+            deleting: dict.account.deleting,
+            confirmDeletion: dict.account.confirmDeletion,
+            cancel: dict.account.cancel,
+          }}
+        />
       </section>
     </main>
   );

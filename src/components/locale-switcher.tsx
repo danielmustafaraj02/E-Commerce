@@ -1,41 +1,97 @@
 "use client";
 
-import { useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { setLocale } from "@/lib/i18n/actions";
-import type { Locale } from "@/lib/i18n/locale";
+import { locales, type Locale } from "@/lib/i18n/locale-constants";
+
+const LABELS: Record<Locale, string> = {
+  en: "English",
+  it: "Italiano",
+  fr: "Français",
+  de: "Deutsch",
+};
+const CODES: Record<Locale, string> = { en: "EN", it: "IT", fr: "FR", de: "DE" };
 
 export function LocaleSwitcher({ current }: { current: Locale }) {
   const [pending, startTransition] = useTransition();
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    function onPointerDown(e: PointerEvent) {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false);
+    }
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
 
   function change(locale: Locale) {
+    setOpen(false);
     startTransition(() => {
       setLocale(locale);
     });
   }
 
   return (
-    <div className="flex items-center gap-1 text-sm">
+    <div ref={rootRef} className="relative">
       <button
         type="button"
-        onClick={() => change("en")}
+        onClick={() => setOpen((o) => !o)}
         disabled={pending}
-        className={
-          current === "en" ? "text-primary font-semibold" : "text-foreground/60 hover:text-primary"
-        }
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        className="border-foreground/15 hover:border-primary/40 hover:text-primary flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-sm font-medium transition-colors disabled:opacity-50"
       >
-        EN
+        {CODES[current]}
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          aria-hidden="true"
+        >
+          <path d="m6 9 6 6 6-6" />
+        </svg>
       </button>
-      <span className="text-foreground/30">/</span>
-      <button
-        type="button"
-        onClick={() => change("it")}
-        disabled={pending}
-        className={
-          current === "it" ? "text-primary font-semibold" : "text-foreground/60 hover:text-primary"
-        }
-      >
-        IT
-      </button>
+
+      {open && (
+        <ul
+          role="listbox"
+          className="border-foreground/10 bg-background animate-pop-in absolute top-full right-0 z-50 mt-1.5 min-w-36 overflow-hidden rounded-lg border py-1 text-sm shadow-lg"
+        >
+          {locales.map((locale) => (
+            <li key={locale}>
+              <button
+                type="button"
+                role="option"
+                aria-selected={current === locale}
+                onClick={() => change(locale)}
+                className={`flex w-full items-center justify-between gap-3 px-3 py-2 text-left transition-colors ${
+                  current === locale
+                    ? "text-primary bg-primary/5 font-semibold"
+                    : "hover:bg-surface text-foreground/80"
+                }`}
+              >
+                {LABELS[locale]}
+                <span className="text-foreground/40 text-xs">{CODES[locale]}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
