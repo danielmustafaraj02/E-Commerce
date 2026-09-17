@@ -132,6 +132,7 @@ model User {
   auditLogs      AuditLog[]
   returnRequests ReturnRequest[]
   consentLogs    ConsentLog[]
+  wishlistItems  WishlistItem[]
 }
 
 model Account {
@@ -211,9 +212,10 @@ model Product {
   categoryId String?
   category   Category? @relation(fields: [categoryId], references: [id])
 
-  images     ProductImage[]
-  orderItems OrderItem[]
-  reviews    Review[]
+  images        ProductImage[]
+  orderItems    OrderItem[]
+  reviews       Review[]
+  wishlistItems WishlistItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -276,6 +278,17 @@ model Review {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   rating    Int
   comment   String?
+  createdAt DateTime @default(now())
+
+  @@unique([productId, userId])
+}
+
+model WishlistItem {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 
   @@unique([productId, userId])

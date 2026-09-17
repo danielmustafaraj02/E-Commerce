@@ -12,6 +12,7 @@ import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { applyTemplate } from "@/lib/i18n/format";
 import { AddToCartButton } from "@/components/add-to-cart-button";
+import { WishlistButton } from "@/components/wishlist-button";
 import { ShareButtons } from "@/components/share-buttons";
 import { ProductCard } from "@/components/product-card";
 import { ProductImageZoom } from "@/components/product-image-zoom";
@@ -79,7 +80,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
   // is capped at the 20 most recent — the signed-in user's own review could
   // be older than that.
   const userId = session?.user?.id;
-  const [myReview, relatedProducts, isVerifiedBuyer] = await Promise.all([
+  const [myReview, relatedProducts, isVerifiedBuyer, wishlistItem] = await Promise.all([
     userId
       ? db.review.findUnique({
           where: { productId_userId: { productId: product.id, userId } },
@@ -94,6 +95,11 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
         })
       : [],
     userId ? hasPurchased(product.id, userId) : false,
+    userId
+      ? db.wishlistItem.findUnique({
+          where: { productId_userId: { productId: product.id, userId } },
+        })
+      : null,
   ]);
 
   const outOfStock = product.stockQty <= 0;
@@ -209,6 +215,16 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
               outOfStock,
             }}
             dict={dict.product}
+          />
+
+          <WishlistButton
+            productId={product.id}
+            slug={product.slug}
+            initialSaved={Boolean(wishlistItem)}
+            isSignedIn={Boolean(userId)}
+            addLabel={dict.product.addToWishlist}
+            removeLabel={dict.product.removeFromWishlist}
+            signInLabel={dict.product.signInToSaveWishlist}
           />
 
           <TrustBadges trustBadgeText={settings.trustBadgeText} dict={dict.product} />

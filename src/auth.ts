@@ -79,7 +79,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth(async () => {
             });
           }
 
-          return { id: user.id, email: user.email, name: user.name, role: user.role };
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            mfaEnabled: user.mfaEnabled,
+          };
         },
       }),
       ...(googleClientId && googleClientSecret
@@ -96,6 +102,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth(async () => {
           // type because some other provider shapes could theoretically
           // omit it.
           token.id = user.id!;
+          // Baked into the JWT at sign-in like `role` — if an admin/staff
+          // user enables MFA mid-session, they need to sign in again for
+          // proxy.ts's admin gate to see it, same as any other role/session
+          // claim here. Regular (non-adapter) `User.mfaEnabled` defaults to
+          // false, so this is always a real boolean, never undefined.
+          token.mfaEnabled = user.mfaEnabled ?? false;
         }
         return token;
       },
@@ -103,6 +115,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(async () => {
         if (session.user) {
           session.user.id = token.id as string;
           session.user.role = token.role as string;
+          session.user.mfaEnabled = token.mfaEnabled as boolean;
         }
         return session;
       },

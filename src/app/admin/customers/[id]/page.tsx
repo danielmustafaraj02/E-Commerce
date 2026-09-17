@@ -9,11 +9,16 @@ export default async function AdminCustomerDetailPage({
 }: PageProps<"/admin/customers/[id]">) {
   const { id } = await params;
 
-  const [settings, customer] = await Promise.all([
+  const [settings, customer, wishlistItems] = await Promise.all([
     getStoreSettings(),
     db.user.findUnique({
       where: { id },
       include: { orders: { orderBy: { createdAt: "desc" } } },
+    }),
+    db.wishlistItem.findMany({
+      where: { userId: id },
+      orderBy: { createdAt: "desc" },
+      include: { product: true },
     }),
   ]);
 
@@ -41,6 +46,28 @@ export default async function AdminCustomerDetailPage({
               </Link>
               <span className="text-foreground/70">{order.status}</span>
               <span>{formatMoney(order.total, order.currency, settings.defaultLocale)}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <h2 className="mt-8 mb-3 text-lg font-medium">Wishlist ({wishlistItems.length})</h2>
+      {wishlistItems.length === 0 ? (
+        <p className="text-foreground/70 text-sm">Nothing saved to their wishlist.</p>
+      ) : (
+        <ul className="divide-foreground/10 flex flex-col divide-y text-sm">
+          {wishlistItems.map((item) => (
+            <li key={item.id} className="flex justify-between py-2">
+              <Link
+                href={`/products/${item.product.slug}`}
+                className="text-primary hover:underline"
+              >
+                {item.product.name}
+              </Link>
+              <span className="text-foreground/70">
+                {formatMoney(item.product.price, item.product.currency, settings.defaultLocale)}
+              </span>
+              <span className="text-foreground/50">{item.createdAt.toLocaleDateString()}</span>
             </li>
           ))}
         </ul>

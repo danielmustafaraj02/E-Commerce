@@ -6,7 +6,7 @@ export default async function AdminCustomersPage() {
     where: { role: "customer" },
     orderBy: { createdAt: "desc" },
     take: 200,
-    include: { _count: { select: { orders: true } } },
+    include: { _count: { select: { orders: true, wishlistItems: true } } },
   });
 
   return (
@@ -21,6 +21,7 @@ export default async function AdminCustomersPage() {
                 <th className="py-3 pr-4 pl-4 font-medium">Name</th>
                 <th className="py-3 pr-4 font-medium">Email</th>
                 <th className="py-3 pr-4 font-medium">Orders</th>
+                <th className="py-3 pr-4 font-medium">Wishlist</th>
                 <th className="py-3 pr-4 font-medium">Joined</th>
               </tr>
             </thead>
@@ -40,6 +41,7 @@ export default async function AdminCustomersPage() {
                     </Link>
                   </td>
                   <td className="py-3 pr-4">{customer._count.orders}</td>
+                  <td className="py-3 pr-4">{customer._count.wishlistItems}</td>
                   <td className="text-foreground/70 py-3 pr-4">
                     {customer.createdAt.toLocaleDateString()}
                   </td>

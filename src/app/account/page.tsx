@@ -51,6 +51,13 @@ export default async function AccountPage() {
       </section>
 
       <section className="mt-10">
+        <h2 className="mb-3 text-lg font-medium">{dict.account.wishlist}</h2>
+        <Link href="/account/wishlist" className="text-primary text-sm hover:underline">
+          {dict.account.viewWishlist}
+        </Link>
+      </section>
+
+      <section className="mt-10">
         <h2 className="mb-3 text-lg font-medium">{dict.account.security}</h2>
         <Link href="/account/mfa" className="text-primary text-sm hover:underline">
           {user.mfaEnabled ? dict.account.manageMfa : dict.account.enableMfa}

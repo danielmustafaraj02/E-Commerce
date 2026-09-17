@@ -4,10 +4,19 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCartStore } from "@/lib/cart-store";
 import { formatMoney } from "@/lib/format";
+import { applyTemplate } from "@/lib/i18n/format";
 import { QuantityStepper } from "@/components/quantity-stepper";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
-export function CartClient({ locale, dict }: { locale: string; dict: Dictionary["cart"] }) {
+export function CartClient({
+  locale,
+  dict,
+  freeShippingThreshold,
+}: {
+  locale: string;
+  dict: Dictionary["cart"];
+  freeShippingThreshold: number | null;
+}) {
   const items = useCartStore((state) => state.items);
   const setQuantity = useCartStore((state) => state.setQuantity);
   const removeItem = useCartStore((state) => state.removeItem);
@@ -32,6 +41,34 @@ export function CartClient({ locale, dict }: { locale: string; dict: Dictionary[
 
   return (
     <div className="flex flex-col gap-6">
+      {freeShippingThreshold !== null && (
+        <div className="border-foreground/10 bg-surface rounded-lg border p-4">
+          {estimatedSubtotal >= freeShippingThreshold ? (
+            <p className="text-primary text-sm font-medium">{dict.freeShippingUnlocked}</p>
+          ) : (
+            <>
+              <p className="text-foreground/70 mb-2 text-sm">
+                {applyTemplate(dict.freeShippingProgress, {
+                  amount: formatMoney(
+                    freeShippingThreshold - estimatedSubtotal,
+                    items[0].currency,
+                    locale
+                  ),
+                })}
+              </p>
+              <div className="bg-foreground/10 h-2 w-full overflow-hidden rounded-full">
+                <div
+                  className="bg-primary h-full rounded-full transition-all duration-300"
+                  style={{
+                    width: `${Math.min(100, (estimatedSubtotal / freeShippingThreshold) * 100)}%`,
+                  }}
+                />
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
       <ul className="border-foreground/10 bg-surface divide-foreground/10 flex flex-col divide-y overflow-hidden rounded-lg border">
         {items.map((item) => (
           <li key={item.productId} className="flex items-center gap-4 p-4">

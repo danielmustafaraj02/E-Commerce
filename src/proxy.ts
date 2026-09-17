@@ -54,6 +54,16 @@ export default async function proxy(request: NextRequest) {
       loginUrl.searchParams.set("callbackUrl", pathname);
       return withSecurityHeaders(NextResponse.redirect(loginUrl));
     }
+
+    // MFA is mandatory for admin/staff — the highest-value account on the
+    // site. `token.mfaEnabled` is only as fresh as the last sign-in (see
+    // auth.ts's jwt callback), so this deliberately sends them to set it up
+    // rather than silently letting a not-yet-enrolled admin session through.
+    if (!token?.mfaEnabled) {
+      const mfaUrl = new URL("/account/mfa", request.url);
+      mfaUrl.searchParams.set("required", "1");
+      return withSecurityHeaders(NextResponse.redirect(mfaUrl));
+    }
   }
 
   if (pathname.startsWith("/account") && !token) {
