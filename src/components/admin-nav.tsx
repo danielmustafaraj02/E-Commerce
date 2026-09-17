@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-type NavItem = { href: string; label: string };
+type NavItem = { href: string; label: string; badge?: number };
 export type NavGroup = { label: string; items: NavItem[] };
 
 export function AdminNav({ groups }: { groups: NavGroup[] }) {
@@ -27,13 +27,18 @@ export function AdminNav({ groups }: { groups: NavGroup[] }) {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`rounded px-3 py-2 transition-colors ${
+                className={`flex items-center gap-2 rounded px-3 py-2 transition-colors ${
                   active
                     ? "bg-primary/10 text-primary font-medium"
                     : "text-foreground/80 hover:bg-foreground/5 hover:text-primary"
                 }`}
               >
                 {item.label}
+                {Boolean(item.badge) && (
+                  <span className="bg-primary rounded-full px-1.5 py-0.5 text-[11px] leading-none font-semibold text-white">
+                    {item.badge}
+                  </span>
+                )}
               </Link>
             );
           })}

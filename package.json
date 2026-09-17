@@ -37,6 +37,7 @@
     "qrcode": "^1.5.4",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "react-email": "^6.9.5",
     "resend": "^6.26.0",
     "stripe": "^22.6.1",
     "swiper": "^14.2.0",

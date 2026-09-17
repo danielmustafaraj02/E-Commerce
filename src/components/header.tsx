@@ -98,6 +98,12 @@ export async function Header({
             >
               {dict.footer.about}
             </Link>
+            <Link
+              href="/murano-glass"
+              className="link-underline text-foreground/80 hover:text-primary transition-colors"
+            >
+              {dict.footer.muranoGuide}
+            </Link>
           </nav>
 
           <form action="/products" method="GET" className="relative flex items-center">

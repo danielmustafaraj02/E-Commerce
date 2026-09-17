@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { db } from "@/lib/db";
-import { sendEmail } from "@/lib/email";
+import { sendVerificationEmailMessage } from "@/lib/email";
 import { getStoreSettings } from "@/lib/store-settings";
 
 export const registerSchema = z.object({
@@ -54,10 +54,7 @@ export async function sendVerificationEmail(email: string) {
   const settings = await getStoreSettings();
   const base = settings.siteUrl || process.env.NEXTAUTH_URL || "http://localhost:3000";
   const verifyUrl = `${base}/api/auth/verify-email?token=${token}`;
+  const expiresInHours = VERIFICATION_TOKEN_TTL_MS / (60 * 60 * 1000);
 
-  await sendEmail({
-    to: email,
-    subject: `Confirm your email — ${settings.storeName}`,
-    text: `Welcome to ${settings.storeName}!\n\nConfirm your email address by clicking the link below:\n${verifyUrl}\n\nThis link expires in 24 hours. If you didn't create this account, you can safely ignore this email.`,
-  });
+  await sendVerificationEmailMessage({ to: email, verifyUrl, expiresInHours });
 }

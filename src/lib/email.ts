@@ -1,14 +1,36 @@
 import { Resend } from "resend";
+import { render } from "react-email";
+import * as React from "react";
 import { getStoreSettings } from "@/lib/store-settings";
+import { rateLimit } from "@/lib/rate-limit";
+import { VerifyEmail } from "@/emails/verify-email";
+import { OrderStatusEmail, type OrderStatus } from "@/emails/order-status";
+
+// Resend's free plan caps out at 100/day — this stops just short of that
+// account-wide ceiling so a traffic spike (or a bug looping order-status
+// emails) can't push the account into a paid plan on its own. One shared
+// key across all instances since this is a global account-level budget, not
+// a per-user or per-IP limit.
+const DAILY_EMAIL_CAP = 80;
 
 // Same graceful-degradation pattern as Stripe/PayPal: without a real API
 // key this logs instead of throwing, so the rest of the app keeps working
 // in dev and the gap is obvious rather than silent. Checks the DB (Admin >
 // Settings > Integrations) first, falling back to env vars of the same name.
-export async function sendEmail(input: { to: string; subject: string; text: string }) {
+export async function sendEmail(input: {
+  to: string;
+  subject: string;
+  text: string;
+  html?: string;
+}) {
   const settings = await getStoreSettings();
   const apiKey = settings.resendApiKey || process.env.RESEND_API_KEY;
   const from = settings.emailFrom || process.env.EMAIL_FROM || "orders@example.com";
+  // The `from` address (e.g. orders@perlamuranoglass.com) has no real inbox
+  // behind it — inbound receiving isn't set up for it. Routing replies to
+  // the real, human-monitored contact address (Admin > Settings > General)
+  // is what makes "Reply" on an order email actually reach someone.
+  const replyTo = settings.contactEmail || undefined;
 
   if (!apiKey) {
     console.warn(
@@ -17,18 +39,60 @@ export async function sendEmail(input: { to: string; subject: string; text: stri
     return;
   }
 
+  const { success } = await rateLimit("email:daily-cap", DAILY_EMAIL_CAP, 24 * 60 * 60 * 1000);
+  if (!success) {
+    console.warn(
+      `[email] Daily cap of ${DAILY_EMAIL_CAP} emails reached — skipping email to ${input.to}: ${input.subject}`
+    );
+    return;
+  }
+
   const resend = new Resend(apiKey);
-  await resend.emails.send({ from, to: input.to, subject: input.subject, text: input.text });
+  await resend.emails.send({
+    from,
+    to: input.to,
+    subject: input.subject,
+    text: input.text,
+    ...(input.html ? { html: input.html } : {}),
+    ...(replyTo ? { replyTo } : {}),
+  });
 }
 
-const STATUS_MESSAGES: Record<string, string> = {
-  paid: "We've received your payment and your order is now being prepared.",
-  processing: "Your order is being processed.",
-  shipped: "Your order is on its way.",
-  delivered: "Your order has been delivered. Enjoy!",
-  cancelled: "Your order has been cancelled.",
-  refunded: "Your order has been refunded.",
-};
+const KNOWN_ORDER_STATUSES = new Set<OrderStatus>([
+  "paid",
+  "processing",
+  "shipped",
+  "delivered",
+  "cancelled",
+  "refunded",
+]);
+
+function isKnownOrderStatus(status: string): status is OrderStatus {
+  return KNOWN_ORDER_STATUSES.has(status as OrderStatus);
+}
+
+export async function sendVerificationEmailMessage(input: {
+  to: string;
+  verifyUrl: string;
+  expiresInHours: number;
+}) {
+  const settings = await getStoreSettings();
+  const element = React.createElement(VerifyEmail, {
+    storeName: settings.storeName,
+    logoUrl: settings.logoUrl,
+    primaryColor: settings.primaryColor,
+    verifyUrl: input.verifyUrl,
+    expiresInHours: input.expiresInHours,
+  });
+  const [html, text] = await Promise.all([render(element), render(element, { plainText: true })]);
+
+  await sendEmail({
+    to: input.to,
+    subject: `Confirm your email — ${settings.storeName}`,
+    html,
+    text,
+  });
+}
 
 export async function sendOrderStatusEmail(order: {
   orderNumber: string;
@@ -40,12 +104,38 @@ export async function sendOrderStatusEmail(order: {
   const to = order.user?.email ?? order.guestEmail;
   if (!to) return;
 
-  const message = STATUS_MESSAGES[order.status] ?? `Your order status changed to ${order.status}.`;
-  const tracking = order.trackingNumber ? `\nTracking number: ${order.trackingNumber}` : "";
+  const settings = await getStoreSettings();
+
+  // Unknown/custom status values (anything outside the fixed set the
+  // template covers) fall back to a plain-text email rather than a
+  // half-populated branded one.
+  if (!isKnownOrderStatus(order.status)) {
+    await sendEmail({
+      to,
+      subject: `Order ${order.orderNumber}: ${order.status}`,
+      text: `Your order status changed to ${order.status}.\n\nOrder number: ${order.orderNumber}`,
+    });
+    return;
+  }
+
+  const base = settings.siteUrl || process.env.NEXTAUTH_URL || "http://localhost:3000";
+  const orderUrl = `${base}/order-confirmation/${order.orderNumber}`;
+
+  const element = React.createElement(OrderStatusEmail, {
+    storeName: settings.storeName,
+    logoUrl: settings.logoUrl,
+    primaryColor: settings.primaryColor,
+    orderNumber: order.orderNumber,
+    status: order.status,
+    trackingNumber: order.trackingNumber,
+    orderUrl,
+  });
+  const [html, text] = await Promise.all([render(element), render(element, { plainText: true })]);
 
   await sendEmail({
     to,
     subject: `Order ${order.orderNumber}: ${order.status}`,
-    text: `${message}${tracking}\n\nOrder number: ${order.orderNumber}`,
+    html,
+    text,
   });
 }

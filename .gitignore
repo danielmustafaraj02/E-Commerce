@@ -59,6 +59,8 @@ next-env.d.ts
 # AI tool local configs — may contain local paths or tokens, not for the repo
 /.claude/
 /.mcp.json
+/.agents/
+/skills-lock.json
 
 # internal QA/ops reports — working notes, not shipped source
 /reports/

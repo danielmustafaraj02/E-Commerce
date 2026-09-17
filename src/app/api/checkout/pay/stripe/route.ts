@@ -75,6 +75,11 @@ export async function POST(request: Request) {
     cancel_url: `${origin}/order-confirmation/${order.orderNumber}?cancelled=1`,
     metadata: { orderNumber: order.orderNumber },
     ...(order.guestEmail ? { customer_email: order.guestEmail } : {}),
+  }, {
+    // Guards against a double-click or client retry on this endpoint
+    // creating a second Checkout Session (and a second pending Payment row)
+    // for the same order.
+    idempotencyKey: `checkout-session:${order.orderNumber}`,
   });
 
   await db.payment.create({
