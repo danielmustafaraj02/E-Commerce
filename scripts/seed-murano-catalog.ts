@@ -18,12 +18,27 @@ import path from "node:path";
 import { db } from "../src/lib/db";
 import manifest from "./murano-manifest.json";
 
-type ManifestEntry = { category: string; name: string; description: string };
+type ManifestEntry = {
+  category: string;
+  name: string;
+  nameEn: string;
+  description: string;
+  descriptionEn: string;
+};
 
 const CATEGORY_FOLDERS: Record<string, string> = {
   Bracciali: "bracciali-in-vetro-di-murano",
   Collane: "collane-in-vetro-di-murano",
   Orecchini: "orecchini-in-vetro-di-murano",
+};
+
+// English names shown when the storefront locale is "en" — see
+// src/lib/product-i18n.ts. Keyed by the same Italian category name used
+// above and in the manifest.
+const CATEGORY_NAMES_EN: Record<string, string> = {
+  Bracciali: "Bracelets",
+  Collane: "Necklaces",
+  Orecchini: "Earrings",
 };
 
 function slugify(input: string): string {
@@ -87,8 +102,12 @@ async function main() {
         } else {
           const category = await db.category.upsert({
             where: { slug: folder },
-            update: {},
-            create: { name: categoryName, slug: folder },
+            update: { nameEn: CATEGORY_NAMES_EN[categoryName] },
+            create: {
+              name: categoryName,
+              nameEn: CATEGORY_NAMES_EN[categoryName],
+              slug: folder,
+            },
           });
           categoryIds.set(categoryName, category.id);
         }
@@ -112,8 +131,10 @@ async function main() {
       await db.product.create({
         data: {
           name: entry.name,
+          nameEn: entry.nameEn,
           slug: base,
           description: entry.description,
+          descriptionEn: entry.descriptionEn,
           price,
           currency: "EUR",
           sku,

@@ -64,3 +64,12 @@ export const getStoreSettings = cache(async () => {
   const settings = await db.storeSettings.findFirst();
   return settings ?? defaults;
 });
+
+// Next.js replaces `openGraph`/`twitter` wholesale per route rather than
+// deep-merging them with the root layout's — so any page that returns its
+// own `openGraph` object needs to set `images` itself, or the social
+// preview silently loses it. Centralized here so every page falls back to
+// the same social image the root layout uses.
+export function ogImage(settings: Pick<StoreSettings, "ogImageUrl" | "logoUrl">) {
+  return settings.ogImageUrl || settings.logoUrl || undefined;
+}

@@ -10,7 +10,7 @@ export function CategoryForm({
   submitLabel,
 }: {
   action: (prevState: unknown, formData: FormData) => Promise<{ error: string | null } | void>;
-  initial?: { name: string; slug: string; parentId: string | null };
+  initial?: { name: string; nameEn: string | null; slug: string; parentId: string | null };
   categories: { id: string; name: string }[];
   submitLabel: string;
 }) {
@@ -19,8 +19,15 @@ export function CategoryForm({
   return (
     <form action={formAction} className="form-card flex max-w-lg flex-col gap-4">
       <label className="flex flex-col gap-1.5 text-sm">
-        <span className="font-medium">Name</span>
+        <span className="font-medium">Name (Italian)</span>
         <input name="name" required defaultValue={initial?.name} className="field" />
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (English)</span>
+        <input name="nameEn" defaultValue={initial?.nameEn ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in English. Falls back to the Italian name if left blank.
+        </span>
       </label>
       <label className="flex flex-col gap-1.5 text-sm">
         <span className="font-medium">Slug</span>

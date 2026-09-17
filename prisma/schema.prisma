@@ -177,6 +177,10 @@ model VerificationToken {
 model Category {
   id       String  @id @default(cuid())
   name     String
+  // English display name, shown when the storefront locale is "en" (see
+  // src/lib/product-i18n.ts). Optional and falls back to `name` so
+  // catalogs that only ever had one language keep working unchanged.
+  nameEn   String?
   slug     String  @unique
   parentId String?
   parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -189,8 +193,13 @@ model Category {
 model Product {
   id                String   @id @default(cuid())
   name              String
+  // English translations, shown when the storefront locale is "en" (see
+  // src/lib/product-i18n.ts). Optional and fall back to name/description
+  // so products that haven't been translated yet still render correctly.
+  nameEn            String?
   slug              String   @unique
   description       String
+  descriptionEn     String?
   price             Int // cents, tax-inclusive display price (see StoreSettings.pricesIncludeTax)
   currency          String   @default("EUR")
   sku               String   @unique

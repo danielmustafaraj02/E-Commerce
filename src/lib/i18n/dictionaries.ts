@@ -77,6 +77,35 @@ const en = {
       "Murano glassmaking dates back to 1291, when Venice's furnaces were moved to the island of Murano — both to protect the city from fire risk and to keep the glassmakers' techniques close, on an island easier to control. Over seven centuries, that isolation turned into a concentration of skill found nowhere else: generations of maestri passing down lamp-working, murrine, and glass-blowing techniques that are still done entirely by hand today.",
     heritageBody2:
       "Every piece here is made using those same traditional techniques — no molds, no mass production. Small variations in color, bubbles, and shape aren't flaws; they're what a hand-blown piece looks like, and no two are ever quite identical.",
+    techniquesTitle: "The techniques behind the names",
+    techniquesBody:
+      "A few terms come up across the catalog. Lampworking (a lume) is shaping a glass rod over an open flame, bead by bead — how most of the round and organic beads here are made. Murrine are tiny mosaic-like slices of patterned glass cane, fused into a bead. A craquelé finish comes from plunging hot glass into cold water to crack its surface, then sealing the pattern under a clear layer. Gold and silver leaf are worked directly into the molten glass while it's still soft, which is where the metallic flecks and veining in many pieces come from. Sandblasting is done after the glass has cooled, to soften its shine into a matte, frosted finish.",
+    authenticityTitle: "Genuine vs. imitation",
+    authenticityBody:
+      "\"Murano glass\" is also one of the most imitated names in jewelry — mass-produced glass beads made elsewhere are routinely sold under the same label. Glass actually worked on the island carries visible signs of hand work: small air bubbles, slight asymmetry between beads in the same set, and color that shifts subtly from piece to piece, because every bead passes through a human hand rather than a mold. If two \"identical\" pieces look perfectly uniform, that's usually the giveaway that they aren't hand-blown at all.",
+    faqTitle: "Common questions",
+    faq: [
+      {
+        question: "Is this genuine Murano glass?",
+        answer:
+          "Yes — every piece is made from glass worked by hand on Murano, using traditional lampworking and blowing techniques, not molded or mass-produced. See \"Genuine vs. imitation\" above for how to recognize the difference.",
+      },
+      {
+        question: "What do \"murrine\", \"craquelé\" and \"lampworking\" mean?",
+        answer:
+          "They're the techniques named throughout our product descriptions — lampworking shapes glass over an open flame, murrine are mosaic-like glass-cane slices fused into a bead, and craquelé is a deliberately cracked-and-sealed finish. Full explanations are in \"The techniques behind the names\" above.",
+      },
+      {
+        question: "Why do beads in the same set look slightly different from each other?",
+        answer:
+          "Because each bead is shaped by hand, not cast from a mold — small differences in color, bubbles and shape are the mark of hand-blown glass, not a defect.",
+      },
+      {
+        question: "How should I care for hand-blown glass jewelry?",
+        answer:
+          "Put it on after perfume, hairspray and lotion, not before, since those can dull the surface over time. Wipe with a soft, dry cloth after wearing, and store pieces separately — a soft pouch or lined box — so they don't knock against each other or harder jewelry.",
+      },
+    ],
   },
   contact: {
     title: "Contact us",
@@ -137,6 +166,7 @@ const en = {
     addToWishlist: "Add to wishlist",
     removeFromWishlist: "Remove from wishlist",
     signInToSaveWishlist: "Sign in to save items to your wishlist.",
+    authenticityLink: "How to tell genuine Murano glass",
   },
   wishlist: {
     title: "Your wishlist",
@@ -323,6 +353,35 @@ const it: Dictionary = {
       "La lavorazione del vetro di Murano risale al 1291, quando le fornaci di Venezia furono trasferite sull'isola di Murano — sia per proteggere la città dal rischio di incendi, sia per custodire le tecniche dei vetrai in un luogo più facile da controllare. In sette secoli, quell'isolamento è diventato una concentrazione di maestria che non si trova altrove: generazioni di maestri che si sono tramandati tecniche di lavorazione a lume, murrine e soffiatura del vetro ancora oggi interamente manuali.",
     heritageBody2:
       "Ogni pezzo qui è realizzato con queste stesse tecniche tradizionali — nessuno stampo, nessuna produzione in serie. Le piccole variazioni di colore, le bolle e le forme non sono difetti: sono ciò che rende un pezzo soffiato a mano unico, mai identico a un altro.",
+    techniquesTitle: "Le tecniche dietro i nomi",
+    techniquesBody:
+      "Nel catalogo tornano spesso alcuni termini. La lavorazione a lume consiste nel modellare una bacchetta di vetro sulla fiamma, perla dopo perla: è così che nascono la maggior parte delle perle tonde e organiche. Le murrine sono piccole fette di canna di vetro decorata, simili a un mosaico, fuse all'interno della perla. L'effetto craquelé si ottiene immergendo il vetro caldo in acqua fredda, che ne screpola la superficie, per poi sigillare il motivo sotto uno strato di vetro trasparente. La foglia d'oro e d'argento viene lavorata direttamente nel vetro fuso mentre è ancora morbido, ed è da qui che nascono i riflessi e le venature metalliche di molti pezzi. La sabbiatura si esegue a freddo, dopo la lavorazione, per trasformare la lucentezza del vetro in una finitura opaca e vellutata.",
+    authenticityTitle: "Autentico o imitazione",
+    authenticityBody:
+      "\"Vetro di Murano\" è anche uno dei nomi più imitati nella bigiotteria: perle di vetro prodotte altrove vengono spesso vendute con la stessa dicitura. Il vetro davvero lavorato sull'isola porta segni visibili della manualità: piccole bolle d'aria, una leggera asimmetria tra le perle di uno stesso set e un colore che varia impercettibilmente da un pezzo all'altro, perché ogni perla passa dalle mani di un maestro e non da uno stampo. Se due pezzi \"identici\" sembrano perfettamente uniformi, di solito è proprio questo il segnale che non sono soffiati a mano.",
+    faqTitle: "Domande frequenti",
+    faq: [
+      {
+        question: "È vero vetro di Murano?",
+        answer:
+          "Sì — ogni pezzo è realizzato con vetro lavorato a mano a Murano, con tecniche tradizionali di lavorazione a lume e soffiatura, mai stampato o prodotto in serie. Vedi \"Autentico o imitazione\" qui sopra per capire come riconoscere la differenza.",
+      },
+      {
+        question: "Cosa significano \"murrine\", \"craquelé\" e \"lavorazione a lume\"?",
+        answer:
+          "Sono le tecniche che tornano nelle descrizioni dei nostri prodotti — la lavorazione a lume modella il vetro sulla fiamma, le murrine sono fette di canna di vetro decorata fuse nella perla, il craquelé è una finitura ottenuta screpolando e poi sigillando il vetro. Le spiegazioni complete sono in \"Le tecniche dietro i nomi\" qui sopra.",
+      },
+      {
+        question: "Perché le perle di uno stesso set sembrano leggermente diverse tra loro?",
+        answer:
+          "Perché ogni perla è modellata a mano, non colata in uno stampo — le piccole differenze di colore, le bolle e la forma sono il segno del vetro soffiato a mano, non un difetto.",
+      },
+      {
+        question: "Come mi prendo cura dei gioielli in vetro soffiato a mano?",
+        answer:
+          "Indossali dopo aver messo profumo, lacca e creme, non prima, perché possono opacizzare la superficie nel tempo. Puliscili con un panno morbido e asciutto dopo l'uso, e conservali separati — in un sacchetto morbido o in una scatola foderata — per evitare che si urtino tra loro o con altri gioielli più duri.",
+      },
+    ],
   },
   contact: {
     title: "Contattaci",
@@ -383,6 +442,7 @@ const it: Dictionary = {
     addToWishlist: "Aggiungi alla lista desideri",
     removeFromWishlist: "Rimuovi dalla lista desideri",
     signInToSaveWishlist: "Accedi per salvare articoli nella tua lista desideri.",
+    authenticityLink: "Come riconoscere il vero vetro di Murano",
   },
   wishlist: {
     title: "La tua lista desideri",

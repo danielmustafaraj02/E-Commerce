@@ -28,8 +28,10 @@ export default async function EditProductPage({ params }: PageProps<"/admin/prod
         submitLabel="Save changes"
         initial={{
           name: product.name,
+          nameEn: product.nameEn,
           slug: product.slug,
           description: product.description,
+          descriptionEn: product.descriptionEn,
           price: product.price,
           sku: product.sku,
           stockQty: product.stockQty,

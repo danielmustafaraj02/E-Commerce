@@ -8,8 +8,10 @@ type Supplier = { id: string; name: string };
 
 export type ProductFormValues = {
   name: string;
+  nameEn: string | null;
   slug: string;
   description: string;
+  descriptionEn: string | null;
   price: number; // cents
   sku: string;
   stockQty: number;
@@ -42,8 +44,15 @@ export function ProductForm({
   return (
     <form action={formAction} className="form-card flex max-w-2xl flex-col gap-4">
       <label className="flex flex-col gap-1.5 text-sm">
-        <span className="font-medium">Name</span>
+        <span className="font-medium">Name (Italian)</span>
         <input name="name" required defaultValue={initial?.name} className="field" />
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (English)</span>
+        <input name="nameEn" defaultValue={initial?.nameEn ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in English. Falls back to the Italian name if left blank.
+        </span>
       </label>
       <label className="flex flex-col gap-1.5 text-sm">
         <span className="font-medium">Slug</span>
@@ -56,7 +65,7 @@ export function ProductForm({
         />
       </label>
       <label className="flex flex-col gap-1.5 text-sm">
-        <span className="font-medium">Description</span>
+        <span className="font-medium">Description / story (Italian)</span>
         <textarea
           name="description"
           required
@@ -64,6 +73,20 @@ export function ProductForm({
           defaultValue={initial?.description}
           className="field"
         />
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Description / story (English)</span>
+        <textarea
+          name="descriptionEn"
+          rows={4}
+          defaultValue={initial?.descriptionEn ?? ""}
+          className="field"
+        />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in English. Falls back to the Italian description if left
+          blank — but an English visitor reading untranslated Italian copy is a worse experience
+          than a shorter English one, so it&apos;s worth filling in.
+        </span>
       </label>
       <div className="flex gap-3">
         <label className="flex flex-1 flex-col gap-1.5 text-sm">

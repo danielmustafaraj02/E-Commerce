@@ -3,9 +3,11 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { z } from "zod";
 import { db } from "@/lib/db";
-import { getStoreSettings } from "@/lib/store-settings";
+import { getStoreSettings, ogImage } from "@/lib/store-settings";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
+import { localizedName } from "@/lib/product-i18n";
+import { toSafeJsonLd } from "@/lib/json-ld";
 import { ProductCard } from "@/components/product-card";
 import { ProductFilterPanel } from "@/components/product-filter-panel";
 import { Pagination } from "@/components/pagination";
@@ -27,15 +29,35 @@ export async function generateMetadata({
   params,
 }: PageProps<"/category/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  const [settings, category] = await Promise.all([getStoreSettings(), getCategory(slug)]);
+  const [settings, locale, category] = await Promise.all([
+    getStoreSettings(),
+    getLocale(),
+    getCategory(slug),
+  ]);
   if (!category) return {};
 
-  const description = `Shop ${category.name} at ${settings.storeName}`;
+  const name = localizedName(category, locale);
+  const description =
+    locale === "en"
+      ? `Shop ${name} at ${settings.storeName}, filterable by price and availability.`
+      : `Scopri i ${name.toLowerCase()} di ${settings.storeName}, filtrabili per prezzo e disponibilità.`;
+  const image = ogImage(settings);
   return {
-    title: category.name,
+    title: name,
     description,
     alternates: { canonical: `/category/${category.slug}` },
-    openGraph: { title: category.name, description, type: "website" },
+    openGraph: {
+      title: name,
+      description,
+      type: "website",
+      images: image ? [{ url: image }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: name,
+      description,
+      images: image ? [image] : undefined,
+    },
   };
 }
 
@@ -66,6 +88,7 @@ export default async function CategoryPage({
 
   if (!category) notFound();
   const dict = getDictionary(uiLocale);
+  const categoryName = localizedName(category, uiLocale);
 
   const where = {
     active: true,
@@ -108,8 +131,47 @@ export default async function CategoryPage({
     return `/category/${category.slug}?${params.toString()}`;
   };
 
+  const base = settings.siteUrl || "";
+  const categoryUrl = `${base}/category/${category.slug}`;
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: settings.storeName, item: base || undefined },
+      { "@type": "ListItem", position: 2, name: categoryName, item: categoryUrl },
+    ],
+  };
+
+  // A lightweight ItemList of the current page's products — lets an AI
+  // answer engine (or Google) enumerate what this category actually
+  // contains without having to render/parse the product grid itself.
+  const itemListJsonLd =
+    products.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          itemListElement: products.map((product, index) => ({
+            "@type": "ListItem",
+            position: (filters.page - 1) * PAGE_SIZE + index + 1,
+            name: localizedName(product, uiLocale),
+            url: `${base}/products/${product.slug}`,
+          })),
+        }
+      : null;
+
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-4 py-16 sm:flex-row">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toSafeJsonLd(breadcrumbJsonLd) }}
+      />
+      {itemListJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: toSafeJsonLd(itemListJsonLd) }}
+        />
+      )}
       <ProductFilterPanel
         dict={dict.products}
         showCategory={false}
@@ -122,7 +184,7 @@ export default async function CategoryPage({
       />
 
       <section className="flex-1">
-        <h1 className="mb-2 text-2xl font-semibold">{category.name}</h1>
+        <h1 className="mb-2 text-2xl font-semibold">{categoryName}</h1>
 
         {category.children.length > 0 && (
           <div className="mb-6 flex flex-wrap gap-3 text-sm">
@@ -132,7 +194,7 @@ export default async function CategoryPage({
                 href={`/category/${child.slug}`}
                 className="border-foreground/20 hover:text-primary rounded border px-3 py-1"
               >
-                {child.name}
+                {localizedName(child, uiLocale)}
               </a>
             ))}
           </div>
@@ -149,7 +211,7 @@ export default async function CategoryPage({
             {products.map((product) => (
               <ProductCard
                 key={product.slug}
-                product={product}
+                product={{ ...product, name: localizedName(product, uiLocale) }}
                 locale={settings.defaultLocale}
                 outOfStockLabel={dict.product.outOfStock}
                 quickAddLabel={dict.product.addToCart}

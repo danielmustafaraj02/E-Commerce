@@ -8,6 +8,7 @@ import { writeAuditLog } from "@/lib/audit-log";
 
 const categorySchema = z.object({
   name: z.string().min(1).max(200),
+  nameEn: z.string().max(200).optional(),
   slug: z
     .string()
     .min(1)
@@ -19,6 +20,7 @@ const categorySchema = z.object({
 function parseForm(formData: FormData) {
   return categorySchema.safeParse({
     name: formData.get("name"),
+    nameEn: formData.get("nameEn") || undefined,
     slug: formData.get("slug"),
     parentId: formData.get("parentId") || undefined,
   });
@@ -35,6 +37,7 @@ export async function createCategory(_prevState: unknown, formData: FormData) {
   const category = await db.category.create({
     data: {
       name: parsed.data.name,
+      nameEn: parsed.data.nameEn || null,
       slug: parsed.data.slug,
       parentId: parsed.data.parentId || null,
     },
@@ -72,6 +75,7 @@ export async function updateCategory(categoryId: string, _prevState: unknown, fo
     where: { id: categoryId },
     data: {
       name: parsed.data.name,
+      nameEn: parsed.data.nameEn || null,
       slug: parsed.data.slug,
       parentId: parsed.data.parentId || null,
     },

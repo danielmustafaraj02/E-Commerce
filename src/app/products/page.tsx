@@ -1,8 +1,11 @@
 import { z } from "zod";
+import type { Metadata } from "next";
 import { db } from "@/lib/db";
-import { getStoreSettings } from "@/lib/store-settings";
+import { getStoreSettings, ogImage } from "@/lib/store-settings";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
+import { localizedName } from "@/lib/product-i18n";
+import { toSafeJsonLd } from "@/lib/json-ld";
 import { ProductCard } from "@/components/product-card";
 import { ProductFilterPanel } from "@/components/product-filter-panel";
 import { Pagination } from "@/components/pagination";
@@ -17,6 +20,48 @@ const filtersSchema = z.object({
   inStock: z.enum(["1"]).optional(),
   page: z.coerce.number().int().positive().default(1),
 });
+
+export async function generateMetadata({
+  searchParams,
+}: PageProps<"/products">): Promise<Metadata> {
+  const [settings, locale, raw] = await Promise.all([
+    getStoreSettings(),
+    getLocale(),
+    searchParams,
+  ]);
+  const dict = getDictionary(locale);
+  const description =
+    locale === "en"
+      ? `Browse the full ${settings.storeName} catalog.`
+      : `Sfoglia il catalogo completo di ${settings.storeName}.`;
+  const image = ogImage(settings);
+  // A search/filtered view (?q=, ?category=, ...) canonicalizes to the plain
+  // catalog since it's a thin slice of the same content — but plain
+  // pagination (?page=2 with nothing else set) is genuinely different
+  // products, so it gets a self-referencing canonical instead of collapsing
+  // every page into page 1.
+  const isPlainPagination =
+    !raw.q && !raw.category && !raw.minPrice && !raw.maxPrice && !raw.inStock;
+  const page = Array.isArray(raw.page) ? raw.page[0] : raw.page;
+  const canonical = isPlainPagination && page && page !== "1" ? `/products?page=${page}` : "/products";
+  return {
+    title: dict.products.allProducts,
+    description,
+    alternates: { canonical },
+    openGraph: {
+      title: dict.products.allProducts,
+      description,
+      type: "website",
+      images: image ? [{ url: image }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: dict.products.allProducts,
+      description,
+      images: image ? [image] : undefined,
+    },
+  };
+}
 
 export default async function ProductsPage({ searchParams }: PageProps<"/products">) {
   const raw = await searchParams;
@@ -52,7 +97,12 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
   const where = {
     active: true,
     ...(filters.q && {
-      OR: [{ name: { contains: filters.q } }, { description: { contains: filters.q } }],
+      OR: [
+        { name: { contains: filters.q } },
+        { nameEn: { contains: filters.q } },
+        { description: { contains: filters.q } },
+        { descriptionEn: { contains: filters.q } },
+      ],
     }),
     ...(filters.category && { category: { slug: filters.category } }),
     ...(filters.inStock && { stockQty: { gt: 0 } }),
@@ -88,8 +138,32 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
     return `/products?${params.toString()}`;
   };
 
+  // Only for the plain, unfiltered catalog view — a search/filter result is
+  // a thin, high-cardinality slice that isn't worth asserting as a
+  // canonical ItemList.
+  const isPlainBrowse = !filters.q && !filters.category && !filters.minPrice && !filters.maxPrice;
+  const itemListJsonLd =
+    isPlainBrowse && products.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          itemListElement: products.map((product, index) => ({
+            "@type": "ListItem",
+            position: (filters.page - 1) * PAGE_SIZE + index + 1,
+            name: localizedName(product, uiLocale),
+            url: `${settings.siteUrl || ""}/products/${product.slug}`,
+          })),
+        }
+      : null;
+
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-4 py-16 sm:flex-row">
+      {itemListJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: toSafeJsonLd(itemListJsonLd) }}
+        />
+      )}
       <ProductFilterPanel
         dict={dict.products}
         categories={categories}
@@ -113,7 +187,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
             {products.map((product) => (
               <ProductCard
                 key={product.slug}
-                product={product}
+                product={{ ...product, name: localizedName(product, uiLocale) }}
                 locale={settings.defaultLocale}
                 outOfStockLabel={dict.product.outOfStock}
                 quickAddLabel={dict.product.addToCart}

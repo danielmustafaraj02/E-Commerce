@@ -45,6 +45,8 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: settings.storeName,
       images: ogImage ? [{ url: ogImage }] : undefined,
       type: "website",
+      locale: "en_US",
+      alternateLocale: ["it_IT"],
     },
     twitter: {
       card: "summary_large_image",
@@ -100,6 +102,25 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
                     },
                   }
                 : {}),
+            }),
+          }}
+        />
+        {/* Lets Google show a sitelinks search box under this site's search
+            result, pointing at the existing /products?q= search — no new
+            functionality needed, just declaring what already exists. */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: toSafeJsonLd({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: settings.storeName,
+              url: siteUrl(settings),
+              potentialAction: {
+                "@type": "SearchAction",
+                target: `${siteUrl(settings)}/products?q={search_term_string}`,
+                "query-input": "required name=search_term_string",
+              },
             }),
           }}
         />

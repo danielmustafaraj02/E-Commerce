@@ -22,7 +22,12 @@ export default async function EditCategoryPage({
         action={boundUpdate}
         categories={categories}
         submitLabel="Save changes"
-        initial={{ name: category.name, slug: category.slug, parentId: category.parentId }}
+        initial={{
+          name: category.name,
+          nameEn: category.nameEn,
+          slug: category.slug,
+          parentId: category.parentId,
+        }}
       />
     </div>
   );

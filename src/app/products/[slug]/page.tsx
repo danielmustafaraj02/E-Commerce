@@ -11,6 +11,8 @@ import { toSafeJsonLd } from "@/lib/json-ld";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { applyTemplate } from "@/lib/i18n/format";
+import { localizedName, localizedDescription } from "@/lib/product-i18n";
+import { truncateAtWord } from "@/lib/text";
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { WishlistButton } from "@/components/wishlist-button";
 import { ShareButtons } from "@/components/share-buttons";
@@ -37,26 +39,38 @@ export async function generateMetadata({
   params,
 }: PageProps<"/products/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  const [settings, product] = await Promise.all([getStoreSettings(), getProduct(slug)]);
+  const [settings, locale, product] = await Promise.all([
+    getStoreSettings(),
+    getLocale(),
+    getProduct(slug),
+  ]);
   if (!product || !product.active) return {};
 
+  const name = localizedName(product, locale);
+  const categoryName = product.category ? localizedName(product.category, locale) : null;
+  // A distinct <title> per product/category, rather than the raw product
+  // name alone, gives Google (and AI answer engines summarizing the page)
+  // a stronger, less generic signal for what the page is about.
+  const title = categoryName ? `${name} — ${categoryName}` : name;
   const description =
-    product.description?.slice(0, 160) || `Buy ${product.name} at ${settings.storeName}`;
+    truncateAtWord(localizedDescription(product, locale), 155) ||
+    (locale === "en" ? `Buy ${name} at ${settings.storeName}` : `Acquista ${name} su ${settings.storeName}`);
   const image = product.images[0]?.url;
 
   return {
-    title: product.name,
+    title,
     description,
     alternates: { canonical: `/products/${product.slug}` },
     openGraph: {
-      title: product.name,
+      title: name,
       description,
       type: "website",
+      locale: locale === "it" ? "it_IT" : "en_US",
       images: image ? [{ url: image }] : undefined,
     },
     twitter: {
       card: "summary_large_image",
-      title: product.name,
+      title: name,
       description,
       images: image ? [image] : undefined,
     },
@@ -75,6 +89,9 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
 
   if (!product || !product.active) notFound();
   const dict = getDictionary(uiLocale);
+  const name = localizedName(product, uiLocale);
+  const description = localizedDescription(product, uiLocale);
+  const categoryName = product.category ? localizedName(product.category, uiLocale) : null;
 
   // Queried separately (not just found in product.reviews) since that list
   // is capped at the 20 most recent — the signed-in user's own review could
@@ -109,13 +126,19 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
       ? product.reviews.reduce((sum, review) => sum + review.rating, 0) / product.reviews.length
       : null;
 
+  const base = settings.siteUrl || "";
+  const productUrl = `${base}/products/${product.slug}`;
+
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: product.name,
-    description: product.description || undefined,
+    name,
+    description: description || undefined,
     sku: product.sku,
     image: product.images.map((image) => image.url),
+    brand: { "@type": "Brand", name: settings.storeName },
+    ...(categoryName ? { category: categoryName } : {}),
+    inLanguage: uiLocale,
     ...(averageRating !== null
       ? {
           aggregateRating: {
@@ -130,8 +153,31 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
       priceCurrency: product.currency,
       price: (product.price / 100).toFixed(2),
       availability: outOfStock ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
-      url: `${settings.siteUrl || ""}/products/${product.slug}`,
+      url: productUrl,
     },
+  };
+
+  // Breadcrumbs in JSON-LD (not just the in-page back-link) are what let
+  // Google render the Home > Category > Product trail under the search
+  // result instead of the raw URL — a small CTR win with near-zero cost
+  // since the data already exists on this page.
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: dict.footer.allProducts, item: `${base}/products` },
+      ...(product.category
+        ? [
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: categoryName,
+              item: `${base}/category/${product.category.slug}`,
+            },
+          ]
+        : []),
+      { "@type": "ListItem", position: product.category ? 3 : 2, name, item: productUrl },
+    ],
   };
 
   return (
@@ -140,22 +186,23 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: toSafeJsonLd(productJsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toSafeJsonLd(breadcrumbJsonLd) }}
+      />
       {product.category && (
         <Link
           href={`/category/${product.category.slug}`}
           className="text-foreground/70 hover:text-primary mb-6 inline-block text-sm"
         >
-          &larr; {product.category.name}
+          &larr; {categoryName}
         </Link>
       )}
 
       <div className="grid gap-10 sm:grid-cols-2">
         <div className="flex flex-col gap-3">
           {product.images[0] && (
-            <ProductImageZoom
-              src={product.images[0].url}
-              alt={product.images[0].altText || product.name}
-            />
+            <ProductImageZoom src={product.images[0].url} alt={product.images[0].altText || name} />
           )}
           {product.images.length > 1 && (
             <div className="flex gap-2">
@@ -163,7 +210,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                 <div key={image.id} className="relative h-16 w-16 overflow-hidden rounded">
                   <Image
                     src={image.url}
-                    alt={image.altText || product.name}
+                    alt={image.altText || name}
                     fill
                     sizes="64px"
                     className="object-cover"
@@ -175,7 +222,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
         </div>
 
         <div>
-          <h1 className="text-2xl font-semibold">{product.name}</h1>
+          <h1 className="text-2xl font-semibold">{name}</h1>
           <p className="mt-2 text-xl">
             {formatMoney(product.price, product.currency, settings.defaultLocale)}
             {settings.pricesIncludeTax && (
@@ -202,13 +249,13 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
             </p>
           )}
 
-          <p className="text-foreground/80 mt-6 whitespace-pre-line">{product.description}</p>
+          <p className="text-foreground/80 mt-6 whitespace-pre-line">{description}</p>
 
           <AddToCartButton
             product={{
               id: product.id,
               slug: product.slug,
-              name: product.name,
+              name,
               price: product.price,
               currency: product.currency,
               imageUrl: product.images[0]?.url ?? null,
@@ -229,12 +276,15 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
 
           <TrustBadges trustBadgeText={settings.trustBadgeText} dict={dict.product} />
 
+          <Link
+            href="/about#authenticity"
+            className="text-foreground/60 hover:text-primary mt-2 inline-block text-xs underline"
+          >
+            {dict.product.authenticityLink}
+          </Link>
+
           <div className="border-foreground/10 mt-6 border-t pt-4">
-            <ShareButtons
-              url={`${settings.siteUrl || ""}/products/${product.slug}`}
-              title={product.name}
-              dict={dict.product}
-            />
+            <ShareButtons url={productUrl} title={name} dict={dict.product} />
           </div>
         </div>
       </div>
@@ -283,7 +333,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
             {relatedProducts.map((related) => (
               <ProductCard
                 key={related.slug}
-                product={related}
+                product={{ ...related, name: localizedName(related, uiLocale) }}
                 locale={settings.defaultLocale}
                 outOfStockLabel={dict.product.outOfStock}
                 quickAddLabel={dict.product.addToCart}

@@ -34,7 +34,10 @@ export const getHomepageData = unstable_cache(
         where: { comment: { not: null } },
         orderBy: [{ rating: "desc" }, { createdAt: "desc" }],
         take: 9,
-        include: { user: { select: { name: true } }, product: { select: { name: true } } },
+        include: {
+          user: { select: { name: true } },
+          product: { select: { name: true, nameEn: true } },
+        },
       }),
     ]);
 

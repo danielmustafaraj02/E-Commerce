@@ -5,6 +5,7 @@ import { getStoreSettings } from "@/lib/store-settings";
 import { getHomepageData } from "@/lib/homepage-data";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
+import { localizedName } from "@/lib/product-i18n";
 import { ProductCard } from "@/components/product-card";
 import { Reveal } from "@/components/reveal";
 import { TrustBadges } from "@/components/trust-badges";
@@ -35,7 +36,7 @@ export default async function Home() {
       // First name only — a reviewer's full name is personal data and
       // wasn't collected for public display purposes.
       authorName: review.user.name?.split(" ")[0] || dict.home.verifiedBuyer,
-      productName: review.product.name,
+      productName: localizedName(review.product, locale),
     }));
 
   return (
@@ -103,7 +104,7 @@ export default async function Home() {
             <section>
               <h2 className="mb-4 text-lg font-medium">{dict.home.bestSellers}</h2>
               <BestSellersCarousel
-                products={bestSellers}
+                products={bestSellers.map((p) => ({ ...p, name: localizedName(p, locale) }))}
                 locale={settings.defaultLocale}
                 outOfStockLabel={dict.product.outOfStock}
                 quickAddLabel={dict.product.addToCart}
@@ -119,7 +120,7 @@ export default async function Home() {
             <section>
               <h2 className="mb-4 text-lg font-medium">{dict.home.shopByCategory}</h2>
               <CategoryCarousel
-                categories={categoriesWithImage}
+                categories={categoriesWithImage.map((c) => ({ ...c, name: localizedName(c, locale) }))}
                 prevLabel={dict.home.previousSlide}
                 nextLabel={dict.home.nextSlide}
               />
@@ -135,7 +136,7 @@ export default async function Home() {
                 {products.map((product, i) => (
                   <Reveal key={product.slug} delayMs={i * 60}>
                     <ProductCard
-                      product={product}
+                      product={{ ...product, name: localizedName(product, locale) }}
                       locale={settings.defaultLocale}
                       outOfStockLabel={dict.product.outOfStock}
                       quickAddLabel={dict.product.addToCart}
