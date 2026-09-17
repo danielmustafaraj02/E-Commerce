@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { getStoreSettings } from "@/lib/store-settings";
-import { db } from "@/lib/db";
+import { getHomepageData } from "@/lib/homepage-data";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { ProductCard } from "@/components/product-card";
@@ -22,35 +22,9 @@ const TestimonialsCarousel = dynamic(() =>
   import("@/components/testimonials-carousel").then((mod) => mod.TestimonialsCarousel)
 );
 
-const REVENUE_STATUSES = ["paid", "processing", "shipped", "delivered"];
-
 export default async function Home() {
-  const [settings, locale, products, categories, topSellingItems, reviews] = await Promise.all([
-    getStoreSettings(),
-    getLocale(),
-    db.product.findMany({
-      where: { active: true },
-      take: 8,
-      orderBy: { createdAt: "desc" },
-      include: { images: { take: 1, orderBy: { position: "asc" } } },
-    }),
-    db.category.findMany({ where: { parentId: null }, orderBy: { name: "asc" }, take: 6 }),
-    db.orderItem.groupBy({
-      by: ["productId"],
-      where: { order: { status: { in: REVENUE_STATUSES } } },
-      _sum: { quantity: true },
-      orderBy: { _sum: { quantity: "desc" } },
-      take: 10,
-    }),
-    // Only real, written reviews — never fabricated copy. Highest-rated
-    // first so the shelf leads with the store's best real feedback.
-    db.review.findMany({
-      where: { comment: { not: null } },
-      orderBy: [{ rating: "desc" }, { createdAt: "desc" }],
-      take: 9,
-      include: { user: { select: { name: true } }, product: { select: { name: true } } },
-    }),
-  ]);
+  const [settings, locale, { products, categoriesWithImage, bestSellers, reviews }] =
+    await Promise.all([getStoreSettings(), getLocale(), getHomepageData()]);
   const dict = getDictionary(locale);
   const testimonials = reviews
     .filter((review) => review.comment)
@@ -63,35 +37,6 @@ export default async function Home() {
       authorName: review.user.name?.split(" ")[0] || dict.home.verifiedBuyer,
       productName: review.product.name,
     }));
-
-  // Best sellers is real sales data (not a fixed shelf), so it fetches by ID
-  // in ranked order rather than a single findMany — a plain where-in query
-  // would come back in whatever order the database feels like.
-  const bestSellersUnordered = await db.product.findMany({
-    where: { id: { in: topSellingItems.map((item) => item.productId) }, active: true },
-    include: { images: { take: 1, orderBy: { position: "asc" } } },
-  });
-  const bestSellers = topSellingItems
-    .map((item) => bestSellersUnordered.find((p) => p.id === item.productId))
-    .filter((p) => p !== undefined);
-
-  // A different product photo per visit rather than always the same one —
-  // the random pick happens in SQL (RANDOM() is supported the same way on
-  // SQLite and Postgres) rather than via Math.random() here, since picking
-  // randomly during render would make this component impure.
-  const categoriesWithImage = await Promise.all(
-    categories.map(async (category) => {
-      const [image = null] = await db.$queryRaw<{ url: string; altText: string }[]>`
-        SELECT "ProductImage"."url" as url, "ProductImage"."altText" as altText
-        FROM "ProductImage"
-        JOIN "Product" ON "Product"."id" = "ProductImage"."productId"
-        WHERE "Product"."categoryId" = ${category.id} AND "Product"."active" = true
-        ORDER BY RANDOM()
-        LIMIT 1
-      `;
-      return { ...category, image };
-    })
-  );
 
   return (
     <main className="flex flex-1 flex-col">
