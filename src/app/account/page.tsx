@@ -11,16 +11,17 @@ import { StatusBadge } from "@/components/status-badge";
 import { DeleteAccountForm } from "./delete-account-form";
 import { ResendVerificationForm } from "./resend-verification-form";
 import { FormAlert } from "@/components/form-alert";
+import { ConfettiBurst } from "@/components/confetti-burst";
 
 export default async function AccountPage({
   searchParams,
 }: {
-  searchParams: Promise<{ verified?: string }>;
+  searchParams: Promise<{ verified?: string; welcome?: string }>;
 }) {
   const session = await auth();
   if (!session?.user) redirect("/login");
 
-  const [settings, uiLocale, user, wishlistPreview, { verified }] = await Promise.all([
+  const [settings, uiLocale, user, wishlistPreview, { verified, welcome }] = await Promise.all([
     getStoreSettings(),
     getLocale(),
     db.user.findUnique({
@@ -46,7 +47,7 @@ export default async function AccountPage({
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-16">
-      <div className="from-primary/15 via-secondary/10 to-primary/0 border-primary/10 flex items-center gap-4 rounded-xl border bg-gradient-to-br px-6 py-6">
+      <div className="from-primary/15 via-secondary/10 to-primary/0 border-primary/10 relative flex items-center gap-4 rounded-xl border bg-gradient-to-br px-6 py-6">
         <div className="from-primary to-secondary flex size-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br text-lg font-semibold text-white shadow-sm">
           {(user.name || user.email).charAt(0).toUpperCase()}
         </div>
@@ -54,6 +55,7 @@ export default async function AccountPage({
           <h1 className="text-xl font-semibold">{user.name || dict.account.title}</h1>
           <p className="text-foreground/70 text-sm">{dict.account.signedInAs(session.user.email!)}</p>
         </div>
+        {welcome === "1" && <ConfettiBurst />}
       </div>
 
       {verified === "1" && (

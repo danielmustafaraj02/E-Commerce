@@ -42,7 +42,7 @@ export async function register(_prevState: unknown, formData: FormData) {
   await signIn("credentials", {
     email: parsed.data.email,
     password: parsed.data.password,
-    redirectTo: "/account",
+    redirectTo: "/account?welcome=1",
   });
   return { error: null };
 }

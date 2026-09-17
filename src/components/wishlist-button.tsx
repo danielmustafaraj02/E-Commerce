@@ -5,7 +5,7 @@ import { toggleWishlist } from "@/app/products/[slug]/wishlist-actions";
 import { useWishlistStore } from "@/lib/wishlist-store";
 import { ConfettiBurst } from "@/components/confetti-burst";
 
-const CONFETTI_DURATION_MS = 650;
+const CONFETTI_DURATION_MS = 850;
 
 function HeartIcon({ filled }: { filled: boolean }) {
   return (

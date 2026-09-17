@@ -189,11 +189,12 @@ button:not(:disabled),
   }
 
   /* Confetti burst (confetti-burst.tsx) — a one-shot "coriandoli" scatter
-     fired from the wishlist heart button the moment an item is saved. Each
-     piece flies out to its own --tx/--ty/--rot and fades, staggered slightly
-     per piece via animation-delay for a less mechanical, more scattered feel. */
+     fired from the wishlist heart button and the post-registration welcome
+     moment. Each piece flies out to its own --tx/--ty/--rot and fades,
+     staggered slightly per piece via animation-delay for a less mechanical,
+     more scattered feel. */
   .confetti-piece {
-    animation: confetti-burst 0.6s ease-out both;
+    animation: confetti-burst 0.8s ease-out both;
   }
 
   /* Lightweight page-transition fade, applied by app/template.tsx so each
