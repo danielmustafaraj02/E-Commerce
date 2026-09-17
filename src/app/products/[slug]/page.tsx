@@ -234,7 +234,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
           {product.images.length > 1 && (
             <div className="flex gap-2">
               {product.images.slice(1).map((image) => (
-                <div key={image.id} className="relative h-16 w-16 overflow-hidden rounded">
+                <div key={image.id} className="relative h-16 w-16 overflow-hidden rounded bg-white">
                   <Image
                     src={image.url}
                     alt={productImageAlt(name, uiLocale)}

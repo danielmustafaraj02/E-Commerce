@@ -31,7 +31,7 @@ export function ProductCard({
       href={`/products/${product.slug}`}
       className="group flex flex-col gap-2 transition-transform duration-300 ease-out hover:-translate-y-1"
     >
-      <div className="bg-surface relative aspect-square w-full overflow-hidden rounded-lg transition-shadow duration-300 group-hover:shadow-lg">
+      <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-white transition-shadow duration-300 group-hover:shadow-lg">
         {product.images[0] && (
           <Image
             src={product.images[0].url}

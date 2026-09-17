@@ -27,7 +27,7 @@ export function ProductImageZoom({ src, alt }: { src: string; alt: string }) {
       onMouseEnter={() => setZooming(true)}
       onMouseMove={handleMouseMove}
       onMouseLeave={() => setZooming(false)}
-      className="bg-surface relative aspect-square w-full cursor-zoom-in overflow-hidden rounded-lg"
+      className="relative aspect-square w-full cursor-zoom-in overflow-hidden rounded-lg bg-white"
     >
       <Image
         src={src}
