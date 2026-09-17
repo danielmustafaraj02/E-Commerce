@@ -24,6 +24,10 @@ export async function Header({
 
   const isStaff = session?.user.role === "admin" || session?.user.role === "staff";
 
+  const wishlistCount = session?.user?.id
+    ? await db.wishlistItem.count({ where: { userId: session.user.id } })
+    : 0;
+
   return (
     <header className="border-foreground/10 bg-background/90 sticky top-0 z-40 border-b backdrop-blur-sm">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-3 px-4 py-3 sm:py-4">
@@ -46,6 +50,28 @@ export async function Header({
               it was overflowing next to the store name at ~375px wide. */}
           <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 text-sm">
             <LocaleSwitcher current={locale} />
+            {session?.user ? (
+              <Link
+                href="/account/wishlist"
+                className="link-underline text-foreground/80 hover:text-primary flex items-center gap-1 transition-colors"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M20.8 4.6c-1.9-1.6-4.6-1.4-6.3.4L12 7.5l-2.5-2.5c-1.7-1.8-4.4-2-6.3-.4-2.1 1.8-2.2 5-.3 6.9L12 21l9.1-9.5c1.9-1.9 1.8-5.1-.3-6.9Z" />
+                </svg>
+                {dict.nav.wishlist}
+                {wishlistCount > 0 ? <span>({wishlistCount})</span> : null}
+              </Link>
+            ) : null}
             <CartLink label={dict.nav.cart} />
             {isStaff && (
               <Link

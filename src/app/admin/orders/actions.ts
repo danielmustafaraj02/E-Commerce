@@ -95,3 +95,32 @@ export async function updateOrderStatus(
 
   redirect(`/admin/orders/${orderNumber}`);
 }
+
+// Admin-only (not staff) — this is permanent and touches financial records,
+// unlike a status update. Intended for cleaning up test orders; real stores
+// should think twice before deleting a paid order's history.
+export async function deleteOrder(orderId: string) {
+  const session = await requireAdmin();
+
+  const order = await db.order.findUnique({ where: { id: orderId } });
+  if (!order) redirect("/admin/orders");
+
+  await db.$transaction([
+    // Payment and ReturnRequest don't cascade on Order deletion (no
+    // onDelete: Cascade in schema) — deleted explicitly first. OrderItem
+    // and Fulfillment do cascade.
+    db.payment.deleteMany({ where: { orderId } }),
+    db.returnRequest.deleteMany({ where: { orderId } }),
+    db.order.delete({ where: { id: orderId } }),
+  ]);
+
+  await writeAuditLog({
+    userId: session!.user.id,
+    action: "order.delete",
+    entityType: "Order",
+    entityId: orderId,
+    before: { orderNumber: order.orderNumber, status: order.status, total: order.total },
+  });
+
+  redirect("/admin/orders");
+}

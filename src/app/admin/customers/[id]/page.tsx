@@ -1,15 +1,19 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
 import { formatMoney } from "@/lib/format";
+import { deleteCustomer } from "../actions";
+import { ConfirmForm } from "@/components/confirm-form";
 
 export default async function AdminCustomerDetailPage({
   params,
 }: PageProps<"/admin/customers/[id]">) {
   const { id } = await params;
 
-  const [settings, customer, wishlistItems] = await Promise.all([
+  const [session, settings, customer, wishlistItems] = await Promise.all([
+    auth(),
     getStoreSettings(),
     db.user.findUnique({
       where: { id },
@@ -71,6 +75,25 @@ export default async function AdminCustomerDetailPage({
             </li>
           ))}
         </ul>
+      )}
+
+      {session?.user?.role === "admin" && customer.role === "customer" && (
+        <div className="border-danger/30 mt-8 rounded border p-4">
+          <h2 className="text-danger mb-1 text-sm font-semibold">Danger zone</h2>
+          <p className="text-foreground/60 mb-3 text-xs">
+            Permanently deletes this account (login, sessions, saved addresses, reviews,
+            wishlist). Their past orders are kept for records, just detached from the account.
+            Useful for cleaning up test accounts — cannot be undone.
+          </p>
+          <ConfirmForm
+            action={deleteCustomer.bind(null, customer.id)}
+            confirmMessage={`Delete the account for ${customer.email}? This cannot be undone.`}
+          >
+            <button type="submit" className="btn-danger text-sm">
+              Delete account
+            </button>
+          </ConfirmForm>
+        </div>
       )}
     </div>
   );

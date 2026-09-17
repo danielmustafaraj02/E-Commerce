@@ -6,20 +6,26 @@ import { db } from "@/lib/db";
 import { quoteOrder, PricingError } from "@/lib/pricing";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { verifyTurnstile } from "@/lib/turnstile";
+import { isValidPostalCode } from "@/lib/postal-code";
 
 const checkoutSchema = z.object({
   items: z
     .array(z.object({ productId: z.string().min(1), quantity: z.coerce.number().int().positive() }))
     .min(1),
   guestEmail: z.string().email().optional(),
-  address: z.object({
-    fullName: z.string().min(1).max(200),
-    street: z.string().min(1).max(300),
-    city: z.string().min(1).max(150),
-    postalCode: z.string().min(1).max(20),
-    country: z.string().length(2),
-    phone: z.string().max(30).optional(),
-  }),
+  address: z
+    .object({
+      fullName: z.string().min(1).max(200),
+      street: z.string().min(1).max(300),
+      city: z.string().min(1).max(150),
+      postalCode: z.string().min(1).max(20),
+      country: z.string().length(2),
+      phone: z.string().max(30).optional(),
+    })
+    .refine((address) => isValidPostalCode(address.country, address.postalCode), {
+      message: "That postal code doesn't look right for the selected country",
+      path: ["postalCode"],
+    }),
   shippingMethodId: z.string().min(1),
   discountCode: z.string().min(1).max(50).optional(),
   turnstileToken: z.string().optional(),

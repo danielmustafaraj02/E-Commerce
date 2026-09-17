@@ -8,6 +8,7 @@ import { formatMoney } from "@/lib/format";
 import { TurnstileWidget } from "@/components/turnstile-widget";
 import { FormAlert } from "@/components/form-alert";
 import { applyTemplate } from "@/lib/i18n/format";
+import { isValidPostalCode } from "@/lib/postal-code";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
 type ShippingMethod = {
@@ -57,6 +58,7 @@ export function CheckoutClient({
   const [street, setStreet] = useState("");
   const [city, setCity] = useState("");
   const [postalCode, setPostalCode] = useState("");
+  const [postalCodeTouched, setPostalCodeTouched] = useState(false);
   const [country, setCountry] = useState(countries[0] ?? "");
   const [phone, setPhone] = useState("");
   const [guestEmail, setGuestEmail] = useState("");
@@ -127,8 +129,15 @@ export function CheckoutClient({
     return <p className="text-foreground/70 text-sm">{dict.empty}</p>;
   }
 
+  const postalCodeValid = isValidPostalCode(country, postalCode);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setPostalCodeTouched(true);
+    if (!postalCodeValid) {
+      setError(dict.invalidPostalCode);
+      return;
+    }
     setSubmitting(true);
     setError(null);
 
@@ -214,9 +223,16 @@ export function CheckoutClient({
             placeholder={dict.postalCode}
             value={postalCode}
             onChange={(e) => setPostalCode(e.target.value)}
-            className="field w-32"
+            onBlur={() => setPostalCodeTouched(true)}
+            aria-invalid={postalCodeTouched && !postalCodeValid}
+            className={`field w-32 ${
+              postalCodeTouched && !postalCodeValid ? "border-danger" : ""
+            }`}
           />
         </div>
+        {postalCodeTouched && !postalCodeValid && (
+          <p className="text-danger -mt-2 text-xs">{dict.invalidPostalCode}</p>
+        )}
         <select value={country} onChange={(e) => setCountry(e.target.value)} className="field">
           {countries.map((c) => (
             <option key={c} value={c}>

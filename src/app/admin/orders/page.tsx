@@ -6,6 +6,13 @@ import { StatusBadge } from "@/components/status-badge";
 
 const STATUSES = ["pending", "paid", "processing", "shipped", "delivered", "cancelled", "refunded"];
 
+const PAYMENT_LABELS: Record<string, string> = {
+  stripe: "Card / wallet",
+  paypal: "PayPal",
+  bank_transfer: "Bank transfer",
+  cash_on_delivery: "Cash on delivery",
+};
+
 export default async function AdminOrdersPage({ searchParams }: PageProps<"/admin/orders">) {
   const { status } = await searchParams;
   const statusFilter = typeof status === "string" && STATUSES.includes(status) ? status : undefined;
@@ -16,7 +23,11 @@ export default async function AdminOrdersPage({ searchParams }: PageProps<"/admi
       where: statusFilter ? { status: statusFilter } : undefined,
       orderBy: { createdAt: "desc" },
       take: 100,
-      include: { user: true },
+      include: {
+        user: true,
+        payments: { orderBy: { createdAt: "desc" }, take: 1, select: { provider: true } },
+        _count: { select: { items: true } },
+      },
     }),
   ]);
 
@@ -57,6 +68,8 @@ export default async function AdminOrdersPage({ searchParams }: PageProps<"/admi
               <tr className="border-foreground/10 text-foreground/60 border-b">
                 <th className="py-3 pr-4 pl-4 font-medium">Order</th>
                 <th className="py-3 pr-4 font-medium">Customer</th>
+                <th className="py-3 pr-4 font-medium">Payment</th>
+                <th className="py-3 pr-4 font-medium">Items</th>
                 <th className="py-3 pr-4 font-medium">Status</th>
                 <th className="py-3 pr-4 font-medium">Total</th>
                 <th className="py-3 pr-4 font-medium">Date</th>
@@ -77,6 +90,10 @@ export default async function AdminOrdersPage({ searchParams }: PageProps<"/admi
                     </Link>
                   </td>
                   <td className="py-3 pr-4">{order.user?.email ?? order.guestEmail ?? "—"}</td>
+                  <td className="text-foreground/70 py-3 pr-4">
+                    {order.payments[0] ? (PAYMENT_LABELS[order.payments[0].provider] ?? order.payments[0].provider) : "—"}
+                  </td>
+                  <td className="text-foreground/70 py-3 pr-4">{order._count.items}</td>
                   <td className="py-3 pr-4">
                     <StatusBadge status={order.status} />
                   </td>

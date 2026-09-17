@@ -3,10 +3,11 @@ import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
 import { formatMoney } from "@/lib/format";
-import { updateOrderStatus } from "../actions";
+import { updateOrderStatus, deleteOrder } from "../actions";
 import { sendToSupplier, updateFulfillment } from "./fulfillment-actions";
 import { StatusForm } from "./status-form";
 import { FulfillmentTrackingForm } from "./fulfillment-tracking-form";
+import { ConfirmForm } from "@/components/confirm-form";
 
 export default async function AdminOrderDetailPage({
   params,
@@ -204,6 +205,24 @@ export default async function AdminOrderDetailPage({
                   );
                 })}
               </div>
+            </div>
+          )}
+
+          {session?.user?.role === "admin" && (
+            <div className="border-danger/30 rounded border p-4">
+              <h2 className="text-danger mb-1 text-sm font-semibold">Danger zone</h2>
+              <p className="text-foreground/60 mb-3 text-xs">
+                Permanently deletes this order and its payment records. Useful for cleaning up
+                test orders — cannot be undone.
+              </p>
+              <ConfirmForm
+                action={deleteOrder.bind(null, order.id)}
+                confirmMessage={`Delete order ${order.orderNumber}? This cannot be undone.`}
+              >
+                <button type="submit" className="btn-danger text-sm">
+                  Delete order
+                </button>
+              </ConfirmForm>
             </div>
           )}
         </section>
