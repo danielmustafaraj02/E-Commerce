@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
+import Image from "next/image";
 import Link from "next/link";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
@@ -34,7 +35,14 @@ export default async function OrderConfirmationPage({
     getLocale(),
     db.order.findUnique({
       where: { orderNumber },
-      include: { items: true, shippingMethod: true, address: true, returnRequests: true },
+      include: {
+        items: {
+          include: { product: { include: { images: { orderBy: { position: "asc" }, take: 1 } } } },
+        },
+        shippingMethod: true,
+        address: true,
+        returnRequests: true,
+      },
     }),
   ]);
   const dict = getDictionary(uiLocale);
@@ -54,6 +62,12 @@ export default async function OrderConfirmationPage({
           ? dict.orderConfirmation.awaitingPayment(order.orderNumber)
           : dict.orderConfirmation.paymentReceived(order.orderNumber)}
       </p>
+      <p className="text-foreground/50 mt-1 text-xs">
+        {dict.orderConfirmation.orderDate}:{" "}
+        {new Intl.DateTimeFormat(settings.defaultLocale, {
+          dateStyle: "long",
+        }).format(order.createdAt)}
+      </p>
       {cancelled && <p className="text-warning mt-2 text-sm">{dict.orderConfirmation.cancelled}</p>}
 
       {order.status === "pending" && (
@@ -70,20 +84,36 @@ export default async function OrderConfirmationPage({
       <section className="mt-8">
         <h2 className="mb-3 text-lg font-medium">{dict.orderConfirmation.items}</h2>
         <ul className="divide-foreground/10 flex flex-col divide-y">
-          {order.items.map((item) => (
-            <li key={item.id} className="flex justify-between py-2 text-sm">
-              <span>
-                {item.productName} &times; {item.quantity}
-              </span>
-              <span>
-                {formatMoney(
-                  item.unitPrice * item.quantity,
-                  order.currency,
-                  settings.defaultLocale
-                )}
-              </span>
-            </li>
-          ))}
+          {order.items.map((item) => {
+            const image = item.product?.images[0];
+            return (
+              <li key={item.id} className="flex items-center gap-4 py-3">
+                <div className="bg-surface border-foreground/10 relative size-16 shrink-0 overflow-hidden rounded-md border">
+                  {image ? (
+                    <Image
+                      src={image.url}
+                      alt={image.altText || item.productName}
+                      fill
+                      sizes="64px"
+                      className="object-cover"
+                    />
+                  ) : null}
+                </div>
+                <div className="flex flex-1 items-center justify-between gap-3 text-sm">
+                  <span>
+                    {item.productName} &times; {item.quantity}
+                  </span>
+                  <span className="shrink-0 font-medium">
+                    {formatMoney(
+                      item.unitPrice * item.quantity,
+                      order.currency,
+                      settings.defaultLocale
+                    )}
+                  </span>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       </section>
 
@@ -132,7 +162,16 @@ export default async function OrderConfirmationPage({
         </section>
       )}
 
-      <p className="text-foreground/60 mt-8 text-xs">
+      {settings.companyLegalName && (
+        <section className="text-foreground/60 border-foreground/10 mt-8 border-t pt-4 text-xs">
+          <p className="text-foreground/70 mb-1 font-medium">{dict.orderConfirmation.soldBy}</p>
+          <p>{settings.companyLegalName}</p>
+          {settings.companyAddress && <p>{settings.companyAddress}</p>}
+          {settings.vatNumber && <p>VAT/P.IVA: {settings.vatNumber}</p>}
+        </section>
+      )}
+
+      <p className="text-foreground/60 mt-4 text-xs">
         {dict.checkout.withdrawalNotice}{" "}
         <Link href="/legal/returns" className="underline">
           {dict.checkout.returnPolicy}

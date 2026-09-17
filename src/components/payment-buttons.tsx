@@ -159,14 +159,19 @@ export function PaymentButtons({
           Card, and any wallet or local payment method enabled at checkout.
         </p>
       </div>
-      <button
+      {/* PayPal isn't configured yet (no live credentials in Admin > Settings
+          > Payments) — hidden from checkout for now rather than showing a
+          customer a button that errors. Uncomment once credentials are set;
+          payRedirect("paypal") above and the /api/checkout/pay/paypal route
+          are untouched. */}
+      {/* <button
         type="button"
         onClick={() => payRedirect("paypal")}
         disabled={loading !== null}
         className="border-foreground/20 rounded border px-4 py-3 disabled:opacity-60"
       >
         {loading === "paypal" ? "Redirecting..." : "Pay with PayPal"}
-      </button>
+      </button> */}
       {bankTransferEnabled && (
         <button
           type="button"

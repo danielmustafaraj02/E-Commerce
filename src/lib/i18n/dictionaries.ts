@@ -255,6 +255,8 @@ const en = {
     cancelled: "Payment was cancelled. You can try again below.",
     items: "Items",
     shippingTo: "Shipping to",
+    orderDate: "Order date",
+    soldBy: "Sold by",
   },
   notFound: {
     title: "Page not found",
@@ -524,6 +526,8 @@ const it: Dictionary = {
     cancelled: "Il pagamento è stato annullato. Puoi riprovare qui sotto.",
     items: "Articoli",
     shippingTo: "Spedizione a",
+    orderDate: "Data dell'ordine",
+    soldBy: "Venduto da",
   },
   notFound: {
     title: "Pagina non trovata",

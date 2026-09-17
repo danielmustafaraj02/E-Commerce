@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 import { render } from "react-email";
 import * as React from "react";
+import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
 import { rateLimit } from "@/lib/rate-limit";
 import { VerifyEmail } from "@/emails/verify-email";
@@ -121,14 +122,50 @@ export async function sendOrderStatusEmail(order: {
   const base = settings.siteUrl || process.env.NEXTAUTH_URL || "http://localhost:3000";
   const orderUrl = `${base}/order-confirmation/${order.orderNumber}`;
 
+  // Line items + currency/total aren't on the slice of the order the callers
+  // already have in hand (webhooks, admin actions, the abandoned-order
+  // cron) — fetched fresh here so every call site gets the full receipt
+  // without having to know what this email needs.
+  const fullOrder = await db.order.findUnique({
+    where: { orderNumber: order.orderNumber },
+    select: {
+      total: true,
+      currency: true,
+      createdAt: true,
+      items: {
+        select: {
+          productName: true,
+          quantity: true,
+          unitPrice: true,
+          product: { select: { images: { orderBy: { position: "asc" }, take: 1 } } },
+        },
+      },
+    },
+  });
+
   const element = React.createElement(OrderStatusEmail, {
     storeName: settings.storeName,
     logoUrl: settings.logoUrl,
     primaryColor: settings.primaryColor,
     orderNumber: order.orderNumber,
+    orderDate: new Intl.DateTimeFormat(settings.defaultLocale, { dateStyle: "long" }).format(
+      fullOrder?.createdAt ?? new Date()
+    ),
     status: order.status,
     trackingNumber: order.trackingNumber,
     orderUrl,
+    items: (fullOrder?.items ?? []).map((item) => ({
+      name: item.productName,
+      quantity: item.quantity,
+      unitPrice: item.unitPrice,
+      imageUrl: item.product.images[0]?.url ?? null,
+    })),
+    currency: fullOrder?.currency ?? "EUR",
+    locale: settings.defaultLocale,
+    total: fullOrder?.total ?? 0,
+    companyLegalName: settings.companyLegalName,
+    companyAddress: settings.companyAddress,
+    vatNumber: settings.vatNumber,
   });
   const [html, text] = await Promise.all([render(element), render(element, { plainText: true })]);
 
