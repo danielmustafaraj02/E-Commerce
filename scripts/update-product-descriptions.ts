@@ -50,7 +50,7 @@ async function main() {
   });
 
   let updated = 0;
-  let skipped = 0;
+  const skipped = 0;
   let unmatched = 0;
 
   for (const product of products) {

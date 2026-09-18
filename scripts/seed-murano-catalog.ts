@@ -22,8 +22,12 @@ type ManifestEntry = {
   category: string;
   name: string;
   nameEn: string;
+  nameFr?: string;
+  nameDe?: string;
   description: string;
   descriptionEn: string;
+  descriptionFr?: string;
+  descriptionDe?: string;
 };
 
 const CATEGORY_FOLDERS: Record<string, string> = {
@@ -32,13 +36,25 @@ const CATEGORY_FOLDERS: Record<string, string> = {
   Orecchini: "orecchini-in-vetro-di-murano",
 };
 
-// English names shown when the storefront locale is "en" — see
-// src/lib/product-i18n.ts. Keyed by the same Italian category name used
-// above and in the manifest.
+// English/French/German names shown when the storefront locale is "en" /
+// "fr" / "de" — see src/lib/product-i18n.ts. Keyed by the same Italian
+// category name used above and in the manifest.
 const CATEGORY_NAMES_EN: Record<string, string> = {
   Bracciali: "Bracelets",
   Collane: "Necklaces",
   Orecchini: "Earrings",
+};
+
+const CATEGORY_NAMES_FR: Record<string, string> = {
+  Bracciali: "Bracelets",
+  Collane: "Colliers",
+  Orecchini: "Boucles d'oreilles",
+};
+
+const CATEGORY_NAMES_DE: Record<string, string> = {
+  Bracciali: "Armbänder",
+  Collane: "Halsketten",
+  Orecchini: "Ohrringe",
 };
 
 function slugify(input: string): string {
@@ -102,10 +118,16 @@ async function main() {
         } else {
           const category = await db.category.upsert({
             where: { slug: folder },
-            update: { nameEn: CATEGORY_NAMES_EN[categoryName] },
+            update: {
+              nameEn: CATEGORY_NAMES_EN[categoryName],
+              nameFr: CATEGORY_NAMES_FR[categoryName],
+              nameDe: CATEGORY_NAMES_DE[categoryName],
+            },
             create: {
               name: categoryName,
               nameEn: CATEGORY_NAMES_EN[categoryName],
+              nameFr: CATEGORY_NAMES_FR[categoryName],
+              nameDe: CATEGORY_NAMES_DE[categoryName],
               slug: folder,
             },
           });
@@ -132,9 +154,13 @@ async function main() {
         data: {
           name: entry.name,
           nameEn: entry.nameEn,
+          nameFr: entry.nameFr,
+          nameDe: entry.nameDe,
           slug: base,
           description: entry.description,
           descriptionEn: entry.descriptionEn,
+          descriptionFr: entry.descriptionFr,
+          descriptionDe: entry.descriptionDe,
           price,
           currency: "EUR",
           sku,
