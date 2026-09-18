@@ -259,17 +259,13 @@ button:not(:disabled),
 
   /* Header category nav (header.tsx) — the row of category/About/guide
      links sat immediately visible with zero entrance, unlike the rest of
-     the page's staggered fade-ups. Same fade-up, staggered per item via
+     the page's staggered fade-ups. Fade-up, staggered per item via
      nth-child since this list renders server-side with no per-item delay
-     prop, plus a small hover lift layered on top of the existing
-     link-underline hover so the row feels responsive even before the
-     underline finishes drawing in. */
+     prop. The hover feedback itself (lift + pill) lives outside this guard,
+     next to .link-underline below — same reasoning: entrance/auto-play
+     motion respects reduced-motion, interaction-triggered feedback doesn't. */
   .nav-link {
     animation: fade-up 0.45s ease both;
-    transition: transform 0.15s ease;
-  }
-  .nav-link:hover {
-    transform: translateY(-2px);
   }
   .nav-link:nth-child(1) {
     animation-delay: 0ms;
@@ -324,6 +320,24 @@ button:not(:disabled),
 .link-underline:hover::after {
   transform: scaleX(1);
   transform-origin: left;
+}
+
+/* Header nav-link (header.tsx) hover feedback — a lift plus a soft pill
+   background fading in behind the text, on top of the underline-draw above.
+   Kept outside the reduced-motion guard (see .nav-link's entrance animation
+   further up) since it's interaction-triggered, not auto-playing. */
+.nav-link {
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+  margin: -0.2rem -0.55rem;
+  transition:
+    transform 0.15s ease,
+    background-color 0.2s ease;
+}
+.nav-link:hover,
+.nav-link:focus-visible {
+  transform: translateY(-2px);
+  background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
 }
 
 /* ---------------------------------------------------------------------------
