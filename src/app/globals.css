@@ -236,6 +236,51 @@ button:not(:disabled),
     animation: card-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
     animation-delay: var(--card-delay, 0s);
   }
+
+  /* Header category nav (header.tsx) — the row of category/About/guide
+     links sat immediately visible with zero entrance, unlike the rest of
+     the page's staggered fade-ups. Same fade-up, staggered per item via
+     nth-child since this list renders server-side with no per-item delay
+     prop, plus a small hover lift layered on top of the existing
+     link-underline hover so the row feels responsive even before the
+     underline finishes drawing in. */
+  .nav-link {
+    animation: fade-up 0.45s ease both;
+    transition: transform 0.15s ease;
+  }
+  .nav-link:hover {
+    transform: translateY(-2px);
+  }
+  .nav-link:nth-child(1) {
+    animation-delay: 0ms;
+  }
+  .nav-link:nth-child(2) {
+    animation-delay: 50ms;
+  }
+  .nav-link:nth-child(3) {
+    animation-delay: 100ms;
+  }
+  .nav-link:nth-child(4) {
+    animation-delay: 150ms;
+  }
+  .nav-link:nth-child(5) {
+    animation-delay: 200ms;
+  }
+  .nav-link:nth-child(6) {
+    animation-delay: 250ms;
+  }
+  .nav-link:nth-child(7) {
+    animation-delay: 300ms;
+  }
+  .nav-link:nth-child(8) {
+    animation-delay: 350ms;
+  }
+  .nav-link:nth-child(9) {
+    animation-delay: 400ms;
+  }
+  .nav-link:nth-child(10) {
+    animation-delay: 450ms;
+  }
 }
 
 /* Underline-grow hover for header/footer text links: a single ::after bar

@@ -134,20 +134,20 @@ export async function Header({
               <Link
                 key={category.id}
                 href={`/category/${category.slug}`}
-                className="link-underline text-foreground/80 hover:text-primary transition-colors"
+                className="nav-link link-underline text-foreground/80 hover:text-primary transition-colors"
               >
                 {category.name}
               </Link>
             ))}
             <Link
               href="/about"
-              className="link-underline text-foreground/80 hover:text-primary transition-colors"
+              className="nav-link link-underline text-foreground/80 hover:text-primary transition-colors"
             >
               {dict.footer.about}
             </Link>
             <Link
               href="/murano-glass"
-              className="link-underline text-foreground/80 hover:text-primary transition-colors"
+              className="nav-link link-underline text-foreground/80 hover:text-primary transition-colors"
             >
               {dict.footer.muranoGuide}
             </Link>
