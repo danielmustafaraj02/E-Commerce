@@ -704,13 +704,13 @@ button:not(:disabled),
   .hero-glass-bg::before,
   .hero-glass-bg::after,
   .hero-glass-bg span {
-    animation: hero-drift 24s ease-in-out infinite alternate;
+    animation: hero-drift 16s ease-in-out infinite alternate;
   }
   .hero-glass-bg::after {
-    animation-duration: 28s;
+    animation-duration: 19s;
   }
   .hero-glass-bg span {
-    animation-duration: 20s;
+    animation-duration: 13s;
   }
 }
 @keyframes hero-drift {
@@ -718,17 +718,15 @@ button:not(:disabled),
     transform: translate(0, 0) scale(1);
   }
   to {
-    transform: translate(4%, 6%) scale(1.08);
+    transform: translate(6%, 8%) scale(1.12);
   }
 }
 
 /* Newsletter section background — same colors and blob shape as
-   .hero-glass-bg, but static (no animation, no will-change layer). The
-   hero is the one place worth spending a continuous, infinitely-running
-   compositor animation on; stacking a second one this far down the page
-   only added GPU/battery cost without adding anything — a static section
-   doesn't drift, so it can't look "off" the way an undersized animated
-   copy of the hero blobs did here. */
+   .hero-glass-bg, now drifting too (previously kept static to save a
+   second continuous compositor animation this far down the page, but
+   the motion reads better than the GPU cost it saves). Reuses
+   hero-drift at its own durations so the two sections don't sync up. */
 .section-glass-bg {
   position: absolute;
   inset: 0;
@@ -743,6 +741,7 @@ button:not(:disabled),
   border-radius: 999px;
   filter: blur(56px);
   opacity: 0.8;
+  will-change: transform;
 }
 .section-glass-bg::before {
   width: 22rem;
@@ -757,6 +756,14 @@ button:not(:disabled),
   bottom: -7rem;
   right: -5rem;
   background: radial-gradient(circle, #7cc7c0 0%, #7cc7c0 25%, transparent 78%);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .section-glass-bg::before {
+    animation: hero-drift 17s ease-in-out infinite alternate;
+  }
+  .section-glass-bg::after {
+    animation: hero-drift 21s ease-in-out infinite alternate;
+  }
 }
 
 .testimonials-swiper .swiper-slide {
