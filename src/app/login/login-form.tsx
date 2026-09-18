@@ -5,6 +5,7 @@ import { signIn } from "next-auth/react";
 import { login } from "./actions";
 import { TurnstileWidget } from "@/components/turnstile-widget";
 import { FormAlert } from "@/components/form-alert";
+import { PasswordField } from "@/components/password-field";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
 export default function LoginForm({
@@ -64,17 +65,12 @@ export default function LoginForm({
           <span className="font-medium">{dict.email}</span>
           <input type="email" name="email" required autoComplete="email" className="field" />
         </label>
-        <label className="flex flex-col gap-1.5 text-sm">
-          <span className="font-medium">{dict.password}</span>
-          <input
-            type="password"
-            name="password"
-            required
-            minLength={8}
-            autoComplete="current-password"
-            className="field"
-          />
-        </label>
+        <PasswordField
+          label={dict.password}
+          name="password"
+          autoComplete="current-password"
+          minLength={8}
+        />
         {state.mfaRequired && (
           <label className="animate-fade-up flex flex-col gap-1.5 text-sm">
             <span className="font-medium">{dict.authenticatorCode}</span>

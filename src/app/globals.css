@@ -355,6 +355,56 @@ button:not(:disabled),
   opacity: 1;
 }
 
+/* Header category row (header.tsx) can overflow horizontally on narrow
+   viewports. Swipe-scrolling still works without a visible scrollbar track
+   (touch/trackpad users don't need it, and the OS-drawn bar read as a
+   layout bug at this width) — the mask fade instead signals "more content"
+   at the trailing edge. */
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.edge-fade-x {
+  mask-image: linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 16px,
+    black calc(100% - 16px),
+    transparent
+  );
+}
+
+/* AuthCard (auth-card.tsx) — login and register share one card and swap in
+   place; the incoming form slides in from the side its link sat on (register
+   from the right, login from the left) rather than just popping, so the
+   swap reads as one continuous motion instead of a page change. Enter-only,
+   like every other entrance animation here — the outgoing panel is already
+   unmounted (React key swap) by the time this plays. */
+@keyframes auth-slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+}
+@keyframes auth-slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .auth-swap-panel[data-mode="login"] {
+    animation: auth-slide-in-left 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .auth-swap-panel[data-mode="register"] {
+    animation: auth-slide-in-right 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+
 /* ---------------------------------------------------------------------------
    Form controls — one shared look for every text/number/email/password
    input, <select>, and <textarea> in the app (`.field`), plus custom

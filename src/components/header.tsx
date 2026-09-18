@@ -129,7 +129,7 @@ export async function Header({
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <nav className="flex items-center gap-4 overflow-x-auto text-sm whitespace-nowrap">
+          <nav className="scrollbar-hide edge-fade-x flex items-center gap-4 overflow-x-auto text-sm whitespace-nowrap">
             {categories.map((category) => (
               <Link
                 key={category.id}

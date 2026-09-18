@@ -1,27 +1,37 @@
 import { headers } from "next/headers";
 import { turnstileSiteKey } from "@/lib/turnstile";
+import { getStoreSettings } from "@/lib/store-settings";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-import RegisterForm from "./register-form";
+import { AuthCard } from "@/components/auth-card";
 
 export default async function RegisterPage() {
-  const [nonce, locale, siteKey] = await Promise.all([
+  const [nonce, locale, siteKey, settings] = await Promise.all([
     headers().then((h) => h.get("x-nonce") ?? undefined),
     getLocale(),
     turnstileSiteKey(),
+    getStoreSettings(),
   ]);
   const dict = getDictionary(locale);
+  const googleEnabled = Boolean(
+    (settings.googleClientId || process.env.GOOGLE_CLIENT_ID) &&
+    (settings.googleClientSecret || process.env.GOOGLE_CLIENT_SECRET)
+  );
 
   return (
-    <main className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center px-4 py-16">
-      <h1 className="mb-6 text-2xl font-semibold">{dict.auth.createAccountTitle}</h1>
-      <RegisterForm siteKey={siteKey} nonce={nonce} dict={dict.auth} />
-      <p className="text-foreground/70 mt-4 text-sm">
-        {dict.auth.haveAccount}{" "}
-        <a href="/login" className="text-primary underline">
-          {dict.auth.signIn}
-        </a>
-      </p>
+    <main className="bg-surface relative flex flex-1 flex-col overflow-hidden">
+      <div className="section-glass-bg" aria-hidden="true" />
+      <div className="relative z-10 mx-auto flex w-full max-w-sm flex-1 flex-col justify-center px-4 py-16">
+        <AuthCard
+          initialMode="register"
+          storeName={settings.storeName}
+          callbackUrl="/account"
+          siteKey={siteKey}
+          nonce={nonce}
+          dict={dict.auth}
+          googleEnabled={googleEnabled}
+        />
+      </div>
     </main>
   );
 }
