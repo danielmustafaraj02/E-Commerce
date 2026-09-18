@@ -5,6 +5,8 @@ import { getStoreSettings, ogImage } from "@/lib/store-settings";
 import { getLocale, type Locale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { hreflangAlternates } from "@/lib/hreflang";
+import { AnimatedHeading } from "@/components/animated-heading";
+import { Reveal } from "@/components/reveal";
 
 export async function generateMetadata(): Promise<Metadata> {
   const [settings, locale] = await Promise.all([getStoreSettings(), getLocale()]);
@@ -53,40 +55,58 @@ export default async function AboutPage() {
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-16">
-      <h1 className="mb-6 text-3xl font-semibold">{dict.about.title}</h1>
-      <p className="text-foreground/80 max-w-2xl text-lg">{dict.about.intro(settings.storeName)}</p>
+      <AnimatedHeading text={dict.about.title} className="mb-6 text-3xl font-semibold" />
+      <Reveal delayMs={150}>
+        <p className="text-foreground/80 max-w-2xl text-lg">{dict.about.intro(settings.storeName)}</p>
+      </Reveal>
 
-      <div className="relative mt-8 aspect-video w-full overflow-hidden rounded-2xl shadow-lg">
-        <Image
-          src="/about/venice-murano-shopfront.jpg"
-          alt={dict.about.heritageImageAlt}
-          fill
-          sizes="(min-width: 768px) 768px, 100vw"
-          className="object-cover"
+      <Reveal delayMs={250}>
+        <div className="relative mt-8 aspect-video w-full overflow-hidden rounded-2xl shadow-lg">
+          <Image
+            src="/about/venice-murano-shopfront.jpg"
+            alt={dict.about.heritageImageAlt}
+            fill
+            sizes="(min-width: 768px) 768px, 100vw"
+            className="object-cover"
+          />
+        </div>
+      </Reveal>
+
+      <Reveal>
+        <AnimatedHeading
+          as="h2"
+          text={dict.about.heritageTitle}
+          className="mt-12 mb-4 text-xl font-medium"
         />
-      </div>
+        <div className="text-foreground/80 flex flex-col gap-4 text-sm leading-relaxed">
+          <p>{dict.about.heritageBody1}</p>
+          <p>{dict.about.heritageBody2}</p>
+          <p>
+            {dict.about.guideLinkBody}{" "}
+            <Link href="/murano-glass" className="text-primary underline">
+              {dict.about.guideLinkCta}
+            </Link>
+          </p>
+        </div>
+      </Reveal>
 
-      <h2 className="mt-12 mb-4 text-xl font-medium">{dict.about.heritageTitle}</h2>
-      <div className="text-foreground/80 flex flex-col gap-4 text-sm leading-relaxed">
-        <p>{dict.about.heritageBody1}</p>
-        <p>{dict.about.heritageBody2}</p>
-        <p>
-          {dict.about.guideLinkBody}{" "}
-          <Link href="/murano-glass" className="text-primary underline">
-            {dict.about.guideLinkCta}
-          </Link>
-        </p>
-      </div>
-
-      <h2 className="mt-12 mb-6 text-xl font-medium">{dict.about.valuesTitle}</h2>
-      <div className="grid gap-6 sm:grid-cols-3">
-        {values.map((value) => (
-          <div key={value.title} className="border-foreground/10 rounded border p-5">
-            <h3 className="mb-2 font-medium">{value.title}</h3>
-            <p className="text-foreground/70 text-sm">{value.body}</p>
-          </div>
-        ))}
-      </div>
+      <Reveal>
+        <AnimatedHeading
+          as="h2"
+          text={dict.about.valuesTitle}
+          className="mt-12 mb-6 text-xl font-medium"
+        />
+        <div className="grid gap-6 sm:grid-cols-3">
+          {values.map((value, index) => (
+            <Reveal key={value.title} delayMs={index * 80}>
+              <div className="border-foreground/10 rounded border p-5">
+                <h3 className="mb-2 font-medium">{value.title}</h3>
+                <p className="text-foreground/70 text-sm">{value.body}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </Reveal>
 
       <p className="text-foreground/70 mt-12 text-sm">
         {dict.about.contactCta}

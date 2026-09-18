@@ -7,6 +7,8 @@ import { getMuranoGuideContent } from "@/lib/murano-guide-content";
 import { localizedName } from "@/lib/product-i18n";
 import { toSafeJsonLd } from "@/lib/json-ld";
 import { hreflangAlternates } from "@/lib/hreflang";
+import { AnimatedHeading } from "@/components/animated-heading";
+import { Reveal } from "@/components/reveal";
 
 // Cycled across the numbered care-step badges below so the list reads as a
 // row of distinct steps at a glance, not one flat brand-colored repeat.
@@ -112,101 +114,129 @@ export default async function MuranoGlassGuidePage() {
         dangerouslySetInnerHTML={{ __html: toSafeJsonLd(breadcrumbJsonLd) }}
       />
 
-      <h1 className="mb-6 text-3xl font-semibold">{content.title}</h1>
-      <p className="text-foreground/80 max-w-2xl text-lg leading-relaxed">{content.intro}</p>
+      <AnimatedHeading text={content.title} className="mb-6 text-3xl font-semibold" />
+      <Reveal delayMs={150}>
+        <p className="text-foreground/80 max-w-2xl text-lg leading-relaxed">{content.intro}</p>
+      </Reveal>
 
-      <h2 className="mt-12 mb-4 text-xl font-medium">{content.historyTitle}</h2>
-      <div className="text-foreground/80 flex flex-col gap-4 text-sm leading-relaxed">
-        {content.historyParagraphs.map((paragraph, index) => (
-          <p key={index}>{paragraph}</p>
-        ))}
-      </div>
+      <Reveal>
+        <AnimatedHeading as="h2" text={content.historyTitle} className="mt-12 mb-4 text-xl font-medium" />
+        <div className="text-foreground/80 flex flex-col gap-4 text-sm leading-relaxed">
+          {content.historyParagraphs.map((paragraph, index) => (
+            <p key={index}>{paragraph}</p>
+          ))}
+        </div>
+      </Reveal>
 
-      <h2 className="mt-12 mb-4 text-xl font-medium">{content.beadsTitle}</h2>
-      <p className="text-foreground/80 text-sm leading-relaxed">{content.beadsBody}</p>
+      <Reveal>
+        <AnimatedHeading as="h2" text={content.beadsTitle} className="mt-12 mb-4 text-xl font-medium" />
+        <p className="text-foreground/80 text-sm leading-relaxed">{content.beadsBody}</p>
+      </Reveal>
 
-      <h2 id="techniques" className="mt-12 mb-4 scroll-mt-20 text-xl font-medium">
-        {content.techniquesTitle}
-      </h2>
-      <div className="flex flex-col gap-5">
-        {content.techniques.map((technique) => (
-          <div key={technique.name}>
-            <h3 className="text-sm font-semibold">{technique.name}</h3>
-            <p className="text-foreground/80 mt-1 text-sm leading-relaxed">{technique.body}</p>
-          </div>
-        ))}
-      </div>
+      <Reveal>
+        <AnimatedHeading
+          as="h2"
+          id="techniques"
+          text={content.techniquesTitle}
+          className="mt-12 mb-4 scroll-mt-20 text-xl font-medium"
+        />
+        <div className="flex flex-col gap-5">
+          {content.techniques.map((technique) => (
+            <div key={technique.name}>
+              <h3 className="text-sm font-semibold">{technique.name}</h3>
+              <p className="text-foreground/80 mt-1 text-sm leading-relaxed">{technique.body}</p>
+            </div>
+          ))}
+        </div>
+      </Reveal>
 
-      <h2 id="authenticity" className="mt-12 mb-4 scroll-mt-20 text-xl font-medium">
-        {content.authenticityTitle}
-      </h2>
-      <p className="text-foreground/80 text-sm leading-relaxed">{content.authenticityIntro}</p>
-      <ul className="text-foreground/80 mt-4 flex flex-col gap-2 text-sm leading-relaxed">
-        {content.authenticitySigns.map((sign, index) => (
-          <li key={index} className="flex gap-2">
-            <span aria-hidden="true">&middot;</span>
-            <span>{sign}</span>
-          </li>
-        ))}
-      </ul>
+      <Reveal>
+        <AnimatedHeading
+          as="h2"
+          id="authenticity"
+          text={content.authenticityTitle}
+          className="mt-12 mb-4 scroll-mt-20 text-xl font-medium"
+        />
+        <p className="text-foreground/80 text-sm leading-relaxed">{content.authenticityIntro}</p>
+        <ul className="text-foreground/80 mt-4 flex flex-col gap-2 text-sm leading-relaxed">
+          {content.authenticitySigns.map((sign, index) => (
+            <li key={index} className="flex gap-2">
+              <span aria-hidden="true">&middot;</span>
+              <span>{sign}</span>
+            </li>
+          ))}
+        </ul>
+      </Reveal>
 
-      <h2 id="care" className="mt-12 mb-2 scroll-mt-20 text-xl font-medium">
-        {content.careTitle}
-      </h2>
-      <p className="text-foreground/80 mb-4 text-sm leading-relaxed">{content.careIntro}</p>
-      <ol className="flex flex-col gap-4">
-        {content.careSteps.map((step, index) => (
-          <li key={step.name} className="flex gap-3">
-            <span
-              className={`${STEP_NUMBER_COLORS[index % STEP_NUMBER_COLORS.length]} flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-medium`}
-              aria-hidden="true"
-            >
-              {index + 1}
-            </span>
-            <span>
-              <span className="text-sm font-medium">{step.name}</span>
-              <span className="text-foreground/80 mt-0.5 block text-sm leading-relaxed">
-                {step.body}
+      <Reveal>
+        <AnimatedHeading
+          as="h2"
+          id="care"
+          text={content.careTitle}
+          className="mt-12 mb-2 scroll-mt-20 text-xl font-medium"
+        />
+        <p className="text-foreground/80 mb-4 text-sm leading-relaxed">{content.careIntro}</p>
+        <ol className="flex flex-col gap-4">
+          {content.careSteps.map((step, index) => (
+            <li key={step.name} className="flex gap-3">
+              <span
+                className={`${STEP_NUMBER_COLORS[index % STEP_NUMBER_COLORS.length]} flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-medium`}
+                aria-hidden="true"
+              >
+                {index + 1}
               </span>
-            </span>
-          </li>
-        ))}
-      </ol>
+              <span>
+                <span className="text-sm font-medium">{step.name}</span>
+                <span className="text-foreground/80 mt-0.5 block text-sm leading-relaxed">
+                  {step.body}
+                </span>
+              </span>
+            </li>
+          ))}
+        </ol>
+      </Reveal>
 
       {categories.length > 0 && (
-        <div className="border-foreground/10 mt-12 rounded-lg border p-6">
-          <h2 className="mb-2 text-lg font-medium">{content.shopCtaTitle}</h2>
-          <p className="text-foreground/70 mb-4 text-sm">{content.shopCtaBody}</p>
-          <div className="flex flex-wrap gap-3 text-sm">
-            {categories.map((category) => (
-              <Link
-                key={category.id}
-                href={`/category/${category.slug}`}
-                className="border-foreground/20 hover:border-primary hover:text-primary rounded border px-3 py-1.5"
-              >
-                {localizedName(category, locale)}
-              </Link>
-            ))}
+        <Reveal>
+          <div className="border-foreground/10 mt-12 rounded-lg border p-6">
+            <h2 className="mb-2 text-lg font-medium">{content.shopCtaTitle}</h2>
+            <p className="text-foreground/70 mb-4 text-sm">{content.shopCtaBody}</p>
+            <div className="flex flex-wrap gap-3 text-sm">
+              {categories.map((category) => (
+                <Link
+                  key={category.id}
+                  href={`/category/${category.slug}`}
+                  className="border-foreground/20 hover:border-primary hover:text-primary rounded border px-3 py-1.5"
+                >
+                  {localizedName(category, locale)}
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
+        </Reveal>
       )}
 
-      <h2 id="faq" className="mt-12 mb-4 scroll-mt-20 text-xl font-medium">
-        {content.faqTitle}
-      </h2>
-      <div className="divide-foreground/10 flex flex-col divide-y">
-        {content.faq.map((item) => (
-          <details key={item.question} className="group py-3">
-            <summary className="cursor-pointer list-none text-sm font-medium marker:content-none">
-              <span className="mr-2 inline-block transition-transform group-open:rotate-90">
-                &rsaquo;
-              </span>
-              {item.question}
-            </summary>
-            <p className="text-foreground/70 mt-2 pl-5 text-sm leading-relaxed">{item.answer}</p>
-          </details>
-        ))}
-      </div>
+      <Reveal>
+        <AnimatedHeading
+          as="h2"
+          id="faq"
+          text={content.faqTitle}
+          className="mt-12 mb-4 scroll-mt-20 text-xl font-medium"
+        />
+        <div className="divide-foreground/10 flex flex-col divide-y">
+          {content.faq.map((item) => (
+            <details key={item.question} className="group py-3">
+              <summary className="cursor-pointer list-none text-sm font-medium marker:content-none">
+                <span className="mr-2 inline-block transition-transform group-open:rotate-90">
+                  &rsaquo;
+                </span>
+                {item.question}
+              </summary>
+              <p className="text-foreground/70 mt-2 pl-5 text-sm leading-relaxed">{item.answer}</p>
+            </details>
+          ))}
+        </div>
+      </Reveal>
     </main>
   );
 }
