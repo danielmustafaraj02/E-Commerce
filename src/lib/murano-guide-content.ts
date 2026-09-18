@@ -1012,7 +1012,571 @@ const ru: MuranoGuideContent = {
   ],
 };
 
-const content: Record<Locale, MuranoGuideContent> = { en, it, fr, de, ar, zh, ru };
+const es: MuranoGuideContent = {
+  metaTitle: "Vidrio de Murano: Historia, Técnicas y Cómo Reconocer el Original",
+  metaDescription:
+    "Una guía completa del vidrio de Murano — su historia de 700 años, las técnicas del lampwork, las murrinas y el sommerso, cómo distinguir el vidrio auténtico soplado a mano de las imitaciones, y cómo cuidarlo.",
+  title: "La Guía Completa del Vidrio de Murano",
+  intro:
+    "El vidrio de Murano es el vidrio elaborado en Murano, una pequeña isla de la laguna veneciana que ha sido el centro de la fabricación de vidrio de Venecia durante más de 700 años. El nombre está protegido por una marca italiana por una buena razón: describe un lugar específico, un conjunto específico de técnicas manuales y un nivel de destreza que la bisutería de vidrio producida en masa y vendida bajo el mismo nombre normalmente no tiene. Esta guía explica de dónde viene, cómo se fabrica realmente y cómo distinguir la pieza auténtica de una imitación.",
+  historyTitle: "Una breve historia",
+  historyParagraphs: [
+    "En 1291, la República de Venecia ordenó que todos los hornos de vidrio de la ciudad se trasladaran a la isla de Murano. La razón oficial era la seguridad contra incendios — los hornos funcionaban día y noche en una ciudad construida casi enteramente de madera —, pero también tuvo el efecto de concentrar a todos los vidrieros en un lugar que la República podía controlar. La fabricación de vidrio en la isla estaba regulada por su propio gremio, la Arte dei Fioleri, y durante siglos los vidrieros de Murano gozaron de un estatus verdaderamente privilegiado (a algunos incluso se les permitió casarse con nobles venecianos) a cambio de normas que restringían adónde podían viajar y a quién podían formar — abandonar la isla para ejercer el oficio en otro lugar se consideró, durante gran parte de esa historia, un acto de traición.",
+    "El Renacimiento fue la edad de oro de Murano. Hacia 1450, un vidriero llamado Angelo Barovier desarrolló el cristallo — un vidrio lo bastante claro e incoloro como para rivalizar con el cristal de roca, un auténtico avance técnico para la época —, y Murano se convirtió en la principal fuente europea de espejos y lámparas finas durante los tres siglos siguientes. Las murrinas y el millefiori (cañas de vidrio con una sección transversal similar a un mosaico, una técnica antigua con raíces en el trabajo del vidrio romano y egipcio) fueron revividas y perfeccionadas en la isla. En el siglo XVII, se dice que uno de los hornos de Murano descubrió por accidente el vidrio avventurina — vidrio salpicado de diminutos cristales de cobre —, que desde entonces ha sido un material distintivo de Murano.",
+    "Estuvo a punto de desaparecer dos veces. El vidrio más barato de Bohemia y Francia fue erosionando el mercado de Murano a lo largo del siglo XVIII, y luego, en 1797, la ocupación napoleónica disolvió la República de Venecia y, con ella, el gremio de los vidrieros — la producción se redujo a una fracción de lo que había sido. El renacimiento que siguió está inusualmente bien documentado: Antonio Salviati relanzó la producción de mosaicos y vidrio a gran escala en la década de 1860 y ayudó a fundar el Museo del Vidrio de Murano en 1861 para preservar y mostrar la propia historia de la isla; Paolo Venini fundó en 1921 lo que se convertiría en uno de los hornos más influyentes de la isla. El vidrio de Murano todavía se fabrica a mano hoy en día, en hornos en funcionamiento en la isla, utilizando en gran medida las mismas técnicas centrales que hace siete siglos.",
+  ],
+  beadsTitle: "Cuentas, comercio y una historia complicada",
+  beadsBody:
+    "Las cuentas trabajadas individualmente a la llama, como las de este catálogo, son una tradición de Murano — pero durante gran parte de su historia, la mayor exportación de la isla en volumen no fue en absoluto el vidrio artístico. Fueron las conterie: pequeñas cuentas de vidrio fabricadas de forma económica, producidas por millones y enviadas a través de las redes comerciales de Venecia desde el siglo XVI en adelante a África, Asia y las Américas, donde se utilizaban como una forma de moneda — incluyendo, incómodamente, dentro de la trata transatlántica de esclavos. Esa tradición de producción en masa tenía su propio gremio independiente y sus propios trabajadores, distintos de los maestros de horno que fabricaban cristallo y lámparas. Es un oficio diferente de las piezas individualmente moldeadas de esta guía, pero forma parte de la historia de la misma isla, y es en gran medida la razón por la que las cuentas de vidrio venecianas todavía aparecen hoy en colecciones de museos y excavaciones arqueológicas en cuatro continentes.",
+  techniquesTitle: "Las técnicas, explicadas",
+  techniques: [
+    {
+      name: "Trabajo a la llama (lavorazione a lume)",
+      body: "Dar forma a una varilla de vidrio sobre una llama abierta en lugar de un horno — la técnica detrás de la mayoría de las cuentas individuales. Un vidriero calienta la punta de una varilla de vidrio de color hasta que está fundida, la enrolla alrededor de un mandril metálico para formar una cuenta, y la moldea con herramientas y la gravedad mientras aún está blanda.",
+    },
+    {
+      name: "Soplado de vidrio (soffiatura)",
+      body: "Recoger vidrio fundido de un horno en el extremo de una caña de soplar y darle forma soplando aire mientras se gira — la técnica detrás de formas huecas más grandes como jarrones y cuentas más grandes.",
+    },
+    {
+      name: "Murrinas y millefiori",
+      body: "Una murrina es una lámina cortada de una larga caña de vidrio construida, capa por capa, de modo que su sección transversal muestra un patrón — una flor, una estrella, un rostro. El millefiori (\"mil flores\") es el estilo de murrina más conocido. Las láminas se colocan sobre la superficie de una cuenta o jarrón y se funden con calor, de modo que el patrón atraviesa todo el vidrio en lugar de quedar solo en la superficie.",
+    },
+    {
+      name: "Filigrana",
+      body: "Finas cañas de vidrio blanco o de color, a veces retorcidas (retortoli) o entrecruzadas formando una fina red (reticello), se incrustan en vidrio transparente antes de darle forma — visibles como delicados hilos que recorren la pieza.",
+    },
+    {
+      name: "Sommerso",
+      body: 'En italiano, "sumergido". Capas de vidrio de diferentes colores se sumergen una sobre otra, cada una envolviendo por completo a la anterior, de modo que una pieza muestra profundidad y un degradado entre colores en lugar de un único tono plano.',
+    },
+    {
+      name: "Avventurina (vidrio aventurina)",
+      body: "Vidrio con diminutos cristales de cobre suspendidos en su interior, que le dan un brillo metálico. Una auténtica invención de Murano, guardada tradicionalmente como una de las fórmulas más celosamente custodiadas de la isla.",
+    },
+    {
+      name: "Pan de oro y plata",
+      body: "Finas láminas de oro o plata reales se colocan sobre el vidrio mientras aún está caliente y se trabajan en su interior, de modo que el metal pasa a formar parte de la superficie en lugar de quedar encima — el origen de las vetas y motas metálicas que se ven en muchas piezas.",
+    },
+    {
+      name: "Craquelado (vidrio de hielo)",
+      body: "El vidrio caliente se sumerge brevemente en agua fría, lo que fractura su superficie en una fina red de grietas; después vuelve al horno el tiempo justo para fundir una capa lisa por encima y sellar el patrón sin que desaparezca.",
+    },
+    {
+      name: "Chorro de arena (sabbiatura)",
+      body: "Se realiza en frío, una vez que la pieza está completamente formada — se proyecta un abrasivo fino sobre la superficie para suavizar su brillo hasta lograr un acabado mate y esmerilado.",
+    },
+    {
+      name: "La marca de la pontia",
+      body: "La marca —áspera o cuidadosamente pulida— que queda en una pieza en el punto donde se separó de la varilla que la sostenía durante el moldeado. El vidrio producido en masa, formado en un molde, no tiene una — una auténtica marca de pontia es una de las señales más fiables del vidrio soplado a mano.",
+    },
+  ],
+  authenticityTitle: "Cómo reconocer el vidrio de Murano auténtico",
+  authenticityIntro:
+    "\"Vidrio de Murano\" es uno de los nombres más imitados en la bisutería y el vidrio decorativo — cuentas producidas en masa en fábricas de otros lugares (a menudo por una fracción del coste) se venden habitualmente bajo la misma etiqueta, especialmente a los turistas en la propia Venecia. Existe una marca real, Vetro Artistico® Murano, registrada por el Consorzio Promovetro Murano, que los hornos de la isla pueden aplicar a sus obras para certificar dónde se fabricaron realmente — pero mucho trabajo genuino de pequeña escala no está certificado formalmente, y muchas afirmaciones que suenan a certificación están inventadas. La comprobación más fiable es el propio vidrio:",
+  authenticitySigns: [
+    "Pequeñas burbujas de aire y una ligera asimetría — señales de que lo dio forma una persona, no un molde.",
+    "Un color que varía sutilmente de una pieza a otra dentro del mismo conjunto, en lugar de ser perfectamente uniforme.",
+    "Una marca de pontia cuando corresponda (ver arriba) — una pieza hecha con molde no la tendrá.",
+    "Un peso y un grosor que se sienten sustanciales en lugar de finos y ligeros — el vidrio recogido a mano suele pesar más que una pieza formada a máquina.",
+    "Un precio que refleja trabajo real. Un vidriero cualificado dedica tiempo real a cada cuenta; un precio que parece demasiado bajo para eso normalmente significa que no se hizo así.",
+  ],
+  careTitle: "Cómo cuidar la joyería de vidrio de Murano",
+  careIntro:
+    "El vidrio es más resistente de lo que la gente espera, pero sigue siendo vidrio — unos pocos hábitos hacen que dure más.",
+  careSteps: [
+    {
+      name: "Póntelo al final",
+      body: "El perfume, la laca y las lociones pueden opacar la superficie del vidrio con el tiempo — aplícalos primero y luego ponte las joyas.",
+    },
+    {
+      name: "Quítatelo para el agua y para dormir",
+      body: "Quítatelo antes de ducharte, nadar o dormir, para que no reciba golpes ni quede expuesto al cloro o al agua salada durante horas seguidas.",
+    },
+    {
+      name: "Límpialo después de usarlo",
+      body: "Un paño suave y seco basta para mantenerlo limpio — no hace falta limpiador de joyas ni agua.",
+    },
+    {
+      name: "Guarda las piezas por separado",
+      body: "Una bolsita suave o una caja forrada evita que las cuentas choquen entre sí o con joyas más duras, la forma más habitual en que se astilla una pieza.",
+    },
+    {
+      name: "Evita los cambios bruscos de temperatura",
+      body: "Dejar una joya de vidrio en un lugar muy caliente (el salpicadero del coche, el sol directo) y luego manipularla en frío puede tensionar el vidrio — el mismo principio de choque térmico que agrieta un vaso frío lleno de agua caliente.",
+    },
+  ],
+  shopCtaTitle: "Compra la colección",
+  shopCtaBody: "Cada pieza de estas colecciones se elabora con las técnicas anteriores — explora por categoría para verlas.",
+  faqTitle: "Preguntas frecuentes",
+  faq: [
+    {
+      question: "¿El vidrio de Murano es vidrio real, o algo sintético?",
+      answer:
+        "Vidrio real — una mezcla de arena de sílice, sosa y cal fundida a alta temperatura en un horno, la misma receta base que el vidrio ha usado durante siglos. Lo que lo convierte específicamente en \"vidrio de Murano\" es dónde y cómo se trabaja, no una materia prima diferente.",
+    },
+    {
+      question: "¿Cuál es la diferencia entre el vidrio de Murano y la bisutería de vidrio corriente?",
+      answer:
+        "Sobre todo el proceso: el vidrio de Murano se moldea a mano, cuenta a cuenta, con técnicas como el trabajo a la llama, las murrinas y el sommerso, en lugar de fundirse o prensarse en un molde. Por eso también dos piezas de Murano \"idénticas\" nunca son perfectamente iguales.",
+    },
+    {
+      question: "¿Por qué el vidrio de Murano auténtico es más caro que las imitaciones?",
+      answer:
+        "Porque requiere mano de obra cualificada real y tiempo — un vidriero moldea cada cuenta individualmente sobre una llama abierta. El vidrio de imitación producido en masa, formado en moldes en una fábrica, se salta casi todo ese trabajo, que es precisamente por qué cuesta menos.",
+    },
+    {
+      question: "¿Qué es una marca de pontia, y debería poder ver una?",
+      answer:
+        "Es la marca que queda en el punto donde una pieza soplada a mano se separó de la varilla que la sostenía durante el moldeado — a veces visible como una pequeña zona rugosa o pulida. No todas las técnicas dejan una marca evidente, pero cuando está presente, es una señal fuerte de trabajo manual.",
+    },
+    {
+      question: "¿Por qué las cuentas de un mismo conjunto se ven ligeramente diferentes entre sí?",
+      answer:
+        "Porque cada una pasó por las manos de una persona, no por un molde. Las pequeñas diferencias de color, burbujas y forma son el aspecto característico del vidrio soplado a mano — no un defecto.",
+    },
+    {
+      question: "¿Cómo limpio y guardo la joyería de vidrio de Murano?",
+      answer:
+        "Límpiala con un paño suave y seco después de usarla, ponte las joyas después (no antes) del perfume o la loción, y guarda las piezas por separado para que no choquen entre sí. Consulta \"Cómo cuidar la joyería de vidrio de Murano\" más arriba para la lista completa.",
+    },
+    {
+      question: "¿Es ecológica la joyería de vidrio?",
+      answer:
+        "El vidrio en sí es uno de los materiales más reciclables que existen — se puede fundir y volver a trabajar indefinidamente sin perder calidad, lo cual es parte de cómo los hornos de Murano han seguido trabajando con la misma materia prima durante siete siglos.",
+    },
+    {
+      question: "¿Se puede reparar una cuenta agrietada o astillada?",
+      answer:
+        "No de forma invisible, en la mayoría de los casos — una reparación normalmente se nota. Esa es la razón práctica para evitar golpes y cambios bruscos de temperatura (ver la sección de cuidados más arriba) en lugar de confiar en poder arreglar el daño después.",
+    },
+  ],
+};
+
+const pt: MuranoGuideContent = {
+  metaTitle: "Vidro de Murano: História, Técnicas e Como Reconhecer o Original",
+  metaDescription:
+    "Um guia completo sobre o vidro de Murano — os seus 700 anos de história, as técnicas por trás do trabalho ao maçarico, das murrine e do sommerso, como distinguir vidro autêntico soprado à mão de imitações, e como cuidar dele.",
+  title: "O Guia Completo do Vidro de Murano",
+  intro:
+    "O vidro de Murano é o vidro produzido em Murano, uma pequena ilha da lagoa veneziana que é o centro do fabrico de vidro de Veneza há mais de 700 anos. O nome é protegido por uma marca italiana por um bom motivo: descreve um local específico, um conjunto específico de técnicas manuais e um nível de perícia que a bijuteria de vidro produzida em massa e vendida sob o mesmo nome normalmente não tem. Este guia explica de onde vem, como é realmente fabricado e como distinguir a peça autêntica de uma imitação.",
+  historyTitle: "Uma breve história",
+  historyParagraphs: [
+    "Em 1291, a República de Veneza ordenou que todos os fornos de vidro da cidade fossem transferidos para a ilha de Murano. A razão oficial era a segurança contra incêndios — os fornos funcionavam dia e noite numa cidade construída quase inteiramente em madeira —, mas isso também teve o efeito de concentrar todos os vidreiros num local que a República podia controlar. O fabrico de vidro na ilha era regido por uma corporação própria, a Arte dei Fioleri, e durante séculos os vidreiros de Murano gozaram de um estatuto verdadeiramente privilegiado (alguns foram até autorizados a casar com nobres venezianos), em troca de regras que limitavam para onde podiam viajar e a quem podiam ensinar o ofício — deixar a ilha para exercer o ofício noutro lugar foi, durante grande parte dessa história, tratado como um ato de traição.",
+    "O Renascimento foi a idade de ouro de Murano. Por volta de 1450, um vidreiro chamado Angelo Barovier desenvolveu o cristallo — um vidro suficientemente transparente e incolor para rivalizar com o cristal de rocha, um verdadeiro avanço técnico para a época —, e Murano tornou-se a principal fonte europeia de espelhos e candeeiros finos durante os três séculos seguintes. As murrine e os millefiori (canas de vidro cujo corte transversal revela um padrão semelhante a um mosaico, uma técnica antiga com raízes no trabalho do vidro romano e egípcio) foram revividos e aperfeiçoados na ilha. No século XVII, um dos fornos de Murano terá descoberto por acaso o vidro avventurina — vidro salpicado de minúsculos cristais de cobre —, que desde então se tornou um material característico de Murano.",
+    "A indústria quase desapareceu duas vezes. O vidro mais barato da Boémia e de França foi corroendo o mercado de Murano ao longo do século XVIII, e depois, em 1797, a ocupação napoleónica dissolveu a República de Veneza e, com ela, a corporação dos vidreiros — a produção reduziu-se a uma fração do que tinha sido. O renascimento que se seguiu está invulgarmente bem documentado: Antonio Salviati relançou a produção em grande escala de mosaicos e vidro na década de 1860 e ajudou a fundar o Museu do Vidro de Murano em 1861, para preservar e mostrar a própria história da ilha; Paolo Venini fundou em 1921 aquele que se tornaria um dos fornos mais influentes da ilha. O vidro de Murano ainda hoje é fabricado à mão, em fornos em funcionamento na ilha, usando em grande parte as mesmas técnicas essenciais de há sete séculos.",
+  ],
+  beadsTitle: "Contas, comércio e uma história complicada",
+  beadsBody:
+    "As contas trabalhadas individualmente ao maçarico, como as deste catálogo, são uma tradição de Murano — mas durante grande parte da sua história, a maior exportação da ilha em volume não era, de todo, vidro artístico. Eram as conterie: pequenas contas de vidro fabricadas de forma barata, produzidas aos milhões e enviadas através das redes comerciais de Veneza a partir do século XVI para África, Ásia e as Américas, onde eram usadas como uma forma de moeda — incluindo, de forma desconfortável, no âmbito do tráfico transatlântico de escravos. Essa tradição de produção em massa tinha a sua própria corporação e os seus próprios trabalhadores, distintos dos mestres de forno que fabricavam cristallo e candeeiros. É um ofício diferente das peças moldadas individualmente descritas neste guia, mas faz parte da mesma história da ilha, e é em grande medida a razão pela qual as contas de vidro venezianas ainda hoje aparecem em coleções de museus e escavações arqueológicas em quatro continentes.",
+  techniquesTitle: "As técnicas, explicadas",
+  techniques: [
+    {
+      name: "Trabalho ao maçarico (lavorazione a lume)",
+      body: "Moldar uma vareta de vidro sobre uma chama aberta em vez de num forno — a técnica por trás da maioria das contas individuais. Um vidreiro aquece a ponta de uma vareta de vidro colorido até ficar fundida, enrola-a à volta de um mandril metálico para formar uma conta e molda-a com ferramentas e a gravidade enquanto ainda está mole.",
+    },
+    {
+      name: "Sopro de vidro (soffiatura)",
+      body: "Recolher vidro fundido de um forno na ponta de uma cana de sopro e moldá-lo soprando ar para dentro enquanto se roda — a técnica por trás de formas ocas maiores, como vasos e contas maiores.",
+    },
+    {
+      name: "Murrine e millefiori",
+      body: 'Uma murrina é uma fatia cortada de uma longa cana de vidro construída camada por camada, de modo que o seu corte transversal mostre um padrão — uma flor, uma estrela, um rosto. O millefiori ("mil flores") é o estilo de murrina mais conhecido. As fatias são dispostas na superfície de uma conta ou vaso e fundidas com calor, de modo que o padrão atravesse todo o vidro em vez de ficar apenas à superfície.',
+    },
+    {
+      name: "Filigrana",
+      body: "Finas canas de vidro branco ou colorido, por vezes torcidas (retortoli) ou cruzadas numa rede fina (reticello), são incorporadas em vidro transparente antes de este ser moldado — visíveis como fios delicados que percorrem a peça.",
+    },
+    {
+      name: "Sommerso",
+      body: "Do italiano, \"submerso\". Camadas de vidro de cores diferentes são mergulhadas umas sobre as outras, cada uma envolvendo completamente a anterior, de modo que uma peça mostra profundidade e um gradiente entre cores em vez de um único tom plano.",
+    },
+    {
+      name: "Avventurina (vidro aventurina)",
+      body: "Vidro com minúsculos cristais de cobre suspensos no seu interior, o que lhe confere um brilho metálico. Uma verdadeira invenção de Murano, tradicionalmente guardada como uma das fórmulas mais zelosamente protegidas da ilha.",
+    },
+    {
+      name: "Folha de ouro e prata",
+      body: "Finas folhas de ouro ou prata verdadeiros são colocadas sobre o vidro ainda quente e trabalhadas nele, de modo que o metal passa a fazer parte da superfície em vez de ficar por cima — a origem das nuances e veios metálicos vistos em muitas peças.",
+    },
+    {
+      name: "Craquelé (vidro de gelo)",
+      body: "O vidro quente é mergulhado brevemente em água fria, o que faz estalar a sua superfície numa fina rede de fissuras; depois volta ao forno o tempo suficiente para fundir uma camada lisa por cima e selar o padrão sem o fazer desaparecer.",
+    },
+    {
+      name: "Jateamento de areia (sabbiatura)",
+      body: "Feito a frio, depois de a peça estar totalmente formada — um abrasivo fino é projetado sobre a superfície para suavizar o seu brilho num acabamento fosco e acetinado.",
+    },
+    {
+      name: "A marca do ponteiro",
+      body: "A marca — rugosa ou cuidadosamente polida — deixada numa peça no ponto onde foi separada da haste que a sustentava durante a moldagem. O vidro produzido em massa, formado num molde, não tem uma — uma verdadeira marca de ponteiro é um dos sinais mais fiáveis de vidro soprado à mão.",
+    },
+  ],
+  authenticityTitle: "Como reconhecer vidro de Murano autêntico",
+  authenticityIntro:
+    "\"Vidro de Murano\" é um dos nomes mais imitados em bijuteria e vidro decorativo — contas produzidas em massa em fábricas noutros locais (muitas vezes por uma fração do custo) são regularmente vendidas com a mesma denominação, especialmente a turistas na própria Veneza. Existe uma marca real, Vetro Artistico® Murano, registada pelo Consorzio Promovetro Murano, que os fornos da ilha podem aplicar aos seus trabalhos para certificar onde foram realmente feitos — mas muito trabalho genuíno de pequena escala não está formalmente certificado, e muitas alegações que soam a certificação são inventadas. A verificação mais fiável é o próprio vidro:",
+  authenticitySigns: [
+    "Pequenas bolhas de ar e uma ligeira assimetria — sinais de que foi moldado por uma pessoa, não por um molde.",
+    "Uma cor que varia subtilmente de peça para peça no mesmo conjunto, em vez de ser perfeitamente uniforme.",
+    "Uma marca de ponteiro quando aplicável (ver acima) — uma peça feita em molde não a terá.",
+    "Peso e espessura que parecem substanciais em vez de finos e leves — o vidro recolhido à mão tende a pesar mais do que uma peça formada à máquina.",
+    "Um preço que reflete trabalho real. Um vidreiro habilidoso dedica tempo real a cada conta; um preço que pareça demasiado baixo para isso normalmente significa que não foi feita assim.",
+  ],
+  careTitle: "Cuidar da joalharia em vidro de Murano",
+  careIntro:
+    "O vidro é mais resistente do que se pensa, mas continua a ser vidro — alguns hábitos fazem-no durar mais.",
+  careSteps: [
+    {
+      name: "Coloque por último",
+      body: "O perfume, a laca e as loções podem opacificar a superfície do vidro com o tempo — aplique-os primeiro e só depois coloque as joias.",
+    },
+    {
+      name: "Retire para a água e para dormir",
+      body: "Retire antes de tomar banho, nadar ou dormir, para que não seja embatido nem exposto a cloro/água salgada durante horas seguidas.",
+    },
+    {
+      name: "Limpe após o uso",
+      body: "Um pano macio e seco é suficiente para o manter limpo — não é necessário produto de limpeza para joias nem água.",
+    },
+    {
+      name: "Guarde as peças separadamente",
+      body: "Uma bolsa macia ou uma caixa forrada evita que as contas embatam umas nas outras ou em joias mais duras, a forma mais comum de uma peça lascar.",
+    },
+    {
+      name: "Evite mudanças bruscas de temperatura",
+      body: "Deixar uma joia de vidro num local muito quente (o tablier do carro, sol direto) e depois manuseá-la fria pode colocar o vidro sob tensão — o mesmo princípio de choque térmico que racha um copo frio cheio de água quente.",
+    },
+  ],
+  shopCtaTitle: "Compre a coleção",
+  shopCtaBody: "Cada peça destas coleções é feita com as técnicas acima — navegue por categoria para as ver.",
+  faqTitle: "Perguntas frequentes",
+  faq: [
+    {
+      question: "O vidro de Murano é vidro real ou algo sintético?",
+      answer:
+        "Vidro real — uma mistura de areia de sílica, soda e cal fundida a alta temperatura num forno, a mesma receita base usada há séculos. O que o torna especificamente \"vidro de Murano\" é onde e como é trabalhado, não uma matéria-prima diferente.",
+    },
+    {
+      question: "Qual é a diferença entre o vidro de Murano e a bijuteria de vidro comum?",
+      answer:
+        "Sobretudo o processo: o vidro de Murano é moldado à mão, conta a conta, com técnicas como o trabalho ao maçarico, as murrine e o sommerso, em vez de ser fundido ou prensado num molde. É também por isso que duas peças \"idênticas\" de Murano nunca são perfeitamente iguais.",
+    },
+    {
+      question: "Por que razão o vidro de Murano autêntico é mais caro do que as imitações?",
+      answer:
+        "Porque exige mão de obra qualificada real e tempo — um vidreiro molda cada conta individualmente sobre uma chama aberta. O vidro de imitação produzido em massa, moldado em fábrica, salta quase todo esse trabalho, o que explica precisamente por que custa menos.",
+    },
+    {
+      question: "O que é uma marca de ponteiro, e devo conseguir ver uma?",
+      answer:
+        "É a marca deixada no ponto onde uma peça soprada à mão foi separada da haste que a sustentava durante a moldagem — por vezes visível como uma pequena zona áspera ou polida. Nem todas as técnicas deixam uma marca evidente, mas quando está presente, é um forte sinal de trabalho manual.",
+    },
+    {
+      question: "Por que razão as contas do mesmo conjunto parecem ligeiramente diferentes entre si?",
+      answer:
+        "Porque cada uma passou pelas mãos de uma pessoa, não por um molde. As pequenas diferenças de cor, bolhas e forma são o aspeto característico do vidro soprado à mão — não um defeito.",
+    },
+    {
+      question: "Como limpo e guardo joalharia em vidro de Murano?",
+      answer:
+        "Limpe com um pano macio e seco após o uso, coloque as joias depois (não antes) do perfume ou loção, e guarde as peças separadamente para que não embatam umas nas outras. Veja \"Cuidar da joalharia em vidro de Murano\" acima para a lista completa.",
+    },
+    {
+      question: "A bijuteria de vidro é ecológica?",
+      answer:
+        "O vidro em si é um dos materiais mais recicláveis que existem — pode ser fundido e retrabalhado indefinidamente sem perder qualidade, o que é parte da razão pela qual os fornos de Murano têm trabalhado a mesma matéria-prima há sete séculos.",
+    },
+    {
+      question: "Pode reparar-se uma conta rachada ou lascada?",
+      answer:
+        "Na maioria dos casos, não de forma invisível — uma reparação geralmente nota-se. Essa é a razão prática para evitar impactos e mudanças bruscas de temperatura (ver a secção de cuidados acima) em vez de contar reparar o dano depois.",
+    },
+  ],
+};
+
+const hi: MuranoGuideContent = {
+  metaTitle: "मुरानो ग्लास: इतिहास, तकनीकें और असली को कैसे पहचानें",
+  metaDescription:
+    "मुरानो ग्लास की एक संपूर्ण गाइड — इसका 700 साल का इतिहास, लैंपवर्किंग, मुर्रिने और सोमर्सो के पीछे की तकनीकें, असली हाथ से फूंके गए ग्लास को नकली से कैसे पहचानें, और इसकी देखभाल कैसे करें।",
+  title: "मुरानो ग्लास की संपूर्ण गाइड",
+  intro:
+    "मुरानो ग्लास वह ग्लास है जो मुरानो में बनाया जाता है, वेनिस के लैगून का एक छोटा द्वीप जो 700 से अधिक वर्षों से वेनिस का ग्लासमेकिंग केंद्र रहा है। यह नाम एक इतालवी ट्रेडमार्क द्वारा एक कारण से संरक्षित है: यह एक विशिष्ट स्थान, हाथ की तकनीकों के एक विशिष्ट समूह, और कौशल के उस स्तर का वर्णन करता है जो उसी नाम के तहत बेचे जाने वाले बड़े पैमाने पर उत्पादित ग्लास आभूषणों में आमतौर पर नहीं होता। यह गाइड बताती है कि यह कहां से आता है, इसे वास्तव में कैसे बनाया जाता है, और असली उत्पाद को नकली से कैसे पहचानें।",
+  historyTitle: "एक संक्षिप्त इतिहास",
+  historyParagraphs: [
+    "1291 में, वेनिस गणराज्य ने शहर की सभी ग्लास भट्टियों को मुरानो द्वीप पर स्थानांतरित करने का आदेश दिया। आधिकारिक कारण अग्नि सुरक्षा था — भट्टियां लगभग पूरी तरह से लकड़ी से बने शहर में दिन-रात चलती थीं — लेकिन इसका असर यह भी हुआ कि सभी ग्लासमेकर्स एक ऐसी जगह पर केंद्रित हो गए जिसे गणराज्य नियंत्रित कर सकता था। द्वीप पर ग्लासमेकिंग को उसके अपने गिल्ड, आर्ते देई फिओलेरी, द्वारा नियंत्रित किया जाता था, और सदियों बाद तक मुरानो के ग्लासमेकर्स को वास्तव में विशेषाधिकार प्राप्त दर्जा मिला (कुछ को तो वेनिसियन कुलीन वर्ग में विवाह करने की भी अनुमति थी) उन नियमों के बदले जो सीमित करते थे कि वे कहां यात्रा कर सकते हैं और किसे प्रशिक्षित कर सकते हैं — उस इतिहास के एक लंबे दौर में, द्वीप छोड़कर कहीं और यह व्यापार करना देशद्रोह का कार्य माना जाता था।",
+    "पुनर्जागरण मुरानो का स्वर्ण युग था। लगभग 1450 के दशक में, एंजेलो बारोवियर नामक एक ग्लासमेकर ने क्रिस्टालो विकसित किया — एक ऐसा ग्लास जो रॉक क्रिस्टल का मुकाबला करने के लिए इतना साफ़ और रंगहीन था, उस समय के लिए एक वास्तविक तकनीकी सफलता — और अगले तीन शताब्दियों के लिए मुरानो यूरोप का बेहतरीन दर्पणों और झूमरों का मुख्य स्रोत बन गया। मुर्रिने और मिलेफियोरी (मोज़ेक जैसे क्रॉस-सेक्शन वाली ग्लास की छड़ें, एक प्राचीन तकनीक जिसकी जड़ें रोमन और मिस्र के ग्लासवर्क में हैं) को द्वीप पर पुनर्जीवित और परिष्कृत किया गया। 17वीं शताब्दी में, कहा जाता है कि मुरानो की एक भट्टी ने संयोगवश एवेंतुरिना ग्लास — तांबे के छोटे क्रिस्टल से जड़ा ग्लास — की खोज की, और तब से यह मुरानो की एक विशिष्ट सामग्री रही है।",
+    "यह लगभग दो बार समाप्त हो गया था। बोहेमिया और फ्रांस के सस्ते ग्लास ने 1700 के दशक में मुरानो के बाज़ार में सेंध लगाई, और फिर 1797 में नेपोलियन के कब्जे ने वेनिस गणराज्य को भंग कर दिया और उसके साथ ही ग्लासमेकर्स के गिल्ड को भी — उत्पादन अपने पूर्व स्तर के एक अंश तक गिर गया। इसके बाद हुआ पुनरुद्धार असामान्य रूप से अच्छी तरह से दर्ज है: एंटोनियो साल्वियाती ने 1860 के दशक में बड़े पैमाने पर मोज़ेक और ग्लास उत्पादन को फिर से शुरू किया और द्वीप के अपने इतिहास को संरक्षित करने और प्रदर्शित करने के लिए 1861 में मुरानो ग्लास संग्रहालय की स्थापना में मदद की; पाओलो वेनिनी ने 1921 में द्वीप की सबसे प्रभावशाली भट्टियों में से एक बनने वाली भट्टी की स्थापना की। मुरानो ग्लास आज भी हाथ से बनाया जाता है, द्वीप पर चल रही भट्टियों में, जो काफी हद तक सात शताब्दी पहले जैसी ही मुख्य तकनीकों का उपयोग करती हैं।",
+  ],
+  beadsTitle: "मनके, व्यापार, और एक जटिल इतिहास",
+  beadsBody:
+    "इस कैटलॉग में मौजूद मनकों की तरह अलग-अलग लैंप-वर्क किए गए मनके मुरानो की एक परंपरा हैं — लेकिन इसके इतिहास के एक लंबे दौर में, द्वीप का सबसे बड़ा निर्यात मात्रा के हिसाब से आर्ट ग्लास बिल्कुल नहीं था। यह था कोंतेरिये: छोटे, सस्ते बनाए गए ग्लास मनके, जो लाखों की संख्या में उत्पादित होते थे और 16वीं शताब्दी से आगे वेनिस के व्यापार नेटवर्क के माध्यम से अफ्रीका, एशिया और अमेरिका भेजे जाते थे, जहां उनका उपयोग मुद्रा के एक रूप के रूप में किया जाता था — जिसमें असहजता से, ट्रांसअटलांटिक दास व्यापार भी शामिल था। उस बड़े पैमाने पर उत्पादन की परंपरा का अपना अलग गिल्ड और अपने कामगार थे, जो क्रिस्टालो और झूमर बनाने वाले भट्टी के माएस्त्री से अलग थे। यह इस गाइड में बताए गए अलग-अलग आकार दिए गए उत्पादों से एक अलग शिल्प है, लेकिन यह उसी द्वीप के इतिहास का हिस्सा है, और यह इस बात का एक बड़ा कारण है कि वेनिसियन ग्लास मनके आज भी चार महाद्वीपों में संग्रहालय संग्रहों और पुरातात्विक खुदाई में मिलते हैं।",
+  techniquesTitle: "तकनीकें, समझाई गईं",
+  techniques: [
+    {
+      name: "लैंपवर्किंग (लावोराज़ियोने आ लूमे)",
+      body: "भट्टी के बजाय खुली लौ पर ग्लास की छड़ को आकार देना — यह तकनीक अधिकांश अलग-अलग मनकों के पीछे है। एक ग्लासवर्कर रंगीन ग्लास की छड़ की नोक को तब तक गर्म करता है जब तक वह पिघल न जाए, इसे मनका बनाने के लिए एक धातु के मैंड्रेल के चारों ओर लपेटता है, और जब यह अभी भी नरम है तो इसे औजारों और गुरुत्वाकर्षण से आकार देता है।",
+    },
+    {
+      name: "ग्लासब्लोइंग (सोफ़्फ़ियातूरा)",
+      body: "एक ब्लोपाइप के सिरे पर भट्टी से पिघला हुआ ग्लास इकट्ठा करना और घुमाते हुए उसमें हवा फूंककर उसे आकार देना — यह तकनीक फूलदान और बड़े मनकों जैसे बड़े खोखले आकारों के पीछे है।",
+    },
+    {
+      name: "मुर्रिने और मिलेफियोरी",
+      body: "एक मुर्रिना एक लंबी ग्लास की छड़ से काटी गई एक स्लाइस है जिसे परत-दर-परत बनाया गया था, ताकि उसका क्रॉस-सेक्शन एक पैटर्न दिखाए — एक फूल, एक तारा, एक चेहरा। मिलेफियोरी (\"हज़ार फूल\") मुर्रिने की सबसे प्रसिद्ध शैली है। स्लाइस को एक मनके या फूलदान की सतह पर व्यवस्थित किया जाता है और गर्मी से फ्यूज़ किया जाता है, ताकि पैटर्न ऊपर बैठने के बजाय ग्लास के पूरे हिस्से में चले।",
+    },
+    {
+      name: "फ़िलिग्राना (फ़िलिग्री)",
+      body: "सफेद या रंगीन ग्लास की पतली छड़ें, कभी-कभी मुड़ी हुई (रेटोर्तोली) या एक महीन जाल (रेतिचेल्लो) में क्रॉस की गई, आकार देने से पहले साफ़ ग्लास में एम्बेड की जाती हैं — जो उत्पाद में चलते हुए नाजुक धागों के रूप में दिखाई देती हैं।",
+    },
+    {
+      name: "सोमर्सो",
+      body: "इतालवी में \"डूबा हुआ\"। अलग-अलग रंगों के ग्लास की परतों को एक के ऊपर एक डुबोया जाता है, प्रत्येक पिछले वाले को पूरी तरह से घेरते हुए, ताकि एक उत्पाद एक ही सपाट रंग के बजाय गहराई और रंगों के बीच एक ग्रेडिएंट दिखाए।",
+    },
+    {
+      name: "अवेंतुरिना (एवेंचुरीन ग्लास)",
+      body: "इसके अंदर तांबे के छोटे क्रिस्टल निलंबित होते हैं, जो इसे धात्विक चमक देते हैं। एक वास्तविक मुरानो आविष्कार, जिसे पारंपरिक रूप से द्वीप के सबसे गुप्त रूप से सुरक्षित सूत्रों में से एक के रूप में रखा जाता है।",
+    },
+    {
+      name: "सोने और चांदी का वर्क",
+      body: "असली सोने या चांदी के पतले वर्क को ग्लास के अभी भी गर्म होने के दौरान बिछाया जाता है और उसमें काम किया जाता है, ताकि धातु ऊपर बैठने के बजाय सतह का हिस्सा बन जाए — कई उत्पादों में दिखने वाले धात्विक धब्बों और नसों का स्रोत।",
+    },
+    {
+      name: "क्राक्वेले (आइस ग्लास)",
+      body: "गर्म ग्लास को थोड़ी देर के लिए ठंडे पानी में डुबोया जाता है, जो इसकी सतह को दरारों के एक महीन जाल में तोड़ देता है, फिर यह ऊपर एक चिकनी परत को फ्यूज़ करने और पैटर्न को बिना पिघलाए सील करने के लिए बस पर्याप्त समय के लिए भट्टी में वापस चला जाता है।",
+    },
+    {
+      name: "सैंडब्लास्टिंग (सब्बियातूरा)",
+      body: "उत्पाद के पूरी तरह से बन जाने के बाद, ठंडे में किया जाता है — सतह की चमक को मैट, फ्रॉस्टेड फिनिश में नरम करने के लिए एक महीन अपघर्षक को सतह पर उड़ाया जाता है।",
+    },
+    {
+      name: "पोंटिल का निशान",
+      body: "वह खुरदरा (या सावधानी से पॉलिश किया गया) निशान जो एक उत्पाद पर उस जगह छूट जाता है जहां इसे आकार देने के दौरान पकड़े रखने वाली पोंटी रॉड से तोड़ा गया था। बड़े पैमाने पर उत्पादित ग्लास, जो एक मोल्ड में बनाया गया है, में यह नहीं होता — एक असली पोंटिल निशान हाथ से फूंके गए ग्लास के अधिक विश्वसनीय संकेतों में से एक है।",
+    },
+  ],
+  authenticityTitle: "असली मुरानो ग्लास को कैसे पहचानें",
+  authenticityIntro:
+    "\"मुरानो ग्लास\" आभूषण और सजावटी ग्लास में सबसे अधिक नकल किए जाने वाले नामों में से एक है — कहीं और फैक्ट्रियों में बड़े पैमाने पर बनाए गए मनके (अक्सर लागत के एक अंश पर) नियमित रूप से उसी लेबल के तहत बेचे जाते हैं, विशेष रूप से खुद वेनिस में पर्यटकों को। Consorzio Promovetro Murano द्वारा पंजीकृत एक वास्तविक ट्रेडमार्क, Vetro Artistico® Murano है, जिसे द्वीप की भट्टियां अपने काम पर यह प्रमाणित करने के लिए लागू कर सकती हैं कि यह वास्तव में कहां बनाया गया था — लेकिन बहुत सारा असली छोटे पैमाने का काम औपचारिक रूप से प्रमाणित नहीं है, और प्रमाणन जैसा लगने वाला बहुत सारा दावा बनावटी है। अधिक विश्वसनीय जांच खुद ग्लास है:",
+  authenticitySigns: [
+    "छोटे हवा के बुलबुले और थोड़ी असममितता — संकेत कि इसे एक इंसान ने आकार दिया, किसी मोल्ड ने नहीं।",
+    "एक ही सेट में उत्पाद-दर-उत्पाद थोड़ा बदलता रंग, बजाय पूरी तरह से एक समान होने के।",
+    "जहां लागू हो वहां एक पोंटिल निशान (ऊपर देखें) — एक मोल्ड-निर्मित उत्पाद में यह नहीं होगा।",
+    "वज़न और मोटाई जो पतली और हल्की के बजाय ठोस महसूस हो — हाथ से इकट्ठा किया गया ग्लास मशीन से बने उत्पाद की तुलना में अधिक वज़नी होता है।",
+    "एक कीमत जो वास्तविक श्रम को दर्शाती है। एक कुशल लैंपवर्कर हर एक मनके पर वास्तविक समय बिताता है; एक कीमत जो इसके लिए बहुत कम लगती है उसका आमतौर पर मतलब है कि यह उस तरह से नहीं बनाई गई थी।",
+  ],
+  careTitle: "मुरानो ग्लास आभूषणों की देखभाल",
+  careIntro:
+    "ग्लास लोगों की अपेक्षा से अधिक सहनशील होता है, लेकिन यह फिर भी ग्लास ही है — कुछ आदतें इसे लंबे समय तक टिकाए रखती हैं।",
+  careSteps: [
+    {
+      name: "इसे सबसे अंत में पहनें",
+      body: "इत्र, हेयरस्प्रे और लोशन समय के साथ ग्लास की सतह को धुंधला कर सकते हैं — इन्हें पहले लगाएं, फिर अपने आभूषण पहनें।",
+    },
+    {
+      name: "पानी और सोने के लिए इसे उतार दें",
+      body: "नहाने, तैरने या सोने से पहले इसे उतार दें, ताकि यह घंटों तक टकराए या क्लोरीन/खारे पानी के संपर्क में न आए।",
+    },
+    {
+      name: "पहनने के बाद इसे पोंछें",
+      body: "इसे साफ रखने के लिए एक मुलायम, सूखा कपड़ा काफी है — आभूषण क्लीनर या पानी की जरूरत नहीं।",
+    },
+    {
+      name: "उत्पादों को अलग-अलग रखें",
+      body: "एक मुलायम पाउच या लाइन वाला बॉक्स मनकों को एक-दूसरे या कठोर आभूषणों से टकराने से रोकता है, जो किसी उत्पाद के टूटने का सबसे आम तरीका है।",
+    },
+    {
+      name: "अचानक तापमान परिवर्तन से बचें",
+      body: "ग्लास के आभूषण को कहीं बहुत गर्म जगह (कार डैशबोर्ड, सीधी धूप) पर छोड़ना और फिर इसे ठंडा होने पर संभालना ग्लास पर दबाव डाल सकता है — वही थर्मल-शॉक सिद्धांत जो गर्म पानी से भरे ठंडे गिलास को फोड़ देता है।",
+    },
+  ],
+  shopCtaTitle: "कलेक्शन खरीदें",
+  shopCtaBody: "इन प्रत्येक कलेक्शन में हर उत्पाद ऊपर दी गई तकनीकों का उपयोग करके बनाया गया है — उन्हें देखने के लिए श्रेणी के अनुसार ब्राउज़ करें।",
+  faqTitle: "अक्सर पूछे जाने वाले प्रश्न",
+  faq: [
+    {
+      question: "क्या मुरानो ग्लास असली ग्लास है, या कुछ सिंथेटिक?",
+      answer:
+        "असली ग्लास — सिलिका रेत, सोडा और चूने का मिश्रण जो भट्टी में उच्च तापमान पर पिघलाया जाता है, वही आधार रेसिपी जो ग्लास सदियों से उपयोग कर रहा है। जो चीज़ इसे विशेष रूप से \"मुरानो ग्लास\" बनाती है वह है इसे कहां और कैसे काम में लाया जाता है, न कि कोई अलग कच्चा माल।",
+    },
+    {
+      question: "मुरानो ग्लास और साधारण ग्लास आभूषणों में क्या अंतर है?",
+      answer:
+        "मुख्य रूप से प्रक्रिया: मुरानो ग्लास हाथ से, मनका दर मनका, लैंपवर्किंग, मुर्रिने और सोमर्सो जैसी तकनीकों का उपयोग करके आकार दिया जाता है, न कि किसी मोल्ड में ढाला या दबाया जाता है। यही कारण है कि दो \"समान\" मुरानो उत्पाद कभी भी पूरी तरह से समान नहीं होते।",
+    },
+    {
+      question: "असली मुरानो ग्लास नकल से अधिक महंगा क्यों है?",
+      answer:
+        "क्योंकि इसमें वास्तविक कुशल श्रम और समय लगता है — एक लैंपवर्कर खुली लौ पर हर मनके को अलग-अलग आकार देता है। बड़े पैमाने पर उत्पादित नकली ग्लास, जो फैक्ट्री में मोल्ड में बनाया जाता है, इस लगभग सारे श्रम को छोड़ देता है, जो ठीक इसी वजह से इसकी कीमत कम होती है।",
+    },
+    {
+      question: "पोंटिल निशान क्या है, और क्या मुझे एक देखने में सक्षम होना चाहिए?",
+      answer:
+        "यह वह निशान है जो एक हाथ से फूंके गए उत्पाद पर उस जगह छूट जाता है जहां इसे आकार देने के दौरान पकड़े रखने वाली रॉड से तोड़ा गया था — कभी-कभी एक छोटे खुरदरे या पॉलिश किए गए स्थान के रूप में दिखाई देता है। हर तकनीक इसे स्पष्ट रूप से नहीं छोड़ती, लेकिन जहां यह मौजूद है, यह हाथ के काम का एक मजबूत संकेत है।",
+    },
+    {
+      question: "एक ही सेट में मनके एक-दूसरे से थोड़े अलग क्यों दिखते हैं?",
+      answer:
+        "क्योंकि हर एक किसी व्यक्ति के हाथों से गुज़रा, किसी मोल्ड से नहीं। रंग, बुलबुले और आकार में छोटे अंतर यही दिखाते हैं कि हाथ से फूंका गया ग्लास कैसा दिखता है — कोई खराबी नहीं।",
+    },
+    {
+      question: "मैं मुरानो ग्लास आभूषणों को कैसे साफ करूं और स्टोर करूं?",
+      answer:
+        "पहनने के बाद इसे मुलायम, सूखे कपड़े से पोंछें, इत्र या लोशन के बाद (पहले नहीं) इसे पहनें, और उत्पादों को अलग-अलग स्टोर करें ताकि वे एक-दूसरे से न टकराएं। पूरी सूची के लिए ऊपर \"मुरानो ग्लास आभूषणों की देखभाल\" देखें।",
+    },
+    {
+      question: "क्या ग्लास आभूषण पर्यावरण के अनुकूल हैं?",
+      answer:
+        "ग्लास खुद सबसे अधिक पुनर्चक्रण योग्य सामग्रियों में से एक है जो मौजूद है — इसे गुणवत्ता खोए बिना अनिश्चित काल तक पिघलाया और फिर से काम में लाया जा सकता है, जो इस बात का एक हिस्सा है कि मुरानो की भट्टियां सात शताब्दियों से एक ही कच्चे माल के साथ काम कर रही हैं।",
+    },
+    {
+      question: "क्या टूटे या चटके हुए मनके की मरम्मत की जा सकती है?",
+      answer:
+        "अधिकांश मामलों में, अदृश्य रूप से नहीं — मरम्मत आमतौर पर दिखती है। यही व्यावहारिक कारण है कि प्रभाव और अचानक तापमान परिवर्तन से बचना चाहिए (ऊपर देखभाल अनुभाग देखें) बजाय इसके कि बाद में क्षति को ठीक करने पर भरोसा किया जाए।",
+    },
+  ],
+};
+
+const ja: MuranoGuideContent = {
+  metaTitle: "ムラノガラス:歴史、技法、そして本物の見分け方",
+  metaDescription:
+    "ムラノガラスの完全ガイド — 700年におよぶ歴史、ランプワーク、ムッリーナ、ソンメルソの技法、本物の手吹きガラスと模造品の見分け方、そしてお手入れ方法まで。",
+  title: "ムラノガラス完全ガイド",
+  intro:
+    "ムラノガラスとは、ヴェネツィアの潟に浮かぶ小さな島、ムラノ島で作られるガラスのことです。ムラノ島は700年以上にわたりヴェネツィアのガラス製造の中心地であり続けています。この名称がイタリアの商標で保護されているのには理由があります — 特定の場所、特定の一連の手作業の技法、そして同じ名前で売られる大量生産のガラスアクセサリーには通常備わっていない技術水準を表しているからです。このガイドでは、ムラノガラスがどこから来たのか、実際にどのように作られているのか、そして本物を模造品から見分ける方法を解説します。",
+  historyTitle: "簡単な歴史",
+  historyParagraphs: [
+    "1291年、ヴェネツィア共和国は市内のすべてのガラス工房をムラノ島へ移転するよう命じました。表向きの理由は防火対策でした — ほぼすべてが木造の街で、工房の炉は昼夜を問わず稼働していたためです — が、それには共和国が管理しやすい一か所にガラス職人を集中させるという効果もありました。島でのガラス製造は独自のギルドであるアルテ・デイ・フィオレーリによって統制され、その後何世紀もの間、ムラノのガラス職人たちは実質的に特権的な地位を享受しました(ヴェネツィアの貴族と結婚することを許された者さえいました)。その代わりに、渡航先や技術を教えられる相手を制限する規則が課され、島を離れて他の場所でこの職業を営むことは、その歴史の長い期間、裏切り行為とみなされていました。",
+    "ルネサンスはムラノの黄金時代でした。1450年代頃、アンジェロ・バロヴィエールというガラス職人がクリスタッロを開発しました — 水晶に匹敵するほど透明で無色のガラスで、当時としては真の技術的躍進でした — そして、その後の3世紀にわたり、ムラノはヨーロッパにおける高級な鏡やシャンデリアの主要な供給地となりました。ムッリーナやミッレフィオーリ(モザイクのような断面を持つガラス棒で、ローマやエジプトのガラス工芸にルーツを持つ古代の技法)も島で復興・洗練されました。17世紀には、ムラノのある工房が偶然にアヴェントゥリーナガラス — 微細な銅の結晶が散りばめられたガラス — を発見したと言われており、それ以来ムラノを象徴する素材の一つとなっています。",
+    "この産業は二度、消滅の危機に瀕しました。18世紀を通じて、ボヘミアやフランスの安価なガラスがムラノの市場を侵食し、さらに1797年にはナポレオンの占領によりヴェネツィア共和国が解体され、それとともにガラス職人のギルドも解散、生産は最盛期のごく一部にまで落ち込みました。その後の復興は異例なほど詳しく記録されています。アントニオ・サルヴィアーティは1860年代にモザイクとガラスの大規模な生産を再興し、島自身の歴史を保存・紹介するため1861年にムラノガラス美術館の設立に尽力しました。パオロ・ヴェニーニは1921年、後に島で最も影響力のある工房の一つとなる工房を設立しました。ムラノガラスは今日でも、島で稼働する工房において、七世紀前とほぼ同じ基本技法を用いて手作業で作られています。",
+  ],
+  beadsTitle: "ビーズ、交易、そして複雑な歴史",
+  beadsBody:
+    "このカタログにあるような、一つひとつランプワークで作られたビーズはムラノの伝統の一つです — しかし、その歴史の長い期間、島最大の輸出品(量的に)は芸術的なガラス製品ではありませんでした。それはコンテリエと呼ばれる、安価に作られた小さなガラスビーズでした。16世紀以降、何百万個も生産され、ヴェネツィアの交易網を通じてアフリカ、アジア、南北アメリカへと送られ、通貨の一形態として使用されました — 心苦しいことに、大西洋を横断する奴隷貿易の中でも使用されていました。この大量生産の伝統には、クリスタッロやシャンデリアを作る工房の職人たちとは異なる、独自のギルドと労働者が存在しました。これは本ガイドで紹介している一つひとつ手作業で成形される製品とは異なる技術ですが、同じ島の歴史の一部であり、ヴェネツィアのガラスビーズが今日でも四大陸の博物館コレクションや考古学的発掘現場で見つかる大きな理由の一つとなっています。",
+  techniquesTitle: "技法の解説",
+  techniques: [
+    {
+      name: "ランプワーク(lavorazione a lume)",
+      body: "工房の炉ではなく裸火の上でガラス棒を成形する技法 — ほとんどの単体ビーズの背後にある技法です。ガラス職人は着色ガラス棒の先端を溶融するまで加熱し、金属製の芯棒に巻き付けてビーズを形成し、まだ柔らかいうちに道具と重力を利用して成形します。",
+    },
+    {
+      name: "ガラス吹き(soffiatura)",
+      body: "吹き竿の先端で工房の炉から溶けたガラスを巻き取り、回転させながら空気を吹き込んで成形する技法 — 花瓶やより大きなビーズなど、より大きな中空の形状の背後にある技法です。",
+    },
+    {
+      name: "ムッリーナとミッレフィオーリ",
+      body: "ムッリーナとは、層を重ねて作られた長いガラス棒から切り出された一片で、その断面に花、星、顔などの模様が現れます。ミッレフィオーリ(「千の花」の意)はムッリーナの中で最もよく知られたスタイルです。この断片をビーズや花瓶の表面に配置して熱で融着させることで、模様が表面だけでなくガラス全体に貫通します。",
+    },
+    {
+      name: "フィリグラーナ(フィリグリー)",
+      body: "白色や有色の細いガラス棒を、時にはねじって(レトルトーリ)、あるいは交差させて細かい網目状(レティチェッロ)にして、成形前の透明ガラスの中に埋め込む技法です。作品の中を走る繊細な糸のように見えます。",
+    },
+    {
+      name: "ソンメルソ",
+      body: "イタリア語で「沈められた」という意味です。異なる色のガラスの層を一つずつ重ねて浸けていき、それぞれが前の層を完全に包み込むことで、単一の平坦な色調ではなく、奥行きと色のグラデーションを持つ作品になります。",
+    },
+    {
+      name: "アヴェントゥリーナ(アヴェンチュリンガラス)",
+      body: "内部に微細な銅の結晶が浮遊しているガラスで、金属的な輝きを与えます。真のムラノの発明であり、伝統的に島で最も厳重に守られてきた配合の一つとされています。",
+    },
+    {
+      name: "金箔・銀箔",
+      body: "本物の金や銀の薄い箔を、ガラスがまだ熱いうちに載せて練り込むことで、金属が表面の上に乗るのではなく表面の一部となります。多くの作品に見られる金属的な斑点や筋の由来です。",
+    },
+    {
+      name: "クラックル(氷ガラス)",
+      body: "熱いガラスを一瞬冷水に浸けることで表面に細かいひび割れの網目を生じさせ、その後、模様を溶かしてしまわない程度の短い時間だけ再び炉に戻して滑らかな層を上から融着させます。",
+    },
+    {
+      name: "サンドブラスト(sabbiatura)",
+      body: "作品が完全に成形された後、冷たい状態で行われる技法です。微細な研磨剤を表面に吹き付けることで、光沢をマットで霜のような仕上がりに変えます。",
+    },
+    {
+      name: "ポンテッロ痕",
+      body: "成形時に作品を支えていたポンテッロ棒から切り離した箇所に残る、粗い(あるいは丁寧に磨かれた)跡です。型で成形された大量生産のガラスにはこの跡がありません — 本物のポンテッロ痕は手吹きガラスであることを示す、より信頼できる兆候の一つです。",
+    },
+  ],
+  authenticityTitle: "本物のムラノガラスの見分け方",
+  authenticityIntro:
+    "「ムラノガラス」は、アクセサリーや装飾ガラスの中で最も模倣される名称の一つです — 他の場所の工場で大量生産されたビーズ(しばしば本物のごく一部のコストで作られる)が、同じ名称のもとで日常的に販売されており、特にヴェネツィア現地の観光客に対して顕著です。Consorzio Promovetro Murano(ムラノガラス振興組合)が登録した「Vetro Artistico® Murano」という実在の商標があり、島の工房は自らの作品が実際にどこで作られたかを証明するためにこれを表示することができます — しかし、本物であっても小規模な作品の多くは正式な認証を受けておらず、また認証らしく聞こえる主張の多くは事実無根です。より信頼できる確認方法は、ガラスそのものを見ることです。",
+  authenticitySigns: [
+    "小さな気泡とわずかな非対称性 — 型ではなく人の手によって成形された証です。",
+    "同じセットの中でも作品ごとに微妙に異なる色合い。完全に均一ではないこと。",
+    "該当する場合はポンテッロ痕があること(上記参照) — 型で作られた作品にはこれがありません。",
+    "薄くて軽いのではなく、しっかりとした重みと厚みが感じられること — 手作業で集められたガラスは機械成形された作品よりも重くなる傾向があります。",
+    "実際の労力を反映した価格であること。熟練したランプワーカーは一つひとつのビーズに実際の時間をかけます。それにしては安すぎる価格は、通常その方法で作られていないことを意味します。",
+  ],
+  careTitle: "ムラノガラスジュエリーのお手入れ",
+  careIntro:
+    "ガラスは思われているよりも丈夫ですが、それでもガラスであることに変わりはありません — いくつかの習慣で長持ちさせることができます。",
+  careSteps: [
+    {
+      name: "最後に身につける",
+      body: "香水、ヘアスプレー、ローションは時間とともにガラスの表面をくすませることがあります — これらを先に使い、その後でジュエリーを身につけてください。",
+    },
+    {
+      name: "水と睡眠の前に外す",
+      body: "シャワー、水泳、睡眠の前に外し、何時間も塩素や塩水にさらされたり、ぶつかったりしないようにしてください。",
+    },
+    {
+      name: "着用後に拭く",
+      body: "柔らかく乾いた布だけで十分きれいに保てます — ジュエリークリーナーや水は必要ありません。",
+    },
+    {
+      name: "各アイテムを分けて保管する",
+      body: "柔らかいポーチや裏地付きのボックスを使うことで、ビーズ同士やより硬いジュエリーとぶつかるのを防げます。これが欠けの最も一般的な原因です。",
+    },
+    {
+      name: "急激な温度変化を避ける",
+      body: "非常に暑い場所(車のダッシュボードや直射日光の下など)にガラスジュエリーを放置してから冷たいまま扱うと、ガラスに負担がかかることがあります — 熱いお湯を入れた冷たいグラスがひび割れるのと同じ熱衝撃の原理です。",
+    },
+  ],
+  shopCtaTitle: "コレクションを見る",
+  shopCtaBody: "これらの各コレクションのすべての作品は上記の技法を用いて作られています — カテゴリーごとに閲覧してご覧ください。",
+  faqTitle: "よくある質問",
+  faq: [
+    {
+      question: "ムラノガラスは本物のガラスですか、それとも合成素材ですか?",
+      answer:
+        "本物のガラスです — シリカ砂、ソーダ、石灰を高温で炉の中で溶かした混合物で、何世紀にもわたりガラスが使ってきたのと同じ基本の配合です。それを特に「ムラノガラス」たらしめているのは、どこでどのように加工されるかであり、異なる原材料ではありません。",
+    },
+    {
+      question: "ムラノガラスと通常のガラスアクセサリーの違いは何ですか?",
+      answer:
+        "主に製法の違いです。ムラノガラスは型に流し込んだり押し込んだりするのではなく、ランプワーク、ムッリーナ、ソンメルソなどの技法を用いて、ビーズ一つひとつを手作業で成形します。そのため、二つの「同じ」ムラノ製品も決して完全に同一にはなりません。",
+    },
+    {
+      question: "なぜ本物のムラノガラスは模造品より高価なのですか?",
+      answer:
+        "本物の熟練した労働力と時間を要するためです — ランプワーカーは裸火の上で一つひとつのビーズを個別に成形します。工場で型を使って大量生産される模造ガラスは、こうした労力のほぼすべてを省略しており、それこそが価格が安い理由です。",
+    },
+    {
+      question: "ポンテッロ痕とは何ですか。見えるはずのものですか?",
+      answer:
+        "成形中に作品を支えていた棒から切り離された箇所に残る跡で、時に小さな粗い、あるいは磨かれた箇所として見えます。すべての技法で明確な跡が残るわけではありませんが、存在する場合は手作業による強い証拠となります。",
+    },
+    {
+      question: "同じセットのビーズが互いにわずかに異なって見えるのはなぜですか?",
+      answer:
+        "それぞれが型ではなく人の手を通っているためです。色、気泡、形のわずかな違いは手吹きガラスの特徴であり、欠陥ではありません。",
+    },
+    {
+      question: "ムラノガラスジュエリーの洗浄・保管方法は?",
+      answer:
+        "着用後は柔らかく乾いた布で拭き、香水やローションの後に(前ではなく)身につけ、各アイテムを分けて保管してぶつからないようにしてください。詳しい一覧は上記の「ムラノガラスジュエリーのお手入れ」をご覧ください。",
+    },
+    {
+      question: "ガラスジュエリーは環境に優しいですか?",
+      answer:
+        "ガラス自体、存在する中で最もリサイクル性の高い素材の一つです — 品質を損なうことなく無限に溶かして再加工することができ、これがムラノの工房が七世紀にわたり同じ原材料を使い続けてこられた理由の一部でもあります。",
+    },
+    {
+      question: "ひび割れたり欠けたりしたビーズは修理できますか?",
+      answer:
+        "ほとんどの場合、目立たないように修理することはできません — 修理跡は通常目に見えます。だからこそ、後から損傷を直すことに頼るのではなく、衝撃や急激な温度変化を避けることが実用的な理由となります(上記のお手入れの項目を参照)。",
+    },
+  ],
+};
+
+const content: Record<Locale, MuranoGuideContent> = { en, it, fr, de, ar, zh, ru, es, pt, hi, ja };
 
 export function getMuranoGuideContent(locale: Locale): MuranoGuideContent {
   return content[locale];
