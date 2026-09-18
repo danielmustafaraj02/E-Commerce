@@ -30,8 +30,14 @@ export default async function AdminSeoPage() {
     productCount,
     productsMissingEnName,
     productsMissingEnDescription,
+    productsMissingFrName,
+    productsMissingFrDescription,
+    productsMissingDeName,
+    productsMissingDeDescription,
     categoryCount,
     categoriesMissingEnName,
+    categoriesMissingFrName,
+    categoriesMissingDeName,
     productsWithReviews,
     legalPageCount,
   ] = await Promise.all([
@@ -40,8 +46,18 @@ export default async function AdminSeoPage() {
     db.product.count({
       where: { active: true, OR: [{ descriptionEn: null }, { descriptionEn: "" }] },
     }),
+    db.product.count({ where: { active: true, OR: [{ nameFr: null }, { nameFr: "" }] } }),
+    db.product.count({
+      where: { active: true, OR: [{ descriptionFr: null }, { descriptionFr: "" }] },
+    }),
+    db.product.count({ where: { active: true, OR: [{ nameDe: null }, { nameDe: "" }] } }),
+    db.product.count({
+      where: { active: true, OR: [{ descriptionDe: null }, { descriptionDe: "" }] },
+    }),
     db.category.count(),
     db.category.count({ where: { OR: [{ nameEn: null }, { nameEn: "" }] } }),
+    db.category.count({ where: { OR: [{ nameFr: null }, { nameFr: "" }] } }),
+    db.category.count({ where: { OR: [{ nameDe: null }, { nameDe: "" }] } }),
     db.product.count({ where: { active: true, reviews: { some: {} } } }),
     db.legalPage.count(),
   ]);
@@ -87,9 +103,39 @@ export default async function AdminSeoPage() {
       detail: `${productCount - productsMissingEnDescription} / ${productCount} products have an English description.`,
     },
     {
+      ok: productsMissingFrName === 0,
+      label: "Product names translated to French",
+      detail: `${productCount - productsMissingFrName} / ${productCount} products have a French name.`,
+    },
+    {
+      ok: productsMissingFrDescription === 0,
+      label: "Product stories translated to French",
+      detail: `${productCount - productsMissingFrDescription} / ${productCount} products have a French description.`,
+    },
+    {
+      ok: productsMissingDeName === 0,
+      label: "Product names translated to German",
+      detail: `${productCount - productsMissingDeName} / ${productCount} products have a German name.`,
+    },
+    {
+      ok: productsMissingDeDescription === 0,
+      label: "Product stories translated to German",
+      detail: `${productCount - productsMissingDeDescription} / ${productCount} products have a German description.`,
+    },
+    {
       ok: categoriesMissingEnName === 0,
       label: "Category names translated to English",
       detail: `${categoryCount - categoriesMissingEnName} / ${categoryCount} categories have an English name.`,
+    },
+    {
+      ok: categoriesMissingFrName === 0,
+      label: "Category names translated to French",
+      detail: `${categoryCount - categoriesMissingFrName} / ${categoryCount} categories have a French name.`,
+    },
+    {
+      ok: categoriesMissingDeName === 0,
+      label: "Category names translated to German",
+      detail: `${categoryCount - categoriesMissingDeName} / ${categoryCount} categories have a German name.`,
     },
     {
       ok: productsWithReviews > 0,
@@ -124,10 +170,10 @@ export default async function AdminSeoPage() {
             ),
           },
           {
-            label: "Bilingual content",
+            label: "Translations",
             content: (
               <section>
-                <h2 className="mb-3 text-lg font-medium">Bilingual content (IT / EN)</h2>
+                <h2 className="mb-3 text-lg font-medium">Translations (IT / EN / FR / DE)</h2>
                 <ul className="divide-foreground/10 divide-y">
                   {translationReadiness.map((item) => (
                     <Check key={item.label} {...item} />

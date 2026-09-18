@@ -3,7 +3,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { getStoreSettings } from "@/lib/store-settings";
-import { hreflangAlternates } from "@/lib/hreflang";
+import { hreflangAlternates, ogLocale, ogAlternateLocales } from "@/lib/hreflang";
 import { toSafeJsonLd } from "@/lib/json-ld";
 import { isStripeConfigured } from "@/lib/stripe";
 import { isPaypalConfigured } from "@/lib/paypal";
@@ -29,7 +29,7 @@ function siteUrl(settings: Awaited<ReturnType<typeof getStoreSettings>>) {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = await getStoreSettings();
+  const [settings, locale] = await Promise.all([getStoreSettings(), getLocale()]);
   const description = settings.metaDescription || `Shop at ${settings.storeName}`;
   const ogImage = settings.ogImageUrl || settings.logoUrl;
   const base = siteUrl(settings);
@@ -46,8 +46,8 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: settings.storeName,
       images: ogImage ? [{ url: ogImage }] : undefined,
       type: "website",
-      locale: "en_US",
-      alternateLocale: ["it_IT"],
+      locale: ogLocale(locale),
+      alternateLocale: ogAlternateLocales(locale),
     },
     twitter: {
       card: "summary_large_image",

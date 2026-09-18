@@ -29,9 +29,13 @@ export default async function EditProductPage({ params }: PageProps<"/admin/prod
         initial={{
           name: product.name,
           nameEn: product.nameEn,
+          nameFr: product.nameFr,
+          nameDe: product.nameDe,
           slug: product.slug,
           description: product.description,
           descriptionEn: product.descriptionEn,
+          descriptionFr: product.descriptionFr,
+          descriptionDe: product.descriptionDe,
           price: product.price,
           sku: product.sku,
           stockQty: product.stockQty,

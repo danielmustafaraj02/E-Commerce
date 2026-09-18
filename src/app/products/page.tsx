@@ -2,7 +2,7 @@ import { z } from "zod";
 import type { Metadata } from "next";
 import { db } from "@/lib/db";
 import { getStoreSettings, ogImage } from "@/lib/store-settings";
-import { getLocale } from "@/lib/i18n/locale";
+import { getLocale, type Locale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { localizedName, localizedCardProduct } from "@/lib/product-i18n";
 import { toSafeJsonLd } from "@/lib/json-ld";
@@ -31,10 +31,13 @@ export async function generateMetadata({
     searchParams,
   ]);
   const dict = getDictionary(locale);
-  const description =
-    locale === "en"
-      ? `Browse the full ${settings.storeName} catalog.`
-      : `Sfoglia il catalogo completo di ${settings.storeName}.`;
+  const descriptionByLocale: Record<Locale, string> = {
+    en: `Browse the full ${settings.storeName} catalog.`,
+    it: `Sfoglia il catalogo completo di ${settings.storeName}.`,
+    fr: `Parcourez le catalogue complet de ${settings.storeName}.`,
+    de: `Durchstöbern Sie den vollständigen Katalog von ${settings.storeName}.`,
+  };
+  const description = descriptionByLocale[locale];
   const image = ogImage(settings);
   // A search/filtered view (?q=, ?category=, ...) canonicalizes to the plain
   // catalog since it's a thin slice of the same content — but plain

@@ -8,7 +8,7 @@ import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
 import { formatMoney } from "@/lib/format";
 import { toSafeJsonLd } from "@/lib/json-ld";
-import { getLocale } from "@/lib/i18n/locale";
+import { getLocale, type Locale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { applyTemplate } from "@/lib/i18n/format";
 import {
@@ -18,7 +18,7 @@ import {
   productImageAlt,
 } from "@/lib/product-i18n";
 import { truncateAtWord } from "@/lib/text";
-import { hreflangAlternates } from "@/lib/hreflang";
+import { hreflangAlternates, ogLocale } from "@/lib/hreflang";
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { WishlistButton } from "@/components/wishlist-button";
 import { ShareButtons } from "@/components/share-buttons";
@@ -67,16 +67,22 @@ export async function generateMetadata({
   // Glass"/"vetro di Murano" is baked in deliberately (high-intent search
   // terms for this specific store, not a generic platform default — see
   // the note on home.heroSubtitle in dictionaries.ts).
-  const title = categoryName
-    ? locale === "en"
-      ? `${name} — Murano Glass ${categoryName}`
-      : `${name} — ${categoryName} in Vetro di Murano`
-    : name;
+  const titleByLocale: Record<Locale, string> = {
+    en: `${name} — Murano Glass ${categoryName}`,
+    it: `${name} — ${categoryName} in Vetro di Murano`,
+    fr: `${name} — ${categoryName} en Verre de Murano`,
+    de: `${name} — ${categoryName} aus Muranoglas`,
+  };
+  const title = categoryName ? titleByLocale[locale] : name;
+  const fallbackDescriptionByLocale: Record<Locale, string> = {
+    en: `${name} — handmade Murano glass, from ${settings.storeName}.`,
+    it: `${name} — vetro di Murano fatto a mano, da ${settings.storeName}.`,
+    fr: `${name} — verre de Murano fait main, par ${settings.storeName}.`,
+    de: `${name} — handgefertigtes Muranoglas von ${settings.storeName}.`,
+  };
   const description =
     truncateAtWord(localizedDescription(product, locale), 155) ||
-    (locale === "en"
-      ? `${name} — handmade Murano glass, from ${settings.storeName}.`
-      : `${name} — vetro di Murano fatto a mano, da ${settings.storeName}.`);
+    fallbackDescriptionByLocale[locale];
   const image = product.images[0]?.url;
 
   return {
@@ -90,7 +96,7 @@ export async function generateMetadata({
       title: name,
       description,
       type: "website",
-      locale: locale === "it" ? "it_IT" : "en_US",
+      locale: ogLocale(locale),
       images: image ? [{ url: image }] : undefined,
     },
     twitter: {

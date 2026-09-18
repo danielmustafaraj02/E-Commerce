@@ -1,3 +1,5 @@
+import type { Locale } from "./i18n/locale-constants";
+
 // Self-referencing hreflang: this site serves every language from the same
 // URL (locale is cookie/Accept-Language driven, see src/lib/i18n/locale.ts),
 // which is Google's documented "dynamic serving" pattern — same URL for
@@ -13,4 +15,24 @@ export function hreflangAlternates(canonicalPath: string): Record<string, string
     de: canonicalPath,
     "x-default": canonicalPath,
   };
+}
+
+// og:locale wants full language_TERRITORY tags, not our bare Locale codes.
+const OG_LOCALES: Record<Locale, string> = {
+  en: "en_US",
+  it: "it_IT",
+  fr: "fr_FR",
+  de: "de_DE",
+};
+
+export function ogLocale(locale: Locale): string {
+  return OG_LOCALES[locale];
+}
+
+// The other three, for openGraph.alternateLocale (crawlers use this to
+// discover the other language versions of the same self-referencing URL).
+export function ogAlternateLocales(locale: Locale): string[] {
+  return (Object.keys(OG_LOCALES) as Locale[])
+    .filter((candidate) => candidate !== locale)
+    .map((candidate) => OG_LOCALES[candidate]);
 }

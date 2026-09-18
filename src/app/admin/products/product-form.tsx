@@ -9,9 +9,13 @@ type Supplier = { id: string; name: string };
 export type ProductFormValues = {
   name: string;
   nameEn: string | null;
+  nameFr: string | null;
+  nameDe: string | null;
   slug: string;
   description: string;
   descriptionEn: string | null;
+  descriptionFr: string | null;
+  descriptionDe: string | null;
   price: number; // cents
   sku: string;
   stockQty: number;
@@ -55,6 +59,22 @@ export function ProductForm({
         </span>
       </label>
       <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (French)</span>
+        <input name="nameFr" defaultValue={initial?.nameFr ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in French. Falls back to the English name, then the Italian
+          name, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (German)</span>
+        <input name="nameDe" defaultValue={initial?.nameDe ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in German. Falls back to the English name, then the Italian
+          name, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
         <span className="font-medium">Slug</span>
         <input
           name="slug"
@@ -86,6 +106,32 @@ export function ProductForm({
           Shown to visitors browsing in English. Falls back to the Italian description if left
           blank — but an English visitor reading untranslated Italian copy is a worse experience
           than a shorter English one, so it&apos;s worth filling in.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Description / story (French)</span>
+        <textarea
+          name="descriptionFr"
+          rows={4}
+          defaultValue={initial?.descriptionFr ?? ""}
+          className="field"
+        />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in French. Falls back to the English description, then the
+          Italian one, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Description / story (German)</span>
+        <textarea
+          name="descriptionDe"
+          rows={4}
+          defaultValue={initial?.descriptionDe ?? ""}
+          className="field"
+        />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in German. Falls back to the English description, then the
+          Italian one, if left blank.
         </span>
       </label>
       <div className="flex gap-3">

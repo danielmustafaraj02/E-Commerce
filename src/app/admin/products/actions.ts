@@ -10,6 +10,8 @@ import { writeAuditLog } from "@/lib/audit-log";
 const productSchema = z.object({
   name: z.string().min(1).max(200),
   nameEn: z.string().max(200).optional(),
+  nameFr: z.string().max(200).optional(),
+  nameDe: z.string().max(200).optional(),
   slug: z
     .string()
     .min(1)
@@ -17,6 +19,8 @@ const productSchema = z.object({
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Slug must be lowercase, hyphen-separated"),
   description: z.string().min(1).max(5000),
   descriptionEn: z.string().max(5000).optional(),
+  descriptionFr: z.string().max(5000).optional(),
+  descriptionDe: z.string().max(5000).optional(),
   price: z.coerce.number().nonnegative(),
   sku: z.string().min(1).max(100),
   stockQty: z.coerce.number().int().nonnegative(),
@@ -42,9 +46,13 @@ function parseProductForm(formData: FormData) {
   return productSchema.safeParse({
     name: formData.get("name"),
     nameEn: formData.get("nameEn") || undefined,
+    nameFr: formData.get("nameFr") || undefined,
+    nameDe: formData.get("nameDe") || undefined,
     slug: formData.get("slug"),
     description: formData.get("description"),
     descriptionEn: formData.get("descriptionEn") || undefined,
+    descriptionFr: formData.get("descriptionFr") || undefined,
+    descriptionDe: formData.get("descriptionDe") || undefined,
     price: formData.get("price"),
     sku: formData.get("sku"),
     stockQty: formData.get("stockQty"),
@@ -104,8 +112,20 @@ export async function updateProduct(productId: string, _prevState: unknown, form
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
-  const { imageUrls, price, costPrice, supplierId, supplierSku, nameEn, descriptionEn, ...fields } =
-    parsed.data;
+  const {
+    imageUrls,
+    price,
+    costPrice,
+    supplierId,
+    supplierSku,
+    nameEn,
+    nameFr,
+    nameDe,
+    descriptionEn,
+    descriptionFr,
+    descriptionDe,
+    ...fields
+  } = parsed.data;
   const images = parseImageUrls(imageUrls);
 
   const before = await db.product.findUnique({ where: { id: productId } });
@@ -124,7 +144,11 @@ export async function updateProduct(productId: string, _prevState: unknown, form
         supplierId: supplierId ?? null,
         supplierSku: supplierSku ?? null,
         nameEn: nameEn ?? null,
+        nameFr: nameFr ?? null,
+        nameDe: nameDe ?? null,
         descriptionEn: descriptionEn ?? null,
+        descriptionFr: descriptionFr ?? null,
+        descriptionDe: descriptionDe ?? null,
         images: {
           deleteMany: {},
           create: images.map((url, position) => ({ url, altText: fields.name, position })),

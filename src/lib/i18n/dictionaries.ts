@@ -88,11 +88,12 @@ const en = {
   about: {
     title: "About us",
     intro: (storeName: string) =>
-      `We started ${storeName} to make quality, well-made products easy to find and simple to buy — no gimmicks, just a straightforward shop with fast shipping and real customer support.`,
+      `We started ${storeName} to bring authentic, hand-blown Murano glass jewelry to people who can't visit the furnaces themselves — every piece made using techniques passed down over seven centuries on the island of Murano, shipped straight from Venice.`,
+    heritageImageAlt: "A Murano glass jewelry workshop window along a Venice canal",
     valuesTitle: "What we care about",
     value1Title: "Quality first",
     value1Body:
-      "We pick products we'd want to own ourselves, not the cheapest option that fits a category.",
+      "Every piece is made in Murano using traditional lamp-working and glass-blowing techniques — never molds, never mass production.",
     value2Title: "Straightforward pricing",
     value2Body: "The price you see includes tax. No surprises at checkout.",
     value3Title: "Real support",
@@ -377,11 +378,12 @@ const it: Dictionary = {
   about: {
     title: "Chi siamo",
     intro: (storeName: string) =>
-      `Abbiamo creato ${storeName} per rendere facile trovare e semplice acquistare prodotti di qualità — niente trucchi, solo un negozio semplice con spedizioni veloci e assistenza clienti reale.`,
+      `Abbiamo creato ${storeName} per portare gioielli autentici in vetro di Murano soffiato a mano a chi non può visitare di persona le fornaci — ogni pezzo realizzato con tecniche tramandate da sette secoli sull'isola di Murano, spedito direttamente da Venezia.`,
+    heritageImageAlt: "La vetrina di una bottega di gioielli in vetro di Murano lungo un canale di Venezia",
     valuesTitle: "Cosa ci sta a cuore",
     value1Title: "Prima la qualità",
     value1Body:
-      "Selezioniamo prodotti che vorremmo possedere noi stessi, non l'opzione più economica della categoria.",
+      "Ogni pezzo è realizzato a Murano con tecniche tradizionali di lavorazione a lume e soffiatura del vetro — mai stampi, mai produzione in serie.",
     value2Title: "Prezzi trasparenti",
     value2Body: "Il prezzo che vedi include le tasse. Nessuna sorpresa al checkout.",
     value3Title: "Assistenza reale",
@@ -667,11 +669,12 @@ const fr: Dictionary = {
   about: {
     title: "À propos",
     intro: (storeName: string) =>
-      `Nous avons créé ${storeName} pour rendre les produits de qualité faciles à trouver et simples à acheter — sans artifices, juste une boutique simple avec une livraison rapide et un vrai service client.`,
+      `Nous avons créé ${storeName} pour faire découvrir de véritables bijoux en verre de Murano soufflé à la main à celles et ceux qui ne peuvent pas visiter les fours en personne — chaque pièce est réalisée selon des techniques transmises depuis sept siècles sur l'île de Murano, expédiée directement depuis Venise.`,
+    heritageImageAlt: "La vitrine d'un atelier de bijoux en verre de Murano le long d'un canal de Venise",
     valuesTitle: "Ce qui nous tient à cœur",
     value1Title: "La qualité avant tout",
     value1Body:
-      "Nous choisissons des produits que nous voudrions posséder nous-mêmes, pas l'option la moins chère de la catégorie.",
+      "Chaque pièce est fabriquée à Murano selon des techniques traditionnelles de travail au chalumeau et de soufflage du verre — jamais de moules, jamais de production en série.",
     value2Title: "Des prix transparents",
     value2Body: "Le prix affiché inclut les taxes. Aucune surprise au moment de payer.",
     value3Title: "Un vrai service client",
@@ -955,11 +958,12 @@ const de: Dictionary = {
   about: {
     title: "Über uns",
     intro: (storeName: string) =>
-      `Wir haben ${storeName} gegründet, um hochwertige, gut gemachte Produkte leicht auffindbar und einfach kaufbar zu machen — keine Tricks, nur ein unkomplizierter Shop mit schnellem Versand und echtem Kundenservice.`,
+      `Wir haben ${storeName} gegründet, um handgeblasenen, authentischen Muranoglas-Schmuck zu Menschen zu bringen, die die Glashütten nicht selbst besuchen können — jedes Stück entsteht nach Techniken, die seit sieben Jahrhunderten auf der Insel Murano weitergegeben werden, und wird direkt aus Venedig verschickt.`,
+    heritageImageAlt: "Das Schaufenster einer Muranoglas-Schmuckwerkstatt an einem Kanal in Venedig",
     valuesTitle: "Was uns wichtig ist",
     value1Title: "Qualität zuerst",
     value1Body:
-      "Wir wählen Produkte aus, die wir selbst besitzen möchten, nicht die billigste Option der Kategorie.",
+      "Jedes Stück wird in Murano mit traditionellen Lampenarbeits- und Glasblastechniken gefertigt — nie mit Gussformen, nie in Massenproduktion.",
     value2Title: "Transparente Preise",
     value2Body: "Der angezeigte Preis beinhaltet die Steuer. Keine Überraschungen an der Kasse.",
     value3Title: "Echter Kundenservice",

@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { getStoreSettings, ogImage } from "@/lib/store-settings";
-import { getLocale } from "@/lib/i18n/locale";
+import { getLocale, type Locale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { localizedName, localizedCardProduct } from "@/lib/product-i18n";
 import { toSafeJsonLd } from "@/lib/json-ld";
@@ -42,11 +42,20 @@ export async function generateMetadata({
   // see the note on home.heroSubtitle in dictionaries.ts for why this
   // store's pages carry store-specific keywords rather than the
   // platform-generic default.
-  const title = locale === "en" ? `Murano Glass ${name}` : `${name} in Vetro di Murano`;
-  const description =
-    locale === "en"
-      ? `Shop handmade Murano glass ${name.toLowerCase()} at ${settings.storeName}, filterable by price and availability.`
-      : `Scopri i ${name.toLowerCase()} in vetro di Murano fatto a mano di ${settings.storeName}, filtrabili per prezzo e disponibilità.`;
+  const titleByLocale: Record<Locale, string> = {
+    en: `Murano Glass ${name}`,
+    it: `${name} in Vetro di Murano`,
+    fr: `${name} en Verre de Murano`,
+    de: `${name} aus Muranoglas`,
+  };
+  const title = titleByLocale[locale];
+  const descriptionByLocale: Record<Locale, string> = {
+    en: `Shop handmade Murano glass ${name.toLowerCase()} at ${settings.storeName}, filterable by price and availability.`,
+    it: `Scopri i ${name.toLowerCase()} in vetro di Murano fatto a mano di ${settings.storeName}, filtrabili per prezzo e disponibilità.`,
+    fr: `Découvrez les ${name.toLowerCase()} en verre de Murano fait main de ${settings.storeName}, filtrables par prix et disponibilité.`,
+    de: `Entdecken Sie handgefertigte ${name.toLowerCase()} aus Muranoglas von ${settings.storeName}, filterbar nach Preis und Verfügbarkeit.`,
+  };
+  const description = descriptionByLocale[locale];
   const image = ogImage(settings);
   return {
     title,

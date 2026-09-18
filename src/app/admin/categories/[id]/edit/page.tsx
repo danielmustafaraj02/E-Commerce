@@ -25,6 +25,8 @@ export default async function EditCategoryPage({
         initial={{
           name: category.name,
           nameEn: category.nameEn,
+          nameFr: category.nameFr,
+          nameDe: category.nameDe,
           slug: category.slug,
           parentId: category.parentId,
         }}

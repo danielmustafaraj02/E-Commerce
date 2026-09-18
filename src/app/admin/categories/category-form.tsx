@@ -10,7 +10,14 @@ export function CategoryForm({
   submitLabel,
 }: {
   action: (prevState: unknown, formData: FormData) => Promise<{ error: string | null } | void>;
-  initial?: { name: string; nameEn: string | null; slug: string; parentId: string | null };
+  initial?: {
+    name: string;
+    nameEn: string | null;
+    nameFr: string | null;
+    nameDe: string | null;
+    slug: string;
+    parentId: string | null;
+  };
   categories: { id: string; name: string }[];
   submitLabel: string;
 }) {
@@ -27,6 +34,22 @@ export function CategoryForm({
         <input name="nameEn" defaultValue={initial?.nameEn ?? ""} className="field" />
         <span className="text-foreground/60 text-xs">
           Shown to visitors browsing in English. Falls back to the Italian name if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (French)</span>
+        <input name="nameFr" defaultValue={initial?.nameFr ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in French. Falls back to the English name, then the Italian
+          name, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (German)</span>
+        <input name="nameDe" defaultValue={initial?.nameDe ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in German. Falls back to the English name, then the Italian
+          name, if left blank.
         </span>
       </label>
       <label className="flex flex-col gap-1.5 text-sm">
