@@ -15,6 +15,13 @@ export function CategoryForm({
     nameEn: string | null;
     nameFr: string | null;
     nameDe: string | null;
+    nameAr: string | null;
+    nameZh: string | null;
+    nameRu: string | null;
+    nameEs: string | null;
+    namePt: string | null;
+    nameHi: string | null;
+    nameJa: string | null;
     slug: string;
     parentId: string | null;
   };
@@ -49,6 +56,62 @@ export function CategoryForm({
         <input name="nameDe" defaultValue={initial?.nameDe ?? ""} className="field" />
         <span className="text-foreground/60 text-xs">
           Shown to visitors browsing in German. Falls back to the English name, then the Italian
+          name, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (Arabic)</span>
+        <input name="nameAr" dir="rtl" defaultValue={initial?.nameAr ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in Arabic. Falls back to the English name, then the Italian
+          name, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (Chinese)</span>
+        <input name="nameZh" defaultValue={initial?.nameZh ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in Chinese. Falls back to the English name, then the Italian
+          name, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (Russian)</span>
+        <input name="nameRu" defaultValue={initial?.nameRu ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in Russian. Falls back to the English name, then the Italian
+          name, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (Spanish)</span>
+        <input name="nameEs" defaultValue={initial?.nameEs ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in Spanish. Falls back to the English name, then the Italian
+          name, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (Portuguese)</span>
+        <input name="namePt" defaultValue={initial?.namePt ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in Portuguese. Falls back to the English name, then the
+          Italian name, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (Hindi)</span>
+        <input name="nameHi" defaultValue={initial?.nameHi ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in Hindi. Falls back to the English name, then the Italian
+          name, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (Japanese)</span>
+        <input name="nameJa" defaultValue={initial?.nameJa ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in Japanese. Falls back to the English name, then the Italian
           name, if left blank.
         </span>
       </label>

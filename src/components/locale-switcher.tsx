@@ -9,8 +9,27 @@ const LABELS: Record<Locale, string> = {
   it: "Italiano",
   fr: "Français",
   de: "Deutsch",
+  ar: "العربية",
+  zh: "中文",
+  ru: "Русский",
+  es: "Español",
+  pt: "Português",
+  hi: "हिन्दी",
+  ja: "日本語",
 };
-const CODES: Record<Locale, string> = { en: "EN", it: "IT", fr: "FR", de: "DE" };
+const CODES: Record<Locale, string> = {
+  en: "EN",
+  it: "IT",
+  fr: "FR",
+  de: "DE",
+  ar: "AR",
+  zh: "ZH",
+  ru: "RU",
+  es: "ES",
+  pt: "PT",
+  hi: "HI",
+  ja: "JA",
+};
 
 export function LocaleSwitcher({ current }: { current: Locale }) {
   const [pending, startTransition] = useTransition();

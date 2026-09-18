@@ -11,47 +11,86 @@ type LocalizableName = {
   nameEn?: string | null;
   nameFr?: string | null;
   nameDe?: string | null;
+  nameAr?: string | null;
+  nameZh?: string | null;
+  nameRu?: string | null;
+  nameEs?: string | null;
+  namePt?: string | null;
+  nameHi?: string | null;
+  nameJa?: string | null;
 };
 type LocalizableProduct = LocalizableName & {
   description?: string | null;
   descriptionEn?: string | null;
   descriptionFr?: string | null;
   descriptionDe?: string | null;
+  descriptionAr?: string | null;
+  descriptionZh?: string | null;
+  descriptionRu?: string | null;
+  descriptionEs?: string | null;
+  descriptionPt?: string | null;
+  descriptionHi?: string | null;
+  descriptionJa?: string | null;
+};
+
+// Every non-English, non-Italian locale falls back to the English field,
+// then the original Italian one — this map is just which row field holds
+// each locale's own translation.
+const NAME_FIELD: Partial<Record<Locale, keyof LocalizableName>> = {
+  fr: "nameFr",
+  de: "nameDe",
+  ar: "nameAr",
+  zh: "nameZh",
+  ru: "nameRu",
+  es: "nameEs",
+  pt: "namePt",
+  hi: "nameHi",
+  ja: "nameJa",
+};
+const DESCRIPTION_FIELD: Partial<Record<Locale, keyof LocalizableProduct>> = {
+  fr: "descriptionFr",
+  de: "descriptionDe",
+  ar: "descriptionAr",
+  zh: "descriptionZh",
+  ru: "descriptionRu",
+  es: "descriptionEs",
+  pt: "descriptionPt",
+  hi: "descriptionHi",
+  ja: "descriptionJa",
 };
 
 export function localizedName(item: LocalizableName, locale: Locale): string {
   if (locale === "en") return item.nameEn || item.name;
-  if (locale === "fr") return item.nameFr || item.nameEn || item.name;
-  if (locale === "de") return item.nameDe || item.nameEn || item.name;
-  return item.name;
+  const field = NAME_FIELD[locale];
+  return (field && item[field]) || item.nameEn || item.name;
 }
 
 export function localizedDescription(product: LocalizableProduct, locale: Locale): string {
   if (locale === "en") return product.descriptionEn || product.description || "";
-  if (locale === "fr") {
-    return product.descriptionFr || product.descriptionEn || product.description || "";
-  }
-  if (locale === "de") {
-    return product.descriptionDe || product.descriptionEn || product.description || "";
-  }
-  return product.description ?? "";
+  const field = DESCRIPTION_FIELD[locale];
+  return (field && product[field]) || product.descriptionEn || product.description || "";
 }
 
 // Image search (Google Images, and AI engines that read alt text as a
 // signal) rewards a descriptive alt over a bare product name. "Handmade
 // Murano glass" is store-specific wording, deliberately baked in here the
 // same way as home.heroSubtitle — see that dictionary entry's comment.
+const IMAGE_ALT_SUFFIX: Record<Locale, string> = {
+  it: "gioiello artigianale in vetro di Murano",
+  en: "handmade Murano glass jewelry",
+  fr: "bijou artisanal en verre de Murano",
+  de: "handgefertigter Schmuck aus Muranoglas",
+  ar: "مجوهرات زجاج مورانو المصنوعة يدويًا",
+  zh: "穆拉诺手工玻璃饰品",
+  ru: "украшение ручной работы из муранского стекла",
+  es: "joya artesanal de vidrio de Murano",
+  pt: "joia artesanal em vidro de Murano",
+  hi: "मुरानो ग्लास से हाथ से बनी ज्वेलरी",
+  ja: "ムラノガラスのハンドメイドジュエリー",
+};
+
 export function productImageAlt(name: string, locale: Locale): string {
-  switch (locale) {
-    case "en":
-      return `${name} — handmade Murano glass jewelry`;
-    case "fr":
-      return `${name} — bijou artisanal en verre de Murano`;
-    case "de":
-      return `${name} — handgefertigter Schmuck aus Muranoglas`;
-    default:
-      return `${name} — gioiello artigianale in vetro di Murano`;
-  }
+  return `${name} — ${IMAGE_ALT_SUFFIX[locale]}`;
 }
 
 // Applies both of the above to a product-card-shaped object in one call —

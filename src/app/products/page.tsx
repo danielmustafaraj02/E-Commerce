@@ -36,6 +36,13 @@ export async function generateMetadata({
     it: `Sfoglia il catalogo completo di ${settings.storeName}.`,
     fr: `Parcourez le catalogue complet de ${settings.storeName}.`,
     de: `Durchstöbern Sie den vollständigen Katalog von ${settings.storeName}.`,
+    ar: `تصفح كتالوج ${settings.storeName} الكامل.`,
+    zh: `浏览 ${settings.storeName} 的完整产品目录。`,
+    ru: `Просмотрите полный каталог ${settings.storeName}.`,
+    es: `Explora el catálogo completo de ${settings.storeName}.`,
+    pt: `Explore o catálogo completo da ${settings.storeName}.`,
+    hi: `${settings.storeName} का पूरा कैटलॉग देखें।`,
+    ja: `${settings.storeName}の全カタログをご覧ください。`,
   };
   const description = descriptionByLocale[locale];
   const image = ogImage(settings);

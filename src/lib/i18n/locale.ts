@@ -1,8 +1,8 @@
 import { cache } from "react";
 import { cookies, headers } from "next/headers";
-import { locales, defaultLocale, LOCALE_COOKIE, type Locale } from "./locale-constants";
+import { locales, defaultLocale, LOCALE_COOKIE, localeDir, type Locale } from "./locale-constants";
 
-export { locales, defaultLocale, LOCALE_COOKIE, type Locale };
+export { locales, defaultLocale, LOCALE_COOKIE, localeDir, type Locale };
 
 // Cheap on its own, but called independently by the layout and by nearly
 // every page — cache() dedupes those to one read per request.

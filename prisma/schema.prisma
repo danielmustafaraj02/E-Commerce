@@ -183,6 +183,13 @@ model Category {
   nameEn   String?
   nameFr   String?
   nameDe   String?
+  nameAr   String?
+  nameZh   String?
+  nameRu   String?
+  nameEs   String?
+  namePt   String?
+  nameHi   String?
+  nameJa   String?
   slug     String  @unique
   parentId String?
   parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -202,11 +209,25 @@ model Product {
   nameEn            String?
   nameFr            String?
   nameDe            String?
+  nameAr            String?
+  nameZh            String?
+  nameRu            String?
+  nameEs            String?
+  namePt            String?
+  nameHi            String?
+  nameJa            String?
   slug              String   @unique
   description       String
   descriptionEn     String?
   descriptionFr     String?
   descriptionDe     String?
+  descriptionAr     String?
+  descriptionZh     String?
+  descriptionRu     String?
+  descriptionEs     String?
+  descriptionPt     String?
+  descriptionHi     String?
+  descriptionJa     String?
   price             Int // cents, tax-inclusive display price (see StoreSettings.pricesIncludeTax)
   currency          String   @default("EUR")
   sku               String   @unique

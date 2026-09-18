@@ -47,6 +47,13 @@ export async function generateMetadata({
     it: `${name} in Vetro di Murano`,
     fr: `${name} en Verre de Murano`,
     de: `${name} aus Muranoglas`,
+    ar: `${name} من زجاج مورانو`,
+    zh: `穆拉诺玻璃${name}`,
+    ru: `${name} из муранского стекла`,
+    es: `${name} de Vidrio de Murano`,
+    pt: `${name} em Vidro de Murano`,
+    hi: `मुरानो ग्लास ${name}`,
+    ja: `ムラノガラスの${name}`,
   };
   const title = titleByLocale[locale];
   const descriptionByLocale: Record<Locale, string> = {
@@ -54,6 +61,13 @@ export async function generateMetadata({
     it: `Scopri i ${name.toLowerCase()} in vetro di Murano fatto a mano di ${settings.storeName}, filtrabili per prezzo e disponibilità.`,
     fr: `Découvrez les ${name.toLowerCase()} en verre de Murano fait main de ${settings.storeName}, filtrables par prix et disponibilité.`,
     de: `Entdecken Sie handgefertigte ${name.toLowerCase()} aus Muranoglas von ${settings.storeName}, filterbar nach Preis und Verfügbarkeit.`,
+    ar: `تسوق ${name} يدوية الصنع من زجاج مورانو في ${settings.storeName}، قابلة للتصفية حسب السعر والتوفر.`,
+    zh: `在 ${settings.storeName} 选购手工穆拉诺玻璃${name}，可按价格和库存筛选。`,
+    ru: `Покупайте ${name.toLowerCase()} ручной работы из муранского стекла в ${settings.storeName}, с фильтрацией по цене и наличию.`,
+    es: `Compra ${name.toLowerCase()} de vidrio de Murano hechos a mano en ${settings.storeName}, filtrables por precio y disponibilidad.`,
+    pt: `Compre ${name.toLowerCase()} em vidro de Murano feitos à mão na ${settings.storeName}, filtráveis por preço e disponibilidade.`,
+    hi: `${settings.storeName} पर हाथ से बने मुरानो ग्लास ${name} खरीदें, कीमत और उपलब्धता के अनुसार फ़िल्टर करने योग्य।`,
+    ja: `${settings.storeName}で手作りのムラノガラス${name}をお買い求めください。価格や在庫状況で絞り込めます。`,
   };
   const description = descriptionByLocale[locale];
   const image = ogImage(settings);

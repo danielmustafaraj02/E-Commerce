@@ -7,7 +7,7 @@ import { hreflangAlternates, ogLocale, ogAlternateLocales } from "@/lib/hreflang
 import { toSafeJsonLd } from "@/lib/json-ld";
 import { isStripeConfigured } from "@/lib/stripe";
 import { isPaypalConfigured } from "@/lib/paypal";
-import { getLocale } from "@/lib/i18n/locale";
+import { getLocale, localeDir } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
@@ -73,6 +73,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang={locale}
+      dir={localeDir(locale)}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       style={
         {

@@ -34,10 +34,31 @@ export default async function AdminSeoPage() {
     productsMissingFrDescription,
     productsMissingDeName,
     productsMissingDeDescription,
+    productsMissingArName,
+    productsMissingArDescription,
+    productsMissingZhName,
+    productsMissingZhDescription,
+    productsMissingRuName,
+    productsMissingRuDescription,
+    productsMissingEsName,
+    productsMissingEsDescription,
+    productsMissingPtName,
+    productsMissingPtDescription,
+    productsMissingHiName,
+    productsMissingHiDescription,
+    productsMissingJaName,
+    productsMissingJaDescription,
     categoryCount,
     categoriesMissingEnName,
     categoriesMissingFrName,
     categoriesMissingDeName,
+    categoriesMissingArName,
+    categoriesMissingZhName,
+    categoriesMissingRuName,
+    categoriesMissingEsName,
+    categoriesMissingPtName,
+    categoriesMissingHiName,
+    categoriesMissingJaName,
     productsWithReviews,
     legalPageCount,
   ] = await Promise.all([
@@ -54,10 +75,45 @@ export default async function AdminSeoPage() {
     db.product.count({
       where: { active: true, OR: [{ descriptionDe: null }, { descriptionDe: "" }] },
     }),
+    db.product.count({ where: { active: true, OR: [{ nameAr: null }, { nameAr: "" }] } }),
+    db.product.count({
+      where: { active: true, OR: [{ descriptionAr: null }, { descriptionAr: "" }] },
+    }),
+    db.product.count({ where: { active: true, OR: [{ nameZh: null }, { nameZh: "" }] } }),
+    db.product.count({
+      where: { active: true, OR: [{ descriptionZh: null }, { descriptionZh: "" }] },
+    }),
+    db.product.count({ where: { active: true, OR: [{ nameRu: null }, { nameRu: "" }] } }),
+    db.product.count({
+      where: { active: true, OR: [{ descriptionRu: null }, { descriptionRu: "" }] },
+    }),
+    db.product.count({ where: { active: true, OR: [{ nameEs: null }, { nameEs: "" }] } }),
+    db.product.count({
+      where: { active: true, OR: [{ descriptionEs: null }, { descriptionEs: "" }] },
+    }),
+    db.product.count({ where: { active: true, OR: [{ namePt: null }, { namePt: "" }] } }),
+    db.product.count({
+      where: { active: true, OR: [{ descriptionPt: null }, { descriptionPt: "" }] },
+    }),
+    db.product.count({ where: { active: true, OR: [{ nameHi: null }, { nameHi: "" }] } }),
+    db.product.count({
+      where: { active: true, OR: [{ descriptionHi: null }, { descriptionHi: "" }] },
+    }),
+    db.product.count({ where: { active: true, OR: [{ nameJa: null }, { nameJa: "" }] } }),
+    db.product.count({
+      where: { active: true, OR: [{ descriptionJa: null }, { descriptionJa: "" }] },
+    }),
     db.category.count(),
     db.category.count({ where: { OR: [{ nameEn: null }, { nameEn: "" }] } }),
     db.category.count({ where: { OR: [{ nameFr: null }, { nameFr: "" }] } }),
     db.category.count({ where: { OR: [{ nameDe: null }, { nameDe: "" }] } }),
+    db.category.count({ where: { OR: [{ nameAr: null }, { nameAr: "" }] } }),
+    db.category.count({ where: { OR: [{ nameZh: null }, { nameZh: "" }] } }),
+    db.category.count({ where: { OR: [{ nameRu: null }, { nameRu: "" }] } }),
+    db.category.count({ where: { OR: [{ nameEs: null }, { nameEs: "" }] } }),
+    db.category.count({ where: { OR: [{ namePt: null }, { namePt: "" }] } }),
+    db.category.count({ where: { OR: [{ nameHi: null }, { nameHi: "" }] } }),
+    db.category.count({ where: { OR: [{ nameJa: null }, { nameJa: "" }] } }),
     db.product.count({ where: { active: true, reviews: { some: {} } } }),
     db.legalPage.count(),
   ]);
@@ -123,6 +179,76 @@ export default async function AdminSeoPage() {
       detail: `${productCount - productsMissingDeDescription} / ${productCount} products have a German description.`,
     },
     {
+      ok: productsMissingArName === 0,
+      label: "Product names translated to Arabic",
+      detail: `${productCount - productsMissingArName} / ${productCount} products have an Arabic name.`,
+    },
+    {
+      ok: productsMissingArDescription === 0,
+      label: "Product stories translated to Arabic",
+      detail: `${productCount - productsMissingArDescription} / ${productCount} products have an Arabic description.`,
+    },
+    {
+      ok: productsMissingZhName === 0,
+      label: "Product names translated to Chinese",
+      detail: `${productCount - productsMissingZhName} / ${productCount} products have a Chinese name.`,
+    },
+    {
+      ok: productsMissingZhDescription === 0,
+      label: "Product stories translated to Chinese",
+      detail: `${productCount - productsMissingZhDescription} / ${productCount} products have a Chinese description.`,
+    },
+    {
+      ok: productsMissingRuName === 0,
+      label: "Product names translated to Russian",
+      detail: `${productCount - productsMissingRuName} / ${productCount} products have a Russian name.`,
+    },
+    {
+      ok: productsMissingRuDescription === 0,
+      label: "Product stories translated to Russian",
+      detail: `${productCount - productsMissingRuDescription} / ${productCount} products have a Russian description.`,
+    },
+    {
+      ok: productsMissingEsName === 0,
+      label: "Product names translated to Spanish",
+      detail: `${productCount - productsMissingEsName} / ${productCount} products have a Spanish name.`,
+    },
+    {
+      ok: productsMissingEsDescription === 0,
+      label: "Product stories translated to Spanish",
+      detail: `${productCount - productsMissingEsDescription} / ${productCount} products have a Spanish description.`,
+    },
+    {
+      ok: productsMissingPtName === 0,
+      label: "Product names translated to Portuguese",
+      detail: `${productCount - productsMissingPtName} / ${productCount} products have a Portuguese name.`,
+    },
+    {
+      ok: productsMissingPtDescription === 0,
+      label: "Product stories translated to Portuguese",
+      detail: `${productCount - productsMissingPtDescription} / ${productCount} products have a Portuguese description.`,
+    },
+    {
+      ok: productsMissingHiName === 0,
+      label: "Product names translated to Hindi",
+      detail: `${productCount - productsMissingHiName} / ${productCount} products have a Hindi name.`,
+    },
+    {
+      ok: productsMissingHiDescription === 0,
+      label: "Product stories translated to Hindi",
+      detail: `${productCount - productsMissingHiDescription} / ${productCount} products have a Hindi description.`,
+    },
+    {
+      ok: productsMissingJaName === 0,
+      label: "Product names translated to Japanese",
+      detail: `${productCount - productsMissingJaName} / ${productCount} products have a Japanese name.`,
+    },
+    {
+      ok: productsMissingJaDescription === 0,
+      label: "Product stories translated to Japanese",
+      detail: `${productCount - productsMissingJaDescription} / ${productCount} products have a Japanese description.`,
+    },
+    {
       ok: categoriesMissingEnName === 0,
       label: "Category names translated to English",
       detail: `${categoryCount - categoriesMissingEnName} / ${categoryCount} categories have an English name.`,
@@ -136,6 +262,41 @@ export default async function AdminSeoPage() {
       ok: categoriesMissingDeName === 0,
       label: "Category names translated to German",
       detail: `${categoryCount - categoriesMissingDeName} / ${categoryCount} categories have a German name.`,
+    },
+    {
+      ok: categoriesMissingArName === 0,
+      label: "Category names translated to Arabic",
+      detail: `${categoryCount - categoriesMissingArName} / ${categoryCount} categories have an Arabic name.`,
+    },
+    {
+      ok: categoriesMissingZhName === 0,
+      label: "Category names translated to Chinese",
+      detail: `${categoryCount - categoriesMissingZhName} / ${categoryCount} categories have a Chinese name.`,
+    },
+    {
+      ok: categoriesMissingRuName === 0,
+      label: "Category names translated to Russian",
+      detail: `${categoryCount - categoriesMissingRuName} / ${categoryCount} categories have a Russian name.`,
+    },
+    {
+      ok: categoriesMissingEsName === 0,
+      label: "Category names translated to Spanish",
+      detail: `${categoryCount - categoriesMissingEsName} / ${categoryCount} categories have a Spanish name.`,
+    },
+    {
+      ok: categoriesMissingPtName === 0,
+      label: "Category names translated to Portuguese",
+      detail: `${categoryCount - categoriesMissingPtName} / ${categoryCount} categories have a Portuguese name.`,
+    },
+    {
+      ok: categoriesMissingHiName === 0,
+      label: "Category names translated to Hindi",
+      detail: `${categoryCount - categoriesMissingHiName} / ${categoryCount} categories have a Hindi name.`,
+    },
+    {
+      ok: categoriesMissingJaName === 0,
+      label: "Category names translated to Japanese",
+      detail: `${categoryCount - categoriesMissingJaName} / ${categoryCount} categories have a Japanese name.`,
     },
     {
       ok: productsWithReviews > 0,
@@ -173,7 +334,9 @@ export default async function AdminSeoPage() {
             label: "Translations",
             content: (
               <section>
-                <h2 className="mb-3 text-lg font-medium">Translations (IT / EN / FR / DE)</h2>
+                <h2 className="mb-3 text-lg font-medium">
+                  Translations (IT / EN / FR / DE / AR / ZH / RU / ES / PT / HI / JA)
+                </h2>
                 <ul className="divide-foreground/10 divide-y">
                   {translationReadiness.map((item) => (
                     <Check key={item.label} {...item} />

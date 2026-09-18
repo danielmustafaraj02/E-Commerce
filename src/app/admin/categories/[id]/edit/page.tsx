@@ -27,6 +27,13 @@ export default async function EditCategoryPage({
           nameEn: category.nameEn,
           nameFr: category.nameFr,
           nameDe: category.nameDe,
+          nameAr: category.nameAr,
+          nameZh: category.nameZh,
+          nameRu: category.nameRu,
+          nameEs: category.nameEs,
+          namePt: category.namePt,
+          nameHi: category.nameHi,
+          nameJa: category.nameJa,
           slug: category.slug,
           parentId: category.parentId,
         }}

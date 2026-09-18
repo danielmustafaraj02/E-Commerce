@@ -1,4 +1,4 @@
-import type { Locale } from "./i18n/locale-constants";
+import { locales, type Locale } from "./i18n/locale-constants";
 
 // Self-referencing hreflang: this site serves every language from the same
 // URL (locale is cookie/Accept-Language driven, see src/lib/i18n/locale.ts),
@@ -9,10 +9,7 @@ import type { Locale } from "./i18n/locale-constants";
 // honest markup for the current architecture.
 export function hreflangAlternates(canonicalPath: string): Record<string, string> {
   return {
-    en: canonicalPath,
-    it: canonicalPath,
-    fr: canonicalPath,
-    de: canonicalPath,
+    ...Object.fromEntries(locales.map((locale) => [locale, canonicalPath])),
     "x-default": canonicalPath,
   };
 }
@@ -23,13 +20,20 @@ const OG_LOCALES: Record<Locale, string> = {
   it: "it_IT",
   fr: "fr_FR",
   de: "de_DE",
+  ar: "ar_AR",
+  zh: "zh_CN",
+  ru: "ru_RU",
+  es: "es_ES",
+  pt: "pt_PT",
+  hi: "hi_IN",
+  ja: "ja_JP",
 };
 
 export function ogLocale(locale: Locale): string {
   return OG_LOCALES[locale];
 }
 
-// The other three, for openGraph.alternateLocale (crawlers use this to
+// The other locales, for openGraph.alternateLocale (crawlers use this to
 // discover the other language versions of the same self-referencing URL).
 export function ogAlternateLocales(locale: Locale): string[] {
   return (Object.keys(OG_LOCALES) as Locale[])

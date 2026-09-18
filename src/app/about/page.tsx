@@ -21,6 +21,13 @@ export async function generateMetadata(): Promise<Metadata> {
     it: `La storia di ${settings.storeName} e la tradizione vetraria muranese di 700 anni con cui sono realizzati i suoi pezzi.`,
     fr: `L'histoire de ${settings.storeName} et de la tradition verrière de Murano, vieille de 700 ans, dans laquelle ses pièces sont réalisées.`,
     de: `Die Geschichte von ${settings.storeName} und der 700 Jahre alten Murano-Glasbläsertradition, in der die Stücke gefertigt werden.`,
+    ar: `القصة وراء ${settings.storeName} وتقليد صناعة زجاج مورانو العريق الممتد لسبعمائة عام الذي تُصنع به قطعها.`,
+    zh: `${settings.storeName} 背后的故事，以及其作品所传承的七百年穆拉诺玻璃制作传统。`,
+    ru: `История ${settings.storeName} и семисотлетняя традиция муранского стеклоделия, в которой изготавливаются его изделия.`,
+    es: `La historia detrás de ${settings.storeName} y la tradición vidriera de Murano de 700 años con la que se elaboran sus piezas.`,
+    pt: `A história por trás da ${settings.storeName} e da tradição de sete séculos da vidraria de Murano com que as suas peças são feitas.`,
+    hi: `${settings.storeName} की कहानी और मुरानो की 700 साल पुरानी कांच-निर्माण परंपरा, जिससे इसके टुकड़े बनाए जाते हैं।`,
+    ja: `${settings.storeName}の物語と、その作品が作られる700年の歴史を持つムラノガラス製造の伝統。`,
   };
   const description = descriptionByLocale[locale];
   const image = ogImage(settings);

@@ -11,11 +11,25 @@ export type ProductFormValues = {
   nameEn: string | null;
   nameFr: string | null;
   nameDe: string | null;
+  nameAr: string | null;
+  nameZh: string | null;
+  nameRu: string | null;
+  nameEs: string | null;
+  namePt: string | null;
+  nameHi: string | null;
+  nameJa: string | null;
   slug: string;
   description: string;
   descriptionEn: string | null;
   descriptionFr: string | null;
   descriptionDe: string | null;
+  descriptionAr: string | null;
+  descriptionZh: string | null;
+  descriptionRu: string | null;
+  descriptionEs: string | null;
+  descriptionPt: string | null;
+  descriptionHi: string | null;
+  descriptionJa: string | null;
   price: number; // cents
   sku: string;
   stockQty: number;
@@ -71,6 +85,62 @@ export function ProductForm({
         <input name="nameDe" defaultValue={initial?.nameDe ?? ""} className="field" />
         <span className="text-foreground/60 text-xs">
           Shown to visitors browsing in German. Falls back to the English name, then the Italian
+          name, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (Arabic)</span>
+        <input name="nameAr" dir="rtl" defaultValue={initial?.nameAr ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in Arabic. Falls back to the English name, then the Italian
+          name, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (Chinese)</span>
+        <input name="nameZh" defaultValue={initial?.nameZh ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in Chinese. Falls back to the English name, then the Italian
+          name, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (Russian)</span>
+        <input name="nameRu" defaultValue={initial?.nameRu ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in Russian. Falls back to the English name, then the Italian
+          name, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (Spanish)</span>
+        <input name="nameEs" defaultValue={initial?.nameEs ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in Spanish. Falls back to the English name, then the Italian
+          name, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (Portuguese)</span>
+        <input name="namePt" defaultValue={initial?.namePt ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in Portuguese. Falls back to the English name, then the
+          Italian name, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (Hindi)</span>
+        <input name="nameHi" defaultValue={initial?.nameHi ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in Hindi. Falls back to the English name, then the Italian
+          name, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (Japanese)</span>
+        <input name="nameJa" defaultValue={initial?.nameJa ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in Japanese. Falls back to the English name, then the Italian
           name, if left blank.
         </span>
       </label>
@@ -131,6 +201,98 @@ export function ProductForm({
         />
         <span className="text-foreground/60 text-xs">
           Shown to visitors browsing in German. Falls back to the English description, then the
+          Italian one, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Description / story (Arabic)</span>
+        <textarea
+          name="descriptionAr"
+          dir="rtl"
+          rows={4}
+          defaultValue={initial?.descriptionAr ?? ""}
+          className="field"
+        />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in Arabic. Falls back to the English description, then the
+          Italian one, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Description / story (Chinese)</span>
+        <textarea
+          name="descriptionZh"
+          rows={4}
+          defaultValue={initial?.descriptionZh ?? ""}
+          className="field"
+        />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in Chinese. Falls back to the English description, then the
+          Italian one, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Description / story (Russian)</span>
+        <textarea
+          name="descriptionRu"
+          rows={4}
+          defaultValue={initial?.descriptionRu ?? ""}
+          className="field"
+        />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in Russian. Falls back to the English description, then the
+          Italian one, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Description / story (Spanish)</span>
+        <textarea
+          name="descriptionEs"
+          rows={4}
+          defaultValue={initial?.descriptionEs ?? ""}
+          className="field"
+        />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in Spanish. Falls back to the English description, then the
+          Italian one, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Description / story (Portuguese)</span>
+        <textarea
+          name="descriptionPt"
+          rows={4}
+          defaultValue={initial?.descriptionPt ?? ""}
+          className="field"
+        />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in Portuguese. Falls back to the English description, then
+          the Italian one, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Description / story (Hindi)</span>
+        <textarea
+          name="descriptionHi"
+          rows={4}
+          defaultValue={initial?.descriptionHi ?? ""}
+          className="field"
+        />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in Hindi. Falls back to the English description, then the
+          Italian one, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Description / story (Japanese)</span>
+        <textarea
+          name="descriptionJa"
+          rows={4}
+          defaultValue={initial?.descriptionJa ?? ""}
+          className="field"
+        />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in Japanese. Falls back to the English description, then the
           Italian one, if left blank.
         </span>
       </label>

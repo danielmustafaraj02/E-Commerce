@@ -72,6 +72,13 @@ export async function generateMetadata({
     it: `${name} — ${categoryName} in Vetro di Murano`,
     fr: `${name} — ${categoryName} en Verre de Murano`,
     de: `${name} — ${categoryName} aus Muranoglas`,
+    ar: `${name} — ${categoryName} من زجاج مورانو`,
+    zh: `${name} — 穆拉诺玻璃${categoryName}`,
+    ru: `${name} — ${categoryName} из муранского стекла`,
+    es: `${name} — ${categoryName} de Vidrio de Murano`,
+    pt: `${name} — ${categoryName} em Vidro de Murano`,
+    hi: `${name} — मुरानो ग्लास ${categoryName}`,
+    ja: `${name} — ムラノガラスの${categoryName}`,
   };
   const title = categoryName ? titleByLocale[locale] : name;
   const fallbackDescriptionByLocale: Record<Locale, string> = {
@@ -79,6 +86,13 @@ export async function generateMetadata({
     it: `${name} — vetro di Murano fatto a mano, da ${settings.storeName}.`,
     fr: `${name} — verre de Murano fait main, par ${settings.storeName}.`,
     de: `${name} — handgefertigtes Muranoglas von ${settings.storeName}.`,
+    ar: `${name} — زجاج مورانو مصنوع يدويًا، من ${settings.storeName}.`,
+    zh: `${name} — 来自 ${settings.storeName} 的手工穆拉诺玻璃。`,
+    ru: `${name} — муранское стекло ручной работы от ${settings.storeName}.`,
+    es: `${name} — vidrio de Murano hecho a mano, de ${settings.storeName}.`,
+    pt: `${name} — vidro de Murano feito à mão, da ${settings.storeName}.`,
+    hi: `${name} — ${settings.storeName} का हाथ से बना मुरानो ग्लास।`,
+    ja: `${name} — ${settings.storeName}の手作りムラノガラス。`,
   };
   const description =
     truncateAtWord(localizedDescription(product, locale), 155) ||
