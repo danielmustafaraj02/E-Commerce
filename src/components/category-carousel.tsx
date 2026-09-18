@@ -72,14 +72,14 @@ export function CategoryCarousel({
                 }
                 className="category-card border-foreground/10 group relative flex flex-col gap-4 rounded-xl border p-5 shadow-sm transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_6px_16px_-6px_var(--accent),0_22px_40px_-24px_var(--accent)] active:translate-y-0 active:scale-[0.97] active:bg-[color-mix(in_srgb,var(--accent)_14%,var(--background))] active:shadow-[0_2px_10px_-4px_var(--accent)] active:duration-100"
               >
-                <div className="bg-surface relative aspect-square w-full overflow-hidden rounded-lg">
+                <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-white">
                   {category.image ? (
                     <Image
                       src={category.image.url}
                       alt={category.image.altText || category.name}
                       fill
                       sizes="(min-width: 1024px) 23vw, (min-width: 640px) 31vw, 45vw"
-                      className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+                      className="object-contain transition-transform duration-500 ease-out group-hover:scale-110"
                     />
                   ) : (
                     <Image
@@ -87,7 +87,7 @@ export function CategoryCarousel({
                       alt={category.name}
                       fill
                       sizes="(min-width: 1024px) 23vw, (min-width: 640px) 31vw, 45vw"
-                      className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+                      className="object-contain transition-transform duration-500 ease-out group-hover:scale-110"
                     />
                   )}
                   {/* Accent-tinted wash that fades in on hover, echoing the card's
