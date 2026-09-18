@@ -119,6 +119,16 @@ button:not(:disabled),
   }
 }
 
+@keyframes badge-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.12);
+  }
+}
+
 @keyframes confetti-burst {
   0% {
     transform: translate(-50%, -50%) translate(0, 0) rotate(0deg) scale(1);
@@ -186,6 +196,16 @@ button:not(:disabled),
   .bracelet-bead {
     animation: pop-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
     animation-delay: var(--bead-delay, 0s);
+  }
+
+  /* "Why us" icon badges (app/page.tsx) — the three color-mix circles sat
+     completely static next to a page full of motion. A slow, staggered
+     breathing loop (transform-only, so it costs nothing extra to theme)
+     gives each one a little life without competing for attention like a
+     one-shot entrance would on a section this far down the page. */
+  .animate-badge-breathe {
+    animation: badge-breathe 3.2s ease-in-out infinite;
+    animation-delay: var(--badge-delay, 0s);
   }
 
   /* Confetti burst (confetti-burst.tsx) — a one-shot "coriandoli" scatter

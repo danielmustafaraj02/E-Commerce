@@ -188,8 +188,11 @@ export default async function Home() {
             <div className="grid gap-6 sm:grid-cols-3">
               <div className="border-foreground/10 rounded-lg border p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
                 <div
-                  className="mb-3 flex h-10 w-10 items-center justify-center rounded-full"
-                  style={{ background: "color-mix(in srgb, #f5c451 22%, transparent)" }}
+                  className="animate-badge-breathe mb-3 flex h-10 w-10 items-center justify-center rounded-full"
+                  style={{
+                    background: "color-mix(in srgb, #f5c451 22%, transparent)",
+                    "--badge-delay": "0ms",
+                  } as React.CSSProperties}
                   aria-hidden="true"
                 >
                   <svg
@@ -213,8 +216,11 @@ export default async function Home() {
               </div>
               <div className="border-foreground/10 rounded-lg border p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
                 <div
-                  className="mb-3 flex h-10 w-10 items-center justify-center rounded-full"
-                  style={{ background: "color-mix(in srgb, #7cc7c0 25%, transparent)" }}
+                  className="animate-badge-breathe mb-3 flex h-10 w-10 items-center justify-center rounded-full"
+                  style={{
+                    background: "color-mix(in srgb, #7cc7c0 25%, transparent)",
+                    "--badge-delay": "220ms",
+                  } as React.CSSProperties}
                   aria-hidden="true"
                 >
                   <svg
@@ -236,8 +242,11 @@ export default async function Home() {
               </div>
               <div className="border-foreground/10 rounded-lg border p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
                 <div
-                  className="mb-3 flex h-10 w-10 items-center justify-center rounded-full"
-                  style={{ background: "color-mix(in srgb, #e8607f 20%, transparent)" }}
+                  className="animate-badge-breathe mb-3 flex h-10 w-10 items-center justify-center rounded-full"
+                  style={{
+                    background: "color-mix(in srgb, #e8607f 20%, transparent)",
+                    "--badge-delay": "440ms",
+                  } as React.CSSProperties}
                   aria-hidden="true"
                 >
                   <svg
