@@ -15,8 +15,12 @@ type ManifestEntry = {
   category: string;
   name: string;
   nameEn: string;
+  nameFr?: string;
+  nameDe?: string;
   description: string;
   descriptionEn: string;
+  descriptionFr?: string;
+  descriptionDe?: string;
 };
 
 function slugify(input: string): string {
@@ -73,8 +77,12 @@ async function main() {
       data: {
         name: entry.name,
         nameEn: entry.nameEn,
+        nameFr: entry.nameFr,
+        nameDe: entry.nameDe,
         description: entry.description,
         descriptionEn: entry.descriptionEn,
+        descriptionFr: entry.descriptionFr,
+        descriptionDe: entry.descriptionDe,
       },
     });
 
