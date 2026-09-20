@@ -207,6 +207,7 @@ const en = {
     street: "Street address",
     city: "City",
     postalCode: "Postal code",
+    country: "Country",
     invalidPostalCode: "That postal code doesn't look right for the selected country.",
     phoneOptional: "Phone (optional)",
     shippingMethod: "Shipping method",
@@ -228,6 +229,9 @@ const en = {
     placeOrder: "Place order",
     placingOrder: "Placing order...",
     empty: "Your cart is empty.",
+  },
+  a11y: {
+    skipToContent: "Skip to main content",
   },
   auth: {
     signInTitle: "Sign in",
@@ -516,6 +520,7 @@ const it: Dictionary = {
     street: "Indirizzo",
     city: "Città",
     postalCode: "CAP",
+    country: "Paese",
     invalidPostalCode: "Il CAP non sembra corretto per il paese selezionato.",
     phoneOptional: "Telefono (opzionale)",
     shippingMethod: "Metodo di spedizione",
@@ -537,6 +542,9 @@ const it: Dictionary = {
     placeOrder: "Effettua ordine",
     placingOrder: "Ordine in corso...",
     empty: "Il tuo carrello è vuoto.",
+  },
+  a11y: {
+    skipToContent: "Vai al contenuto principale",
   },
   auth: {
     signInTitle: "Accedi",
@@ -824,6 +832,7 @@ const fr: Dictionary = {
     street: "Adresse",
     city: "Ville",
     postalCode: "Code postal",
+    country: "Pays",
     invalidPostalCode: "Ce code postal ne semble pas correct pour le pays sélectionné.",
     phoneOptional: "Téléphone (facultatif)",
     shippingMethod: "Mode de livraison",
@@ -845,6 +854,9 @@ const fr: Dictionary = {
     placeOrder: "Passer la commande",
     placingOrder: "Commande en cours...",
     empty: "Votre panier est vide.",
+  },
+  a11y: {
+    skipToContent: "Aller au contenu principal",
   },
   auth: {
     signInTitle: "Connexion",
@@ -1131,6 +1143,7 @@ const de: Dictionary = {
     street: "Straße",
     city: "Stadt",
     postalCode: "Postleitzahl",
+    country: "Land",
     invalidPostalCode: "Diese Postleitzahl scheint für das ausgewählte Land nicht korrekt zu sein.",
     phoneOptional: "Telefon (optional)",
     shippingMethod: "Versandart",
@@ -1152,6 +1165,9 @@ const de: Dictionary = {
     placeOrder: "Bestellung aufgeben",
     placingOrder: "Bestellung wird aufgegeben...",
     empty: "Ihr Warenkorb ist leer.",
+  },
+  a11y: {
+    skipToContent: "Zum Hauptinhalt springen",
   },
   auth: {
     signInTitle: "Anmelden",
@@ -1438,6 +1454,7 @@ const ar: Dictionary = {
     street: "عنوان الشارع",
     city: "المدينة",
     postalCode: "الرمز البريدي",
+    country: "الدولة",
     invalidPostalCode: "لا يبدو هذا الرمز البريدي صحيحًا للدولة المختارة.",
     phoneOptional: "الهاتف (اختياري)",
     shippingMethod: "طريقة الشحن",
@@ -1459,6 +1476,9 @@ const ar: Dictionary = {
     placeOrder: "إتمام الطلب",
     placingOrder: "جارٍ إتمام الطلب...",
     empty: "سلتك فارغة.",
+  },
+  a11y: {
+    skipToContent: "تخطي إلى المحتوى الرئيسي",
   },
   auth: {
     signInTitle: "تسجيل الدخول",
@@ -1743,6 +1763,7 @@ const zh: Dictionary = {
     street: "详细地址",
     city: "城市",
     postalCode: "邮政编码",
+    country: "国家/地区",
     invalidPostalCode: "该邮政编码与所选国家/地区不匹配。",
     phoneOptional: "电话（可选）",
     shippingMethod: "配送方式",
@@ -1763,6 +1784,9 @@ const zh: Dictionary = {
     placeOrder: "提交订单",
     placingOrder: "订单提交中...",
     empty: "购物车是空的。",
+  },
+  a11y: {
+    skipToContent: "跳到主要内容",
   },
   auth: {
     signInTitle: "登录",
@@ -2048,6 +2072,7 @@ const ru: Dictionary = {
     street: "Адрес (улица, дом)",
     city: "Город",
     postalCode: "Почтовый индекс",
+    country: "Страна",
     invalidPostalCode: "Этот почтовый индекс не соответствует выбранной стране.",
     phoneOptional: "Телефон (необязательно)",
     shippingMethod: "Способ доставки",
@@ -2069,6 +2094,9 @@ const ru: Dictionary = {
     placeOrder: "Оформить заказ",
     placingOrder: "Оформляем заказ...",
     empty: "Ваша корзина пуста.",
+  },
+  a11y: {
+    skipToContent: "Перейти к основному содержимому",
   },
   auth: {
     signInTitle: "Вход",
@@ -2354,6 +2382,7 @@ const es: Dictionary = {
     street: "Dirección",
     city: "Ciudad",
     postalCode: "Código postal",
+    country: "País",
     invalidPostalCode: "Ese código postal no parece correcto para el país seleccionado.",
     phoneOptional: "Teléfono (opcional)",
     shippingMethod: "Método de envío",
@@ -2375,6 +2404,9 @@ const es: Dictionary = {
     placeOrder: "Realizar pedido",
     placingOrder: "Realizando pedido...",
     empty: "Tu carrito está vacío.",
+  },
+  a11y: {
+    skipToContent: "Ir al contenido principal",
   },
   auth: {
     signInTitle: "Iniciar sesión",
@@ -2661,6 +2693,7 @@ const pt: Dictionary = {
     street: "Morada",
     city: "Cidade",
     postalCode: "Código postal",
+    country: "País",
     invalidPostalCode: "Esse código postal não parece correto para o país selecionado.",
     phoneOptional: "Telefone (opcional)",
     shippingMethod: "Método de envio",
@@ -2682,6 +2715,9 @@ const pt: Dictionary = {
     placeOrder: "Fazer encomenda",
     placingOrder: "A fazer encomenda...",
     empty: "O seu carrinho está vazio.",
+  },
+  a11y: {
+    skipToContent: "Saltar para o conteúdo principal",
   },
   auth: {
     signInTitle: "Iniciar sessão",
@@ -2968,6 +3004,7 @@ const hi: Dictionary = {
     street: "स्ट्रीट पता",
     city: "शहर",
     postalCode: "पिन कोड",
+    country: "देश",
     invalidPostalCode: "चुने गए देश के लिए यह पिन कोड सही नहीं लगता।",
     phoneOptional: "फ़ोन (वैकल्पिक)",
     shippingMethod: "शिपिंग विधि",
@@ -2989,6 +3026,9 @@ const hi: Dictionary = {
     placeOrder: "ऑर्डर करें",
     placingOrder: "ऑर्डर दिया जा रहा है...",
     empty: "आपका कार्ट खाली है।",
+  },
+  a11y: {
+    skipToContent: "मुख्य सामग्री पर जाएँ",
   },
   auth: {
     signInTitle: "साइन इन करें",
@@ -3275,6 +3315,7 @@ const ja: Dictionary = {
     street: "番地",
     city: "市区町村",
     postalCode: "郵便番号",
+    country: "国・地域",
     invalidPostalCode: "選択した国に対してこの郵便番号は正しくないようです。",
     phoneOptional: "電話番号(任意)",
     shippingMethod: "配送方法",
@@ -3296,6 +3337,9 @@ const ja: Dictionary = {
     placeOrder: "注文を確定する",
     placingOrder: "注文処理中...",
     empty: "カートは空です。",
+  },
+  a11y: {
+    skipToContent: "本文へスキップ",
   },
   auth: {
     signInTitle: "ログイン",

@@ -144,6 +144,7 @@ export default async function Home() {
                 locale={settings.defaultLocale}
                 outOfStockLabel={dict.product.outOfStock}
                 quickAddLabel={dict.product.addToCart}
+                addedLabel={dict.product.added}
                 prevLabel={dict.home.previousSlide}
                 nextLabel={dict.home.nextSlide}
               />
@@ -176,6 +177,7 @@ export default async function Home() {
                       locale={settings.defaultLocale}
                       outOfStockLabel={dict.product.outOfStock}
                       quickAddLabel={dict.product.addToCart}
+                      addedLabel={dict.product.added}
                     />
                   </Reveal>
                 ))}

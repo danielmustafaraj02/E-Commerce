@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useCartStore } from "@/lib/cart-store";
@@ -53,6 +53,7 @@ export function CheckoutClient({
   const items = useCartStore((state) => state.items);
   const clearCart = useCartStore((state) => state.clear);
   const formRef = useRef<HTMLFormElement>(null);
+  const postalCodeRef = useRef<HTMLInputElement>(null);
 
   const [fullName, setFullName] = useState("");
   const [street, setStreet] = useState("");
@@ -71,6 +72,17 @@ export function CheckoutClient({
   const [quote, setQuote] = useState<Quote | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  // Country names in the shopper's language instead of bare ISO codes. Built on
+  // the client only (this form doesn't render until the cart has hydrated), so
+  // there's no server/client mismatch; falls back to the code if unsupported.
+  const regionNames = useMemo(() => {
+    try {
+      return new Intl.DisplayNames([locale], { type: "region" });
+    } catch {
+      return null;
+    }
+  }, [locale]);
 
   const cartItems = items.map((item) => ({ productId: item.productId, quantity: item.quantity }));
 
@@ -136,6 +148,7 @@ export function CheckoutClient({
     setPostalCodeTouched(true);
     if (!postalCodeValid) {
       setError(dict.invalidPostalCode);
+      postalCodeRef.current?.focus();
       return;
     }
     setSubmitting(true);
@@ -180,7 +193,10 @@ export function CheckoutClient({
             <span className="font-medium">{dict.emailForUpdates}</span>
             <input
               type="email"
+              name="email"
               required
+              autoComplete="email"
+              spellCheck={false}
               value={guestEmail}
               onChange={(e) => setGuestEmail(e.target.value)}
               className="field"
@@ -198,6 +214,9 @@ export function CheckoutClient({
         <legend className="mb-1 px-1 font-medium">{dict.shippingAddress}</legend>
         <input
           required
+          name="name"
+          autoComplete="name"
+          aria-label={dict.fullName}
           placeholder={dict.fullName}
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
@@ -205,6 +224,9 @@ export function CheckoutClient({
         />
         <input
           required
+          name="street-address"
+          autoComplete="address-line1"
+          aria-label={dict.street}
           placeholder={dict.street}
           value={street}
           onChange={(e) => setStreet(e.target.value)}
@@ -213,34 +235,58 @@ export function CheckoutClient({
         <div className="flex flex-col gap-3 sm:flex-row">
           <input
             required
+            name="city"
+            autoComplete="address-level2"
+            aria-label={dict.city}
             placeholder={dict.city}
             value={city}
             onChange={(e) => setCity(e.target.value)}
             className="field sm:flex-1"
           />
           <input
+            ref={postalCodeRef}
             required
+            name="postal-code"
+            autoComplete="postal-code"
+            aria-label={dict.postalCode}
             placeholder={dict.postalCode}
             value={postalCode}
             onChange={(e) => setPostalCode(e.target.value)}
             onBlur={() => setPostalCodeTouched(true)}
             aria-invalid={postalCodeTouched && !postalCodeValid}
+            aria-describedby={
+              postalCodeTouched && !postalCodeValid ? "postal-code-error" : undefined
+            }
             className={`field sm:w-32 ${
               postalCodeTouched && !postalCodeValid ? "border-danger" : ""
             }`}
           />
         </div>
         {postalCodeTouched && !postalCodeValid && (
-          <p className="text-danger -mt-2 text-xs">{dict.invalidPostalCode}</p>
+          <p id="postal-code-error" role="alert" className="text-danger -mt-2 text-xs">
+            {dict.invalidPostalCode}
+          </p>
         )}
-        <select value={country} onChange={(e) => setCountry(e.target.value)} className="field">
+        <select
+          name="country"
+          autoComplete="country"
+          aria-label={dict.country}
+          value={country}
+          onChange={(e) => setCountry(e.target.value)}
+          className="field"
+        >
           {countries.map((c) => (
             <option key={c} value={c}>
-              {c}
+              {regionNames?.of(c) ?? c}
             </option>
           ))}
         </select>
         <input
+          type="tel"
+          name="tel"
+          autoComplete="tel"
+          inputMode="tel"
+          aria-label={dict.phoneOptional}
           placeholder={dict.phoneOptional}
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
@@ -280,9 +326,21 @@ export function CheckoutClient({
       <div className="form-card flex flex-col gap-4">
         <div className="flex gap-2">
           <input
+            name="discount-code"
+            autoComplete="off"
+            spellCheck={false}
+            aria-label={dict.discountCode}
             placeholder={dict.discountCode}
             value={discountCodeInput}
             onChange={(e) => setDiscountCodeInput(e.target.value)}
+            onKeyDown={(e) => {
+              // This input lives inside the checkout <form>, so Enter would
+              // otherwise submit the form and place the order. Apply the code.
+              if (e.key === "Enter") {
+                e.preventDefault();
+                setAppliedDiscountCode(discountCodeInput || undefined);
+              }
+            }}
             className="field flex-1 text-sm"
           />
           <button
@@ -294,37 +352,41 @@ export function CheckoutClient({
           </button>
         </div>
 
-        {quote && (
-          <div className="border-foreground/10 animate-fade-up flex flex-col gap-1.5 border-t pt-4 text-sm">
-            <div className="flex justify-between">
-              <span className="text-foreground/70">{dict.subtotal}</span>
-              <span>{formatMoney(quote.subtotal, quote.currency, locale)}</span>
-            </div>
-            {quote.discountAmount > 0 && (
-              <div className="text-success flex justify-between">
-                <span>{dict.discount}</span>
-                <span>-{formatMoney(quote.discountAmount, quote.currency, locale)}</span>
+        <div aria-live="polite">
+          {quote && (
+            <div className="border-foreground/10 animate-fade-up flex flex-col gap-1.5 border-t pt-4 text-sm tabular-nums">
+              <div className="flex justify-between">
+                <span className="text-foreground/70">{dict.subtotal}</span>
+                <span>{formatMoney(quote.subtotal, quote.currency, locale)}</span>
               </div>
-            )}
-            <div className="flex justify-between">
-              <span className="text-foreground/70">{dict.shipping}</span>
-              <span>{formatMoney(quote.shippingAmount, quote.currency, locale)}</span>
+              {quote.discountAmount > 0 && (
+                <div className="text-success flex justify-between">
+                  <span>{dict.discount}</span>
+                  <span>-{formatMoney(quote.discountAmount, quote.currency, locale)}</span>
+                </div>
+              )}
+              <div className="flex justify-between">
+                <span className="text-foreground/70">{dict.shipping}</span>
+                <span>{formatMoney(quote.shippingAmount, quote.currency, locale)}</span>
+              </div>
+              {quote.freeShipping && (
+                <p className="text-success text-xs">{dict.freeShippingApplied}</p>
+              )}
+              <div className="text-foreground/70 flex justify-between">
+                <span>
+                  {quote.pricesIncludeTax ? dict.includesVat : dict.vat}
+                  {quote.taxRatePercent !== null ? ` (${quote.taxRatePercent}%)` : ""}
+                </span>
+                <span>{formatMoney(quote.taxAmount, quote.currency, locale)}</span>
+              </div>
+              {quote.missingTaxRule && <p className="text-warning">{dict.missingTaxRule}</p>}
+              <div className="border-foreground/10 mt-1 flex justify-between border-t pt-2 text-base font-semibold">
+                <span>{dict.total}</span>
+                <span>{formatMoney(quote.total, quote.currency, locale)}</span>
+              </div>
             </div>
-            {quote.freeShipping && <p className="text-success text-xs">{dict.freeShippingApplied}</p>}
-            <div className="text-foreground/70 flex justify-between">
-              <span>
-                {quote.pricesIncludeTax ? dict.includesVat : dict.vat}
-                {quote.taxRatePercent !== null ? ` (${quote.taxRatePercent}%)` : ""}
-              </span>
-              <span>{formatMoney(quote.taxAmount, quote.currency, locale)}</span>
-            </div>
-            {quote.missingTaxRule && <p className="text-warning">{dict.missingTaxRule}</p>}
-            <div className="border-foreground/10 mt-1 flex justify-between border-t pt-2 text-base font-semibold">
-              <span>{dict.total}</span>
-              <span>{formatMoney(quote.total, quote.currency, locale)}</span>
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       <TurnstileWidget siteKey={turnstileSiteKey} nonce={nonce} />
@@ -339,11 +401,7 @@ export function CheckoutClient({
         .
       </p>
 
-      <button
-        type="submit"
-        disabled={submitting || !quote}
-        className="btn-primary py-3 text-base"
-      >
+      <button type="submit" disabled={submitting || !quote} className="btn-primary py-3 text-base">
         {submitting ? dict.placingOrder : dict.placeOrder}
       </button>
     </form>

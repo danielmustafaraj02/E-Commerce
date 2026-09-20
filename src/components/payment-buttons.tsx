@@ -137,7 +137,11 @@ export function PaymentButtons({
   }
 
   if (codConfirmed) {
-    return <p className="text-success text-sm">Confirmed — pay the courier on delivery.</p>;
+    return (
+      <p role="status" className="text-success text-sm">
+        Confirmed — pay the courier on delivery.
+      </p>
+    );
   }
 
   return (
@@ -192,7 +196,11 @@ export function PaymentButtons({
           {loading === "cod" ? "Confirming..." : "Cash on delivery"}
         </button>
       )}
-      {error && <p className="text-danger text-sm">{error}</p>}
+      {error && (
+        <p role="alert" className="text-danger text-sm">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

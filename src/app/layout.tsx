@@ -151,6 +151,14 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         className="bg-background text-foreground flex min-h-full flex-col"
         style={{ fontFamily: `${settings.fontFamily}, var(--font-sans)` }}
       >
+        {/* First tab stop: lets keyboard and screen-reader users jump past the
+            header and navigation. Targets the page wrapper in template.tsx. */}
+        <a
+          href="#main-content"
+          className="bg-background text-foreground sr-only rounded px-4 py-2 text-sm font-medium shadow-lg focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100]"
+        >
+          {dict.a11y.skipToContent}
+        </a>
         <Header
           storeName={settings.storeName}
           logoUrl={settings.logoUrl}

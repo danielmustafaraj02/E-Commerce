@@ -18,19 +18,21 @@ export function ProductCard({
   locale,
   outOfStockLabel,
   quickAddLabel,
+  addedLabel,
 }: {
   product: ProductCardData;
   locale: string;
   outOfStockLabel: string;
   quickAddLabel?: string;
+  addedLabel?: string;
 }) {
   const outOfStock = product.stockQty <= 0;
 
+  // The card is a <div> with a stretched link (the name's ::after fills the
+  // card) rather than one big <Link>: the quick-add <button> can then be a
+  // sibling of the link instead of interactive content nested inside an <a>.
   return (
-    <Link
-      href={`/products/${product.slug}`}
-      className="group flex flex-col gap-2 transition-transform duration-300 ease-out hover:-translate-y-1"
-    >
+    <div className="group relative flex flex-col gap-2 transition-transform duration-300 ease-out hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:translate-y-0">
       <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-white transition-shadow duration-300 group-hover:shadow-lg">
         {product.images[0] && (
           <CatalogImage
@@ -38,7 +40,7 @@ export function ProductCard({
             alt={product.images[0].altText || product.name}
             fill
             sizes="(min-width: 640px) 25vw, 50vw"
-            className="object-contain transition-transform duration-500 ease-out group-hover:scale-105"
+            className="object-contain transition-transform duration-500 ease-out group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
           />
         )}
         {outOfStock && (
@@ -57,15 +59,19 @@ export function ProductCard({
               imageUrl: product.images[0]?.url ?? null,
             }}
             label={quickAddLabel}
+            addedLabel={addedLabel}
           />
         )}
       </div>
-      <span className="group-hover:text-primary text-sm font-medium transition-colors">
+      <Link
+        href={`/products/${product.slug}`}
+        className="group-hover:text-primary text-sm font-medium break-words transition-colors after:absolute after:inset-0"
+      >
         {product.name}
-      </span>
-      <span className="text-foreground/70 text-sm">
+      </Link>
+      <span className="text-foreground/70 text-sm tabular-nums">
         {formatMoney(product.price, product.currency, locale)}
       </span>
-    </Link>
+    </div>
   );
 }

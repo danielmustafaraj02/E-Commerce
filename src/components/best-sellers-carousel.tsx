@@ -23,6 +23,7 @@ export function BestSellersCarousel({
   locale,
   outOfStockLabel,
   quickAddLabel,
+  addedLabel,
   prevLabel,
   nextLabel,
 }: {
@@ -30,6 +31,7 @@ export function BestSellersCarousel({
   locale: string;
   outOfStockLabel: string;
   quickAddLabel: string;
+  addedLabel?: string;
   prevLabel: string;
   nextLabel: string;
 }) {
@@ -54,6 +56,7 @@ export function BestSellersCarousel({
               locale={locale}
               outOfStockLabel={outOfStockLabel}
               quickAddLabel={quickAddLabel}
+              addedLabel={addedLabel}
             />
           </SwiperSlide>
         ))}

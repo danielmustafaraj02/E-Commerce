@@ -403,6 +403,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                 locale={settings.defaultLocale}
                 outOfStockLabel={dict.product.outOfStock}
                 quickAddLabel={dict.product.addToCart}
+                addedLabel={dict.product.added}
               />
             ))}
           </div>

@@ -6,7 +6,13 @@ export function FormAlert({
   children: React.ReactNode;
 }) {
   return (
-    <div className={type === "error" ? "alert alert-error" : "alert alert-success"}>
+    // role=alert (assertive) for errors, role=status (polite) for success, so
+    // screen readers announce a message the moment it appears — otherwise every
+    // form error and confirmation in the app is silent to them.
+    <div
+      role={type === "error" ? "alert" : "status"}
+      className={type === "error" ? "alert alert-error" : "alert alert-success"}
+    >
       {type === "error" ? (
         <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor" aria-hidden="true">
           <path

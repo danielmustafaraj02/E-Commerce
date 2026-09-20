@@ -11,7 +11,11 @@ export function NewsletterSignupForm({ dict }: { dict: Dictionary["footer"] }) {
   });
 
   if (state.success) {
-    return <p className="text-success text-sm">{dict.newsletterSuccess}</p>;
+    return (
+      <p role="status" className="text-success text-sm">
+        {dict.newsletterSuccess}
+      </p>
+    );
   }
 
   return (
@@ -21,6 +25,9 @@ export function NewsletterSignupForm({ dict }: { dict: Dictionary["footer"] }) {
           type="email"
           name="email"
           required
+          autoComplete="email"
+          spellCheck={false}
+          aria-label={dict.newsletterTitle}
           placeholder={dict.newsletterPlaceholder}
           className="field text-sm"
         />
@@ -29,7 +36,7 @@ export function NewsletterSignupForm({ dict }: { dict: Dictionary["footer"] }) {
         </button>
       </div>
       {state.error && (
-        <p className="text-danger text-xs">
+        <p role="alert" className="text-danger text-xs">
           {state.error === "invalidEmail" ? dict.newsletterInvalidEmail : dict.newsletterError}
         </p>
       )}

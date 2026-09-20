@@ -220,6 +220,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
                 locale={settings.defaultLocale}
                 outOfStockLabel={dict.product.outOfStock}
                 quickAddLabel={dict.product.addToCart}
+                addedLabel={dict.product.added}
               />
             ))}
           </div>
