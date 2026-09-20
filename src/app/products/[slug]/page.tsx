@@ -1,3 +1,4 @@
+import { siteBaseUrl } from "@/lib/site-url";
 import { cache } from "react";
 import type { Metadata } from "next";
 import { CatalogImage } from "@/components/catalog-image";
@@ -178,7 +179,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
       ? product.reviews.reduce((sum, review) => sum + review.rating, 0) / product.reviews.length
       : null;
 
-  const base = settings.siteUrl || "";
+  const base = siteBaseUrl(settings);
   const productUrl = `${base}/products/${product.slug}`;
 
   const productJsonLd = {

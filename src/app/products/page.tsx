@@ -1,3 +1,4 @@
+import { siteBaseUrl } from "@/lib/site-url";
 import { z } from "zod";
 import type { Metadata } from "next";
 import { db } from "@/lib/db";
@@ -180,7 +181,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
             "@type": "ListItem",
             position: (filters.page - 1) * PAGE_SIZE + index + 1,
             name: localizedName(product, uiLocale),
-            url: `${settings.siteUrl || ""}/products/${product.slug}`,
+            url: `${siteBaseUrl(settings)}/products/${product.slug}`,
           })),
         }
       : null;

@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
 import { sendEmail, sendOrderStatusEmail } from "@/lib/email";
 import { captureError } from "@/lib/monitoring";
+import { siteBaseUrl } from "@/lib/site-url";
 
 // An "abandoned cart" in this schema is just a pending order that never got
 // paid — /api/checkout already creates the Order (and reserves stock) before
@@ -28,14 +29,14 @@ export async function processAbandonedOrders() {
   const now = new Date();
   const settings = await getStoreSettings();
 
-  const reminded = await sendReminders(now, settings.siteUrl);
+  const reminded = await sendReminders(now, siteBaseUrl(settings));
   const cancelled = await cancelExpiredOrders(now);
   await notifyCancelledOrders(cancelled);
 
   return { reminded, expired: cancelled.length };
 }
 
-async function sendReminders(now: Date, siteUrl: string | null) {
+async function sendReminders(now: Date, siteUrl: string) {
   const candidates = await db.order.findMany({
     where: {
       status: "pending",
@@ -53,7 +54,7 @@ async function sendReminders(now: Date, siteUrl: string | null) {
     const to = order.user?.email ?? order.guestEmail;
     if (!to) continue;
 
-    const resumeUrl = `${siteUrl ?? ""}/order-confirmation/${order.orderNumber}`;
+    const resumeUrl = `${siteUrl}/order-confirmation/${order.orderNumber}`;
     const itemLines = order.items
       .map((item) => `- ${item.productName} x${item.quantity}`)
       .join("\n");

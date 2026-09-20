@@ -1,3 +1,4 @@
+import { siteBaseUrl } from "@/lib/site-url";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { db } from "@/lib/db";
@@ -50,7 +51,7 @@ export default async function MuranoGlassGuidePage() {
     db.category.findMany({ where: { parentId: null }, orderBy: { name: "asc" } }),
   ]);
   const content = getMuranoGuideContent(locale);
-  const base = settings.siteUrl || "";
+  const base = siteBaseUrl(settings);
   const pageUrl = `${base}/murano-glass`;
 
   const articleJsonLd = {

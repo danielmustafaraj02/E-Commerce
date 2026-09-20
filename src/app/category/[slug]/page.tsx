@@ -1,3 +1,4 @@
+import { siteBaseUrl } from "@/lib/site-url";
 import { cache } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -185,7 +186,7 @@ export default async function CategoryPage({
     return `/category/${category.slug}?${params.toString()}`;
   };
 
-  const base = settings.siteUrl || "";
+  const base = siteBaseUrl(settings);
   const categoryUrl = `${base}/category/${category.slug}`;
 
   const breadcrumbJsonLd = {

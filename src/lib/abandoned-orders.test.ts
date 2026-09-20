@@ -173,4 +173,18 @@ describe("processAbandonedOrders", () => {
     expect(mocks.sendEmail).toHaveBeenCalledOnce();
     expect(mocks.sendOrderStatusEmail).toHaveBeenCalledOnce();
   });
+
+  it("puts the store's domain in the reminder link (a bare /order-confirmation/... path is not clickable)", async () => {
+    vi.stubEnv("NEXTAUTH_URL", "https://shop.test");
+    mocks.findOrders
+      .mockResolvedValueOnce([{ ...order("r"), items: [{ productName: "Ring", quantity: 1 }] }])
+      .mockResolvedValueOnce([]);
+
+    await processAbandonedOrders();
+
+    expect(mocks.sendEmail.mock.calls[0][0].text).toContain(
+      "https://shop.test/order-confirmation/ORD-r"
+    );
+    vi.unstubAllEnvs();
+  });
 });
