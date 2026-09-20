@@ -53,7 +53,14 @@ function SocialIcon({ platform }: { platform: keyof SocialLinks }) {
       );
     case "tiktokUrl":
       return (
-        <svg {...common} fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <svg
+          {...common}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
           <path d="M14 4v10.5a3.5 3.5 0 1 1-3.5-3.5" />
           <path d="M14 4c.4 2.4 2 4 4.5 4.3" />
         </svg>
@@ -129,7 +136,7 @@ export async function Footer({
       <div className="mx-auto w-full max-w-5xl px-4 py-14">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr_1.3fr]">
           <div className="flex flex-col gap-4">
-            <Link href="/" className="text-lg font-semibold">
+            <Link href="/" translate="no" className="text-lg font-semibold">
               {storeName}
             </Link>
             <p className="text-foreground/60 max-w-[26ch] text-sm">{dict.footer.tagline}</p>
@@ -183,7 +190,10 @@ export async function Footer({
               </li>
               {legalLinks.map((link) => (
                 <li key={link.slug}>
-                  <Link href={`/legal/${link.slug}`} className="hover:text-primary transition-colors">
+                  <Link
+                    href={`/legal/${link.slug}`}
+                    className="hover:text-primary transition-colors"
+                  >
                     {link.label}
                   </Link>
                 </li>
@@ -206,7 +216,10 @@ export async function Footer({
                   </Link>
                 </li>
                 <li>
-                  <a href={`mailto:${contactEmail}`} className="hover:text-primary transition-colors">
+                  <a
+                    href={`mailto:${contactEmail}`}
+                    className="hover:text-primary transition-colors"
+                  >
                     {contactEmail}
                   </a>
                 </li>
@@ -234,7 +247,8 @@ export async function Footer({
 
       <div className="border-foreground/10 border-t">
         <p className="text-foreground/60 mx-auto w-full max-w-5xl px-4 py-6 text-sm">
-          &copy; {new Date().getFullYear()} {storeName}. {dict.footer.rights}
+          &copy; {new Date().getFullYear()} <span translate="no">{storeName}</span>.{" "}
+          {dict.footer.rights}
         </p>
       </div>
     </footer>

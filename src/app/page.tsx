@@ -90,7 +90,7 @@ export default async function Home() {
               style={{ "--reveal-delay": "80ms" } as React.CSSProperties}
               className="animate-fade-up text-4xl font-semibold sm:text-5xl"
             >
-              {settings.storeName}
+              <span translate="no">{settings.storeName}</span>
             </h1>
             <p
               style={{ "--reveal-delay": "160ms" } as React.CSSProperties}
@@ -192,6 +192,9 @@ export default async function Home() {
             <img
               src="/home/bead-garland.svg"
               alt=""
+              width={1200}
+              height={90}
+              loading="lazy"
               aria-hidden="true"
               className="mb-6 h-16 w-full opacity-80 sm:h-20"
             />
@@ -289,6 +292,8 @@ export default async function Home() {
                 testimonials={testimonials}
                 prevLabel={dict.home.previousSlide}
                 nextLabel={dict.home.nextSlide}
+                pauseLabel={dict.home.pauseSlides}
+                playLabel={dict.home.playSlides}
               />
             </section>
           </Reveal>

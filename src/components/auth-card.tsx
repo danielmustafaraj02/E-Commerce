@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import LoginForm from "@/app/login/login-form";
 import RegisterForm from "@/app/register/register-form";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
@@ -36,16 +36,32 @@ export function AuthCard({
   initialNotice?: string | null;
 }) {
   const [mode, setMode] = useState<Mode>(initialMode);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const switched = useRef(false);
+
+  // Switching modes unmounts the link that had focus, which would drop keyboard
+  // and screen-reader users back at the top of the page. After a switch (not on
+  // first load), focus the new heading so the change is announced and the next
+  // Tab lands in the new form.
+  useEffect(() => {
+    if (switched.current) headingRef.current?.focus();
+  }, [mode]);
 
   function switchTo(next: Mode) {
     if (next === mode) return;
+    switched.current = true;
     setMode(next);
     window.history.replaceState(null, "", next === "login" ? "/login" : "/register");
   }
 
   return (
     <div className="flex flex-col">
-      <h1 key={mode} className="animate-fade-up mb-1 text-center text-2xl font-semibold">
+      <h1
+        key={mode}
+        ref={headingRef}
+        tabIndex={-1}
+        className="animate-fade-up mb-1 text-center text-2xl font-semibold outline-none"
+      >
         {mode === "login" ? dict.signInTitle : dict.createAccountTitle}
       </h1>
       <p className="text-foreground/60 mb-6 text-center text-sm">{storeName}</p>

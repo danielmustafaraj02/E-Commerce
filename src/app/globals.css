@@ -913,3 +913,46 @@ button:not(:disabled),
 .testimonials-swiper .swiper-slide {
   height: auto;
 }
+
+/* ---------------------------------------------------------------------------
+   Global interaction and motion defaults.
+   ------------------------------------------------------------------------- */
+
+/* Visitors who ask the OS to reduce motion get none: the entrance animations
+   above are already opt-in, but shared component styles (alerts, hover lifts,
+   Tailwind transition utilities, Swiper's slide transitions) run regardless, so
+   this collapses every remaining animation and transition to ~instant. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* No 300ms double-tap-to-zoom delay on tappable controls (pinch zoom still
+   works), and a deliberate, on-brand tap flash instead of the browser default. */
+a,
+button,
+summary,
+label,
+input,
+select,
+textarea,
+[role="button"] {
+  touch-action: manipulation;
+}
+html {
+  -webkit-tap-highlight-color: color-mix(in srgb, var(--color-primary) 14%, transparent);
+}
+
+/* Avoid one-word last lines in headings. */
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
