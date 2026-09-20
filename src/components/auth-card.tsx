@@ -22,6 +22,8 @@ export function AuthCard({
   nonce,
   dict,
   googleEnabled,
+  initialError,
+  initialNotice,
 }: {
   initialMode: Mode;
   storeName: string;
@@ -30,6 +32,8 @@ export function AuthCard({
   nonce?: string;
   dict: Dictionary["auth"];
   googleEnabled: boolean;
+  initialError?: string | null;
+  initialNotice?: string | null;
 }) {
   const [mode, setMode] = useState<Mode>(initialMode);
 
@@ -55,6 +59,8 @@ export function AuthCard({
               nonce={nonce}
               dict={dict}
               googleEnabled={googleEnabled}
+              initialError={initialError}
+              initialNotice={initialNotice}
             />
           ) : (
             <RegisterForm siteKey={siteKey} nonce={nonce} dict={dict} />

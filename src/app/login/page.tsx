@@ -16,6 +16,12 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
     getStoreSettings(),
   ]);
   const dict = getDictionary(locale);
+  // Set by the signIn callback in auth.ts when Google sign-in is refused for
+  // an account that has to use password + authenticator code.
+  const errorParam = Array.isArray(params.error) ? params.error[0] : params.error;
+  const initialError = errorParam === "google-mfa" ? dict.auth.googleSignInBlocked : null;
+  const resetParam = Array.isArray(params.reset) ? params.reset[0] : params.reset;
+  const initialNotice = resetParam === "1" ? dict.auth.passwordUpdated : null;
   const googleEnabled = Boolean(
     (settings.googleClientId || process.env.GOOGLE_CLIENT_ID) &&
     (settings.googleClientSecret || process.env.GOOGLE_CLIENT_SECRET)
@@ -33,6 +39,8 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
           nonce={nonce}
           dict={dict.auth}
           googleEnabled={googleEnabled}
+          initialError={initialError}
+          initialNotice={initialNotice}
         />
       </div>
     </main>

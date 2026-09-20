@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { login } from "./actions";
 import { TurnstileWidget } from "@/components/turnstile-widget";
@@ -14,12 +15,16 @@ export default function LoginForm({
   nonce,
   dict,
   googleEnabled,
+  initialError,
+  initialNotice,
 }: {
   callbackUrl: string;
   siteKey: string | null;
   nonce?: string;
   dict: Dictionary["auth"];
   googleEnabled: boolean;
+  initialError?: string | null;
+  initialNotice?: string | null;
 }) {
   const [state, formAction, pending] = useActionState(login, {
     error: null as string | null,
@@ -71,6 +76,12 @@ export default function LoginForm({
           autoComplete="current-password"
           minLength={8}
         />
+        <Link
+          href="/forgot-password"
+          className="text-foreground/60 -mt-2 self-end text-xs hover:underline"
+        >
+          {dict.forgotPassword}
+        </Link>
         {state.mfaRequired && (
           <label className="animate-fade-up flex flex-col gap-1.5 text-sm">
             <span className="font-medium">{dict.authenticatorCode}</span>
@@ -88,7 +99,10 @@ export default function LoginForm({
           </label>
         )}
         <TurnstileWidget siteKey={siteKey} nonce={nonce} />
-        {state.error && <FormAlert type="error">{state.error}</FormAlert>}
+        {initialNotice && !state.error && <FormAlert type="success">{initialNotice}</FormAlert>}
+        {(state.error ?? initialError) && (
+          <FormAlert type="error">{state.error ?? initialError}</FormAlert>
+        )}
         <button type="submit" disabled={pending} className="btn-primary">
           {pending ? dict.signingIn : dict.signIn}
         </button>

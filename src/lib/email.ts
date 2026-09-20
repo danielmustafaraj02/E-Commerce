@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
 import { rateLimit } from "@/lib/rate-limit";
 import { VerifyEmail } from "@/emails/verify-email";
+import { ResetPasswordEmail } from "@/emails/reset-password";
 import { OrderStatusEmail, type OrderStatus } from "@/emails/order-status";
 
 // Resend's free plan caps out at 100/day — this stops just short of that
@@ -92,6 +93,41 @@ export async function sendVerificationEmailMessage(input: {
     subject: `Confirm your email — ${settings.storeName}`,
     html,
     text,
+  });
+}
+
+export async function sendPasswordResetEmailMessage(input: {
+  to: string;
+  resetUrl: string;
+  expiresInMinutes: number;
+}) {
+  const settings = await getStoreSettings();
+  const element = React.createElement(ResetPasswordEmail, {
+    storeName: settings.storeName,
+    logoUrl: settings.logoUrl,
+    primaryColor: settings.primaryColor,
+    resetUrl: input.resetUrl,
+    expiresInMinutes: input.expiresInMinutes,
+  });
+  const [html, text] = await Promise.all([render(element), render(element, { plainText: true })]);
+
+  await sendEmail({
+    to: input.to,
+    subject: `Reset your password — ${settings.storeName}`,
+    html,
+    text,
+  });
+}
+
+// Plain text on purpose: a security notice should be unmistakable and
+// impossible to mistake for marketing.
+export async function sendPasswordChangedEmail(to: string) {
+  const settings = await getStoreSettings();
+  const contact = settings.contactEmail ? ` at ${settings.contactEmail}` : "";
+  await sendEmail({
+    to,
+    subject: `Your password was changed — ${settings.storeName}`,
+    text: `The password for your ${settings.storeName} account was just changed, and any devices that were signed in have been signed out.\n\nIf this was you, no action is needed. If it wasn't, reset your password again right away and contact us${contact}.`,
   });
 }
 

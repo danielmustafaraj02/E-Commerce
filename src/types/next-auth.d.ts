@@ -12,6 +12,8 @@ declare module "next-auth" {
   interface User {
     role: string;
     mfaEnabled: boolean;
+    // ms timestamp of the sign-in that created this session
+    authAt?: number;
   }
 }
 
@@ -20,5 +22,7 @@ declare module "next-auth/jwt" {
     id: string;
     role: string;
     mfaEnabled: boolean;
+    // ms timestamp of the sign-in that created this session
+    authAt?: number;
   }
 }

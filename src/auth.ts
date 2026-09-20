@@ -3,9 +3,12 @@ import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import bcrypt from "bcryptjs";
+import { cache } from "react";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { verifyMfaToken } from "@/lib/mfa";
+import { OAUTH_BLOCKED_REDIRECT, oauthSignInBlocked } from "@/lib/oauth-policy";
+import { refreshSessionToken } from "@/lib/session-refresh";
 import { getStoreSettings } from "@/lib/store-settings";
 
 const credentialsSchema = z.object({
@@ -13,6 +16,16 @@ const credentialsSchema = z.object({
   password: z.string().min(8),
   totpCode: z.string().optional(),
 });
+
+// One small primary-key read per request (cache() dedupes the header, layout and
+// page each calling auth() in the same render) — the price of being able to
+// revoke a stateless JWT. See src/lib/session-refresh.ts.
+const getSessionUserState = cache((userId: string) =>
+  db.user.findUnique({
+    where: { id: userId },
+    select: { role: true, mfaEnabled: true, passwordChangedAt: true },
+  })
+);
 
 // Lazy (async) config so the Google provider can be enabled/disabled at
 // runtime from Admin > Settings > Integrations, falling back to
@@ -51,15 +64,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth(async () => {
 
           const passwordValid = await bcrypt.compare(password, user.passwordHash);
           if (!passwordValid) {
-            await db.user.update({
+            // Increment atomically and decide on the *returned* count: the
+            // `user` row above was read before the (slow) bcrypt compare, so
+            // parallel guesses would all see the same stale count and none
+            // would ever trip the lock.
+            const { failedLoginCount } = await db.user.update({
               where: { id: user.id },
-              data: {
-                failedLoginCount: { increment: 1 },
-                ...(user.failedLoginCount + 1 >= 5
-                  ? { lockedUntil: new Date(Date.now() + 15 * 60 * 1000) }
-                  : {}),
-              },
+              data: { failedLoginCount: { increment: 1 } },
+              select: { failedLoginCount: true },
             });
+            if (failedLoginCount >= 5) {
+              await db.user.update({
+                where: { id: user.id },
+                data: { lockedUntil: new Date(Date.now() + 15 * 60 * 1000) },
+              });
+            }
             return null;
           }
 
@@ -93,6 +112,27 @@ export const { handlers, auth, signIn, signOut } = NextAuth(async () => {
         : []),
     ],
     callbacks: {
+      async signIn({ user, account }) {
+        if (!account || account.provider === "credentials") return true;
+
+        // Look the account up by its provider link first (what Auth.js itself
+        // uses to find the user), falling back to email for a first sign-in.
+        const select = { role: true, mfaEnabled: true } as const;
+        const linked = await db.account.findUnique({
+          where: {
+            provider_providerAccountId: {
+              provider: account.provider,
+              providerAccountId: account.providerAccountId,
+            },
+          },
+          select: { user: { select } },
+        });
+        const existing =
+          linked?.user ??
+          (user.email ? await db.user.findUnique({ where: { email: user.email }, select }) : null);
+
+        return oauthSignInBlocked(existing) ? OAUTH_BLOCKED_REDIRECT : true;
+      },
       async jwt({ token, user }) {
         if (user) {
           token.role = user.role;
@@ -108,8 +148,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth(async () => {
           // claim here. Regular (non-adapter) `User.mfaEnabled` defaults to
           // false, so this is always a real boolean, never undefined.
           token.mfaEnabled = user.mfaEnabled ?? false;
+          token.authAt = Date.now();
+          return token;
         }
-        return token;
+
+        // Every later read: re-check against the DB. Returning null ends the
+        // session (Auth.js clears the cookie), so a demoted user drops to
+        // their new role immediately and a deleted user is signed out.
+        return refreshSessionToken(token, await getSessionUserState(token.id));
       },
       async session({ session, token }) {
         if (session.user) {
