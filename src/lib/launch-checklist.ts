@@ -162,11 +162,11 @@ export const LAUNCH_CHECKLIST: ChecklistItem[] = [
     "Only needed if admins should be allowed to sign in with Google."
   ),
   item(
-    "Security",
-    "low",
+    "SEO",
+    "medium",
     false,
-    "Decide what rate limiting does when Redis is down",
-    "Today an Upstash outage makes rate-limited routes error; consider failing open for low-risk routes."
+    "Set the store's site URL in Admin > Settings",
+    "The setting is empty on production. Canonical URLs, the sitemap and emails currently work only through the NEXTAUTH_URL fallback; set it explicitly so nothing depends on that fallback."
   ),
 
   // ── Payments & orders ──────────────────────────────────────────────────
@@ -296,7 +296,7 @@ export const LAUNCH_CHECKLIST: ChecklistItem[] = [
     "high",
     false,
     "Set real stock levels",
-    "Checked live: all 45 products are Out of stock, so nothing can be bought and search results will say 'out of stock'."
+    "Checked live: all 45 products are Out of stock — on the page, in the structured data and in the Merchant feed — so nothing can be bought and search results will say out of stock."
   ),
   item(
     "Catalog",
@@ -377,10 +377,10 @@ export const LAUNCH_CHECKLIST: ChecklistItem[] = [
   ),
   item(
     "Catalog",
-    "low",
+    "medium",
     false,
-    "Move product photos to WebP/AVIF",
-    "public/products is roughly 40 MB of PNG."
+    "Add at least three photos per product",
+    "Checked live: every product has exactly one photo. Add detail, worn/scale and lifestyle shots. The Merchant feed exports the extras automatically as additional_image_link. Format is not the problem: the image optimizer already serves them as WebP at about 11 KB."
   ),
 
   // ── Tax, shipping & legal ──────────────────────────────────────────────
@@ -525,7 +525,7 @@ export const LAUNCH_CHECKLIST: ChecklistItem[] = [
     "medium",
     false,
     "Deploy absolute image and logo URLs in structured data",
-    "Checked live: product images and the logo are relative ('/logo.png'). The fix is written — it goes live with the next deploy."
+    "Checked live: product, offer, image and breadcrumb URLs in the structured data are relative ('/products/...'). Cause: four pages built URLs from the Admin site-URL setting alone, and it is empty on production. Fixed in the code (siteBaseUrl falls back to NEXTAUTH_URL) and waiting for the next deploy; afterwards re-check offers.url in a product page's JSON-LD. It also fixes the abandoned-cart email, whose link had no domain."
   ),
   item(
     "SEO",
@@ -553,7 +553,7 @@ export const LAUNCH_CHECKLIST: ChecklistItem[] = [
     "medium",
     false,
     "Submit the product feed to Google Merchant Center",
-    "The feed responds (200) at /api/feeds/google-merchant; add it as a scheduled fetch and fix any disapprovals."
+    "The feed responds (200) at /api/feeds/google-merchant. The code now also exports Google's Jewelry category, extra photos, richer titles and the material once deployed. Add it as a scheduled fetch and fix any disapprovals. Every item currently says out of stock."
   ),
   item(
     "SEO",
@@ -574,7 +574,7 @@ export const LAUNCH_CHECKLIST: ChecklistItem[] = [
     "low",
     false,
     "Tidy the product title pattern",
-    "'Sage & Gold Wrap Bracelet — Murano Glass Bracelets' repeats the category word."
+    "Checked live: 43 of 45 product titles were over 60 characters and got cut off in results. Fixed in the code (every title now fits, 39 of 45 keep the Murano Glass keyword) and waiting for the next deploy. Meta descriptions now end with the price and a call to action too."
   ),
   item(
     "SEO",
@@ -630,11 +630,11 @@ export const LAUNCH_CHECKLIST: ChecklistItem[] = [
     "Vercel alerts or a log drain for 5xx responses."
   ),
   item(
-    "Operations",
-    "low",
+    "Catalog",
+    "medium",
     false,
-    "Enable Prisma slow-query logging in staging",
-    "Find slow queries before customers do."
+    "Lengthen product descriptions and add a specs table",
+    "Checked live: descriptions are 28-58 words (a product page usually needs 200 or more to compete) and no product has a specs table. Add materials, dimensions, clasp, length and care in your own words — not padding."
   ),
 
   // ── Email ──────────────────────────────────────────────────────────────
