@@ -1,12 +1,26 @@
+import { auth } from "@/auth";
 import { db } from "@/lib/db";
+import {
+  CHECKLIST_CHECKED_ON,
+  LAUNCH_CHECKLIST,
+  missingChecklistItems,
+} from "@/lib/launch-checklist";
 import { TaskForm } from "./task-form";
 import { toggleImprovementTask, deleteImprovementTask } from "./actions";
+import { importLaunchChecklist } from "./import-actions";
 import { StatusBadge } from "@/components/status-badge";
 
 const PRIORITY_RANK: Record<string, number> = { high: 0, medium: 1, low: 2 };
 
-export default async function AdminRoadmapPage() {
-  const tasks = await db.improvementTask.findMany();
+export default async function AdminRoadmapPage({ searchParams }: PageProps<"/admin/roadmap">) {
+  const [tasks, session, params] = await Promise.all([
+    db.improvementTask.findMany(),
+    auth(),
+    searchParams,
+  ]);
+  const isAdmin = session?.user?.role === "admin";
+  const missing = missingChecklistItems(tasks.map((task) => task.title));
+  const importedParam = Array.isArray(params.imported) ? params.imported[0] : params.imported;
 
   const open = tasks
     .filter((t) => t.status !== "done")
@@ -25,9 +39,38 @@ export default async function AdminRoadmapPage() {
       <p className="text-foreground/70 mb-6 max-w-2xl text-sm">
         A shared backlog of site content/config that still needs filling in or revisiting, and
         improvement ideas for later — for staff, and for an AI coding session working on this repo
-        to read and update directly between sessions instead of losing that context in chat
-        history.
+        to read and update directly between sessions instead of losing that context in chat history.
       </p>
+
+      {importedParam !== undefined && (
+        <p className="alert alert-success mb-6 text-sm">
+          {Number(importedParam) > 0
+            ? `Imported ${Number(importedParam)} checklist items.`
+            : "The launch checklist was already on the roadmap — nothing to import."}
+        </p>
+      )}
+
+      {isAdmin && missing.length > 0 && (
+        <div className="form-card mb-8 flex flex-col gap-3">
+          <div>
+            <h2 className="font-medium">Launch checklist</h2>
+            <p className="text-foreground/70 mt-1 text-sm">
+              {LAUNCH_CHECKLIST.length} items from the README and the site review, each already
+              marked done or open based on what was checked on {CHECKLIST_CHECKED_ON} (live site,
+              DNS, deployed code).{" "}
+              {missing.length === LAUNCH_CHECKLIST.length
+                ? "None of them are on the roadmap yet."
+                : `${missing.length} aren't on the roadmap yet.`}{" "}
+              Importing only adds missing items — it never changes tasks you already have.
+            </p>
+          </div>
+          <form action={importLaunchChecklist}>
+            <button type="submit" className="btn-primary">
+              Import {missing.length} checklist items
+            </button>
+          </form>
+        </div>
+      )}
 
       <div className="form-card mb-8">
         <TaskForm />
@@ -99,9 +142,7 @@ export default async function AdminRoadmapPage() {
                   >
                     <div className="flex items-center gap-2">
                       <StatusBadge status="done" />
-                      <span className="text-foreground/60 text-sm line-through">
-                        {task.title}
-                      </span>
+                      <span className="text-foreground/60 text-sm line-through">{task.title}</span>
                     </div>
                     <div className="flex shrink-0 gap-3 text-sm">
                       <form action={boundToggle}>

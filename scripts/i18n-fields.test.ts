@@ -4,6 +4,7 @@ import {
   CATEGORY_NAMES,
   LOCALE_SUFFIXES,
   categoryTranslations,
+  findManifestEntry,
   productTranslations,
   type ManifestEntry,
 } from "./i18n-fields";
@@ -95,5 +96,32 @@ describe("murano manifest wording", () => {
     const ja = entries.filter((entry) => /ムラーノ/.test(entry.descriptionJa ?? ""));
     expect(es.map((entry) => entry.nameEn)).toEqual([]);
     expect(ja.map((entry) => entry.nameEn)).toEqual([]);
+  });
+});
+
+describe("findManifestEntry", () => {
+  const entry = entries[0];
+  const slug = `${entry.name
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")}-abc123`.replace(/--+/g, "-");
+
+  it("matches by the Italian name", () => {
+    expect(findManifestEntry({ name: entry.name }, entries)).toBe(entry);
+  });
+
+  it("matches a row whose name was edited to English (as on production)", () => {
+    expect(findManifestEntry({ name: entry.nameEn ?? "" }, entries)).toBe(entry);
+  });
+
+  it("falls back to the slug when the name matches nothing", () => {
+    expect(findManifestEntry({ name: "Something renamed", slug }, entries)).toBe(entry);
+  });
+
+  it("returns nothing for an unknown product", () => {
+    expect(
+      findManifestEntry({ name: "Not in the manifest", slug: "nope-abc123" }, entries)
+    ).toBeUndefined();
   });
 });

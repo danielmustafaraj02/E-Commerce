@@ -16,6 +16,7 @@ import {
   CATEGORY_NAMES,
   LOCALE_SUFFIXES,
   categoryTranslations,
+  findManifestEntry,
   productTranslations,
   type ManifestEntry,
 } from "./i18n-fields";
@@ -23,15 +24,14 @@ import {
 async function main() {
   const dryRun = process.argv.includes("--dry-run");
   const entries = Object.values(manifest as Record<string, ManifestEntry>);
-  const byName = new Map(entries.map((entry) => [entry.name, entry]));
   const locales = LOCALE_SUFFIXES.join("/");
 
   let updatedProducts = 0;
   let unmatchedProducts = 0;
 
-  const products = await db.product.findMany({ select: { id: true, name: true } });
+  const products = await db.product.findMany({ select: { id: true, name: true, slug: true } });
   for (const product of products) {
-    const entry = byName.get(product.name);
+    const entry = findManifestEntry(product, entries);
     if (!entry) {
       console.warn(`No manifest match for product "${product.name}" (id ${product.id})`);
       unmatchedProducts++;

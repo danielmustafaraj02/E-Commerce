@@ -7,7 +7,7 @@ import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
 import { formatMoney } from "@/lib/format";
-import { toSafeJsonLd } from "@/lib/json-ld";
+import { absoluteUrl, toSafeJsonLd } from "@/lib/json-ld";
 import { buildReturnPolicy, buildShippingDetails } from "@/lib/offer-json-ld";
 import { getLocale, type Locale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
@@ -187,7 +187,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
     name,
     description: description || undefined,
     sku: product.sku,
-    image: product.images.map((image) => image.url),
+    image: product.images.map((image) => absoluteUrl(image.url, base)),
     brand: { "@type": "Brand", name: settings.storeName },
     ...(categoryName ? { category: categoryName } : {}),
     inLanguage: uiLocale,

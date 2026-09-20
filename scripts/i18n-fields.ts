@@ -91,3 +91,32 @@ export function categoryTranslations(nameIt: string): CategoryTranslationData {
   for (const suffix of LOCALE_SUFFIXES) data[`name${suffix}`] = names[suffix];
   return data;
 }
+
+export function slugify(input: string): string {
+  return input
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 80);
+}
+
+// Finds the manifest entry for a product row. Matching by the Italian name alone
+// misses databases where Product.name was later edited to English (as on
+// production), so fall back to the English name, then to the slug — the slug is
+// "<slugified Italian name>-<6 hex chars>" and never changes.
+export function findManifestEntry(
+  product: { name: string; slug?: string },
+  entries: ManifestEntry[]
+): ManifestEntry | undefined {
+  const byName = entries.find((entry) => entry.name === product.name);
+  if (byName) return byName;
+  const byEnglish = entries.find((entry) => entry.nameEn === product.name);
+  if (byEnglish) return byEnglish;
+  if (product.slug) {
+    const prefix = product.slug.replace(/-[0-9a-f]{6}$/i, "");
+    return entries.find((entry) => slugify(entry.name) === prefix);
+  }
+  return undefined;
+}

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { getStoreSettings } from "@/lib/store-settings";
 import { ogLocale, ogAlternateLocales } from "@/lib/hreflang";
-import { toSafeJsonLd } from "@/lib/json-ld";
+import { absoluteUrl, isPlaceholderCompany, toSafeJsonLd } from "@/lib/json-ld";
 import { isStripeConfigured } from "@/lib/stripe";
 import { isPaypalConfigured } from "@/lib/paypal";
 import { getLocale, localeDir } from "@/lib/i18n/locale";
@@ -92,8 +92,10 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
               "@type": "Organization",
               name: settings.storeName,
               url: siteUrl(settings),
-              ...(settings.logoUrl ? { logo: settings.logoUrl } : {}),
-              ...(settings.companyLegalName ? { legalName: settings.companyLegalName } : {}),
+              ...(settings.logoUrl ? { logo: absoluteUrl(settings.logoUrl, siteUrl(settings)) } : {}),
+              ...(!isPlaceholderCompany(settings.companyLegalName)
+                ? { legalName: settings.companyLegalName }
+                : {}),
               // The seed's placeholder (IT00000000000) must never be published as
               // a real VAT ID.
               ...(settings.vatNumber && !/^[A-Z]{2}0+$/.test(settings.vatNumber)
