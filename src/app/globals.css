@@ -3,7 +3,7 @@
 :root {
   color-scheme: light;
   --background: #ffffff;
-  --foreground: #1a2a33;
+  --foreground: #171717;
   --surface: #f6f1f9;
   --danger: #dc2626;
   --success: #15803d;
@@ -49,7 +49,9 @@ body {
 
 /* A thin band of the glass palette (violet, teal, rose, gold) on the edge of
    the header and footer — the one colorful thread that runs through every page. */
-.glass-rule,
+/* The header is already positioned (sticky) and would lose that to a
+   `position: relative` here, since unlayered CSS beats Tailwind's utilities;
+   only the footer needs a positioning context. */
 .glass-rule-top {
   position: relative;
 }
@@ -980,6 +982,11 @@ select,
 textarea,
 [role="button"] {
   touch-action: manipulation;
+}
+/* The header is sticky: keep it from covering whatever receives keyboard focus
+   or an in-page anchor (WCAG 2.2 "Focus Not Obscured"). */
+html {
+  scroll-padding-top: 8rem;
 }
 html {
   -webkit-tap-highlight-color: color-mix(in srgb, var(--color-primary) 14%, transparent);

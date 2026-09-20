@@ -207,7 +207,7 @@
   }
   .shelf-bead {
     justify-self: end;
-    margin-right: -6%;
+    margin-inline-end: -6%;
   }
 }
 
@@ -293,7 +293,7 @@
 .shelf-badge {
   position: absolute;
   top: 0.25rem;
-  left: 0;
+  inset-inline-start: 0;
   z-index: 1;
   background: var(--ink);
   color: var(--ground);
@@ -431,11 +431,16 @@
   transform: translateY(-0.12em) rotate(-45deg);
   transition: transform 0.15s ease;
 }
+/* Closed chevron points toward the reading direction. */
+[dir="rtl"] .shelf-faq summary::before {
+  transform: translateY(-0.12em) rotate(135deg);
+}
 .shelf-faq details[open] summary::before {
   transform: translateY(-0.2em) rotate(45deg);
 }
 .shelf-faq p {
-  margin: 0.75rem 0 0 1.25rem;
+  margin: 0.75rem 0 0;
+  margin-inline-start: 1.25rem;
   max-width: 62ch;
   color: var(--ink-soft);
 }
@@ -472,7 +477,7 @@
   color: var(--ink-soft);
 }
 .shelf-stars {
-  color: var(--aventurine);
+  color: #8a5a1c; /* darker aventurine: 3:1+ on the blush band */
   letter-spacing: 0.15em;
 }
 
