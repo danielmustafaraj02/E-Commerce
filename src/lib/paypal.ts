@@ -4,6 +4,7 @@
 // buyer approves payment on PayPal's own hosted page, so card/bank details
 // never touch this server.
 import { getStoreSettings } from "@/lib/store-settings";
+import type { PaypalCapture } from "@/lib/paypal-amount";
 
 const PAYPAL_API_BASE =
   process.env.NODE_ENV === "production"
@@ -109,7 +110,7 @@ export async function capturePaypalOrder(paypalOrderId: string) {
     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
   });
   if (!res.ok) throw new Error(`PayPal capture failed: ${await res.text()}`);
-  return res.json() as Promise<{ status: string }>;
+  return res.json() as Promise<PaypalCapture>;
 }
 
 // Verifies the webhook actually came from PayPal — never trust an

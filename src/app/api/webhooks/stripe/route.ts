@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { getStripe, getStripeWebhookSecret } from "@/lib/stripe";
 import { captureError } from "@/lib/monitoring";
 import { sendOrderStatusEmail } from "@/lib/email";
+import { applyPaidToOrder } from "@/lib/order-payment";
 
 // The only place an order is trusted to actually be paid — never rely on
 // the client-side redirect alone (a buyer can close the tab, spoof the
@@ -38,24 +39,50 @@ export async function POST(request: Request) {
     const orderNumber = session.metadata?.orderNumber;
     if (!orderNumber || session.payment_status !== "paid") return;
 
-    const paidOrder = await db.$transaction(async (tx) => {
-      const order = await tx.order.findUnique({
-        where: { orderNumber },
-        include: { user: { select: { email: true } } },
-      });
-      if (!order || order.status !== "pending") return null;
+    const applied = await db.$transaction(async (tx) => {
+      const result = await applyPaidToOrder(
+        tx,
+        { orderNumber },
+        session.amount_total !== null && session.currency
+          ? { amount: session.amount_total, currency: session.currency }
+          : undefined
+      );
 
-      await tx.order.update({ where: { id: order.id }, data: { status: "paid" } });
-      await tx.payment.updateMany({
-        where: { orderId: order.id, provider: "stripe", providerTransactionId: session.id },
-        data: {
-          status: "succeeded",
-          providerTransactionId:
-            typeof session.payment_intent === "string" ? session.payment_intent : session.id,
-        },
-      });
-      return order;
+      // Money really was collected in all three of these, so record it on the
+      // Payment row even when the order itself couldn't be marked paid —
+      // otherwise a paid-after-cancel order would show no trace of the money.
+      if (
+        result.outcome === "paid" ||
+        result.outcome === "already_settled" ||
+        result.outcome === "paid_after_cancel"
+      ) {
+        await tx.payment.updateMany({
+          where: {
+            orderId: result.order.id,
+            provider: "stripe",
+            providerTransactionId: session.id,
+          },
+          data: {
+            status: "succeeded",
+            providerTransactionId:
+              typeof session.payment_intent === "string" ? session.payment_intent : session.id,
+          },
+        });
+      }
+      return result;
     });
+
+    // These need a person, and retrying the webhook can't change the outcome —
+    // so report them loudly but answer 200 instead of making Stripe retry.
+    if (applied.outcome !== "paid" && applied.outcome !== "already_settled") {
+      captureError(new Error(`Stripe payment needs manual review: ${applied.outcome}`), {
+        scope: "stripe-webhook-unsettled-payment",
+        orderNumber,
+        sessionId: session.id,
+        outcome: applied.outcome,
+      });
+    }
+    const paidOrder = applied.outcome === "paid" ? applied.order : null;
 
     // Outside the transaction (a slow email provider shouldn't hold it
     // open) and in its own try/catch: the order is already correctly

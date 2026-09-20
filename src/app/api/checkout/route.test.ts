@@ -1,0 +1,149 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+const mocks = vi.hoisted(() => ({
+  quoteOrder: vi.fn(),
+  cancelExpiredOrders: vi.fn(),
+  notifyCancelledOrders: vi.fn(),
+  afterCallbacks: [] as (() => unknown)[],
+  txUpdateStock: vi.fn(),
+}));
+
+vi.mock("next/server", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("next/server")>()),
+  after: (fn: () => unknown) => mocks.afterCallbacks.push(fn),
+}));
+vi.mock("@/auth", () => ({ auth: async () => null }));
+vi.mock("@/lib/rate-limit", () => ({
+  rateLimit: async () => ({ success: true, remaining: 9 }),
+  clientIp: () => "203.0.113.7",
+}));
+vi.mock("@/lib/turnstile", () => ({ verifyTurnstile: async () => true }));
+vi.mock("@/lib/pricing", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/pricing")>()),
+  quoteOrder: mocks.quoteOrder,
+}));
+vi.mock("@/lib/abandoned-orders", () => ({
+  cancelExpiredOrders: mocks.cancelExpiredOrders,
+  notifyCancelledOrders: mocks.notifyCancelledOrders,
+}));
+vi.mock("@/lib/db", () => {
+  const tx = {
+    product: { updateMany: mocks.txUpdateStock },
+    address: { create: async () => ({ id: "addr1" }) },
+    discountCode: { update: async () => ({}) },
+    order: { create: async ({ data }: { data: { orderNumber: string } }) => data },
+  };
+  return { db: { $transaction: (fn: (t: typeof tx) => unknown) => fn(tx) } };
+});
+
+import { PricingError } from "@/lib/pricing";
+import { POST } from "./route";
+
+const quote = {
+  lines: [
+    {
+      quantity: 1,
+      product: {
+        id: "p1",
+        name: "Ruby Necklace",
+        price: 5000,
+        trackInventory: true,
+        supplierId: null,
+        costPrice: null,
+      },
+    },
+  ],
+  subtotal: 5000,
+  taxAmount: 0,
+  taxRatePercent: null,
+  shippingAmount: 0,
+  discountAmount: 0,
+  total: 5000,
+  currency: "EUR",
+  discountCodeId: null,
+  shippingMethod: { id: "ship1" },
+};
+
+function checkout() {
+  return POST(
+    new Request("https://shop.test/api/checkout", {
+      method: "POST",
+      body: JSON.stringify({
+        items: [{ productId: "p1", quantity: 1 }],
+        guestEmail: "buyer@example.com",
+        address: {
+          fullName: "A Buyer",
+          street: "Via Roma 1",
+          city: "Roma",
+          postalCode: "00100",
+          country: "IT",
+        },
+        shippingMethodId: "ship1",
+      }),
+    })
+  );
+}
+
+const outOfStock = () => new PricingError("Ruby Necklace only has 0 left in stock", 409);
+
+beforeEach(() => {
+  vi.resetAllMocks();
+  mocks.afterCallbacks.length = 0;
+  mocks.quoteOrder.mockResolvedValue(quote);
+  mocks.txUpdateStock.mockResolvedValue({ count: 1 });
+});
+
+describe("POST /api/checkout stock conflicts", () => {
+  it("places the order normally when stock is available", async () => {
+    const res = await checkout();
+
+    expect(res.status).toBe(201);
+    expect(mocks.cancelExpiredOrders).not.toHaveBeenCalled();
+  });
+
+  it("releases expired reservations and retries once when an item looks out of stock", async () => {
+    mocks.quoteOrder.mockRejectedValueOnce(outOfStock());
+    const released = [{ orderNumber: "ORD-OLD", guestEmail: "old@example.com", user: null }];
+    mocks.cancelExpiredOrders.mockResolvedValue(released);
+
+    const res = await checkout();
+
+    expect(res.status).toBe(201);
+    expect(mocks.quoteOrder).toHaveBeenCalledTimes(2);
+    // The released customers are told after this request has been answered.
+    expect(mocks.notifyCancelledOrders).not.toHaveBeenCalled();
+    mocks.afterCallbacks.forEach((fn) => fn());
+    expect(mocks.notifyCancelledOrders).toHaveBeenCalledWith(released);
+  });
+
+  it("also retries when the stock decrement itself loses the race", async () => {
+    mocks.txUpdateStock.mockResolvedValueOnce({ count: 0 });
+    mocks.cancelExpiredOrders.mockResolvedValue([
+      { orderNumber: "ORD-OLD", guestEmail: null, user: null },
+    ]);
+
+    const res = await checkout();
+
+    expect(res.status).toBe(201);
+    expect(mocks.cancelExpiredOrders).toHaveBeenCalledOnce();
+  });
+
+  it("reports out-of-stock when there was nothing to release", async () => {
+    mocks.quoteOrder.mockRejectedValue(outOfStock());
+    mocks.cancelExpiredOrders.mockResolvedValue([]);
+
+    const res = await checkout();
+
+    expect(res.status).toBe(409);
+    expect(mocks.quoteOrder).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not go looking for expired orders on other pricing errors", async () => {
+    mocks.quoteOrder.mockRejectedValue(new PricingError("Invalid discount code", 400));
+
+    const res = await checkout();
+
+    expect(res.status).toBe(400);
+    expect(mocks.cancelExpiredOrders).not.toHaveBeenCalled();
+  });
+});

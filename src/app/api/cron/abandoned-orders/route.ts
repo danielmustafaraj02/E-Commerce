@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { processAbandonedOrders } from "@/lib/abandoned-orders";
 import { captureError } from "@/lib/monitoring";
 
-// Triggered hourly by vercel.json's cron entry, which Vercel calls with
+// Triggered daily by vercel.json's cron entry (checkout also releases expired
+// holds on demand, so a daily run is enough), which Vercel calls with
 // `Authorization: Bearer $CRON_SECRET` automatically when CRON_SECRET is set
 // as an env var — see README §Abandoned cart recovery. Any other trigger
 // (external cron, GitHub Actions) must send that same header.

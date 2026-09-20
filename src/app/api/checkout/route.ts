@@ -1,5 +1,5 @@
 import { randomBytes } from "node:crypto";
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
@@ -7,6 +7,7 @@ import { quoteOrder, PricingError } from "@/lib/pricing";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { isValidPostalCode } from "@/lib/postal-code";
+import { cancelExpiredOrders, notifyCancelledOrders } from "@/lib/abandoned-orders";
 
 const checkoutSchema = z.object({
   items: z
@@ -69,7 +70,7 @@ export async function POST(request: Request) {
     );
   }
 
-  try {
+  async function placeOrder() {
     const quote = await quoteOrder({
       items: input.items,
       country: input.address.country,
@@ -149,6 +150,23 @@ export async function POST(request: Request) {
         },
       });
     });
+    return order;
+  }
+
+  try {
+    let order;
+    try {
+      order = await placeOrder();
+    } catch (error) {
+      // Out-of-stock can just mean expired unpaid orders are still holding the
+      // stock (the cron may only run daily). Release those and try once more
+      // before telling a real customer the item is gone.
+      if (!(error instanceof PricingError) || error.status !== 409) throw error;
+      const released = await cancelExpiredOrders();
+      if (released.length === 0) throw error;
+      after(() => notifyCancelledOrders(released));
+      order = await placeOrder();
+    }
 
     return NextResponse.json({ orderNumber: order.orderNumber }, { status: 201 });
   } catch (error) {
