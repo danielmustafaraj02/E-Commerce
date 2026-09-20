@@ -22,13 +22,13 @@ self-service (data export, account deletion, MFA, password reset).
 
 **Admin** (`/admin`) — a top bar of sections, each with its own sidebar:
 
-| Section | Pages |
-| --- | --- |
-| Overview | Dashboard, SEO & indexing checklist |
-| Catalog | Products, categories, suppliers (dropshipping) |
-| Sales | Orders, discounts, returns, shipping zones/methods, tax rules |
-| Customers | Customers, newsletter campaigns |
-| Planning | Roadmap (an in-app to-do list) |
+| Section                 | Pages                                                             |
+| ----------------------- | ----------------------------------------------------------------- |
+| Overview                | Dashboard, SEO & indexing checklist                               |
+| Catalog                 | Products, categories, suppliers (dropshipping)                    |
+| Sales                   | Orders, discounts, returns, shipping zones/methods, tax rules     |
+| Customers               | Customers, newsletter campaigns                                   |
+| Planning                | Roadmap (an in-app to-do list)                                    |
 | Settings _(admin only)_ | Store settings, payments, integrations, team & roles, legal pages |
 
 Staff accounts get everything except the Settings section.
@@ -39,17 +39,17 @@ of the catalog; see [Languages](#languages).
 
 ## Stack
 
-| Concern | Choice |
-| --- | --- |
-| Framework | Next.js 16 (App Router, Turbopack), React 19, Tailwind 4 |
-| Database | Postgres via Prisma 7 (Neon in production) |
-| Auth | Auth.js v5 — email + password, optional Google, optional TOTP MFA |
-| Payments | Stripe Checkout and PayPal (hosted pages — no card data on this server) |
-| Email | Resend + React Email templates |
-| Bot protection | Cloudflare Turnstile (optional) |
-| Rate limiting | Upstash Redis (in-memory fallback when unset) |
-| Monitoring | Sentry (optional), `/api/health` for uptime checks |
-| Hosting | Vercel |
+| Concern        | Choice                                                                  |
+| -------------- | ----------------------------------------------------------------------- |
+| Framework      | Next.js 16 (App Router, Turbopack), React 19, Tailwind 4                |
+| Database       | Postgres via Prisma 7 (Neon in production)                              |
+| Auth           | Auth.js v5 — email + password, optional Google, optional TOTP MFA       |
+| Payments       | Stripe Checkout and PayPal (hosted pages — no card data on this server) |
+| Email          | Resend + React Email templates                                          |
+| Bot protection | Cloudflare Turnstile (optional)                                         |
+| Rate limiting  | Upstash Redis (in-memory fallback when unset)                           |
+| Monitoring     | Sentry (optional), `/api/health` for uptime checks                      |
+| Hosting        | Vercel                                                                  |
 
 > **Next.js 16 differs from older versions.** `AGENTS.md` asks contributors (and
 > AI assistants) to read the guides in `node_modules/next/dist/docs/` before
@@ -68,10 +68,16 @@ npx tsx scripts/seed-murano-catalog.ts   # the product catalog, from public/prod
 npm run dev                              # http://localhost:3000
 ```
 
-`db:seed` creates `admin@demo-store.example` / `ChangeMe123!` (see
-`prisma/seed.ts`). **Change that password immediately** — and never seed a
-production database with it. Admin and staff accounts must enroll in MFA on first
-sign-in (Account → Security).
+`db:seed` creates an admin account, `admin@demo-store.example` by default. There
+is **no built-in password**: set `SEED_ADMIN_PASSWORD` (12–72 characters) and
+optionally `SEED_ADMIN_EMAIL`, or let the seed generate a random password and
+print it once. Admin and staff accounts must enroll in MFA on first sign-in
+(Account → Security).
+
+The seed **refuses to run when `NODE_ENV=production`** — it creates demo data. If
+you seeded a database with an older version of this repo, that admin still has
+the old published password: re-run the seed with `SEED_RESET_ADMIN=1` to replace
+it (this also signs out any session using the old one).
 
 Need a local Postgres? Any 14+ instance works; put its URL in `DATABASE_URL`.
 
@@ -79,29 +85,29 @@ Need a local Postgres? Any 14+ instance works; put its URL in `DATABASE_URL`.
 
 ## Configuration
 
-Copy `.env.example` to `.env`. Most integrations can *also* be configured at
+Copy `.env.example` to `.env`. Most integrations can _also_ be configured at
 runtime in **Admin → Settings → Payments / Integrations**; a value saved there
 takes precedence over the environment variable of the same name. Anything marked
 optional degrades gracefully when unset (logs instead of failing), but a public
 launch needs the ones marked ★.
 
-| Variable | Purpose |
-| --- | --- |
-| `DATABASE_URL` ★ | Postgres connection string |
-| `AUTH_SECRET` ★ | Signs sessions and the login proof cookie — `npx auth secret` |
-| `NEXTAUTH_URL` ★ | Public site URL (fallback for absolute links) |
-| `STRIPE_SECRET_KEY` · `STRIPE_PUBLISHABLE_KEY` · `STRIPE_WEBHOOK_SECRET` ★ | Card/wallet payments |
-| `PAYPAL_CLIENT_ID` · `PAYPAL_CLIENT_SECRET` · `PAYPAL_WEBHOOK_ID` | PayPal payments |
-| `RESEND_API_KEY` · `EMAIL_FROM` ★ | Order, verification and password-reset emails |
-| `CRON_SECRET` ★ | Authenticates the daily abandoned-order cron |
-| `UPSTASH_REDIS_REST_URL` · `UPSTASH_REDIS_REST_TOKEN` ★ | Shared rate limiting (the in-memory fallback is per-instance) |
-| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` · `TURNSTILE_SECRET_KEY` | Captcha on login, register, contact, checkout |
-| `SENTRY_DSN` ★ | Error alerts — also how "needs manual review" payment problems reach you |
-| `GOOGLE_CLIENT_ID` · `GOOGLE_CLIENT_SECRET` | Optional Google sign-in |
-| `ADMIN_SESSION_MAX_AGE_MINUTES` | Forces admin/staff to re-authenticate (default 240) |
-| `ABANDONED_ORDER_REMINDER_HOURS` · `ABANDONED_ORDER_EXPIRE_HOURS` | Reminder (default 1h) and stock-hold length for unpaid card/PayPal orders (default 2h) |
-| `BANK_TRANSFER_HOLD_DAYS` | Stock hold for bank-transfer orders (default 5 days) |
-| `NEXT_PUBLIC_IMAGE_HOSTS` | Extra remote image hosts to optimize (see [Notes](#notes)) |
+| Variable                                                                   | Purpose                                                                                |
+| -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `DATABASE_URL` ★                                                           | Postgres connection string                                                             |
+| `AUTH_SECRET` ★                                                            | Signs sessions and the login proof cookie — `npx auth secret`                          |
+| `NEXTAUTH_URL` ★                                                           | Public site URL (fallback for absolute links)                                          |
+| `STRIPE_SECRET_KEY` · `STRIPE_PUBLISHABLE_KEY` · `STRIPE_WEBHOOK_SECRET` ★ | Card/wallet payments                                                                   |
+| `PAYPAL_CLIENT_ID` · `PAYPAL_CLIENT_SECRET` · `PAYPAL_WEBHOOK_ID`          | PayPal payments                                                                        |
+| `RESEND_API_KEY` · `EMAIL_FROM` ★                                          | Order, verification and password-reset emails                                          |
+| `CRON_SECRET` ★                                                            | Authenticates the daily abandoned-order cron                                           |
+| `UPSTASH_REDIS_REST_URL` · `UPSTASH_REDIS_REST_TOKEN` ★                    | Shared rate limiting (the in-memory fallback is per-instance)                          |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` · `TURNSTILE_SECRET_KEY`                  | Captcha on login, register, contact, checkout                                          |
+| `SENTRY_DSN` ★                                                             | Error alerts — also how "needs manual review" payment problems reach you               |
+| `GOOGLE_CLIENT_ID` · `GOOGLE_CLIENT_SECRET`                                | Optional Google sign-in                                                                |
+| `ADMIN_SESSION_MAX_AGE_MINUTES`                                            | Forces admin/staff to re-authenticate (default 240)                                    |
+| `ABANDONED_ORDER_REMINDER_HOURS` · `ABANDONED_ORDER_EXPIRE_HOURS`          | Reminder (default 1h) and stock-hold length for unpaid card/PayPal orders (default 2h) |
+| `BANK_TRANSFER_HOLD_DAYS`                                                  | Stock hold for bank-transfer orders (default 5 days)                                   |
+| `NEXT_PUBLIC_IMAGE_HOSTS`                                                  | Extra remote image hosts to optimize (see [Notes](#notes))                             |
 
 ---
 
@@ -128,28 +134,29 @@ Tests live next to the code they cover (`*.test.ts`).
 
 ## Scripts
 
-| Command | What it does |
-| --- | --- |
-| `npm run dev` · `build` · `start` | Dev server · production build (runs `prisma migrate deploy` first) · run the build |
-| `npm run lint` · `typecheck` | ESLint · TypeScript |
-| `npm test` · `test:watch` | Vitest once · watch |
-| `npm run format` · `format:check` | Prettier |
-| `npm run db:migrate` · `db:seed` · `db:studio` | Migrations · seed · Prisma Studio |
+| Command                                        | What it does                                                                       |
+| ---------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `npm run dev` · `build` · `start`              | Dev server · production build (runs `prisma migrate deploy` first) · run the build |
+| `npm run lint` · `typecheck`                   | ESLint · TypeScript                                                                |
+| `npm test` · `test:watch`                      | Vitest once · watch                                                                |
+| `npm run format` · `format:check`              | Prettier                                                                           |
+| `npm run db:migrate` · `db:seed` · `db:studio` | Migrations · seed · Prisma Studio                                                  |
 
 **Catalog scripts** (`npx tsx scripts/<name>.ts [--dry-run]`) — all read
 `scripts/murano-manifest.json`:
 
-| Script | Use it to |
-| --- | --- |
-| `seed-murano-catalog` | Create the catalog on a fresh database |
-| `apply-product-i18n` | Fill translated names/descriptions (all 10 non-Italian locales) on an existing catalog |
-| `update-product-descriptions` | Push edited manifest text to existing products |
+| Script                        | Use it to                                                                              |
+| ----------------------------- | -------------------------------------------------------------------------------------- |
+| `seed-murano-catalog`         | Create the catalog on a fresh database                                                 |
+| `apply-product-i18n`          | Fill translated names/descriptions (all 10 non-Italian locales) on an existing catalog |
+| `update-product-descriptions` | Push edited manifest text to existing products                                         |
 
 ---
 
 ## How it works
 
 ### Checkout, payments and stock
+
 - **Pricing is server-side.** `lib/pricing.ts` re-reads products, shipping and tax
   from the DB; client prices are never trusted.
 - Placing an order creates it as `pending` and **reserves stock** immediately.
@@ -165,6 +172,7 @@ Tests live next to the code they cover (`*.test.ts`).
   only for a payment we created for that exact order, and only if the amount matches.
 
 ### Accounts and sessions
+
 - Sessions are JWTs, **re-checked against the database on every read**
   (`lib/session-refresh.ts`): a demoted user drops to their new role immediately,
   a deleted user is signed out, and a password reset ends every earlier session.
@@ -177,12 +185,14 @@ Tests live next to the code they cover (`*.test.ts`).
   captcha can't be skipped by sending a dummy code.
 
 ### Privacy
+
 - The cookie banner's **analytics** choice controls Vercel Analytics and Speed
   Insights: nothing loads until a visitor accepts. The "marketing" choice is
   stored for consent records; no marketing scripts exist yet.
 - `/api/account/export` (data export) and account deletion are self-service.
 
 ### Languages
+
 - **UI text:** `src/lib/i18n/dictionaries.ts`. TypeScript enforces every locale
   has every key; `dictionaries.test.ts` also checks placeholders, script mixing,
   and that Portuguese stays European (`pt-PT`) and German stays formal.
@@ -195,6 +205,7 @@ Tests live next to the code they cover (`*.test.ts`).
   [What to do next](#what-to-do-next) for why that limits SEO.
 
 ### SEO and AI discoverability
+
 Per-page titles/descriptions/canonicals and OpenGraph; JSON-LD for Organization,
 WebSite, Product (offer, availability, shipping, returns, ratings when reviews
 exist), BreadcrumbList, ItemList, FAQ and HowTo; `sitemap.xml`, `robots.txt`,
@@ -209,8 +220,10 @@ policies for AI assistants. Private and utility pages are `noindex`.
 1. Create a Postgres database (Neon via the Vercel Marketplace works well).
 2. Set the environment variables above (★ ones at minimum) in Vercel.
 3. `npm run build` runs `prisma migrate deploy`, so migrations apply on deploy.
-4. **Do not run `db:seed` against production** — it creates a known admin
-   password. Create your admin account another way, then run
+4. **Do not run `db:seed` against production** (it refuses to). Create your admin
+   account another way — for example seed a scratch database with a strong
+   `SEED_ADMIN_PASSWORD` and copy the row, or insert the user with a bcrypt hash
+   and `role = 'admin'` — then run
    `npx tsx scripts/seed-murano-catalog.ts` and `apply-product-i18n.ts` if you
    want the sample catalog.
 5. Register the webhooks: Stripe → `/api/webhooks/stripe`
@@ -258,8 +271,10 @@ verify those manually in test mode before launch.
 Ordered by how much they matter for a real launch.
 
 ### Before you take real orders
-- [ ] **Never ship the seeded admin login.** Change `prisma/seed.ts` to take the
-      admin password from an env var (or refuse to run when `NODE_ENV=production`).
+
+- [x] ~~Never ship the seeded admin login~~ — the seed now uses `SEED_ADMIN_PASSWORD`
+      or a generated password, and refuses to run in production. **If you seeded any
+      database earlier, run the seed once with `SEED_RESET_ADMIN=1`.**
 - [ ] **Set real stock levels.** The QA log records every product at `stockQty: 0`,
       which shows "out of stock" everywhere and marks all products `OutOfStock` in
       structured data.
@@ -280,6 +295,7 @@ Ordered by how much they matter for a real launch.
       (neither could be exercised without a running database).
 
 ### High-impact improvements
+
 - [ ] **Locale-prefixed URLs** (`/it/…`, `/de/…`). Today every language shares one
       URL, so search engines only ever see English and the translations can't
       rank; hreflang points at the same URL. This is the biggest SEO lever.
@@ -295,6 +311,7 @@ Ordered by how much they matter for a real launch.
 - [ ] **Step-up MFA for Google sign-in** if admins should be able to use Google.
 
 ### Later
+
 - [ ] Image uploads (e.g. Vercel Blob) instead of pasting URLs.
 - [ ] Localize the transactional emails (they are English only).
 - [ ] Browser end-to-end tests for checkout and the admin.
