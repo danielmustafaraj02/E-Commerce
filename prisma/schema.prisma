@@ -120,6 +120,9 @@ model User {
   mfaEnabled      Boolean @default(false)
   failedLoginCount Int    @default(0)
   lockedUntil     DateTime?
+  // Set whenever the password changes (reset flow). Sessions issued before this
+  // moment are rejected — see src/lib/session-refresh.ts.
+  passwordChangedAt DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -152,6 +155,7 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -160,6 +164,8 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model VerificationToken {
@@ -168,6 +174,7 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+  @@index([identifier])
 }
 
 // ---------------------------------------------------------------------------
@@ -197,6 +204,8 @@ model Category {
 
   products Product[]
   taxRules TaxRule[]
+
+  @@index([parentId])
 }
 
 model Product {
@@ -256,6 +265,10 @@ model Product {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([categoryId])
+  @@index([supplierId])
+  @@index([active, createdAt])
 }
 
 // ---------------------------------------------------------------------------
@@ -296,6 +309,9 @@ model Fulfillment {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([orderId])
+  @@index([supplierId])
 }
 
 model ProductImage {
@@ -305,6 +321,8 @@ model ProductImage {
   url       String
   altText   String  @default("")
   position  Int     @default(0)
+
+  @@index([productId, position])
 }
 
 model Review {
@@ -318,6 +336,7 @@ model Review {
   createdAt DateTime @default(now())
 
   @@unique([productId, userId])
+  @@index([userId])
 }
 
 model WishlistItem {
@@ -329,6 +348,7 @@ model WishlistItem {
   createdAt DateTime @default(now())
 
   @@unique([productId, userId])
+  @@index([userId])
 }
 
 // ---------------------------------------------------------------------------
@@ -348,6 +368,8 @@ model Address {
   isDefault  Boolean @default(false)
 
   orders Order[]
+
+  @@index([userId])
 }
 
 // ---------------------------------------------------------------------------
@@ -382,6 +404,7 @@ model ShippingZoneCountry {
   country String // ISO 3166-1 alpha-2
 
   @@unique([zoneId, country])
+  @@index([country])
 }
 
 model ShippingZoneMethod {
@@ -392,6 +415,7 @@ model ShippingZoneMethod {
   method   ShippingMethod @relation(fields: [methodId], references: [id], onDelete: Cascade)
 
   @@unique([zoneId, methodId])
+  @@index([methodId])
 }
 
 // ---------------------------------------------------------------------------
@@ -406,6 +430,9 @@ model TaxRule {
   name        String // e.g. "IVA standard", "IVA ridotta"
   categoryId  String? // null = applies store-wide for this country/region
   category    Category? @relation(fields: [categoryId], references: [id])
+
+  @@index([country])
+  @@index([categoryId])
 }
 
 // ---------------------------------------------------------------------------
@@ -458,6 +485,13 @@ model Order {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status, createdAt])
+  @@index([createdAt])
+  @@index([addressId])
+  @@index([shippingMethodId])
+  @@index([discountCodeId])
 }
 
 model OrderItem {
@@ -477,6 +511,10 @@ model OrderItem {
 
   fulfillmentId String?
   fulfillment   Fulfillment? @relation(fields: [fulfillmentId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+  @@index([fulfillmentId])
 }
 
 model Payment {
@@ -489,6 +527,8 @@ model Payment {
   amount                Int // cents
   currency              String  @default("EUR")
   createdAt             DateTime @default(now())
+
+  @@index([orderId])
 }
 
 model DiscountCode {
@@ -516,6 +556,9 @@ model ReturnRequest {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([orderId])
+  @@index([userId])
 }
 
 // ---------------------------------------------------------------------------
@@ -538,6 +581,8 @@ model ConsentLog {
   consentType String // functional | analytics | marketing
   granted     Boolean
   createdAt   DateTime @default(now())
+
+  @@index([userId])
 }
 
 // Marketing email list — deliberately separate from ConsentLog (which is
@@ -563,6 +608,9 @@ model AuditLog {
   afterData  String? // JSON snapshot
   ipAddress  String?
   createdAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
 }
 
 // Internal "what still needs doing" backlog for Admin > Roadmap — staff jot
