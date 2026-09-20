@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { getStoreSettings } from "@/lib/store-settings";
 import { getHomepageData } from "@/lib/homepage-data";
 import { getLocale } from "@/lib/i18n/locale";
@@ -10,22 +9,11 @@ import { localizedName, localizedCardProduct } from "@/lib/product-i18n";
 import { formatMoney } from "@/lib/format";
 import { toSafeJsonLd } from "@/lib/json-ld";
 import { hreflangAlternates } from "@/lib/hreflang";
-import { ProductCard } from "@/components/product-card";
-import { Reveal } from "@/components/reveal";
-import { TrustBadges } from "@/components/trust-badges";
+import { CatalogImage } from "@/components/catalog-image";
+import { ShelfItem } from "@/components/shelf-item";
 import { NewsletterSignupForm } from "@/components/newsletter-signup-form";
-
-// Swiper pulls in a non-trivial client bundle — each shelf that needs it
-// gets its own chunk instead of bloating the shared homepage bundle.
-const BestSellersCarousel = dynamic(() =>
-  import("@/components/best-sellers-carousel").then((mod) => mod.BestSellersCarousel)
-);
-const CategoryCarousel = dynamic(() =>
-  import("@/components/category-carousel").then((mod) => mod.CategoryCarousel)
-);
-const TestimonialsCarousel = dynamic(() =>
-  import("@/components/testimonials-carousel").then((mod) => mod.TestimonialsCarousel)
-);
+import { homeFontClasses } from "./home-fonts";
+import "./home.css";
 
 // Title/description/OG come from the root layout; only the canonical and
 // hreflang set live here, so pages that don't define their own no longer
@@ -33,6 +21,9 @@ const TestimonialsCarousel = dynamic(() =>
 export const metadata: Metadata = {
   alternates: { canonical: "/", languages: hreflangAlternates("/") },
 };
+
+// The number of pieces shown per shelf: one row at the widest layout.
+const SHELF_SIZE = 4;
 
 export default async function Home() {
   const [settings, locale, { products, categoriesWithImage, bestSellers, reviews }] =
@@ -56,7 +47,12 @@ export default async function Home() {
   const homeFaq = [
     ...dict.home.faq,
     ...(freeShippingAmount
-      ? [{ question: dict.home.faqShippingQuestion, answer: dict.home.faqShippingAnswer(freeShippingAmount) }]
+      ? [
+          {
+            question: dict.home.faqShippingQuestion,
+            answer: dict.home.faqShippingAnswer(freeShippingAmount),
+          },
+        ]
       : []),
   ];
   // Direct-answer FAQ content, marked up as FAQPage — the format AI answer
@@ -75,268 +71,205 @@ export default async function Home() {
     })),
   };
 
-  return (
-    <main className="flex flex-1 flex-col">
-      <section className="bg-surface relative overflow-hidden">
-        <div className="hero-glass-bg" aria-hidden="true">
-          <span />
-        </div>
-        <div className="relative z-10 mx-auto grid w-full max-w-5xl items-center gap-10 px-4 py-16 sm:grid-cols-2 sm:py-20">
-          <div className="flex flex-col gap-4">
-            <p className="animate-fade-up text-primary text-sm font-medium">
-              {dict.home.heroEyebrow}
-            </p>
-            <h1
-              style={{ "--reveal-delay": "80ms" } as React.CSSProperties}
-              className="animate-fade-up text-4xl font-semibold sm:text-5xl"
-            >
-              <span translate="no">{settings.storeName}</span>
-            </h1>
-            <p
-              style={{ "--reveal-delay": "160ms" } as React.CSSProperties}
-              className="animate-fade-up text-foreground/70 max-w-md"
-            >
-              {dict.home.heroSubtitle}
-            </p>
-            {settings.pricesIncludeTax && (
-              <p
-                style={{ "--reveal-delay": "220ms" } as React.CSSProperties}
-                className="animate-fade-up text-foreground/50 text-sm"
-              >
-                {dict.home.pricesIncludeTax}
-              </p>
-            )}
-            <Link
-              href="/products"
-              style={{ "--reveal-delay": "280ms" } as React.CSSProperties}
-              className="btn-primary animate-fade-up mt-2 w-fit"
-            >
-              {dict.home.shopNow}
-            </Link>
-            <div
-              style={{ "--reveal-delay": "340ms" } as React.CSSProperties}
-              className="animate-fade-up"
-            >
-              <TrustBadges trustBadgeText={settings.trustBadgeText} dict={dict.product} />
-            </div>
-          </div>
+  const shelfProps = {
+    locale: settings.defaultLocale,
+    outOfStockLabel: dict.product.outOfStock,
+    quickAddLabel: dict.product.addToCart,
+    addedLabel: dict.product.added,
+  };
+  const points = [
+    { title: dict.home.whyShipping, body: dict.home.whyShippingBody },
+    { title: dict.home.whySecure, body: dict.home.whySecureBody },
+    { title: dict.home.whyReturns, body: dict.home.whyReturnsBody },
+  ];
+  const facts = [
+    settings.trustBadgeText,
+    dict.product.returnsBadge,
+    dict.product.secureBadge,
+  ].filter(Boolean);
 
-          <div className="relative aspect-square w-full overflow-hidden rounded-2xl shadow-lg">
-            <Image
-              src="/hero/perla-viola-murano.jpg"
-              alt=""
-              fill
-              priority
-              sizes="(min-width: 640px) 50vw, 100vw"
-              className="object-cover"
-            />
+  // The design (app/home.css) is scoped to `.shelf`: the glass is the only
+  // saturated thing on the page, and the product photos are blended straight
+  // into the ground instead of sitting in cards.
+  return (
+    <main className={`shelf flex flex-1 flex-col ${homeFontClasses}`}>
+      <section className="shelf-hero">
+        <div className="shelf-wrap">
+          <div className="shelf-hero-grid">
+            <div className="shelf-hero-copy">
+              <h1 className="shelf-title">
+                <span translate="no">{settings.storeName}</span>
+              </h1>
+              <p className="shelf-lede">{dict.home.heroSubtitle}</p>
+              {settings.pricesIncludeTax && (
+                <p className="shelf-note">{dict.home.pricesIncludeTax}</p>
+              )}
+              <Link href="/products" className="shelf-button">
+                {dict.home.shopNow}
+              </Link>
+              <ul className="shelf-facts">
+                {facts.map((fact) => (
+                  <li key={fact}>{fact}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="shelf-bead">
+              <Image
+                src="/hero/perla-viola-murano.jpg"
+                alt=""
+                fill
+                priority
+                sizes="(min-width: 52rem) 36vw, 100vw"
+              />
+            </div>
           </div>
         </div>
       </section>
 
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-16 px-4 py-16">
-        {bestSellers.length > 0 && (
-          <Reveal>
-            <section>
-              <h2 className="mb-4 text-lg font-medium">{dict.home.bestSellers}</h2>
-              <BestSellersCarousel
-                products={bestSellers.map((p) => localizedCardProduct(p, locale))}
-                locale={settings.defaultLocale}
-                outOfStockLabel={dict.product.outOfStock}
-                quickAddLabel={dict.product.addToCart}
-                addedLabel={dict.product.added}
-                prevLabel={dict.home.previousSlide}
-                nextLabel={dict.home.nextSlide}
-              />
-            </section>
-          </Reveal>
-        )}
-
-        {categoriesWithImage.length > 0 && (
-          <Reveal>
-            <section>
-              <h2 className="mb-4 text-lg font-medium">{dict.home.shopByCategory}</h2>
-              <CategoryCarousel
-                categories={categoriesWithImage.map((c) => ({ ...c, name: localizedName(c, locale) }))}
-                prevLabel={dict.home.previousSlide}
-                nextLabel={dict.home.nextSlide}
-              />
-            </section>
-          </Reveal>
-        )}
-
-        {products.length > 0 && (
-          <Reveal>
-            <section>
-              <h2 className="mb-4 text-lg font-medium">{dict.home.newArrivals}</h2>
-              <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
-                {products.map((product, i) => (
-                  <Reveal key={product.slug} delayMs={i * 60}>
-                    <ProductCard
-                      product={localizedCardProduct(product, locale)}
-                      locale={settings.defaultLocale}
-                      outOfStockLabel={dict.product.outOfStock}
-                      quickAddLabel={dict.product.addToCart}
-                      addedLabel={dict.product.added}
-                    />
-                  </Reveal>
-                ))}
-              </div>
-            </section>
-          </Reveal>
-        )}
-
-        <Reveal>
-          <section>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/home/bead-garland.svg"
-              alt=""
-              width={1200}
-              height={90}
-              loading="lazy"
-              aria-hidden="true"
-              className="mb-6 h-16 w-full opacity-80 sm:h-20"
-            />
-            <h2 className="mb-6 text-lg font-medium">{dict.home.whyUsTitle}</h2>
-            <div className="grid gap-6 sm:grid-cols-3">
-              <div className="border-foreground/10 rounded-lg border p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
-                <div
-                  className="animate-badge-breathe mb-3 flex h-10 w-10 items-center justify-center rounded-full"
-                  style={{
-                    background: "color-mix(in srgb, #f5c451 22%, transparent)",
-                    "--badge-delay": "0ms",
-                  } as React.CSSProperties}
-                  aria-hidden="true"
-                >
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#b8860b"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M3 7h11v9H3z" />
-                    <path d="M14 10h4l3 3v3h-7z" />
-                    <circle cx="7" cy="18" r="1.5" />
-                    <circle cx="17.5" cy="18" r="1.5" />
-                  </svg>
-                </div>
-                <h3 className="mb-2 font-medium">{dict.home.whyShipping}</h3>
-                <p className="text-foreground/70 text-sm">{dict.home.whyShippingBody}</p>
-              </div>
-              <div className="border-foreground/10 rounded-lg border p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
-                <div
-                  className="animate-badge-breathe mb-3 flex h-10 w-10 items-center justify-center rounded-full"
-                  style={{
-                    background: "color-mix(in srgb, #7cc7c0 25%, transparent)",
-                    "--badge-delay": "220ms",
-                  } as React.CSSProperties}
-                  aria-hidden="true"
-                >
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#2f6f68"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z" />
-                    <path d="M9 12l2 2 4-4" />
-                  </svg>
-                </div>
-                <h3 className="mb-2 font-medium">{dict.home.whySecure}</h3>
-                <p className="text-foreground/70 text-sm">{dict.home.whySecureBody}</p>
-              </div>
-              <div className="border-foreground/10 rounded-lg border p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
-                <div
-                  className="animate-badge-breathe mb-3 flex h-10 w-10 items-center justify-center rounded-full"
-                  style={{
-                    background: "color-mix(in srgb, #e8607f 20%, transparent)",
-                    "--badge-delay": "440ms",
-                  } as React.CSSProperties}
-                  aria-hidden="true"
-                >
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#c65b8a"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M3 12a9 9 0 1 0 3-6.7" />
-                    <path d="M3 4v5h5" />
-                  </svg>
-                </div>
-                <h3 className="mb-2 font-medium">{dict.home.whyReturns}</h3>
-                <p className="text-foreground/70 text-sm">{dict.home.whyReturnsBody}</p>
-              </div>
+      {bestSellers.length > 0 && (
+        <section className="shelf-section">
+          <div className="shelf-wrap">
+            <div className="shelf-heading-row">
+              <h2 className="shelf-heading">{dict.home.bestSellers}</h2>
             </div>
-          </section>
-        </Reveal>
-
-        {settings.showTestimonials && testimonials.length > 0 && (
-          <Reveal>
-            <section>
-              <h2 className="mb-4 text-lg font-medium">{dict.home.testimonialsTitle}</h2>
-              <TestimonialsCarousel
-                testimonials={testimonials}
-                prevLabel={dict.home.previousSlide}
-                nextLabel={dict.home.nextSlide}
-                pauseLabel={dict.home.pauseSlides}
-                playLabel={dict.home.playSlides}
-              />
-            </section>
-          </Reveal>
-        )}
-
-        <Reveal>
-          <section>
-            <script
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{ __html: toSafeJsonLd(homeFaqJsonLd) }}
-            />
-            <h2 className="mb-4 text-lg font-medium">{dict.home.faqTitle}</h2>
-            <div className="divide-foreground/10 flex flex-col divide-y">
-              {homeFaq.map((item) => (
-                <details key={item.question} className="group py-3">
-                  <summary className="cursor-pointer list-none text-sm font-medium marker:content-none">
-                    <span className="mr-2 inline-block transition-transform group-open:rotate-90">
-                      &rsaquo;
-                    </span>
-                    {item.question}
-                  </summary>
-                  <p className="text-foreground/70 mt-2 pl-5 text-sm leading-relaxed">
-                    {item.answer}
-                  </p>
-                </details>
+            <ul className="shelf-row">
+              {bestSellers.slice(0, SHELF_SIZE).map((product) => (
+                <ShelfItem
+                  key={product.id}
+                  product={localizedCardProduct(product, locale)}
+                  {...shelfProps}
+                />
               ))}
-            </div>
-          </section>
-        </Reveal>
-      </div>
-
-      <Reveal>
-        <section className="bg-surface relative overflow-hidden">
-          <div className="section-glass-bg" aria-hidden="true" />
-          <div className="relative mx-auto flex w-full max-w-5xl flex-col items-center gap-3 px-4 py-14 text-center">
-            <h2 className="text-xl font-medium">{dict.home.newsletterCtaTitle}</h2>
-            <p className="text-foreground/70 max-w-md text-sm">{dict.home.newsletterCtaBody}</p>
-            <div className="mt-2 w-full max-w-sm">
-              <NewsletterSignupForm dict={dict.footer} />
-            </div>
+            </ul>
           </div>
         </section>
-      </Reveal>
+      )}
+
+      {categoriesWithImage.length > 0 && (
+        <section className="shelf-section shelf-section--aqua">
+          <div className="shelf-wrap">
+            <div className="shelf-heading-row">
+              <h2 className="shelf-heading">{dict.home.shopByCategory}</h2>
+            </div>
+            <ul className="shelf-categories">
+              {categoriesWithImage.map((category) => {
+                const name = localizedName(category, locale);
+                return (
+                  <li key={category.id} className="shelf-category">
+                    <div className="shelf-category-photo">
+                      {category.image && (
+                        <CatalogImage
+                          src={category.image.url}
+                          alt=""
+                          fill
+                          sizes="(min-width: 68rem) 20rem, (min-width: 48rem) 30vw, 50vw"
+                        />
+                      )}
+                    </div>
+                    <h3 className="shelf-category-name">
+                      <Link href={`/category/${category.slug}`}>{name}</Link>
+                    </h3>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </section>
+      )}
+
+      {products.length > 0 && (
+        <section className="shelf-section shelf-section--lilac">
+          <div className="shelf-wrap">
+            <div className="shelf-heading-row">
+              <h2 className="shelf-heading">{dict.home.newArrivals}</h2>
+              <Link href="/products" className="shelf-link">
+                {dict.footer.allProducts}
+              </Link>
+            </div>
+            <ul className="shelf-row">
+              {products.slice(0, SHELF_SIZE).map((product) => (
+                <ShelfItem
+                  key={product.slug}
+                  product={localizedCardProduct(product, locale)}
+                  {...shelfProps}
+                />
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
+
+      <section className="shelf-section shelf-section--sand">
+        <div className="shelf-wrap">
+          <div className="shelf-heading-row">
+            <h2 className="shelf-heading">{dict.home.whyUsTitle}</h2>
+          </div>
+          <ul className="shelf-points">
+            {points.map((point) => (
+              <li key={point.title} className="shelf-point">
+                <h3>{point.title}</h3>
+                <p>{point.body}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {settings.showTestimonials && testimonials.length > 0 && (
+        <section className="shelf-section shelf-section--blush">
+          <div className="shelf-wrap">
+            <div className="shelf-heading-row">
+              <h2 className="shelf-heading">{dict.home.testimonialsTitle}</h2>
+            </div>
+            <ul className="shelf-quotes">
+              {testimonials.slice(0, 3).map((review) => (
+                <li key={review.id}>
+                  <figure className="shelf-quote">
+                    <span className="shelf-stars" aria-hidden="true">
+                      {"\u2605".repeat(review.rating)}
+                    </span>
+                    <span className="sr-only">{review.rating}/5</span>
+                    <blockquote>{review.comment}</blockquote>
+                    <figcaption>
+                      {review.authorName}, {review.productName}
+                    </figcaption>
+                  </figure>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
+
+      <section className="shelf-section">
+        <div className="shelf-wrap">
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: toSafeJsonLd(homeFaqJsonLd) }}
+          />
+          <div className="shelf-heading-row">
+            <h2 className="shelf-heading">{dict.home.faqTitle}</h2>
+          </div>
+          <div className="shelf-faq">
+            {homeFaq.map((item) => (
+              <details key={item.question}>
+                <summary>{item.question}</summary>
+                <p>{item.answer}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="shelf-newsletter shelf-section">
+        <div className="shelf-wrap">
+          <div className="shelf-newsletter-inner">
+            <h2 className="shelf-heading">{dict.home.newsletterCtaTitle}</h2>
+            <p>{dict.home.newsletterCtaBody}</p>
+            <NewsletterSignupForm dict={dict.footer} />
+          </div>
+        </div>
+      </section>
     </main>
   );
 }

@@ -3,11 +3,19 @@
 :root {
   color-scheme: light;
   --background: #ffffff;
-  --foreground: #171717;
-  --surface: #f7f7f8;
+  --foreground: #1a2a33;
+  --surface: #f6f1f9;
   --danger: #dc2626;
   --success: #15803d;
   --warning: #b45309;
+  /* Fixed brand palette taken from the glass itself. Unlike --store-primary
+     these are not admin-editable: they are what makes hover/focus/checked
+     states and the decorative bands colorful whatever primary color is set. */
+  --accent: #7b4b94;
+  --accent-deep: #5f3676;
+  --glass-teal: #1f7a85;
+  --glass-rose: #c65b8a;
+  --glass-gold: #f5c451;
   /* Raw admin-picked brand colors, set inline on <html> from StoreSettings. */
   --store-primary: #111827;
   --store-secondary: #4f46e5;
@@ -27,6 +35,8 @@
   --color-danger: var(--danger);
   --color-success: var(--success);
   --color-warning: var(--warning);
+  --color-accent: var(--accent);
+  --color-accent-deep: var(--accent-deep);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -35,6 +45,34 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* A thin band of the glass palette (violet, teal, rose, gold) on the edge of
+   the header and footer — the one colorful thread that runs through every page. */
+.glass-rule,
+.glass-rule-top {
+  position: relative;
+}
+.glass-rule::after,
+.glass-rule-top::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--accent),
+    var(--glass-teal),
+    var(--glass-rose),
+    var(--glass-gold)
+  );
+}
+.glass-rule::after {
+  bottom: 0;
+}
+.glass-rule-top::before {
+  top: 0;
 }
 
 /* Tailwind v4 preflight matches the native UA default of `cursor: default`
@@ -423,10 +461,9 @@ button:not(:disabled),
     width: 100%;
     border-radius: 0.6rem;
     border: 1.5px solid color-mix(in srgb, var(--foreground) 18%, transparent);
-    /* Plain white fill — the warm-gold accent (same one used across the
-     site's decorative bits: hero blobs, newsletter, category cards,
-     .btn-primary hover) shows up in the border/glow only, not the fill,
-     so the input stays white with just a colored shadow. */
+    /* Plain white fill — the brand accent (--accent, violet) shows up in the
+     border/glow only, not the fill, so the input stays white with just a
+     colored shadow. */
     background: var(--background);
     padding: 0.55rem 0.85rem;
     color: var(--foreground);
@@ -440,14 +477,14 @@ button:not(:disabled),
     color: color-mix(in srgb, var(--foreground) 42%, transparent);
   }
   .field:hover {
-    border-color: color-mix(in srgb, #f5c451 55%, transparent);
-    box-shadow: 0 4px 14px -6px color-mix(in srgb, #f5c451 45%, transparent);
+    border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+    box-shadow: 0 4px 14px -6px color-mix(in srgb, var(--accent) 45%, transparent);
   }
   .field:focus {
     outline: none;
-    border-color: #f5c451;
+    border-color: var(--accent);
     background: var(--background);
-    box-shadow: 0 0 0 4px color-mix(in srgb, #f5c451 22%, transparent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent);
     transform: translateY(-1px);
   }
   .field:disabled {
@@ -492,18 +529,18 @@ button:not(:disabled),
     transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
   .field-checkbox:hover {
-    border-color: var(--color-primary);
+    border-color: var(--accent);
   }
   .field-checkbox:checked {
-    border-color: var(--color-primary);
-    background: var(--color-primary);
+    border-color: var(--accent);
+    background: var(--accent);
   }
   .field-checkbox:checked::after {
     transform: scale(1);
   }
   .field-checkbox:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 20%, transparent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 20%, transparent);
   }
   .field-checkbox:active {
     transform: scale(0.88);
@@ -540,17 +577,17 @@ button:not(:disabled),
     transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
   .field-radio:hover {
-    border-color: var(--color-primary);
+    border-color: var(--accent);
   }
   .field-radio:checked {
-    border-color: var(--color-primary);
+    border-color: var(--accent);
   }
   .field-radio:checked::after {
     transform: scale(1);
   }
   .field-radio:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 20%, transparent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 20%, transparent);
   }
   .field-radio:active {
     transform: scale(0.88);
@@ -606,18 +643,17 @@ button:not(:disabled),
   }
   .btn-primary:hover {
     transform: translateY(-1px);
-    /* Flips to white with black text and a warm gold border/glow (same
-     accent used across the site's decorative bits — hero blobs,
-     newsletter, category cards) instead of just dimming the whole button. */
+    /* Flips to white with black text and a violet border/glow instead of
+     just dimming the whole button. */
     background: white;
     color: black;
-    border-color: #f5c451;
-    box-shadow: 0 10px 24px -8px color-mix(in srgb, #f5c451 70%, transparent);
+    border-color: var(--accent);
+    box-shadow: 0 10px 24px -8px color-mix(in srgb, var(--accent) 70%, transparent);
   }
   .btn-primary:active {
     transform: translateY(0);
-    background: color-mix(in srgb, #f5c451 14%, white);
-    box-shadow: 0 4px 10px -4px color-mix(in srgb, #f5c451 70%, transparent);
+    background: color-mix(in srgb, var(--accent) 12%, white);
+    box-shadow: 0 4px 10px -4px color-mix(in srgb, var(--accent) 70%, transparent);
   }
   .btn-primary:disabled {
     opacity: 0.55;
@@ -642,9 +678,9 @@ button:not(:disabled),
       background-color 0.2s ease;
   }
   .btn-secondary:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-    background: color-mix(in srgb, var(--color-primary) 6%, transparent);
+    border-color: var(--accent);
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 6%, transparent);
   }
   .btn-secondary:disabled {
     opacity: 0.55;

@@ -30,7 +30,7 @@ export async function Header({
     : 0;
 
   return (
-    <header className="border-foreground/10 bg-background/90 sticky top-0 z-40 border-b backdrop-blur-sm">
+    <header className="glass-rule bg-background/90 sticky top-0 z-40 backdrop-blur-sm">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-3 px-4 py-3 sm:py-4">
         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
           <Link href="/" className="flex shrink-0 items-center gap-2 text-lg font-semibold">
@@ -81,7 +81,7 @@ export async function Header({
             {isStaff && (
               <Link
                 href="/admin"
-                className="link-underline text-foreground/80 hover:text-primary transition-colors"
+                className="link-underline text-foreground/80 hover:text-accent transition-colors"
               >
                 {dict.nav.admin}
               </Link>
@@ -91,7 +91,7 @@ export async function Header({
                 href="/account"
                 aria-label={dict.nav.account}
                 title={dict.nav.account}
-                className="group link-underline text-foreground/80 hover:text-primary flex items-center"
+                className="group link-underline text-foreground/80 hover:text-accent flex items-center"
               >
                 <svg
                   width="18"
@@ -113,13 +113,13 @@ export async function Header({
               <>
                 <Link
                   href="/login"
-                  className="link-underline text-foreground/80 hover:text-primary transition-colors"
+                  className="link-underline text-foreground/80 hover:text-accent transition-colors"
                 >
                   {dict.nav.signIn}
                 </Link>
                 <Link
                   href="/register"
-                  className="link-underline text-foreground/80 hover:text-primary hidden transition-colors sm:inline"
+                  className="link-underline text-foreground/80 hover:text-accent hidden transition-colors sm:inline"
                 >
                   {dict.nav.register}
                 </Link>
@@ -134,20 +134,20 @@ export async function Header({
               <Link
                 key={category.id}
                 href={`/category/${category.slug}`}
-                className="nav-link link-underline text-foreground/80 hover:text-primary transition-colors"
+                className="nav-link link-underline text-foreground/80 hover:text-accent transition-colors"
               >
                 {category.name}
               </Link>
             ))}
             <Link
               href="/about"
-              className="nav-link link-underline text-foreground/80 hover:text-primary transition-colors"
+              className="nav-link link-underline text-foreground/80 hover:text-accent transition-colors"
             >
               {dict.footer.about}
             </Link>
             <Link
               href="/murano-glass"
-              className="nav-link link-underline text-foreground/80 hover:text-primary transition-colors"
+              className="nav-link link-underline text-foreground/80 hover:text-accent transition-colors"
             >
               {dict.footer.muranoGuide}
             </Link>

@@ -1,0 +1,558 @@
+/* ---------------------------------------------------------------------------
+   Home page — "the shelf".
+
+   Scoped to `.shelf` so nothing elsewhere on the site changes. The design idea
+   is that the glass is the only thing with saturation: a cool, quiet ground,
+   one accent taken from the hero bead (violet), and the product photographs
+   blended into the page with `mix-blend-mode: multiply` so their white
+   backgrounds dissolve and the pieces sit directly on the page instead of in
+   boxes. That blend needs photos on a pure white background — every catalog
+   photo is; if one isn't, its white edge will show as a faint tint.
+
+   Palette (from the glass itself):
+     ground      #e8eef0  canal light
+     ink         #0e3a46  deep lagoon (text — a dark teal, not tinted black)
+     accent      #7b4b94  bead violet (the one interactive color)
+     aventurine  #b5813f  the gold flecks; reserved, not used decoratively
+
+   Type: Cardo (Venetian old-style roman, Aldine lineage) for headings, product
+   names and running copy; Hanken Grotesk for UI (buttons, prices, forms). Both
+   are loaded only on this route (see home-fonts.ts).
+
+   Motion: one moment (the hero bead settling on load). No scroll reveals, no
+   hover lifts. The global prefers-reduced-motion rule in globals.css collapses
+   the settle for visitors who ask for that.
+   ------------------------------------------------------------------------- */
+
+.shelf {
+  --ground: #f7f3fa;
+  --tint-lilac: #efe6f5;
+  --tint-aqua: #ddf0ee;
+  --tint-sand: #fbf1d9;
+  --tint-blush: #fbe6ec;
+  --teal: #1f7a85;
+  --rose: #c65b8a;
+  --ink: #0e3a46;
+  --ink-soft: color-mix(in srgb, var(--ink) 76%, transparent);
+  --rule: color-mix(in srgb, var(--ink) 18%, transparent);
+  --accent: #7b4b94;
+  --accent-deep: #5f3676;
+  --violet-night: #3f2154;
+  --aventurine: #b5813f;
+  --gold: #f5c451;
+
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.shelf :where(h1, h2, h3) {
+  font-family: var(--font-display), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.shelf-wrap {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 68rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+.shelf-section {
+  padding-block: 3.5rem;
+}
+/* Color-blocked bands: each section sits on its own tint of the glass palette. */
+.shelf-section--lilac {
+  background: var(--tint-lilac);
+}
+.shelf-section--aqua {
+  background: var(--tint-aqua);
+}
+.shelf-section--sand {
+  background: var(--tint-sand);
+}
+.shelf-section--blush {
+  background: var(--tint-blush);
+}
+
+.shelf-heading {
+  font-size: clamp(1.75rem, 3.4vw, 2.4rem);
+}
+
+.shelf-heading-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.shelf-link {
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-underline-offset: 0.25em;
+}
+.shelf-link:hover {
+  color: var(--accent-deep);
+  text-decoration: underline;
+}
+
+/* -- Hero ------------------------------------------------------------------ */
+
+.shelf-hero {
+  overflow: hidden;
+  /* Soft washes of the glass's own colors — violet behind the bead, aqua low
+     on the left, a touch of rose above. Static; the bead is the only motion. */
+  background:
+    radial-gradient(55% 75% at 88% 45%, #e2c5ee 0%, transparent 70%),
+    radial-gradient(50% 60% at 0% 100%, #bfe6e2 0%, transparent 70%),
+    radial-gradient(35% 45% at 55% 0%, #fbd9e4 0%, transparent 70%), var(--ground);
+}
+.shelf-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+  padding-block: 2.5rem 0.5rem;
+}
+.shelf-hero-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+  max-width: 31rem;
+}
+.shelf-title {
+  font-size: clamp(2.75rem, 8vw, 4.75rem);
+}
+.shelf-lede {
+  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.2rem, 2.4vw, 1.5rem);
+  line-height: 1.4;
+  margin: 0;
+}
+.shelf-note {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+}
+.shelf-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  padding: 0.8rem 1.5rem;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+.shelf-button:hover {
+  background: var(--accent-deep);
+}
+.shelf-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+  margin: 0.25rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+}
+
+/* The hero photo is a macro of one bead on white. Multiply drops the white into
+   the ground; it is cropped tight and allowed to bleed past the right edge so
+   the bead reads as an object, not a picture in a frame. */
+.shelf-bead {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  max-width: 34rem;
+  justify-self: center;
+}
+.shelf-bead img {
+  object-fit: cover;
+  object-position: 58% 50%;
+  mix-blend-mode: multiply;
+  transform: scale(1.24);
+  animation: shelf-settle 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes shelf-settle {
+  from {
+    opacity: 0;
+    transform: scale(1.32) translateY(-2%);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.24);
+  }
+}
+
+@media (min-width: 52rem) {
+  .shelf-hero-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: 2rem;
+    padding-block: 3.5rem 1.5rem;
+  }
+  .shelf-bead {
+    justify-self: end;
+    margin-right: -6%;
+  }
+}
+
+/* -- Photos: dissolve into the ground --------------------------------------- */
+
+/* Catalog photos are on white, but not perfectly: about 40% have a corner
+   darker than 250/255 (down to ~207 — a corner shadow), which multiply alone
+   shows as a faint grey box. So: lift near-white a little before blending, and
+   feather the photo's outer edge with a mask so any corner shadow fades into the
+   ground. The image box must therefore match the photo's own edges, which is why
+   the frames below use the photos' 2:3 ratio (or crop symmetrically) with
+   object-fit: cover. Feather is small (5% x 3%) so the pieces, which sit well
+   inside the frame, are untouched. */
+.shelf-item-photo img,
+.shelf-category-photo img {
+  object-fit: cover;
+  mix-blend-mode: multiply;
+  filter: brightness(1.05) contrast(1.03);
+  -webkit-mask-image:
+    linear-gradient(to right, transparent, #000 5%, #000 95%, transparent),
+    linear-gradient(to bottom, transparent, #000 3%, #000 97%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent, #000 5%, #000 95%, transparent),
+    linear-gradient(to bottom, transparent, #000 3%, #000 97%, transparent);
+  mask-composite: intersect;
+}
+
+/* -- The shelf: rows of pieces ---------------------------------------------- */
+
+.shelf-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2.25rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 48rem) {
+  .shelf-row {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 3rem 1.75rem;
+  }
+}
+.shelf-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.shelf-item-photo {
+  position: relative;
+  aspect-ratio: 2 / 3;
+}
+.shelf-item-name {
+  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+  font-size: 1.15rem;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+/* Stretched link: the whole item is clickable, while the quick-add button (a
+   sibling, stacked above with z-index) stays a separate control. */
+.shelf-item-name a {
+  color: inherit;
+  text-decoration: none;
+}
+.shelf-item-name a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.shelf-item-name a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 0.2em;
+}
+.shelf-item-price {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--accent-deep);
+  font-variant-numeric: tabular-nums;
+}
+.shelf-badge {
+  position: absolute;
+  top: 0.25rem;
+  left: 0;
+  z-index: 1;
+  background: var(--ink);
+  color: var(--ground);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  padding: 0.1rem 0.55rem;
+  border-radius: 2px;
+}
+
+/* -- Categories: the pieces themselves, deliberately uneven ---------------- */
+
+.shelf-categories {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem 1rem;
+  align-items: end;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.shelf-category {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  text-align: center;
+}
+.shelf-category-photo {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+}
+.shelf-category-photo img {
+  object-position: 50% 48%;
+}
+.shelf-category-name {
+  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+.shelf-category-name a {
+  color: inherit;
+  text-decoration: none;
+}
+.shelf-category-name a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.shelf-category-name a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 0.2em;
+}
+@media (min-width: 48rem) {
+  .shelf-categories {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem 3rem;
+  }
+  /* Not a grid of identical tiles: the middle piece sits higher. */
+  .shelf-category:nth-child(3n + 2) {
+    padding-bottom: 3.5rem;
+  }
+}
+
+/* -- Why buy here: three short paragraphs, no cards ------------------------ */
+
+.shelf-points {
+  display: grid;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 48rem) {
+  .shelf-points {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 3rem;
+  }
+}
+.shelf-point {
+  --tone: var(--accent);
+  border-top: 4px solid var(--tone);
+  padding-top: 1rem;
+}
+.shelf-point:nth-child(2) {
+  --tone: var(--teal);
+}
+.shelf-point:nth-child(3) {
+  --tone: var(--rose);
+}
+.shelf-point h3 {
+  font-size: 1.35rem;
+  margin-bottom: 0.5rem;
+}
+.shelf-point p {
+  margin: 0;
+  max-width: 34ch;
+  color: var(--ink-soft);
+  font-size: 0.98rem;
+}
+
+/* -- FAQ ------------------------------------------------------------------- */
+
+.shelf-faq details {
+  border-top: 1px solid var(--rule);
+  padding-block: 1rem;
+}
+.shelf-faq details:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+.shelf-faq summary {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+  font-size: 1.2rem;
+  line-height: 1.3;
+}
+.shelf-faq summary::-webkit-details-marker {
+  display: none;
+}
+/* The chevron is drawn in CSS: purely decorative, so nothing for a screen
+   reader to read out. */
+.shelf-faq summary::before {
+  content: "";
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid var(--accent);
+  border-bottom: 2px solid var(--accent);
+  transform: translateY(-0.12em) rotate(-45deg);
+  transition: transform 0.15s ease;
+}
+.shelf-faq details[open] summary::before {
+  transform: translateY(-0.2em) rotate(45deg);
+}
+.shelf-faq p {
+  margin: 0.75rem 0 0 1.25rem;
+  max-width: 62ch;
+  color: var(--ink-soft);
+}
+
+/* -- Reviews: quotes set as text ------------------------------------------- */
+
+.shelf-quotes {
+  display: grid;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 48rem) {
+  .shelf-quotes {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.5rem;
+  }
+}
+.shelf-quote {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.shelf-quote blockquote {
+  margin: 0;
+  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+  font-size: 1.2rem;
+  line-height: 1.5;
+}
+.shelf-quote figcaption {
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+}
+.shelf-stars {
+  color: var(--aventurine);
+  letter-spacing: 0.15em;
+}
+
+/* -- Newsletter band ------------------------------------------------------- */
+
+.shelf-newsletter {
+  background: var(--violet-night);
+  color: #fff;
+}
+.shelf-newsletter :where(h2) {
+  color: #fff;
+}
+.shelf-newsletter-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  max-width: 30rem;
+}
+.shelf-newsletter p {
+  margin: 0;
+  color: color-mix(in srgb, #fff 82%, transparent);
+}
+/* On the dark band the button is the gold of the aventurine flecks. */
+.shelf .shelf-newsletter .btn-primary {
+  background: var(--gold);
+  color: var(--violet-night);
+  font-weight: 600;
+}
+.shelf .shelf-newsletter .btn-primary:hover {
+  background: #ffd977;
+  color: var(--violet-night);
+}
+.shelf-newsletter a,
+.shelf-newsletter label,
+.shelf-newsletter [role="alert"],
+.shelf-newsletter [role="status"] {
+  color: inherit;
+}
+.shelf-newsletter a:focus-visible,
+.shelf-newsletter button:focus-visible {
+  outline-color: var(--gold);
+}
+
+/* Shared form controls (defined globally in globals.css) take this page's
+   accent instead of the site-wide warm-gold glow. Unlayered, so they win over
+   the @layer components rules regardless of order. */
+.shelf .btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: transparent;
+  border-radius: 4px;
+}
+.shelf .btn-primary:hover {
+  background: var(--accent-deep);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: none;
+  transform: none;
+}
+.shelf .field {
+  border-radius: 4px;
+  border-color: color-mix(in srgb, var(--ink) 35%, transparent);
+  background: #fff;
+}
+.shelf .field:hover {
+  border-color: var(--accent);
+  box-shadow: none;
+}
+.shelf .field:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 28%, transparent);
+  transform: none;
+}
+
+/* Visible keyboard focus, in the accent. */
+.shelf a:focus-visible,
+.shelf button:focus-visible,
+.shelf summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}

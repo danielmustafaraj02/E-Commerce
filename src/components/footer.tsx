@@ -132,7 +132,7 @@ export async function Footer({
     payments.cashOnDelivery;
 
   return (
-    <footer className="border-foreground/10 bg-foreground/[0.015] border-t">
+    <footer className="glass-rule-top bg-surface">
       <div className="mx-auto w-full max-w-5xl px-4 py-14">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr_1.3fr]">
           <div className="flex flex-col gap-4">
@@ -150,7 +150,7 @@ export async function Footer({
                     rel="noopener noreferrer"
                     aria-label={entry.label}
                     title={entry.label}
-                    className="border-foreground/10 text-foreground/60 hover:border-primary hover:text-primary flex h-9 w-9 items-center justify-center rounded-full border transition-colors"
+                    className="border-foreground/10 text-foreground/60 hover:border-accent hover:text-accent flex h-9 w-9 items-center justify-center rounded-full border transition-colors"
                   >
                     <SocialIcon platform={entry.key} />
                   </a>
@@ -163,7 +163,7 @@ export async function Footer({
             <h3 className="text-sm font-medium">{dict.footer.shopHeading}</h3>
             <ul className="text-foreground/70 mt-4 flex flex-col gap-2.5 text-sm">
               <li>
-                <Link href="/products" className="hover:text-primary transition-colors">
+                <Link href="/products" className="hover:text-accent transition-colors">
                   {dict.footer.allProducts}
                 </Link>
               </li>
@@ -171,7 +171,7 @@ export async function Footer({
                 <li key={category.id}>
                   <Link
                     href={`/category/${category.slug}`}
-                    className="hover:text-primary transition-colors"
+                    className="hover:text-accent transition-colors"
                   >
                     {category.name}
                   </Link>
@@ -184,7 +184,7 @@ export async function Footer({
             <h3 className="text-sm font-medium">{dict.footer.helpHeading}</h3>
             <ul className="text-foreground/70 mt-4 flex flex-col gap-2.5 text-sm">
               <li>
-                <Link href="/contact" className="hover:text-primary transition-colors">
+                <Link href="/contact" className="hover:text-accent transition-colors">
                   {dict.footer.contact}
                 </Link>
               </li>
@@ -192,7 +192,7 @@ export async function Footer({
                 <li key={link.slug}>
                   <Link
                     href={`/legal/${link.slug}`}
-                    className="hover:text-primary transition-colors"
+                    className="hover:text-accent transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -206,19 +206,19 @@ export async function Footer({
               <h3 className="text-sm font-medium">{dict.footer.companyHeading}</h3>
               <ul className="text-foreground/70 mt-4 flex flex-col gap-2.5 text-sm">
                 <li>
-                  <Link href="/about" className="hover:text-primary transition-colors">
+                  <Link href="/about" className="hover:text-accent transition-colors">
                     {dict.footer.about}
                   </Link>
                 </li>
                 <li>
-                  <Link href="/murano-glass" className="hover:text-primary transition-colors">
+                  <Link href="/murano-glass" className="hover:text-accent transition-colors">
                     {dict.footer.muranoGuide}
                   </Link>
                 </li>
                 <li>
                   <a
                     href={`mailto:${contactEmail}`}
-                    className="hover:text-primary transition-colors"
+                    className="hover:text-accent transition-colors"
                   >
                     {contactEmail}
                   </a>
