@@ -1,7 +1,12 @@
 import bcrypt from "bcryptjs";
 import { db } from "../src/lib/db";
+import { LEGACY_DEFAULT_PASSWORD, resolveSeedAdmin } from "../src/lib/seed-admin";
 
 async function main() {
+  // Resolved first so a bad configuration (e.g. NODE_ENV=production) stops the
+  // seed before it writes anything.
+  const admin = resolveSeedAdmin(process.env);
+
   const storeSettings = await db.storeSettings.upsert({
     where: { id: "default" },
     update: {},
@@ -22,18 +27,49 @@ async function main() {
     },
   });
 
-  const adminPasswordHash = await bcrypt.hash("ChangeMe123!", 12);
+  // Databases seeded before this change have the published default password.
+  // The upsert below never touches an existing account, so say so loudly.
+  const existingAdmin = await db.user.findUnique({ where: { email: admin.email } });
+  if (
+    existingAdmin?.passwordHash &&
+    (await bcrypt.compare(LEGACY_DEFAULT_PASSWORD, existingAdmin.passwordHash))
+  ) {
+    console.warn(
+      `\n!! ${admin.email} still has the old default password "${LEGACY_DEFAULT_PASSWORD}". ` +
+        "Anyone who has read this repo can sign in as this admin. Re-run the seed with " +
+        "SEED_RESET_ADMIN=1 (and optionally SEED_ADMIN_PASSWORD=...) to replace it, " +
+        "or delete the account.\n"
+    );
+  }
+
+  // An existing admin is normally left alone; SEED_RESET_ADMIN=1 replaces its
+  // password (and, via passwordChangedAt, ends every session signed in with
+  // the old one).
+  const resetAdmin = process.env.SEED_RESET_ADMIN === "1";
+  const passwordHash = await bcrypt.hash(admin.password, 12);
   await db.user.upsert({
-    where: { email: "admin@demo-store.example" },
-    update: {},
+    where: { email: admin.email },
+    update: resetAdmin
+      ? { passwordHash, passwordChangedAt: new Date(), failedLoginCount: 0, lockedUntil: null }
+      : {},
     create: {
-      email: "admin@demo-store.example",
-      passwordHash: adminPasswordHash,
+      email: admin.email,
+      passwordHash,
       name: "Admin",
       role: "admin",
       emailVerified: new Date(),
     },
   });
+  if (!existingAdmin || resetAdmin) {
+    console.log(
+      admin.generated
+        ? `\nAdmin account ${existingAdmin ? "password reset" : "created"}:\n  email:    ${admin.email}\n  password: ${admin.password}\n` +
+            "This generated password is shown once — sign in and change it, then set up MFA.\n"
+        : `\nAdmin ${admin.email} ${existingAdmin ? "password reset" : "created"} using SEED_ADMIN_PASSWORD.\n`
+    );
+  } else {
+    console.log(`Admin ${admin.email} already exists — left unchanged.`);
+  }
 
   const electronics = await db.category.upsert({
     where: { slug: "electronics" },
