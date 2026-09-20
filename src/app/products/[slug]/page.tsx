@@ -19,7 +19,7 @@ import {
   localizedCardProduct,
   productImageAlt,
 } from "@/lib/product-i18n";
-import { truncateAtWord } from "@/lib/text";
+import { buildProductMetaDescription, fitTitle } from "@/lib/seo-text";
 import { hreflangAlternates, ogLocale } from "@/lib/hreflang";
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { WishlistButton } from "@/components/wishlist-button";
@@ -62,27 +62,24 @@ export async function generateMetadata({
   if (!product || !product.active) return {};
 
   const name = localizedName(product, locale);
-  const categoryName = product.category ? localizedName(product.category, locale) : null;
-  // A distinct <title> per product/category, rather than the raw product
-  // name alone, gives Google (and AI answer engines summarizing the page)
-  // a stronger, less generic signal for what the page is about. "Murano
-  // Glass"/"vetro di Murano" is baked in deliberately (high-intent search
-  // terms for this specific store, not a generic platform default — see
-  // the note on home.heroSubtitle in dictionaries.ts).
-  const titleByLocale: Record<Locale, string> = {
-    en: `${name} — Murano Glass ${categoryName}`,
-    it: `${name} — ${categoryName} in Vetro di Murano`,
-    fr: `${name} — ${categoryName} en Verre de Murano`,
-    de: `${name} — ${categoryName} aus Muranoglas`,
-    ar: `${name} — ${categoryName} من زجاج مورانو`,
-    zh: `${name} — 穆拉诺玻璃${categoryName}`,
-    ru: `${name} — ${categoryName} из муранского стекла`,
-    es: `${name} — ${categoryName} de Vidrio de Murano`,
-    pt: `${name} — ${categoryName} em Vidro de Murano`,
-    hi: `${name} — मुरानो ग्लास ${categoryName}`,
-    ja: `${name} — ムラノガラスの${categoryName}`,
+  // "Murano glass" in the locale's own words is worth having in the title (a
+  // high-intent search term), but only when it still fits: search results show
+  // ~60 characters and the layout appends " | {store name}". fitTitle() takes
+  // the keyword form when it fits and otherwise the plain product name.
+  const keywordByLocale: Record<Locale, string> = {
+    en: "Murano Glass",
+    it: "Vetro di Murano",
+    fr: "Verre de Murano",
+    de: "Muranoglas",
+    ar: "زجاج مورانو",
+    zh: "穆拉诺玻璃",
+    ru: "Муранское стекло",
+    es: "Vidrio de Murano",
+    pt: "Vidro de Murano",
+    hi: "मुरानो ग्लास",
+    ja: "ムラノガラス",
   };
-  const title = categoryName ? titleByLocale[locale] : name;
+  const title = fitTitle([`${name} — ${keywordByLocale[locale]}`, name], settings.storeName);
   const fallbackDescriptionByLocale: Record<Locale, string> = {
     en: `${name} — handmade Murano glass, from ${settings.storeName}.`,
     it: `${name} — vetro di Murano fatto a mano, da ${settings.storeName}.`,
@@ -96,9 +93,15 @@ export async function generateMetadata({
     hi: `${name} — ${settings.storeName} का हाथ से बना मुरानो ग्लास।`,
     ja: `${name} — ${settings.storeName}の手作りムラノガラス。`,
   };
-  const description =
-    truncateAtWord(localizedDescription(product, locale), 155) ||
-    fallbackDescriptionByLocale[locale];
+  // Price and a call to action close the snippet (both lift click-through);
+  // an out-of-stock product says so instead of inviting a purchase it can't take.
+  const dict = getDictionary(locale);
+  const description = buildProductMetaDescription({
+    description: localizedDescription(product, locale) || fallbackDescriptionByLocale[locale],
+    suffix: `${formatMoney(product.price, product.currency, settings.defaultLocale)} · ${
+      product.stockQty > 0 ? dict.home.shopNow : dict.product.outOfStock
+    }`,
+  });
   const image = product.images[0]?.url;
 
   return {
