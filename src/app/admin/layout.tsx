@@ -1,5 +1,7 @@
+import { msAgo } from "@/lib/time";
 import { requireStaff } from "@/lib/require-admin";
-import { AdminNav } from "@/components/admin-nav";
+import { AdminShell } from "@/components/admin-nav";
+import { buildAdminSections } from "@/lib/admin-nav";
 import { db } from "@/lib/db";
 
 // Rolling 24h window rather than a per-admin "last seen" marker — no schema
@@ -11,82 +13,13 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
   const session = await requireStaff();
   const isAdmin = session?.user?.role === "admin";
 
-  const since = new Date(Date.now() - NOTIFICATION_WINDOW_MS);
+  const since = msAgo(NOTIFICATION_WINDOW_MS);
   const [newOrderCount, newCustomerCount] = await Promise.all([
     db.order.count({ where: { createdAt: { gte: since } } }),
     db.user.count({ where: { role: "customer", createdAt: { gte: since } } }),
   ]);
 
-  const navGroups = [
-    {
-      label: "Overview",
-      items: [
-        { href: "/admin", label: "Dashboard" },
-        { href: "/admin/seo", label: "SEO & Indexing" },
-      ],
-    },
-    {
-      label: "Catalog",
-      items: [
-        { href: "/admin/products", label: "Products" },
-        { href: "/admin/categories", label: "Categories" },
-        { href: "/admin/suppliers", label: "Suppliers" },
-      ],
-    },
-    {
-      label: "Sales",
-      items: [
-        { href: "/admin/orders", label: "Orders", badge: newOrderCount },
-        { href: "/admin/discounts", label: "Discounts" },
-        { href: "/admin/returns", label: "Returns" },
-        { href: "/admin/shipping", label: "Shipping" },
-        { href: "/admin/tax-rules", label: "Tax rules" },
-      ],
-    },
-    {
-      label: "Customers",
-      items: [
-        { href: "/admin/customers", label: "Customers", badge: newCustomerCount },
-        { href: "/admin/newsletter", label: "Newsletter" },
-      ],
-    },
-    {
-      label: "Planning",
-      items: [{ href: "/admin/roadmap", label: "Roadmap" }],
-    },
-    // Split into smaller, single-purpose groups (rather than one long
-    // "Configuration" bucket) so the sidebar stays scannable as more
-    // admin-only sections get added.
-    ...(isAdmin
-      ? [
-          {
-            label: "Security & payments",
-            items: [
-              { href: "/admin/team", label: "Team & roles" },
-              { href: "/admin/settings/payments", label: "Payments" },
-            ],
-          },
-          {
-            label: "Integrations",
-            items: [{ href: "/admin/settings/integrations", label: "Integrations" }],
-          },
-          {
-            label: "Site",
-            items: [
-              { href: "/admin/settings", label: "Store settings" },
-              { href: "/admin/legal-pages", label: "Legal pages" },
-            ],
-          },
-        ]
-      : []),
-  ];
+  const sections = buildAdminSections({ isAdmin, newOrderCount, newCustomerCount });
 
-  return (
-    <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-4 py-6 sm:flex-row sm:gap-8 sm:py-10">
-      <aside className="shrink-0 sm:w-44">
-        <AdminNav groups={navGroups} />
-      </aside>
-      <main className="min-w-0 flex-1">{children}</main>
-    </div>
-  );
+  return <AdminShell sections={sections}>{children}</AdminShell>;
 }

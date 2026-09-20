@@ -1,3 +1,4 @@
+import { DAY_MS, msAgo } from "@/lib/time";
 import Link from "next/link";
 import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
@@ -10,7 +11,7 @@ const TREND_DAYS = 30;
 
 export default async function AdminDashboardPage() {
   const settings = await getStoreSettings();
-  const since = new Date(Date.now() - NOTIFICATION_WINDOW_MS);
+  const since = msAgo(NOTIFICATION_WINDOW_MS);
 
   const [
     productCount,
@@ -66,7 +67,7 @@ export default async function AdminDashboardPage() {
     db.order.findMany({
       where: {
         status: { in: REVENUE_STATUSES },
-        createdAt: { gte: new Date(Date.now() - TREND_DAYS * 24 * 60 * 60 * 1000) },
+        createdAt: { gte: msAgo(TREND_DAYS * DAY_MS) },
       },
       select: { total: true, createdAt: true },
     }),
@@ -77,7 +78,7 @@ export default async function AdminDashboardPage() {
   // trivially small to fold client-side.
   const revenueByDay = new Map<string, number>();
   for (let i = TREND_DAYS - 1; i >= 0; i--) {
-    const day = new Date(Date.now() - i * 24 * 60 * 60 * 1000);
+    const day = msAgo(i * DAY_MS);
     revenueByDay.set(day.toISOString().slice(0, 10), 0);
   }
   for (const order of trendOrders) {
