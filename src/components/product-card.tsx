@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { CatalogImage } from "@/components/catalog-image";
 import Link from "next/link";
 import { formatMoney } from "@/lib/format";
 import { QuickAddButton } from "@/components/quick-add-button";
@@ -33,7 +33,7 @@ export function ProductCard({
     >
       <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-white transition-shadow duration-300 group-hover:shadow-lg">
         {product.images[0] && (
-          <Image
+          <CatalogImage
             src={product.images[0].url}
             alt={product.images[0].altText || product.name}
             fill

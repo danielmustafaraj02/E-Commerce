@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import { CatalogImage } from "@/components/catalog-image";
 import { useWishlistStore } from "@/lib/wishlist-store";
 import { QuickAddButton } from "@/components/quick-add-button";
 import { WishlistEmptyIcon } from "@/components/wishlist-empty-icon";
@@ -59,7 +59,7 @@ export function GuestWishlistClient({
                     aria-label={item.name}
                   >
                     {item.imageUrl && (
-                      <Image
+                      <CatalogImage
                         src={item.imageUrl}
                         alt={item.name}
                         fill

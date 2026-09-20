@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { CatalogImage } from "@/components/catalog-image";
 import Link from "next/link";
 import { useCartStore } from "@/lib/cart-store";
 import { formatMoney } from "@/lib/format";
@@ -90,7 +90,7 @@ export function CartClient({
                 href={`/products/${item.slug}`}
                 className="bg-background relative h-20 w-20 shrink-0 overflow-hidden rounded-lg"
               >
-                <Image
+                <CatalogImage
                   src={item.imageUrl}
                   alt={item.name}
                   fill

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
-import Image from "next/image";
+import { CatalogImage } from "@/components/catalog-image";
 import Link from "next/link";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
@@ -90,7 +90,7 @@ export default async function OrderConfirmationPage({
               <li key={item.id} className="flex items-center gap-4 py-3">
                 <div className="bg-surface border-foreground/10 relative size-16 shrink-0 overflow-hidden rounded-md border">
                   {image ? (
-                    <Image
+                    <CatalogImage
                       src={image.url}
                       alt={image.altText || item.productName}
                       fill

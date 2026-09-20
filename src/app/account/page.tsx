@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import { CatalogImage } from "@/components/catalog-image";
 import { redirect } from "next/navigation";
 import { auth, signOut } from "@/auth";
 import { db } from "@/lib/db";
@@ -170,7 +170,7 @@ export default async function AccountPage({
                 className="group relative aspect-square overflow-hidden rounded-lg"
               >
                 {item.product.images[0] ? (
-                  <Image
+                  <CatalogImage
                     src={item.product.images[0].url}
                     alt={item.product.images[0].altText || item.product.name}
                     fill

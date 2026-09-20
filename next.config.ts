@@ -1,14 +1,13 @@
 import type { NextConfig } from "next";
+import { imageRemotePatterns } from "./src/lib/image-hosts";
 
 const isProd = process.env.NODE_ENV === "production";
 
 const nextConfig: NextConfig = {
   images: {
-    // Product/category photos come from loremflickr today, and admins can
-    // paste arbitrary image URLs from the settings/product editor — so this
-    // has to stay broad (https-only, matching the CSP's img-src) rather than
-    // an allowlist of specific hosts.
-    remotePatterns: [{ protocol: "https", hostname: "**" }],
+    // An allowlist, not `**`: see src/lib/image-hosts.ts for why, and for how
+    // to add another host.
+    remotePatterns: imageRemotePatterns(),
   },
   async headers() {
     return [

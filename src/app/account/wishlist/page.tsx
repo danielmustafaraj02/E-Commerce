@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import { CatalogImage } from "@/components/catalog-image";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
@@ -78,7 +78,7 @@ export default async function WishlistPage() {
                     aria-label={item.product.name}
                   >
                     {image && (
-                      <Image
+                      <CatalogImage
                         src={image.url}
                         alt={image.altText || item.product.name}
                         fill

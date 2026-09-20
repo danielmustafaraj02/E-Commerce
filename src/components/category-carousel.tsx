@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import Image from "next/image";
+import { CatalogImage } from "@/components/catalog-image";
 import Link from "next/link";
 import { CarouselNavButton } from "@/components/carousel-nav-button";
 
@@ -74,7 +74,7 @@ export function CategoryCarousel({
               >
                 <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-white">
                   {category.image ? (
-                    <Image
+                    <CatalogImage
                       src={category.image.url}
                       alt={category.image.altText || category.name}
                       fill
@@ -82,7 +82,7 @@ export function CategoryCarousel({
                       className="object-contain transition-transform duration-500 ease-out group-hover:scale-110"
                     />
                   ) : (
-                    <Image
+                    <CatalogImage
                       src={`https://loremflickr.com/480/360/${encodeURIComponent(category.slug)}`}
                       alt={category.name}
                       fill

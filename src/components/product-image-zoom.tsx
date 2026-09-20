@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import Image from "next/image";
+import { CatalogImage } from "@/components/catalog-image";
 
 // Cursor-following zoom on hover — the image itself scales up with its
 // transform-origin tracking the pointer, rather than a separate magnifier
@@ -29,7 +29,7 @@ export function ProductImageZoom({ src, alt }: { src: string; alt: string }) {
       onMouseLeave={() => setZooming(false)}
       className="relative aspect-square w-full cursor-zoom-in overflow-hidden rounded-lg bg-white"
     >
-      <Image
+      <CatalogImage
         src={src}
         alt={alt}
         fill
