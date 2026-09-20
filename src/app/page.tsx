@@ -162,7 +162,7 @@ export default async function Home() {
                           src={category.image.url}
                           alt=""
                           fill
-                          sizes="(min-width: 68rem) 20rem, (min-width: 48rem) 30vw, 50vw"
+                          sizes="(min-width: 64rem) 19rem, (min-width: 48rem) 30vw, 50vw"
                         />
                       )}
                     </div>

@@ -41,7 +41,7 @@ export function ShelfItem({
             src={image.url}
             alt={image.altText || product.name}
             fill
-            sizes="(min-width: 68rem) 16rem, (min-width: 48rem) 25vw, 50vw"
+            sizes="(min-width: 64rem) 15rem, (min-width: 48rem) 25vw, 50vw"
           />
         )}
         {outOfStock && <span className="shelf-badge">{outOfStockLabel}</span>}
