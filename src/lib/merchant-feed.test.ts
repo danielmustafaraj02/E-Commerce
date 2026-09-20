@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { feedTitle, googleProductCategory } from "./merchant-feed";
+import { feedTitle, googleProductCategory, productMaterial } from "./merchant-feed";
 
 describe("googleProductCategory", () => {
   it.each([
@@ -33,5 +33,17 @@ describe("feedTitle", () => {
 
   it("stays within Google's 150-character limit", () => {
     expect(feedTitle("x".repeat(400), "en").length).toBe(150);
+  });
+});
+
+describe("productMaterial", () => {
+  it("says Glass for the store's glass-bead jewelry categories", () => {
+    expect(productMaterial({ name: "Bracciali" })).toBe("Glass");
+    expect(productMaterial({ name: "Gioielli", nameEn: "Necklaces" })).toBe("Glass");
+  });
+
+  it("states no material for a category it can't vouch for, or none", () => {
+    expect(productMaterial({ name: "Home Goods" })).toBeNull();
+    expect(productMaterial(null)).toBeNull();
   });
 });

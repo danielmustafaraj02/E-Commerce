@@ -80,10 +80,12 @@ describe("Google Merchant feed", () => {
     expect(xml).toContain("<g:material>Glass</g:material>");
   });
 
-  it("omits google_product_category for a category it doesn't know, rather than guessing", async () => {
+  it("omits google_product_category and material for a category it doesn't know, rather than guessing", async () => {
     mocks.products.mockResolvedValue([product({ category: { name: "Home Goods", nameEn: null } })]);
+    const xml = await feed();
 
-    expect(await feed()).not.toContain("google_product_category");
+    expect(xml).not.toContain("google_product_category");
+    expect(xml).not.toContain("<g:material>");
   });
 
   it("keeps availability honest and skips products with no image", async () => {

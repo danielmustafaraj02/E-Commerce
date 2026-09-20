@@ -10,6 +10,7 @@ import { getStoreSettings } from "@/lib/store-settings";
 import { formatMoney } from "@/lib/format";
 import { absoluteUrl, toSafeJsonLd } from "@/lib/json-ld";
 import { buildReturnPolicy, buildShippingDetails } from "@/lib/offer-json-ld";
+import { productMaterial } from "@/lib/merchant-feed";
 import { getLocale, type Locale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { applyTemplate } from "@/lib/i18n/format";
@@ -185,6 +186,8 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
   const base = siteBaseUrl(settings);
   const productUrl = `${base}/products/${product.slug}`;
 
+  const material = productMaterial(product.category);
+
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -194,6 +197,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
     image: product.images.map((image) => absoluteUrl(image.url, base)),
     brand: { "@type": "Brand", name: settings.storeName },
     ...(categoryName ? { category: categoryName } : {}),
+    ...(material ? { material } : {}),
     inLanguage: uiLocale,
     ...(averageRating !== null
       ? {

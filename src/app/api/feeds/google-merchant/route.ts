@@ -4,7 +4,12 @@ import { getStoreSettings } from "@/lib/store-settings";
 import { localizedName, localizedDescription } from "@/lib/product-i18n";
 import { absoluteUrl } from "@/lib/json-ld";
 import { siteBaseUrl } from "@/lib/site-url";
-import { MAX_ADDITIONAL_IMAGES, feedTitle, googleProductCategory } from "@/lib/merchant-feed";
+import {
+  MAX_ADDITIONAL_IMAGES,
+  feedTitle,
+  googleProductCategory,
+  productMaterial,
+} from "@/lib/merchant-feed";
 import type { Locale } from "@/lib/i18n/locale";
 
 // Google Merchant Center product feed (RSS 2.0 + the `g:` namespace Google
@@ -50,6 +55,7 @@ export async function GET(request: Request) {
         absoluteUrl(image.url, base)
       );
       const googleCategory = googleProductCategory(product.category);
+      const material = productMaterial(product.category);
 
       return `
     <item>
@@ -64,7 +70,7 @@ export async function GET(request: Request) {
       <g:condition>new</g:condition>
       <g:brand>${xmlEscape(settings.storeName)}</g:brand>
       <g:identifier_exists>no</g:identifier_exists>
-      <g:material>Glass</g:material>
+      ${material ? `<g:material>${xmlEscape(material)}</g:material>` : ""}
       ${googleCategory ? `<g:google_product_category>${xmlEscape(googleCategory)}</g:google_product_category>` : ""}
       ${product.category ? `<g:product_type>${xmlEscape(localizedName(product.category, locale))}</g:product_type>` : ""}
     </item>`;

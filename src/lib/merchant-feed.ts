@@ -35,3 +35,14 @@ export function feedTitle(name: string, locale: "en" | "it"): string {
 
 // Google allows up to 10 additional images per item.
 export const MAX_ADDITIONAL_IMAGES = 10;
+
+// The material for a product, when it can be stated truthfully. Every category
+// this store sells (bracelets, necklaces, earrings) is glass-bead jewelry, so
+// "Glass" is accurate for them; it deliberately says nothing about Murano
+// origin (a separate claim — see the README on the protected "Vetro Artistico
+// Murano" mark). Any other category gets none rather than a guess.
+export function productMaterial(
+  category: { name: string; nameEn?: string | null } | null
+): string | null {
+  return googleProductCategory(category) ? "Glass" : null;
+}
