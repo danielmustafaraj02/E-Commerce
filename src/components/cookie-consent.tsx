@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
-
-const STORAGE_KEY = "cookie-consent";
+import { CONSENT_CHANGED_EVENT, CONSENT_STORAGE_KEY } from "@/lib/consent";
 
 export function CookieConsent({ dict }: { dict: Dictionary["cookieConsent"] }) {
   const [visible, setVisible] = useState(false);
@@ -18,7 +17,7 @@ export function CookieConsent({ dict }: { dict: Dictionary["cookieConsent"] }) {
     // synchronously in an effect" advice doesn't apply to this pattern.
     try {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      if (!localStorage.getItem(STORAGE_KEY)) setVisible(true);
+      if (!localStorage.getItem(CONSENT_STORAGE_KEY)) setVisible(true);
     } catch {
       // If storage is unavailable, skip the banner rather than show it forever.
     }
@@ -26,10 +25,13 @@ export function CookieConsent({ dict }: { dict: Dictionary["cookieConsent"] }) {
 
   async function save(choice: { analytics: boolean; marketing: boolean }) {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(choice));
+      localStorage.setItem(CONSENT_STORAGE_KEY, JSON.stringify(choice));
     } catch {
       // Non-fatal — the choice still gets logged server-side.
     }
+    // Lets ConsentGatedAnalytics react right away (storage events don't fire
+    // in the tab that made the change).
+    window.dispatchEvent(new Event(CONSENT_CHANGED_EVENT));
     setVisible(false);
     try {
       await fetch("/api/consent", {
@@ -106,7 +108,11 @@ export function CookieConsent({ dict }: { dict: Dictionary["cookieConsent"] }) {
               {dict.savePreferences}
             </button>
           ) : (
-            <button type="button" onClick={() => setCustomizing(true)} className="btn-secondary text-sm">
+            <button
+              type="button"
+              onClick={() => setCustomizing(true)}
+              className="btn-secondary text-sm"
+            >
               {dict.customize}
             </button>
           )}

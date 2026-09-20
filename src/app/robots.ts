@@ -8,7 +8,9 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
   return {
     rules: {
       userAgent: "*",
-      allow: "/",
+      // The more specific Allow wins over `Disallow: /api`: Merchant Center
+      // fetches the product feed from here.
+      allow: ["/", "/api/feeds/google-merchant"],
       // Private/account-scoped and non-content routes — nothing here is
       // meant to be indexed or is useful to a search result.
       disallow: ["/admin", "/account", "/cart", "/checkout", "/api", "/order-confirmation"],

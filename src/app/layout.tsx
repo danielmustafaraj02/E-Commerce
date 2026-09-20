@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { getStoreSettings } from "@/lib/store-settings";
-import { hreflangAlternates, ogLocale, ogAlternateLocales } from "@/lib/hreflang";
+import { ogLocale, ogAlternateLocales } from "@/lib/hreflang";
 import { toSafeJsonLd } from "@/lib/json-ld";
 import { isStripeConfigured } from "@/lib/stripe";
 import { isPaypalConfigured } from "@/lib/paypal";
@@ -12,6 +10,7 @@ import { getDictionary } from "@/lib/i18n/dictionaries";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { CookieConsent } from "@/components/cookie-consent";
+import { ConsentGatedAnalytics } from "@/components/consent-gated-analytics";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -38,7 +37,6 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL(base),
     title: { default: settings.storeName, template: `%s | ${settings.storeName}` },
     description,
-    alternates: { canonical: "/", languages: hreflangAlternates("/") },
     openGraph: {
       title: settings.storeName,
       description,
@@ -95,6 +93,12 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
               name: settings.storeName,
               url: siteUrl(settings),
               ...(settings.logoUrl ? { logo: settings.logoUrl } : {}),
+              ...(settings.companyLegalName ? { legalName: settings.companyLegalName } : {}),
+              // The seed's placeholder (IT00000000000) must never be published as
+              // a real VAT ID.
+              ...(settings.vatNumber && !/^[A-Z]{2}0+$/.test(settings.vatNumber)
+                ? { vatID: settings.vatNumber }
+                : {}),
               ...(settings.contactEmail
                 ? {
                     contactPoint: {
@@ -173,8 +177,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           }}
         />
         <CookieConsent dict={dict.cookieConsent} />
-        <Analytics />
-        <SpeedInsights />
+        <ConsentGatedAnalytics />
       </body>
     </html>
   );

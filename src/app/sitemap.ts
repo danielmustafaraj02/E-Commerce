@@ -12,28 +12,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     db.legalPage.findMany({ select: { slug: true, lastUpdated: true } }),
   ]);
 
+  // The newest product edit is the best available "last changed" signal for
+  // the pages that list products.
+  const catalogUpdatedAt = products.reduce<Date | undefined>(
+    (latest, product) => (!latest || product.updatedAt > latest ? product.updatedAt : latest),
+    undefined
+  );
+
+  // Google ignores <changefreq> and <priority>; only <lastmod> is used, and
+  // only when it is accurate — so pages with no real modification date omit it.
   return [
-    { url: base, changeFrequency: "daily", priority: 1 },
-    { url: `${base}/products`, changeFrequency: "daily", priority: 0.9 },
-    { url: `${base}/about`, changeFrequency: "monthly", priority: 0.5 },
-    { url: `${base}/murano-glass`, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${base}/contact`, changeFrequency: "monthly", priority: 0.5 },
+    { url: base, lastModified: catalogUpdatedAt },
+    { url: `${base}/products`, lastModified: catalogUpdatedAt },
+    { url: `${base}/about` },
+    { url: `${base}/murano-glass` },
+    { url: `${base}/contact` },
     ...categories.map((category) => ({
       url: `${base}/category/${category.slug}`,
-      changeFrequency: "weekly" as const,
-      priority: 0.7,
+      lastModified: catalogUpdatedAt,
     })),
     ...products.map((product) => ({
       url: `${base}/products/${product.slug}`,
       lastModified: product.updatedAt,
-      changeFrequency: "weekly" as const,
-      priority: 0.8,
     })),
     ...legalPages.map((page) => ({
       url: `${base}/legal/${page.slug}`,
       lastModified: page.lastUpdated,
-      changeFrequency: "yearly" as const,
-      priority: 0.3,
     })),
   ];
 }

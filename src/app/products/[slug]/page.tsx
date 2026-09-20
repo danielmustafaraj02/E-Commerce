@@ -1,6 +1,6 @@
 import { cache } from "react";
 import type { Metadata } from "next";
-import Image from "next/image";
+import { CatalogImage } from "@/components/catalog-image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { auth } from "@/auth";
@@ -8,6 +8,7 @@ import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
 import { formatMoney } from "@/lib/format";
 import { toSafeJsonLd } from "@/lib/json-ld";
+import { buildReturnPolicy, buildShippingDetails } from "@/lib/offer-json-ld";
 import { getLocale, type Locale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { applyTemplate } from "@/lib/i18n/format";
@@ -142,27 +143,33 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
   // is capped at the 20 most recent — the signed-in user's own review could
   // be older than that.
   const userId = session?.user?.id;
-  const [myReview, relatedProducts, isVerifiedBuyer, wishlistItem] = await Promise.all([
-    userId
-      ? db.review.findUnique({
-          where: { productId_userId: { productId: product.id, userId } },
-        })
-      : null,
-    product.categoryId
-      ? db.product.findMany({
-          where: { categoryId: product.categoryId, active: true, id: { not: product.id } },
-          take: 4,
-          orderBy: { createdAt: "desc" },
-          include: { images: { take: 1, orderBy: { position: "asc" } } },
-        })
-      : [],
-    userId ? hasPurchased(product.id, userId) : false,
-    userId
-      ? db.wishlistItem.findUnique({
-          where: { productId_userId: { productId: product.id, userId } },
-        })
-      : null,
-  ]);
+  const [myReview, relatedProducts, isVerifiedBuyer, wishlistItem, shippingZones] =
+    await Promise.all([
+      userId
+        ? db.review.findUnique({
+            where: { productId_userId: { productId: product.id, userId } },
+          })
+        : null,
+      product.categoryId
+        ? db.product.findMany({
+            where: { categoryId: product.categoryId, active: true, id: { not: product.id } },
+            take: 4,
+            orderBy: { createdAt: "desc" },
+            include: { images: { take: 1, orderBy: { position: "asc" } } },
+          })
+        : [],
+      userId ? hasPurchased(product.id, userId) : false,
+      userId
+        ? db.wishlistItem.findUnique({
+            where: { productId_userId: { productId: product.id, userId } },
+          })
+        : null,
+      // Same zones/methods the checkout prices from, so the shipping and return
+      // details in the structured data below can't drift from what shoppers get.
+      db.shippingZone.findMany({
+        include: { countries: true, methods: { include: { method: true } } },
+      }),
+    ]);
 
   const outOfStock = product.stockQty <= 0;
   const lowStock = !outOfStock && product.stockQty <= product.lowStockThreshold;
@@ -199,6 +206,15 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
       price: (product.price / 100).toFixed(2),
       priceValidUntil: PRICE_VALID_UNTIL,
       itemCondition: "https://schema.org/NewCondition",
+      seller: { "@type": "Organization", name: settings.storeName },
+      shippingDetails: buildShippingDetails(shippingZones, {
+        priceCents: product.price,
+        currency: product.currency,
+        freeShippingThresholdCents: settings.freeShippingThreshold,
+      }),
+      hasMerchantReturnPolicy: buildReturnPolicy(shippingZones, {
+        returnPolicyUrl: base ? `${base}/legal/returns` : undefined,
+      }),
       availability: outOfStock ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
       url: productUrl,
     },
@@ -255,7 +271,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
             <div className="flex gap-2">
               {product.images.slice(1).map((image) => (
                 <div key={image.id} className="relative h-16 w-16 overflow-hidden rounded bg-white">
-                  <Image
+                  <CatalogImage
                     src={image.url}
                     alt={productImageAlt(name, uiLocale)}
                     fill

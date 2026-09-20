@@ -28,8 +28,10 @@ const getCategory = cache((slug: string) =>
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: PageProps<"/category/[slug]">): Promise<Metadata> {
   const { slug } = await params;
+  const raw = await searchParams;
   const [settings, locale, category] = await Promise.all([
     getStoreSettings(),
     getLocale(),
@@ -71,13 +73,20 @@ export async function generateMetadata({
   };
   const description = descriptionByLocale[locale];
   const image = ogImage(settings);
+  // A filtered view (?minPrice=, ?inStock=, ...) is a thin slice of the same
+  // category, so it canonicalizes to the plain page. Plain pagination
+  // (?page=2 with nothing else) is genuinely different products, so it gets a
+  // self-referencing canonical — same rule as /products.
+  const page = Array.isArray(raw.page) ? raw.page[0] : raw.page;
+  const isPlainPagination = !raw.minPrice && !raw.maxPrice && !raw.inStock;
+  const canonical =
+    isPlainPagination && page && /^[2-9]\d*$|^1\d+$/.test(page)
+      ? `/category/${category.slug}?page=${page}`
+      : `/category/${category.slug}`;
   return {
     title,
     description,
-    alternates: {
-      canonical: `/category/${category.slug}`,
-      languages: hreflangAlternates(`/category/${category.slug}`),
-    },
+    alternates: { canonical, languages: hreflangAlternates(canonical) },
     openGraph: {
       title,
       description,

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -8,6 +9,7 @@ import { getDictionary } from "@/lib/i18n/dictionaries";
 import { localizedName, localizedCardProduct } from "@/lib/product-i18n";
 import { formatMoney } from "@/lib/format";
 import { toSafeJsonLd } from "@/lib/json-ld";
+import { hreflangAlternates } from "@/lib/hreflang";
 import { ProductCard } from "@/components/product-card";
 import { Reveal } from "@/components/reveal";
 import { TrustBadges } from "@/components/trust-badges";
@@ -24,6 +26,13 @@ const CategoryCarousel = dynamic(() =>
 const TestimonialsCarousel = dynamic(() =>
   import("@/components/testimonials-carousel").then((mod) => mod.TestimonialsCarousel)
 );
+
+// Title/description/OG come from the root layout; only the canonical and
+// hreflang set live here, so pages that don't define their own no longer
+// inherit "/" as their canonical URL.
+export const metadata: Metadata = {
+  alternates: { canonical: "/", languages: hreflangAlternates("/") },
+};
 
 export default async function Home() {
   const [settings, locale, { products, categoriesWithImage, bestSellers, reviews }] =

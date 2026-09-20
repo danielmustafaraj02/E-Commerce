@@ -1,5 +1,13 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
+
+export async function generateMetadata({ params }: PageProps<"/legal/[slug]">): Promise<Metadata> {
+  const { slug } = await params;
+  const page = await db.legalPage.findUnique({ where: { slug }, select: { title: true } });
+  if (!page) return {};
+  return { title: page.title, alternates: { canonical: `/legal/${slug}` } };
+}
 
 export default async function LegalPage({ params }: PageProps<"/legal/[slug]">) {
   const { slug } = await params;

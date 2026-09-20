@@ -1,9 +1,20 @@
+import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { getStoreSettings } from "@/lib/store-settings";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
+import { hreflangAlternates } from "@/lib/hreflang";
 import { turnstileSiteKey } from "@/lib/turnstile";
 import { ContactForm } from "./contact-form";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const dict = getDictionary(await getLocale());
+  return {
+    title: dict.contact.title,
+    description: dict.contact.intro,
+    alternates: { canonical: "/contact", languages: hreflangAlternates("/contact") },
+  };
+}
 
 export default async function ContactPage() {
   const [settings, locale, nonce, siteKey] = await Promise.all([
