@@ -10,18 +10,7 @@
  */
 import { db } from "../src/lib/db";
 import manifest from "./murano-manifest.json";
-
-type ManifestEntry = {
-  category: string;
-  name: string;
-  nameEn: string;
-  nameFr?: string;
-  nameDe?: string;
-  description: string;
-  descriptionEn: string;
-  descriptionFr?: string;
-  descriptionDe?: string;
-};
+import { productTranslations, type ManifestEntry } from "./i18n-fields";
 
 function slugify(input: string): string {
   return input
@@ -67,7 +56,7 @@ async function main() {
     if (dryRun) {
       console.log(`[dry-run] would update "${product.name}" -> "${entry.name}"`);
       console.log(`  IT: ${entry.description.slice(0, 80)}…`);
-      console.log(`  EN: ${entry.descriptionEn.slice(0, 80)}…`);
+      console.log(`  EN: ${entry.descriptionEn?.slice(0, 80)}…`);
       updated++;
       continue;
     }
@@ -76,13 +65,8 @@ async function main() {
       where: { id: product.id },
       data: {
         name: entry.name,
-        nameEn: entry.nameEn,
-        nameFr: entry.nameFr,
-        nameDe: entry.nameDe,
         description: entry.description,
-        descriptionEn: entry.descriptionEn,
-        descriptionFr: entry.descriptionFr,
-        descriptionDe: entry.descriptionDe,
+        ...productTranslations(entry),
       },
     });
 

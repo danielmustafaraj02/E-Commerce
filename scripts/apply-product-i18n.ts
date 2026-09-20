@@ -1,9 +1,9 @@
 /**
- * Backfills nameEn/nameFr/nameDe/descriptionEn/descriptionFr/descriptionDe
- * onto Product rows (and nameEn/nameFr/nameDe onto Category rows) that were
- * seeded before those columns existed, using scripts/murano-manifest.json as
- * the source of truth. Safe to re-run — every write is keyed by the current
- * (Italian) name, which never changes.
+ * Backfills every translated name/description column (En, Fr, De, Ar, Zh, Ru,
+ * Es, Pt, Hi, Ja) onto Product rows — and the translated names onto Category
+ * rows — that were seeded before those columns existed, using
+ * scripts/murano-manifest.json as the source of truth. Safe to re-run — every
+ * write is keyed by the current (Italian) name, which never changes.
  *
  * Run this instead of scripts/seed-murano-catalog.ts when the catalog is
  * already populated and only needs the translation fields filled in.
@@ -12,41 +12,19 @@
  */
 import { db } from "../src/lib/db";
 import manifest from "./murano-manifest.json";
-
-type ManifestEntry = {
-  category: string;
-  name: string;
-  nameEn: string;
-  nameFr?: string;
-  nameDe?: string;
-  description: string;
-  descriptionEn: string;
-  descriptionFr?: string;
-  descriptionDe?: string;
-};
-
-const CATEGORY_NAMES_EN: Record<string, string> = {
-  Bracciali: "Bracelets",
-  Collane: "Necklaces",
-  Orecchini: "Earrings",
-};
-
-const CATEGORY_NAMES_FR: Record<string, string> = {
-  Bracciali: "Bracelets",
-  Collane: "Colliers",
-  Orecchini: "Boucles d'oreilles",
-};
-
-const CATEGORY_NAMES_DE: Record<string, string> = {
-  Bracciali: "Armbänder",
-  Collane: "Halsketten",
-  Orecchini: "Ohrringe",
-};
+import {
+  CATEGORY_NAMES,
+  LOCALE_SUFFIXES,
+  categoryTranslations,
+  productTranslations,
+  type ManifestEntry,
+} from "./i18n-fields";
 
 async function main() {
   const dryRun = process.argv.includes("--dry-run");
   const entries = Object.values(manifest as Record<string, ManifestEntry>);
   const byName = new Map(entries.map((entry) => [entry.name, entry]));
+  const locales = LOCALE_SUFFIXES.join("/");
 
   let updatedProducts = 0;
   let unmatchedProducts = 0;
@@ -60,37 +38,26 @@ async function main() {
       continue;
     }
     if (dryRun) {
-      console.log(`[dry-run] would set nameEn/nameFr/nameDe/descriptionEn/descriptionFr/descriptionDe for "${product.name}"`);
+      console.log(`[dry-run] would set name/description in ${locales} for "${product.name}"`);
     } else {
       await db.product.update({
         where: { id: product.id },
-        data: {
-          nameEn: entry.nameEn,
-          nameFr: entry.nameFr,
-          nameDe: entry.nameDe,
-          descriptionEn: entry.descriptionEn,
-          descriptionFr: entry.descriptionFr,
-          descriptionDe: entry.descriptionDe,
-        },
+        data: productTranslations(entry),
       });
     }
     updatedProducts++;
   }
 
   let updatedCategories = 0;
-  for (const [nameIt, nameEn] of Object.entries(CATEGORY_NAMES_EN)) {
-    const nameFr = CATEGORY_NAMES_FR[nameIt];
-    const nameDe = CATEGORY_NAMES_DE[nameIt];
+  for (const nameIt of Object.keys(CATEGORY_NAMES)) {
     if (dryRun) {
-      console.log(
-        `[dry-run] would set nameEn="${nameEn}" nameFr="${nameFr}" nameDe="${nameDe}" for category "${nameIt}"`
-      );
+      console.log(`[dry-run] would set name in ${locales} for category "${nameIt}"`);
       updatedCategories++;
       continue;
     }
     const result = await db.category.updateMany({
       where: { name: nameIt },
-      data: { nameEn, nameFr, nameDe },
+      data: categoryTranslations(nameIt),
     });
     updatedCategories += result.count;
   }
