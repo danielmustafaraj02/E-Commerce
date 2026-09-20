@@ -35,6 +35,7 @@ export default function ResetPasswordForm({
         name="password"
         autoComplete="new-password"
         minLength={8}
+        showLabel={dict.showPassword}
       />
       {message && <FormAlert type="error">{message}</FormAlert>}
       {state.error === "invalid" && (

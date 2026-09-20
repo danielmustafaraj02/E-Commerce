@@ -77,6 +77,7 @@ export default async function OrderConfirmationPage({
             bankTransferEnabled={settings.bankTransferEnabled && Boolean(settings.bankIban)}
             codEnabled={settings.codEnabled}
             locale={settings.defaultLocale}
+            dict={dict.payment}
           />
         </section>
       )}

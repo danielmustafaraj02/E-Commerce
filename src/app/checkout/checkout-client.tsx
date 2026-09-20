@@ -68,6 +68,9 @@ export function CheckoutClient({
 
   const [shippingMethods, setShippingMethods] = useState<ShippingMethod[]>([]);
   const [shippingMethodId, setShippingMethodId] = useState<string>("");
+  // Which country the loaded methods are for — so "no methods" is only shown
+  // once the lookup for the *current* country has finished (not while loading).
+  const [shippingLoadedFor, setShippingLoadedFor] = useState<string | null>(null);
 
   const [quote, setQuote] = useState<Quote | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -88,14 +91,29 @@ export function CheckoutClient({
 
   useEffect(() => {
     if (!country) return;
+    let cancelled = false;
     fetch(`/api/shipping/methods?country=${country}`)
       .then((res) => res.json())
-      .then((data: { methods: ShippingMethod[] }) => {
-        setShippingMethods(data.methods);
+      .then((data: { methods?: ShippingMethod[] }) => {
+        if (cancelled) return;
+        const methods = data.methods ?? [];
+        setShippingMethods(methods);
         setShippingMethodId((current) =>
-          data.methods.some((m) => m.id === current) ? current : (data.methods[0]?.id ?? "")
+          methods.some((m) => m.id === current) ? current : (methods[0]?.id ?? "")
         );
+        setShippingLoadedFor(country);
+      })
+      .catch(() => {
+        // Treat a failed lookup like "nothing available": the shopper sees the
+        // message below instead of a silently empty form.
+        if (cancelled) return;
+        setShippingMethods([]);
+        setShippingMethodId("");
+        setShippingLoadedFor(country);
       });
+    return () => {
+      cancelled = true;
+    };
   }, [country]);
 
   useEffect(() => {
@@ -121,7 +139,7 @@ export function CheckoutClient({
         const data = await res.json();
         if (cancelled) return;
         if (!res.ok) {
-          setError(data.error ?? "Could not calculate order total");
+          setError(data.error ?? dict.couldNotQuote);
           setQuote(null);
           return;
         }
@@ -129,7 +147,7 @@ export function CheckoutClient({
         setQuote(data);
       })
       .catch(() => {
-        if (!cancelled) setError("Could not calculate order total");
+        if (!cancelled) setError(dict.couldNotQuote);
       });
     return () => {
       cancelled = true;
@@ -138,7 +156,14 @@ export function CheckoutClient({
   }, [country, shippingMethodId, appliedDiscountCode, JSON.stringify(cartItems)]);
 
   if (items.length === 0) {
-    return <p className="text-foreground/70 text-sm">{dict.empty}</p>;
+    return (
+      <div className="flex flex-col items-start gap-4">
+        <p className="text-foreground/70 text-sm">{dict.empty}</p>
+        <Link href="/products" className="btn-secondary text-sm">
+          {dict.continueShopping}
+        </Link>
+      </div>
+    );
   }
 
   const postalCodeValid = isValidPostalCode(country, postalCode);
@@ -173,14 +198,14 @@ export function CheckoutClient({
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? "Could not place order");
+        setError(data.error ?? dict.couldNotPlaceOrder);
         setSubmitting(false);
         return;
       }
       clearCart();
       router.push(`/order-confirmation/${data.orderNumber}`);
     } catch {
-      setError("Could not place order");
+      setError(dict.couldNotPlaceOrder);
       setSubmitting(false);
     }
   }
@@ -293,6 +318,12 @@ export function CheckoutClient({
           className="field"
         />
       </fieldset>
+
+      {shippingLoadedFor === country && shippingMethods.length === 0 && (
+        <p role="alert" className="text-warning text-sm">
+          {dict.noShippingMethods}
+        </p>
+      )}
 
       {shippingMethods.length > 0 && (
         <fieldset className="form-card flex flex-col gap-2">

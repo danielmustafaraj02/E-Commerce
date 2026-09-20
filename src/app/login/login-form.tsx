@@ -35,7 +35,11 @@ export default function LoginForm({
     <div className="form-card flex flex-col gap-4">
       {googleEnabled && (
         <>
-          <button type="button" onClick={() => signIn("google", { callbackUrl })} className="btn-secondary">
+          <button
+            type="button"
+            onClick={() => signIn("google", { callbackUrl })}
+            className="btn-secondary"
+          >
             <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
               <path
                 fill="#4285F4"
@@ -54,11 +58,11 @@ export default function LoginForm({
                 d="M9 3.58c1.32 0 2.51.45 3.44 1.35l2.58-2.58C13.46.89 11.43 0 9 0A9 9 0 00.9 4.97l3.05 2.33C4.66 5.17 6.65 3.58 9 3.58z"
               />
             </svg>
-            Continue with Google
+            {dict.continueWithGoogle}
           </button>
           <div className="text-foreground/50 flex items-center gap-3 text-xs">
             <div className="bg-foreground/10 h-px flex-1" />
-            or
+            {dict.or}
             <div className="bg-foreground/10 h-px flex-1" />
           </div>
         </>
@@ -68,13 +72,21 @@ export default function LoginForm({
         <input type="hidden" name="callbackUrl" value={callbackUrl} />
         <label className="flex flex-col gap-1.5 text-sm">
           <span className="font-medium">{dict.email}</span>
-          <input type="email" name="email" required autoComplete="email" className="field" />
+          <input
+            type="email"
+            name="email"
+            required
+            autoComplete="email"
+            spellCheck={false}
+            className="field"
+          />
         </label>
         <PasswordField
           label={dict.password}
           name="password"
           autoComplete="current-password"
           minLength={8}
+          showLabel={dict.showPassword}
         />
         <Link
           href="/forgot-password"
@@ -91,6 +103,7 @@ export default function LoginForm({
               pattern="[0-9]{6}"
               maxLength={6}
               name="totpCode"
+              spellCheck={false}
               required
               autoFocus
               autoComplete="one-time-code"

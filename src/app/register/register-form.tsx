@@ -35,6 +35,7 @@ export default function RegisterForm({
         name="password"
         autoComplete="new-password"
         minLength={8}
+        showLabel={dict.showPassword}
       />
       <TurnstileWidget siteKey={siteKey} nonce={nonce} />
       {state.error && <FormAlert type="error">{state.error}</FormAlert>}
