@@ -655,15 +655,21 @@
 
 /* -- Phones ----------------------------------------------------------------------- */
 
-/* Categories become a swipeable strip: one piece large in the middle with its
-   neighbours peeking in, rather than everything at once (CategoryStrip opens it
-   on the middle item). It bleeds to the screen edges so the peek is not clipped. */
+/* Categories become a one-at-a-time carousel: a single full-width card,
+   swipeable, and looping in both directions (CategoryStrip.tsx clones the
+   first/last card off-screen and silently re-centers on the real one once a
+   swipe — or autoplay — lands on a clone, so it never visibly "runs out"). */
 @media (max-width: 47.99rem) {
   .shelf-categories {
     display: flex;
+    /* Without this, a card's offsetLeft (which CategoryStrip.tsx reads to
+       scroll to it) is measured against whatever ancestor happens to be
+       positioned further up the tree, not against this scroll container —
+       silently wrong math instead of a visible error. */
+    position: relative;
     gap: 1.25rem;
-    margin-inline: -1.25rem;
-    padding: 0 1.25rem 0.5rem;
+    padding-inline: 1.25rem;
+    padding-bottom: 0.5rem;
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory;
@@ -673,7 +679,7 @@
     display: none;
   }
   .shelf-category {
-    flex: 0 0 62%;
+    flex: 0 0 100%;
     scroll-snap-align: center;
     /* Without this, a fast flick can coast straight past a card instead of
        stopping on it — "always" forces every swipe to land on one card. */
