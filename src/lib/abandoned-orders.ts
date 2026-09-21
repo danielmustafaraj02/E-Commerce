@@ -3,6 +3,8 @@ import { getStoreSettings } from "@/lib/store-settings";
 import { sendEmail, sendOrderStatusEmail } from "@/lib/email";
 import { captureError } from "@/lib/monitoring";
 import { siteBaseUrl } from "@/lib/site-url";
+import { emailStrings } from "@/lib/i18n/email-locale";
+import { applyTemplate } from "@/lib/i18n/format";
 
 // An "abandoned cart" in this schema is just a pending order that never got
 // paid — /api/checkout already creates the Order (and reserves stock) before
@@ -60,10 +62,17 @@ async function sendReminders(now: Date, siteUrl: string) {
       .join("\n");
 
     try {
+      // The language the order was placed in. Orders from before it was stored
+      // get English, never the language of whoever's request happens to be running.
+      const { t } = await emailStrings(order.locale ?? "en");
       await sendEmail({
         to,
-        subject: "You left something in your cart",
-        text: `You started an order but haven't finished paying for it yet:\n\n${itemLines}\n\nFinish your order: ${resumeUrl}\n\nOrder number: ${order.orderNumber}`,
+        subject: t.abandonedSubject,
+        text: applyTemplate(t.abandonedBody, {
+          items: itemLines,
+          url: resumeUrl,
+          orderNumber: order.orderNumber,
+        }),
       });
       await db.order.update({ where: { id: order.id }, data: { abandonedEmailSentAt: now } });
       sent += 1;

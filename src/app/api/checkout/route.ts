@@ -9,6 +9,7 @@ import { verifyTurnstile } from "@/lib/turnstile";
 import { isValidPostalCode } from "@/lib/postal-code";
 import { cancelExpiredOrders, notifyCancelledOrders } from "@/lib/abandoned-orders";
 import { getFeedback } from "@/lib/i18n/feedback";
+import { getLocale } from "@/lib/i18n/locale";
 import { pricingMessage } from "@/lib/pricing-messages";
 
 const checkoutSchema = z.object({
@@ -45,6 +46,7 @@ function generateOrderNumber() {
 
 export async function POST(request: Request) {
   const t = await getFeedback();
+  const locale = await getLocale();
   const { success } = await rateLimit(`checkout:${clientIp(request)}`, 10, 60_000);
   if (!success) {
     return NextResponse.json({ error: t.tooManyRequests }, { status: 429 });
@@ -133,6 +135,7 @@ export async function POST(request: Request) {
           discountAmount: quote.discountAmount,
           total: quote.total,
           currency: quote.currency,
+          locale,
           addressId: address.id,
           shippingMethodId: quote.shippingMethod.id,
           discountCodeId: quote.discountCodeId,

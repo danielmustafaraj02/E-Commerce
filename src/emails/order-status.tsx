@@ -15,41 +15,13 @@ import {
   Tailwind,
   pixelBasedPreset,
 } from "react-email";
+import type { Dictionary } from "@/lib/i18n/dictionaries";
+import { getDictionary } from "@/lib/i18n/dictionaries";
+import { applyTemplate } from "@/lib/i18n/format";
+import { localeDir, type Locale } from "@/lib/i18n/locale-constants";
 
 export type OrderStatus =
-  | "paid"
-  | "processing"
-  | "shipped"
-  | "delivered"
-  | "cancelled"
-  | "refunded";
-
-const STATUS_COPY: Record<OrderStatus, { heading: string; message: string }> = {
-  paid: {
-    heading: "Payment received",
-    message: "We've received your payment and your order is now being prepared with care.",
-  },
-  processing: {
-    heading: "Order being prepared",
-    message: "Your order is being carefully prepared by our artisans.",
-  },
-  shipped: {
-    heading: "Your order is on its way",
-    message: "Your order has shipped and is on its way to you.",
-  },
-  delivered: {
-    heading: "Order delivered",
-    message: "Your order has been delivered. We hope you love it!",
-  },
-  cancelled: {
-    heading: "Order cancelled",
-    message: "Your order has been cancelled.",
-  },
-  refunded: {
-    heading: "Order refunded",
-    message: "Your order has been refunded.",
-  },
-};
+  "paid" | "processing" | "shipped" | "delivered" | "cancelled" | "refunded";
 
 export interface OrderStatusEmailItem {
   name: string;
@@ -74,6 +46,8 @@ interface OrderStatusEmailProps {
   companyLegalName: string | null;
   companyAddress: string | null;
   vatNumber: string | null;
+  t: Dictionary["emails"];
+  lang: Locale; // the email's language (`locale` above is only for formatting numbers)
 }
 
 function money(cents: number, currency: string, locale: string) {
@@ -96,18 +70,21 @@ export default function OrderStatusEmail({
   companyLegalName,
   companyAddress,
   vatNumber,
+  t,
+  lang,
 }: OrderStatusEmailProps) {
-  const copy = STATUS_COPY[status];
+  const copy = t.status[status];
 
   return (
-    <Html lang="en">
+    <Html lang={lang} dir={localeDir(lang)}>
       <Tailwind
-        config={{ presets: [pixelBasedPreset], theme: { extend: { colors: { brand: primaryColor } } } }}
+        config={{
+          presets: [pixelBasedPreset],
+          theme: { extend: { colors: { brand: primaryColor } } },
+        }}
       >
         <Head />
-        <Preview>
-          Order {orderNumber}: {copy.heading}
-        </Preview>
+        <Preview>{applyTemplate(t.orderSubject, { orderNumber, heading: copy.heading })}</Preview>
         <Body className="bg-[#f4f1ec] font-sans">
           <Container className="mx-auto max-w-[560px] px-6 py-10">
             <Section className="mb-6 text-center">
@@ -135,13 +112,13 @@ export default function OrderStatusEmail({
                 <Row>
                   <Column>
                     <Text className="m-0 text-xs tracking-wide text-[#a39c8d] uppercase">
-                      Order number
+                      {t.orderNumberLabel}
                     </Text>
                     <Text className="m-0 text-sm font-medium text-[#1f1c18]">{orderNumber}</Text>
                   </Column>
                   <Column>
                     <Text className="m-0 text-xs tracking-wide text-[#a39c8d] uppercase">
-                      Order date
+                      {t.orderDateLabel}
                     </Text>
                     <Text className="m-0 text-sm font-medium text-[#1f1c18]">{orderDate}</Text>
                   </Column>
@@ -150,7 +127,7 @@ export default function OrderStatusEmail({
                   <Row className="mt-3">
                     <Column>
                       <Text className="m-0 text-xs tracking-wide text-[#a39c8d] uppercase">
-                        Tracking number
+                        {t.trackingLabel}
                       </Text>
                       <Text className="m-0 text-sm font-medium text-[#1f1c18]">
                         {trackingNumber}
@@ -184,7 +161,7 @@ export default function OrderStatusEmail({
                           />
                         )}
                       </Column>
-                      <Column className="align-top pl-3">
+                      <Column className="pl-3 align-top">
                         <Text className="m-0 text-sm text-[#1f1c18]">
                           {item.name} &times; {item.quantity}
                         </Text>
@@ -199,7 +176,9 @@ export default function OrderStatusEmail({
                   <Hr className="my-3 border-solid border-[#ece7dd]" />
                   <Row>
                     <Column>
-                      <Text className="m-0 text-sm font-semibold text-[#1f1c18]">Total</Text>
+                      <Text className="m-0 text-sm font-semibold text-[#1f1c18]">
+                        {t.totalLabel}
+                      </Text>
                     </Column>
                     <Column className="text-right">
                       <Text className="m-0 text-sm font-semibold text-[#1f1c18]">
@@ -212,24 +191,22 @@ export default function OrderStatusEmail({
 
               <Button
                 href={orderUrl}
-                className="box-border mt-8 rounded-md bg-brand px-6 py-3 text-sm font-medium text-white no-underline"
+                className="bg-brand mt-8 box-border rounded-md px-6 py-3 text-sm font-medium text-white no-underline"
               >
-                View your order
+                {t.viewOrder}
               </Button>
 
               <Hr className="my-6 border-solid border-[#ece7dd]" />
-              <Text className="m-0 text-xs text-[#a39c8d]">
-                Questions about this order? Just reply to this email.
-              </Text>
+              <Text className="m-0 text-xs text-[#a39c8d]">{t.orderQuestions}</Text>
             </Section>
 
             <Section className="mt-6 text-center text-xs text-[#a39c8d]">
-              <Text className="m-0">{storeName} — authentic Venetian glass, handmade in Murano.</Text>
+              <Text className="m-0">{applyTemplate(t.tagline, { storeName })}</Text>
               {companyLegalName ? (
                 <Text className="m-0 mt-2">
                   {companyLegalName}
                   {companyAddress ? ` — ${companyAddress}` : ""}
-                  {vatNumber ? ` — VAT ${vatNumber}` : ""}
+                  {vatNumber ? ` — ${applyTemplate(t.vatLabel, { number: vatNumber })}` : ""}
                 </Text>
               ) : null}
             </Section>
@@ -263,6 +240,8 @@ OrderStatusEmail.PreviewProps = {
   companyLegalName: "Perla Murano Glass S.r.l.",
   companyAddress: "Murano, Venezia, Italia",
   vatNumber: "IT00000000000",
+  t: getDictionary("en").emails,
+  lang: "en",
 } satisfies OrderStatusEmailProps;
 
 export { OrderStatusEmail };

@@ -473,6 +473,11 @@ model Order {
   discountAmount Int    @default(0) // cents
   total          Int // cents
   currency       String @default("EUR")
+  // The storefront language the customer checked out in. Emails about the order
+  // (status updates, abandoned-cart reminder) are sent from webhooks and cron,
+  // with no request to read a language from, so they use this. Null on orders
+  // placed before it existed: those get English.
+  locale String?
 
   addressId String?
   address   Address? @relation(fields: [addressId], references: [id])

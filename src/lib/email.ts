@@ -7,6 +7,8 @@ import { rateLimit } from "@/lib/rate-limit";
 import { VerifyEmail } from "@/emails/verify-email";
 import { ResetPasswordEmail } from "@/emails/reset-password";
 import { OrderStatusEmail, type OrderStatus } from "@/emails/order-status";
+import { emailStrings } from "@/lib/i18n/email-locale";
+import { applyTemplate } from "@/lib/i18n/format";
 
 // Resend's free plan caps out at 100/day — this stops just short of that
 // account-wide ceiling so a traffic spike (or a bug looping order-status
@@ -77,9 +79,13 @@ export async function sendVerificationEmailMessage(input: {
   to: string;
   verifyUrl: string;
   expiresInHours: number;
+  locale?: string | null;
 }) {
   const settings = await getStoreSettings();
+  const { locale, t } = await emailStrings(input.locale);
   const element = React.createElement(VerifyEmail, {
+    t,
+    locale,
     storeName: settings.storeName,
     logoUrl: settings.logoUrl,
     primaryColor: settings.primaryColor,
@@ -90,7 +96,7 @@ export async function sendVerificationEmailMessage(input: {
 
   await sendEmail({
     to: input.to,
-    subject: `Confirm your email — ${settings.storeName}`,
+    subject: applyTemplate(t.verifySubject, { storeName: settings.storeName }),
     html,
     text,
   });
@@ -100,9 +106,13 @@ export async function sendPasswordResetEmailMessage(input: {
   to: string;
   resetUrl: string;
   expiresInMinutes: number;
+  locale?: string | null;
 }) {
   const settings = await getStoreSettings();
+  const { locale, t } = await emailStrings(input.locale);
   const element = React.createElement(ResetPasswordEmail, {
+    t,
+    locale,
     storeName: settings.storeName,
     logoUrl: settings.logoUrl,
     primaryColor: settings.primaryColor,
@@ -113,7 +123,7 @@ export async function sendPasswordResetEmailMessage(input: {
 
   await sendEmail({
     to: input.to,
-    subject: `Reset your password — ${settings.storeName}`,
+    subject: applyTemplate(t.resetSubject, { storeName: settings.storeName }),
     html,
     text,
   });
@@ -121,13 +131,16 @@ export async function sendPasswordResetEmailMessage(input: {
 
 // Plain text on purpose: a security notice should be unmistakable and
 // impossible to mistake for marketing.
-export async function sendPasswordChangedEmail(to: string) {
+export async function sendPasswordChangedEmail(to: string, locale?: string | null) {
   const settings = await getStoreSettings();
-  const contact = settings.contactEmail ? ` at ${settings.contactEmail}` : "";
+  const { t } = await emailStrings(locale);
+  const contact = settings.contactEmail
+    ? applyTemplate(t.pwChangedContact, { email: settings.contactEmail })
+    : "";
   await sendEmail({
     to,
-    subject: `Your password was changed — ${settings.storeName}`,
-    text: `The password for your ${settings.storeName} account was just changed, and any devices that were signed in have been signed out.\n\nIf this was you, no action is needed. If it wasn't, reset your password again right away and contact us${contact}.`,
+    subject: applyTemplate(t.pwChangedSubject, { storeName: settings.storeName }),
+    text: applyTemplate(t.pwChangedBody, { storeName: settings.storeName, contact }),
   });
 }
 
@@ -143,30 +156,17 @@ export async function sendOrderStatusEmail(order: {
 
   const settings = await getStoreSettings();
 
-  // Unknown/custom status values (anything outside the fixed set the
-  // template covers) fall back to a plain-text email rather than a
-  // half-populated branded one.
-  if (!isKnownOrderStatus(order.status)) {
-    await sendEmail({
-      to,
-      subject: `Order ${order.orderNumber}: ${order.status}`,
-      text: `Your order status changed to ${order.status}.\n\nOrder number: ${order.orderNumber}`,
-    });
-    return;
-  }
-
-  const base = settings.siteUrl || process.env.NEXTAUTH_URL || "http://localhost:3000";
-  const orderUrl = `${base}/order-confirmation/${order.orderNumber}`;
-
-  // Line items + currency/total aren't on the slice of the order the callers
-  // already have in hand (webhooks, admin actions, the abandoned-order
-  // cron) — fetched fresh here so every call site gets the full receipt
-  // without having to know what this email needs.
+  // Line items + currency/total + the order's language aren't on the slice of
+  // the order the callers already have in hand (webhooks, admin actions, the
+  // abandoned-order cron) — fetched fresh here so every call site gets the full
+  // receipt, in the customer's language, without having to know what this
+  // email needs.
   const fullOrder = await db.order.findUnique({
     where: { orderNumber: order.orderNumber },
     select: {
       total: true,
       currency: true,
+      locale: true,
       createdAt: true,
       items: {
         select: {
@@ -178,13 +178,40 @@ export async function sendOrderStatusEmail(order: {
       },
     },
   });
+  // Orders placed before the language was stored have none: English, formatted
+  // the way the store already formatted them.
+  const { locale: lang, t } = await emailStrings(fullOrder?.locale ?? "en");
+  const formatLocale = fullOrder?.locale ?? settings.defaultLocale;
+
+  // Unknown/custom status values (anything outside the fixed set the
+  // template covers) fall back to a plain-text email rather than a
+  // half-populated branded one.
+  if (!isKnownOrderStatus(order.status)) {
+    await sendEmail({
+      to,
+      subject: applyTemplate(t.orderSubject, {
+        orderNumber: order.orderNumber,
+        heading: order.status,
+      }),
+      text: applyTemplate(t.unknownStatusBody, {
+        status: order.status,
+        orderNumber: order.orderNumber,
+      }),
+    });
+    return;
+  }
+
+  const base = settings.siteUrl || process.env.NEXTAUTH_URL || "http://localhost:3000";
+  const orderUrl = `${base}/order-confirmation/${order.orderNumber}`;
 
   const element = React.createElement(OrderStatusEmail, {
+    t,
+    lang,
     storeName: settings.storeName,
     logoUrl: settings.logoUrl,
     primaryColor: settings.primaryColor,
     orderNumber: order.orderNumber,
-    orderDate: new Intl.DateTimeFormat(settings.defaultLocale, { dateStyle: "long" }).format(
+    orderDate: new Intl.DateTimeFormat(formatLocale, { dateStyle: "long" }).format(
       fullOrder?.createdAt ?? new Date()
     ),
     status: order.status,
@@ -197,7 +224,7 @@ export async function sendOrderStatusEmail(order: {
       imageUrl: item.product.images[0]?.url ?? null,
     })),
     currency: fullOrder?.currency ?? "EUR",
-    locale: settings.defaultLocale,
+    locale: formatLocale,
     total: fullOrder?.total ?? 0,
     companyLegalName: settings.companyLegalName,
     companyAddress: settings.companyAddress,
@@ -207,7 +234,10 @@ export async function sendOrderStatusEmail(order: {
 
   await sendEmail({
     to,
-    subject: `Order ${order.orderNumber}: ${order.status}`,
+    subject: applyTemplate(t.orderSubject, {
+      orderNumber: order.orderNumber,
+      heading: t.status[order.status].heading,
+    }),
     html,
     text,
   });

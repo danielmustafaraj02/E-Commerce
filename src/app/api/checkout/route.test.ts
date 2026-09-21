@@ -6,12 +6,14 @@ const mocks = vi.hoisted(() => ({
   notifyCancelledOrders: vi.fn(),
   afterCallbacks: [] as (() => unknown)[],
   txUpdateStock: vi.fn(),
+  orderCreated: vi.fn(),
+  locale: "en" as string,
 }));
 
 // Messages come back in the visitor's language; tests run as an English visitor.
 vi.mock("@/lib/i18n/locale", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/lib/i18n/locale")>()),
-  getLocale: async () => "en",
+  getLocale: async () => mocks.locale,
 }));
 vi.mock("next/server", async (importOriginal) => ({
   ...(await importOriginal<typeof import("next/server")>()),
@@ -36,7 +38,12 @@ vi.mock("@/lib/db", () => {
     product: { updateMany: mocks.txUpdateStock },
     address: { create: async () => ({ id: "addr1" }) },
     discountCode: { update: async () => ({}) },
-    order: { create: async ({ data }: { data: { orderNumber: string } }) => data },
+    order: {
+      create: async ({ data }: { data: { orderNumber: string } }) => {
+        mocks.orderCreated(data);
+        return data;
+      },
+    },
   };
   return { db: { $transaction: (fn: (t: typeof tx) => unknown) => fn(tx) } };
 });
@@ -93,6 +100,7 @@ const outOfStock = () => new PricingError("Ruby Necklace only has 0 left in stoc
 
 beforeEach(() => {
   vi.resetAllMocks();
+  mocks.locale = "en";
   mocks.afterCallbacks.length = 0;
   mocks.quoteOrder.mockResolvedValue(quote);
   mocks.txUpdateStock.mockResolvedValue({ count: 1 });
@@ -104,6 +112,15 @@ describe("POST /api/checkout stock conflicts", () => {
 
     expect(res.status).toBe(201);
     expect(mocks.cancelExpiredOrders).not.toHaveBeenCalled();
+  });
+
+  it("remembers the language the customer checked out in, for the emails about the order", async () => {
+    mocks.locale = "ja";
+
+    const res = await checkout();
+
+    expect(res.status).toBe(201);
+    expect(mocks.orderCreated).toHaveBeenCalledWith(expect.objectContaining({ locale: "ja" }));
   });
 
   it("releases expired reservations and retries once when an item looks out of stock", async () => {
