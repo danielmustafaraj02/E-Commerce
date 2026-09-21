@@ -20,7 +20,6 @@ type PaymentMethods = {
   paypal: boolean;
   klarna: boolean;
   bankTransfer: boolean;
-  cashOnDelivery: boolean;
 };
 
 // Small, self-drawn glyphs (no external icon font/CDN) — generic enough not
@@ -132,8 +131,7 @@ export async function Footer({
     payments.cards ||
     payments.paypal ||
     payments.klarna ||
-    payments.bankTransfer ||
-    payments.cashOnDelivery;
+    payments.bankTransfer;
 
   return (
     <footer className="glass-rule-top bg-surface">
@@ -247,10 +245,7 @@ export async function Footer({
           </span>
           <PaymentIcons
             {...payments}
-            labels={{
-              bankTransfer: dict.payment.bankTransfer,
-              cashOnDelivery: dict.payment.cashOnDelivery,
-            }}
+            labels={{ bankTransfer: dict.payment.bankTransfer }}
           />
         </div>
       )}

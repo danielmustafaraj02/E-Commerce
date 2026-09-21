@@ -9,8 +9,6 @@ type Initial = {
   bankAccountHolder: string;
   bankIban: string;
   bankBic: string;
-  codEnabled: boolean;
-  codFee: number | null; // cents
 };
 
 export function OfflinePaymentsForm({ initial }: { initial: Initial }) {
@@ -47,30 +45,6 @@ export function OfflinePaymentsForm({ initial }: { initial: Initial }) {
         <label className="flex flex-col gap-1 text-sm">
           BIC / SWIFT
           <input name="bankBic" defaultValue={initial.bankBic} className="field font-mono" />
-        </label>
-      </fieldset>
-
-      <fieldset className="border-foreground/10 bg-background/50 flex flex-col gap-4 rounded-lg border p-4">
-        <legend className="px-1 font-medium">Cash on delivery</legend>
-        <label className="flex items-center gap-2 text-sm">
-          <input
-            type="checkbox"
-            name="codEnabled"
-            defaultChecked={initial.codEnabled}
-            className="field-checkbox"
-          />
-          Offer cash on delivery at checkout
-        </label>
-        <label className="flex flex-col gap-1 text-sm">
-          Surcharge (optional, added to the order total)
-          <input
-            name="codFee"
-            type="number"
-            min={0}
-            step="0.01"
-            defaultValue={initial.codFee !== null ? initial.codFee / 100 : undefined}
-            className="field"
-          />
         </label>
       </fieldset>
 

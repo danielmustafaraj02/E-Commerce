@@ -100,7 +100,6 @@ export default async function OrderConfirmationPage({
             <PaymentButtons
               orderNumber={order.orderNumber}
               bankTransferEnabled={settings.bankTransferEnabled && Boolean(settings.bankIban)}
-              codEnabled={settings.codEnabled}
               locale={settings.defaultLocale}
               dict={dict.payment}
             />

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { formatMoney } from "@/lib/format";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
@@ -19,21 +18,17 @@ const SECONDARY_BUTTON = "btn-secondary w-full py-3 disabled:opacity-60";
 export function PaymentButtons({
   orderNumber,
   bankTransferEnabled,
-  codEnabled,
   locale,
   dict,
 }: {
   orderNumber: string;
   bankTransferEnabled: boolean;
-  codEnabled: boolean;
   locale: string;
   dict: Dictionary["payment"];
 }) {
-  const router = useRouter();
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [bankDetails, setBankDetails] = useState<BankDetails | null>(null);
-  const [codConfirmed, setCodConfirmed] = useState(false);
 
   async function payRedirect(provider: "stripe" | "paypal") {
     setLoading(provider);
@@ -76,29 +71,6 @@ export function PaymentButtons({
     } catch {
       setError(dict.errBank);
     } finally {
-      setLoading(null);
-    }
-  }
-
-  async function payCashOnDelivery() {
-    setLoading("cod");
-    setError(null);
-    try {
-      const res = await fetch("/api/checkout/pay/cash-on-delivery", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderNumber }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error ?? dict.errCod);
-        setLoading(null);
-        return;
-      }
-      setCodConfirmed(true);
-      router.refresh();
-    } catch {
-      setError(dict.errCod);
       setLoading(null);
     }
   }
@@ -148,14 +120,6 @@ export function PaymentButtons({
     );
   }
 
-  if (codConfirmed) {
-    return (
-      <p role="status" className="text-success text-sm">
-        {dict.codConfirmed}
-      </p>
-    );
-  }
-
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-col gap-1">
@@ -187,16 +151,6 @@ export function PaymentButtons({
           className={SECONDARY_BUTTON}
         >
           {loading === "bank_transfer" ? dict.loading : dict.bankTransfer}
-        </button>
-      )}
-      {codEnabled && (
-        <button
-          type="button"
-          onClick={payCashOnDelivery}
-          disabled={loading !== null}
-          className={SECONDARY_BUTTON}
-        >
-          {loading === "cod" ? dict.confirming : dict.cashOnDelivery}
         </button>
       )}
       {error && (

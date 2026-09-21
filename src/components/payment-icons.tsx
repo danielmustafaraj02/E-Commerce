@@ -85,45 +85,21 @@ export function BankTransferIcon({ label }: { label: string }) {
   );
 }
 
-export function CashIcon({ label }: { label: string }) {
-  return (
-    <Badge label={label}>
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="text-foreground/70"
-        aria-hidden="true"
-      >
-        <rect x="2.5" y="6.5" width="19" height="11" rx="1.5" />
-        <circle cx="12" cy="12" r="2.5" />
-      </svg>
-    </Badge>
-  );
-}
-
 export function PaymentIcons({
   cards,
   paypal,
   klarna,
   bankTransfer,
-  cashOnDelivery,
   labels,
 }: {
   cards: boolean;
   paypal: boolean;
   klarna?: boolean;
   bankTransfer: boolean;
-  cashOnDelivery: boolean;
-  // Accessible names for the two icons that aren't brand marks.
-  labels: { bankTransfer: string; cashOnDelivery: string };
+  // Accessible name for the icon that isn't a brand mark.
+  labels: { bankTransfer: string };
 }) {
-  if (!cards && !paypal && !klarna && !bankTransfer && !cashOnDelivery) return null;
+  if (!cards && !paypal && !klarna && !bankTransfer) return null;
 
   return (
     <div className="flex flex-wrap items-center gap-2">
@@ -136,7 +112,6 @@ export function PaymentIcons({
       {paypal && <PayPalIcon />}
       {klarna && <KlarnaIcon />}
       {bankTransfer && <BankTransferIcon label={labels.bankTransfer} />}
-      {cashOnDelivery && <CashIcon label={labels.cashOnDelivery} />}
     </div>
   );
 }

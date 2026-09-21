@@ -184,7 +184,6 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
             paypal: paypalEnabled,
             klarna: settings.klarnaEnabled,
             bankTransfer: settings.bankTransferEnabled,
-            cashOnDelivery: settings.codEnabled,
           }}
         />
         <CookieConsent dict={dict.cookieConsent} />

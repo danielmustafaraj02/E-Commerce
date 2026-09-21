@@ -67,8 +67,6 @@ const offlineSchema = z.object({
   bankAccountHolder: z.string().optional(),
   bankIban: z.string().optional(),
   bankBic: z.string().optional(),
-  codEnabled: z.coerce.boolean(),
-  codFee: z.coerce.number().nonnegative().optional(),
 });
 
 // Separate from updatePaymentSettings — these are plain settings (booleans,
@@ -82,8 +80,6 @@ export async function updateOfflinePaymentSettings(_prevState: unknown, formData
     bankAccountHolder: formData.get("bankAccountHolder") || undefined,
     bankIban: formData.get("bankIban") || undefined,
     bankBic: formData.get("bankBic") || undefined,
-    codEnabled: formData.get("codEnabled") === "on",
-    codFee: formData.get("codFee") || undefined,
   });
   if (!parsed.success) return { error: "Invalid input", success: false };
 
@@ -95,8 +91,6 @@ export async function updateOfflinePaymentSettings(_prevState: unknown, formData
       bankAccountHolder: parsed.data.bankAccountHolder || null,
       bankIban: parsed.data.bankIban || null,
       bankBic: parsed.data.bankBic || null,
-      codEnabled: parsed.data.codEnabled,
-      codFee: parsed.data.codFee !== undefined ? Math.round(parsed.data.codFee * 100) : null,
     },
     create: {
       id: before.id,
@@ -104,8 +98,6 @@ export async function updateOfflinePaymentSettings(_prevState: unknown, formData
       bankAccountHolder: parsed.data.bankAccountHolder || null,
       bankIban: parsed.data.bankIban || null,
       bankBic: parsed.data.bankBic || null,
-      codEnabled: parsed.data.codEnabled,
-      codFee: parsed.data.codFee !== undefined ? Math.round(parsed.data.codFee * 100) : null,
     },
   });
 
@@ -116,7 +108,6 @@ export async function updateOfflinePaymentSettings(_prevState: unknown, formData
     entityId: updated.id,
     after: {
       bankTransferEnabled: updated.bankTransferEnabled,
-      codEnabled: updated.codEnabled,
     },
   });
 

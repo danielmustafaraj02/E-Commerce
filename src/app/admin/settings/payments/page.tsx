@@ -37,8 +37,6 @@ export default async function AdminPaymentsSettingsPage() {
           bankAccountHolder: settings.bankAccountHolder ?? "",
           bankIban: settings.bankIban ?? "",
           bankBic: settings.bankBic ?? "",
-          codEnabled: settings.codEnabled,
-          codFee: settings.codFee,
         }}
       />
     </div>

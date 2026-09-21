@@ -16,7 +16,7 @@ deployment on Vercel.
 
 **Storefront** — home, catalog with price/stock filters and pagination, category
 pages, product pages (reviews, wishlist, related items), cart, guest and account
-checkout (card/wallet via Stripe, PayPal, bank transfer, cash on delivery),
+checkout (card/wallet via Stripe, PayPal, bank transfer),
 order tracking, return requests, newsletter, cookie consent, and account
 self-service (data export, account deletion, MFA, password reset).
 
