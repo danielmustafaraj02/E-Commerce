@@ -28,9 +28,9 @@ export type MuranoGuideContent = {
 };
 
 const en: MuranoGuideContent = {
-  metaTitle: "Murano Glass: History, Techniques & How to Spot the Real Thing",
+  metaTitle: "Murano Glass Guide: History, Real vs Fake",
   metaDescription:
-    "A complete guide to Murano glass — its 700-year history, the techniques behind lampworking, murrine and sommerso, how to tell genuine hand-blown glass from imitations, and how to care for it.",
+    "Murano glass explained: 700 years of history, lampworking and murrine techniques, how to tell genuine glass from imitations, and how to care for it.",
   title: "The Complete Guide to Murano Glass",
   intro:
     "Murano glass is glass made on Murano, a small island in the Venetian lagoon that has been Venice's glassmaking center for over 700 years. The name is protected by an Italian trademark for a reason: it describes a specific place, a specific set of hand techniques, and a level of skill that mass-produced glass jewelry sold under the same name usually doesn't have. This guide covers where it comes from, how it's actually made, and how to tell the genuine article from an imitation.",
