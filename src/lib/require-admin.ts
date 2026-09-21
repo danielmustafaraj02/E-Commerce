@@ -1,6 +1,19 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 
+// Mandatory for admin/staff before writes, matching proxy.ts's page-level
+// gate (src/proxy.ts) — that gate only covers navigation and doesn't run for
+// Server Actions, so without this an admin/staff account without MFA set up
+// could still invoke every requireStaff()/requireAdmin()-gated mutation.
+// session.user.mfaEnabled is re-validated against the DB on every session
+// read (see refreshSessionToken/getSessionUserState in src/auth.ts), so this
+// needs no extra DB query here.
+function requireMfa(session: { user?: { mfaEnabled?: boolean } } | null) {
+  if (!session?.user?.mfaEnabled) {
+    redirect("/account/mfa?required=1");
+  }
+}
+
 // Layout-level convenience for the read side. Every *mutating* admin action
 // (Server Action or route) must still check role itself — Server Functions
 // bypass proxy.ts, so this alone is not a security boundary for writes.
@@ -10,6 +23,7 @@ export async function requireStaff() {
   if (role !== "admin" && role !== "staff") {
     redirect("/login?callbackUrl=/admin");
   }
+  requireMfa(session);
   return session;
 }
 
@@ -18,15 +32,6 @@ export async function requireAdmin() {
   if (session?.user?.role !== "admin") {
     redirect(session ? "/admin" : "/login?callbackUrl=/admin");
   }
+  requireMfa(session);
   return session;
 }
-
-// MFA enrollment is optional for now (mandatory enforcement removed on
-// request — the spec's §11.2 recommendation was to require it before a real
-// go-live, but it was blocking normal dev/admin use). The feature itself is
-// untouched: anyone can still enable it from /account/mfa, and login still
-// requires the code for accounts that have it on. Re-add a call to this if
-// you want it mandatory again:
-//
-//   const user = await db.user.findUnique({ where: { id: userId }, select: { mfaEnabled: true } });
-//   if (!user?.mfaEnabled) redirect("/account/mfa");

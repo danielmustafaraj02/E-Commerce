@@ -4,6 +4,7 @@ const mocks = vi.hoisted(() => ({
   send: vi.fn(),
   findOrder: vi.fn(),
   logoUrl: null as string | null,
+  captureError: vi.fn(),
 }));
 
 vi.mock("resend", () => ({
@@ -13,6 +14,7 @@ vi.mock("resend", () => ({
 }));
 vi.mock("@/lib/db", () => ({ db: { order: { findUnique: mocks.findOrder } } }));
 vi.mock("@/lib/rate-limit", () => ({ rateLimit: async () => ({ success: true }) }));
+vi.mock("@/lib/monitoring", () => ({ captureError: mocks.captureError }));
 vi.mock("@/lib/store-settings", () => ({
   getStoreSettings: async () => ({
     resendApiKey: "re_test",
@@ -142,5 +144,29 @@ describe("sendPasswordChangedEmail", () => {
     expect(mocks.send.mock.calls[0][0].subject).toBe(
       "Your password was changed — Perla Murano Glass"
     );
+  });
+});
+
+describe("sendEmail error reporting", () => {
+  it("reports it when Resend rejects the send instead of failing silently", async () => {
+    mocks.send.mockResolvedValue({
+      data: null,
+      error: { name: "validation_error", message: "The example.com domain is not verified." },
+    });
+
+    await sendPasswordChangedEmail("user@example.com");
+
+    expect(mocks.captureError).toHaveBeenCalledTimes(1);
+    const [error, context] = mocks.captureError.mock.calls[0];
+    expect((error as Error).message).toContain("The example.com domain is not verified.");
+    expect(context).toMatchObject({ to: "user@example.com" });
+  });
+
+  it("does not report anything on a normal successful send", async () => {
+    mocks.send.mockResolvedValue({ data: { id: "abc123" }, error: null });
+
+    await sendPasswordChangedEmail("user@example.com");
+
+    expect(mocks.captureError).not.toHaveBeenCalled();
   });
 });

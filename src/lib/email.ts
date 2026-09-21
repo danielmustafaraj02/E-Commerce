@@ -4,6 +4,7 @@ import * as React from "react";
 import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
 import { rateLimit } from "@/lib/rate-limit";
+import { captureError } from "@/lib/monitoring";
 import { VerifyEmail } from "@/emails/verify-email";
 import { ResetPasswordEmail } from "@/emails/reset-password";
 import { OrderStatusEmail, type OrderStatus } from "@/emails/order-status";
@@ -54,14 +55,27 @@ export async function sendEmail(input: {
   }
 
   const resend = new Resend(apiKey);
-  await resend.emails.send({
+  const { error } = (await resend.emails.send({
     from,
     to: input.to,
     subject: input.subject,
     text: input.text,
     ...(input.html ? { html: input.html } : {}),
     ...(replyTo ? { replyTo } : {}),
-  });
+  })) ?? {};
+  // Resend's SDK returns { data, error } rather than throwing on an API-level
+  // rejection (bad key, unverified sending domain, etc.), so this was
+  // previously silent — every caller believed the send succeeded. Reported,
+  // not thrown: callers already treat email as best-effort (see registerUser,
+  // sendPasswordChangedEmail) and a webhook handler shouldn't 500 just
+  // because a receipt email failed to send.
+  if (error) {
+    captureError(new Error(`Resend rejected an email: ${error.message}`), {
+      to: input.to,
+      subject: input.subject,
+      resendErrorName: error.name,
+    });
+  }
 }
 
 const KNOWN_ORDER_STATUSES = new Set<OrderStatus>([
