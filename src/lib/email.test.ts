@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => ({
   send: vi.fn(),
   findOrder: vi.fn(),
+  logoUrl: null as string | null,
 }));
 
 vi.mock("resend", () => ({
@@ -18,7 +19,7 @@ vi.mock("@/lib/store-settings", () => ({
     emailFrom: "orders@example.com",
     contactEmail: "help@example.com",
     storeName: "Perla Murano Glass",
-    logoUrl: null,
+    logoUrl: mocks.logoUrl,
     primaryColor: "#0f6e5e",
     siteUrl: "https://example.com",
     defaultLocale: "en-US",
@@ -57,6 +58,7 @@ function stored(locale: string | null) {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  mocks.logoUrl = null;
 });
 
 describe("sendOrderStatusEmail", () => {
@@ -69,6 +71,30 @@ describe("sendOrderStatusEmail", () => {
     expect(sent.subject).toBe("Ordine ORD-1: Pagamento ricevuto");
     expect(sent.html).toContain('lang="it"');
     expect(sent.text).toContain("Numero ordine");
+  });
+
+  it("points the logo and product pictures at complete web addresses so inboxes can load them", async () => {
+    mocks.logoUrl = "/logo.png";
+    mocks.findOrder.mockResolvedValue({
+      ...stored("en"),
+      items: [
+        {
+          productName: "Bracelet",
+          quantity: 1,
+          unitPrice: 4500,
+          product: { images: [{ url: "/products/bracelets/onyx.png" }] },
+        },
+      ],
+    });
+
+    await sendOrderStatusEmail(order);
+
+    const html: string = mocks.send.mock.calls[0][0].html;
+    expect(html).toContain('src="https://example.com/logo.png"');
+    expect(html).toContain(
+      'src="https://example.com/_next/image?url=%2Fproducts%2Fbracelets%2Fonyx.png&amp;w=128&amp;q=75"'
+    );
+    expect(html).not.toMatch(/src="\//);
   });
 
   it("uses right-to-left for Arabic", async () => {

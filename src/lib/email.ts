@@ -9,6 +9,8 @@ import { ResetPasswordEmail } from "@/emails/reset-password";
 import { OrderStatusEmail, type OrderStatus } from "@/emails/order-status";
 import { emailStrings } from "@/lib/i18n/email-locale";
 import { applyTemplate } from "@/lib/i18n/format";
+import { siteBaseUrl } from "@/lib/site-url";
+import { emailAbsoluteUrl, emailThumbnailUrl } from "@/lib/email-image";
 
 // Resend's free plan caps out at 100/day — this stops just short of that
 // account-wide ceiling so a traffic spike (or a bug looping order-status
@@ -87,7 +89,7 @@ export async function sendVerificationEmailMessage(input: {
     t,
     locale,
     storeName: settings.storeName,
-    logoUrl: settings.logoUrl,
+    logoUrl: emailAbsoluteUrl(settings.logoUrl, siteBaseUrl(settings)),
     primaryColor: settings.primaryColor,
     verifyUrl: input.verifyUrl,
     expiresInHours: input.expiresInHours,
@@ -114,7 +116,7 @@ export async function sendPasswordResetEmailMessage(input: {
     t,
     locale,
     storeName: settings.storeName,
-    logoUrl: settings.logoUrl,
+    logoUrl: emailAbsoluteUrl(settings.logoUrl, siteBaseUrl(settings)),
     primaryColor: settings.primaryColor,
     resetUrl: input.resetUrl,
     expiresInMinutes: input.expiresInMinutes,
@@ -201,14 +203,14 @@ export async function sendOrderStatusEmail(order: {
     return;
   }
 
-  const base = settings.siteUrl || process.env.NEXTAUTH_URL || "http://localhost:3000";
+  const base = siteBaseUrl(settings);
   const orderUrl = `${base}/order-confirmation/${order.orderNumber}`;
 
   const element = React.createElement(OrderStatusEmail, {
     t,
     lang,
     storeName: settings.storeName,
-    logoUrl: settings.logoUrl,
+    logoUrl: emailAbsoluteUrl(settings.logoUrl, siteBaseUrl(settings)),
     primaryColor: settings.primaryColor,
     orderNumber: order.orderNumber,
     orderDate: new Intl.DateTimeFormat(formatLocale, { dateStyle: "long" }).format(
@@ -221,7 +223,7 @@ export async function sendOrderStatusEmail(order: {
       name: item.productName,
       quantity: item.quantity,
       unitPrice: item.unitPrice,
-      imageUrl: item.product.images[0]?.url ?? null,
+      imageUrl: emailThumbnailUrl(item.product.images[0]?.url, base),
     })),
     currency: fullOrder?.currency ?? "EUR",
     locale: formatLocale,
