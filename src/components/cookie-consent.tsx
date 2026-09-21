@@ -47,7 +47,7 @@ export function CookieConsent({ dict }: { dict: Dictionary["cookieConsent"] }) {
   if (!visible) return null;
 
   return (
-    <div className="border-foreground/10 bg-background animate-fade-up fixed inset-x-0 bottom-0 z-50 border-t p-4 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+    <div className="border-foreground/10 bg-background animate-fade-up fixed inset-x-0 bottom-0 z-50 max-h-[85vh] overflow-y-auto border-t p-4 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-3 text-sm">
         <p className="text-foreground/80">
           {dict.message}{" "}
@@ -88,14 +88,14 @@ export function CookieConsent({ dict }: { dict: Dictionary["cookieConsent"] }) {
           <button
             type="button"
             onClick={() => save({ analytics: true, marketing: true })}
-            className="btn-primary text-sm"
+            className="btn-primary text-sm max-sm:flex-1"
           >
             {dict.acceptAll}
           </button>
           <button
             type="button"
             onClick={() => save({ analytics: false, marketing: false })}
-            className="btn-secondary text-sm"
+            className="btn-secondary text-sm max-sm:flex-1"
           >
             {dict.rejectNonEssential}
           </button>
@@ -103,7 +103,7 @@ export function CookieConsent({ dict }: { dict: Dictionary["cookieConsent"] }) {
             <button
               type="button"
               onClick={() => save({ analytics, marketing })}
-              className="btn-secondary text-sm"
+              className="btn-secondary text-sm max-sm:flex-1"
             >
               {dict.savePreferences}
             </button>
@@ -111,7 +111,7 @@ export function CookieConsent({ dict }: { dict: Dictionary["cookieConsent"] }) {
             <button
               type="button"
               onClick={() => setCustomizing(true)}
-              className="btn-secondary text-sm"
+              className="btn-secondary text-sm max-sm:flex-1"
             >
               {dict.customize}
             </button>

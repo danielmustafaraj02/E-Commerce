@@ -31,7 +31,7 @@ export async function Header({
     : 0;
 
   return (
-    <header className="glass-rule bg-background/90 sticky top-0 z-40 backdrop-blur-sm">
+    <header className="glass-rule bg-background/90 relative z-40 backdrop-blur-sm sm:sticky sm:top-0">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-3 px-4 py-3 sm:py-4">
         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
           <Link href="/" className="flex shrink-0 items-center gap-2 text-lg font-semibold">
@@ -57,7 +57,7 @@ export async function Header({
                 href="/account/wishlist"
                 aria-label={dict.nav.wishlist}
                 title={dict.nav.wishlist}
-                className="group link-underline text-foreground/80 hover:text-danger flex items-center gap-1 transition-colors"
+                className="group link-underline text-foreground/80 hover:text-danger flex items-center gap-1 transition-colors max-sm:-m-1.5 max-sm:p-1.5"
               >
                 <svg
                   width="18"
@@ -92,7 +92,7 @@ export async function Header({
                 href="/account"
                 aria-label={dict.nav.account}
                 title={dict.nav.account}
-                className="group link-underline text-foreground/80 hover:text-accent flex items-center"
+                className="group link-underline text-foreground/80 hover:text-accent flex items-center max-sm:-m-1.5 max-sm:p-1.5"
               >
                 <svg
                   width="18"

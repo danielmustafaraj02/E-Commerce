@@ -89,7 +89,7 @@ export function LocaleSwitcher({ current }: { current: Locale }) {
       {open && (
         <ul
           role="listbox"
-          className="border-foreground/10 bg-background animate-pop-in absolute top-full right-0 z-50 mt-1.5 min-w-36 overflow-hidden rounded-lg border py-1 text-sm shadow-lg"
+          className="border-foreground/10 bg-background animate-pop-in absolute top-full z-50 mt-1.5 min-w-36 max-sm:start-0 sm:end-0 overflow-hidden rounded-lg border py-1 text-sm shadow-lg"
         >
           {locales.map((locale) => (
             <li key={locale}>

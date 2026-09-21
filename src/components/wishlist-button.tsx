@@ -73,14 +73,14 @@ export function WishlistButton({
   };
 
   const buttonClass = (isSaved: boolean) =>
-    `border-foreground/15 hover:border-danger/50 hover:bg-danger/5 inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors disabled:opacity-50 ${
+    `border-foreground/15 hover:border-danger/50 hover:bg-danger/5 inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors disabled:opacity-50 max-sm:w-full max-sm:justify-center ${
       isSaved ? "text-danger border-danger/30 bg-danger/5" : "text-foreground/80"
     }`;
 
   if (!isSignedIn) {
     return (
       <div className="mt-3">
-        <div className="relative inline-block">
+        <div className="relative inline-block max-sm:block">
           <button
             type="button"
             aria-pressed={guestSaved}
@@ -101,7 +101,7 @@ export function WishlistButton({
 
   return (
     <div className="mt-3">
-      <div className="relative inline-block">
+      <div className="relative inline-block max-sm:block">
         <button
           type="button"
           disabled={isPending}

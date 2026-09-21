@@ -652,3 +652,21 @@
     display: none;
   }
 }
+
+/* -- Phones ----------------------------------------------------------------------- */
+
+/* The bead is scaled up past its box; without room above it, it overlaps the
+   line of facts stacked over it. */
+@media (max-width: 51.99rem) {
+  .shelf-bead {
+    margin-top: 2.5rem;
+  }
+}
+/* Two columns leave the third category alone on its row: centre it. */
+@media (max-width: 47.99rem) {
+  .shelf-categories > .shelf-category:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc(50% - 0.5rem);
+  }
+}
