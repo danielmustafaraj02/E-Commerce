@@ -844,6 +844,58 @@ button:not(:disabled),
     border-color: var(--color-primary);
     background: color-mix(in srgb, var(--color-primary) 6%, transparent);
   }
+
+  /* Color filter swatches (product-filter-panel.tsx) — a real circle of the
+     actual color rather than a text dropdown. 2.75rem (44px) meets the
+     minimum touch-target size, important since this is opened at least as
+     often on a phone as a desktop. The checkmark uses mix-blend-mode so it
+     stays visible on every swatch color, from white to black, without
+     needing a per-color text-color rule. */
+  .color-swatch {
+    position: relative;
+    display: inline-flex;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 999px;
+    cursor: pointer;
+    border: 2px solid color-mix(in srgb, var(--foreground) 14%, transparent);
+    box-shadow: 0 1px 2px color-mix(in srgb, var(--foreground) 10%, transparent);
+    transition:
+      transform 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+  .color-swatch:hover {
+    transform: scale(1.1);
+  }
+  .color-swatch:has(:focus-visible) {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+  .color-swatch:has(:checked) {
+    box-shadow:
+      0 0 0 2px var(--background),
+      0 0 0 4px var(--color-primary);
+  }
+  .color-swatch input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .color-swatch-check {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    mix-blend-mode: difference;
+    pointer-events: none;
+  }
+  .color-swatch:has(:checked) .color-swatch-check {
+    display: flex;
+  }
 } /* end @layer components */
 
 /* Shared prev/next button for every homepage carousel (best sellers,

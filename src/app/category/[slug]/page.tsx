@@ -17,6 +17,7 @@ import "../../home.css";
 import "../../shop.css";
 import { ProductFilterPanel } from "@/components/product-filter-panel";
 import { Pagination } from "@/components/pagination";
+import { isProductColorKey } from "@/lib/product-colors";
 
 const PAGE_SIZE = 12;
 
@@ -24,6 +25,7 @@ const filtersSchema = z.object({
   minPrice: z.coerce.number().nonnegative().optional(),
   maxPrice: z.coerce.number().nonnegative().optional(),
   inStock: z.enum(["1"]).optional(),
+  color: z.array(z.string()).optional(),
   page: z.coerce.number().int().positive().default(1),
 });
 
@@ -92,7 +94,7 @@ export async function generateMetadata({
   // (?page=2 with nothing else) is genuinely different products, so it gets a
   // self-referencing canonical — same rule as /products.
   const page = Array.isArray(raw.page) ? raw.page[0] : raw.page;
-  const isPlainPagination = !raw.minPrice && !raw.maxPrice && !raw.inStock;
+  const isPlainPagination = !raw.minPrice && !raw.maxPrice && !raw.inStock && !raw.color;
   const canonical =
     isPlainPagination && page && /^[2-9]\d*$|^1\d+$/.test(page)
       ? `/category/${category.slug}?page=${page}`
@@ -127,10 +129,17 @@ export default async function CategoryPage({
     return v === "" ? undefined : v;
   };
 
+  // See src/app/products/page.tsx for why color needs its own array
+  // normalization ahead of the schema parse.
+  const colorValues = (Array.isArray(raw.color) ? raw.color : raw.color ? [raw.color] : []).filter(
+    isProductColorKey
+  );
+
   const parsed = filtersSchema.safeParse({
     minPrice: single(raw.minPrice),
     maxPrice: single(raw.maxPrice),
     inStock: single(raw.inStock),
+    color: colorValues.length ? colorValues : undefined,
     page: single(raw.page),
   });
   const filters = parsed.success ? parsed.data : { page: 1 };
@@ -150,6 +159,7 @@ export default async function CategoryPage({
     active: true,
     categoryId: category.id,
     ...(filters.inStock && { stockQty: { gt: 0 } }),
+    ...(filters.color?.length && { color: { in: filters.color } }),
     ...((filters.minPrice !== undefined || filters.maxPrice !== undefined) && {
       price: {
         ...(filters.minPrice !== undefined && { gte: Math.round(filters.minPrice * 100) }),
@@ -200,6 +210,7 @@ export default async function CategoryPage({
     if (filters.minPrice !== undefined) params.set("minPrice", String(filters.minPrice));
     if (filters.maxPrice !== undefined) params.set("maxPrice", String(filters.maxPrice));
     if (filters.inStock) params.set("inStock", filters.inStock);
+    for (const color of filters.color ?? []) params.append("color", color);
     params.set("page", String(page));
     return `/category/${category.slug}?${params.toString()}`;
   };
@@ -283,7 +294,8 @@ export default async function CategoryPage({
               filters.page === 1 &&
               !filters.minPrice &&
               !filters.maxPrice &&
-              !filters.inStock
+              !filters.inStock &&
+              !filters.color?.length
                 ? dict.products.noProductsInCategory
                 : dict.products.noResults}
             </p>

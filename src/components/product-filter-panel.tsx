@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { PriceRangeSlider } from "@/components/price-range-slider";
+import { PRODUCT_COLOR_KEYS, PRODUCT_COLOR_SWATCH } from "@/lib/product-colors";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
 type Category = { id: string; slug: string; name: string };
@@ -36,7 +37,14 @@ export function ProductFilterPanel({
   dict: Dictionary["products"];
   categories?: Category[];
   showCategory?: boolean;
-  filters: { q?: string; category?: string; minPrice?: number; maxPrice?: number; inStock?: "1" };
+  filters: {
+    q?: string;
+    category?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    inStock?: "1";
+    color?: string[];
+  };
   priceMin: number;
   priceMax: number;
   currency: string;
@@ -49,7 +57,8 @@ export function ProductFilterPanel({
     (showCategory && filters.category) ||
     filters.minPrice !== undefined ||
     filters.maxPrice !== undefined ||
-    filters.inStock
+    filters.inStock ||
+    filters.color?.length
   );
 
   return (
@@ -139,6 +148,42 @@ export function ProductFilterPanel({
               minLabel={priceLabels.min}
               maxLabel={priceLabels.max}
             />
+          </div>
+
+          <div className="border-foreground/10 flex flex-col gap-3 border-t pt-5">
+            <span className="font-medium">{dict.colorLabel}</span>
+            <div className="flex flex-wrap gap-2.5">
+              {PRODUCT_COLOR_KEYS.map((key) => (
+                <label
+                  key={key}
+                  className="color-swatch"
+                  title={dict.colors[key]}
+                  style={{ background: PRODUCT_COLOR_SWATCH[key] }}
+                >
+                  <input
+                    type="checkbox"
+                    name="color"
+                    value={key}
+                    defaultChecked={filters.color?.includes(key)}
+                  />
+                  <span className="sr-only">{dict.colors[key]}</span>
+                  <span className="color-swatch-check" aria-hidden="true">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M20 6 9 17l-5-5" />
+                    </svg>
+                  </span>
+                </label>
+              ))}
+            </div>
           </div>
 
           <label className="border-foreground/10 flex cursor-pointer items-center gap-2 border-t pt-5">

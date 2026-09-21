@@ -14,6 +14,7 @@ import "../home.css";
 import "../shop.css";
 import { ProductFilterPanel } from "@/components/product-filter-panel";
 import { Pagination } from "@/components/pagination";
+import { isProductColorKey } from "@/lib/product-colors";
 
 const PAGE_SIZE = 12;
 
@@ -23,6 +24,7 @@ const filtersSchema = z.object({
   minPrice: z.coerce.number().nonnegative().optional(),
   maxPrice: z.coerce.number().nonnegative().optional(),
   inStock: z.enum(["1"]).optional(),
+  color: z.array(z.string()).optional(),
   page: z.coerce.number().int().positive().default(1),
 });
 
@@ -56,7 +58,7 @@ export async function generateMetadata({
   // products, so it gets a self-referencing canonical instead of collapsing
   // every page into page 1.
   const isPlainPagination =
-    !raw.q && !raw.category && !raw.minPrice && !raw.maxPrice && !raw.inStock;
+    !raw.q && !raw.category && !raw.minPrice && !raw.maxPrice && !raw.inStock && !raw.color;
   const page = Array.isArray(raw.page) ? raw.page[0] : raw.page;
   const canonical =
     isPlainPagination && page && page !== "1" ? `/products?page=${page}` : "/products";
@@ -90,12 +92,21 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
     return v === "" ? undefined : v;
   };
 
+  // Checkbox swatches all share name="color", so a real selection arrives as
+  // an array (Next only gives a bare string for a single-valued param) —
+  // and only real palette keys survive, so a tampered query string can't
+  // reach the DB query below with an arbitrary value.
+  const colorValues = (Array.isArray(raw.color) ? raw.color : raw.color ? [raw.color] : []).filter(
+    isProductColorKey
+  );
+
   const parsed = filtersSchema.safeParse({
     q: single(raw.q),
     category: single(raw.category),
     minPrice: single(raw.minPrice),
     maxPrice: single(raw.maxPrice),
     inStock: single(raw.inStock),
+    color: colorValues.length ? colorValues : undefined,
     page: single(raw.page),
   });
   const filters = parsed.success ? parsed.data : { page: 1 };
@@ -122,6 +133,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
     }),
     ...(filters.category && { category: { slug: filters.category } }),
     ...(filters.inStock && { stockQty: { gt: 0 } }),
+    ...(filters.color?.length && { color: { in: filters.color } }),
     ...((filters.minPrice !== undefined || filters.maxPrice !== undefined) && {
       price: {
         ...(filters.minPrice !== undefined && { gte: Math.round(filters.minPrice * 100) }),
@@ -168,6 +180,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
     if (filters.minPrice !== undefined) params.set("minPrice", String(filters.minPrice));
     if (filters.maxPrice !== undefined) params.set("maxPrice", String(filters.maxPrice));
     if (filters.inStock) params.set("inStock", filters.inStock);
+    for (const color of filters.color ?? []) params.append("color", color);
     params.set("page", String(page));
     return `/products?${params.toString()}`;
   };
@@ -175,7 +188,8 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
   // Only for the plain, unfiltered catalog view — a search/filter result is
   // a thin, high-cardinality slice that isn't worth asserting as a
   // canonical ItemList.
-  const isPlainBrowse = !filters.q && !filters.category && !filters.minPrice && !filters.maxPrice;
+  const isPlainBrowse =
+    !filters.q && !filters.category && !filters.minPrice && !filters.maxPrice && !filters.color;
   const itemListJsonLd =
     isPlainBrowse && products.length > 0
       ? {
