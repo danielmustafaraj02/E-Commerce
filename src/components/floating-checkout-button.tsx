@@ -18,7 +18,8 @@ export function FloatingCheckoutButton({ label }: { label: string }) {
   return (
     <Link
       href="/checkout"
-      className="btn-primary animate-pop-in fixed end-5 bottom-5 z-40 flex items-center gap-2 rounded-full px-5 py-3 text-sm shadow-lg transition-transform duration-150 will-change-transform hover:scale-105 active:scale-95"
+      className="btn-primary animate-pop-in fixed end-5 z-40 flex items-center gap-2 rounded-full px-5 py-3 text-sm shadow-lg transition-transform duration-150 will-change-transform hover:scale-105 active:scale-95"
+      style={{ bottom: "calc(1.25rem + env(safe-area-inset-bottom, 0px))" }}
     >
       <svg
         width="18"
