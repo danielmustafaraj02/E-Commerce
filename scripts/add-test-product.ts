@@ -27,7 +27,23 @@ const WARNING =
 async function main() {
   const existing = await db.product.findUnique({ where: { slug: SLUG } });
   if (existing) {
-    console.log(`Already exists (id ${existing.id}, active: ${existing.active}).`);
+    if (existing.active) {
+      console.log(`Already exists and is active (id ${existing.id}).`);
+      console.log(`   URL: /products/${SLUG}`);
+      return;
+    }
+    // Left inactive by a previous scripts/remove-test-product.ts run (it
+    // deactivates rather than deletes once a real order exists for it).
+    await db.product.update({
+      where: { id: existing.id },
+      data: { active: true, stockQty: 999 },
+    });
+    console.log(`✅ Reactivated existing test product (id ${existing.id}).`);
+    console.log(`   URL: /products/${SLUG}`);
+    console.log(
+      `\n⚠️  This is now LIVE and buyable by anyone who finds it, not just you — ` +
+        `test quickly, then run scripts/remove-test-product.ts.`
+    );
     return;
   }
 
