@@ -8,8 +8,8 @@ import {
 } from "./launch-checklist";
 
 describe("LAUNCH_CHECKLIST", () => {
-  it("has exactly 100 items", () => {
-    expect(LAUNCH_CHECKLIST).toHaveLength(100);
+  it("has exactly 104 items", () => {
+    expect(LAUNCH_CHECKLIST).toHaveLength(104);
   });
 
   it("has unique titles once the area prefix is added", () => {
@@ -52,7 +52,7 @@ describe("LAUNCH_CHECKLIST", () => {
 
 describe("missingChecklistItems", () => {
   it("returns everything when the roadmap is empty", () => {
-    expect(missingChecklistItems([])).toHaveLength(100);
+    expect(missingChecklistItems([])).toHaveLength(104);
   });
 
   it("skips items already on the roadmap, matching by exact title", () => {
@@ -64,7 +64,7 @@ describe("missingChecklistItems", () => {
 
     const missing = missingChecklistItems(have);
 
-    expect(missing).toHaveLength(98);
+    expect(missing).toHaveLength(102);
     expect(missing).not.toContain(LAUNCH_CHECKLIST[0]);
   });
 

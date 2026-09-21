@@ -162,6 +162,34 @@ export const LAUNCH_CHECKLIST: ChecklistItem[] = [
     "Only needed if admins should be allowed to sign in with Google."
   ),
   item(
+    "Security",
+    "high",
+    false,
+    "Deploy this session's security fixes",
+    "Fixed in code (commit c7c3f81) but not yet pushed to main, so not live: rate limiting on /api/checkout/quote (was letting anyone brute-force discount codes for free) and on the PayPal payment-init route, removal of a dead /api/auth/register route that bypassed the Turnstile check the real registration form enforces, and hashing email-verification tokens at rest (password-reset tokens already were). Push to main to deploy."
+  ),
+  item(
+    "Security",
+    "high",
+    false,
+    "Fix silently-swallowed email send failures",
+    "src/lib/email.ts#sendEmail awaits resend.emails.send() but never checks the response for an error — a bad API key, unverified sending domain, or any Resend-side rejection is silently treated as success everywhere (order confirmations, password resets, shipping updates). Found while testing: a send with an unverified 'from' domain returned a 403 from Resend but the app logged success. Should check the response and surface/log failures so a misconfigured sender doesn't fail silently in production."
+  ),
+  item(
+    "Security",
+    "medium",
+    false,
+    "Enforce completed MFA inside requireStaff/requireAdmin, not just at the page layer",
+    "src/lib/require-admin.ts: an admin/staff account with valid credentials but no completed MFA enrollment can still invoke every requireStaff()/requireAdmin()-gated Server Action — the role check alone is sufficient. src/proxy.ts only nudges them toward /account/mfa when browsing pages; it doesn't block the action itself. Documented, deliberate tradeoff in the code, not an oversight — but a real gap if 'admin = must have 2FA on' was assumed to be a hard rule."
+  ),
+  item(
+    "Payments",
+    "high",
+    false,
+    "Verify the Stripe account itself, not just that a key is set",
+    "A valid secret key can still belong to an account that hasn't finished business verification or added a payout method — charges would work but payouts wouldn't. Run scripts/check-payment-readiness.ts (see its --live check of stripe.accounts.retrieveCurrent(): details_submitted, charges_enabled, payouts_enabled)."
+  ),
+  item(
     "SEO",
     "medium",
     false,
@@ -727,7 +755,7 @@ export const LAUNCH_CHECKLIST: ChecklistItem[] = [
 ];
 
 // How an item appears on the roadmap: the area in brackets keeps a flat list of
-// 100 tasks scannable and sortable by eye.
+// 104 tasks scannable and sortable by eye.
 export const taskTitle = (entry: ChecklistItem) => `[${entry.area}] ${entry.title}`;
 
 export type TaskRow = {

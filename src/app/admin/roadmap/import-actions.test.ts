@@ -38,20 +38,20 @@ describe("importLaunchChecklist", () => {
     expect(mocks.createMany).not.toHaveBeenCalled();
   });
 
-  it("creates all 100 tasks on an empty roadmap and logs it", async () => {
+  it("creates all 104 tasks on an empty roadmap and logs it", async () => {
     mocks.findMany.mockResolvedValue([]);
 
     await expect(importLaunchChecklist()).rejects.toThrow("NEXT_REDIRECT");
 
     const { data } = mocks.createMany.mock.calls[0][0];
-    expect(data).toHaveLength(100);
+    expect(data).toHaveLength(104);
     expect(data.filter((row: { status: string }) => row.status === "done").length).toBe(
       LAUNCH_CHECKLIST.filter((entry) => entry.done).length
     );
     expect(mocks.writeAuditLog).toHaveBeenCalledWith(
-      expect.objectContaining({ action: "improvementTask.import", after: { created: 100 } })
+      expect.objectContaining({ action: "improvementTask.import", after: { created: 104 } })
     );
-    expect(mocks.redirect).toHaveBeenCalledWith("/admin/roadmap?imported=100");
+    expect(mocks.redirect).toHaveBeenCalledWith("/admin/roadmap?imported=104");
   });
 
   it("only adds what is missing and leaves existing tasks alone", async () => {
@@ -62,8 +62,8 @@ describe("importLaunchChecklist", () => {
 
     await expect(importLaunchChecklist()).rejects.toThrow("NEXT_REDIRECT");
 
-    expect(mocks.createMany.mock.calls[0][0].data).toHaveLength(99);
-    expect(mocks.redirect).toHaveBeenCalledWith("/admin/roadmap?imported=99");
+    expect(mocks.createMany.mock.calls[0][0].data).toHaveLength(103);
+    expect(mocks.redirect).toHaveBeenCalledWith("/admin/roadmap?imported=103");
   });
 
   it("does nothing (and writes no audit entry) when everything is already imported", async () => {

@@ -66,3 +66,10 @@ next-env.d.ts
 
 # internal QA/ops reports — working notes, not shipped source
 /reports/
+
+# local-only payment/catalog setup helpers — write directly to production
+# and prompt for/write live credentials; kept on disk only, never committed
+/scripts/setup-payments.ts
+/scripts/check-payment-readiness.ts
+/scripts/go-live-catalog-update.sh
+/scripts/send-test-emails.ts
