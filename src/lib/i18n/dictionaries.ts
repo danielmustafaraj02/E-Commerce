@@ -329,6 +329,7 @@ const en = {
   },
   payment: {
     payWithCard: "Pay with card or wallet",
+    payWithPayPal: "Pay with PayPal",
     redirecting: "Redirecting…",
     cardHelp: "Card, and any wallet or local payment method enabled at checkout.",
     bankTransfer: "Pay by bank transfer",
@@ -758,6 +759,7 @@ const it: Dictionary = {
   },
   payment: {
     payWithCard: "Paga con carta o portafoglio digitale",
+    payWithPayPal: "Paga con PayPal",
     redirecting: "Reindirizzamento…",
     cardHelp: "Carta e qualsiasi portafoglio digitale o metodo di pagamento locale attivo al checkout.",
     bankTransfer: "Paga con bonifico bancario",
@@ -1186,6 +1188,7 @@ const fr: Dictionary = {
   },
   payment: {
     payWithCard: "Payer par carte ou portefeuille",
+    payWithPayPal: "Payer avec PayPal",
     redirecting: "Redirection…",
     cardHelp: "Carte, ainsi que tout portefeuille ou moyen de paiement local activé lors du paiement.",
     bankTransfer: "Payer par virement bancaire",
@@ -1613,6 +1616,7 @@ const de: Dictionary = {
   },
   payment: {
     payWithCard: "Mit Karte oder Wallet bezahlen",
+    payWithPayPal: "Mit PayPal bezahlen",
     redirecting: "Weiterleitung…",
     cardHelp: "Karte sowie alle beim Bezahlen aktivierten Wallets und lokalen Zahlungsarten.",
     bankTransfer: "Per Banküberweisung bezahlen",
@@ -2040,6 +2044,7 @@ const ar: Dictionary = {
   },
   payment: {
     payWithCard: "الدفع بالبطاقة أو المحفظة",
+    payWithPayPal: "الدفع عبر PayPal",
     redirecting: "جارٍ إعادة التوجيه…",
     cardHelp: "البطاقة، وأي محفظة أو وسيلة دفع محلية مفعّلة عند إتمام الطلب.",
     bankTransfer: "الدفع بالتحويل المصرفي",
@@ -2464,6 +2469,7 @@ const zh: Dictionary = {
   },
   payment: {
     payWithCard: "使用银行卡或电子钱包支付",
+    payWithPayPal: "使用 PayPal 支付",
     redirecting: "正在跳转…",
     cardHelp: "银行卡，以及结账时可用的电子钱包或本地支付方式。",
     bankTransfer: "银行转账支付",
@@ -2890,6 +2896,7 @@ const ru: Dictionary = {
   },
   payment: {
     payWithCard: "Оплатить картой или электронным кошельком",
+    payWithPayPal: "Оплатить через PayPal",
     redirecting: "Перенаправление…",
     cardHelp: "Карта, а также любые электронные кошельки и местные способы оплаты, доступные при оформлении заказа.",
     bankTransfer: "Оплатить банковским переводом",
@@ -3316,6 +3323,7 @@ const es: Dictionary = {
   },
   payment: {
     payWithCard: "Pagar con tarjeta o monedero",
+    payWithPayPal: "Pagar con PayPal",
     redirecting: "Redirigiendo…",
     cardHelp: "Tarjeta y cualquier monedero o método de pago local habilitado al pagar.",
     bankTransfer: "Pagar por transferencia bancaria",
@@ -3743,6 +3751,7 @@ const pt: Dictionary = {
   },
   payment: {
     payWithCard: "Pagar com cartão ou carteira digital",
+    payWithPayPal: "Pagar com o PayPal",
     redirecting: "A redirecionar…",
     cardHelp: "Cartão e qualquer carteira digital ou método de pagamento local ativo no pagamento.",
     bankTransfer: "Pagar por transferência bancária",
@@ -4170,6 +4179,7 @@ const hi: Dictionary = {
   },
   payment: {
     payWithCard: "कार्ड या वॉलेट से भुगतान करें",
+    payWithPayPal: "PayPal से भुगतान करें",
     redirecting: "रीडायरेक्ट हो रहा है…",
     cardHelp: "कार्ड, तथा चेकआउट पर उपलब्ध कोई भी वॉलेट या स्थानीय भुगतान तरीका।",
     bankTransfer: "बैंक ट्रांसफ़र से भुगतान करें",
@@ -4597,6 +4607,7 @@ const ja: Dictionary = {
   },
   payment: {
     payWithCard: "カードまたはウォレットで支払う",
+    payWithPayPal: "PayPalで支払う",
     redirecting: "移動しています…",
     cardHelp: "カードのほか、お支払い時に利用できるウォレットや現地の決済方法に対応しています。",
     bankTransfer: "銀行振込で支払う",

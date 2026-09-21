@@ -53,9 +53,11 @@ function SecretField({
 export function PaymentsForm({
   configured,
   klarnaEnabled,
+  siteUrl,
 }: {
   configured: Record<FieldKey, boolean>;
   klarnaEnabled: boolean;
+  siteUrl: string;
 }) {
   const [state, formAction, pending] = useActionState(updatePaymentSettings, {
     error: null as string | null,
@@ -83,8 +85,11 @@ export function PaymentsForm({
           configured={configured.stripeWebhookSecret}
         />
         <p className="text-foreground/60 text-xs">
-          Find these in the Stripe Dashboard under Developers → API keys, and Developers → Webhooks
-          (point the webhook at <code>/api/webhooks/stripe</code>).
+          Find these in the Stripe Dashboard under Developers → API keys, and Developers → Webhooks.
+          Add an endpoint at <code className="break-all">{siteUrl}/api/webhooks/stripe</code> for
+          the events <code>checkout.session.completed</code> and{" "}
+          <code>checkout.session.async_payment_succeeded</code>, then paste its signing secret
+          above.
         </p>
         <p className="text-foreground/60 text-xs">
           <strong>
@@ -136,8 +141,12 @@ export function PaymentsForm({
           configured={configured.paypalWebhookId}
         />
         <p className="text-foreground/60 text-xs">
-          Find these in the PayPal Developer Dashboard under your app&apos;s credentials, and under
-          Webhooks (point it at <code>/api/webhooks/paypal</code>).
+          Find these in the PayPal Developer Dashboard under your app&apos;s credentials (use the{" "}
+          <strong>Live</strong> tab for real payments). Under the app&apos;s Webhooks, add{" "}
+          <code className="break-all">{siteUrl}/api/webhooks/paypal</code> with the event{" "}
+          <code>PAYMENT.CAPTURE.COMPLETED</code> and paste its Webhook ID above. The PayPal button
+          appears at checkout only once the client ID and secret are both set. To try it with
+          sandbox credentials first, set the environment variable <code>PAYPAL_ENV=sandbox</code>.
         </p>
       </fieldset>
 

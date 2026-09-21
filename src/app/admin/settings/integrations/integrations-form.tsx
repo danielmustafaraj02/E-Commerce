@@ -62,7 +62,9 @@ function Field({
 export function IntegrationsForm({
   configured,
   current,
+  siteUrl,
 }: {
+  siteUrl: string;
   configured: Record<FieldKey, boolean>;
   current: { emailFrom: string; turnstileSiteKey: string; googleClientId: string };
 }) {
@@ -151,13 +153,31 @@ export function IntegrationsForm({
           configured={configured.googleClientSecret}
         />
         <p className="text-foreground/60 text-xs">
-          Create OAuth credentials at console.cloud.google.com/apis/credentials → Create
-          credentials → OAuth client ID (type: Web application).
+          Create OAuth credentials at console.cloud.google.com/apis/credentials → Create credentials
+          → OAuth client ID (type: Web application).
         </p>
         <p className="text-foreground/60 text-xs">
-          Adds a &quot;Continue with Google&quot; button to the login page once both are set. Add
-          this as an Authorized redirect URI on that OAuth client:{" "}
-          <code>{"{your site URL}"}/api/auth/callback/google</code>.
+          Adds a &quot;Continue with Google&quot; button to the login and register pages once both
+          are set. On that OAuth client, enter exactly:
+        </p>
+        <dl className="bg-surface text-foreground/80 flex flex-col gap-2 rounded-lg p-3 text-xs">
+          <div>
+            <dt className="font-medium">Authorized JavaScript origin</dt>
+            <dd>
+              <code className="break-all">{siteUrl}</code>
+            </dd>
+          </div>
+          <div>
+            <dt className="font-medium">Authorized redirect URI</dt>
+            <dd>
+              <code className="break-all">{siteUrl}/api/auth/callback/google</code>
+            </dd>
+          </div>
+        </dl>
+        <p className="text-foreground/60 text-xs">
+          Under OAuth consent screen, set the publishing status to <strong>In production</strong> —
+          while it says &quot;Testing&quot;, only the test users you list can sign in. Google
+          sign-in is not offered to admin, staff or two-factor accounts; they use their password.
         </p>
       </fieldset>
 

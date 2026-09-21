@@ -15,6 +15,7 @@ import { ShelfMain } from "@/components/shelf-main";
 import { ShelfHead, ShelfBody } from "@/components/shelf-page";
 import { ReturnRequestForm } from "./return-request-form";
 import { localizedName } from "@/lib/product-i18n";
+import { isPaypalConfigured } from "@/lib/paypal";
 
 const RETURNABLE_STATUSES = ["paid", "processing", "shipped", "delivered"];
 
@@ -49,6 +50,7 @@ export default async function OrderConfirmationPage({
     }),
   ]);
   const dict = getDictionary(uiLocale);
+  const paypalEnabled = await isPaypalConfigured();
 
   if (!order) notFound();
   if (!canAccessOrder(order, session)) notFound();
@@ -100,6 +102,7 @@ export default async function OrderConfirmationPage({
             <PaymentButtons
               orderNumber={order.orderNumber}
               bankTransferEnabled={settings.bankTransferEnabled && Boolean(settings.bankIban)}
+              paypalEnabled={paypalEnabled}
               locale={settings.defaultLocale}
               dict={dict.payment}
             />

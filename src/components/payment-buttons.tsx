@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { formatMoney } from "@/lib/format";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
+import { formatIban } from "@/lib/iban";
 
 type BankDetails = {
   bankAccountHolder: string | null;
@@ -18,11 +19,13 @@ const SECONDARY_BUTTON = "btn-secondary w-full py-3 disabled:opacity-60";
 export function PaymentButtons({
   orderNumber,
   bankTransferEnabled,
+  paypalEnabled,
   locale,
   dict,
 }: {
   orderNumber: string;
   bankTransferEnabled: boolean;
+  paypalEnabled: boolean;
   locale: string;
   dict: Dictionary["payment"];
 }) {
@@ -91,7 +94,7 @@ export function PaymentButtons({
           <div className="flex justify-between gap-4">
             <dt className="text-foreground/60">{dict.iban}</dt>
             <dd translate="no" className="font-mono break-all">
-              {bankDetails.bankIban}
+              {formatIban(bankDetails.bankIban)}
             </dd>
           </div>
           {bankDetails.bankBic && (
@@ -137,12 +140,18 @@ export function PaymentButtons({
             knowable from here, so this stays deliberately non-specific. */}
         <p className="text-foreground/60 text-xs">{dict.cardHelp}</p>
       </div>
-      {/* PayPal isn't configured yet (no live credentials in Admin > Settings
-          > Payments) — hidden from checkout for now rather than showing a
-          customer a button that errors. Re-enable with a
-          <button onClick={() => payRedirect("paypal")}> once credentials are
-          set; payRedirect("paypal") above and the /api/checkout/pay/paypal
-          route are untouched. */}
+      {/* Only offered once PayPal credentials are set (Admin > Settings > Payments),
+          so a customer is never shown a button that can only fail. */}
+      {paypalEnabled && (
+        <button
+          type="button"
+          onClick={() => payRedirect("paypal")}
+          disabled={loading !== null}
+          className={SECONDARY_BUTTON}
+        >
+          {loading === "paypal" ? dict.redirecting : dict.payWithPayPal}
+        </button>
+      )}
       {bankTransferEnabled && (
         <button
           type="button"
