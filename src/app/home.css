@@ -675,5 +675,19 @@
   .shelf-category {
     flex: 0 0 62%;
     scroll-snap-align: center;
+    /* Without this, a fast flick can coast straight past a card instead of
+       stopping on it — "always" forces every swipe to land on one card. */
+    scroll-snap-stop: always;
+  }
+  /* A light press-down on tap, the same interaction-triggered feedback
+     already used elsewhere (see .nav-link's hover in globals.css) — kept
+     outside any reduced-motion guard for the same reason: it's triggered by
+     touch, not autoplay. No shadow/border/background added, so the "pieces
+     dissolve into the page, no boxes" treatment above is untouched. */
+  .shelf-category-photo img {
+    transition: transform 0.2s ease;
+  }
+  .shelf-category:active .shelf-category-photo img {
+    transform: scale(0.96);
   }
 }
