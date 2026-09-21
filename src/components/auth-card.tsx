@@ -66,7 +66,11 @@ export function AuthCard({
       </h1>
       <p className="text-foreground/60 mb-6 text-center text-sm">{storeName}</p>
 
-      <div className="relative overflow-hidden">
+      {/* Clips the slide-in animation. The 4px of bottom padding (cancelled by the
+            negative margin, so the layout doesn't move) keep the clip edge below the
+            card's bottom border: on a card with a fractional height the edge landed
+            one pixel too high and cut that border off. */}
+      <div className="relative -mb-1 overflow-hidden pb-1">
         <div key={mode} data-mode={mode} className="auth-swap-panel">
           {mode === "login" ? (
             <LoginForm
