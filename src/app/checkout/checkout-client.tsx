@@ -213,6 +213,26 @@ export function CheckoutClient({
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-6">
+      <div className="shop-panel shop-panel-pad">
+        <p className="text-accent-deep flex items-center text-sm font-medium">
+          <span className="shop-check shop-settle" aria-hidden="true">
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+          </span>
+          {dict.freeShippingApplied}
+        </p>
+      </div>
+
       {!isLoggedIn && (
         <div className="form-card">
           <label className="flex flex-col gap-1.5 text-sm">
@@ -334,35 +354,6 @@ export function CheckoutClient({
         </p>
       )}
 
-      {shippingMethods.length > 0 && (
-        <fieldset className="form-card flex flex-col gap-2">
-          <legend className="mb-1 px-1 font-medium">{dict.shippingMethod}</legend>
-          {shippingMethods.map((method) => (
-            <label key={method.id} className="option-card text-sm">
-              <input
-                type="radio"
-                name="shippingMethod"
-                checked={shippingMethodId === method.id}
-                onChange={() => setShippingMethodId(method.id)}
-                className="field-radio"
-              />
-              <span className="flex-1">
-                <span className="block font-medium">{method.name}</span>
-                <span className="text-foreground/60 text-xs">
-                  {applyTemplate(dict.days, {
-                    min: method.estimatedDaysMin,
-                    max: method.estimatedDaysMax,
-                  })}
-                </span>
-              </span>
-              <span className="font-medium">
-                {formatMoney(method.basePrice, quote?.currency ?? "EUR", locale)}
-              </span>
-            </label>
-          ))}
-        </fieldset>
-      )}
-
       <div className="form-card flex flex-col gap-4">
         <div className="flex gap-2">
           <input
@@ -404,13 +395,6 @@ export function CheckoutClient({
                   <span>{dict.discount}</span>
                   <span>-{formatMoney(quote.discountAmount, quote.currency, locale)}</span>
                 </div>
-              )}
-              <div className="flex justify-between">
-                <span className="text-foreground/70">{dict.shipping}</span>
-                <span>{formatMoney(quote.shippingAmount, quote.currency, locale)}</span>
-              </div>
-              {quote.freeShipping && (
-                <p className="text-success text-xs">{dict.freeShippingApplied}</p>
               )}
               <div className="text-foreground/70 flex justify-between">
                 <span>

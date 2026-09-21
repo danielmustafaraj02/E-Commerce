@@ -73,3 +73,6 @@ next-env.d.ts
 /scripts/check-payment-readiness.ts
 /scripts/go-live-catalog-update.sh
 /scripts/send-test-emails.ts
+/scripts/set-stripe-credentials.ts
+/scripts/finish-payment-setup.sh
+/scripts/link-upstash-kv-vars.ts
