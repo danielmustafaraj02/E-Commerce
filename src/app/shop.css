@@ -604,3 +604,23 @@
 .shop-editorial--airy details {
   padding-block: 1.15rem;
 }
+
+/* -- Category copy ------------------------------------------------------------------- */
+
+/* Written by the shop owner (admin > Categories), below the product grid. */
+.shop-copy {
+  max-width: 40rem;
+  margin-top: 4.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 8%, transparent);
+}
+.shop-copy p {
+  margin: 0 0 1.4rem;
+  font-family: var(--font-display), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: 1.15rem;
+  line-height: 1.8;
+  white-space: pre-line;
+}
+.shop-copy p:last-child {
+  margin-bottom: 0;
+}

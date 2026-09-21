@@ -197,6 +197,20 @@ model Category {
   namePt   String?
   nameHi   String?
   nameJa   String?
+  // Optional page copy shown below the product grid on /category/[slug]: Italian
+  // in `description`, then one column per locale, with the same fallback as
+  // products (locale -> English -> Italian). See src/lib/product-i18n.ts.
+  description   String?
+  descriptionEn String?
+  descriptionFr String?
+  descriptionDe String?
+  descriptionAr String?
+  descriptionZh String?
+  descriptionRu String?
+  descriptionEs String?
+  descriptionPt String?
+  descriptionHi String?
+  descriptionJa String?
   slug     String  @unique
   parentId String?
   parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)

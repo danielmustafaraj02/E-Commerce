@@ -7,7 +7,8 @@ import { db } from "@/lib/db";
 import { getStoreSettings, ogImage } from "@/lib/store-settings";
 import { getLocale, type Locale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-import { localizedName, localizedCardProduct } from "@/lib/product-i18n";
+import { localizedName, localizedDescription, localizedCardProduct } from "@/lib/product-i18n";
+import { firstParagraph, paragraphs, truncateAtWord } from "@/lib/text";
 import { toSafeJsonLd } from "@/lib/json-ld";
 import { hreflangAlternates } from "@/lib/hreflang";
 import { ShelfItem } from "@/components/shelf-item";
@@ -75,7 +76,16 @@ export async function generateMetadata({
     hi: `${settings.storeName} पर हाथ से बने मुरानो ग्लास ${name} खरीदें, कीमत और उपलब्धता के अनुसार फ़िल्टर करने योग्य।`,
     ja: `${settings.storeName}で手作りのムラノガラス${name}をお買い求めください。価格や在庫状況で絞り込めます。`,
   };
-  const description = descriptionByLocale[locale];
+  // Copy written for this category (admin > Categories) makes a better snippet
+  // than the generic line below, which is only the fallback.
+  // Only page 1 uses it: later pages show different products under their own
+  // canonical, so they keep the generic line rather than repeating page 1's.
+  const pageParam = Array.isArray(raw.page) ? raw.page[0] : raw.page;
+  const copy = localizedDescription(category, locale);
+  const description =
+    copy && (!pageParam || pageParam === "1")
+      ? truncateAtWord(firstParagraph(copy).replace(/\s+/g, " "), 155)
+      : descriptionByLocale[locale];
   const image = ogImage(settings);
   // A filtered view (?minPrice=, ?inStock=, ...) is a thin slice of the same
   // category, so it canonicalizes to the plain page. Plain pagination
@@ -134,6 +144,7 @@ export default async function CategoryPage({
   if (!category) notFound();
   const dict = getDictionary(uiLocale);
   const categoryName = localizedName(category, uiLocale);
+  const copy = localizedDescription(category, uiLocale);
 
   const where = {
     active: true,
@@ -293,6 +304,14 @@ export default async function CategoryPage({
             currentPage={filters.page}
             buildHref={buildPageHref}
           />
+
+          {filters.page === 1 && copy && (
+            <section className="shop-copy">
+              {paragraphs(copy).map((text, index) => (
+                <p key={index}>{text}</p>
+              ))}
+            </section>
+          )}
         </section>
       </div>
     </main>

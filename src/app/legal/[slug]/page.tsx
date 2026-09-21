@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
+import { truncateAtWord } from "@/lib/text";
 import { ShelfMain } from "@/components/shelf-main";
 import { ShelfHead, ShelfBody } from "@/components/shelf-page";
 
@@ -18,19 +19,15 @@ export async function generateMetadata({ params }: PageProps<"/legal/[slug]">): 
   };
 }
 
-// Meta description from the page's own opening text, cut at a word boundary
-// (~155 characters is roughly what a search result shows).
+// Meta description from the page's own opening text. Skips a short leading
+// heading line ("1. About these terms") so the snippet starts with real text.
 function describe(content: string) {
-  // Skip a short leading heading line ("1. About these terms") so the snippet
-  // starts with the actual text.
   const lines = content
     .split(/\n+/)
     .map((line) => line.trim())
     .filter(Boolean);
   const body = lines.length > 1 && lines[0].length < 60 ? lines.slice(1) : lines;
-  const text = body.join(" ").replace(/\s+/g, " ").trim();
-  if (text.length <= 155) return text || undefined;
-  return `${text.slice(0, 155).replace(/\s+\S*$/, "")}…`;
+  return truncateAtWord(body.join(" ").replace(/\s+/g, " ").trim(), 155) || undefined;
 }
 
 export default async function LegalPage({ params }: PageProps<"/legal/[slug]">) {

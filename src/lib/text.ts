@@ -7,3 +7,16 @@ export function truncateAtWord(text: string, maxLength: number): string {
   const lastSpace = cut.lastIndexOf(" ");
   return (lastSpace > 0 ? cut.slice(0, lastSpace) : cut).trimEnd() + "…";
 }
+
+// Admin-entered copy (category descriptions) is plain text; a blank line starts
+// a new paragraph.
+export function paragraphs(text: string): string[] {
+  return text
+    .split(/\n\s*\n/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+}
+
+export function firstParagraph(text: string): string {
+  return paragraphs(text)[0] ?? "";
+}
