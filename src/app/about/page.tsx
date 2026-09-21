@@ -7,6 +7,8 @@ import { getDictionary } from "@/lib/i18n/dictionaries";
 import { hreflangAlternates } from "@/lib/hreflang";
 import { AnimatedHeading } from "@/components/animated-heading";
 import { Reveal } from "@/components/reveal";
+import { ShelfMain } from "@/components/shelf-main";
+import { ShelfHead, ShelfBody } from "@/components/shelf-page";
 
 export async function generateMetadata(): Promise<Metadata> {
   const [settings, locale] = await Promise.all([getStoreSettings(), getLocale()]);
@@ -61,66 +63,63 @@ export default async function AboutPage() {
   ];
 
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-16">
-      <AnimatedHeading text={dict.about.title} className="mb-6 text-3xl font-semibold" />
-      <Reveal delayMs={150}>
-        <p className="text-foreground/80 max-w-2xl text-lg">{dict.about.intro(settings.storeName)}</p>
-      </Reveal>
+    <ShelfMain>
+      <ShelfHead
+        width="lg"
+        heading={<AnimatedHeading text={dict.about.title} className="shop-title" />}
+      >
+        <Reveal delayMs={150}>
+          <p className="shop-lede max-w-2xl">{dict.about.intro(settings.storeName)}</p>
+        </Reveal>
+      </ShelfHead>
+      <ShelfBody width="lg" editorial airy>
+        <Reveal delayMs={250}>
+          <div className="relative aspect-video w-full overflow-hidden rounded-2xl shadow-lg">
+            <Image
+              src="/about/venice-murano-shopfront.jpg"
+              alt={dict.about.heritageImageAlt}
+              fill
+              sizes="(min-width: 768px) 768px, 100vw"
+              className="object-cover"
+            />
+          </div>
+        </Reveal>
 
-      <Reveal delayMs={250}>
-        <div className="relative mt-8 aspect-video w-full overflow-hidden rounded-2xl shadow-lg">
-          <Image
-            src="/about/venice-murano-shopfront.jpg"
-            alt={dict.about.heritageImageAlt}
-            fill
-            sizes="(min-width: 768px) 768px, 100vw"
-            className="object-cover"
-          />
-        </div>
-      </Reveal>
+        <Reveal>
+          <AnimatedHeading as="h2" text={dict.about.heritageTitle} className="shop-h2-plain" />
+          <div className="text-foreground/80 flex flex-col gap-4 text-sm leading-relaxed">
+            <p>{dict.about.heritageBody1}</p>
+            <p>{dict.about.heritageBody2}</p>
+            <p>
+              {dict.about.guideLinkBody}{" "}
+              <Link href="/murano-glass" className="shelf-link underline">
+                {dict.about.guideLinkCta}
+              </Link>
+            </p>
+          </div>
+        </Reveal>
 
-      <Reveal>
-        <AnimatedHeading
-          as="h2"
-          text={dict.about.heritageTitle}
-          className="mt-12 mb-4 text-xl font-medium"
-        />
-        <div className="text-foreground/80 flex flex-col gap-4 text-sm leading-relaxed">
-          <p>{dict.about.heritageBody1}</p>
-          <p>{dict.about.heritageBody2}</p>
-          <p>
-            {dict.about.guideLinkBody}{" "}
-            <Link href="/murano-glass" className="text-primary underline">
-              {dict.about.guideLinkCta}
-            </Link>
-          </p>
-        </div>
-      </Reveal>
+        <Reveal>
+          <AnimatedHeading as="h2" text={dict.about.valuesTitle} className="shop-h2-plain" />
+          <div className="grid gap-6 sm:grid-cols-3">
+            {values.map((value, index) => (
+              <Reveal key={value.title} delayMs={index * 80}>
+                <div className="shop-panel shop-panel-pad">
+                  <h3 className="shop-ui mb-2 font-medium">{value.title}</h3>
+                  <p className="text-foreground/70 text-sm">{value.body}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </Reveal>
 
-      <Reveal>
-        <AnimatedHeading
-          as="h2"
-          text={dict.about.valuesTitle}
-          className="mt-12 mb-6 text-xl font-medium"
-        />
-        <div className="grid gap-6 sm:grid-cols-3">
-          {values.map((value, index) => (
-            <Reveal key={value.title} delayMs={index * 80}>
-              <div className="border-foreground/10 rounded border p-5">
-                <h3 className="mb-2 font-medium">{value.title}</h3>
-                <p className="text-foreground/70 text-sm">{value.body}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </Reveal>
-
-      <p className="text-foreground/70 mt-12 text-sm">
-        {dict.about.contactCta}
-        <Link href="/contact" className="text-primary underline">
-          {dict.about.contactLink}
-        </Link>
-      </p>
-    </main>
+        <p className="text-foreground/70 mt-12 text-sm">
+          {dict.about.contactCta}
+          <Link href="/contact" className="shelf-link underline">
+            {dict.about.contactLink}
+          </Link>
+        </p>
+      </ShelfBody>
+    </ShelfMain>
   );
 }

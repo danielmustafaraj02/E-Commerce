@@ -13,22 +13,24 @@ type ShelfItemData = {
   images: { url: string; altText: string }[];
 };
 
-// One piece on the home page's shelf (styles in app/home.css). Same structure
-// as ProductCard — a stretched link on the name with the quick-add button as a
-// sibling rather than nested inside the link — but without the box: the photo
-// sits directly on the page.
+// One piece on a shelf (styles in app/home.css): the home page and the product
+// listings. A stretched link on the name with the quick-add button as a sibling
+// rather than nested inside the link, and no box — the photo sits directly on
+// the page.
 export function ShelfItem({
   product,
   locale,
   outOfStockLabel,
   quickAddLabel,
   addedLabel,
+  sizes = "(min-width: 64rem) 15rem, (min-width: 48rem) 25vw, 50vw",
 }: {
   product: ShelfItemData;
   locale: string;
   outOfStockLabel: string;
   quickAddLabel: string;
   addedLabel: string;
+  sizes?: string;
 }) {
   const outOfStock = product.stockQty <= 0;
   const image = product.images[0];
@@ -37,12 +39,7 @@ export function ShelfItem({
     <li className="shelf-item group">
       <div className="shelf-item-photo">
         {image && (
-          <CatalogImage
-            src={image.url}
-            alt={image.altText || product.name}
-            fill
-            sizes="(min-width: 64rem) 15rem, (min-width: 48rem) 25vw, 50vw"
-          />
+          <CatalogImage src={image.url} alt={image.altText || product.name} fill sizes={sizes} />
         )}
         {outOfStock && <span className="shelf-badge">{outOfStockLabel}</span>}
         {!outOfStock && (

@@ -129,7 +129,8 @@ export async function Header({
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <nav className="scrollbar-hide edge-fade-x flex items-center gap-4 overflow-x-auto text-sm whitespace-nowrap">
+          {/* The edge fade is 16px wide; the padding keeps the first and last link clear of it (the negative margin cancels the shift so the text stays aligned). */}
+          <nav className="scrollbar-hide edge-fade-x -ms-4 flex items-center gap-4 overflow-x-auto px-4 text-sm whitespace-nowrap">
             {categories.map((category) => (
               <Link
                 key={category.id}

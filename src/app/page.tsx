@@ -24,6 +24,9 @@ export const metadata: Metadata = {
 
 // The number of pieces shown per shelf: one row at the widest layout.
 const SHELF_SIZE = 4;
+// New arrivals fill two rows of four (the loader fetches 8); on phones the CSS
+// keeps it to two rows of two.
+const NEW_ARRIVALS_SIZE = 8;
 
 export default async function Home() {
   const [settings, locale, { products, categoriesWithImage, bestSellers, reviews }] =
@@ -92,7 +95,7 @@ export default async function Home() {
   // saturated thing on the page, and the product photos are blended straight
   // into the ground instead of sitting in cards.
   return (
-    <main className={`shelf flex flex-1 flex-col ${homeFontClasses}`}>
+    <main className={`shelf shelf-home flex flex-1 flex-col ${homeFontClasses}`}>
       <section className="shelf-hero">
         <div className="shelf-wrap">
           <div className="shelf-hero-grid">
@@ -146,7 +149,7 @@ export default async function Home() {
       )}
 
       {categoriesWithImage.length > 0 && (
-        <section className="shelf-section shelf-section--aqua">
+        <section className="shelf-section">
           <div className="shelf-wrap">
             <div className="shelf-heading-row">
               <h2 className="shelf-heading">{dict.home.shopByCategory}</h2>
@@ -178,7 +181,7 @@ export default async function Home() {
       )}
 
       {products.length > 0 && (
-        <section className="shelf-section shelf-section--lilac">
+        <section className="shelf-section">
           <div className="shelf-wrap">
             <div className="shelf-heading-row">
               <h2 className="shelf-heading">{dict.home.newArrivals}</h2>
@@ -186,8 +189,8 @@ export default async function Home() {
                 {dict.footer.allProducts}
               </Link>
             </div>
-            <ul className="shelf-row">
-              {products.slice(0, SHELF_SIZE).map((product) => (
+            <ul className="shelf-row shelf-row--two-rows">
+              {products.slice(0, NEW_ARRIVALS_SIZE).map((product) => (
                 <ShelfItem
                   key={product.slug}
                   product={localizedCardProduct(product, locale)}
@@ -216,7 +219,7 @@ export default async function Home() {
       </section>
 
       {settings.showTestimonials && testimonials.length > 0 && (
-        <section className="shelf-section shelf-section--blush">
+        <section className="shelf-section">
           <div className="shelf-wrap">
             <div className="shelf-heading-row">
               <h2 className="shelf-heading">{dict.home.testimonialsTitle}</h2>

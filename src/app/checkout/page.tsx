@@ -5,6 +5,8 @@ import { getStoreSettings } from "@/lib/store-settings";
 import { turnstileSiteKey } from "@/lib/turnstile";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
+import { ShelfMain } from "@/components/shelf-main";
+import { ShelfHead, ShelfBody } from "@/components/shelf-page";
 import { CheckoutClient } from "./checkout-client";
 
 export default async function CheckoutPage() {
@@ -21,17 +23,19 @@ export default async function CheckoutPage() {
   const countries = countryRows.map((row) => row.country).sort();
 
   return (
-    <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-16">
-      <h1 className="mb-6 text-2xl font-semibold">{dict.checkout.title}</h1>
-      <CheckoutClient
-        locale={settings.defaultLocale}
-        countries={countries}
-        isLoggedIn={Boolean(session?.user)}
-        userEmail={session?.user?.email ?? null}
-        turnstileSiteKey={siteKey}
-        nonce={nonce}
-        dict={dict.checkout}
-      />
-    </main>
+    <ShelfMain>
+      <ShelfHead title={dict.checkout.title} />
+      <ShelfBody>
+        <CheckoutClient
+          locale={settings.defaultLocale}
+          countries={countries}
+          isLoggedIn={Boolean(session?.user)}
+          userEmail={session?.user?.email ?? null}
+          turnstileSiteKey={siteKey}
+          nonce={nonce}
+          dict={dict.checkout}
+        />
+      </ShelfBody>
+    </ShelfMain>
   );
 }

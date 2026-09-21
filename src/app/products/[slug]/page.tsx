@@ -25,7 +25,10 @@ import { hreflangAlternates, ogLocale } from "@/lib/hreflang";
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { WishlistButton } from "@/components/wishlist-button";
 import { ShareButtons } from "@/components/share-buttons";
-import { ProductCard } from "@/components/product-card";
+import { ShelfItem } from "@/components/shelf-item";
+import { homeFontClasses } from "@/app/home-fonts";
+import "../../home.css";
+import "../../shop.css";
 import { ProductImageZoom } from "@/components/product-image-zoom";
 import { TrustBadges } from "@/components/trust-badges";
 import { ReviewForm } from "./review-form";
@@ -252,7 +255,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
   };
 
   return (
-    <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-16">
+    <main className={`shelf flex flex-1 flex-col ${homeFontClasses}`}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: toSafeJsonLd(productJsonLd) }}
@@ -261,159 +264,168 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: toSafeJsonLd(breadcrumbJsonLd) }}
       />
-      {product.category && (
-        <Link
-          href={`/category/${product.category.slug}`}
-          className="text-foreground/70 hover:text-primary mb-6 inline-block text-sm"
-        >
-          &larr; {categoryName}
-        </Link>
-      )}
-
-      <div className="grid gap-10 sm:grid-cols-2">
-        <div className="flex flex-col gap-3">
-          {product.images[0] && (
-            <ProductImageZoom src={product.images[0].url} alt={productImageAlt(name, uiLocale)} />
+      <section className="shelf-section shop-product">
+        <div className="shelf-wrap">
+          {product.category && (
+            <Link href={`/category/${product.category.slug}`} className="shelf-link shop-back">
+              &larr; {categoryName}
+            </Link>
           )}
-          {product.images.length > 1 && (
-            <div className="flex gap-2">
-              {product.images.slice(1).map((image) => (
-                <div key={image.id} className="relative h-16 w-16 overflow-hidden rounded bg-white">
-                  <CatalogImage
-                    src={image.url}
-                    alt={productImageAlt(name, uiLocale)}
-                    fill
-                    sizes="64px"
-                    className="object-contain"
-                  />
+
+          <div className="shop-product-grid">
+            <div className="flex flex-col gap-3">
+              {product.images[0] && (
+                <ProductImageZoom
+                  src={product.images[0].url}
+                  alt={productImageAlt(name, uiLocale)}
+                />
+              )}
+              {product.images.length > 1 && (
+                <div className="flex gap-2">
+                  {product.images.slice(1).map((image) => (
+                    <div key={image.id} className="shop-thumb">
+                      <CatalogImage
+                        src={image.url}
+                        alt={productImageAlt(name, uiLocale)}
+                        fill
+                        sizes="64px"
+                      />
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
-          )}
-        </div>
 
-        <div>
-          <h1 className="text-2xl font-semibold">{name}</h1>
-          <p className="mt-2 text-xl">
-            {formatMoney(product.price, product.currency, settings.defaultLocale)}
-            {settings.pricesIncludeTax && (
-              <span className="text-foreground/60 ml-2 text-sm">{dict.product.vatIncluded}</span>
-            )}
-          </p>
+            <div>
+              <h1 className="shop-product-title">{name}</h1>
+              <p className="shop-price">
+                {formatMoney(product.price, product.currency, settings.defaultLocale)}
+                {settings.pricesIncludeTax && (
+                  <span className="text-foreground/60 ml-2 text-sm">
+                    {dict.product.vatIncluded}
+                  </span>
+                )}
+              </p>
 
-          <p className="mt-1 text-sm">
-            {outOfStock ? (
-              <span className="text-danger">{dict.product.outOfStock}</span>
-            ) : lowStock ? (
-              <span className="text-warning">
-                {applyTemplate(dict.product.onlyLeft, { n: product.stockQty })}
-              </span>
-            ) : (
-              <span className="text-success">{dict.product.inStock}</span>
-            )}
-          </p>
+              <p className="mt-1 text-sm">
+                {outOfStock ? (
+                  <span className="text-danger">{dict.product.outOfStock}</span>
+                ) : lowStock ? (
+                  <span className="text-warning">
+                    {applyTemplate(dict.product.onlyLeft, { n: product.stockQty })}
+                  </span>
+                ) : (
+                  <span className="text-success">{dict.product.inStock}</span>
+                )}
+              </p>
 
-          {averageRating !== null && (
-            <p className="text-foreground/70 mt-1 text-sm">
-              {averageRating.toFixed(1)} / 5 (
-              {applyTemplate(dict.product.reviewCount, { n: product.reviews.length })})
-            </p>
-          )}
+              {averageRating !== null && (
+                <p className="text-foreground/70 mt-1 text-sm">
+                  {averageRating.toFixed(1)} / 5 (
+                  {applyTemplate(dict.product.reviewCount, { n: product.reviews.length })})
+                </p>
+              )}
 
-          <p className="text-foreground/80 mt-6 whitespace-pre-line">{description}</p>
+              <p className="shop-prose">{description}</p>
 
-          <AddToCartButton
-            product={{
-              id: product.id,
-              slug: product.slug,
-              name,
-              price: product.price,
-              currency: product.currency,
-              imageUrl: product.images[0]?.url ?? null,
-              outOfStock,
-            }}
-            dict={dict.product}
-          />
+              <AddToCartButton
+                product={{
+                  id: product.id,
+                  slug: product.slug,
+                  name,
+                  price: product.price,
+                  currency: product.currency,
+                  imageUrl: product.images[0]?.url ?? null,
+                  outOfStock,
+                }}
+                dict={dict.product}
+              />
 
-          <WishlistButton
-            productId={product.id}
-            slug={product.slug}
-            name={name}
-            price={product.price}
-            currency={product.currency}
-            imageUrl={product.images[0]?.url ?? null}
-            initialSaved={Boolean(wishlistItem)}
-            isSignedIn={Boolean(userId)}
-            addLabel={dict.product.addToWishlist}
-            removeLabel={dict.product.removeFromWishlist}
-          />
+              <WishlistButton
+                productId={product.id}
+                slug={product.slug}
+                name={name}
+                price={product.price}
+                currency={product.currency}
+                imageUrl={product.images[0]?.url ?? null}
+                initialSaved={Boolean(wishlistItem)}
+                isSignedIn={Boolean(userId)}
+                addLabel={dict.product.addToWishlist}
+                removeLabel={dict.product.removeFromWishlist}
+              />
 
-          <TrustBadges trustBadgeText={settings.trustBadgeText} dict={dict.product} />
+              <TrustBadges trustBadgeText={settings.trustBadgeText} dict={dict.product} />
 
-          <Link
-            href="/murano-glass#authenticity"
-            className="text-foreground/60 hover:text-primary mt-2 inline-block text-xs underline"
-          >
-            {dict.product.authenticityLink}
-          </Link>
+              <Link
+                href="/murano-glass#authenticity"
+                className="text-foreground/60 hover:text-primary mt-2 inline-block text-xs underline"
+              >
+                {dict.product.authenticityLink}
+              </Link>
 
-          <div className="border-foreground/10 mt-6 border-t pt-4">
-            <ShareButtons url={productUrl} title={name} dict={dict.product} />
+              <div className="border-foreground/10 mt-6 border-t pt-4">
+                <ShareButtons url={productUrl} title={name} dict={dict.product} />
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <section className="mt-16">
-        <h2 className="mb-4 text-lg font-medium">{dict.product.reviews}</h2>
-        {product.reviews.length === 0 ? (
-          <p className="text-foreground/70 text-sm">{dict.product.noReviews}</p>
-        ) : (
-          <ul className="flex flex-col gap-4">
-            {product.reviews.map((review) => (
-              <li key={review.id} className="border-foreground/10 border-b pb-4">
-                <p className="text-sm font-medium">
-                  {review.user.name ?? "Anonymous"} &middot; {review.rating}/5
-                </p>
-                {review.comment && (
-                  <p className="text-foreground/80 mt-1 text-sm">{review.comment}</p>
-                )}
-              </li>
-            ))}
-          </ul>
-        )}
+      <section className="shelf-section">
+        <div className="shelf-wrap shop-reviews">
+          <h2 className="shelf-heading">{dict.product.reviews}</h2>
+          {product.reviews.length === 0 ? (
+            <p className="text-foreground/70 text-sm">{dict.product.noReviews}</p>
+          ) : (
+            <ul className="flex flex-col gap-4">
+              {product.reviews.map((review) => (
+                <li key={review.id} className="border-foreground/10 border-b pb-4">
+                  <p className="text-sm font-medium">
+                    {review.user.name ?? "Anonymous"} &middot; {review.rating}/5
+                  </p>
+                  {review.comment && (
+                    <p className="text-foreground/80 mt-1 text-sm">{review.comment}</p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
 
-        {!userId ? (
-          <p className="text-foreground/70 mt-4 text-sm">
-            <Link href="/login" className="text-primary hover:underline">
-              {dict.product.signInToReview}
-            </Link>
-          </p>
-        ) : isVerifiedBuyer || myReview ? (
-          <ReviewForm
-            productId={product.id}
-            slug={product.slug}
-            existing={myReview ? { rating: myReview.rating, comment: myReview.comment } : null}
-            dict={dict.product}
-          />
-        ) : (
-          <p className="text-foreground/70 mt-4 text-sm">{dict.product.verifiedPurchaseOnly}</p>
-        )}
+          {!userId ? (
+            <p className="text-foreground/70 mt-4 text-sm">
+              <Link href="/login" className="text-primary hover:underline">
+                {dict.product.signInToReview}
+              </Link>
+            </p>
+          ) : isVerifiedBuyer || myReview ? (
+            <ReviewForm
+              productId={product.id}
+              slug={product.slug}
+              existing={myReview ? { rating: myReview.rating, comment: myReview.comment } : null}
+              dict={dict.product}
+            />
+          ) : (
+            <p className="text-foreground/70 mt-4 text-sm">{dict.product.verifiedPurchaseOnly}</p>
+          )}
+        </div>
       </section>
 
       {relatedProducts.length > 0 && (
-        <section className="border-foreground/10 mt-16 border-t pt-10">
-          <h2 className="mb-4 text-lg font-medium">{dict.product.youMightAlsoLike}</h2>
-          <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
-            {relatedProducts.map((related) => (
-              <ProductCard
-                key={related.slug}
-                product={localizedCardProduct(related, uiLocale)}
-                locale={settings.defaultLocale}
-                outOfStockLabel={dict.product.outOfStock}
-                quickAddLabel={dict.product.addToCart}
-                addedLabel={dict.product.added}
-              />
-            ))}
+        <section className="shelf-section shelf-section--sand">
+          <div className="shelf-wrap">
+            <h2 className="shelf-heading shop-related-heading">{dict.product.youMightAlsoLike}</h2>
+            <ul className="shelf-row">
+              {relatedProducts.map((related) => (
+                <ShelfItem
+                  key={related.slug}
+                  product={localizedCardProduct(related, uiLocale)}
+                  locale={settings.defaultLocale}
+                  outOfStockLabel={dict.product.outOfStock}
+                  quickAddLabel={dict.product.addToCart}
+                  addedLabel={dict.product.added}
+                />
+              ))}
+            </ul>
           </div>
         </section>
       )}

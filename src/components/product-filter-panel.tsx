@@ -51,7 +51,7 @@ export function ProductFilterPanel({
 
   return (
     <aside className="w-full shrink-0 sm:sticky sm:top-24 sm:w-64 sm:self-start">
-      <div className="rounded-2xl p-5 text-sm">
+      <div className="shop-filter-card text-sm">
         <input
           type="checkbox"
           id="mobile-filters-toggle"
@@ -67,10 +67,11 @@ export function ProductFilterPanel({
             height="18"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="#f5c451"
+            stroke="currentColor"
             strokeWidth="2.25"
             strokeLinecap="round"
             strokeLinejoin="round"
+            className="text-accent"
             aria-hidden="true"
           >
             <polygon points="4 4 20 4 14 12.5 14 19 10 21 10 12.5 4 4" />

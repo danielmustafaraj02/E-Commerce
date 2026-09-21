@@ -27,7 +27,7 @@ export function ProductImageZoom({ src, alt }: { src: string; alt: string }) {
       onMouseEnter={() => setZooming(true)}
       onMouseMove={handleMouseMove}
       onMouseLeave={() => setZooming(false)}
-      className="relative aspect-square w-full cursor-zoom-in overflow-hidden rounded-lg bg-white"
+      className="shop-product-photo cursor-zoom-in"
     >
       <CatalogImage
         src={src}
@@ -35,7 +35,7 @@ export function ProductImageZoom({ src, alt }: { src: string; alt: string }) {
         fill
         priority
         sizes="(min-width: 640px) 50vw, 100vw"
-        className="object-contain transition-transform duration-300 ease-out"
+        className="transition-transform duration-300 ease-out"
         style={{
           transformOrigin: origin,
           transform: zooming ? "scale(2.2)" : "scale(1)",

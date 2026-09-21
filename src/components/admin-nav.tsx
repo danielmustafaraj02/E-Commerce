@@ -13,7 +13,7 @@ import {
 function Badge({ count }: { count: number }) {
   if (!count) return null;
   return (
-    <span className="bg-primary rounded-full px-1.5 py-0.5 text-[11px] leading-none font-semibold text-white">
+    <span className="bg-accent rounded-full px-1.5 py-0.5 text-[11px] leading-none font-semibold text-white">
       {count}
     </span>
   );
@@ -47,8 +47,8 @@ export function AdminShell({
                   aria-current={active ? "page" : undefined}
                   className={`-mb-px flex items-center gap-2 border-b-2 px-3 py-3 transition-colors ${
                     active
-                      ? "border-primary text-primary font-medium"
-                      : "text-foreground/70 hover:text-primary border-transparent"
+                      ? "border-accent text-accent-deep font-medium"
+                      : "text-foreground/70 hover:text-accent-deep border-transparent"
                   }`}
                 >
                   {section.label}
@@ -76,8 +76,8 @@ export function AdminShell({
                     aria-current={active ? "page" : undefined}
                     className={`flex items-center gap-2 rounded px-3 py-2 transition-colors ${
                       active
-                        ? "bg-primary/10 text-primary font-medium"
-                        : "text-foreground/80 hover:bg-foreground/5 hover:text-primary"
+                        ? "bg-accent/10 text-accent-deep font-medium"
+                        : "text-foreground/80 hover:bg-foreground/5 hover:text-accent-deep"
                     }`}
                   >
                     {item.label}

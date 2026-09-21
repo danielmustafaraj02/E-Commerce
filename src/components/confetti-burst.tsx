@@ -15,7 +15,16 @@ const PIECES: {
   className: string;
   delay: number;
 }[] = [
-  { tx: -38, ty: -46, rot: -40, w: 8, h: 8, rounded: "rounded-sm", className: "bg-primary", delay: 0 },
+  {
+    tx: -38,
+    ty: -46,
+    rot: -40,
+    w: 8,
+    h: 8,
+    rounded: "rounded-sm",
+    className: "bg-accent",
+    delay: 0,
+  },
   {
     tx: 30,
     ty: -52,
@@ -23,7 +32,7 @@ const PIECES: {
     w: 10,
     h: 6,
     rounded: "rounded-sm",
-    className: "bg-secondary",
+    className: "bg-[color:var(--glass-teal)]",
     delay: 0.02,
   },
   {
@@ -36,7 +45,16 @@ const PIECES: {
     className: "bg-[#f5c451]",
     delay: 0.04,
   },
-  { tx: 48, ty: -14, rot: 65, w: 6, h: 10, rounded: "rounded-sm", className: "bg-danger", delay: 0.06 },
+  {
+    tx: 48,
+    ty: -14,
+    rot: 65,
+    w: 6,
+    h: 10,
+    rounded: "rounded-sm",
+    className: "bg-[color:var(--glass-rose)]",
+    delay: 0.06,
+  },
   {
     tx: -18,
     ty: -58,
@@ -44,7 +62,7 @@ const PIECES: {
     w: 8,
     h: 8,
     rounded: "rounded-full",
-    className: "bg-success",
+    className: "bg-[color:var(--glass-gold)]",
     delay: 0.08,
   },
   {
@@ -54,10 +72,19 @@ const PIECES: {
     w: 10,
     h: 8,
     rounded: "rounded-sm",
-    className: "bg-secondary",
+    className: "bg-[color:var(--glass-teal)]",
     delay: 0.03,
   },
-  { tx: -44, ty: 20, rot: 50, w: 8, h: 6, rounded: "rounded-sm", className: "bg-primary", delay: 0.05 },
+  {
+    tx: -44,
+    ty: 20,
+    rot: 50,
+    w: 8,
+    h: 6,
+    rounded: "rounded-sm",
+    className: "bg-accent",
+    delay: 0.05,
+  },
   {
     tx: 44,
     ty: 24,
@@ -68,7 +95,16 @@ const PIECES: {
     className: "bg-[#f5c451]",
     delay: 0.07,
   },
-  { tx: -10, ty: 36, rot: 80, w: 6, h: 10, rounded: "rounded-sm", className: "bg-danger", delay: 0.09 },
+  {
+    tx: -10,
+    ty: 36,
+    rot: 80,
+    w: 6,
+    h: 10,
+    rounded: "rounded-sm",
+    className: "bg-[color:var(--glass-rose)]",
+    delay: 0.09,
+  },
   {
     tx: 16,
     ty: 42,
@@ -76,7 +112,7 @@ const PIECES: {
     w: 8,
     h: 8,
     rounded: "rounded-full",
-    className: "bg-success",
+    className: "bg-[color:var(--glass-gold)]",
     delay: 0.1,
   },
 ];

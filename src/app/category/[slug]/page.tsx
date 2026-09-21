@@ -10,7 +10,10 @@ import { getDictionary } from "@/lib/i18n/dictionaries";
 import { localizedName, localizedCardProduct } from "@/lib/product-i18n";
 import { toSafeJsonLd } from "@/lib/json-ld";
 import { hreflangAlternates } from "@/lib/hreflang";
-import { ProductCard } from "@/components/product-card";
+import { ShelfItem } from "@/components/shelf-item";
+import { homeFontClasses } from "@/app/home-fonts";
+import "../../home.css";
+import "../../shop.css";
 import { ProductFilterPanel } from "@/components/product-filter-panel";
 import { Pagination } from "@/components/pagination";
 
@@ -148,7 +151,11 @@ export default async function CategoryPage({
   // to the Prisma orderBy — pushes out-of-stock items to the end of the
   // grid instead of leaving them wherever createdAt puts them.
   const [allMatchingIds, priceBounds] = await Promise.all([
-    db.product.findMany({ where, orderBy: { createdAt: "desc" }, select: { id: true, stockQty: true } }),
+    db.product.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      select: { id: true, stockQty: true },
+    }),
     db.product.aggregate({
       where: { active: true, categoryId: category.id },
       _min: { price: true },
@@ -216,7 +223,7 @@ export default async function CategoryPage({
       : null;
 
   return (
-    <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-4 py-16 sm:flex-row">
+    <main className={`shelf flex flex-1 flex-col ${homeFontClasses}`}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: toSafeJsonLd(breadcrumbJsonLd) }}
@@ -227,57 +234,67 @@ export default async function CategoryPage({
           dangerouslySetInnerHTML={{ __html: toSafeJsonLd(itemListJsonLd) }}
         />
       )}
-      <ProductFilterPanel
-        dict={dict.products}
-        showCategory={false}
-        filters={filters}
-        priceMin={priceMin}
-        priceMax={priceMax}
-        currency={settings.defaultCurrency}
-        locale={settings.defaultLocale}
-        clearHref={`/category/${category.slug}`}
-      />
+      <header className="shop-head">
+        <div className="shelf-wrap">
+          <h1 className="shop-title">{categoryName}</h1>
+          {category.children.length > 0 && (
+            <div className="shop-chips">
+              {category.children.map((child) => (
+                <a key={child.id} href={`/category/${child.slug}`} className="shop-chip">
+                  {localizedName(child, uiLocale)}
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+      </header>
 
-      <section className="flex-1">
-        <h1 className="mb-2 text-2xl font-semibold">{categoryName}</h1>
+      <div className="shelf-wrap shop-layout">
+        <ProductFilterPanel
+          dict={dict.products}
+          showCategory={false}
+          filters={filters}
+          priceMin={priceMin}
+          priceMax={priceMax}
+          currency={settings.defaultCurrency}
+          locale={settings.defaultLocale}
+          clearHref={`/category/${category.slug}`}
+        />
 
-        {category.children.length > 0 && (
-          <div className="mb-6 flex flex-wrap gap-3 text-sm">
-            {category.children.map((child) => (
-              <a
-                key={child.id}
-                href={`/category/${child.slug}`}
-                className="border-foreground/20 hover:text-primary rounded border px-3 py-1"
-              >
-                {localizedName(child, uiLocale)}
-              </a>
-            ))}
-          </div>
-        )}
+        <section className="shop-results">
+          {products.length === 0 ? (
+            <p className="shelf-note">
+              {total === 0 &&
+              filters.page === 1 &&
+              !filters.minPrice &&
+              !filters.maxPrice &&
+              !filters.inStock
+                ? dict.products.noProductsInCategory
+                : dict.products.noResults}
+            </p>
+          ) : (
+            <ul className="shop-grid">
+              {products.map((product) => (
+                <ShelfItem
+                  key={product.slug}
+                  product={localizedCardProduct(product, uiLocale)}
+                  locale={settings.defaultLocale}
+                  outOfStockLabel={dict.product.outOfStock}
+                  quickAddLabel={dict.product.addToCart}
+                  addedLabel={dict.product.added}
+                  sizes="(min-width: 40rem) 20vw, 50vw"
+                />
+              ))}
+            </ul>
+          )}
 
-        {products.length === 0 ? (
-          <p className="text-foreground/70 text-sm">
-            {total === 0 && filters.page === 1 && !filters.minPrice && !filters.maxPrice && !filters.inStock
-              ? dict.products.noProductsInCategory
-              : dict.products.noResults}
-          </p>
-        ) : (
-          <div className="grid grid-cols-2 gap-6 sm:grid-cols-3">
-            {products.map((product) => (
-              <ProductCard
-                key={product.slug}
-                product={localizedCardProduct(product, uiLocale)}
-                locale={settings.defaultLocale}
-                outOfStockLabel={dict.product.outOfStock}
-                quickAddLabel={dict.product.addToCart}
-                addedLabel={dict.product.added}
-              />
-            ))}
-          </div>
-        )}
-
-        <Pagination totalPages={totalPages} currentPage={filters.page} buildHref={buildPageHref} />
-      </section>
+          <Pagination
+            totalPages={totalPages}
+            currentPage={filters.page}
+            buildHref={buildPageHref}
+          />
+        </section>
+      </div>
     </main>
   );
 }

@@ -8,7 +8,10 @@ import { getDictionary } from "@/lib/i18n/dictionaries";
 import { localizedName, localizedCardProduct } from "@/lib/product-i18n";
 import { toSafeJsonLd } from "@/lib/json-ld";
 import { hreflangAlternates } from "@/lib/hreflang";
-import { ProductCard } from "@/components/product-card";
+import { ShelfItem } from "@/components/shelf-item";
+import { homeFontClasses } from "@/app/home-fonts";
+import "../home.css";
+import "../shop.css";
 import { ProductFilterPanel } from "@/components/product-filter-panel";
 import { Pagination } from "@/components/pagination";
 
@@ -33,7 +36,7 @@ export async function generateMetadata({
   ]);
   const dict = getDictionary(locale);
   const descriptionByLocale: Record<Locale, string> = {
-    en: `Browse the full ${settings.storeName} catalog.`,
+    en: `Browse the full ${settings.storeName} catalog: handmade Murano glass jewelry, from bracelets to necklaces and earrings.`,
     it: `Sfoglia il catalogo completo di ${settings.storeName}.`,
     fr: `Parcourez le catalogue complet de ${settings.storeName}.`,
     de: `Durchstöbern Sie den vollständigen Katalog von ${settings.storeName}.`,
@@ -55,7 +58,8 @@ export async function generateMetadata({
   const isPlainPagination =
     !raw.q && !raw.category && !raw.minPrice && !raw.maxPrice && !raw.inStock;
   const page = Array.isArray(raw.page) ? raw.page[0] : raw.page;
-  const canonical = isPlainPagination && page && page !== "1" ? `/products?page=${page}` : "/products";
+  const canonical =
+    isPlainPagination && page && page !== "1" ? `/products?page=${page}` : "/products";
   return {
     title: dict.products.allProducts,
     description,
@@ -187,48 +191,59 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
       : null;
 
   return (
-    <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-4 py-16 sm:flex-row">
+    <main className={`shelf flex flex-1 flex-col ${homeFontClasses}`}>
       {itemListJsonLd && (
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: toSafeJsonLd(itemListJsonLd) }}
         />
       )}
-      <ProductFilterPanel
-        dict={dict.products}
-        categories={categories}
-        filters={filters}
-        priceMin={priceMin}
-        priceMax={priceMax}
-        currency={settings.defaultCurrency}
-        locale={settings.defaultLocale}
-        clearHref={filters.q ? `/products?q=${encodeURIComponent(filters.q)}` : "/products"}
-      />
+      <header className="shop-head">
+        <div className="shelf-wrap">
+          <h1 className="shop-title">
+            {filters.q ? dict.products.resultsFor(filters.q) : dict.products.allProducts}
+          </h1>
+        </div>
+      </header>
 
-      <section className="flex-1">
-        <h1 className="mb-4 text-2xl font-semibold">
-          {filters.q ? dict.products.resultsFor(filters.q) : dict.products.allProducts}
-        </h1>
+      <div className="shelf-wrap shop-layout">
+        <ProductFilterPanel
+          dict={dict.products}
+          categories={categories}
+          filters={filters}
+          priceMin={priceMin}
+          priceMax={priceMax}
+          currency={settings.defaultCurrency}
+          locale={settings.defaultLocale}
+          clearHref={filters.q ? `/products?q=${encodeURIComponent(filters.q)}` : "/products"}
+        />
 
-        {products.length === 0 ? (
-          <p className="text-foreground/70 text-sm">{dict.products.noResults}</p>
-        ) : (
-          <div className="grid grid-cols-2 gap-6 sm:grid-cols-3">
-            {products.map((product) => (
-              <ProductCard
-                key={product.slug}
-                product={localizedCardProduct(product, uiLocale)}
-                locale={settings.defaultLocale}
-                outOfStockLabel={dict.product.outOfStock}
-                quickAddLabel={dict.product.addToCart}
-                addedLabel={dict.product.added}
-              />
-            ))}
-          </div>
-        )}
+        <section className="shop-results">
+          {products.length === 0 ? (
+            <p className="shelf-note">{dict.products.noResults}</p>
+          ) : (
+            <ul className="shop-grid">
+              {products.map((product) => (
+                <ShelfItem
+                  key={product.slug}
+                  product={localizedCardProduct(product, uiLocale)}
+                  locale={settings.defaultLocale}
+                  outOfStockLabel={dict.product.outOfStock}
+                  quickAddLabel={dict.product.addToCart}
+                  addedLabel={dict.product.added}
+                  sizes="(min-width: 40rem) 20vw, 50vw"
+                />
+              ))}
+            </ul>
+          )}
 
-        <Pagination totalPages={totalPages} currentPage={filters.page} buildHref={buildPageHref} />
-      </section>
+          <Pagination
+            totalPages={totalPages}
+            currentPage={filters.page}
+            buildHref={buildPageHref}
+          />
+        </section>
+      </div>
     </main>
   );
 }

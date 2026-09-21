@@ -2,6 +2,8 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import "./home.css";
+import "./shop.css";
 
 export default function ErrorBoundary({
   error,
@@ -23,18 +25,22 @@ export default function ErrorBoundary({
   }, [error]);
 
   return (
-    <main className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center px-4 py-24 text-center">
-      <h1 className="text-2xl font-semibold">Something went wrong</h1>
-      <p className="text-foreground/70 mt-2 text-sm">
-        An unexpected error occurred. You can try again, or head back to the homepage.
-      </p>
-      <div className="mt-8 flex gap-4 text-sm">
-        <button type="button" onClick={reset} className="bg-primary rounded px-4 py-2 text-white">
-          Try again
-        </button>
-        <Link href="/" className="border-foreground/20 rounded border px-4 py-2">
-          Back to home
-        </Link>
+    // Not <ShelfMain>: an error boundary shouldn't depend on the font loader, so
+    // the display/UI faces fall back to the system serif/sans here.
+    <main className="shelf flex flex-1 flex-col">
+      <div className="shelf-wrap shop-w-sm shop-center">
+        <h1 className="shop-title">Something went wrong</h1>
+        <p className="shop-lede">
+          An unexpected error occurred. You can try again, or head back to the homepage.
+        </p>
+        <div className="shop-actions">
+          <button type="button" onClick={reset} className="btn-primary text-sm">
+            Try again
+          </button>
+          <Link href="/" className="btn-secondary text-sm">
+            Back to home
+          </Link>
+        </div>
       </div>
     </main>
   );

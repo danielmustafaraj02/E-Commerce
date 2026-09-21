@@ -1,19 +1,22 @@
 /* ---------------------------------------------------------------------------
    Home page — "the shelf".
 
-   Scoped to `.shelf` so nothing elsewhere on the site changes. The design idea
-   is that the glass is the only thing with saturation: a cool, quiet ground,
-   one accent taken from the hero bead (violet), and the product photographs
-   blended into the page with `mix-blend-mode: multiply` so their white
-   backgrounds dissolve and the pieces sit directly on the page instead of in
-   boxes. That blend needs photos on a pure white background — every catalog
-   photo is; if one isn't, its white edge will show as a faint tint.
+   Scoped to `.shelf` so nothing elsewhere on the site changes. The idea: the
+   glass supplies all the colour. Each section is a band tinted from the
+   piece's own palette (lilac, aqua, sand, blush), the hero sits on soft washes
+   of the same colours behind the bead, and product photographs are blended
+   into the band with `mix-blend-mode: multiply` so their white backgrounds
+   dissolve and the pieces sit directly on the page instead of in boxes. That
+   blend needs photos on a pure white background — every catalog photo is; if
+   one isn't, its white edge will show as a faint tint.
 
    Palette (from the glass itself):
-     ground      #e8eef0  canal light
      ink         #0e3a46  deep lagoon (text — a dark teal, not tinted black)
-     accent      #7b4b94  bead violet (the one interactive color)
-     aventurine  #b5813f  the gold flecks; reserved, not used decoratively
+     accent      #7b4b94  bead violet (links, buttons, focus)
+     teal/rose   #1f7a85 / #c65b8a  the other two glass colours (rules, accents)
+     tints       lilac #f5f2f7, aqua #edf2f1, sand #f6f2ea, blush #f6eff1 (kept barely tinted)
+     violet-night #3f2154  the newsletter band, with the gold of the flecks
+   Every text/background pair used here is at least 4.5:1.
 
    Type: Cardo (Venetian old-style roman, Aldine lineage) for headings, product
    names and running copy; Hanken Grotesk for UI (buttons, prices, forms). Both
@@ -25,11 +28,11 @@
    ------------------------------------------------------------------------- */
 
 .shelf {
-  --ground: #f7f3fa;
-  --tint-lilac: #efe6f5;
-  --tint-aqua: #ddf0ee;
-  --tint-sand: #fbf1d9;
-  --tint-blush: #fbe6ec;
+  --ground: #fff;
+  --tint-lilac: #f5f2f7;
+  --tint-aqua: #edf2f1;
+  --tint-sand: #f6f2ea;
+  --tint-blush: #f6eff1;
   --teal: #1f7a85;
   --rose: #c65b8a;
   --ink: #0e3a46;
@@ -40,6 +43,13 @@
   --violet-night: #3f2154;
   --aventurine: #b5813f;
   --gold: #f5c451;
+  --gold-soft: #ffd977;
+  --aventurine-deep: #8a5a1c;
+  --wash-violet: #f0e8f4;
+  --wash-aqua: #e2eeec;
+  --wash-rose: #f4e8ec;
+  --on-dark-error: #ffc9c9;
+  --on-dark-ok: #b8f0c8;
 
   background: var(--ground);
   color: var(--ink);
@@ -49,6 +59,7 @@
 }
 
 .shelf :where(h1, h2, h3) {
+  text-wrap: balance;
   font-family: var(--font-display), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
   font-weight: 400;
   line-height: 1.12;
@@ -81,6 +92,12 @@
   background: var(--tint-blush);
 }
 
+/* Plain sections are white; a hairline, not a colour, tells them apart. Only the
+   tinted (sand) band and the newsletter block carry colour. */
+.shelf-section + .shelf-section:not([class*="--"]):not(.shelf-newsletter) {
+  border-top: 1px solid color-mix(in srgb, var(--ink) 8%, transparent);
+}
+
 .shelf-heading {
   font-size: clamp(1.75rem, 3.4vw, 2.4rem);
 }
@@ -109,12 +126,15 @@
 
 .shelf-hero {
   overflow: hidden;
-  /* Soft washes of the glass's own colors — violet behind the bead, aqua low
-     on the left, a touch of rose above. Static; the bead is the only motion. */
+  /* White, with one faint violet glow behind the bead. Static; the bead is the
+     only motion. */
   background:
-    radial-gradient(55% 75% at 88% 45%, #e2c5ee 0%, transparent 70%),
-    radial-gradient(50% 60% at 0% 100%, #bfe6e2 0%, transparent 70%),
-    radial-gradient(35% 45% at 55% 0%, #fbd9e4 0%, transparent 70%), var(--ground);
+    radial-gradient(
+      55% 75% at 88% 45%,
+      color-mix(in srgb, var(--wash-violet) 70%, transparent) 0%,
+      transparent 70%
+    ),
+    var(--ground);
 }
 .shelf-hero-grid {
   display: grid;
@@ -477,7 +497,7 @@
   color: var(--ink-soft);
 }
 .shelf-stars {
-  color: #8a5a1c; /* darker aventurine: 3:1+ on the blush band */
+  color: var(--aventurine-deep); /* 4.9:1 on the blush band */
   letter-spacing: 0.15em;
 }
 
@@ -508,14 +528,20 @@
   font-weight: 600;
 }
 .shelf .shelf-newsletter .btn-primary:hover {
-  background: #ffd977;
+  background: var(--gold-soft);
   color: var(--violet-night);
 }
 .shelf-newsletter a,
-.shelf-newsletter label,
-.shelf-newsletter [role="alert"],
-.shelf-newsletter [role="status"] {
+.shelf-newsletter label {
   color: inherit;
+}
+/* The form's error/success colours (red/green) are for light backgrounds;
+   these lighter tints keep the same meaning at 8:1+ on the violet band. */
+.shelf .shelf-newsletter [role="alert"] {
+  color: var(--on-dark-error);
+}
+.shelf .shelf-newsletter [role="status"] {
+  color: var(--on-dark-ok);
 }
 .shelf-newsletter a:focus-visible,
 .shelf-newsletter button:focus-visible {
@@ -560,4 +586,69 @@
   outline: 2px solid var(--accent);
   outline-offset: 3px;
   border-radius: 2px;
+}
+
+/* -- Home page: more air ------------------------------------------------------ */
+
+/* Scoped to `.shelf-home` (the home <main>) so the product pages, which share the
+   section and grid classes above, keep their tighter rhythm. */
+.shelf-home .shelf-section {
+  padding-block: 4.5rem;
+}
+.shelf-home .shelf-heading-row {
+  margin-bottom: 3rem;
+}
+.shelf-home .shelf-hero-grid {
+  padding-block: 3.5rem 1.5rem;
+}
+.shelf-home .shelf-hero-copy {
+  gap: 1.75rem;
+}
+.shelf-home .shelf-row {
+  gap: 3rem 1.25rem;
+}
+.shelf-home .shelf-categories {
+  gap: 3rem 1.25rem;
+}
+.shelf-home .shelf-points {
+  gap: 2.5rem;
+}
+.shelf-home .shelf-quotes {
+  gap: 2.5rem;
+}
+.shelf-home .shelf-faq details {
+  padding-block: 1.25rem;
+}
+.shelf-home .shelf-faq p {
+  margin-top: 1rem;
+}
+@media (min-width: 48rem) {
+  .shelf-home .shelf-section {
+    padding-block: 6.5rem;
+  }
+  .shelf-home .shelf-row {
+    gap: 4.25rem 2.25rem;
+  }
+  .shelf-home .shelf-categories {
+    gap: 3rem 4rem;
+  }
+  .shelf-home .shelf-points {
+    gap: 3.5rem;
+  }
+  .shelf-home .shelf-quotes {
+    gap: 3.5rem;
+  }
+}
+@media (min-width: 52rem) {
+  .shelf-home .shelf-hero-grid {
+    gap: 3rem;
+    padding-block: 5.5rem 3.5rem;
+  }
+}
+
+/* New arrivals: two rows at every width — eight pieces in four columns, four in two. */
+@media (max-width: 47.99rem) {
+  .shelf-row--two-rows > :nth-child(n + 5) {
+    display: none;
+  }
 }

@@ -105,7 +105,7 @@ export function PaymentButtons({
 
   if (bankDetails) {
     return (
-      <div className="border-foreground/10 rounded border p-4 text-sm">
+      <div className="shop-panel shop-panel-pad text-sm">
         <p className="mb-3 font-medium">{dict.bankTitle}</p>
         <dl className="flex flex-col gap-1">
           {bankDetails.bankAccountHolder && (

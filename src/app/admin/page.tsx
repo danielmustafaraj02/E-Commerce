@@ -99,7 +99,7 @@ export default async function AdminDashboardPage() {
       <h1 className="mb-6 text-2xl font-semibold">Dashboard</h1>
 
       {hasRecentActivity && (
-        <div className="border-primary/20 bg-primary/5 mb-6 rounded-lg border p-4">
+        <div className="border-accent/25 bg-accent/5 mb-6 rounded-lg border p-4">
           <h2 className="mb-3 text-sm font-semibold">
             Recent activity (last 24h)
           </h2>
@@ -108,7 +108,7 @@ export default async function AdminDashboardPage() {
               <li key={order.orderNumber} className="flex items-center justify-between gap-3">
                 <span>
                   New order{" "}
-                  <Link href={`/admin/orders/${order.orderNumber}`} className="text-primary hover:underline">
+                  <Link href={`/admin/orders/${order.orderNumber}`} className="text-accent-deep hover:underline">
                     {order.orderNumber}
                   </Link>
                 </span>
@@ -123,7 +123,7 @@ export default async function AdminDashboardPage() {
                   New account{" "}
                   <Link
                     href={`/admin/customers/${customer.id}`}
-                    className="text-primary hover:underline"
+                    className="text-accent-deep hover:underline"
                   >
                     {customer.name || customer.email}
                   </Link>
@@ -135,26 +135,26 @@ export default async function AdminDashboardPage() {
       )}
 
       <dl className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <div className="border-foreground/10 rounded border p-4">
+        <div className="border-foreground/10 rounded-lg border border-t-[3px] border-t-[color:var(--accent)] p-4">
           <dt className="text-foreground/70 text-sm">Revenue</dt>
           <dd className="text-2xl font-semibold">
             {formatMoney(revenue._sum.total ?? 0, settings.defaultCurrency, settings.defaultLocale)}
           </dd>
         </div>
-        <div className="border-foreground/10 rounded border p-4">
+        <div className="border-foreground/10 rounded-lg border border-t-[3px] border-t-[color:var(--accent)] p-4">
           <dt className="text-foreground/70 text-sm">Orders</dt>
           <dd className="text-2xl font-semibold">{orderCount}</dd>
         </div>
-        <div className="border-foreground/10 rounded border p-4">
+        <div className="border-foreground/10 rounded-lg border border-t-[3px] border-t-[color:var(--accent)] p-4">
           <dt className="text-foreground/70 text-sm">Products</dt>
           <dd className="text-2xl font-semibold">{productCount}</dd>
         </div>
-        <div className="border-foreground/10 rounded border p-4">
+        <div className="border-foreground/10 rounded-lg border border-t-[3px] border-t-[color:var(--accent)] p-4">
           <dt className="text-foreground/70 text-sm">Customers</dt>
           <dd className="text-2xl font-semibold">{userCount}</dd>
         </div>
         {dropshipItems.length > 0 && (
-          <div className="border-foreground/10 rounded border p-4">
+          <div className="border-foreground/10 rounded-lg border border-t-[3px] border-t-[color:var(--accent)] p-4">
             <dt className="text-foreground/70 text-sm">Dropship profit</dt>
             <dd className="text-2xl font-semibold">
               {formatMoney(dropshipProfit, settings.defaultCurrency, settings.defaultLocale)}

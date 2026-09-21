@@ -1,0 +1,606 @@
+/* ---------------------------------------------------------------------------
+   Product listings and product pages: /products, /category/*, /products/*.
+
+   These pages carry the home page's design (app/home.css): they are `.shelf`
+   pages too, so the tokens (ink, accent, tints), the display/UI fonts, the
+   section bands and the ShelfItem tile all come from there. This file only adds
+   what the home page doesn't have — a page header band, the filter sidebar, the
+   product-page photo pane and pagination.
+
+   Photos follow the same rule as on the home page: they are on white, so
+   `mix-blend-mode: multiply` lets the tinted pane show through, and the outer
+   edge is feathered so a corner shadow in the photo fades out instead of
+   showing as a box. The frames therefore keep the photos' own edges (2:3, or a
+   symmetric crop of it).
+   ------------------------------------------------------------------------- */
+
+/* The store's primary colour is admin-editable and, by default, near-black.
+   On these pages the primary action takes the glass violet, as on the home page
+   (`.shelf-button`); the hover keeps the site-wide flip to white. */
+.shelf .btn-primary {
+  background: var(--accent);
+}
+.shelf .btn-primary:hover {
+  background: #fff;
+}
+.shelf .btn-primary:active {
+  background: color-mix(in srgb, var(--accent) 12%, white);
+}
+
+/* -- Page header band ------------------------------------------------------- */
+
+.shop-head {
+  /* White, with the faintest violet glow in one corner and a hairline below. */
+  background:
+    radial-gradient(
+      42% 130% at 94% 0%,
+      color-mix(in srgb, var(--wash-violet) 55%, transparent) 0%,
+      transparent 70%
+    ),
+    var(--ground);
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 8%, transparent);
+  padding-block: 2.75rem 2.25rem;
+}
+.shop-title {
+  font-size: clamp(2.1rem, 5.5vw, 3.25rem);
+  overflow-wrap: anywhere;
+}
+.shop-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+.shop-chip {
+  display: inline-block;
+  padding: 0.3rem 1rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: color-mix(in srgb, #fff 60%, transparent);
+  color: var(--ink);
+  font-size: 0.92rem;
+  text-decoration: none;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+.shop-chip:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* -- Listing: filter sidebar + grid ---------------------------------------- */
+
+.shop-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding-block: 2rem 4rem;
+}
+@media (min-width: 40rem) {
+  .shop-layout {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 2.5rem;
+    padding-block: 2.75rem 5rem;
+  }
+}
+.shop-results {
+  flex: 1;
+  min-width: 0;
+}
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 40rem) {
+  .shop-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.5rem 1.5rem;
+  }
+}
+
+.shop-filter-card {
+  padding: 1.25rem;
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  background: color-mix(in srgb, #fff 65%, transparent);
+}
+.shop-filter-card :where(.border-t) {
+  border-color: var(--rule);
+}
+
+/* -- Pagination -------------------------------------------------------------- */
+
+.shop-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 3rem;
+  font-size: 0.95rem;
+}
+.shop-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  height: 2.5rem;
+  padding-inline: 0.75rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  color: var(--ink);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  text-decoration: none;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+.shop-page:hover {
+  border-color: var(--accent);
+  color: var(--accent-deep);
+}
+.shop-page[aria-current="page"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* -- Product page ------------------------------------------------------------- */
+
+.shop-product {
+  background: var(--ground);
+}
+.shop-back {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+}
+.shop-product-grid {
+  display: grid;
+  gap: 2rem;
+}
+@media (min-width: 40rem) {
+  .shop-product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3.5rem;
+    align-items: start;
+  }
+}
+
+.shop-product-photo,
+.shop-thumb {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--tint-lilac);
+}
+.shop-product-photo {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: 18px;
+}
+.shop-thumb {
+  width: 4.5rem;
+  aspect-ratio: 2 / 3;
+  border-radius: 8px;
+}
+.shop-product-photo img,
+.shop-thumb img {
+  object-fit: cover;
+  mix-blend-mode: multiply;
+  filter: brightness(1.05) contrast(1.03);
+  -webkit-mask-image:
+    linear-gradient(to right, transparent, #000 5%, #000 95%, transparent),
+    linear-gradient(to bottom, transparent, #000 3%, #000 97%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent, #000 5%, #000 95%, transparent),
+    linear-gradient(to bottom, transparent, #000 3%, #000 97%, transparent);
+  mask-composite: intersect;
+}
+
+.shop-product-title {
+  font-size: clamp(2rem, 4.6vw, 2.9rem);
+  overflow-wrap: anywhere;
+}
+.shop-price {
+  margin: 0.9rem 0 0;
+  color: var(--accent-deep);
+  font-size: 1.65rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.shop-prose {
+  margin: 1.5rem 0 0;
+  max-width: 34rem;
+  font-family: var(--font-display), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: 1.2rem;
+  line-height: 1.65;
+  white-space: pre-line;
+}
+
+.shop-reviews > * {
+  max-width: 44rem;
+}
+.shop-reviews > .shelf-heading {
+  margin-bottom: 1.25rem;
+}
+.shop-reviews :where(.border-foreground\/10) {
+  border-color: var(--rule);
+}
+.shop-related-heading {
+  margin-bottom: 1.75rem;
+}
+
+/* -- Page shell (components/shelf-page.tsx) ----------------------------------- */
+
+/* Content widths, border-box: the column plus the wrap's 1.25rem side padding. */
+.shop-w-sm {
+  max-width: 32.5rem;
+}
+.shop-w-md {
+  max-width: 44.5rem;
+}
+.shop-w-lg {
+  max-width: 50.5rem;
+}
+.shop-body {
+  padding-block: 2.25rem 4.5rem;
+}
+.shop-head-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.shop-head-text {
+  min-width: 0;
+}
+.shop-avatar {
+  position: relative; /* the welcome confetti bursts from here */
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+.shop-lede {
+  margin: 0.6rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+/* -- Panels and lists ---------------------------------------------------------- */
+
+/* `bg-surface` is almost the page ground, so boxes built from it vanish; a
+   translucent white panel with the hairline rule reads on every band. */
+.shop-panel,
+.shelf .form-card {
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  background: color-mix(in srgb, #fff 65%, transparent);
+  box-shadow: none;
+}
+.shop-panel-pad {
+  padding: 1.25rem;
+}
+.shop-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
+}
+.shop-list > li + li {
+  border-top: 1px solid var(--rule);
+}
+.shop-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 3.5rem 1.5rem;
+  text-align: center;
+}
+.shop-section + .shop-section {
+  margin-top: 2.75rem;
+}
+.shop-h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+  font-size: 1.6rem;
+}
+.shop-h2--flush {
+  margin-bottom: 0;
+}
+/* Small UI headings (card titles) stay in the UI face, not the display one. */
+.shop-ui {
+  font-family: var(--font-ui), system-ui, sans-serif;
+}
+.shop-tile {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 1rem;
+  color: inherit;
+  text-decoration: none;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+.shop-tile:hover {
+  border-color: var(--accent);
+  background: color-mix(in srgb, #fff 90%, transparent);
+}
+.shop-tile-icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+}
+.shop-tile-icon--violet {
+  background: var(--tint-lilac);
+  color: var(--accent);
+}
+
+/* Selectable option cards (shipping / payment method): violet, not the store's
+   near-black primary. */
+.shelf .option-card {
+  border-color: var(--rule);
+  background: color-mix(in srgb, #fff 55%, transparent);
+}
+.shelf .option-card:hover {
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+}
+.shelf .option-card:has(:checked) {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, #fff);
+}
+.shelf .field-radio::after {
+  background: var(--accent);
+}
+
+/* -- Cart and order lines ------------------------------------------------------ */
+
+.shop-thumb--cart {
+  width: 4rem;
+  flex-shrink: 0;
+}
+.shop-thumb--fill {
+  width: 100%;
+}
+.shop-line-name {
+  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+  font-size: 1.15rem;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+.shop-line-name:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 0.2em;
+}
+.shop-track {
+  height: 0.5rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--tint-lilac);
+}
+.shop-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+.shop-total {
+  color: var(--accent-deep);
+  font-size: 1.35rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* -- Sign in / register ------------------------------------------------------- */
+
+.shop-auth-title {
+  font-size: clamp(2rem, 6vw, 2.6rem);
+}
+
+/* Legal text: plain running copy, kept in the UI face for long documents. */
+.shop-legal {
+  margin: 0;
+  max-width: 40rem;
+  font-size: 1rem;
+  line-height: 1.75;
+  white-space: pre-line;
+}
+
+/* -- Editorial pages (about, guide) -------------------------------------------- */
+
+.shop-h2-plain {
+  margin: 3rem 0 1rem;
+  font-size: clamp(1.6rem, 3vw, 2rem);
+}
+.shop-cta-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+}
+/* Long-form copy in the display face, as on the home page's running text. */
+.shop-editorial p,
+.shop-editorial li {
+  font-family: var(--font-display), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: 1.15rem;
+  line-height: 1.65;
+}
+.shop-editorial summary {
+  font-size: 1.05rem;
+}
+.shop-editorial h3 {
+  font-size: 1.05rem;
+  line-height: 1.3;
+}
+/* Cards sit in narrow columns: body copy back to a comfortable size. */
+.shop-editorial .shop-panel p {
+  font-size: 1rem;
+  line-height: 1.55;
+}
+.shop-editorial .shop-panel {
+  height: 100%;
+}
+
+/* -- Loading, 404 and error screens ------------------------------------------- */
+
+.shop-skeleton {
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+.shop-skeleton--photo {
+  aspect-ratio: 2 / 3;
+  border-radius: 0;
+  background: var(--tint-lilac);
+}
+.shop-center {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-block: 5rem;
+  text-align: center;
+}
+.shop-eyebrow {
+  margin: 0 0 0.5rem;
+  color: var(--accent-deep);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+.shop-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+/* -- Cart line -------------------------------------------------------------------- */
+
+/* Phones: photo beside the name, and the quantity + line total on their own row
+   under it, so the name keeps a readable width. From 34rem it is one row. */
+.shop-cart-line {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr);
+  gap: 0.75rem 1rem;
+  align-items: start;
+  padding: 1rem;
+}
+.shop-cart-controls {
+  display: flex;
+  grid-column: 2;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.shop-cart-total {
+  min-width: 5rem;
+  text-align: end;
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+@media (min-width: 34rem) {
+  .shop-cart-line {
+    grid-template-columns: 4rem minmax(0, 1fr) auto 5rem;
+    align-items: center;
+  }
+  .shop-cart-controls {
+    display: contents;
+  }
+}
+
+/* The sign-in/register glass blobs (globals.css), kept faint here. */
+.shelf .section-glass-bg::before,
+.shelf .section-glass-bg::after {
+  opacity: 0.25;
+}
+
+/* -- Quiet moments ------------------------------------------------------------------ */
+
+/* Something drifts into place once, like the hero bead. Only where it marks a
+   real moment (empty cart, free shipping unlocked, a paid order) and never for
+   visitors who ask for reduced motion. */
+@keyframes shop-settle {
+  from {
+    opacity: 0;
+    transform: translateY(-14px) scale(1.08);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .shop-settle {
+    animation: shop-settle 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .shop-avatar--settle {
+    animation: shop-settle 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.15s both;
+  }
+}
+.shop-check {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-inline-end: 0.6rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+}
+
+/* The guide: long copy, so more air between lines, paragraphs and sections. */
+.shop-editorial--airy p,
+.shop-editorial--airy li {
+  line-height: 1.85;
+}
+.shop-editorial--airy .flex-col {
+  gap: 1.6rem;
+}
+.shop-editorial--airy ul.flex-col {
+  gap: 0.9rem;
+}
+.shop-editorial--airy .shop-h2-plain {
+  margin-top: 4.75rem;
+  margin-bottom: 1.5rem;
+}
+.shop-editorial--airy > div:first-child .shop-h2-plain {
+  margin-top: 0;
+}
+.shop-editorial--airy .shop-cta {
+  margin-top: 4.75rem;
+}
+.shop-editorial--airy details {
+  padding-block: 1.15rem;
+}

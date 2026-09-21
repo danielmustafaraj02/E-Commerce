@@ -60,7 +60,7 @@ export function AuthCard({
         key={mode}
         ref={headingRef}
         tabIndex={-1}
-        className="animate-fade-up mb-1 text-center text-2xl font-semibold outline-none"
+        className="animate-fade-up shop-auth-title mb-1 text-center outline-none"
       >
         {mode === "login" ? dict.signInTitle : dict.createAccountTitle}
       </h1>
@@ -94,7 +94,7 @@ export function AuthCard({
                 e.preventDefault();
                 switchTo("register");
               }}
-              className="text-primary font-medium underline"
+              className="text-accent-deep font-medium underline"
             >
               {dict.createOne}
             </a>
@@ -108,7 +108,7 @@ export function AuthCard({
                 e.preventDefault();
                 switchTo("login");
               }}
-              className="text-primary font-medium underline"
+              className="text-accent-deep font-medium underline"
             >
               {dict.signIn}
             </a>

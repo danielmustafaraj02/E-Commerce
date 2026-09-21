@@ -1,16 +1,34 @@
+import { ShelfMain } from "@/components/shelf-main";
+import { ShelfBody } from "@/components/shelf-page";
+
+// Skeleton shown while any storefront route streams in. It uses the same
+// ground, header band and 2:3 tiles as the pages it stands in for, so the swap
+// doesn't flash white or shift the layout.
 export default function Loading() {
   return (
-    <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 px-4 py-16">
-      <div className="bg-foreground/10 h-6 w-40 animate-pulse rounded" />
-      <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
-        {Array.from({ length: 8 }, (_, i) => (
-          <div key={i} className="flex flex-col gap-2">
-            <div className="bg-foreground/10 aspect-square w-full animate-pulse rounded-lg" />
-            <div className="bg-foreground/10 h-4 w-3/4 animate-pulse rounded" />
-            <div className="bg-foreground/10 h-4 w-1/3 animate-pulse rounded" />
-          </div>
-        ))}
-      </div>
-    </main>
+    <ShelfMain>
+      <header className="shop-head" aria-hidden="true">
+        <div className="shelf-wrap">
+          <div className="shop-skeleton animate-pulse" style={{ height: "3rem", width: "16rem" }} />
+        </div>
+      </header>
+      <ShelfBody width="full">
+        <ul className="shelf-row" aria-hidden="true">
+          {Array.from({ length: 8 }, (_, i) => (
+            <li key={i} className="flex flex-col gap-2">
+              <div className="shop-skeleton shop-skeleton--photo animate-pulse" />
+              <div
+                className="shop-skeleton animate-pulse"
+                style={{ height: "1.1rem", width: "75%" }}
+              />
+              <div
+                className="shop-skeleton animate-pulse"
+                style={{ height: "1rem", width: "33%" }}
+              />
+            </li>
+          ))}
+        </ul>
+      </ShelfBody>
+    </ShelfMain>
   );
 }
