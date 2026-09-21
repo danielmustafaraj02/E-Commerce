@@ -11,6 +11,7 @@ import { formatMoney } from "@/lib/format";
 import { absoluteUrl, toSafeJsonLd } from "@/lib/json-ld";
 import { buildReturnPolicy, buildShippingDetails } from "@/lib/offer-json-ld";
 import { productMaterial } from "@/lib/merchant-feed";
+import { productSizeDictKey } from "@/lib/product-sizing";
 import { getLocale, type Locale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { applyTemplate } from "@/lib/i18n/format";
@@ -190,6 +191,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
   const productUrl = `${base}/products/${product.slug}`;
 
   const material = productMaterial(product.category);
+  const sizeKey = productSizeDictKey(product.category);
 
   const productJsonLd = {
     "@context": "https://schema.org",
@@ -318,6 +320,12 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                   <span className="text-success">{dict.product.inStock}</span>
                 )}
               </p>
+
+              {sizeKey && (
+                <p className="text-foreground/70 mt-1 text-sm">
+                  {dict.product.sizeLabel}: {dict.product[sizeKey]}
+                </p>
+              )}
 
               {averageRating !== null && (
                 <p className="text-foreground/70 mt-1 text-sm">
