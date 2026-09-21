@@ -24,6 +24,7 @@ import {
 import { buildProductMetaDescription, fitTitle } from "@/lib/seo-text";
 import { hreflangAlternates, ogLocale } from "@/lib/hreflang";
 import { AddToCartButton } from "@/components/add-to-cart-button";
+import { BuyNowButton } from "@/components/buy-now-button";
 import { WishlistButton } from "@/components/wishlist-button";
 import { ShareButtons } from "@/components/share-buttons";
 import { ShelfItem } from "@/components/shelf-item";
@@ -348,6 +349,21 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                 }}
                 dict={dict.product}
               />
+
+              {userId && !outOfStock && (
+                <BuyNowButton
+                  product={{
+                    id: product.id,
+                    slug: product.slug,
+                    name,
+                    price: product.price,
+                    currency: product.currency,
+                    imageUrl: product.images[0]?.url ?? null,
+                    outOfStock,
+                  }}
+                  label={dict.product.buyNow}
+                />
+              )}
 
               <WishlistButton
                 productId={product.id}

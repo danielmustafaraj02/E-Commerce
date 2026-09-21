@@ -9,6 +9,7 @@ import { getLocale, localeDir } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { FloatingCheckoutButton } from "@/components/floating-checkout-button";
 import { CookieConsent } from "@/components/cookie-consent";
 import { ConsentGatedAnalytics } from "@/components/consent-gated-analytics";
 import "./globals.css";
@@ -166,6 +167,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           dict={dict}
         />
         {children}
+        <FloatingCheckoutButton label={dict.cart.checkout} />
         <Footer
           storeName={settings.storeName}
           contactEmail={settings.contactEmail}
