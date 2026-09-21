@@ -477,6 +477,17 @@ button:not(:disabled),
   .field::placeholder {
     color: color-mix(in srgb, var(--foreground) 48%, transparent);
   }
+  /* A <select>'s dropdown popup is drawn by the OS/browser, not this
+     stylesheet — some browsers (notably Android Chrome's "force dark" web
+     content rendering) repaint that popup's background independently of the
+     page's own colors, without touching text inherited via a CSS custom
+     property (.field's `color: var(--foreground)`). That mismatch makes the
+     option text invisible even though it's still fully clickable. Literal
+     (non-variable) colors on <option> survive that repaint correctly. */
+  select.field option {
+    color: #171717;
+    background-color: #ffffff;
+  }
   .field:hover:not(:disabled):not(:focus) {
     border-color: color-mix(in srgb, var(--accent) 50%, transparent);
   }
