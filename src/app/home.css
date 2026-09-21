@@ -192,8 +192,9 @@
 }
 
 /* The hero photo is a macro of one bead on white. Multiply drops the white into
-   the ground; it is cropped tight and allowed to bleed past the right edge so
-   the bead reads as an object, not a picture in a frame. */
+   the ground; the whole piece is kept in frame (object-fit: contain) rather
+   than cropped, since a full necklace reads as broken if any of its loop is
+   cut off. */
 .shelf-bead {
   position: relative;
   aspect-ratio: 1 / 1;
@@ -202,10 +203,9 @@
   justify-self: center;
 }
 .shelf-bead img {
-  object-fit: cover;
-  object-position: 58% 50%;
+  object-fit: contain;
+  object-position: 50% 50%;
   mix-blend-mode: multiply;
-  transform: scale(1.24);
   animation: shelf-settle 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 @keyframes shelf-settle {
