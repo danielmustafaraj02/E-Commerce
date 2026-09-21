@@ -7,6 +7,7 @@ import { useCartStore } from "@/lib/cart-store";
 import { formatMoney } from "@/lib/format";
 import { TurnstileWidget } from "@/components/turnstile-widget";
 import { FormAlert } from "@/components/form-alert";
+import { AddressCheck } from "@/components/address-check";
 import { applyTemplate } from "@/lib/i18n/format";
 import { isValidPostalCode } from "@/lib/postal-code";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
@@ -316,6 +317,14 @@ export function CheckoutClient({
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           className="field"
+        />
+        <AddressCheck
+          street={street}
+          city={city}
+          postalCode={postalCode}
+          country={country}
+          ready={street.trim().length >= 3 && city.trim().length >= 2 && postalCodeValid}
+          dict={dict.addressCheck}
         />
       </fieldset>
 

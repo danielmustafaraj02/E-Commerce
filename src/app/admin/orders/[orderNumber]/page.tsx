@@ -8,11 +8,14 @@ import { sendToSupplier, updateFulfillment } from "./fulfillment-actions";
 import { StatusForm } from "./status-form";
 import { FulfillmentTrackingForm } from "./fulfillment-tracking-form";
 import { ConfirmForm } from "@/components/confirm-form";
+import { AddressMap } from "@/components/address-map";
+import { findOrderOnMap } from "./geocode-actions";
 
 export default async function AdminOrderDetailPage({
   params,
+  searchParams,
 }: PageProps<"/admin/orders/[orderNumber]">) {
-  const { orderNumber } = await params;
+  const [{ orderNumber }, { map }] = await Promise.all([params, searchParams]);
 
   const [session, settings, order] = await Promise.all([
     auth(),
@@ -112,6 +115,34 @@ export default async function AdminOrderDetailPage({
               <p>
                 {order.address.city}, {order.address.postalCode} {order.address.country}
               </p>
+
+              {order.address.lat !== null && order.address.lng !== null ? (
+                <div className="mt-3 flex flex-col gap-1.5">
+                  <AddressMap
+                    lat={order.address.lat}
+                    lng={order.address.lng}
+                    precision="street"
+                    alt={`Map of ${order.address.street}, ${order.address.city}`}
+                    openLabel="Open larger map"
+                  />
+                  {order.address.geocodeLabel && (
+                    <p className="text-xs">OpenStreetMap matched: {order.address.geocodeLabel}</p>
+                  )}
+                </div>
+              ) : (
+                <form action={findOrderOnMap.bind(null, order.orderNumber)} className="mt-3">
+                  <p className="mb-2 text-xs">
+                    {map === "unavailable"
+                      ? "The map service didn't answer. Try again in a minute."
+                      : order.address.geocodedAt
+                        ? "This address wasn't found on the map. Check the spelling with the customer."
+                        : "This address hasn't been located on the map yet."}
+                  </p>
+                  <button type="submit" className="btn-secondary text-sm">
+                    {order.address.geocodedAt ? "Search again" : "Find on map"}
+                  </button>
+                </form>
+              )}
             </div>
           )}
 
@@ -212,8 +243,8 @@ export default async function AdminOrderDetailPage({
             <div className="border-danger/30 rounded border p-4">
               <h2 className="text-danger mb-1 text-sm font-semibold">Danger zone</h2>
               <p className="text-foreground/60 mb-3 text-xs">
-                Permanently deletes this order and its payment records. Useful for cleaning up
-                test orders — cannot be undone.
+                Permanently deletes this order and its payment records. Useful for cleaning up test
+                orders — cannot be undone.
               </p>
               <ConfirmForm
                 action={deleteOrder.bind(null, order.id)}

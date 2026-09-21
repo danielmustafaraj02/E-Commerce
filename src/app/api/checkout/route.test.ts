@@ -4,6 +4,7 @@ const mocks = vi.hoisted(() => ({
   quoteOrder: vi.fn(),
   cancelExpiredOrders: vi.fn(),
   notifyCancelledOrders: vi.fn(),
+  geocodeAndStoreAddress: vi.fn(),
   afterCallbacks: [] as (() => unknown)[],
   txUpdateStock: vi.fn(),
   orderCreated: vi.fn(),
@@ -32,6 +33,9 @@ vi.mock("@/lib/pricing", async (importOriginal) => ({
 vi.mock("@/lib/abandoned-orders", () => ({
   cancelExpiredOrders: mocks.cancelExpiredOrders,
   notifyCancelledOrders: mocks.notifyCancelledOrders,
+}));
+vi.mock("@/lib/geocode-address", () => ({
+  geocodeAndStoreAddress: mocks.geocodeAndStoreAddress,
 }));
 vi.mock("@/lib/db", () => {
   const tx = {
@@ -112,6 +116,19 @@ describe("POST /api/checkout stock conflicts", () => {
 
     expect(res.status).toBe(201);
     expect(mocks.cancelExpiredOrders).not.toHaveBeenCalled();
+  });
+
+  it("looks up where the address is after the response, and a failing lookup never fails the order", async () => {
+    mocks.geocodeAndStoreAddress.mockRejectedValue(new Error("db down"));
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    const res = await checkout();
+
+    expect(res.status).toBe(201);
+    expect(mocks.geocodeAndStoreAddress).not.toHaveBeenCalled();
+    await Promise.all(mocks.afterCallbacks.map((fn) => fn()));
+    expect(mocks.geocodeAndStoreAddress).toHaveBeenCalledWith("addr1");
+    consoleError.mockRestore();
   });
 
   it("remembers the language the customer checked out in, for the emails about the order", async () => {

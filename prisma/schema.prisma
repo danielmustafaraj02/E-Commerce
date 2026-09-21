@@ -381,6 +381,15 @@ model Address {
   phone      String?
   isDefault  Boolean @default(false)
 
+  // Where the address is on the map, found with OpenStreetMap's geocoder
+  // (src/lib/geocode.ts). Filled in shortly after an order is placed, or from the
+  // admin order page. geocodedAt is set once a lookup was answered, even with no
+  // match (lat/lng stay null then); a lookup that failed leaves it null to retry.
+  lat          Float?
+  lng          Float?
+  geocodedAt   DateTime?
+  geocodeLabel String?
+
   orders Order[]
 
   @@index([userId])

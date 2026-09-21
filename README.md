@@ -99,6 +99,7 @@ launch needs the ones marked ★.
 | `STRIPE_SECRET_KEY` · `STRIPE_PUBLISHABLE_KEY` · `STRIPE_WEBHOOK_SECRET` ★ | Card/wallet payments                                                                   |
 | `PAYPAL_CLIENT_ID` · `PAYPAL_CLIENT_SECRET` · `PAYPAL_WEBHOOK_ID`          | PayPal payments                                                                        |
 | `PAYPAL_ENV`                                                                | `sandbox` or `live`. Default: live in production, sandbox elsewhere (a Vercel preview counts as production, so set `sandbox` to test with sandbox keys) |
+| `GEOCODER_URL`                                                              | Optional. Base URL of a Nominatim-compatible geocoder for the checkout address map. Default: `https://nominatim.openstreetmap.org` (free, ~1 request/second, identifies the shop by name and contact email) |
 | `RESEND_API_KEY` · `EMAIL_FROM` ★                                          | Order, verification and password-reset emails                                          |
 | `CRON_SECRET` ★                                                            | Authenticates the daily abandoned-order cron                                           |
 | `UPSTASH_REDIS_REST_URL` · `UPSTASH_REDIS_REST_TOKEN` ★                    | Shared rate limiting (the in-memory fallback is per-instance)                          |

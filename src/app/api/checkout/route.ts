@@ -11,6 +11,8 @@ import { cancelExpiredOrders, notifyCancelledOrders } from "@/lib/abandoned-orde
 import { getFeedback } from "@/lib/i18n/feedback";
 import { getLocale } from "@/lib/i18n/locale";
 import { pricingMessage } from "@/lib/pricing-messages";
+import { geocodeAndStoreAddress } from "@/lib/geocode-address";
+import { captureError } from "@/lib/monitoring";
 
 const checkoutSchema = z.object({
   items: z
@@ -170,6 +172,19 @@ export async function POST(request: Request) {
       if (released.length === 0) throw error;
       after(() => notifyCancelledOrders(released));
       order = await placeOrder();
+    }
+
+    // Work out where the address is once the customer has their answer, so the
+    // admin's order page can show it on a map. Never holds up or fails checkout.
+    if (order.addressId) {
+      const addressId = order.addressId;
+      after(async () => {
+        try {
+          await geocodeAndStoreAddress(addressId);
+        } catch (error) {
+          captureError(error, { scope: "geocode-address", addressId });
+        }
+      });
     }
 
     return NextResponse.json({ orderNumber: order.orderNumber }, { status: 201 });
