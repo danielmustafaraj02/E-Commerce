@@ -257,6 +257,12 @@ model Product {
   stockQty          Int      @default(0)
   lowStockThreshold Int      @default(5)
   active            Boolean  @default(true)
+  // One canonical color per piece, for the filter swatches on /products and
+  // /category/[slug] — a fixed small palette (see PRODUCT_COLORS in
+  // src/lib/product-colors.ts), not free text, so the filter UI can render
+  // real swatches instead of a text dropdown. Optional: an unset color just
+  // doesn't match any color filter, it isn't excluded from browsing.
+  color             String?
 
   // Dropshipping: a product sourced from a supplier who ships directly to
   // the customer. trackInventory=false skips the stock check/decrement at
