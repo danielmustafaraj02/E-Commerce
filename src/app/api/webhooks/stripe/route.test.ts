@@ -45,6 +45,21 @@ function sessionEvent(
   };
 }
 
+function paymentIntentEvent(overrides: Record<string, unknown> = {}) {
+  return {
+    type: "payment_intent.succeeded",
+    data: {
+      object: {
+        id: "pi_express_1",
+        amount: 5167,
+        currency: "eur",
+        metadata: { orderNumber: "ORD-1" },
+        ...overrides,
+      },
+    },
+  };
+}
+
 function deliver(event: unknown) {
   mocks.constructEvent.mockReturnValue(event);
   return POST(
@@ -138,6 +153,38 @@ describe("Stripe webhook", () => {
     expect(mocks.updateOrder).not.toHaveBeenCalled();
     expect(mocks.sendOrderStatusEmail).not.toHaveBeenCalled();
     expect(mocks.captureError).not.toHaveBeenCalled();
+  });
+
+  it("marks a pending order paid from an Express Checkout PaymentIntent", async () => {
+    const res = await deliver(paymentIntentEvent());
+
+    expect(res.status).toBe(200);
+    expect(mocks.updateOrder).toHaveBeenCalledWith({
+      where: { id: "o1" },
+      data: { status: "paid" },
+    });
+    expect(mocks.updatePayments).toHaveBeenCalledWith(
+      expect.objectContaining({ data: { status: "succeeded" } })
+    );
+    expect(mocks.sendOrderStatusEmail).toHaveBeenCalledOnce();
+  });
+
+  it("ignores a PaymentIntent with no orderNumber metadata (e.g. one that belongs to a Checkout Session)", async () => {
+    const res = await deliver(paymentIntentEvent({ metadata: {} }));
+
+    expect(res.status).toBe(200);
+    expect(mocks.findOrder).not.toHaveBeenCalled();
+  });
+
+  it("does not mark the order paid when the PaymentIntent amount doesn't match", async () => {
+    const res = await deliver(paymentIntentEvent({ amount: 100 }));
+
+    expect(res.status).toBe(200);
+    expect(mocks.updateOrder).not.toHaveBeenCalled();
+    expect(mocks.captureError).toHaveBeenCalledWith(
+      expect.any(Error),
+      expect.objectContaining({ outcome: "amount_mismatch" })
+    );
   });
 
   it("rejects a request with a bad signature", async () => {

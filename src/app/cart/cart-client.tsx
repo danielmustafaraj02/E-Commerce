@@ -7,16 +7,21 @@ import { formatMoney } from "@/lib/format";
 import { applyTemplate } from "@/lib/i18n/format";
 import { QuantityStepper } from "@/components/quantity-stepper";
 import { BeadMark } from "@/components/bead-mark";
+import { ExpressCheckoutButton } from "@/components/express-checkout-button";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
 export function CartClient({
   locale,
+  uiLocale,
   dict,
   freeShippingThreshold,
+  stripePublishableKey,
 }: {
   locale: string;
+  uiLocale: string;
   dict: Dictionary["cart"];
   freeShippingThreshold: number | null;
+  stripePublishableKey: string | null;
 }) {
   const items = useCartStore((state) => state.items);
   const setQuantity = useCartStore((state) => state.setQuantity);
@@ -136,6 +141,12 @@ export function CartClient({
       <Link href="/checkout" className="btn-primary text-center">
         {dict.checkout}
       </Link>
+
+      <ExpressCheckoutButton
+        publishableKey={stripePublishableKey}
+        locale={uiLocale}
+        dividerLabel={dict.expressCheckoutOr}
+      />
     </div>
   );
 }

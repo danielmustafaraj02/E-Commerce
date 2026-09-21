@@ -75,13 +75,24 @@ export default async function proxy(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
   const isDev = process.env.NODE_ENV === "development";
 
+  // Express Checkout (Apple Pay/Google Pay via @stripe/react-stripe-js,
+  // src/components/express-checkout-button.tsx) is the one place this app
+  // loads a third-party script on-page rather than redirecting to it —
+  // still SAQ-A (Stripe's Elements iframe tokenizes client-side, same
+  // guarantee as Hosted Checkout's redirect), but it needs three narrow,
+  // Stripe-only additions: js.stripe.com can load *as* a script (also
+  // covered by 'strict-dynamic' for browsers that support it, since
+  // loadStripe() injects it from our own nonce'd code — listed explicitly
+  // too for older browsers), its iframes need frame-src (default-src alone
+  // would block them), and its own API/fraud-check calls need connect-src.
   const csp = `
     default-src 'self';
-    script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${isDev ? " 'unsafe-eval'" : ""};
+    script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://js.stripe.com${isDev ? " 'unsafe-eval'" : ""};
     style-src 'self' 'unsafe-inline';
     img-src 'self' https: data:;
     font-src 'self' data:;
-    connect-src 'self';
+    connect-src 'self' https://api.stripe.com https://m.stripe.network;
+    frame-src https://js.stripe.com https://hooks.stripe.com;
     object-src 'none';
     base-uri 'self';
     form-action 'self';

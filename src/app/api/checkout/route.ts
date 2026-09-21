@@ -1,18 +1,14 @@
-import { randomBytes } from "node:crypto";
-import { after, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/auth";
-import { db } from "@/lib/db";
-import { quoteOrder, PricingError } from "@/lib/pricing";
+import { PricingError } from "@/lib/pricing";
+import { placeOrderWithRetry } from "@/lib/place-order";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { isValidPostalCode } from "@/lib/postal-code";
-import { cancelExpiredOrders, notifyCancelledOrders } from "@/lib/abandoned-orders";
 import { getFeedback } from "@/lib/i18n/feedback";
 import { getLocale } from "@/lib/i18n/locale";
 import { pricingMessage } from "@/lib/pricing-messages";
-import { geocodeAndStoreAddress } from "@/lib/geocode-address";
-import { captureError } from "@/lib/monitoring";
 
 const checkoutSchema = z.object({
   items: z
@@ -36,15 +32,6 @@ const checkoutSchema = z.object({
   discountCode: z.string().min(1).max(50).optional(),
   turnstileToken: z.string().optional(),
 });
-
-function generateOrderNumber() {
-  // For a guest (no account), orderNumber is the only bearer token gating
-  // access to that order's PII (src/lib/orders.ts, canAccessOrder) — 8
-  // random bytes (64 bits) keeps brute-forcing it infeasible even without
-  // the rate limit on the lookup page as a second layer.
-  const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-  return `ORD-${date}-${randomBytes(8).toString("hex").toUpperCase()}`;
-}
 
 export async function POST(request: Request) {
   const t = await getFeedback();
@@ -74,118 +61,16 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: t.guestEmailRequired }, { status: 400 });
   }
 
-  async function placeOrder() {
-    const quote = await quoteOrder({
+  try {
+    const order = await placeOrderWithRetry({
       items: input.items,
-      country: input.address.country,
+      address: input.address,
       shippingMethodId: input.shippingMethodId,
       discountCode: input.discountCode,
+      userId: session?.user?.id,
+      guestEmail: input.guestEmail,
+      locale,
     });
-
-    const orderNumber = generateOrderNumber();
-
-    const order = await db.$transaction(async (tx) => {
-      for (const line of quote.lines) {
-        // Dropshipped items (trackInventory=false) have no stock of ours to
-        // decrement — the supplier owns availability.
-        if (!line.product.trackInventory) continue;
-
-        const result = await tx.product.updateMany({
-          where: { id: line.product.id, stockQty: { gte: line.quantity } },
-          data: { stockQty: { decrement: line.quantity } },
-        });
-        if (result.count !== 1) {
-          throw new PricingError(
-            `${line.product.name} is no longer available in that quantity`,
-            409,
-            "product-unavailable"
-          );
-        }
-      }
-
-      const addressFields = {
-        fullName: input.address.fullName,
-        street: input.address.street,
-        city: input.address.city,
-        postalCode: input.address.postalCode,
-        country: input.address.country,
-        phone: input.address.phone,
-      };
-      const address = session?.user?.id
-        ? await tx.address.create({
-            data: { ...addressFields, user: { connect: { id: session.user.id } } },
-          })
-        : await tx.address.create({ data: addressFields });
-
-      if (quote.discountCodeId) {
-        await tx.discountCode.update({
-          where: { id: quote.discountCodeId },
-          data: { usedCount: { increment: 1 } },
-        });
-      }
-
-      return tx.order.create({
-        data: {
-          orderNumber,
-          userId: session?.user?.id ?? undefined,
-          guestEmail: session?.user ? null : input.guestEmail,
-          status: "pending",
-          subtotal: quote.subtotal,
-          taxAmount: quote.taxAmount,
-          taxRatePercent: quote.taxRatePercent,
-          shippingAmount: quote.shippingAmount,
-          discountAmount: quote.discountAmount,
-          total: quote.total,
-          currency: quote.currency,
-          locale,
-          addressId: address.id,
-          shippingMethodId: quote.shippingMethod.id,
-          discountCodeId: quote.discountCodeId,
-          items: {
-            create: quote.lines.map((line) => ({
-              productId: line.product.id,
-              productName: line.product.name,
-              quantity: line.quantity,
-              unitPrice: line.product.price,
-              // Snapshot dropshipping info so a later change to the
-              // product's supplier/cost doesn't rewrite this order's history.
-              supplierId: line.product.supplierId,
-              unitCost: line.product.costPrice,
-            })),
-          },
-        },
-      });
-    });
-    return order;
-  }
-
-  try {
-    let order;
-    try {
-      order = await placeOrder();
-    } catch (error) {
-      // Out-of-stock can just mean expired unpaid orders are still holding the
-      // stock (the cron may only run daily). Release those and try once more
-      // before telling a real customer the item is gone.
-      if (!(error instanceof PricingError) || error.status !== 409) throw error;
-      const released = await cancelExpiredOrders();
-      if (released.length === 0) throw error;
-      after(() => notifyCancelledOrders(released));
-      order = await placeOrder();
-    }
-
-    // Work out where the address is once the customer has their answer, so the
-    // admin's order page can show it on a map. Never holds up or fails checkout.
-    if (order.addressId) {
-      const addressId = order.addressId;
-      after(async () => {
-        try {
-          await geocodeAndStoreAddress(addressId);
-        } catch (error) {
-          captureError(error, { scope: "geocode-address", addressId });
-        }
-      });
-    }
 
     return NextResponse.json({ orderNumber: order.orderNumber }, { status: 201 });
   } catch (error) {

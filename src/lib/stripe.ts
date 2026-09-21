@@ -19,6 +19,17 @@ export async function getStripeWebhookSecret() {
   return settings.stripeWebhookSecret || process.env.STRIPE_WEBHOOK_SECRET || null;
 }
 
+// Publishable keys are safe to send to the browser by design (Stripe's own
+// term for them) — this is not a secret. Used by the Express Checkout
+// button (src/components/express-checkout-button.tsx), which still keeps
+// PCI scope at SAQ A: Stripe's Elements render in a Stripe-controlled
+// iframe and tokenize client-side, the same guarantee Hosted Checkout gives,
+// just embedded on this page instead of after a redirect.
+export async function getStripePublishableKey() {
+  const settings = await getStoreSettings();
+  return settings.stripePublishableKey || process.env.STRIPE_PUBLISHABLE_KEY || null;
+}
+
 export async function isStripeConfigured() {
   return Boolean(await getStripeSecretKey());
 }

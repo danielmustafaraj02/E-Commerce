@@ -105,12 +105,79 @@ export async function POST(request: Request) {
     }
   }
 
+  // Express Checkout (src/app/api/checkout/express/route.ts) confirms a
+  // PaymentIntent directly rather than a Checkout Session, so it fires this
+  // event instead of the two above. Same idea: find the order by metadata,
+  // verify the amount, mark paid, record the Payment row, send the email.
+  //
+  // A Checkout Session payment also emits payment_intent.succeeded under the
+  // hood (Sessions use a PaymentIntent internally) — this function no-ops
+  // for those (no orderNumber in that PaymentIntent's own metadata), and
+  // even if a future Stripe API version started copying it across,
+  // applyPaidToOrder is idempotent (a "pending"-only check) so re-processing
+  // an already-paid order here is a harmless no-op, not a double charge or
+  // a duplicate email.
+  async function fulfillPaymentIntent(paymentIntent: Stripe.PaymentIntent) {
+    const orderNumber = paymentIntent.metadata?.orderNumber;
+    if (!orderNumber) return;
+
+    const applied = await db.$transaction(async (tx) => {
+      const result = await applyPaidToOrder(
+        tx,
+        { orderNumber },
+        { amount: paymentIntent.amount, currency: paymentIntent.currency }
+      );
+
+      if (
+        result.outcome === "paid" ||
+        result.outcome === "already_settled" ||
+        result.outcome === "paid_after_cancel"
+      ) {
+        await tx.payment.updateMany({
+          where: {
+            orderId: result.order.id,
+            provider: "stripe",
+            providerTransactionId: paymentIntent.id,
+          },
+          data: { status: "succeeded" },
+        });
+      }
+      return result;
+    });
+
+    if (applied.outcome !== "paid" && applied.outcome !== "already_settled") {
+      captureError(new Error(`Stripe payment needs manual review: ${applied.outcome}`), {
+        scope: "stripe-webhook-unsettled-payment",
+        orderNumber,
+        paymentIntentId: paymentIntent.id,
+        outcome: applied.outcome,
+      });
+    }
+    const paidOrder = applied.outcome === "paid" ? applied.order : null;
+
+    if (paidOrder) {
+      try {
+        await sendOrderStatusEmail({
+          orderNumber: paidOrder.orderNumber,
+          status: "paid",
+          trackingNumber: paidOrder.trackingNumber,
+          guestEmail: paidOrder.guestEmail,
+          user: paidOrder.user,
+        });
+      } catch (error) {
+        captureError(error, { scope: "stripe-webhook-email", orderNumber: paidOrder.orderNumber });
+      }
+    }
+  }
+
   try {
     if (
       event.type === "checkout.session.completed" ||
       event.type === "checkout.session.async_payment_succeeded"
     ) {
       await fulfillCheckoutSession(event.data.object as Stripe.Checkout.Session);
+    } else if (event.type === "payment_intent.succeeded") {
+      await fulfillPaymentIntent(event.data.object as Stripe.PaymentIntent);
     }
   } catch (error) {
     // Signature already verified above — this is a processing failure, not a
