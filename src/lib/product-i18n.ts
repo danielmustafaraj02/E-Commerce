@@ -60,12 +60,16 @@ const DESCRIPTION_FIELD: Partial<Record<Locale, keyof LocalizableProduct>> = {
 };
 
 export function localizedName(item: LocalizableName, locale: Locale): string {
+  // Italian is the source language and lives in the plain `name` column, so it
+  // must not go through the English fallback below.
+  if (locale === "it") return item.name;
   if (locale === "en") return item.nameEn || item.name;
   const field = NAME_FIELD[locale];
   return (field && item[field]) || item.nameEn || item.name;
 }
 
 export function localizedDescription(product: LocalizableProduct, locale: Locale): string {
+  if (locale === "it") return product.description || product.descriptionEn || "";
   if (locale === "en") return product.descriptionEn || product.description || "";
   const field = DESCRIPTION_FIELD[locale];
   return (field && product[field]) || product.descriptionEn || product.description || "";

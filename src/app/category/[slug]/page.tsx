@@ -270,6 +270,10 @@ export default async function CategoryPage({
           currency={settings.defaultCurrency}
           locale={settings.defaultLocale}
           clearHref={`/category/${category.slug}`}
+          priceLabels={{
+            min: dict.feedback.minPriceLabel,
+            max: dict.feedback.maxPriceLabel,
+          }}
         />
 
         <section className="shop-results">
@@ -303,6 +307,7 @@ export default async function CategoryPage({
             totalPages={totalPages}
             currentPage={filters.page}
             buildHref={buildPageHref}
+            label={dict.feedback.paginationLabel}
           />
 
           {filters.page === 1 && copy && (

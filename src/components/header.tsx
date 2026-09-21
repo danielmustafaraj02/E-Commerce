@@ -5,6 +5,7 @@ import { CartLink } from "@/components/cart-link";
 import { GuestWishlistLink } from "@/components/guest-wishlist-link";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import type { Locale } from "@/lib/i18n/locale";
+import { localizedName } from "@/lib/product-i18n";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
 export async function Header({
@@ -137,7 +138,7 @@ export async function Header({
                 href={`/category/${category.slug}`}
                 className="nav-link link-underline text-foreground/80 hover:text-accent transition-colors"
               >
-                {category.name}
+                {localizedName(category, locale)}
               </Link>
             ))}
             <Link

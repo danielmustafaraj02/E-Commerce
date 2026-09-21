@@ -3,6 +3,8 @@ import { db } from "@/lib/db";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { PaymentIcons } from "@/components/payment-icons";
 import { NewsletterSignupForm } from "@/components/newsletter-signup-form";
+import { localizedName } from "@/lib/product-i18n";
+import type { Locale } from "@/lib/i18n/locale";
 
 type SocialLinks = {
   facebookUrl: string | null;
@@ -98,12 +100,14 @@ export async function Footer({
   social,
   payments,
   dict,
+  locale,
 }: {
   storeName: string;
   contactEmail: string;
   social: SocialLinks;
   payments: PaymentMethods;
   dict: Dictionary;
+  locale: Locale;
 }) {
   const categories = await db.category.findMany({
     where: { parentId: null },
@@ -173,7 +177,7 @@ export async function Footer({
                     href={`/category/${category.slug}`}
                     className="hover:text-accent transition-colors"
                   >
-                    {category.name}
+                    {localizedName(category, locale)}
                   </Link>
                 </li>
               ))}
@@ -241,7 +245,13 @@ export async function Footer({
           <span className="text-foreground/60 text-xs font-medium tracking-wide uppercase">
             {dict.footer.weAccept}
           </span>
-          <PaymentIcons {...payments} />
+          <PaymentIcons
+            {...payments}
+            labels={{
+              bankTransfer: dict.payment.bankTransfer,
+              cashOnDelivery: dict.payment.cashOnDelivery,
+            }}
+          />
         </div>
       )}
 

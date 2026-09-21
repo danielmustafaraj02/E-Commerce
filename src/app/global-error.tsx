@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { ERROR_MESSAGES, localeDir, useClientLocale } from "@/lib/i18n/error-messages";
 
 // Catches errors thrown by the root layout itself (where the normal
 // error.tsx boundary can't help, since it renders inside that same layout).
@@ -12,6 +13,9 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const locale = useClientLocale();
+  const t = ERROR_MESSAGES[locale];
+
   useEffect(() => {
     console.error("Unhandled root-layout error:", error);
     fetch("/api/client-error", {
@@ -23,7 +27,7 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <html lang="en">
+    <html lang={locale} dir={localeDir(locale)}>
       <body style={{ fontFamily: "system-ui, sans-serif" }}>
         <main
           style={{
@@ -36,8 +40,8 @@ export default function GlobalError({
             padding: "1rem",
           }}
         >
-          <h1 style={{ fontSize: "1.5rem", fontWeight: 600 }}>Something went wrong</h1>
-          <p style={{ marginTop: "0.5rem", color: "#666" }}>Please try again.</p>
+          <h1 style={{ fontSize: "1.5rem", fontWeight: 600 }}>{t.title}</h1>
+          <p style={{ marginTop: "0.5rem", color: "#666" }}>{t.short}</p>
           <button
             type="button"
             onClick={reset}
@@ -50,7 +54,7 @@ export default function GlobalError({
               border: "none",
             }}
           >
-            Try again
+            {t.retry}
           </button>
         </main>
       </body>

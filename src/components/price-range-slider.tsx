@@ -12,6 +12,8 @@ export function PriceRangeSlider({
   currency,
   locale,
   separatorLabel,
+  minLabel,
+  maxLabel,
 }: {
   min: number;
   max: number;
@@ -20,6 +22,8 @@ export function PriceRangeSlider({
   currency: string;
   locale: string;
   separatorLabel: string;
+  minLabel: string;
+  maxLabel: string;
 }) {
   // Bounds can legitimately collapse to a single price point (e.g. one
   // product, or a store with a uniform price) — pad so the track still has
@@ -55,11 +59,11 @@ export function PriceRangeSlider({
           <Slider.Range className="absolute h-full rounded-full bg-[linear-gradient(90deg,#e0a92e,#f5c451)]" />
         </Slider.Track>
         <Slider.Thumb
-          aria-label="Minimum price"
+          aria-label={minLabel}
           className="block h-4.5 w-4.5 rounded-full border-2 border-[#f5c451] bg-background shadow transition-transform hover:scale-110 focus-visible:ring-4 focus-visible:ring-[#f5c451]/25 focus-visible:outline-none"
         />
         <Slider.Thumb
-          aria-label="Maximum price"
+          aria-label={maxLabel}
           className="block h-4.5 w-4.5 rounded-full border-2 border-[#f5c451] bg-background shadow transition-transform hover:scale-110 focus-visible:ring-4 focus-visible:ring-[#f5c451]/25 focus-visible:outline-none"
         />
       </Slider.Root>

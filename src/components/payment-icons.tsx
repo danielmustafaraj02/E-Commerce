@@ -62,9 +62,9 @@ export function KlarnaIcon() {
   );
 }
 
-export function BankTransferIcon() {
+export function BankTransferIcon({ label }: { label: string }) {
   return (
-    <Badge label="Bank transfer">
+    <Badge label={label}>
       <svg
         width="18"
         height="18"
@@ -85,9 +85,9 @@ export function BankTransferIcon() {
   );
 }
 
-export function CashIcon() {
+export function CashIcon({ label }: { label: string }) {
   return (
-    <Badge label="Cash on delivery">
+    <Badge label={label}>
       <svg
         width="20"
         height="20"
@@ -113,12 +113,15 @@ export function PaymentIcons({
   klarna,
   bankTransfer,
   cashOnDelivery,
+  labels,
 }: {
   cards: boolean;
   paypal: boolean;
   klarna?: boolean;
   bankTransfer: boolean;
   cashOnDelivery: boolean;
+  // Accessible names for the two icons that aren't brand marks.
+  labels: { bankTransfer: string; cashOnDelivery: string };
 }) {
   if (!cards && !paypal && !klarna && !bankTransfer && !cashOnDelivery) return null;
 
@@ -132,8 +135,8 @@ export function PaymentIcons({
       )}
       {paypal && <PayPalIcon />}
       {klarna && <KlarnaIcon />}
-      {bankTransfer && <BankTransferIcon />}
-      {cashOnDelivery && <CashIcon />}
+      {bankTransfer && <BankTransferIcon label={labels.bankTransfer} />}
+      {cashOnDelivery && <CashIcon label={labels.cashOnDelivery} />}
     </div>
   );
 }

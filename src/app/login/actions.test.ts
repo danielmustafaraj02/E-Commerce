@@ -11,6 +11,11 @@ const mocks = vi.hoisted(() => ({
   verifyTurnstile: vi.fn(),
 }));
 
+// Messages come back in the visitor's language; tests run as an English visitor.
+vi.mock("@/lib/i18n/locale", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/i18n/locale")>()),
+  getLocale: async () => "en",
+}));
 vi.mock("next/headers", () => ({
   cookies: async () => ({ get: mocks.cookieGet, set: mocks.cookieSet }),
   headers: async () => new Headers({ "x-forwarded-for": "203.0.113.7" }),
@@ -105,7 +110,7 @@ describe("login: MFA pre-check", () => {
 
     const result = await login(null, form({}));
 
-    expect(result).toEqual({ error: "Invalid email or password", mfaRequired: false });
+    expect(result).toEqual({ error: "Invalid email or password.", mfaRequired: false });
     expect(mocks.cookieSet).not.toHaveBeenCalled();
   });
 
@@ -124,6 +129,6 @@ describe("login: MFA pre-check", () => {
 
     expect(mocks.signIn).toHaveBeenCalledOnce();
     expect(mocks.cookieSet).not.toHaveBeenCalled();
-    expect(result).toEqual({ error: "Invalid email or password", mfaRequired: false });
+    expect(result).toEqual({ error: "Invalid email or password.", mfaRequired: false });
   });
 });

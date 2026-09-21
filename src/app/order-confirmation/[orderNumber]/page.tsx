@@ -14,6 +14,7 @@ import { PaymentButtons } from "@/components/payment-buttons";
 import { ShelfMain } from "@/components/shelf-main";
 import { ShelfHead, ShelfBody } from "@/components/shelf-page";
 import { ReturnRequestForm } from "./return-request-form";
+import { localizedName } from "@/lib/product-i18n";
 
 const RETURNABLE_STATUSES = ["paid", "processing", "shipped", "delivered"];
 
@@ -111,13 +112,18 @@ export default async function OrderConfirmationPage({
           <ul className="divide-foreground/10 flex flex-col divide-y">
             {order.items.map((item) => {
               const image = item.product?.images[0];
+              // The name stored on the order is the Italian source; show the
+              // visitor's language when the product still exists.
+              const itemName = item.product
+                ? localizedName(item.product, uiLocale)
+                : item.productName;
               return (
                 <li key={item.id} className="flex items-center gap-4 py-3">
                   <div className="shop-thumb shop-thumb--cart">
                     {image ? (
                       <CatalogImage
                         src={image.url}
-                        alt={image.altText || item.productName}
+                        alt={image.altText || itemName}
                         fill
                         sizes="64px"
                       />
@@ -125,7 +131,7 @@ export default async function OrderConfirmationPage({
                   </div>
                   <div className="flex flex-1 items-center justify-between gap-3 text-sm">
                     <span>
-                      {item.productName} &times; {item.quantity}
+                      {itemName} &times; {item.quantity}
                     </span>
                     <span className="shrink-0 font-medium">
                       {formatMoney(
@@ -205,10 +211,20 @@ export default async function OrderConfirmationPage({
           <section className="mt-6">
             {order.returnRequests.length > 0 && order.returnRequests[0].status !== "rejected" ? (
               <p className="text-foreground/70 text-sm">
-                Return status: {order.returnRequests[0].status}
+                {dict.feedback.returnStatusLabel}: {order.returnRequests[0].status}
               </p>
             ) : (
-              <ReturnRequestForm orderNumber={order.orderNumber} />
+              <ReturnRequestForm
+                orderNumber={order.orderNumber}
+                labels={{
+                  submitted: dict.feedback.returnSubmitted,
+                  reason: dict.feedback.returnReasonLabel,
+                  request: dict.feedback.requestReturn,
+                  submit: dict.feedback.submitRequest,
+                  sending: dict.feedback.sending,
+                  cancel: dict.account.cancel,
+                }}
+              />
             )}
           </section>
         )}

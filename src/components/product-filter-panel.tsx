@@ -31,6 +31,7 @@ export function ProductFilterPanel({
   currency,
   locale,
   clearHref,
+  priceLabels,
 }: {
   dict: Dictionary["products"];
   categories?: Category[];
@@ -41,6 +42,8 @@ export function ProductFilterPanel({
   currency: string;
   locale: string;
   clearHref: string;
+  // Accessible names for the two ends of the price slider.
+  priceLabels: { min: string; max: string };
 }) {
   const hasActiveFilters = Boolean(
     (showCategory && filters.category) ||
@@ -133,6 +136,8 @@ export function ProductFilterPanel({
               currency={currency}
               locale={locale}
               separatorLabel={dict.priceRangeSeparator}
+              minLabel={priceLabels.min}
+              maxLabel={priceLabels.max}
             />
           </div>
 

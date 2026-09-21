@@ -6,6 +6,7 @@ import { rateLimit } from "@/lib/rate-limit";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { sendEmail } from "@/lib/email";
 import { getStoreSettings } from "@/lib/store-settings";
+import { getFeedback } from "@/lib/i18n/feedback";
 
 const schema = z.object({
   name: z.string().min(1).max(200),
@@ -14,15 +15,16 @@ const schema = z.object({
 });
 
 export async function sendContactMessage(_prevState: unknown, formData: FormData) {
+  const t = await getFeedback();
   const ip = (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
   const { success } = await rateLimit(`contact:${ip}`, 5, 60_000);
-  if (!success) return { error: "Too many messages. Try again later.", success: false };
+  if (!success) return { error: t.tooManyMessages, success: false };
 
   const captchaOk = await verifyTurnstile(
     formData.get("cf-turnstile-response") as string | null,
     ip
   );
-  if (!captchaOk) return { error: "Verification failed. Please try again.", success: false };
+  if (!captchaOk) return { error: t.verificationFailed, success: false };
 
   const parsed = schema.safeParse({
     name: formData.get("name"),
@@ -30,7 +32,7 @@ export async function sendContactMessage(_prevState: unknown, formData: FormData
     message: formData.get("message"),
   });
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Invalid input", success: false };
+    return { error: t.invalidInput, success: false };
   }
 
   const settings = await getStoreSettings();

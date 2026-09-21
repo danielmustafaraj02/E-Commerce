@@ -1,20 +1,27 @@
 import { z } from "zod";
 import { db } from "@/lib/db";
+import { getDictionary } from "@/lib/i18n/dictionaries";
+import { getLocale } from "@/lib/i18n/locale";
+import { applyTemplate } from "@/lib/i18n/format";
+import { ShelfMain } from "@/components/shelf-main";
 
 const schema = z.object({ email: z.string().email() });
 
-export default async function UnsubscribePage({ searchParams }: PageProps<"/newsletter/unsubscribe">) {
+export default async function UnsubscribePage({
+  searchParams,
+}: PageProps<"/newsletter/unsubscribe">) {
+  const t = getDictionary(await getLocale()).feedback;
   const { email: raw } = await searchParams;
   const parsed = schema.safeParse({ email: Array.isArray(raw) ? raw[0] : raw });
 
   if (!parsed.success) {
     return (
-      <main className="mx-auto max-w-md px-4 py-24 text-center">
-        <h1 className="mb-2 text-xl font-semibold">Invalid unsubscribe link</h1>
-        <p className="text-foreground/70 text-sm">
-          This link is missing or has an invalid email address.
-        </p>
-      </main>
+      <ShelfMain>
+        <div className="shelf-wrap shop-w-sm shop-center">
+          <h1 className="shop-title">{t.unsubscribeInvalidTitle}</h1>
+          <p className="shop-lede">{t.unsubscribeInvalidBody}</p>
+        </div>
+      </ShelfMain>
     );
   }
 
@@ -25,12 +32,11 @@ export default async function UnsubscribePage({ searchParams }: PageProps<"/news
   });
 
   return (
-    <main className="mx-auto max-w-md px-4 py-24 text-center">
-      <h1 className="mb-2 text-xl font-semibold">You&apos;re unsubscribed</h1>
-      <p className="text-foreground/70 text-sm">
-        {email} won&apos;t receive newsletter emails anymore. You can subscribe again anytime from
-        the homepage.
-      </p>
-    </main>
+    <ShelfMain>
+      <div className="shelf-wrap shop-w-sm shop-center">
+        <h1 className="shop-title">{t.unsubscribedTitle}</h1>
+        <p className="shop-lede">{applyTemplate(t.unsubscribedBody, { email })}</p>
+      </div>
+    </ShelfMain>
   );
 }

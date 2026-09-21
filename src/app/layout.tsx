@@ -170,6 +170,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           storeName={settings.storeName}
           contactEmail={settings.contactEmail}
           dict={dict}
+          locale={locale}
           social={{
             facebookUrl: settings.facebookUrl,
             instagramUrl: settings.instagramUrl,

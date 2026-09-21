@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import { ERROR_MESSAGES, useClientLocale } from "@/lib/i18n/error-messages";
 import "./home.css";
 import "./shop.css";
 
@@ -12,6 +13,9 @@ export default function ErrorBoundary({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const locale = useClientLocale();
+  const t = ERROR_MESSAGES[locale];
+
   useEffect(() => {
     console.error("Unhandled route error:", error);
     // Same-origin report — see src/app/api/client-error/route.ts for why
@@ -29,16 +33,14 @@ export default function ErrorBoundary({
     // the display/UI faces fall back to the system serif/sans here.
     <main className="shelf flex flex-1 flex-col">
       <div className="shelf-wrap shop-w-sm shop-center">
-        <h1 className="shop-title">Something went wrong</h1>
-        <p className="shop-lede">
-          An unexpected error occurred. You can try again, or head back to the homepage.
-        </p>
+        <h1 className="shop-title">{t.title}</h1>
+        <p className="shop-lede">{t.body}</p>
         <div className="shop-actions">
           <button type="button" onClick={reset} className="btn-primary text-sm">
-            Try again
+            {t.retry}
           </button>
           <Link href="/" className="btn-secondary text-sm">
-            Back to home
+            {t.home}
           </Link>
         </div>
       </div>

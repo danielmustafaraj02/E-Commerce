@@ -8,6 +8,11 @@ const mocks = vi.hoisted(() => ({
   txUpdateStock: vi.fn(),
 }));
 
+// Messages come back in the visitor's language; tests run as an English visitor.
+vi.mock("@/lib/i18n/locale", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/i18n/locale")>()),
+  getLocale: async () => "en",
+}));
 vi.mock("next/server", async (importOriginal) => ({
   ...(await importOriginal<typeof import("next/server")>()),
   after: (fn: () => unknown) => mocks.afterCallbacks.push(fn),

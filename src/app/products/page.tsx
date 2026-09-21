@@ -209,13 +209,21 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
       <div className="shelf-wrap shop-layout">
         <ProductFilterPanel
           dict={dict.products}
-          categories={categories}
+          categories={categories.map((c) => ({
+            id: c.id,
+            slug: c.slug,
+            name: localizedName(c, uiLocale),
+          }))}
           filters={filters}
           priceMin={priceMin}
           priceMax={priceMax}
           currency={settings.defaultCurrency}
           locale={settings.defaultLocale}
           clearHref={filters.q ? `/products?q=${encodeURIComponent(filters.q)}` : "/products"}
+          priceLabels={{
+            min: dict.feedback.minPriceLabel,
+            max: dict.feedback.maxPriceLabel,
+          }}
         />
 
         <section className="shop-results">
@@ -241,6 +249,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
             totalPages={totalPages}
             currentPage={filters.page}
             buildHref={buildPageHref}
+            label={dict.feedback.paginationLabel}
           />
         </section>
       </div>

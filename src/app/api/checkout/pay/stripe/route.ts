@@ -6,14 +6,16 @@ import { getStripe } from "@/lib/stripe";
 import { canAccessOrder } from "@/lib/orders";
 import { getStoreSettings } from "@/lib/store-settings";
 import { ONLINE_HOLD_MS } from "@/lib/abandoned-orders";
+import { getFeedback } from "@/lib/i18n/feedback";
 
 const schema = z.object({ orderNumber: z.string().min(1) });
 
 export async function POST(request: Request) {
+  const t = await getFeedback();
   const body = await request.json().catch(() => null);
   const parsed = schema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: "Invalid input" }, { status: 400 });
+    return NextResponse.json({ error: t.invalidInput }, { status: 400 });
   }
 
   const [session, order] = await Promise.all([
@@ -21,10 +23,10 @@ export async function POST(request: Request) {
     db.order.findUnique({ where: { orderNumber: parsed.data.orderNumber } }),
   ]);
   if (!order || !canAccessOrder(order, session)) {
-    return NextResponse.json({ error: "Order not found" }, { status: 404 });
+    return NextResponse.json({ error: t.orderNotFound }, { status: 404 });
   }
   if (order.status !== "pending") {
-    return NextResponse.json({ error: "Order is not awaiting payment" }, { status: 400 });
+    return NextResponse.json({ error: t.orderNotAwaitingPayment }, { status: 400 });
   }
 
   let stripe;
@@ -54,10 +56,7 @@ export async function POST(request: Request) {
     if (existing?.status === "complete") {
       // Paid (or a delayed method still settling) — the webhook will confirm
       // it. Creating a second session here could charge them twice.
-      return NextResponse.json(
-        { error: "Your payment is being processed — please check back in a moment." },
-        { status: 409 }
-      );
+      return NextResponse.json({ error: t.paymentProcessing }, { status: 409 });
     }
     await db.payment.update({ where: { id: previous.id }, data: { status: "failed" } });
   }

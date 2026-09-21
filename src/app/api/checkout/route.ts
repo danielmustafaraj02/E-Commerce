@@ -8,6 +8,8 @@ import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { isValidPostalCode } from "@/lib/postal-code";
 import { cancelExpiredOrders, notifyCancelledOrders } from "@/lib/abandoned-orders";
+import { getFeedback } from "@/lib/i18n/feedback";
+import { pricingMessage } from "@/lib/pricing-messages";
 
 const checkoutSchema = z.object({
   items: z
@@ -42,16 +44,17 @@ function generateOrderNumber() {
 }
 
 export async function POST(request: Request) {
+  const t = await getFeedback();
   const { success } = await rateLimit(`checkout:${clientIp(request)}`, 10, 60_000);
   if (!success) {
-    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    return NextResponse.json({ error: t.tooManyRequests }, { status: 429 });
   }
 
   const body = await request.json().catch(() => null);
   const parsed = checkoutSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
-      { error: "Invalid input", issues: parsed.error.flatten() },
+      { error: t.invalidInput, issues: parsed.error.flatten() },
       { status: 400 }
     );
   }
@@ -59,15 +62,12 @@ export async function POST(request: Request) {
 
   const captchaOk = await verifyTurnstile(input.turnstileToken ?? null, clientIp(request));
   if (!captchaOk) {
-    return NextResponse.json({ error: "Verification failed. Please try again." }, { status: 400 });
+    return NextResponse.json({ error: t.verificationFailed }, { status: 400 });
   }
 
   const session = await auth();
   if (!session?.user && !input.guestEmail) {
-    return NextResponse.json(
-      { error: "Sign in or provide an email to check out as a guest" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: t.guestEmailRequired }, { status: 400 });
   }
 
   async function placeOrder() {
@@ -93,7 +93,8 @@ export async function POST(request: Request) {
         if (result.count !== 1) {
           throw new PricingError(
             `${line.product.name} is no longer available in that quantity`,
-            409
+            409,
+            "product-unavailable"
           );
         }
       }
@@ -171,7 +172,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ orderNumber: order.orderNumber }, { status: 201 });
   } catch (error) {
     if (error instanceof PricingError) {
-      return NextResponse.json({ error: error.message }, { status: error.status });
+      return NextResponse.json({ error: pricingMessage(error, t) }, { status: error.status });
     }
     throw error;
   }

@@ -13,6 +13,7 @@ import { QuickAddButton } from "@/components/quick-add-button";
 import { ShelfMain } from "@/components/shelf-main";
 import { ShelfHead, ShelfBody } from "@/components/shelf-page";
 import { WishlistEmptyIcon } from "@/components/wishlist-empty-icon";
+import { localizedName } from "@/lib/product-i18n";
 
 export default async function WishlistPage() {
   const session = await auth();
@@ -71,7 +72,7 @@ export default async function WishlistPage() {
                     {image && (
                       <CatalogImage
                         src={image.url}
-                        alt={image.altText || item.product.name}
+                        alt={image.altText || localizedName(item.product, uiLocale)}
                         fill
                         sizes="(min-width: 64rem) 15rem, (min-width: 48rem) 25vw, 50vw"
                       />
@@ -97,7 +98,7 @@ export default async function WishlistPage() {
                         product={{
                           id: item.product.id,
                           slug: item.product.slug,
-                          name: item.product.name,
+                          name: localizedName(item.product, uiLocale),
                           price: item.product.price,
                           currency: item.product.currency,
                           imageUrl: image?.url ?? null,
@@ -107,7 +108,9 @@ export default async function WishlistPage() {
                     )}
                   </div>
                   <h3 className="shelf-item-name">
-                    <Link href={`/products/${item.product.slug}`}>{item.product.name}</Link>
+                    <Link href={`/products/${item.product.slug}`}>
+                      {localizedName(item.product, uiLocale)}
+                    </Link>
                   </h3>
                   <span className="shelf-item-price">
                     {formatMoney(item.product.price, item.product.currency, settings.defaultLocale)}

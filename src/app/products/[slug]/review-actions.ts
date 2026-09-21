@@ -5,6 +5,8 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { rateLimit } from "@/lib/rate-limit";
+import { getDictionary } from "@/lib/i18n/dictionaries";
+import { getLocale } from "@/lib/i18n/locale";
 
 const schema = z.object({
   productId: z.string().min(1),
@@ -33,18 +35,20 @@ export async function hasPurchased(productId: string, userId: string) {
 }
 
 export async function submitReview(_prevState: unknown, formData: FormData) {
+  const dict = getDictionary(await getLocale());
+  const t = dict.feedback;
   const session = await auth();
-  if (!session?.user?.id) return { error: "Sign in to leave a review", success: false };
+  if (!session?.user?.id) return { error: dict.product.signInToReview, success: false };
 
   const { success: withinLimit } = await rateLimit(`review:${session.user.id}`, 10, 60_000);
-  if (!withinLimit) return { error: "Too many requests. Try again shortly.", success: false };
+  if (!withinLimit) return { error: t.tooManyRequests, success: false };
 
   const account = await db.user.findUnique({
     where: { id: session.user.id },
     select: { emailVerified: true },
   });
   if (!account?.emailVerified) {
-    return { error: "Confirm your email address to leave a review", success: false };
+    return { error: t.confirmEmailToReview, success: false };
   }
 
   const parsed = schema.safeParse({
@@ -54,15 +58,15 @@ export async function submitReview(_prevState: unknown, formData: FormData) {
     comment: formData.get("comment") || undefined,
   });
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Invalid review", success: false };
+    return { error: t.invalidInput, success: false };
   }
 
   const product = await db.product.findUnique({ where: { id: parsed.data.productId } });
-  if (!product) return { error: "Product not found", success: false };
+  if (!product) return { error: t.productNotFound, success: false };
 
   if (!(await hasPurchased(parsed.data.productId, session.user.id))) {
     return {
-      error: "Only customers who've purchased this product can leave a review",
+      error: dict.product.verifiedPurchaseOnly,
       success: false,
     };
   }

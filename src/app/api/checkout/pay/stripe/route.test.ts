@@ -10,6 +10,11 @@ const mocks = vi.hoisted(() => ({
   createSession: vi.fn(),
 }));
 
+// Messages come back in the visitor's language; tests run as an English visitor.
+vi.mock("@/lib/i18n/locale", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/i18n/locale")>()),
+  getLocale: async () => "en",
+}));
 vi.mock("@/auth", () => ({ auth: async () => null }));
 vi.mock("@/lib/db", () => ({
   db: {

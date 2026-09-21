@@ -14,6 +14,7 @@ import { FormAlert } from "@/components/form-alert";
 import { ConfettiBurst } from "@/components/confetti-burst";
 import { ShelfMain } from "@/components/shelf-main";
 import { ShelfHead, ShelfBody } from "@/components/shelf-page";
+import { localizedName } from "@/lib/product-i18n";
 
 export default async function AccountPage({
   searchParams,
@@ -63,23 +64,25 @@ export default async function AccountPage({
       <ShelfBody>
         {verified === "1" && (
           <div className="mt-4">
-            <FormAlert type="success">Email confirmed — thanks!</FormAlert>
+            <FormAlert type="success">{dict.feedback.emailConfirmed}</FormAlert>
           </div>
         )}
         {verified === "expired" && (
           <div className="mt-4">
-            <FormAlert type="error">
-              That confirmation link expired. Request a new one below.
-            </FormAlert>
+            <FormAlert type="error">{dict.feedback.confirmLinkExpired}</FormAlert>
           </div>
         )}
 
         {!user.emailVerified && (
           <div className="border-warning/30 bg-warning/5 mt-6 rounded-lg border p-4">
-            <p className="text-sm">
-              Please confirm your email address — check your inbox for a confirmation link.
-            </p>
-            <ResendVerificationForm />
+            <p className="text-sm">{dict.feedback.confirmEmailPrompt}</p>
+            <ResendVerificationForm
+              labels={{
+                resend: dict.feedback.resendConfirmation,
+                sending: dict.feedback.sending,
+                sent: dict.feedback.confirmationSent,
+              }}
+            />
           </div>
         )}
 
@@ -175,7 +178,7 @@ export default async function AccountPage({
                   {item.product.images[0] && (
                     <CatalogImage
                       src={item.product.images[0].url}
-                      alt={item.product.images[0].altText || item.product.name}
+                      alt={item.product.images[0].altText || localizedName(item.product, uiLocale)}
                       fill
                       sizes="140px"
                     />
