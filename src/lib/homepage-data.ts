@@ -4,6 +4,15 @@ import { db } from "@/lib/db";
 
 const REVENUE_STATUSES = ["paid", "processing", "shipped", "delivered"];
 
+// The piece shown on each "Shop by category" tile, by product slug: the same one
+// every visit. If one of these products is deleted or deactivated, that tile falls
+// back to the category's oldest active product, so it is still never random.
+export const CATEGORY_COVER_PRODUCT_SLUGS = [
+  "bracciale-rame-di-mezzanotte-ca793a", // Midnight Copper Bracelet
+  "collana-fiore-notturno-15492b", // Night Flower Necklace
+  "orecchini-goccia-di-rubino-9ad623", // Ruby Drop Earrings
+];
+
 // The homepage previously ran ~9 sequential/near-sequential DB round trips
 // (including one raw query per category for its random image) on every
 // single request, which is most of what was dragging down the Real
@@ -49,8 +58,9 @@ export const getHomepageData = unstable_cache(
         where: { id: { in: topSellingItems.map((item) => item.productId) }, active: true },
         include: { images: { take: 1, orderBy: { position: "asc" } } },
       }),
-      // One random product image per category in a single round trip
-      // (DISTINCT ON + ORDER BY RANDOM()) instead of one query per category.
+      // One product image per category in a single round trip (DISTINCT ON), the
+      // pinned cover product first, else the category's oldest active product. Always
+      // that product's first photo, and no RANDOM(): the tile must not change per visit.
       categories.length > 0
         ? db.$queryRaw<{ categoryId: string; url: string; altText: string }[]>`
             SELECT DISTINCT ON ("Product"."categoryId") "Product"."categoryId" as "categoryId",
@@ -59,7 +69,9 @@ export const getHomepageData = unstable_cache(
             JOIN "Product" ON "Product"."id" = "ProductImage"."productId"
             WHERE "Product"."categoryId" IN (${Prisma.join(categories.map((c) => c.id))})
               AND "Product"."active" = true
-            ORDER BY "Product"."categoryId", RANDOM()
+            ORDER BY "Product"."categoryId",
+              ("Product"."slug" IN (${Prisma.join(CATEGORY_COVER_PRODUCT_SLUGS)})) DESC,
+              "Product"."createdAt", "Product"."id", "ProductImage"."position"
           `
         : Promise.resolve([] as { categoryId: string; url: string; altText: string }[]),
     ]);
