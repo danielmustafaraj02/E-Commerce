@@ -131,6 +131,8 @@ export function CartClient({
         </span>
       </div>
 
+      <p className="text-foreground/70 -mt-3 text-sm">{dict.shippingNote}</p>
+
       <Link href="/checkout" className="btn-primary text-center">
         {dict.checkout}
       </Link>
