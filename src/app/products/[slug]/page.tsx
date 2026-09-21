@@ -12,7 +12,7 @@ import { absoluteUrl, toSafeJsonLd } from "@/lib/json-ld";
 import { buildReturnPolicy, buildShippingDetails } from "@/lib/offer-json-ld";
 import { productMaterial } from "@/lib/merchant-feed";
 import { productSizeDictKey } from "@/lib/product-sizing";
-import { isProductColorKey } from "@/lib/product-colors";
+import { isProductColorKey, PRODUCT_COLOR_SWATCH } from "@/lib/product-colors";
 import { getLocale, type Locale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { applyTemplate } from "@/lib/i18n/format";
@@ -258,6 +258,20 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
     ],
   };
 
+  // Same two authenticity/origin questions as the homepage FAQ (dict.home.faq) —
+  // the ones a shopper is most likely to have right before buying a specific
+  // piece, not the full list (shipping/returns already live in TrustBadges
+  // and the checkout flow itself).
+  const productFaqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: dict.home.faq.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  };
+
   return (
     <main className={`shelf flex flex-1 flex-col ${homeFontClasses}`}>
       <script
@@ -323,15 +337,27 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                 )}
               </p>
 
-              {sizeKey && (
-                <p className="text-foreground/70 mt-1 text-sm">
-                  {dict.product.sizeLabel}: {dict.product[sizeKey]}
-                </p>
-              )}
-
-              {isProductColorKey(product.color) && (
-                <p className="text-foreground/70 mt-1 text-sm">
-                  {dict.products.colorLabel}: {dict.products.colors[product.color]}
+              {/* Size and color are both quick specs, not prose — one row
+                  instead of two keeps the stack of facts above the
+                  description from reading as a long list. */}
+              {(sizeKey || isProductColorKey(product.color)) && (
+                <p className="text-foreground/70 mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+                  {sizeKey && (
+                    <span>
+                      {dict.product.sizeLabel}: {dict.product[sizeKey]}
+                    </span>
+                  )}
+                  {isProductColorKey(product.color) && (
+                    <span className="inline-flex items-center gap-1.5">
+                      {dict.products.colorLabel}:
+                      <span
+                        className="border-foreground/15 inline-block size-3.5 shrink-0 rounded-full border"
+                        style={{ background: PRODUCT_COLOR_SWATCH[product.color] }}
+                        aria-hidden="true"
+                      />
+                      {dict.products.colors[product.color]}
+                    </span>
+                  )}
                 </p>
               )}
 
@@ -344,20 +370,8 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
 
               <p className="shop-prose">{description}</p>
 
-              {/* Facts true of every piece in the catalog (all three
-                  categories are glass jewelry) rather than per-product
-                  copy — material is gated on productMaterial() staying
-                  in sync with the JSON-LD above if a new category is
-                  ever added that isn't glass. */}
+              {/* True of every piece in the catalog, not per-product copy. */}
               <ul className="border-foreground/10 text-foreground/70 mt-4 flex flex-col gap-1.5 border-t pt-4 text-sm">
-                {material && (
-                  <li>
-                    <span className="text-foreground font-medium">
-                      {dict.product.materialLabel}:
-                    </span>{" "}
-                    {dict.product.materialGlass}
-                  </li>
-                )}
                 <li>
                   <span className="text-foreground font-medium">{dict.product.careLabel}:</span>{" "}
                   {dict.product.careNote}{" "}
@@ -461,6 +475,26 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
           ) : (
             <p className="text-foreground/70 mt-4 text-sm">{dict.product.verifiedPurchaseOnly}</p>
           )}
+        </div>
+      </section>
+
+      <section className="shelf-section">
+        <div className="shelf-wrap">
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: toSafeJsonLd(productFaqJsonLd) }}
+          />
+          <div className="shelf-heading-row">
+            <h2 className="shelf-heading">{dict.home.faqTitle}</h2>
+          </div>
+          <div className="shelf-faq">
+            {dict.home.faq.map((item) => (
+              <details key={item.question}>
+                <summary>{item.question}</summary>
+                <p>{item.answer}</p>
+              </details>
+            ))}
+          </div>
         </div>
       </section>
 

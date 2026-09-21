@@ -44,7 +44,7 @@ export function BuyNowButton({
         });
         router.push("/checkout");
       }}
-      className="btn-secondary ms-3 mt-8 transition-transform duration-150 will-change-transform active:scale-95 max-sm:ms-0 max-sm:mt-3 max-sm:w-full max-sm:py-3"
+      className="btn-secondary ms-3 mt-6 transition-transform duration-150 will-change-transform active:scale-95 max-sm:ms-0 max-sm:mt-3 max-sm:w-full max-sm:py-3"
     >
       {label}
     </button>
