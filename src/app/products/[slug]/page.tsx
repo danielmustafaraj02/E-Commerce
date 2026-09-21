@@ -12,6 +12,7 @@ import { absoluteUrl, toSafeJsonLd } from "@/lib/json-ld";
 import { buildReturnPolicy, buildShippingDetails } from "@/lib/offer-json-ld";
 import { productMaterial } from "@/lib/merchant-feed";
 import { productSizeDictKey } from "@/lib/product-sizing";
+import { isProductColorKey } from "@/lib/product-colors";
 import { getLocale, type Locale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { applyTemplate } from "@/lib/i18n/format";
@@ -328,6 +329,12 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                 </p>
               )}
 
+              {isProductColorKey(product.color) && (
+                <p className="text-foreground/70 mt-1 text-sm">
+                  {dict.products.colorLabel}: {dict.products.colors[product.color]}
+                </p>
+              )}
+
               {averageRating !== null && (
                 <p className="text-foreground/70 mt-1 text-sm">
                   {averageRating.toFixed(1)} / 5 (
@@ -336,6 +343,29 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
               )}
 
               <p className="shop-prose">{description}</p>
+
+              {/* Facts true of every piece in the catalog (all three
+                  categories are glass jewelry) rather than per-product
+                  copy — material is gated on productMaterial() staying
+                  in sync with the JSON-LD above if a new category is
+                  ever added that isn't glass. */}
+              <ul className="border-foreground/10 text-foreground/70 mt-4 flex flex-col gap-1.5 border-t pt-4 text-sm">
+                {material && (
+                  <li>
+                    <span className="text-foreground font-medium">
+                      {dict.product.materialLabel}:
+                    </span>{" "}
+                    {dict.product.materialGlass}
+                  </li>
+                )}
+                <li>
+                  <span className="text-foreground font-medium">{dict.product.careLabel}:</span>{" "}
+                  {dict.product.careNote}{" "}
+                  <Link href="/murano-glass#care" className="text-primary hover:underline">
+                    {dict.footer.muranoGuide}
+                  </Link>
+                </li>
+              </ul>
 
               <AddToCartButton
                 product={{
