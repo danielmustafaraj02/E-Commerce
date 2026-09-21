@@ -3,11 +3,19 @@ import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
 import { formatMoney } from "@/lib/format";
 import { StatusBadge } from "@/components/status-badge";
+import { CatalogImage } from "@/components/catalog-image";
 
 export default async function AdminProductsPage() {
   const [settings, products] = await Promise.all([
     getStoreSettings(),
-    db.product.findMany({ orderBy: { createdAt: "desc" }, include: { supplier: true } }),
+    db.product.findMany({
+      orderBy: { createdAt: "desc" },
+      include: {
+        supplier: true,
+        // Only the first picture, for the thumbnail beside the name.
+        images: { orderBy: { position: "asc" }, take: 1 },
+      },
+    }),
   ]);
 
   return (
@@ -42,7 +50,26 @@ export default async function AdminProductsPage() {
                   key={product.id}
                   className="border-foreground/5 hover:bg-foreground/[0.02] border-b transition-colors last:border-b-0"
                 >
-                  <td className="py-3 pr-4 pl-4 font-medium">{product.name}</td>
+                  <td className="py-2 pr-4 pl-4">
+                    <div className="flex items-center gap-3">
+                      {product.images[0] ? (
+                        <CatalogImage
+                          src={product.images[0].url}
+                          alt=""
+                          width={40}
+                          height={40}
+                          sizes="40px"
+                          className="border-foreground/10 size-10 shrink-0 rounded border object-cover"
+                        />
+                      ) : (
+                        <span
+                          aria-hidden="true"
+                          className="border-foreground/10 bg-foreground/5 size-10 shrink-0 rounded border"
+                        />
+                      )}
+                      <span className="font-medium">{product.name}</span>
+                    </div>
+                  </td>
                   <td className="text-foreground/70 py-3 pr-4">{product.sku}</td>
                   <td className="py-3 pr-4">
                     {formatMoney(product.price, product.currency, settings.defaultLocale)}
