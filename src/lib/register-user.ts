@@ -1,8 +1,17 @@
+import { createHash, randomUUID } from "node:crypto";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { sendVerificationEmailMessage } from "@/lib/email";
 import { getStoreSettings } from "@/lib/store-settings";
+
+// Only a SHA-256 of the token is stored, so a leaked/dumped VerificationToken
+// table can't be replayed as a working verify link (same reasoning as
+// hashResetToken in lib/password-reset.ts). The raw token exists only in the
+// email.
+export function hashVerificationToken(token: string) {
+  return createHash("sha256").update(token).digest("hex");
+}
 
 export const registerSchema = z.object({
   email: z.string().email(),
@@ -46,9 +55,13 @@ export async function sendVerificationEmail(email: string) {
   // an old, previously-emailed link can't be used after a resend.
   await db.verificationToken.deleteMany({ where: { identifier: email } });
 
-  const token = crypto.randomUUID() + crypto.randomUUID();
+  const token = randomUUID() + randomUUID();
   await db.verificationToken.create({
-    data: { identifier: email, token, expires: new Date(Date.now() + VERIFICATION_TOKEN_TTL_MS) },
+    data: {
+      identifier: email,
+      token: hashVerificationToken(token),
+      expires: new Date(Date.now() + VERIFICATION_TOKEN_TTL_MS),
+    },
   });
 
   const settings = await getStoreSettings();

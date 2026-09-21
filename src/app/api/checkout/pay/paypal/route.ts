@@ -4,12 +4,18 @@ import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { createPaypalOrder } from "@/lib/paypal";
 import { canAccessOrder } from "@/lib/orders";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { getFeedback } from "@/lib/i18n/feedback";
 
 const schema = z.object({ orderNumber: z.string().min(1) });
 
 export async function POST(request: Request) {
   const t = await getFeedback();
+  const { success } = await rateLimit(`paypal-pay:${clientIp(request)}`, 10, 60_000);
+  if (!success) {
+    return NextResponse.json({ error: t.tooManyRequests }, { status: 429 });
+  }
+
   const body = await request.json().catch(() => null);
   const parsed = schema.safeParse(body);
   if (!parsed.success) {

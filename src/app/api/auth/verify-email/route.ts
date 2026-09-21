@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { hashVerificationToken } from "@/lib/register-user";
 import { getStoreSettings } from "@/lib/store-settings";
 
 export async function GET(request: Request) {
@@ -13,9 +14,10 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${base}/account?verified=0`);
   }
 
-  const record = await db.verificationToken.findUnique({ where: { token } });
+  const hashed = hashVerificationToken(token);
+  const record = await db.verificationToken.findUnique({ where: { token: hashed } });
   if (!record || record.expires < new Date()) {
-    if (record) await db.verificationToken.delete({ where: { token } }).catch(() => {});
+    if (record) await db.verificationToken.delete({ where: { token: hashed } }).catch(() => {});
     return NextResponse.redirect(`${base}/account?verified=expired`);
   }
 
@@ -23,7 +25,7 @@ export async function GET(request: Request) {
     where: { email: record.identifier },
     data: { emailVerified: new Date() },
   });
-  await db.verificationToken.delete({ where: { token } });
+  await db.verificationToken.delete({ where: { token: hashed } });
 
   return NextResponse.redirect(`${base}/account?verified=1`);
 }

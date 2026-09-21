@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { quoteOrder, PricingError } from "@/lib/pricing";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { getFeedback } from "@/lib/i18n/feedback";
 import { pricingMessage } from "@/lib/pricing-messages";
 
@@ -15,6 +16,11 @@ const quoteSchema = z.object({
 
 export async function POST(request: Request) {
   const t = await getFeedback();
+  const { success } = await rateLimit(`quote:${clientIp(request)}`, 20, 60_000);
+  if (!success) {
+    return NextResponse.json({ error: t.tooManyRequests }, { status: 429 });
+  }
+
   const body = await request.json().catch(() => null);
   const parsed = quoteSchema.safeParse(body);
   if (!parsed.success) {
