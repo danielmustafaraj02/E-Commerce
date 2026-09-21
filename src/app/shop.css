@@ -16,15 +16,18 @@
 
 /* The store's primary colour is admin-editable and, by default, near-black.
    On these pages the primary action takes the glass violet, as on the home page
-   (`.shelf-button`); the hover keeps the site-wide flip to white. */
+   (`.shelf-button`); hover and press darken it, as everywhere else. */
 .shelf .btn-primary {
   background: var(--accent);
 }
-.shelf .btn-primary:hover {
-  background: #fff;
+.shelf .btn-primary:hover:not(:disabled) {
+  background: var(--accent-deep);
+  box-shadow:
+    0 8px 18px -8px color-mix(in srgb, var(--accent) 70%, transparent),
+    inset 0 1px 0 color-mix(in srgb, white 14%, transparent);
 }
-.shelf .btn-primary:active {
-  background: color-mix(in srgb, var(--accent) 12%, white);
+.shelf .btn-primary:active:not(:disabled) {
+  background: color-mix(in srgb, var(--accent-deep) 85%, black);
 }
 
 /* -- Page header band ------------------------------------------------------- */

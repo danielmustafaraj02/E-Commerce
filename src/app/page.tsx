@@ -11,6 +11,7 @@ import { toSafeJsonLd } from "@/lib/json-ld";
 import { hreflangAlternates } from "@/lib/hreflang";
 import { CatalogImage } from "@/components/catalog-image";
 import { ShelfItem } from "@/components/shelf-item";
+import { CategoryStrip } from "@/components/category-strip";
 import { NewsletterSignupForm } from "@/components/newsletter-signup-form";
 import { homeFontClasses } from "./home-fonts";
 import "./home.css";
@@ -154,7 +155,7 @@ export default async function Home() {
             <div className="shelf-heading-row">
               <h2 className="shelf-heading">{dict.home.shopByCategory}</h2>
             </div>
-            <ul className="shelf-categories">
+            <CategoryStrip className="shelf-categories">
               {categoriesWithImage.map((category) => {
                 const name = localizedName(category, locale);
                 return (
@@ -175,7 +176,7 @@ export default async function Home() {
                   </li>
                 );
               })}
-            </ul>
+            </CategoryStrip>
           </div>
         </section>
       )}

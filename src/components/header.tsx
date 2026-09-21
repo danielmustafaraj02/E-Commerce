@@ -155,15 +155,22 @@ export async function Header({
             </Link>
           </nav>
 
-          <form action="/products" method="GET" className="relative flex items-center">
+          {/* Above the category links on phones (search is the first thing people
+              reach for there); beside them from sm up. */}
+          <form
+            action="/products"
+            method="GET"
+            role="search"
+            className="relative flex items-center max-sm:order-first"
+          >
             <svg
-              width="15"
-              height="15"
+              width="18"
+              height="18"
               viewBox="0 0 20 20"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
-              className="text-foreground/40 pointer-events-none absolute left-2.5"
+              className="text-foreground/50 pointer-events-none absolute start-3.5 sm:start-3"
               aria-hidden="true"
             >
               <circle cx="9" cy="9" r="6.5" />
@@ -173,8 +180,33 @@ export async function Header({
               type="search"
               name="q"
               placeholder={dict.nav.searchPlaceholder}
-              className="field w-full min-w-0 py-1.5 pl-8 text-sm sm:w-56"
+              aria-label={dict.nav.searchPlaceholder}
+              enterKeyHint="search"
+              autoComplete="off"
+              className="field w-full min-w-0 rounded-full ps-11 pe-14 text-base shadow-sm sm:w-64 sm:rounded-xl sm:py-1.5 sm:ps-10 sm:pe-3 sm:text-sm sm:shadow-none"
             />
+            {/* The keyboard's Search key submits too; this is for people who reach
+                for a button. Phones only. */}
+            <button
+              type="submit"
+              aria-label={dict.nav.searchPlaceholder}
+              className="bg-accent hover:bg-accent-deep active:bg-accent-deep absolute end-1.5 flex size-9 items-center justify-center rounded-full text-white transition-colors sm:hidden"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="rtl:rotate-180"
+                aria-hidden="true"
+              >
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </button>
           </form>
         </div>
       </div>

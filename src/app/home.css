@@ -662,11 +662,25 @@
     margin-top: 2.5rem;
   }
 }
-/* Two columns leave the third category alone on its row: centre it. */
+/* Categories become a swipeable strip: one piece large in the middle with its
+   neighbours peeking in, rather than everything at once (CategoryStrip opens it
+   on the middle item). It bleeds to the screen edges so the peek is not clipped. */
 @media (max-width: 47.99rem) {
-  .shelf-categories > .shelf-category:last-child:nth-child(odd) {
-    grid-column: 1 / -1;
-    justify-self: center;
-    width: calc(50% - 0.5rem);
+  .shelf-categories {
+    display: flex;
+    gap: 1.25rem;
+    margin-inline: -1.25rem;
+    padding: 0 1.25rem 0.5rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .shelf-categories::-webkit-scrollbar {
+    display: none;
+  }
+  .shelf-category {
+    flex: 0 0 62%;
+    scroll-snap-align: center;
   }
 }
