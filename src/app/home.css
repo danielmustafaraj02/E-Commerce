@@ -655,13 +655,6 @@
 
 /* -- Phones ----------------------------------------------------------------------- */
 
-/* The bead is scaled up past its box; without room above it, it overlaps the
-   line of facts stacked over it. */
-@media (max-width: 51.99rem) {
-  .shelf-bead {
-    margin-top: 2.5rem;
-  }
-}
 /* Categories become a swipeable strip: one piece large in the middle with its
    neighbours peeking in, rather than everything at once (CategoryStrip opens it
    on the middle item). It bleeds to the screen edges so the peek is not clipped. */
