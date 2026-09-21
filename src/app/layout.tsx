@@ -73,17 +73,15 @@ export async function generateMetadata(): Promise<Metadata> {
 // components that actually sit near an edge (floating-checkout-button,
 // cookie-consent) add env(safe-area-inset-*) themselves so content doesn't
 // end up under the home indicator once this is on. themeColor tints the
-// browser's own address bar/status bar to match the store instead of
-// showing as plain white/black.
-export async function generateViewport(): Promise<Viewport> {
-  const settings = await getStoreSettings();
-  return {
-    width: "device-width",
-    initialScale: 1,
-    viewportFit: "cover",
-    themeColor: settings.primaryColor || "#7b4b94",
-  };
-}
+// browser's own address bar/status bar — white, matching the page itself
+// (an earlier version used the brand accent color here, which read as a
+// stray colored bar rather than a page background).
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#ffffff",
+};
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const [settings, locale, cardsEnabled, paypalEnabled] = await Promise.all([
