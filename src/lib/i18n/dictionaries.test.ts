@@ -26,6 +26,17 @@ const others = locales.filter((locale) => locale !== "en");
 
 const placeholders = (text: string) => (text.match(/\{[^}]+\}|§\d+§/g) ?? []).sort().join("|");
 
+// Proper nouns are deliberately identical across every locale (a brand name
+// isn't translated), so they're expected to match English rather than being
+// mistaken for a forgotten translation.
+const KEPT_AS_ENGLISH = new Set(["about.friendsLinkText"]);
+// Locales where grammar puts nothing before this key's linked text (e.g.
+// Japanese starts the sentence with the link itself) — an intentional empty
+// string, not a missed translation.
+const ALLOWED_EMPTY: Partial<Record<Locale, Set<string>>> = {
+  ja: new Set(["about.friendsIntro"]),
+};
+
 const SCRIPTS = {
   Arabic: /[؀-ۿ]/,
   CJK: /[一-鿿぀-ヿ]/,
@@ -48,7 +59,10 @@ describe.each(others)("UI translations: %s", (locale) => {
   });
 
   it("has no empty strings", () => {
-    const empty = [...dictionary].filter(([, value]) => !value.trim()).map(([key]) => key);
+    const allowed = ALLOWED_EMPTY[locale];
+    const empty = [...dictionary]
+      .filter(([key, value]) => !value.trim() && !allowed?.has(key))
+      .map(([key]) => key);
     expect(empty).toEqual([]);
   });
 
@@ -71,7 +85,10 @@ describe.each(others)("UI translations: %s", (locale) => {
 
   it("does not leave long sentences in English", () => {
     const untranslated = [...english]
-      .filter(([key, value]) => value.length > 20 && dictionary.get(key) === value)
+      .filter(
+        ([key, value]) =>
+          value.length > 20 && dictionary.get(key) === value && !KEPT_AS_ENGLISH.has(key)
+      )
       .map(([key]) => key);
     expect(untranslated).toEqual([]);
   });

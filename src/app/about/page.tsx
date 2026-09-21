@@ -119,6 +119,19 @@ export default async function AboutPage() {
             {dict.about.contactLink}
           </Link>
         </p>
+
+        <p className="text-foreground/70 mt-2 text-sm">
+          {dict.about.friendsIntro}
+          <a
+            href="https://venetianmuranoglass.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shelf-link underline"
+          >
+            {dict.about.friendsLinkText}
+          </a>
+          {dict.about.friendsOutro}
+        </p>
       </ShelfBody>
     </ShelfMain>
   );

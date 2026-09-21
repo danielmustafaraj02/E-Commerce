@@ -102,6 +102,9 @@ const en = {
     value3Body: "A person reads every message sent to our contact address — not a bot.",
     contactCta: "Have a question? ",
     contactLink: "Get in touch",
+    friendsIntro: "We're friends with the team at ",
+    friendsLinkText: "Venetian Murano Glass",
+    friendsOutro: ".",
     heritageTitle: "The craft behind every piece",
     heritageBody1:
       "Murano glassmaking dates back to 1291, when Venice's furnaces were moved to the island of Murano — both to protect the city from fire risk and to keep the glassmakers' techniques close, on an island easier to control. Over seven centuries, that isolation turned into a concentration of skill found nowhere else: generations of maestri passing down lamp-working, murrine, and glass-blowing techniques that are still done entirely by hand today.",
@@ -546,6 +549,9 @@ const it: Dictionary = {
       "Una persona legge ogni messaggio inviato al nostro indirizzo di contatto — non un bot.",
     contactCta: "Hai una domanda? ",
     contactLink: "Contattaci",
+    friendsIntro: "Siamo amici del team di ",
+    friendsLinkText: "Venetian Murano Glass",
+    friendsOutro: ".",
     heritageTitle: "L'arte dietro ogni pezzo",
     heritageBody1:
       "La lavorazione del vetro di Murano risale al 1291, quando le fornaci di Venezia furono trasferite sull'isola di Murano — sia per proteggere la città dal rischio di incendi, sia per custodire le tecniche dei vetrai in un luogo più facile da controllare. In sette secoli, quell'isolamento è diventato una concentrazione di maestria che non si trova altrove: generazioni di maestri che si sono tramandati tecniche di lavorazione a lume, murrine e soffiatura del vetro ancora oggi interamente manuali.",
@@ -989,6 +995,9 @@ const fr: Dictionary = {
     value3Body: "Une personne lit chaque message envoyé à notre adresse de contact — pas un robot.",
     contactCta: "Une question ? ",
     contactLink: "Contactez-nous",
+    friendsIntro: "Nous sommes amis avec l'équipe de ",
+    friendsLinkText: "Venetian Murano Glass",
+    friendsOutro: ".",
     heritageTitle: "Le savoir-faire derrière chaque pièce",
     heritageBody1:
       "La verrerie de Murano remonte à 1291, lorsque les fourneaux de Venise furent déplacés sur l'île de Murano — à la fois pour protéger la ville du risque d'incendie et pour garder les techniques des verriers proches, sur une île plus facile à contrôler. Au fil de sept siècles, cet isolement est devenu une concentration de savoir-faire introuvable ailleurs : des générations de maîtres verriers se transmettant des techniques de travail au chalumeau, de murrine et de soufflage du verre, encore entièrement manuelles aujourd'hui.",
@@ -1431,6 +1440,9 @@ const de: Dictionary = {
     value3Body: "Eine Person liest jede Nachricht, die an unsere Kontaktadresse gesendet wird — kein Bot.",
     contactCta: "Haben Sie eine Frage? ",
     contactLink: "Kontaktieren Sie uns",
+    friendsIntro: "Wir sind mit dem Team von ",
+    friendsLinkText: "Venetian Murano Glass",
+    friendsOutro: " befreundet.",
     heritageTitle: "Das Handwerk hinter jedem Stück",
     heritageBody1:
       "Die Murano-Glasherstellung geht auf das Jahr 1291 zurück, als die Öfen Venedigs auf die Insel Murano verlegt wurden — sowohl um die Stadt vor Brandgefahr zu schützen, als auch um die Techniken der Glasmacher auf einer leichter zu kontrollierenden Insel zu bewahren. Über sieben Jahrhunderte wurde aus dieser Isolation eine Konzentration von Fachwissen, die es sonst nirgendwo gibt: Generationen von Meistern, die Lampenglas-, Murrine- und Glasbläsertechniken weitergaben, die noch heute vollständig von Hand ausgeführt werden.",
@@ -1873,6 +1885,9 @@ const ar: Dictionary = {
     value3Body: "شخص حقيقي يقرأ كل رسالة تُرسل إلى عنوان التواصل لدينا — وليس روبوتًا.",
     contactCta: "لديك سؤال؟ ",
     contactLink: "تواصل معنا",
+    friendsIntro: "نحن أصدقاء مع فريق ",
+    friendsLinkText: "Venetian Murano Glass",
+    friendsOutro: ".",
     heritageTitle: "الحرفية وراء كل قطعة",
     heritageBody1:
       "تعود صناعة زجاج مورانو إلى عام 1291، حين نُقلت أفران البندقية إلى جزيرة مورانو — لحماية المدينة من خطر الحرائق، ولإبقاء تقنيات صنّاع الزجاج في مكان يسهل التحكم به. وعلى مدى سبعة قرون، تحوّلت تلك العزلة إلى تركيز فريد من المهارة لا يوجد مثله في أي مكان آخر: أجيال من المعلمين توارثوا تقنيات اللهب والمورّينا ونفخ الزجاج، وما زالت تُنفَّذ يدويًا بالكامل حتى اليوم.",
@@ -2313,6 +2328,9 @@ const zh: Dictionary = {
     value3Body: "发送到我们联系邮箱的每一条留言都由真人阅读——而不是机器人。",
     contactCta: "有疑问？ ",
     contactLink: "联系我们",
+    friendsIntro: "我们与 ",
+    friendsLinkText: "Venetian Murano Glass",
+    friendsOutro: " 的团队是朋友。",
     heritageTitle: "每件作品背后的工艺",
     heritageBody1:
       "穆拉诺玻璃制造的历史可追溯到 1291 年，当时威尼斯将城内所有的玻璃炉窑迁至穆拉诺岛——既是为了让这座几乎全由木材建造的城市免受火灾威胁，也是为了将玻璃工匠的技艺集中在一座更易于管控的岛屿上。七个世纪以来，这种与外界的隔绝反而造就了世间罕见的技艺积累：一代代大师将灯工、马赛克嵌花（murrine）和吹制玻璃的工艺代代相传，时至今日仍完全依靠手工完成。",
@@ -2753,6 +2771,9 @@ const ru: Dictionary = {
     value3Body: "Каждое сообщение, отправленное на наш адрес для связи, читает живой человек — а не бот.",
     contactCta: "Есть вопрос? ",
     contactLink: "Свяжитесь с нами",
+    friendsIntro: "Мы дружим с командой ",
+    friendsLinkText: "Venetian Murano Glass",
+    friendsOutro: ".",
     heritageTitle: "Мастерство за каждым изделием",
     heritageBody1:
       "История стеклоделия на Мурано начинается в 1291 году, когда все печи Венеции были перенесены на остров Мурано — отчасти ради пожарной безопасности, ведь печи работали днём и ночью в городе, почти полностью построенном из дерева, а отчасти для того, чтобы держать мастеров-стеклодувов и их технологии в месте, которое было проще контролировать. За семь веков эта изоляция превратилась в концентрацию мастерства, которого не найти больше нигде: поколения маэстро передавали друг другу техники работы на горелке, изготовления мурринов и выдувания стекла, которые и сегодня выполняются полностью вручную.",
@@ -3194,6 +3215,9 @@ const es: Dictionary = {
     value3Body: "Una persona lee cada mensaje enviado a nuestra dirección de contacto — no un bot.",
     contactCta: "¿Tienes alguna pregunta? ",
     contactLink: "Ponte en contacto",
+    friendsIntro: "Somos amigos del equipo de ",
+    friendsLinkText: "Venetian Murano Glass",
+    friendsOutro: ".",
     heritageTitle: "La artesanía detrás de cada pieza",
     heritageBody1:
       "La fabricación de vidrio de Murano se remonta a 1291, cuando los hornos de Venecia se trasladaron a la isla de Murano — tanto para proteger la ciudad del riesgo de incendios como para mantener las técnicas de los vidrieros cerca, en una isla más fácil de controlar. A lo largo de siete siglos, ese aislamiento se convirtió en una concentración de maestría que no se encuentra en ningún otro lugar: generaciones de maestros que transmitieron técnicas de lampwork, murrina y soplado de vidrio que aún hoy se realizan enteramente a mano.",
@@ -3636,6 +3660,9 @@ const pt: Dictionary = {
     value3Body: "Uma pessoa lê cada mensagem enviada para o nosso endereço de contacto — não um robô.",
     contactCta: "Tem alguma pergunta? ",
     contactLink: "Entre em contacto",
+    friendsIntro: "Somos amigos da equipa da ",
+    friendsLinkText: "Venetian Murano Glass",
+    friendsOutro: ".",
     heritageTitle: "A arte por detrás de cada peça",
     heritageBody1:
       "O fabrico de vidro de Murano remonta a 1291, quando as fornalhas de Veneza foram transferidas para a ilha de Murano — tanto para proteger a cidade do risco de incêndio como para manter as técnicas dos vidreiros próximas, numa ilha mais fácil de controlar. Ao longo de sete séculos, esse isolamento transformou-se numa concentração de perícia que não se encontra em mais lado nenhum: gerações de mestres que transmitiram técnicas de trabalho ao maçarico, murrine e sopro de vidro, ainda hoje feitas inteiramente à mão.",
@@ -4078,6 +4105,9 @@ const hi: Dictionary = {
     value3Body: "हमारे संपर्क पते पर भेजा गया हर संदेश एक व्यक्ति पढ़ता है — कोई बॉट नहीं।",
     contactCta: "कोई सवाल है? ",
     contactLink: "संपर्क करें",
+    friendsIntro: "हम ",
+    friendsLinkText: "Venetian Murano Glass",
+    friendsOutro: " की टीम के दोस्त हैं।",
     heritageTitle: "हर उत्पाद के पीछे की शिल्पकला",
     heritageBody1:
       "मुरानो ग्लासमेकिंग 1291 से चली आ रही है, जब वेनिस की भट्टियों को मुरानो द्वीप पर स्थानांतरित किया गया था — शहर को आग के खतरे से बचाने और ग्लासमेकर्स की तकनीकों को एक ऐसे द्वीप पर सुरक्षित रखने के लिए जिसे नियंत्रित करना आसान हो। सात शताब्दियों में, वह अलगाव कौशल की एक ऐसी एकाग्रता में बदल गया जो कहीं और नहीं मिलती: पीढ़ियों से माएस्त्री लैंप-वर्किंग, मुर्रिने और ग्लास-ब्लोइंग तकनीकों को आगे बढ़ाते आए हैं जो आज भी पूरी तरह हाथ से की जाती हैं।",
@@ -4520,6 +4550,9 @@ const ja: Dictionary = {
     value3Body: "お問い合わせ先に届いたメッセージはすべて、ボットではなく実際のスタッフが目を通しています。",
     contactCta: "ご質問がありますか? ",
     contactLink: "お問い合わせはこちら",
+    friendsIntro: "",
+    friendsLinkText: "Venetian Murano Glass",
+    friendsOutro: "のチームと友人です。",
     heritageTitle: "すべての商品に息づく職人技",
     heritageBody1:
       "ムラノガラスの歴史は1291年に遡ります。当時、ヴェネツィアの工房は火災のリスクから街を守るため、またガラス職人の技術を管理しやすい島に留めておくため、ムラノ島に移されました。700年の歳月を経て、この隔絶が他に類を見ない技術の集積を生み出しました — 何世代にもわたる巨匠たちがランプワーク、ムッリーナ、ガラス吹きの技法を受け継ぎ、今も全工程が手作業で行われています。",
