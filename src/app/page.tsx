@@ -164,7 +164,7 @@ export default async function Home() {
                       {category.image && (
                         <CatalogImage
                           src={category.image.url}
-                          alt=""
+                          alt={name}
                           fill
                           sizes="(min-width: 64rem) 19rem, (min-width: 48rem) 30vw, 50vw"
                         />

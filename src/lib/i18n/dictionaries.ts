@@ -12,6 +12,8 @@ const en = {
     account: "Account",
     signIn: "Sign in",
     register: "Register",
+    menu: "Menu",
+    closeMenu: "Close menu",
   },
   footer: {
     rights: "All rights reserved.",
@@ -483,6 +485,8 @@ const it: Dictionary = {
     account: "Account",
     signIn: "Accedi",
     register: "Registrati",
+    menu: "Menu",
+    closeMenu: "Chiudi il menu",
   },
   footer: {
     rights: "Tutti i diritti riservati.",
@@ -949,6 +953,8 @@ const fr: Dictionary = {
     account: "Compte",
     signIn: "Connexion",
     register: "S'inscrire",
+    menu: "Menu",
+    closeMenu: "Fermer le menu",
   },
   footer: {
     rights: "Tous droits réservés.",
@@ -1414,6 +1420,8 @@ const de: Dictionary = {
     account: "Konto",
     signIn: "Anmelden",
     register: "Registrieren",
+    menu: "Menü",
+    closeMenu: "Menü schließen",
   },
   footer: {
     rights: "Alle Rechte vorbehalten.",
@@ -1878,6 +1886,8 @@ const ar: Dictionary = {
     account: "الحساب",
     signIn: "تسجيل الدخول",
     register: "إنشاء حساب",
+    menu: "القائمة",
+    closeMenu: "إغلاق القائمة",
   },
   footer: {
     rights: "جميع الحقوق محفوظة.",
@@ -2340,6 +2350,8 @@ const zh: Dictionary = {
     account: "账户",
     signIn: "登录",
     register: "注册",
+    menu: "菜单",
+    closeMenu: "关闭菜单",
   },
   footer: {
     rights: "版权所有，保留所有权利。",
@@ -2800,6 +2812,8 @@ const ru: Dictionary = {
     account: "Аккаунт",
     signIn: "Войти",
     register: "Регистрация",
+    menu: "Меню",
+    closeMenu: "Закрыть меню",
   },
   footer: {
     rights: "Все права защищены.",
@@ -3263,6 +3277,8 @@ const es: Dictionary = {
     account: "Cuenta",
     signIn: "Iniciar sesión",
     register: "Registrarse",
+    menu: "Menú",
+    closeMenu: "Cerrar menú",
   },
   footer: {
     rights: "Todos los derechos reservados.",
@@ -3727,6 +3743,8 @@ const pt: Dictionary = {
     account: "Conta",
     signIn: "Iniciar sessão",
     register: "Registar",
+    menu: "Menu",
+    closeMenu: "Fechar menu",
   },
   footer: {
     rights: "Todos os direitos reservados.",
@@ -3746,7 +3764,7 @@ const pt: Dictionary = {
     tagline: "Peças feitas à mão, enviadas com cuidado.",
     newsletterTitle: "Fique a par de tudo",
     newsletterBody: "Novas peças e alguma oferta ocasional — sem spam, cancele quando quiser.",
-    newsletterPlaceholder: "voce@exemplo.com",
+    newsletterPlaceholder: "seu@exemplo.com",
     newsletterSubmit: "Subscrever",
     newsletterSubmitting: "A subscrever…",
     newsletterSuccess: "Subscrição confirmada — obrigado!",
@@ -4003,7 +4021,7 @@ const pt: Dictionary = {
     resetButton: "Escolher uma nova palavra-passe",
     resetExpiry: "Esta ligação expira dentro de {minutes} minutos e só pode ser usada uma vez. Se não pediu esta alteração, ignore este e-mail — a sua palavra-passe não será alterada.",
     pwChangedSubject: "A sua palavra-passe foi alterada — {storeName}",
-    pwChangedBody: "A palavra-passe da sua conta {storeName} acabou de ser alterada e todos os dispositivos com sessão iniciada foram desligados.\n\nSe foi você, não precisa de fazer nada. Se não foi, redefina de imediato a palavra-passe e contacte-nos{contact}.",
+    pwChangedBody: "A palavra-passe da sua conta {storeName} acabou de ser alterada e todos os dispositivos com sessão iniciada foram desligados.\n\nSe reconhece esta alteração, não precisa de fazer nada. Se não a reconhece, redefina de imediato a palavra-passe e contacte-nos{contact}.",
     pwChangedContact: " através de {email}",
     orderNumberLabel: "Número da encomenda",
     orderDateLabel: "Data da encomenda",
@@ -4190,6 +4208,8 @@ const hi: Dictionary = {
     account: "खाता",
     signIn: "साइन इन करें",
     register: "रजिस्टर करें",
+    menu: "मेनू",
+    closeMenu: "मेनू बंद करें",
   },
   footer: {
     rights: "सर्वाधिकार सुरक्षित।",
@@ -4222,7 +4242,7 @@ const hi: Dictionary = {
       "प्रामाणिक वेनिसियन लैंपवर्क ग्लास, इटली के मुरानो में हाथ से बना — पारंपरिक इतालवी शिल्पकला, एक-एक मनका करके।",
     shopNow: "अभी खरीदें",
     pricesIncludeTax: "दिखाई गई सभी कीमतों में VAT/IVA शामिल है।",
-    newArrivals: "नई आगमन",
+    newArrivals: "नए आगमन",
     bestSellers: "बेस्ट सेलर",
     shopByCategory: "श्रेणी के अनुसार खरीदारी करें",
     whyUsTitle: "हमारे साथ खरीदारी क्यों करें",
@@ -4653,6 +4673,8 @@ const ja: Dictionary = {
     account: "アカウント",
     signIn: "ログイン",
     register: "新規登録",
+    menu: "メニュー",
+    closeMenu: "メニューを閉じる",
   },
   footer: {
     rights: "全著作権所有。",

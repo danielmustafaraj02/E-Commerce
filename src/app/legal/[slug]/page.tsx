@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { truncateAtWord } from "@/lib/text";
+import { hreflangAlternates } from "@/lib/hreflang";
 import { ShelfMain } from "@/components/shelf-main";
 import { ShelfHead, ShelfBody } from "@/components/shelf-page";
 
@@ -12,10 +13,11 @@ export async function generateMetadata({ params }: PageProps<"/legal/[slug]">): 
     select: { title: true, content: true },
   });
   if (!page) return {};
+  const canonical = `/legal/${slug}`;
   return {
     title: page.title,
     description: describe(page.content),
-    alternates: { canonical: `/legal/${slug}` },
+    alternates: { canonical, languages: hreflangAlternates(canonical) },
   };
 }
 

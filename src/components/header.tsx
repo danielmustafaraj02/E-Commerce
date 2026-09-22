@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { CartLink } from "@/components/cart-link";
 import { GuestWishlistLink } from "@/components/guest-wishlist-link";
 import { LocaleSwitcher } from "@/components/locale-switcher";
+import { MobileNavMenu } from "@/components/mobile-nav-menu";
 import type { Locale } from "@/lib/i18n/locale";
 import { localizedName } from "@/lib/product-i18n";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
@@ -30,16 +31,20 @@ export async function Header({
     ? await db.wishlistItem.count({ where: { userId: session.user.id } })
     : 0;
 
-  // Shared by every link in the category/About/guide row below. On phones
-  // these become filled pill chips (max-sm:) — a plain underlined-text row
-  // didn't read as a swipeable, tappable row at a glance, and the tap
-  // targets were too thin for a thumb. sm+ keeps the original minimal
-  // text-link treatment untouched.
   const navChipClass =
-    "nav-link link-underline text-foreground/80 hover:text-accent transition-colors " +
-    "max-sm:rounded-full max-sm:border max-sm:border-foreground/10 max-sm:bg-foreground/4 " +
-    "max-sm:px-3.5 max-sm:py-2.5 max-sm:leading-none max-sm:[&::after]:hidden " +
-    "max-sm:hover:bg-accent/10 max-sm:hover:text-foreground/80 max-sm:active:bg-accent/15";
+    "nav-link link-underline text-foreground/80 hover:text-accent transition-colors";
+
+  // Same destinations as the desktop row below, for the full-screen mobile
+  // menu (MobileNavMenu) — resolved here since it needs plain strings, not
+  // JSX, and this component already has locale/dict in scope.
+  const mobileNavLinks = [
+    ...categories.map((category) => ({
+      href: `/category/${category.slug}`,
+      label: localizedName(category, locale),
+    })),
+    { href: "/about", label: dict.footer.about },
+    { href: "/murano-glass", label: dict.footer.muranoGuide },
+  ];
 
   return (
     <header className="glass-rule bg-background/90 relative z-40 backdrop-blur-sm sm:sticky sm:top-0">
@@ -141,16 +146,12 @@ export async function Header({
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          {/* The edge fade is 16px wide; the padding keeps the first and last link clear of it
-              (the negative margin cancels the shift so the text stays aligned). Vertical padding
-              (py-1) makes room for the taller chips on phones without clipping their border. */}
-          <nav className="scrollbar-hide edge-fade-x -ms-4 flex items-center gap-2 overflow-x-auto px-4 py-1 text-sm whitespace-nowrap sm:gap-4 sm:py-0">
+          {/* Desktop only now — on phones this used to be a horizontally-scrolling
+              row (swipe to see the rest); MobileNavMenu below replaces that with a
+              single button that opens a full-screen list instead. */}
+          <nav className="hidden items-center gap-4 text-sm whitespace-nowrap sm:flex">
             {categories.map((category) => (
-              <Link
-                key={category.id}
-                href={`/category/${category.slug}`}
-                className={navChipClass}
-              >
+              <Link key={category.id} href={`/category/${category.slug}`} className={navChipClass}>
                 {localizedName(category, locale)}
               </Link>
             ))}
@@ -162,59 +163,70 @@ export async function Header({
             </Link>
           </nav>
 
-          {/* Above the category links on phones (search is the first thing people
-              reach for there); beside them from sm up. */}
-          <form
-            action="/products"
-            method="GET"
-            role="search"
-            className="relative flex items-center max-sm:order-first"
-          >
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 20 20"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              className="text-foreground/50 pointer-events-none absolute start-3.5 sm:start-3"
-              aria-hidden="true"
-            >
-              <circle cx="9" cy="9" r="6.5" />
-              <path d="M18 18l-4-4" strokeLinecap="round" />
-            </svg>
-            <input
-              type="search"
-              name="q"
-              placeholder={dict.nav.searchPlaceholder}
-              aria-label={dict.nav.searchPlaceholder}
-              enterKeyHint="search"
-              autoComplete="off"
-              className="field w-full min-w-0 rounded-full ps-11 pe-14 text-base shadow-sm sm:w-64 sm:rounded-xl sm:py-1.5 sm:ps-10 sm:pe-3 sm:text-sm sm:shadow-none"
-            />
-            {/* The keyboard's Search key submits too; this is for people who reach
-                for a button. Phones only. */}
-            <button
-              type="submit"
-              aria-label={dict.nav.searchPlaceholder}
-              className="bg-accent hover:bg-accent-deep active:bg-accent-deep absolute end-1.5 flex size-9 items-center justify-center rounded-full text-white transition-colors sm:hidden"
+          {/* Phones: search and the menu button share one row instead of
+              each getting a full-width row of their own — sm:contents
+              unwraps this back to two plain items of the flex row above
+              (after <nav>, same as before) once the desktop layout takes
+              over. */}
+          <div className="flex items-center gap-2 sm:contents">
+            <form
+              action="/products"
+              method="GET"
+              role="search"
+              className="relative flex items-center max-sm:flex-1"
             >
               <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
+                width="18"
+                height="18"
+                viewBox="0 0 20 20"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="rtl:rotate-180"
+                strokeWidth="2"
+                className="text-foreground/50 pointer-events-none absolute start-3.5 sm:start-3"
                 aria-hidden="true"
               >
-                <path d="M5 12h14M13 6l6 6-6 6" />
+                <circle cx="9" cy="9" r="6.5" />
+                <path d="M18 18l-4-4" strokeLinecap="round" />
               </svg>
-            </button>
-          </form>
+              <input
+                type="search"
+                name="q"
+                placeholder={dict.nav.searchPlaceholder}
+                aria-label={dict.nav.searchPlaceholder}
+                enterKeyHint="search"
+                autoComplete="off"
+                className="field w-full min-w-0 rounded-full ps-11 pe-14 text-base shadow-sm sm:w-64 sm:rounded-xl sm:py-1.5 sm:ps-10 sm:pe-3 sm:text-sm sm:shadow-none"
+              />
+              {/* The keyboard's Search key submits too; this is for people who reach
+                  for a button. Phones only. */}
+              <button
+                type="submit"
+                aria-label={dict.nav.searchPlaceholder}
+                className="bg-accent hover:bg-accent-deep active:bg-accent-deep absolute end-1.5 flex size-9 items-center justify-center rounded-full text-white transition-colors sm:hidden"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="rtl:rotate-180"
+                  aria-hidden="true"
+                >
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
+              </button>
+            </form>
+
+            <MobileNavMenu
+              links={mobileNavLinks}
+              menuLabel={dict.nav.menu}
+              closeLabel={dict.nav.closeMenu}
+            />
+          </div>
         </div>
       </div>
     </header>

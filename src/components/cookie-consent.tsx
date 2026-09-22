@@ -47,7 +47,10 @@ export function CookieConsent({ dict }: { dict: Dictionary["cookieConsent"] }) {
   if (!visible) return null;
 
   return (
-    <div className="border-foreground/10 bg-background animate-fade-up fixed inset-x-0 bottom-0 z-50 max-h-[85vh] overflow-y-auto border-t p-4 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+    <div
+      className="border-foreground/10 bg-background animate-fade-up fixed inset-x-0 bottom-0 z-50 max-h-[85vh] overflow-y-auto border-t p-4 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]"
+      style={{ paddingBottom: "calc(1rem + env(safe-area-inset-bottom, 0px))" }}
+    >
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-3 text-sm">
         <p className="text-foreground/80">
           {dict.message}{" "}

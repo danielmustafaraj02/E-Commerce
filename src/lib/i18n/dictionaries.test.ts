@@ -96,8 +96,11 @@ describe.each(others)("UI translations: %s", (locale) => {
 
 describe("register and variant consistency", () => {
   it("Portuguese is European Portuguese (the site's locale is pt-PT), not Brazilian", () => {
-    // "sua/seu" are fine in both; these are Brazilian-only.
-    const brazilian = /\b(você|senha|equipe|usuário|celular|fazer login|entre com)\b|\blogin\b/i;
+    // "sua/seu" are fine in both; these are Brazilian-only. Lookarounds (not \b)
+    // because JS's \b treats accented letters as non-word characters, so \b would
+    // silently fail to bound words like "você" or "usuário" against punctuation.
+    const brazilian =
+      /(?<![\p{L}\p{N}_])(você|senha|equipe|usuário|celular|fazer login|entre com|login)(?![\p{L}\p{N}_])/iu;
     const found = [...dictionaries.pt].filter(([, value]) => brazilian.test(value)).map(([k]) => k);
     expect(found).toEqual([]);
   });

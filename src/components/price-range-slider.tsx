@@ -47,7 +47,7 @@ export function PriceRangeSlider({
       </div>
 
       <Slider.Root
-        className="relative flex h-5 w-full touch-none items-center select-none"
+        className="relative flex h-5 w-full touch-none items-center select-none max-sm:h-8"
         min={sliderMin}
         max={sliderMax}
         step={step}
@@ -58,13 +58,16 @@ export function PriceRangeSlider({
         <Slider.Track className="bg-foreground/10 relative h-1.5 w-full grow overflow-hidden rounded-full">
           <Slider.Range className="absolute h-full rounded-full bg-[linear-gradient(90deg,#e0a92e,#f5c451)]" />
         </Slider.Track>
+        {/* Larger drag target on phones (was 18px, too small to grab
+            precisely with a finger) without changing the visible thumb
+            size on desktop, where a mouse pointer is precise. */}
         <Slider.Thumb
           aria-label={minLabel}
-          className="block h-4.5 w-4.5 rounded-full border-2 border-[#f5c451] bg-background shadow transition-transform hover:scale-110 focus-visible:ring-4 focus-visible:ring-[#f5c451]/25 focus-visible:outline-none"
+          className="bg-background block h-4.5 w-4.5 rounded-full border-2 border-[#f5c451] shadow transition-transform hover:scale-110 focus-visible:ring-4 focus-visible:ring-[#f5c451]/25 focus-visible:outline-none max-sm:h-7 max-sm:w-7"
         />
         <Slider.Thumb
           aria-label={maxLabel}
-          className="block h-4.5 w-4.5 rounded-full border-2 border-[#f5c451] bg-background shadow transition-transform hover:scale-110 focus-visible:ring-4 focus-visible:ring-[#f5c451]/25 focus-visible:outline-none"
+          className="bg-background block h-4.5 w-4.5 rounded-full border-2 border-[#f5c451] shadow transition-transform hover:scale-110 focus-visible:ring-4 focus-visible:ring-[#f5c451]/25 focus-visible:outline-none max-sm:h-7 max-sm:w-7"
         />
       </Slider.Root>
 

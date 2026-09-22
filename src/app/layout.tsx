@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { getStoreSettings } from "@/lib/store-settings";
 import { ogLocale, ogAlternateLocales } from "@/lib/hreflang";
@@ -57,8 +57,31 @@ export async function generateMetadata(): Promise<Metadata> {
     verification: settings.googleSiteVerification
       ? { google: settings.googleSiteVerification }
       : undefined,
+    // Lets "Add to Home Screen" launch without Safari/Chrome browser chrome —
+    // manifest.ts covers Android/Chrome, this covers iOS Safari, which
+    // ignores most of the manifest and needs its own meta tags.
+    appleWebApp: {
+      capable: true,
+      title: settings.storeName,
+      statusBarStyle: "default",
+    },
   };
 }
+
+// viewportFit: "cover" lets the page draw under the notch/home-indicator
+// safe areas instead of leaving a hard browser-chrome band there — the
+// components that actually sit near an edge (floating-checkout-button,
+// cookie-consent) add env(safe-area-inset-*) themselves so content doesn't
+// end up under the home indicator once this is on. themeColor tints the
+// browser's own address bar/status bar — white, matching the page itself
+// (an earlier version used the brand accent color here, which read as a
+// stray colored bar rather than a page background).
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#ffffff",
+};
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const [settings, locale, cardsEnabled, paypalEnabled] = await Promise.all([
