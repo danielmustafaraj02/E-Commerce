@@ -214,4 +214,78 @@ describe("quoteOrder", () => {
       })
     ).rejects.toThrow(PricingError);
   });
+
+  it("rejects a zero or negative quantity instead of quoting it", async () => {
+    mockDb.product.findMany.mockResolvedValue([product()]);
+
+    await expect(
+      quoteOrder({
+        items: [{ productId: "p1", quantity: 0 }],
+        country: "IT",
+        shippingMethodId: "m1",
+      })
+    ).rejects.toMatchObject({ code: "invalid-quantity" });
+  });
+
+  it("rejects a discount code that has reached its usage limit", async () => {
+    mockDb.product.findMany.mockResolvedValue([product()]);
+    mockDb.discountCode.findUnique.mockResolvedValue({
+      id: "d1",
+      code: "USEDUP",
+      percentOff: 10,
+      amountOff: null,
+      expiresAt: null,
+      maxUses: 5,
+      usedCount: 5,
+      active: true,
+    });
+
+    await expect(
+      quoteOrder({
+        items: [{ productId: "p1", quantity: 1 }],
+        country: "IT",
+        shippingMethodId: "m1",
+        discountCode: "USEDUP",
+      })
+    ).rejects.toMatchObject({ code: "discount-limit" });
+  });
+
+  it("rejects a discount code that doesn't exist or was deactivated", async () => {
+    mockDb.product.findMany.mockResolvedValue([product()]);
+    mockDb.discountCode.findUnique.mockResolvedValue(null);
+
+    await expect(
+      quoteOrder({
+        items: [{ productId: "p1", quantity: 1 }],
+        country: "IT",
+        shippingMethodId: "m1",
+        discountCode: "NOPE",
+      })
+    ).rejects.toMatchObject({ code: "discount-invalid" });
+  });
+
+  it("caps a fixed amountOff discount at the subtotal so total never goes negative", async () => {
+    mockDb.product.findMany.mockResolvedValue([product({ price: 500 })]);
+    mockDb.discountCode.findUnique.mockResolvedValue({
+      id: "d1",
+      code: "BIGSAVE",
+      percentOff: null,
+      amountOff: 5000, // far more than the 500 subtotal
+      expiresAt: null,
+      maxUses: null,
+      usedCount: 0,
+      active: true,
+    });
+
+    const quote = await quoteOrder({
+      items: [{ productId: "p1", quantity: 1 }],
+      country: "IT",
+      shippingMethodId: "m1",
+      discountCode: "BIGSAVE",
+    });
+
+    expect(quote.discountAmount).toBe(500);
+    // Tax-inclusive, fully discounted subtotal: only shipping remains.
+    expect(quote.total).toBe(500);
+  });
 });
