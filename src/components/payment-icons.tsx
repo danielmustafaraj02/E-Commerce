@@ -40,13 +40,19 @@ export function MastercardIcon() {
 }
 
 export function PayPalIcon() {
+  // Not the generic Badge (h-7 w-11): "PayPal" is wider than the other
+  // wordmarks at that box width and was wrapping/clipping inside it.
   return (
-    <Badge label="PayPal">
-      <span className="text-[12px] font-bold italic">
+    <div
+      aria-label="PayPal"
+      title="PayPal"
+      className="border-foreground/10 bg-background flex h-7 w-14 shrink-0 items-center justify-center rounded border shadow-sm"
+    >
+      <span className="text-[11px] font-bold whitespace-nowrap">
         <span className="text-[#003087]">Pay</span>
         <span className="text-[#0070ba]">Pal</span>
       </span>
-    </Badge>
+    </div>
   );
 }
 

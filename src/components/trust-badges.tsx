@@ -73,7 +73,7 @@ export function TrustBadges({
   dict: { returnsBadge: string; secureBadge: string };
 }) {
   return (
-    <ul className="text-foreground/70 mt-6 flex flex-col gap-2 text-sm">
+    <ul className="text-foreground/70 mt-5 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm">
       {trustBadgeText && (
         <li className="flex items-center gap-2">
           <CheckSealIcon />
