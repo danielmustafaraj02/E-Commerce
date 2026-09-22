@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { captureError } from "@/lib/monitoring";
+import { isValidBearerToken } from "@/lib/bearer-auth";
 
 const PRIORITIES = new Set(["low", "medium", "high"]);
 
@@ -11,9 +12,7 @@ const PRIORITIES = new Set(["low", "medium", "high"]);
 // gated the same way api/cron/abandoned-orders is — this is a service
 // credential, not a user session, and proxy.ts does not run for /api.
 export async function POST(request: Request) {
-  const secret = process.env.AUTOMATION_ROADMAP_TOKEN;
-  const authHeader = request.headers.get("authorization");
-  if (!secret || authHeader !== `Bearer ${secret}`) {
+  if (!isValidBearerToken(request, process.env.AUTOMATION_ROADMAP_TOKEN)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
