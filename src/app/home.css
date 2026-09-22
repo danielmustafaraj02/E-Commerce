@@ -678,12 +678,14 @@
   border-radius: 999px;
   background: color-mix(in srgb, var(--foreground) 22%, transparent);
   transition:
-    background-color 0.2s ease,
-    transform 0.2s ease;
+    background-color 0.25s ease,
+    width 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
+/* Stretches into a pill rather than just swapping color — reads as "the
+   indicator moved to here" instead of a flat on/off swap between two dots. */
 .category-dot.is-active {
+  width: 1.5rem;
   background: var(--color-primary);
-  transform: scale(1.35);
 }
 
 /* Categories become a one-at-a-time carousel: a single full-width card,

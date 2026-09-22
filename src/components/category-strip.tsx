@@ -24,13 +24,13 @@ export function CategoryStrip({ children, className }: { children: ReactNode; cl
     if (realCount < 2) return;
     if (!window.matchMedia(MOBILE_QUERY).matches) return;
 
-    const setActiveDot = (realIndex: number) => {
-      const dots = dotsRef.current?.children;
-      if (!dots) return;
-      for (let i = 0; i < dots.length; i++) {
-        dots[i].classList.toggle("is-active", i === realIndex);
-      }
-    };
+    // Tag every real card with which dot it owns before cloning, so the
+    // clones (below) inherit the same tag via the deep clone — the
+    // intersection observer further down can then light up the right dot
+    // no matter whether the visible card is real or a stand-in clone.
+    for (let i = 0; i < realCount; i++) {
+      (list.children[i] as HTMLElement).dataset.realIndex = String(i);
+    }
 
     // Loop trick: clone the first and last card to the opposite ends. A
     // swipe (or autoplay step) that lands on a clone is instantly (no
@@ -50,13 +50,36 @@ export function CategoryStrip({ children, className }: { children: ReactNode; cl
     const cardLeft = (i: number) => (list.children[i] as HTMLElement).offsetLeft;
     let index = 1; // index 0 is now the cloned last card; 1 is the real first
     list.scrollLeft = cardLeft(index);
-    setActiveDot(0);
 
     const goTo = (nextIndex: number, smooth: boolean) => {
       index = nextIndex;
-      setActiveDot(index - 1);
       list.scrollTo({ left: cardLeft(index), behavior: smooth ? "smooth" : "instant" });
     };
+
+    // Which dot is lit doesn't come from the same offsetLeft math as the
+    // wrap logic below — scroll-snap-align:center's actual resting scroll
+    // position depends on the container's padding too, which plain
+    // offsetLeft comparisons don't account for, so that arithmetic is a
+    // reasonable approximation for "which card is nearest" but an unreliable
+    // one for "which card is centered right now". An observer answers that
+    // directly regardless of the exact snap math.
+    const dotObserver = new IntersectionObserver(
+      (entries) => {
+        const mostVisible = entries.reduce((best, entry) =>
+          entry.intersectionRatio > best.intersectionRatio ? entry : best
+        );
+        if (mostVisible.intersectionRatio < 0.6) return;
+        const realIndex = (mostVisible.target as HTMLElement).dataset.realIndex;
+        if (realIndex === undefined) return;
+        const dots = dotsRef.current?.children;
+        if (!dots) return;
+        for (let i = 0; i < dots.length; i++) {
+          dots[i].classList.toggle("is-active", String(i) === realIndex);
+        }
+      },
+      { root: list, threshold: [0, 0.25, 0.5, 0.6, 0.75, 1] }
+    );
+    for (const child of list.children) dotObserver.observe(child);
 
     // After a swipe or an autoplay step settles, find whichever card is
     // actually nearest the scroll position and, if it's a clone, jump to
@@ -80,7 +103,6 @@ export function CategoryStrip({ children, className }: { children: ReactNode; cl
           goTo(1, false); // on the cloned-first card -> jump to the real first
         } else {
           index = nearest;
-          setActiveDot(index - 1);
         }
       }, 120);
     };
@@ -120,6 +142,7 @@ export function CategoryStrip({ children, className }: { children: ReactNode; cl
       clearTimeout(settleTimer);
       clearTimeout(resumeTimer);
       stopAutoplay();
+      dotObserver.disconnect();
       firstClone.remove();
       lastClone.remove();
     };
