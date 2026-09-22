@@ -197,6 +197,12 @@
   width: 4.5rem;
   aspect-ratio: 2 / 3;
   border-radius: 8px;
+  padding: 0;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+.shop-thumb--active {
+  border-color: var(--accent);
 }
 .shop-product-photo img,
 .shop-thumb img {

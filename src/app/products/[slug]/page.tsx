@@ -1,7 +1,7 @@
 import { siteBaseUrl } from "@/lib/site-url";
 import { cache } from "react";
 import type { Metadata } from "next";
-import { CatalogImage } from "@/components/catalog-image";
+import { ProductGallery } from "@/components/product-gallery";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { auth } from "@/auth";
@@ -32,7 +32,6 @@ import { ShelfItem } from "@/components/shelf-item";
 import { homeFontClasses } from "@/app/home-fonts";
 import "../../home.css";
 import "../../shop.css";
-import { ProductImageZoom } from "@/components/product-image-zoom";
 import { TrustBadges } from "@/components/trust-badges";
 import { ReviewForm } from "./review-form";
 import { hasPurchased } from "./review-actions";
@@ -291,28 +290,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
           )}
 
           <div className="shop-product-grid">
-            <div className="flex flex-col gap-3">
-              {product.images[0] && (
-                <ProductImageZoom
-                  src={product.images[0].url}
-                  alt={productImageAlt(name, uiLocale)}
-                />
-              )}
-              {product.images.length > 1 && (
-                <div className="flex gap-2">
-                  {product.images.slice(1).map((image) => (
-                    <div key={image.id} className="shop-thumb">
-                      <CatalogImage
-                        src={image.url}
-                        alt={productImageAlt(name, uiLocale)}
-                        fill
-                        sizes="64px"
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            <ProductGallery images={product.images} alt={productImageAlt(name, uiLocale)} />
 
             <div>
               <h1 className="shop-product-title">{name}</h1>
