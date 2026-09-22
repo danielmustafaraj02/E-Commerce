@@ -163,65 +163,70 @@ export async function Header({
             </Link>
           </nav>
 
-          <MobileNavMenu
-            links={mobileNavLinks}
-            menuLabel={dict.nav.menu}
-            closeLabel={dict.nav.closeMenu}
-          />
-
-          {/* Above the category links on phones (search is the first thing people
-              reach for there); beside them from sm up. */}
-          <form
-            action="/products"
-            method="GET"
-            role="search"
-            className="relative flex items-center max-sm:order-first"
-          >
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 20 20"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              className="text-foreground/50 pointer-events-none absolute start-3.5 sm:start-3"
-              aria-hidden="true"
-            >
-              <circle cx="9" cy="9" r="6.5" />
-              <path d="M18 18l-4-4" strokeLinecap="round" />
-            </svg>
-            <input
-              type="search"
-              name="q"
-              placeholder={dict.nav.searchPlaceholder}
-              aria-label={dict.nav.searchPlaceholder}
-              enterKeyHint="search"
-              autoComplete="off"
-              className="field w-full min-w-0 rounded-full ps-11 pe-14 text-base shadow-sm sm:w-64 sm:rounded-xl sm:py-1.5 sm:ps-10 sm:pe-3 sm:text-sm sm:shadow-none"
-            />
-            {/* The keyboard's Search key submits too; this is for people who reach
-                for a button. Phones only. */}
-            <button
-              type="submit"
-              aria-label={dict.nav.searchPlaceholder}
-              className="bg-accent hover:bg-accent-deep active:bg-accent-deep absolute end-1.5 flex size-9 items-center justify-center rounded-full text-white transition-colors sm:hidden"
+          {/* Phones: search and the menu button share one row instead of
+              each getting a full-width row of their own — sm:contents
+              unwraps this back to two plain items of the flex row above
+              (after <nav>, same as before) once the desktop layout takes
+              over. */}
+          <div className="flex items-center gap-2 sm:contents">
+            <form
+              action="/products"
+              method="GET"
+              role="search"
+              className="relative flex items-center max-sm:flex-1"
             >
               <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
+                width="18"
+                height="18"
+                viewBox="0 0 20 20"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="rtl:rotate-180"
+                strokeWidth="2"
+                className="text-foreground/50 pointer-events-none absolute start-3.5 sm:start-3"
                 aria-hidden="true"
               >
-                <path d="M5 12h14M13 6l6 6-6 6" />
+                <circle cx="9" cy="9" r="6.5" />
+                <path d="M18 18l-4-4" strokeLinecap="round" />
               </svg>
-            </button>
-          </form>
+              <input
+                type="search"
+                name="q"
+                placeholder={dict.nav.searchPlaceholder}
+                aria-label={dict.nav.searchPlaceholder}
+                enterKeyHint="search"
+                autoComplete="off"
+                className="field w-full min-w-0 rounded-full ps-11 pe-14 text-base shadow-sm sm:w-64 sm:rounded-xl sm:py-1.5 sm:ps-10 sm:pe-3 sm:text-sm sm:shadow-none"
+              />
+              {/* The keyboard's Search key submits too; this is for people who reach
+                  for a button. Phones only. */}
+              <button
+                type="submit"
+                aria-label={dict.nav.searchPlaceholder}
+                className="bg-accent hover:bg-accent-deep active:bg-accent-deep absolute end-1.5 flex size-9 items-center justify-center rounded-full text-white transition-colors sm:hidden"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="rtl:rotate-180"
+                  aria-hidden="true"
+                >
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
+              </button>
+            </form>
+
+            <MobileNavMenu
+              links={mobileNavLinks}
+              menuLabel={dict.nav.menu}
+              closeLabel={dict.nav.closeMenu}
+            />
+          </div>
         </div>
       </div>
     </header>

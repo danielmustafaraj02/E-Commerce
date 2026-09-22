@@ -54,13 +54,17 @@ export function MobileNavMenu({
 
   return (
     <>
+      {/* Icon-only, shrink-0: sits beside the search bar (header.tsx) rather
+          than on its own full-width row, so the header doesn't eat so much
+          vertical space above the fold. */}
       <button
         ref={triggerRef}
         type="button"
         onClick={() => setOpen(true)}
         aria-expanded={open}
         aria-controls={panelId}
-        className="btn-secondary flex items-center justify-center gap-2 text-sm sm:hidden"
+        aria-label={menuLabel}
+        className="btn-secondary shrink-0 !px-3 sm:hidden"
       >
         <svg
           width="18"
@@ -74,7 +78,6 @@ export function MobileNavMenu({
         >
           <path d="M4 7h16M4 12h16M4 17h16" />
         </svg>
-        {menuLabel}
       </button>
 
       {open &&
