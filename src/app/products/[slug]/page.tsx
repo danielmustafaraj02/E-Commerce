@@ -417,12 +417,10 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
         </div>
       </section>
 
-      <section className="shelf-section">
-        <div className="shelf-wrap shop-reviews">
-          <h2 className="shelf-heading">{dict.product.reviews}</h2>
-          {product.reviews.length === 0 ? (
-            <p className="text-foreground/70 text-sm">{dict.product.noReviews}</p>
-          ) : (
+      {product.reviews.length > 0 && (
+        <section className="shelf-section">
+          <div className="shelf-wrap shop-reviews">
+            <h2 className="shelf-heading">{dict.product.reviews}</h2>
             <ul className="flex flex-col gap-4">
               {product.reviews.map((review) => (
                 <li key={review.id} className="border-foreground/10 border-b pb-4">
@@ -435,26 +433,26 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                 </li>
               ))}
             </ul>
-          )}
 
-          {!userId ? (
-            <p className="text-foreground/70 mt-4 text-sm">
-              <Link href="/login" className="text-primary hover:underline">
-                {dict.product.signInToReview}
-              </Link>
-            </p>
-          ) : isVerifiedBuyer || myReview ? (
-            <ReviewForm
-              productId={product.id}
-              slug={product.slug}
-              existing={myReview ? { rating: myReview.rating, comment: myReview.comment } : null}
-              dict={dict.product}
-            />
-          ) : (
-            <p className="text-foreground/70 mt-4 text-sm">{dict.product.verifiedPurchaseOnly}</p>
-          )}
-        </div>
-      </section>
+            {!userId ? (
+              <p className="text-foreground/70 mt-4 text-sm">
+                <Link href="/login" className="text-primary hover:underline">
+                  {dict.product.signInToReview}
+                </Link>
+              </p>
+            ) : isVerifiedBuyer || myReview ? (
+              <ReviewForm
+                productId={product.id}
+                slug={product.slug}
+                existing={myReview ? { rating: myReview.rating, comment: myReview.comment } : null}
+                dict={dict.product}
+              />
+            ) : (
+              <p className="text-foreground/70 mt-4 text-sm">{dict.product.verifiedPurchaseOnly}</p>
+            )}
+          </div>
+        </section>
+      )}
 
       <section className="shelf-section">
         <div className="shelf-wrap">
