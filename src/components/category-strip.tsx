@@ -1,17 +1,21 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { Children, useEffect, useRef, type ReactNode } from "react";
 
 // The home page's category list. On desktop it is a static 3-column grid and
 // nothing here does anything (checked via matchMedia, matching home.css's
 // own 47.99rem breakpoint). On phones it becomes a one-card-at-a-time
-// carousel that loops in both directions and advances by itself.
+// carousel that loops in both directions, advances by itself, and shows a
+// row of dots (one per category, the current one highlighted) so it reads
+// as "there's more, swipe" rather than a single static card.
 const AUTOPLAY_MS = 4500;
 const RESUME_AFTER_INTERACTION_MS = 6000;
 const MOBILE_QUERY = "(max-width: 47.99rem)";
 
 export function CategoryStrip({ children, className }: { children: ReactNode; className: string }) {
   const listRef = useRef<HTMLUListElement>(null);
+  const dotsRef = useRef<HTMLDivElement>(null);
+  const dotCount = Children.count(children);
 
   useEffect(() => {
     const list = listRef.current;
@@ -19,6 +23,14 @@ export function CategoryStrip({ children, className }: { children: ReactNode; cl
     const realCount = list.children.length;
     if (realCount < 2) return;
     if (!window.matchMedia(MOBILE_QUERY).matches) return;
+
+    const setActiveDot = (realIndex: number) => {
+      const dots = dotsRef.current?.children;
+      if (!dots) return;
+      for (let i = 0; i < dots.length; i++) {
+        dots[i].classList.toggle("is-active", i === realIndex);
+      }
+    };
 
     // Loop trick: clone the first and last card to the opposite ends. A
     // swipe (or autoplay step) that lands on a clone is instantly (no
@@ -38,9 +50,11 @@ export function CategoryStrip({ children, className }: { children: ReactNode; cl
     const cardLeft = (i: number) => (list.children[i] as HTMLElement).offsetLeft;
     let index = 1; // index 0 is now the cloned last card; 1 is the real first
     list.scrollLeft = cardLeft(index);
+    setActiveDot(0);
 
     const goTo = (nextIndex: number, smooth: boolean) => {
       index = nextIndex;
+      setActiveDot(index - 1);
       list.scrollTo({ left: cardLeft(index), behavior: smooth ? "smooth" : "instant" });
     };
 
@@ -66,6 +80,7 @@ export function CategoryStrip({ children, className }: { children: ReactNode; cl
           goTo(1, false); // on the cloned-first card -> jump to the real first
         } else {
           index = nearest;
+          setActiveDot(index - 1);
         }
       }, 120);
     };
@@ -111,8 +126,17 @@ export function CategoryStrip({ children, className }: { children: ReactNode; cl
   }, []);
 
   return (
-    <ul ref={listRef} className={className}>
-      {children}
-    </ul>
+    <>
+      <ul ref={listRef} className={className}>
+        {children}
+      </ul>
+      {dotCount > 1 && (
+        <div ref={dotsRef} className="category-dots sm:hidden" aria-hidden="true">
+          {Array.from({ length: dotCount }).map((_, i) => (
+            <span key={i} className={`category-dot ${i === 0 ? "is-active" : ""}`} />
+          ))}
+        </div>
+      )}
+    </>
   );
 }

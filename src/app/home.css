@@ -697,3 +697,28 @@
     transform: scale(0.96);
   }
 }
+
+/* Dot indicators under the mobile carousel (category-strip.tsx) — with only
+   one card visible at a time, there was nothing left on screen signalling
+   "there are more of these, swipe" the way the old peeking-neighbour layout
+   did. sm:hidden on the wrapping div (JSX) keeps this off the desktop grid,
+   so it doesn't need its own media-query guard here. */
+.category-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+.category-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--foreground) 22%, transparent);
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+.category-dot.is-active {
+  background: var(--color-primary);
+  transform: scale(1.35);
+}
