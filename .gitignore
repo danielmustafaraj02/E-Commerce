@@ -81,3 +81,4 @@ next-env.d.ts
 /scripts/finish-paypal-setup.sh
 /scripts/finish-payment-setup.sh
 /scripts/link-upstash-kv-vars.ts
+.neon
