@@ -167,13 +167,23 @@
 }
 
 /* Hero copy enters as a short staggered cascade alongside the bead settling
-   in (see .shelf-bead img below) — the text used to just appear all at
-   once, the only motion on the page being the necklace. Reuses the same
-   fade-up keyframe/pattern as .nav-link (globals.css); respects
-   prefers-reduced-motion through that file's blanket `*` rule, not a local
-   guard here. */
+   in (see .shelf-bead below) — the text used to just appear all at once,
+   the only motion on the page being the necklace. A back-out easing (rather
+   than plain ease) gives it a bit of a "rise and settle" pop instead of a
+   flat glide. Respects prefers-reduced-motion through globals.css's
+   blanket `*` rule, not a local guard here. */
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
 .shelf-hero-copy > * {
-  animation: fade-up 0.6s ease both;
+  animation: hero-rise 0.7s cubic-bezier(0.22, 1.12, 0.36, 1) both;
 }
 .shelf-hero-copy > *:nth-child(1) {
   animation-delay: 0ms;
@@ -201,10 +211,30 @@
   padding: 0.8rem 1.5rem;
   border-radius: 4px;
   text-decoration: none;
-  transition: background-color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    transform 0.15s ease;
 }
 .shelf-button:hover {
   background: var(--accent-deep);
+  transform: translateY(-2px);
+}
+/* A slow, subtle glow breathing on the CTA once it's landed — keeps a
+   little life in the hero after the entrance finishes, without being a
+   distracting flashing button. Starts after the entrance animation above
+   ends (260ms delay + 0.7s duration) so the two don't visually collide. */
+@keyframes button-glow {
+  from {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+  to {
+    box-shadow: 0 0 0.9rem 0.15rem color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+}
+.shelf-hero-copy .shelf-button {
+  animation:
+    hero-rise 0.7s cubic-bezier(0.22, 1.12, 0.36, 1) 260ms both,
+    button-glow 2.4s ease-in-out 1.1s infinite alternate;
 }
 .shelf-facts {
   display: flex;
@@ -242,6 +272,39 @@
   to {
     opacity: 1;
     transform: scale(1.24);
+  }
+}
+
+/* A single light-catching sweep across the glass once it's settled — on
+   theme (the copy itself says the beads "catturano la luce", catch the
+   light), and it plays once then fades out rather than looping, so it reads
+   as a moment, not a busy loading effect. Starts right as shelf-settle
+   above finishes (1.2s) so the two feel like one continuous motion. */
+.shelf-bead::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 42%,
+    color-mix(in srgb, white 70%, transparent) 50%,
+    transparent 58%
+  );
+  background-size: 300% 300%;
+  background-position: -100% -100%;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  opacity: 0;
+  animation: shelf-shimmer 1.3s ease-out 1.15s 1 both;
+}
+@keyframes shelf-shimmer {
+  from {
+    background-position: -100% -100%;
+    opacity: 1;
+  }
+  to {
+    background-position: 100% 100%;
+    opacity: 0;
   }
 }
 
