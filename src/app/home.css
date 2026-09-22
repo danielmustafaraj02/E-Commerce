@@ -655,6 +655,37 @@
 
 /* -- Phones ----------------------------------------------------------------------- */
 
+/* Dot indicators under the mobile carousel (category-strip.tsx) — with only
+   one card visible at a time, there was nothing left on screen signalling
+   "there are more of these, swipe" the way the old peeking-neighbour layout
+   did. display:none by default; the phones media query below overrides it
+   to flex — that override has to come AFTER this block in the file, since
+   two rules of equal specificity resolve by source order, and a later plain
+   rule beats an earlier one regardless of which media query is active.
+   (NOT a Tailwind sm:hidden on the element (JSX): this file's plain,
+   unlayered CSS always beats a Tailwind utility class too, regardless of
+   media query, since cascade layers rank below unlayered rules no matter
+   their specificity or source order.) */
+.category-dots {
+  display: none;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+.category-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--foreground) 22%, transparent);
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+.category-dot.is-active {
+  background: var(--color-primary);
+  transform: scale(1.35);
+}
+
 /* Categories become a one-at-a-time carousel: a single full-width card,
    swipeable, and looping in both directions (CategoryStrip.tsx clones the
    first/last card off-screen and silently re-centers on the real one once a
@@ -699,32 +730,4 @@
   .category-dots {
     display: flex;
   }
-}
-
-/* Dot indicators under the mobile carousel (category-strip.tsx) — with only
-   one card visible at a time, there was nothing left on screen signalling
-   "there are more of these, swipe" the way the old peeking-neighbour layout
-   did. display:none by default, flex only inside the same max-width:47.99rem
-   carousel breakpoint below — NOT a Tailwind sm:hidden on the element (JSX):
-   this file's plain, unlayered CSS always beats a Tailwind utility class
-   regardless of which media query is active, since cascade layers rank
-   below unlayered rules no matter their specificity or source order. */
-.category-dots {
-  display: none;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: 0.75rem;
-}
-.category-dot {
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--foreground) 22%, transparent);
-  transition:
-    background-color 0.2s ease,
-    transform 0.2s ease;
-}
-.category-dot.is-active {
-  background: var(--color-primary);
-  transform: scale(1.35);
 }
