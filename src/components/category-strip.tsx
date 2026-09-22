@@ -131,7 +131,7 @@ export function CategoryStrip({ children, className }: { children: ReactNode; cl
         {children}
       </ul>
       {dotCount > 1 && (
-        <div ref={dotsRef} className="category-dots sm:hidden" aria-hidden="true">
+        <div ref={dotsRef} className="category-dots" aria-hidden="true">
           {Array.from({ length: dotCount }).map((_, i) => (
             <span key={i} className={`category-dot ${i === 0 ? "is-active" : ""}`} />
           ))}

@@ -696,15 +696,21 @@
   .shelf-category:active .shelf-category-photo img {
     transform: scale(0.96);
   }
+  .category-dots {
+    display: flex;
+  }
 }
 
 /* Dot indicators under the mobile carousel (category-strip.tsx) — with only
    one card visible at a time, there was nothing left on screen signalling
    "there are more of these, swipe" the way the old peeking-neighbour layout
-   did. sm:hidden on the wrapping div (JSX) keeps this off the desktop grid,
-   so it doesn't need its own media-query guard here. */
+   did. display:none by default, flex only inside the same max-width:47.99rem
+   carousel breakpoint below — NOT a Tailwind sm:hidden on the element (JSX):
+   this file's plain, unlayered CSS always beats a Tailwind utility class
+   regardless of which media query is active, since cascade layers rank
+   below unlayered rules no matter their specificity or source order. */
 .category-dots {
-  display: flex;
+  display: none;
   justify-content: center;
   gap: 0.5rem;
   margin-top: 0.75rem;
