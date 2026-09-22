@@ -78,6 +78,7 @@ next-env.d.ts
 /scripts/send-test-emails.ts
 /scripts/set-stripe-credentials.ts
 /scripts/set-paypal-credentials.ts
+/scripts/set-google-credentials.ts
 /scripts/finish-paypal-setup.sh
 /scripts/finish-payment-setup.sh
 /scripts/link-upstash-kv-vars.ts
