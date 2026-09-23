@@ -14,11 +14,18 @@ export function TaskForm() {
       <input name="title" required placeholder="Title" maxLength={200} className="field" />
       <textarea
         name="description"
-        rows={2}
+        rows={6}
         placeholder="Details (optional) — what needs doing, why, and any context a future session would need"
-        maxLength={2000}
+        maxLength={10000}
         className="field"
       />
+      <label className="flex items-start gap-2 text-sm">
+        <input type="checkbox" name="forClaude" className="mt-0.5" />
+        <span>
+          Use as a prompt for Claude — a nightly run picks it up, opens a PR with the change and
+          writes what it did and what to check on the Bacheca below.
+        </span>
+      </label>
       <div className="flex gap-3">
         <select name="priority" defaultValue="medium" className="field flex-1">
           <option value="high">High priority</option>

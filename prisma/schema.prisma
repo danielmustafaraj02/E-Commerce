@@ -671,4 +671,11 @@ model ImprovementTask {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   completedAt DateTime?
+  // Picked up by the nightly "Roadmap tasks for Claude" routine through
+  // api/automation/roadmap/claim; the run writes what it changed and what to
+  // check into claudeReport (the "Bacheca" on Admin > Roadmap).
+  forClaude       Boolean   @default(false)
+  claudeClaimedAt DateTime?
+  claudeReport    String?
+  claudeReportAt  DateTime?
 }
