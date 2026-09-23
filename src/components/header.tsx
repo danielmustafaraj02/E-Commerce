@@ -8,6 +8,7 @@ import { MobileNavMenu } from "@/components/mobile-nav-menu";
 import type { Locale } from "@/lib/i18n/locale";
 import { localizedName } from "@/lib/product-i18n";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
+import { logoSrc } from "@/lib/store-settings";
 
 export async function Header({
   storeName,
@@ -54,7 +55,7 @@ export async function Header({
         <Link href="/" className="shrink-0 self-stretch flex items-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/logo.png"
+            src={logoSrc(logoUrl)}
             alt={storeName}
             className="h-20 w-auto object-contain sm:h-24"
           />

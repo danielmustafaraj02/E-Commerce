@@ -73,3 +73,9 @@ export const getStoreSettings = cache(async () => {
 export function ogImage(settings: Pick<StoreSettings, "ogImageUrl" | "logoUrl">) {
   return settings.ogImageUrl || settings.logoUrl || undefined;
 }
+
+// The header falls back to the bundled /public/logo.png whenever no admin
+// logo has been uploaded yet (e.g. before first setup, or if it's cleared).
+export function logoSrc(logoUrl: string | null) {
+  return logoUrl || "/logo.png";
+}
