@@ -48,15 +48,15 @@ export async function Header({
 
   return (
     <header className="glass-rule bg-background/90 relative z-40 backdrop-blur-sm sm:sticky sm:top-0">
-      <div className="mx-auto flex w-full max-w-7xl items-center gap-6 px-4 py-3 sm:py-4">
+      <div className="mx-auto flex w-full max-w-7xl items-center gap-6 px-4 py-1 sm:py-2">
 
         {/* ── Logo (far left) ───────────────────────────────────────────── */}
-        <Link href="/" className="shrink-0">
+        <Link href="/" className="shrink-0 self-stretch flex items-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/logo.png"
             alt={storeName}
-            className="h-14 w-auto object-contain"
+            className="h-20 w-auto object-contain sm:h-24"
           />
         </Link>
 
