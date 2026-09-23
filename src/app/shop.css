@@ -268,6 +268,34 @@
   gap: 0.5rem;
   overflow-x: auto;
 }
+
+/* Mobile-only: a native (no-JS) swipeable strip — each photo is a full
+   viewport-width snap point, so it behaves like a carousel with nothing to
+   keep in sync. Desktop uses the thumb rail + zoom above instead. This base
+   rule MUST come before the `@media (min-width: 40rem)` block below: it has
+   the same specificity as that block's `.shop-gallery-swipe { display: none }`
+   override, and for tied specificity, source order decides the winner —
+   putting the unconditional rule after the media query previously made
+   `display: flex` win at every width, override or not. This exact bug
+   already shipped once; if you touch this file, keep this one first. */
+.shop-gallery-swipe {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  margin-inline: -1.25rem;
+  padding-inline: 1.25rem;
+  scrollbar-width: none;
+}
+.shop-gallery-swipe::-webkit-scrollbar {
+  display: none;
+}
+.shop-gallery-swipe-item {
+  flex: none;
+  width: 100%;
+  scroll-snap-align: center;
+}
+
 @media (min-width: 40rem) {
   .shop-gallery-desktop {
     display: flex;
@@ -289,27 +317,6 @@
   .shop-gallery .shop-product-photo {
     aspect-ratio: 4 / 4.6;
   }
-}
-
-/* Mobile-only: a native (no-JS) swipeable strip — each photo is a full
-   viewport-width snap point, so it behaves like a carousel with nothing to
-   keep in sync. Desktop uses the thumb rail + zoom above instead. */
-.shop-gallery-swipe {
-  display: flex;
-  gap: 0.75rem;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  margin-inline: -1.25rem;
-  padding-inline: 1.25rem;
-  scrollbar-width: none;
-}
-.shop-gallery-swipe::-webkit-scrollbar {
-  display: none;
-}
-.shop-gallery-swipe-item {
-  flex: none;
-  width: 100%;
-  scroll-snap-align: center;
 }
 
 /* -- Value row / gift reassurance strip ----------------------------------------- */
