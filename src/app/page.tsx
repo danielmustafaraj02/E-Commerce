@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { getStoreSettings } from "@/lib/store-settings";
+import { getStoreSettings, ogImage } from "@/lib/store-settings";
 import { getHomepageData } from "@/lib/homepage-data";
-import { getLocale } from "@/lib/i18n/locale";
+import { getLocale, type Locale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { localizedName, localizedCardProduct } from "@/lib/product-i18n";
 import { formatMoney } from "@/lib/format";
 import { toSafeJsonLd } from "@/lib/json-ld";
 import { hreflangAlternates } from "@/lib/hreflang";
+import { fitTitle } from "@/lib/seo-text";
+import { truncateAtWord } from "@/lib/text";
 import { CatalogImage } from "@/components/catalog-image";
 import { ShelfItem } from "@/components/shelf-item";
 import { CategoryStrip } from "@/components/category-strip";
@@ -16,12 +18,57 @@ import { NewsletterSignupForm } from "@/components/newsletter-signup-form";
 import { homeFontClasses } from "./home-fonts";
 import "./home.css";
 
-// Title/description/OG come from the root layout; only the canonical and
-// hreflang set live here, so pages that don't define their own no longer
-// inherit "/" as their canonical URL.
-export const metadata: Metadata = {
-  alternates: { canonical: "/", languages: hreflangAlternates("/") },
-};
+// "Murano Glass Jewelry" in the locale's own words, same idea as the keyword
+// carried in products/[slug]/page.tsx and category/[slug]/page.tsx — the
+// homepage is the single highest-authority URL on the site, so it shouldn't
+// be the one page whose <title>/description fall through to the root
+// layout's bare store name and generic "Shop at {storeName}" default.
+export async function generateMetadata(): Promise<Metadata> {
+  const [settings, locale] = await Promise.all([getStoreSettings(), getLocale()]);
+  const dict = getDictionary(locale);
+
+  const titleCandidatesByLocale: Record<Locale, string[]> = {
+    en: ["Murano Glass Jewelry, Handmade in Venice, Italy", "Murano Glass Jewelry"],
+    it: ["Gioielli in Vetro di Murano, Fatti a Mano a Venezia", "Gioielli in Vetro di Murano"],
+    fr: ["Bijoux en Verre de Murano, Faits Main à Venise", "Bijoux en Verre de Murano"],
+    de: ["Muranoglas-Schmuck, Handgefertigt in Venedig", "Muranoglas-Schmuck"],
+    ar: ["مجوهرات زجاج مورانو، صناعة يدوية في البندقية", "مجوهرات زجاج مورانو"],
+    zh: ["穆拉诺玻璃珠宝，威尼斯手工制作", "穆拉诺玻璃珠宝"],
+    ru: ["Ювелирные изделия из муранского стекла, Венеция", "Муранское стекло"],
+    es: ["Joyería de Vidrio de Murano, Hecha a Mano en Venecia", "Joyería de Vidrio de Murano"],
+    pt: ["Joias em Vidro de Murano, Feitas à Mão em Veneza", "Joias em Vidro de Murano"],
+    hi: ["मुरानो ग्लास ज्वेलरी, वेनिस में हस्तनिर्मित", "मुरानो ग्लास ज्वेलरी"],
+    ja: ["ムラノガラスジュエリー、ヴェネツィアで手作り", "ムラノガラスジュエリー"],
+  };
+  const candidates = titleCandidatesByLocale[locale];
+  const title = fitTitle(candidates, settings.storeName);
+  // Admin-entered copy (Settings > SEO) wins when set; otherwise the hero
+  // subtitle is already keyword-rich, locale-translated marketing copy, so
+  // it makes a far better snippet than the layout's generic fallback.
+  const description = settings.metaDescription
+    ? settings.metaDescription
+    : truncateAtWord(dict.home.heroSubtitle, 155);
+  const image = ogImage(settings);
+  const canonical = "/";
+
+  return {
+    title,
+    description,
+    alternates: { canonical, languages: hreflangAlternates(canonical) },
+    openGraph: {
+      title: candidates[0],
+      description,
+      type: "website",
+      images: image ? [{ url: image }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: candidates[0],
+      description,
+      images: image ? [image] : undefined,
+    },
+  };
+}
 
 // The number of pieces shown per shelf: one row at the widest layout.
 const SHELF_SIZE = 4;
