@@ -8,8 +8,9 @@ import { ProductImageZoom } from "@/components/product-image-zoom";
 // JS-synced carousel: a thumb rail + zoomable active image on desktop
 // (mouse hover makes zoom meaningful), and a native scroll-snap swipe strip
 // on mobile (no JS, so nothing to keep in sync with a "selected" index that
-// touch scrolling would otherwise fight with). Tailwind's `sm:` (40rem)
-// matches the breakpoint the rest of this page's CSS already uses.
+// touch scrolling would otherwise fight with). Which one shows is decided
+// entirely by shop.css's .shop-gallery-desktop/.shop-gallery-swipe media
+// query, not Tailwind's hidden/sm:* utilities — see the comment there.
 export function ProductGallery({
   images,
   alt,
@@ -22,7 +23,7 @@ export function ProductGallery({
 
   return (
     <div className="shop-gallery">
-      <div className="hidden sm:flex sm:gap-4">
+      <div className="shop-gallery-desktop">
         {images.length > 1 && (
           <div className="shop-gallery-thumbs">
             {images.map((image, index) => (
@@ -48,7 +49,7 @@ export function ProductGallery({
         {active && <ProductImageZoom src={active.url} alt={alt} isLifestyle={active.isLifestyle} />}
       </div>
 
-      <div className="shop-gallery-swipe sm:hidden">
+      <div className="shop-gallery-swipe">
         {images.map((image) => (
           <div key={image.id} className="shop-product-photo shop-gallery-swipe-item">
             <CatalogImage

@@ -252,6 +252,16 @@
 
 /* -- Gallery (components/product-gallery.tsx) --------------------------------- */
 
+/* Two variants — desktop thumb rail + zoom, mobile swipe strip — toggled
+   entirely by this file's own media query rather than Tailwind's
+   hidden/sm:flex/sm:hidden utilities: this page's CSS loads in a route-level
+   chunk that can land after the shared Tailwind stylesheet in the cascade,
+   so an unconditional utility class of equal specificity isn't reliably
+   guaranteed to win. Keeping the show/hide logic self-contained here removes
+   that cross-stylesheet ordering dependency entirely. */
+.shop-gallery-desktop {
+  display: none;
+}
 .shop-gallery-thumbs {
   display: flex;
   flex: none;
@@ -259,6 +269,13 @@
   overflow-x: auto;
 }
 @media (min-width: 40rem) {
+  .shop-gallery-desktop {
+    display: flex;
+    gap: 1rem;
+  }
+  .shop-gallery-swipe {
+    display: none;
+  }
   .shop-gallery-thumbs {
     flex-direction: column;
     order: -1;
