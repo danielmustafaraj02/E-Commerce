@@ -222,6 +222,14 @@ export default async function AdminRoadmapPage({ searchParams }: PageProps<"/adm
                           {task.description}
                         </p>
                       ))}
+                    <details>
+                      <summary className="text-primary cursor-pointer text-sm hover:underline">
+                        Edit
+                      </summary>
+                      <div className="mt-3">
+                        <TaskForm task={task} />
+                      </div>
+                    </details>
                     <span className="text-foreground/40 text-xs">
                       Added {task.createdAt.toLocaleDateString()}
                       {claudeWorking &&

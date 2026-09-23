@@ -6,7 +6,7 @@ import { db } from "@/lib/db";
 // and posts its report back through api/automation/roadmap/report, which
 // shows up on the Bacheca in Admin > Roadmap.
 
-export const TASK_DETAILS_MAX = 10_000;
+export const TASK_DETAILS_MAX = 30_000;
 export const CLAUDE_REPORT_MAX = 20_000;
 
 // A run that crashed after claiming never reports back; after this long the

@@ -27,7 +27,12 @@ vi.mock("@/lib/db", () => ({
 vi.mock("@/lib/require-admin", () => ({ requireStaff: mocks.requireStaff }));
 vi.mock("@/lib/audit-log", () => ({ writeAuditLog: mocks.writeAuditLog }));
 
-import { askClaudeAgain, createImprovementTask, toggleClaudeTask } from "./actions";
+import {
+  askClaudeAgain,
+  createImprovementTask,
+  toggleClaudeTask,
+  updateImprovementTask,
+} from "./actions";
 
 const form = (fields: Record<string, string>) => {
   const data = new FormData();
@@ -66,14 +71,80 @@ describe("createImprovementTask", () => {
     expect(mocks.create.mock.calls[0][0].data.forClaude).toBe(false);
   });
 
-  it("rejects details over 10,000 characters", async () => {
+  it("rejects details over 30,000 characters", async () => {
     const result = await createImprovementTask(
       null,
-      form({ title: "x", description: "x".repeat(10_001), priority: "medium" })
+      form({ title: "x", description: "x".repeat(30_001), priority: "medium" })
     );
 
     expect(result).toHaveProperty("error");
     expect(mocks.create).not.toHaveBeenCalled();
+  });
+});
+
+describe("updateImprovementTask", () => {
+  it("checks staff access before touching the database", async () => {
+    mocks.requireStaff.mockRejectedValue(new Error("NEXT_REDIRECT"));
+
+    await expect(
+      updateImprovementTask("t1", null, form({ title: "x", priority: "low" }))
+    ).rejects.toThrow();
+
+    expect(mocks.findUnique).not.toHaveBeenCalled();
+    expect(mocks.update).not.toHaveBeenCalled();
+  });
+
+  it("saves the edited title, details, priority and Claude flag", async () => {
+    mocks.findUnique.mockResolvedValue({ id: "t1", forClaude: false });
+
+    await expect(
+      updateImprovementTask(
+        "t1",
+        null,
+        form({ title: "New title", description: "New details", priority: "high", forClaude: "on" })
+      )
+    ).rejects.toThrow("NEXT_REDIRECT");
+
+    expect(mocks.update).toHaveBeenCalledWith({
+      where: { id: "t1" },
+      data: { title: "New title", description: "New details", priority: "high", forClaude: true },
+    });
+  });
+
+  it("unticking 'for Claude' drops a pending claim and empty details become null", async () => {
+    mocks.findUnique.mockResolvedValue({ id: "t1", forClaude: true });
+
+    await expect(
+      updateImprovementTask("t1", null, form({ title: "T", description: "", priority: "low" }))
+    ).rejects.toThrow("NEXT_REDIRECT");
+
+    expect(mocks.update).toHaveBeenCalledWith({
+      where: { id: "t1" },
+      data: {
+        title: "T",
+        description: null,
+        priority: "low",
+        forClaude: false,
+        claudeClaimedAt: null,
+      },
+    });
+  });
+
+  it("returns an error instead of saving invalid input", async () => {
+    mocks.findUnique.mockResolvedValue({ id: "t1", forClaude: false });
+
+    const result = await updateImprovementTask("t1", null, form({ title: "", priority: "low" }));
+
+    expect(result).toHaveProperty("error");
+    expect(mocks.update).not.toHaveBeenCalled();
+  });
+
+  it("returns an error when the task was deleted meanwhile", async () => {
+    mocks.findUnique.mockResolvedValue(null);
+
+    const result = await updateImprovementTask("t1", null, form({ title: "x", priority: "low" }));
+
+    expect(result).toEqual({ error: "This task no longer exists" });
   });
 });
 
@@ -142,6 +213,19 @@ describe("askClaudeAgain", () => {
         claudeReportAt: null,
       },
     });
+  });
+
+  it("copies at most 4,000 characters of the previous report", async () => {
+    mocks.findUnique.mockResolvedValue({
+      id: "t1",
+      description: "Task",
+      claudeReport: "r".repeat(10_000),
+    });
+
+    await expect(askClaudeAgain("t1", form({}))).rejects.toThrow("NEXT_REDIRECT");
+
+    const description: string = mocks.update.mock.calls[0][0].data.description;
+    expect(description.match(/r+$/)?.[0].length).toBe(4_000);
   });
 
   it("keeps the details unchanged when there is no report and no feedback", async () => {
