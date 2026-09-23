@@ -3,6 +3,13 @@ import { requireStaff } from "@/lib/require-admin";
 import { AdminShell } from "@/components/admin-nav";
 import { buildAdminSections } from "@/lib/admin-nav";
 import { db } from "@/lib/db";
+import { noIndexMetadata } from "@/lib/seo";
+
+// Every other private/account-scoped route (cart, checkout, account, login,
+// ...) sets this; /admin is robots.txt-disallowed too, but that only blocks
+// crawling — it doesn't stop Google from indexing the bare URL if it's ever
+// linked from somewhere else. This is the belt to that suspenders.
+export const metadata = noIndexMetadata;
 
 // Rolling 24h window rather than a per-admin "last seen" marker — no schema
 // change or per-user read state needed, at the cost of the badge not being
