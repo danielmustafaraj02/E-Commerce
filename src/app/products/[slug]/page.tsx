@@ -39,31 +39,10 @@ import { StarRating } from "@/components/star-rating";
 import { ReviewForm } from "./review-form";
 import { hasPurchased } from "./review-actions";
 
-// Small single-use icons for the shipping banner / gift sections below —
-// same stroke convention (1.8, round caps/joins, currentColor) as the
-// existing icons in components/trust-badges.tsx, kept local since nothing
-// else on the site needs them yet.
-function TruckIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="shrink-0"
-      aria-hidden="true"
-    >
-      <rect x="1" y="6" width="13" height="10" rx="1.5" />
-      <path d="M14 10h4l3 3v3h-7z" />
-      <circle cx="6" cy="18.5" r="1.8" />
-      <circle cx="17.5" cy="18.5" r="1.8" />
-    </svg>
-  );
-}
+// Small single-use icons for the gift sections below — same stroke
+// convention (1.8, round caps/joins, currentColor) as the existing icons in
+// components/trust-badges.tsx, kept local since nothing else on the site
+// needs them yet.
 function GiftIcon() {
   return (
     <svg
@@ -389,11 +368,6 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: toSafeJsonLd(breadcrumbJsonLd) }}
       />
-      <div className="shop-shipping-banner">
-        <TruckIcon />
-        {dict.product.shippingBanner}
-      </div>
-
       <section className="shelf-section shop-product">
         <div className="shelf-wrap">
           {product.category && (
