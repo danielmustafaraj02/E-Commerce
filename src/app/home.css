@@ -205,18 +205,27 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--accent);
+  /* Scoped to this one CTA (not the shared --accent token) so the rest of
+     the site's purple — borders, focus rings, links, other buttons — is
+     untouched. A muted, premium purple rather than the brighter --accent. */
+  --cta: #70458f;
+  --cta-deep: #5e3978;
+  background: var(--cta);
   color: #fff;
   font-weight: 600;
-  padding: 0.8rem 1.5rem;
-  border-radius: 4px;
+  font-size: 1.05rem;
+  letter-spacing: 0.015em;
+  padding: 0.95rem 2.25rem;
+  border-radius: 5px;
   text-decoration: none;
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--cta) 32%, transparent);
   transition:
     background-color 0.15s ease,
-    transform 0.15s ease;
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
 }
 .shelf-button:hover {
-  background: var(--accent-deep);
+  background: var(--cta-deep);
   transform: translateY(-2px);
 }
 /* A slow, subtle glow breathing on the CTA once it's landed — keeps a
@@ -225,10 +234,10 @@
    ends (260ms delay + 0.7s duration) so the two don't visually collide. */
 @keyframes button-glow {
   from {
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 35%, transparent);
+    box-shadow: 0 4px 14px color-mix(in srgb, var(--cta) 32%, transparent);
   }
   to {
-    box-shadow: 0 0 0.9rem 0.15rem color-mix(in srgb, var(--accent) 35%, transparent);
+    box-shadow: 0 0 1.1rem 0.2rem color-mix(in srgb, var(--cta) 42%, transparent);
   }
 }
 .shelf-hero-copy .shelf-button {
