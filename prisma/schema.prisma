@@ -251,6 +251,12 @@ model Product {
   descriptionPt     String?
   descriptionHi     String?
   descriptionJa     String?
+  // Persuasive "why this piece" copy shown as its own section on the product
+  // page (uniqueness, gift framing, handmade-in-Murano heritage) — separate
+  // from `description` above. English-only translation for now, same
+  // one-locale-at-a-time rollout as name/description originally had.
+  story             String   @default("")
+  storyEn           String?
   price             Int // cents, tax-inclusive display price (see StoreSettings.pricesIncludeTax)
   currency          String   @default("EUR")
   sku               String   @unique

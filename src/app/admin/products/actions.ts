@@ -35,6 +35,8 @@ const productSchema = z.object({
   descriptionPt: z.string().max(5000).optional(),
   descriptionHi: z.string().max(5000).optional(),
   descriptionJa: z.string().max(5000).optional(),
+  story: z.string().max(2000).optional(),
+  storyEn: z.string().max(2000).optional(),
   price: z.coerce.number().nonnegative(),
   sku: z.string().min(1).max(100),
   stockQty: z.coerce.number().int().nonnegative(),
@@ -88,6 +90,8 @@ function parseProductForm(formData: FormData) {
     descriptionPt: formData.get("descriptionPt") || undefined,
     descriptionHi: formData.get("descriptionHi") || undefined,
     descriptionJa: formData.get("descriptionJa") || undefined,
+    story: formData.get("story") || undefined,
+    storyEn: formData.get("storyEn") || undefined,
     price: formData.get("price"),
     sku: formData.get("sku"),
     stockQty: formData.get("stockQty"),
@@ -178,6 +182,8 @@ export async function updateProduct(productId: string, _prevState: unknown, form
     descriptionPt,
     descriptionHi,
     descriptionJa,
+    story,
+    storyEn,
     ...fields
   } = parsed.data;
   const images = parseImageUrls(imageUrls);
@@ -217,6 +223,8 @@ export async function updateProduct(productId: string, _prevState: unknown, form
         descriptionPt: descriptionPt ?? null,
         descriptionHi: descriptionHi ?? null,
         descriptionJa: descriptionJa ?? null,
+        story: story ?? "",
+        storyEn: storyEn ?? null,
         images: {
           deleteMany: {},
           create: images.map((img, position) => ({

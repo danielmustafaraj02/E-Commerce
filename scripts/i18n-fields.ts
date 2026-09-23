@@ -27,6 +27,10 @@ export type ManifestEntry = {
   category: string;
   name: string;
   description: string;
+  // "Why this piece" gift/story copy (see prisma/schema.prisma Product.story).
+  // English-only translation so far, unlike name/description above.
+  story?: string;
+  storyEn?: string;
 } & { [K in NameKey | DescriptionKey]?: string };
 
 export type ProductTranslationData = { [K in NameKey | DescriptionKey]?: string };

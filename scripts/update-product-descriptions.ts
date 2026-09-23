@@ -1,6 +1,7 @@
 /**
- * Updates the name/description fields of every existing Murano product in
- * the database to match the current scripts/murano-manifest.json.
+ * Updates the name/description/story fields of every existing Murano product
+ * in the database to match the current scripts/murano-manifest.json — this
+ * includes the "why this piece" gift/story copy shown on the product page.
  *
  * Safe to re-run: only touches products whose slug matches a manifest entry.
  * Does NOT create new products — use seed-murano-catalog.ts for that.
@@ -57,6 +58,8 @@ async function main() {
       console.log(`[dry-run] would update "${product.name}" -> "${entry.name}"`);
       console.log(`  IT: ${entry.description.slice(0, 80)}…`);
       console.log(`  EN: ${entry.descriptionEn?.slice(0, 80)}…`);
+      console.log(`  Story IT: ${entry.story?.slice(0, 80) ?? "(none)"}…`);
+      console.log(`  Story EN: ${entry.storyEn?.slice(0, 80) ?? "(none)"}…`);
       updated++;
       continue;
     }
@@ -66,6 +69,8 @@ async function main() {
       data: {
         name: entry.name,
         description: entry.description,
+        story: entry.story ?? "",
+        storyEn: entry.storyEn,
         ...productTranslations(entry),
       },
     });

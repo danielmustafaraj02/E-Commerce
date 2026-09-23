@@ -19,6 +19,7 @@ import { applyTemplate } from "@/lib/i18n/format";
 import {
   localizedName,
   localizedDescription,
+  localizedStory,
   localizedCardProduct,
   productImageAlt,
 } from "@/lib/product-i18n";
@@ -147,6 +148,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
   const dict = getDictionary(uiLocale);
   const name = localizedName(product, uiLocale);
   const description = localizedDescription(product, uiLocale);
+  const story = localizedStory(product, uiLocale);
   const categoryName = product.category ? localizedName(product.category, uiLocale) : null;
 
   // Queried separately (not just found in product.reviews) since that list
@@ -450,6 +452,15 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
             ) : (
               <p className="text-foreground/70 mt-4 text-sm">{dict.product.verifiedPurchaseOnly}</p>
             )}
+          </div>
+        </section>
+      )}
+
+      {story && (
+        <section className="shelf-section">
+          <div className="shelf-wrap">
+            <h2 className="shelf-heading">{dict.product.storyTitle}</h2>
+            <p className="text-foreground/80 max-w-2xl text-base leading-relaxed">{story}</p>
           </div>
         </section>
       )}

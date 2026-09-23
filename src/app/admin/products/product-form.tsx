@@ -30,6 +30,8 @@ export type ProductFormValues = {
   descriptionPt: string | null;
   descriptionHi: string | null;
   descriptionJa: string | null;
+  story: string;
+  storyEn: string | null;
   price: number; // cents
   sku: string;
   stockQty: number;
@@ -294,6 +296,22 @@ export function ProductForm({
         <span className="text-foreground/60 text-xs">
           Shown to visitors browsing in Japanese. Falls back to the English description, then the
           Italian one, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Why this piece is special (Italian)</span>
+        <textarea name="story" rows={4} defaultValue={initial?.story} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown as its own section on the product page, before the FAQ — uniqueness, gift framing,
+          and the handmade-in-Murano story, separate from the plain description above.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Why this piece is special (English)</span>
+        <textarea name="storyEn" rows={4} defaultValue={initial?.storyEn ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in English. Falls back to the Italian text above if left blank.
+          Other languages aren&apos;t translated yet, so they also fall back to this.
         </span>
       </label>
       <div className="flex gap-3">
