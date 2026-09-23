@@ -1,9 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const mocks = vi.hoisted(() => ({ settings: vi.fn(), products: vi.fn() }));
+const mocks = vi.hoisted(() => ({ settings: vi.fn(), products: vi.fn(), rateLimit: vi.fn() }));
 
 vi.mock("@/lib/store-settings", () => ({ getStoreSettings: mocks.settings }));
 vi.mock("@/lib/db", () => ({ db: { product: { findMany: mocks.products } } }));
+vi.mock("@/lib/rate-limit", () => ({
+  rateLimit: mocks.rateLimit,
+  clientIp: () => "203.0.113.1",
+}));
 
 import { GET } from "./route";
 
@@ -40,9 +44,19 @@ beforeEach(() => {
     siteUrl: "https://shop.test",
   });
   mocks.products.mockResolvedValue([product()]);
+  mocks.rateLimit.mockResolvedValue({ success: true, remaining: 19 });
 });
 
 describe("Google Merchant feed", () => {
+  it("rejects requests once the caller is over the rate limit", async () => {
+    mocks.rateLimit.mockResolvedValue({ success: false, remaining: 0 });
+
+    const res = await GET(new Request("https://shop.test/api/feeds/google-merchant"));
+
+    expect(res.status).toBe(429);
+    expect(mocks.products).not.toHaveBeenCalled();
+  });
+
   it("gives each item a descriptive title, not just the product name", async () => {
     expect(await feed()).toContain(
       "<title>Sage &amp; Gold Wrap Bracelet – Handmade Murano Glass Jewelry</title>"
