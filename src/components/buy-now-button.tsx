@@ -12,6 +12,8 @@ import { useCartStore } from "@/lib/cart-store";
 export function BuyNowButton({
   product,
   label,
+  quantity = 1,
+  className = "",
 }: {
   product: {
     id: string;
@@ -23,6 +25,8 @@ export function BuyNowButton({
     outOfStock: boolean;
   };
   label: string;
+  quantity?: number;
+  className?: string;
 }) {
   const addItem = useCartStore((state) => state.addItem);
   const router = useRouter();
@@ -34,17 +38,20 @@ export function BuyNowButton({
       disabled={product.outOfStock || pending}
       onClick={() => {
         setPending(true);
-        addItem({
-          productId: product.id,
-          slug: product.slug,
-          name: product.name,
-          price: product.price,
-          currency: product.currency,
-          imageUrl: product.imageUrl,
-        });
+        addItem(
+          {
+            productId: product.id,
+            slug: product.slug,
+            name: product.name,
+            price: product.price,
+            currency: product.currency,
+            imageUrl: product.imageUrl,
+          },
+          quantity
+        );
         router.push("/checkout");
       }}
-      className="btn-secondary ms-3 mt-6 transition-transform duration-150 will-change-transform active:scale-95 max-sm:ms-0 max-sm:mt-3 max-sm:w-full max-sm:py-3"
+      className={`btn-secondary transition-transform duration-150 will-change-transform active:scale-95 max-sm:w-full max-sm:py-3 ${className}`}
     >
       {label}
     </button>

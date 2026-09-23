@@ -26,9 +26,7 @@ import {
 } from "@/lib/product-i18n";
 import { buildProductMetaDescription, fitTitle } from "@/lib/seo-text";
 import { hreflangAlternates, ogLocale } from "@/lib/hreflang";
-import { AddToCartButton } from "@/components/add-to-cart-button";
-import { BuyNowButton } from "@/components/buy-now-button";
-import { WishlistButton } from "@/components/wishlist-button";
+import { ProductPurchasePanel } from "@/components/product-purchase-panel";
 import { ShareButtons } from "@/components/share-buttons";
 import { ShelfItem } from "@/components/shelf-item";
 import { homeFontClasses } from "@/app/home-fonts";
@@ -281,6 +279,19 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
 
   const material = productMaterial(product.category);
   const sizeKey = productSizeDictKey(product.category);
+  const priceDisplay = formatMoney(product.price, product.currency, settings.defaultLocale);
+
+  // The same shape AddToCartButton/BuyNowButton/WishlistButton each need —
+  // computed once instead of three identical object literals.
+  const cartProduct = {
+    id: product.id,
+    slug: product.slug,
+    name,
+    price: product.price,
+    currency: product.currency,
+    imageUrl: product.images[0]?.url ?? null,
+    outOfStock,
+  };
 
   const productJsonLd = {
     "@context": "https://schema.org",
@@ -391,7 +402,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
               </p>
 
               <p className="shop-price">
-                {formatMoney(product.price, product.currency, settings.defaultLocale)}
+                {priceDisplay}
                 {settings.pricesIncludeTax && (
                   <span className="text-foreground/60 ml-2 text-sm">
                     {dict.product.vatIncluded}
@@ -445,7 +456,10 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                 </p>
               )}
 
-              <p className="shop-prose">{description}</p>
+              {/* Clamped to a short teaser here — the full text is still in
+                  the DOM (fine for SEO/screen readers) and fully visible
+                  further down in "The story behind this piece". */}
+              <p className="shop-prose line-clamp-3">{description}</p>
 
               {/* True of every piece in the catalog, not per-product copy. */}
               <ul className="border-foreground/10 text-foreground/70 mt-4 flex flex-col gap-1.5 border-t pt-4 text-sm">
@@ -468,46 +482,24 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                 </span>
               </div>
 
-              <AddToCartButton
-                product={{
-                  id: product.id,
+              <ProductPurchasePanel
+                product={cartProduct}
+                priceDisplay={priceDisplay}
+                dict={dict.product}
+                cartDict={dict.cart}
+                showBuyNow={Boolean(userId) && !outOfStock}
+                wishlist={{
+                  productId: product.id,
                   slug: product.slug,
                   name,
                   price: product.price,
                   currency: product.currency,
                   imageUrl: product.images[0]?.url ?? null,
-                  outOfStock,
+                  initialSaved: Boolean(wishlistItem),
+                  isSignedIn: Boolean(userId),
+                  addLabel: dict.product.addToWishlist,
+                  removeLabel: dict.product.removeFromWishlist,
                 }}
-                dict={dict.product}
-                className="shop-cta-teal"
-              />
-
-              {userId && !outOfStock && (
-                <BuyNowButton
-                  product={{
-                    id: product.id,
-                    slug: product.slug,
-                    name,
-                    price: product.price,
-                    currency: product.currency,
-                    imageUrl: product.images[0]?.url ?? null,
-                    outOfStock,
-                  }}
-                  label={dict.product.buyNow}
-                />
-              )}
-
-              <WishlistButton
-                productId={product.id}
-                slug={product.slug}
-                name={name}
-                price={product.price}
-                currency={product.currency}
-                imageUrl={product.images[0]?.url ?? null}
-                initialSaved={Boolean(wishlistItem)}
-                isSignedIn={Boolean(userId)}
-                addLabel={dict.product.addToWishlist}
-                removeLabel={dict.product.removeFromWishlist}
               />
 
               <TrustBadges trustBadgeText={settings.trustBadgeText} dict={dict.product} />

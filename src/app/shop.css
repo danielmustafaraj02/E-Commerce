@@ -843,3 +843,58 @@
 .shop-copy p:last-child {
   margin-bottom: 0;
 }
+
+/* -- Sticky mobile Add to Cart bar (components/product-purchase-panel.tsx) --- */
+
+/* Mobile only, and only once the inline Add to Cart button has scrolled out
+   of view — ProductPurchasePanel toggles .shop-sticky-cta--visible via an
+   IntersectionObserver. The desktop media query hides it unconditionally
+   regardless of that class, for the same cross-stylesheet cascade-order
+   reason documented on .shop-gallery-desktop above: a component-owned CSS
+   toggle, not a Tailwind hidden/sm:* utility, since this page's CSS chunk
+   can load after the shared Tailwind stylesheet in the cascade. */
+.shop-sticky-cta {
+  display: none;
+}
+.shop-sticky-cta--visible {
+  display: block;
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 40;
+  background: var(--ground);
+  border-top: 1px solid var(--rule);
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+  padding-block: 0.75rem;
+  padding-inline: 1.25rem;
+  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+}
+.shop-sticky-cta-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 30rem;
+  margin-inline: auto;
+}
+.shop-sticky-cta-price {
+  color: var(--ink);
+  font-size: 1.05rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.shop-sticky-cta .btn-primary {
+  /* Higher specificity (0,2,0) than the button's own max-sm:w-full (0,1,0)
+     utility, so this reliably wins regardless of stylesheet load order —
+     the button fills the row via flex, not via width:100%, so it shares
+     space with the price beside it instead of forcing it onto its own line. */
+  width: auto;
+  margin: 0;
+  flex: 1;
+}
+@media (min-width: 40rem) {
+  .shop-sticky-cta,
+  .shop-sticky-cta--visible {
+    display: none;
+  }
+}

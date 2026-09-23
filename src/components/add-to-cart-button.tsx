@@ -7,6 +7,7 @@ import type { Dictionary } from "@/lib/i18n/dictionaries";
 export function AddToCartButton({
   product,
   dict,
+  quantity = 1,
   className = "",
 }: {
   product: {
@@ -19,6 +20,7 @@ export function AddToCartButton({
     outOfStock: boolean;
   };
   dict: Dictionary["product"];
+  quantity?: number;
   className?: string;
 }) {
   const addItem = useCartStore((state) => state.addItem);
@@ -29,18 +31,21 @@ export function AddToCartButton({
       type="button"
       disabled={product.outOfStock}
       onClick={() => {
-        addItem({
-          productId: product.id,
-          slug: product.slug,
-          name: product.name,
-          price: product.price,
-          currency: product.currency,
-          imageUrl: product.imageUrl,
-        });
+        addItem(
+          {
+            productId: product.id,
+            slug: product.slug,
+            name: product.name,
+            price: product.price,
+            currency: product.currency,
+            imageUrl: product.imageUrl,
+          },
+          quantity
+        );
         setAdded(true);
         setTimeout(() => setAdded(false), 1500);
       }}
-      className={`btn-primary mt-6 transition-transform duration-150 will-change-transform active:scale-95 max-sm:w-full max-sm:py-3 ${className}`}
+      className={`btn-primary transition-transform duration-150 will-change-transform active:scale-95 max-sm:w-full max-sm:py-3 ${className}`}
     >
       <span key={added ? "added" : "idle"} className="animate-pop-in inline-block">
         {product.outOfStock ? dict.outOfStock : added ? `✓ ${dict.added}` : dict.addToCart}
