@@ -905,3 +905,19 @@
     display: none;
   }
 }
+
+/* The bar is fixed, so once a shopper reaches the true bottom of the page
+   it would otherwise sit permanently over the last ~70px of the footer with
+   no way to scroll past it. Reserving that space up front (rather than
+   toggling it with .shop-sticky-cta--visible) means the page never shifts
+   as the bar shows/hides while scrolling — only the amount of blank space
+   at the very end changes. :has() scopes it to pages that render the bar
+   at all, so every other page's footer is untouched. */
+body:has(.shop-sticky-cta) footer {
+  padding-bottom: calc(4.75rem + env(safe-area-inset-bottom, 0px));
+}
+@media (min-width: 40rem) {
+  body:has(.shop-sticky-cta) footer {
+    padding-bottom: 0;
+  }
+}
