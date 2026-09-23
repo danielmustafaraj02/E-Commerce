@@ -335,12 +335,16 @@ model Fulfillment {
 }
 
 model ProductImage {
-  id        String  @id @default(cuid())
-  productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  url       String
-  altText   String  @default("")
-  position  Int     @default(0)
+  id          String  @id @default(cuid())
+  productId   String
+  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url         String
+  altText     String  @default("")
+  position    Int     @default(0)
+  // On-model/lifestyle photos aren't shot on a plain white background, so the
+  // catalog's multiply-blend + edge-feather treatment (src/app/shop.css) reads
+  // as a white halo on them. This opts a single image out of that treatment.
+  isLifestyle Boolean @default(false)
 
   @@index([productId, position])
 }

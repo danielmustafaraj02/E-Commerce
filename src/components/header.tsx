@@ -48,7 +48,7 @@ export async function Header({
 
   return (
     <header className="glass-rule bg-background/90 relative z-40 backdrop-blur-sm sm:sticky sm:top-0">
-      <div className="mx-auto flex w-full max-w-7xl items-center gap-6 px-4 py-1 sm:py-2">
+      <div className="mx-auto flex w-full max-w-7xl items-center gap-6 px-4 py-2 sm:py-2">
 
         {/* ── Logo (far left) ───────────────────────────────────────────── */}
         <Link href="/" className="shrink-0 self-stretch flex items-center">
@@ -56,7 +56,7 @@ export async function Header({
           <img
             src="/logo.png"
             alt={storeName}
-            className="h-20 w-auto object-contain sm:h-24"
+            className="h-12 w-auto object-contain sm:h-14"
           />
         </Link>
 

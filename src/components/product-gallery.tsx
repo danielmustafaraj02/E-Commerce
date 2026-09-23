@@ -8,7 +8,7 @@ export function ProductGallery({
   images,
   alt,
 }: {
-  images: { id: string; url: string }[];
+  images: { id: string; url: string; isLifestyle?: boolean }[];
   alt: string;
 }) {
   const [selected, setSelected] = useState(0);
@@ -16,7 +16,7 @@ export function ProductGallery({
 
   return (
     <div className="flex flex-col gap-3">
-      {active && <ProductImageZoom src={active.url} alt={alt} />}
+      {active && <ProductImageZoom src={active.url} alt={alt} isLifestyle={active.isLifestyle} />}
       {images.length > 1 && (
         <div className="flex gap-2">
           {images.map((image, index) => (
@@ -28,7 +28,13 @@ export function ProductGallery({
               aria-current={index === selected}
               className={`shop-thumb ${index === selected ? "shop-thumb--active" : ""}`}
             >
-              <CatalogImage src={image.url} alt="" fill sizes="64px" />
+              <CatalogImage
+                src={image.url}
+                alt=""
+                fill
+                sizes="64px"
+                className={image.isLifestyle ? "shop-photo--lifestyle" : undefined}
+              />
             </button>
           ))}
         </div>

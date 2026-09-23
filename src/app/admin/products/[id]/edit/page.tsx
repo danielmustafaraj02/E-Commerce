@@ -56,7 +56,9 @@ export default async function EditProductPage({ params }: PageProps<"/admin/prod
           lowStockThreshold: product.lowStockThreshold,
           categoryId: product.categoryId,
           active: product.active,
-          imageUrls: product.images.map((image) => image.url).join("\n"),
+          imageUrls: product.images
+            .map((image) => (image.isLifestyle ? `${image.url} lifestyle` : image.url))
+            .join("\n"),
           trackInventory: product.trackInventory,
           supplierId: product.supplierId,
           supplierSku: product.supplierSku,

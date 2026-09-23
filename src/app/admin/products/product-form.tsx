@@ -124,8 +124,8 @@ export function ProductForm({
         <span className="font-medium">Name (Portuguese)</span>
         <input name="namePt" defaultValue={initial?.namePt ?? ""} className="field" />
         <span className="text-foreground/60 text-xs">
-          Shown to visitors browsing in Portuguese. Falls back to the English name, then the
-          Italian name, if left blank.
+          Shown to visitors browsing in Portuguese. Falls back to the English name, then the Italian
+          name, if left blank.
         </span>
       </label>
       <label className="flex flex-col gap-1.5 text-sm">
@@ -173,9 +173,9 @@ export function ProductForm({
           className="field"
         />
         <span className="text-foreground/60 text-xs">
-          Shown to visitors browsing in English. Falls back to the Italian description if left
-          blank — but an English visitor reading untranslated Italian copy is a worse experience
-          than a shorter English one, so it&apos;s worth filling in.
+          Shown to visitors browsing in English. Falls back to the Italian description if left blank
+          — but an English visitor reading untranslated Italian copy is a worse experience than a
+          shorter English one, so it&apos;s worth filling in.
         </span>
       </label>
       <label className="flex flex-col gap-1.5 text-sm">
@@ -266,8 +266,8 @@ export function ProductForm({
           className="field"
         />
         <span className="text-foreground/60 text-xs">
-          Shown to visitors browsing in Portuguese. Falls back to the English description, then
-          the Italian one, if left blank.
+          Shown to visitors browsing in Portuguese. Falls back to the English description, then the
+          Italian one, if left blank.
         </span>
       </label>
       <label className="flex flex-col gap-1.5 text-sm">
@@ -417,6 +417,11 @@ export function ProductForm({
           placeholder="https://..."
           className="field font-mono text-xs"
         />
+        <span className="text-foreground/60 text-xs">
+          Add <code>lifestyle</code> after a URL (e.g. <code>https://... lifestyle</code>) for
+          on-model/lifestyle photos — it skips the white-background blend that otherwise shows as a
+          white halo around them.
+        </span>
       </label>
       <label className="flex cursor-pointer items-center gap-2 text-sm">
         <input

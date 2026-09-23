@@ -219,6 +219,18 @@
   mask-composite: intersect;
 }
 
+/* On-model/lifestyle photos aren't shot on a plain white background, so the
+   multiply blend + edge feather above (built for white-background studio
+   shots) reads as a white halo on them instead of disappearing seamlessly.
+   ProductImage.isLifestyle opts a photo out of that treatment. */
+.shop-product-photo img.shop-photo--lifestyle,
+.shop-thumb img.shop-photo--lifestyle {
+  mix-blend-mode: normal;
+  filter: none;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
 .shop-product-title {
   font-size: clamp(2rem, 4.6vw, 2.9rem);
   overflow-wrap: anywhere;

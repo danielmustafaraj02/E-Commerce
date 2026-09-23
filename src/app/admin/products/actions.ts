@@ -49,11 +49,18 @@ const productSchema = z.object({
   costPrice: z.coerce.number().nonnegative().optional(),
 });
 
+// Each line is a URL, optionally followed by whitespace and the literal
+// marker "lifestyle" for on-model photos that should skip the catalog's
+// white-background blend treatment (see ProductImage.isLifestyle).
 function parseImageUrls(raw: string | undefined) {
   return (raw ?? "")
     .split("\n")
     .map((line) => line.trim())
-    .filter(Boolean);
+    .filter(Boolean)
+    .map((line) => {
+      const [url, marker] = line.split(/\s+/);
+      return { url, isLifestyle: marker?.toLowerCase() === "lifestyle" };
+    });
 }
 
 function parseProductForm(formData: FormData) {
@@ -112,7 +119,12 @@ export async function createProduct(_prevState: unknown, formData: FormData) {
         price: Math.round(price * 100),
         costPrice: costPrice !== undefined ? Math.round(costPrice * 100) : undefined,
         images: {
-          create: images.map((url, position) => ({ url, altText: fields.name, position })),
+          create: images.map((img, position) => ({
+            url: img.url,
+            altText: fields.name,
+            position,
+            isLifestyle: img.isLifestyle,
+          })),
         },
       },
     });
@@ -207,7 +219,12 @@ export async function updateProduct(productId: string, _prevState: unknown, form
         descriptionJa: descriptionJa ?? null,
         images: {
           deleteMany: {},
-          create: images.map((url, position) => ({ url, altText: fields.name, position })),
+          create: images.map((img, position) => ({
+            url: img.url,
+            altText: fields.name,
+            position,
+            isLifestyle: img.isLifestyle,
+          })),
         },
       },
     });
