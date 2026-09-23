@@ -30,6 +30,25 @@
   background: color-mix(in srgb, var(--accent-deep) 85%, black);
 }
 
+/* Just the product page's Add to Cart button (.shop-cta-teal, passed via
+   AddToCartButton's className prop) — deliberately teal (--ink, the same
+   dark teal already used for every heading) rather than the violet accent
+   above, so it isn't lost against the accent-colored wishlist heart/links
+   right next to it. Every other .btn-primary on `.shelf` pages (quick-add,
+   login, newsletter) is untouched. */
+.shelf .btn-primary.shop-cta-teal {
+  background: var(--ink);
+}
+.shelf .btn-primary.shop-cta-teal:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--ink) 86%, black);
+  box-shadow:
+    0 8px 18px -8px color-mix(in srgb, var(--ink) 70%, transparent),
+    inset 0 1px 0 color-mix(in srgb, white 14%, transparent);
+}
+.shelf .btn-primary.shop-cta-teal:active:not(:disabled) {
+  background: color-mix(in srgb, var(--ink) 74%, black);
+}
+
 /* -- Page header band ------------------------------------------------------- */
 
 .shop-head {
@@ -229,6 +248,184 @@
   filter: none;
   -webkit-mask-image: none;
   mask-image: none;
+}
+
+/* -- Gallery (components/product-gallery.tsx) --------------------------------- */
+
+.shop-gallery-thumbs {
+  display: flex;
+  flex: none;
+  gap: 0.5rem;
+  overflow-x: auto;
+}
+@media (min-width: 40rem) {
+  .shop-gallery-thumbs {
+    flex-direction: column;
+    order: -1;
+    overflow-x: visible;
+    overflow-y: auto;
+    max-height: 40rem;
+  }
+  /* More presence for the main photo now that it isn't sharing the row with
+     a thumb strip underneath it — the grid column itself (.shop-product-grid)
+     already gives it the space; this just lets it use all of it. */
+  .shop-gallery .shop-product-photo {
+    aspect-ratio: 4 / 4.6;
+  }
+}
+
+/* Mobile-only: a native (no-JS) swipeable strip — each photo is a full
+   viewport-width snap point, so it behaves like a carousel with nothing to
+   keep in sync. Desktop uses the thumb rail + zoom above instead. */
+.shop-gallery-swipe {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  margin-inline: -1.25rem;
+  padding-inline: 1.25rem;
+  scrollbar-width: none;
+}
+.shop-gallery-swipe::-webkit-scrollbar {
+  display: none;
+}
+.shop-gallery-swipe-item {
+  flex: none;
+  width: 100%;
+  scroll-snap-align: center;
+}
+
+/* -- Shipping banner ------------------------------------------------------------ */
+
+.shop-shipping-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background: var(--ink);
+  color: #fff;
+  padding-block: 0.65rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-align: center;
+  text-wrap: balance;
+}
+
+/* -- Value row / gift reassurance strip ----------------------------------------- */
+
+.shop-value-row {
+  color: var(--ink-soft);
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
+}
+
+.shop-gift-reassurance {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: 12px;
+  background: var(--tint-lilac);
+  color: var(--accent-deep);
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+.shop-gift-reassurance svg {
+  margin-top: 0.15rem;
+  color: var(--accent);
+}
+
+/* -- "THE PERFECT GIFT" editorial section --------------------------------------- */
+
+.shop-gift-section {
+  display: grid;
+  gap: 2rem;
+  align-items: center;
+}
+@media (min-width: 40rem) {
+  .shop-gift-section {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+    gap: 3.5rem;
+  }
+}
+.shop-gift-photo {
+  position: relative;
+  aspect-ratio: 930 / 1024;
+  border-radius: 18px;
+  overflow: hidden;
+  isolation: isolate;
+}
+.shop-gift-photo img {
+  object-fit: cover;
+}
+.shop-gift-eyebrow {
+  color: var(--accent-deep);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.shop-gift-headline {
+  margin-top: 0.5rem;
+  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+  font-size: clamp(1.75rem, 3.6vw, 2.5rem);
+  line-height: 1.15;
+}
+.shop-gift-body {
+  margin-top: 1rem;
+  max-width: 34rem;
+  color: var(--ink-soft);
+  line-height: 1.65;
+}
+.shop-gift-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1.25rem;
+  color: var(--accent-deep);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.shop-gift-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem 2rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  list-style: none;
+}
+.shop-gift-features li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+}
+.shop-gift-features svg {
+  color: var(--accent);
+}
+
+/* -- Story + FAQ combined section ------------------------------------------------ */
+
+.shop-story-faq-grid {
+  display: grid;
+  gap: 3rem;
+}
+@media (min-width: 48rem) {
+  .shop-story-faq-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 4rem;
+  }
+}
+.shop-story-prose {
+  margin-top: 1.25rem;
+  max-width: 34rem;
+  color: var(--ink-soft);
+  font-size: 1.05rem;
+  line-height: 1.75;
 }
 
 .shop-product-title {

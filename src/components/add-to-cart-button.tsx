@@ -7,6 +7,7 @@ import type { Dictionary } from "@/lib/i18n/dictionaries";
 export function AddToCartButton({
   product,
   dict,
+  className = "",
 }: {
   product: {
     id: string;
@@ -18,6 +19,7 @@ export function AddToCartButton({
     outOfStock: boolean;
   };
   dict: Dictionary["product"];
+  className?: string;
 }) {
   const addItem = useCartStore((state) => state.addItem);
   const [added, setAdded] = useState(false);
@@ -38,7 +40,7 @@ export function AddToCartButton({
         setAdded(true);
         setTimeout(() => setAdded(false), 1500);
       }}
-      className="btn-primary mt-6 transition-transform duration-150 will-change-transform active:scale-95 max-sm:w-full max-sm:py-3"
+      className={`btn-primary mt-6 transition-transform duration-150 will-change-transform active:scale-95 max-sm:w-full max-sm:py-3 ${className}`}
     >
       <span key={added ? "added" : "idle"} className="animate-pop-in inline-block">
         {product.outOfStock ? dict.outOfStock : added ? `✓ ${dict.added}` : dict.addToCart}

@@ -30,6 +30,23 @@ const CODES: Record<Locale, string> = {
   hi: "HI",
   ja: "JA",
 };
+// A language switcher, not a country switcher — these are the conventional
+// flag-per-language pairing most sites use where the two don't line up 1:1
+// (Arabic, Chinese, Hindi have no single "the" country). Portuguese uses
+// Portugal, not Brazil, matching this site's pt-PT copy (see dictionaries.ts).
+const FLAGS: Record<Locale, string> = {
+  en: "🇬🇧",
+  it: "🇮🇹",
+  fr: "🇫🇷",
+  de: "🇩🇪",
+  ar: "🇸🇦",
+  zh: "🇨🇳",
+  ru: "🇷🇺",
+  es: "🇪🇸",
+  pt: "🇵🇹",
+  hi: "🇮🇳",
+  ja: "🇯🇵",
+};
 
 export function LocaleSwitcher({ current }: { current: Locale }) {
   const [pending, startTransition] = useTransition();
@@ -69,6 +86,7 @@ export function LocaleSwitcher({ current }: { current: Locale }) {
         aria-expanded={open}
         className="border-foreground/15 hover:border-primary/40 hover:text-primary flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-sm font-medium transition-colors disabled:opacity-50"
       >
+        <span aria-hidden="true">{FLAGS[current]}</span>
         {CODES[current]}
         <svg
           width="12"
@@ -89,7 +107,7 @@ export function LocaleSwitcher({ current }: { current: Locale }) {
       {open && (
         <ul
           role="listbox"
-          className="border-foreground/10 bg-background animate-pop-in absolute top-full z-50 mt-1.5 min-w-36 max-sm:start-0 sm:end-0 overflow-hidden rounded-lg border py-1 text-sm shadow-lg"
+          className="border-foreground/10 bg-background animate-pop-in absolute top-full z-50 mt-1.5 min-w-36 overflow-hidden rounded-lg border py-1 text-sm shadow-lg max-sm:start-0 sm:end-0"
         >
           {locales.map((locale) => (
             <li key={locale}>
@@ -104,7 +122,10 @@ export function LocaleSwitcher({ current }: { current: Locale }) {
                     : "hover:bg-surface text-foreground/80"
                 }`}
               >
-                {LABELS[locale]}
+                <span className="flex items-center gap-2">
+                  <span aria-hidden="true">{FLAGS[locale]}</span>
+                  {LABELS[locale]}
+                </span>
                 <span className="text-foreground/40 text-xs">{CODES[locale]}</span>
               </button>
             </li>

@@ -4,6 +4,12 @@ import { useState } from "react";
 import { CatalogImage } from "@/components/catalog-image";
 import { ProductImageZoom } from "@/components/product-image-zoom";
 
+// Two independent presentations of the same image set rather than one
+// JS-synced carousel: a thumb rail + zoomable active image on desktop
+// (mouse hover makes zoom meaningful), and a native scroll-snap swipe strip
+// on mobile (no JS, so nothing to keep in sync with a "selected" index that
+// touch scrolling would otherwise fight with). Tailwind's `sm:` (40rem)
+// matches the breakpoint the rest of this page's CSS already uses.
 export function ProductGallery({
   images,
   alt,
@@ -15,30 +21,46 @@ export function ProductGallery({
   const active = images[selected] ?? images[0];
 
   return (
-    <div className="flex flex-col gap-3">
-      {active && <ProductImageZoom src={active.url} alt={alt} isLifestyle={active.isLifestyle} />}
-      {images.length > 1 && (
-        <div className="flex gap-2">
-          {images.map((image, index) => (
-            <button
-              key={image.id}
-              type="button"
-              onClick={() => setSelected(index)}
-              aria-label={`${alt} ${index + 1}`}
-              aria-current={index === selected}
-              className={`shop-thumb ${index === selected ? "shop-thumb--active" : ""}`}
-            >
-              <CatalogImage
-                src={image.url}
-                alt=""
-                fill
-                sizes="64px"
-                className={image.isLifestyle ? "shop-photo--lifestyle" : undefined}
-              />
-            </button>
-          ))}
-        </div>
-      )}
+    <div className="shop-gallery">
+      <div className="hidden sm:flex sm:gap-4">
+        {images.length > 1 && (
+          <div className="shop-gallery-thumbs">
+            {images.map((image, index) => (
+              <button
+                key={image.id}
+                type="button"
+                onClick={() => setSelected(index)}
+                aria-label={`${alt} ${index + 1}`}
+                aria-current={index === selected}
+                className={`shop-thumb ${index === selected ? "shop-thumb--active" : ""}`}
+              >
+                <CatalogImage
+                  src={image.url}
+                  alt=""
+                  fill
+                  sizes="64px"
+                  className={image.isLifestyle ? "shop-photo--lifestyle" : undefined}
+                />
+              </button>
+            ))}
+          </div>
+        )}
+        {active && <ProductImageZoom src={active.url} alt={alt} isLifestyle={active.isLifestyle} />}
+      </div>
+
+      <div className="shop-gallery-swipe sm:hidden">
+        {images.map((image) => (
+          <div key={image.id} className="shop-product-photo shop-gallery-swipe-item">
+            <CatalogImage
+              src={image.url}
+              alt={alt}
+              fill
+              sizes="100vw"
+              className={image.isLifestyle ? "shop-photo--lifestyle" : undefined}
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

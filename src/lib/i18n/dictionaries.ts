@@ -177,6 +177,53 @@ const en = {
     buyNow: "Buy now",
     reviews: "Reviews",
     storyTitle: "The story behind this piece",
+    shippingBanner:
+      "Complimentary shipping across Italy & Europe · USA & Canada €30 · Rest of World €40",
+    handmadeBadge: "Handmade in Italy",
+    lightweightBadge: "Lightweight",
+    seeReviews: "See reviews",
+    giftReassuranceTitle: "A perfect gift for every occasion",
+    giftReassuranceBody: "Elegance, craftsmanship, and a story to give.",
+    giftSectionEyebrow: "The perfect gift",
+    giftSectionHeadline: "More than a jewel, a lasting emotion.",
+    giftSectionBody:
+      "Every piece arrives beautifully presented in our signature packaging, ready to give exactly as it is — for a birthday, an anniversary, a special occasion, or simply to make someone feel special.",
+    giftSectionLink: "Discover our gift packaging",
+    giftFeature1: "Elegant packaging",
+    giftFeature2: "Ready to gift",
+    giftFeature3: "A unique, meaningful present",
+    faq: [
+      {
+        question: "Is this real Murano glass?",
+        answer:
+          "Yes — every piece is hand-worked glass from Murano, Italy, using traditional lampworking and glassblowing techniques, never molded or mass-produced. Read our full guide to Murano glass for how to tell genuine glass from imitations.",
+      },
+      {
+        question: "Where is it made?",
+        answer:
+          "On Murano, the small island in the Venetian lagoon that has been Italy's glassmaking center for over 700 years. Every piece is shaped by hand in a working furnace on the island.",
+      },
+      {
+        question: "How should I care for my jewelry?",
+        answer:
+          "Keep it dry, avoid contact with perfume, and store each piece separately so they don't scratch one another. With a little care, Murano glass keeps its color and shine for a lifetime.",
+      },
+      {
+        question: "Can I return my order?",
+        answer:
+          "Yes. Every order includes the EU's 14-day right of withdrawal — if it's not right for you, send it back for a full refund, no questions asked.",
+      },
+      {
+        question: "What are the shipping options?",
+        answer:
+          "Shipping is complimentary across Italy and the rest of Europe. Orders to the USA and Canada are €30, and €40 to the rest of the world. Standard delivery takes 3–5 days within Europe; international orders may be subject to local import duties and taxes, which aren't included in the price.",
+      },
+      {
+        question: "Does it come gift-wrapped?",
+        answer:
+          "Yes — every piece arrives in our signature gift box, ready to give exactly as it is. No extra wrapping needed, whether it's a gift for someone else or a treat for yourself.",
+      },
+    ],
     noReviews: "No reviews yet.",
     reviewCount: "{n} reviews",
     yourRating: "Your rating",
@@ -270,13 +317,15 @@ const en = {
     returnStatusLabel: "Return status",
     emailConfirmed: "Email confirmed — thanks!",
     confirmLinkExpired: "That confirmation link has expired. Request a new one below.",
-    confirmEmailPrompt: "Please confirm your email address — check your inbox for a confirmation link.",
+    confirmEmailPrompt:
+      "Please confirm your email address — check your inbox for a confirmation link.",
     resendConfirmation: "Resend confirmation email",
     confirmationSent: "Confirmation email sent — check your inbox.",
     unsubscribeInvalidTitle: "Invalid unsubscribe link",
     unsubscribeInvalidBody: "This link is missing or has an invalid email address.",
     unsubscribedTitle: "You're unsubscribed",
-    unsubscribedBody: "{email} won't receive newsletter emails anymore. You can subscribe again anytime from the homepage.",
+    unsubscribedBody:
+      "{email} won't receive newsletter emails anymore. You can subscribe again anytime from the homepage.",
     paginationLabel: "Pagination",
     minPriceLabel: "Minimum price",
     maxPriceLabel: "Maximum price",
@@ -290,16 +339,21 @@ const en = {
     verifySubject: "Confirm your email — {storeName}",
     verifyPreview: "Confirm your email address — {storeName}",
     verifyHeading: "Confirm your email address",
-    verifyBody: "Welcome to {storeName}. Confirm your email address to activate your account — you'll need this to leave reviews and save items to your wishlist.",
+    verifyBody:
+      "Welcome to {storeName}. Confirm your email address to activate your account — you'll need this to leave reviews and save items to your wishlist.",
     verifyButton: "Confirm email address",
-    verifyExpiry: "This link expires in {hours} hours. If you didn't create this account, you can safely ignore this email.",
+    verifyExpiry:
+      "This link expires in {hours} hours. If you didn't create this account, you can safely ignore this email.",
     resetSubject: "Reset your password — {storeName}",
     resetHeading: "Reset your password",
-    resetBody: "We received a request to reset the password for your {storeName} account. Choose a new one using the button below.",
+    resetBody:
+      "We received a request to reset the password for your {storeName} account. Choose a new one using the button below.",
     resetButton: "Choose a new password",
-    resetExpiry: "This link expires in {minutes} minutes and can be used once. If you didn't ask for this, you can safely ignore this email — your password won't change.",
+    resetExpiry:
+      "This link expires in {minutes} minutes and can be used once. If you didn't ask for this, you can safely ignore this email — your password won't change.",
     pwChangedSubject: "Your password was changed — {storeName}",
-    pwChangedBody: "The password for your {storeName} account was just changed, and any devices that were signed in have been signed out.\n\nIf this was you, no action is needed. If it wasn't, reset your password again right away and contact us{contact}.",
+    pwChangedBody:
+      "The password for your {storeName} account was just changed, and any devices that were signed in have been signed out.\n\nIf this was you, no action is needed. If it wasn't, reset your password again right away and contact us{contact}.",
     pwChangedContact: " at {email}",
     orderNumberLabel: "Order number",
     orderDateLabel: "Order date",
@@ -311,12 +365,25 @@ const en = {
     unknownStatusBody: "Your order status changed to {status}.\n\nOrder number: {orderNumber}",
     vatLabel: "VAT {number}",
     abandonedSubject: "You left something in your cart",
-    abandonedBody: "You started an order but haven't finished paying for it yet:\n\n{items}\n\nFinish your order: {url}\n\nOrder number: {orderNumber}",
+    abandonedBody:
+      "You started an order but haven't finished paying for it yet:\n\n{items}\n\nFinish your order: {url}\n\nOrder number: {orderNumber}",
     status: {
-      paid: { heading: "Payment received", message: "We've received your payment and your order is now being prepared with care." },
-      processing: { heading: "Order being prepared", message: "Your order is being carefully prepared by our artisans." },
-      shipped: { heading: "Your order is on its way", message: "Your order has shipped and is on its way to you." },
-      delivered: { heading: "Order delivered", message: "Your order has been delivered. We hope you love it!" },
+      paid: {
+        heading: "Payment received",
+        message: "We've received your payment and your order is now being prepared with care.",
+      },
+      processing: {
+        heading: "Order being prepared",
+        message: "Your order is being carefully prepared by our artisans.",
+      },
+      shipped: {
+        heading: "Your order is on its way",
+        message: "Your order has shipped and is on its way to you.",
+      },
+      delivered: {
+        heading: "Order delivered",
+        message: "Your order has been delivered. We hope you love it!",
+      },
       cancelled: { heading: "Order cancelled", message: "Your order has been cancelled." },
       refunded: { heading: "Order refunded", message: "Your order has been refunded." },
     },
@@ -332,15 +399,19 @@ const en = {
     postalCode: "Postal code",
     country: "Country",
     couldNotQuote: "Couldn't calculate your order total. Check your details and try again.",
-    couldNotPlaceOrder: "Couldn't place your order. Check your details and try again, or contact us if it keeps happening.",
-    noShippingMethods: "Shipping isn't available to this country right now. Choose another country or contact us.",
+    couldNotPlaceOrder:
+      "Couldn't place your order. Check your details and try again, or contact us if it keeps happening.",
+    noShippingMethods:
+      "Shipping isn't available to this country right now. Choose another country or contact us.",
     continueShopping: "Continue shopping",
     invalidPostalCode: "That postal code doesn't look right for the selected country.",
     addressCheck: {
       checking: "Checking the address on the map…",
       found: "Is this the right place? Check the pin before you order.",
-      foundArea: "We could only find the area, not the exact building. That's fine, but check the street and number.",
-      notFound: "We couldn't find this address on the map. Check the spelling — you can still place your order.",
+      foundArea:
+        "We could only find the area, not the exact building. That's fine, but check the street and number.",
+      notFound:
+        "We couldn't find this address on the map. Check the spelling — you can still place your order.",
       unavailable: "The map isn't available right now. You can still place your order.",
       openMap: "Open larger map",
       mapAlt: "Map showing the delivery address",
@@ -379,7 +450,8 @@ const en = {
     bic: "BIC/SWIFT",
     reference: "Reference",
     amount: "Amount",
-    bankNote: "Please include the reference above so we can match your payment. We'll confirm your order once the transfer arrives.",
+    bankNote:
+      "Please include the reference above so we can match your payment. We'll confirm your order once the transfer arrives.",
     errStart: "Couldn't start the payment. Please try again.",
     errBank: "Couldn't start the bank transfer. Please try again.",
   },
@@ -407,10 +479,12 @@ const en = {
       "Google sign-in isn't available for accounts with two-factor authentication or for admin/staff accounts. Please sign in with your email, password and authenticator code.",
     forgotPassword: "Forgot password?",
     forgotPasswordTitle: "Reset your password",
-    forgotPasswordIntro: "Enter the email address for your account and we'll send you a link to choose a new password.",
+    forgotPasswordIntro:
+      "Enter the email address for your account and we'll send you a link to choose a new password.",
     sendResetLink: "Send reset link",
     sendingResetLink: "Sending…",
-    resetLinkSent: "If an account exists for that address, a reset link is on its way. It expires in 1 hour.",
+    resetLinkSent:
+      "If an account exists for that address, a reset link is on its way. It expires in 1 hour.",
     resetPasswordTitle: "Choose a new password",
     newPassword: "New password",
     resetPassword: "Update password",
@@ -561,7 +635,8 @@ const it: Dictionary = {
     title: "Chi siamo",
     intro: (storeName: string) =>
       `Abbiamo creato ${storeName} per portare gioielli autentici in vetro di Murano soffiato a mano a chi non può visitare di persona le fornaci — ogni pezzo realizzato con tecniche tramandate da sette secoli sull'isola di Murano, spedito direttamente da Venezia.`,
-    heritageImageAlt: "La vetrina di una bottega di gioielli in vetro di Murano lungo un canale di Venezia",
+    heritageImageAlt:
+      "La vetrina di una bottega di gioielli in vetro di Murano lungo un canale di Venezia",
     valuesTitle: "Cosa ci sta a cuore",
     value1Title: "Prima la qualità",
     value1Body:
@@ -646,6 +721,53 @@ const it: Dictionary = {
     buyNow: "Acquista ora",
     reviews: "Recensioni",
     storyTitle: "La storia di questo pezzo",
+    shippingBanner:
+      "Spedizione omaggio in Italia ed Europa · USA e Canada 30€ · Resto del mondo 40€",
+    handmadeBadge: "Fatto a mano in Italia",
+    lightweightBadge: "Leggero",
+    seeReviews: "Vedi le recensioni",
+    giftReassuranceTitle: "Il regalo perfetto per ogni occasione",
+    giftReassuranceBody: "Eleganza, artigianalità e una storia da regalare.",
+    giftSectionEyebrow: "Il regalo perfetto",
+    giftSectionHeadline: "Più di un gioiello, un'emozione che resta.",
+    giftSectionBody:
+      "Ogni gioiello arriva confezionato con cura nella nostra scatola firmata, pronto da regalare così com'è — per un compleanno, un anniversario, un'occasione speciale, o semplicemente per far sentire qualcuno importante.",
+    giftSectionLink: "Scopri la nostra confezione regalo",
+    giftFeature1: "Confezione elegante",
+    giftFeature2: "Pronto da regalare",
+    giftFeature3: "Un dono unico e speciale",
+    faq: [
+      {
+        question: "È vero vetro di Murano?",
+        answer:
+          "Sì — ogni pezzo è vetro lavorato a mano a Murano, Italia, con le tecniche tradizionali della lavorazione a lume e della soffiatura, mai stampato o prodotto in serie. Consulta la nostra guida al vetro di Murano per riconoscere il vetro autentico dalle imitazioni.",
+      },
+      {
+        question: "Dove viene realizzato?",
+        answer:
+          "A Murano, la piccola isola della laguna veneziana che da oltre 700 anni è il centro della lavorazione del vetro in Italia. Ogni pezzo viene modellato a mano in una fornace attiva sull'isola.",
+      },
+      {
+        question: "Come mi prendo cura del mio gioiello?",
+        answer:
+          "Tienilo all'asciutto, evita il contatto con i profumi e conserva ogni pezzo separatamente per evitare graffi. Con qualche piccola attenzione, il vetro di Murano mantiene colore e brillantezza per tutta la vita.",
+      },
+      {
+        question: "Posso restituire il mio ordine?",
+        answer:
+          "Sì. Ogni ordine include il diritto di recesso di 14 giorni previsto dalla normativa UE — se non è quello che cercavi, puoi restituirlo per un rimborso completo, senza bisogno di spiegazioni.",
+      },
+      {
+        question: "Quali sono le opzioni di spedizione?",
+        answer:
+          "La spedizione è omaggio in Italia e nel resto d'Europa. Gli ordini verso USA e Canada hanno un costo di 30€, e di 40€ per il resto del mondo. La consegna standard richiede 3-5 giorni in Europa; gli ordini internazionali potrebbero essere soggetti a dazi doganali e imposte locali, non inclusi nel prezzo.",
+      },
+      {
+        question: "Arriva confezionato come regalo?",
+        answer:
+          "Sì — ogni pezzo arriva nella nostra scatola firmata, pronto da regalare così com'è. Nessun confezionamento aggiuntivo necessario, che sia un regalo per qualcun altro o un pensiero per te stessa.",
+      },
+    ],
     noReviews: "Nessuna recensione ancora.",
     reviewCount: "{n} recensioni",
     yourRating: "La tua valutazione",
@@ -715,12 +837,14 @@ const it: Dictionary = {
     confirmEmailToWishlist: "Conferma il tuo indirizzo email per usare la lista desideri.",
     confirmEmailToReview: "Conferma il tuo indirizzo email per lasciare una recensione.",
     productNotFound: "Prodotto non trovato.",
-    guestEmailRequired: "Accedi oppure inserisci un indirizzo email per completare l'acquisto come ospite.",
+    guestEmailRequired:
+      "Accedi oppure inserisci un indirizzo email per completare l'acquisto come ospite.",
     cartEmpty: "Il tuo carrello è vuoto.",
     productUnavailable: "Un prodotto nel carrello non è più disponibile.",
     invalidQuantity: "Quantità non valida per {name}.",
     lowStock: "Di {name} ne restano solo {n} disponibili.",
-    shippingUnavailable: "Il metodo di spedizione selezionato non è disponibile per questa destinazione.",
+    shippingUnavailable:
+      "Il metodo di spedizione selezionato non è disponibile per questa destinazione.",
     discountInvalid: "Codice sconto non valido.",
     discountExpired: "Questo codice sconto è scaduto.",
     discountLimitReached: "Questo codice sconto ha raggiunto il limite di utilizzi.",
@@ -739,19 +863,22 @@ const it: Dictionary = {
     returnStatusLabel: "Stato del reso",
     emailConfirmed: "Email confermata: grazie!",
     confirmLinkExpired: "Il link di conferma è scaduto. Richiedine uno nuovo qui sotto.",
-    confirmEmailPrompt: "Conferma il tuo indirizzo email: controlla la posta in arrivo per il link di conferma.",
+    confirmEmailPrompt:
+      "Conferma il tuo indirizzo email: controlla la posta in arrivo per il link di conferma.",
     resendConfirmation: "Invia di nuovo l'email di conferma",
     confirmationSent: "Email di conferma inviata: controlla la posta in arrivo.",
     unsubscribeInvalidTitle: "Link di annullamento iscrizione non valido",
     unsubscribeInvalidBody: "Nel link manca l'indirizzo email oppure non è valido.",
     unsubscribedTitle: "Iscrizione annullata",
-    unsubscribedBody: "{email} non riceverà più email della newsletter. Puoi iscriverti di nuovo in qualsiasi momento dalla homepage.",
+    unsubscribedBody:
+      "{email} non riceverà più email della newsletter. Puoi iscriverti di nuovo in qualsiasi momento dalla homepage.",
     paginationLabel: "Paginazione",
     minPriceLabel: "Prezzo minimo",
     maxPriceLabel: "Prezzo massimo",
     alreadyVerified: "Il tuo indirizzo email è già confermato.",
     incorrectPassword: "Password errata.",
-    oauthContactSupport: "Gli account creati con Google devono contattare l'assistenza per essere eliminati.",
+    oauthContactSupport:
+      "Gli account creati con Google devono contattare l'assistenza per essere eliminati.",
   },
   emails: {
     tagline: "{storeName} — autentico vetro veneziano, fatto a mano a Murano.",
@@ -759,16 +886,21 @@ const it: Dictionary = {
     verifySubject: "Conferma la tua email — {storeName}",
     verifyPreview: "Conferma il tuo indirizzo email — {storeName}",
     verifyHeading: "Conferma il tuo indirizzo email",
-    verifyBody: "Benvenuto su {storeName}. Conferma il tuo indirizzo email per attivare l'account: ti servirà per lasciare recensioni e salvare i prodotti nella lista desideri.",
+    verifyBody:
+      "Benvenuto su {storeName}. Conferma il tuo indirizzo email per attivare l'account: ti servirà per lasciare recensioni e salvare i prodotti nella lista desideri.",
     verifyButton: "Conferma indirizzo email",
-    verifyExpiry: "Questo link scade tra {hours} ore. Se non hai creato tu questo account, puoi ignorare questa email.",
+    verifyExpiry:
+      "Questo link scade tra {hours} ore. Se non hai creato tu questo account, puoi ignorare questa email.",
     resetSubject: "Reimposta la tua password — {storeName}",
     resetHeading: "Reimposta la tua password",
-    resetBody: "Abbiamo ricevuto una richiesta di reimpostazione della password per il tuo account {storeName}. Scegline una nuova con il pulsante qui sotto.",
+    resetBody:
+      "Abbiamo ricevuto una richiesta di reimpostazione della password per il tuo account {storeName}. Scegline una nuova con il pulsante qui sotto.",
     resetButton: "Scegli una nuova password",
-    resetExpiry: "Questo link scade tra {minutes} minuti e può essere usato una sola volta. Se non l'hai richiesto tu, puoi ignorare questa email: la tua password non cambierà.",
+    resetExpiry:
+      "Questo link scade tra {minutes} minuti e può essere usato una sola volta. Se non l'hai richiesto tu, puoi ignorare questa email: la tua password non cambierà.",
     pwChangedSubject: "La tua password è stata modificata — {storeName}",
-    pwChangedBody: "La password del tuo account {storeName} è stata appena modificata e tutti i dispositivi collegati sono stati disconnessi.\n\nSe sei stato tu, non serve fare nulla. Se non sei stato tu, reimposta subito di nuovo la password e contattaci{contact}.",
+    pwChangedBody:
+      "La password del tuo account {storeName} è stata appena modificata e tutti i dispositivi collegati sono stati disconnessi.\n\nSe sei stato tu, non serve fare nulla. Se non sei stato tu, reimposta subito di nuovo la password e contattaci{contact}.",
     pwChangedContact: " all'indirizzo {email}",
     orderNumberLabel: "Numero ordine",
     orderDateLabel: "Data dell'ordine",
@@ -777,15 +909,30 @@ const it: Dictionary = {
     viewOrder: "Visualizza il tuo ordine",
     orderQuestions: "Hai domande su questo ordine? Rispondi semplicemente a questa email.",
     orderSubject: "Ordine {orderNumber}: {heading}",
-    unknownStatusBody: "Lo stato del tuo ordine è cambiato in {status}.\n\nNumero ordine: {orderNumber}",
+    unknownStatusBody:
+      "Lo stato del tuo ordine è cambiato in {status}.\n\nNumero ordine: {orderNumber}",
     vatLabel: "P. IVA {number}",
     abandonedSubject: "Hai lasciato qualcosa nel carrello",
-    abandonedBody: "Hai iniziato un ordine ma non hai ancora completato il pagamento:\n\n{items}\n\nCompleta il tuo ordine: {url}\n\nNumero ordine: {orderNumber}",
+    abandonedBody:
+      "Hai iniziato un ordine ma non hai ancora completato il pagamento:\n\n{items}\n\nCompleta il tuo ordine: {url}\n\nNumero ordine: {orderNumber}",
     status: {
-      paid: { heading: "Pagamento ricevuto", message: "Abbiamo ricevuto il tuo pagamento e il tuo ordine è ora in preparazione con cura." },
-      processing: { heading: "Ordine in preparazione", message: "Il tuo ordine viene preparato con cura dai nostri artigiani." },
-      shipped: { heading: "Il tuo ordine è in viaggio", message: "Il tuo ordine è stato spedito ed è in viaggio verso di te." },
-      delivered: { heading: "Ordine consegnato", message: "Il tuo ordine è stato consegnato. Speriamo che ti piaccia!" },
+      paid: {
+        heading: "Pagamento ricevuto",
+        message:
+          "Abbiamo ricevuto il tuo pagamento e il tuo ordine è ora in preparazione con cura.",
+      },
+      processing: {
+        heading: "Ordine in preparazione",
+        message: "Il tuo ordine viene preparato con cura dai nostri artigiani.",
+      },
+      shipped: {
+        heading: "Il tuo ordine è in viaggio",
+        message: "Il tuo ordine è stato spedito ed è in viaggio verso di te.",
+      },
+      delivered: {
+        heading: "Ordine consegnato",
+        message: "Il tuo ordine è stato consegnato. Speriamo che ti piaccia!",
+      },
       cancelled: { heading: "Ordine annullato", message: "Il tuo ordine è stato annullato." },
       refunded: { heading: "Ordine rimborsato", message: "Il tuo ordine è stato rimborsato." },
     },
@@ -800,16 +947,21 @@ const it: Dictionary = {
     city: "Città",
     postalCode: "CAP",
     country: "Paese",
-    couldNotQuote: "Non è stato possibile calcolare il totale dell'ordine. Controlla i dati e riprova.",
-    couldNotPlaceOrder: "Non è stato possibile completare l'ordine. Controlla i dati e riprova, oppure contattaci se il problema persiste.",
-    noShippingMethods: "La spedizione non è disponibile per questo paese al momento. Scegli un altro paese o contattaci.",
+    couldNotQuote:
+      "Non è stato possibile calcolare il totale dell'ordine. Controlla i dati e riprova.",
+    couldNotPlaceOrder:
+      "Non è stato possibile completare l'ordine. Controlla i dati e riprova, oppure contattaci se il problema persiste.",
+    noShippingMethods:
+      "La spedizione non è disponibile per questo paese al momento. Scegli un altro paese o contattaci.",
     continueShopping: "Continua lo shopping",
     invalidPostalCode: "Il CAP non sembra corretto per il paese selezionato.",
     addressCheck: {
       checking: "Verifico l'indirizzo sulla mappa…",
       found: "È questo il posto giusto? Controlla la posizione prima di ordinare.",
-      foundArea: "Abbiamo trovato solo la zona, non l'edificio esatto. Va bene, ma controlla via e numero civico.",
-      notFound: "Non troviamo questo indirizzo sulla mappa. Controlla l'ortografia: puoi comunque completare l'ordine.",
+      foundArea:
+        "Abbiamo trovato solo la zona, non l'edificio esatto. Va bene, ma controlla via e numero civico.",
+      notFound:
+        "Non troviamo questo indirizzo sulla mappa. Controlla l'ortografia: puoi comunque completare l'ordine.",
       unavailable: "La mappa non è disponibile al momento. Puoi comunque completare l'ordine.",
       openMap: "Apri mappa più grande",
       mapAlt: "Mappa con l'indirizzo di consegna",
@@ -839,7 +991,8 @@ const it: Dictionary = {
     payWithCard: "Paga con carta o portafoglio digitale",
     payWithPayPal: "Paga con PayPal",
     redirecting: "Reindirizzamento…",
-    cardHelp: "Carta e qualsiasi portafoglio digitale o metodo di pagamento locale attivo al checkout.",
+    cardHelp:
+      "Carta e qualsiasi portafoglio digitale o metodo di pagamento locale attivo al checkout.",
     bankTransfer: "Paga con bonifico bancario",
     loading: "Caricamento…",
     bankTitle: "Completa il bonifico bancario",
@@ -848,7 +1001,8 @@ const it: Dictionary = {
     bic: "BIC/SWIFT",
     reference: "Causale",
     amount: "Importo",
-    bankNote: "Indica la causale qui sopra così possiamo associare il pagamento. Confermeremo l'ordine appena il bonifico sarà arrivato.",
+    bankNote:
+      "Indica la causale qui sopra così possiamo associare il pagamento. Confermeremo l'ordine appena il bonifico sarà arrivato.",
     errStart: "Non è stato possibile avviare il pagamento. Riprova.",
     errBank: "Non è stato possibile avviare il bonifico. Riprova.",
   },
@@ -876,10 +1030,12 @@ const it: Dictionary = {
       "L'accesso con Google non è disponibile per gli account con autenticazione a due fattori né per gli account admin/staff. Accedi con email, password e codice dell'autenticatore.",
     forgotPassword: "Password dimenticata?",
     forgotPasswordTitle: "Reimposta la password",
-    forgotPasswordIntro: "Inserisci l'indirizzo email del tuo account e ti invieremo un link per scegliere una nuova password.",
+    forgotPasswordIntro:
+      "Inserisci l'indirizzo email del tuo account e ti invieremo un link per scegliere una nuova password.",
     sendResetLink: "Invia il link di reimpostazione",
     sendingResetLink: "Invio in corso…",
-    resetLinkSent: "Se esiste un account con questo indirizzo, un link di reimpostazione è in arrivo. Scade tra 1 ora.",
+    resetLinkSent:
+      "Se esiste un account con questo indirizzo, un link di reimpostazione è in arrivo. Scade tra 1 ora.",
     resetPasswordTitle: "Scegli una nuova password",
     newPassword: "Nuova password",
     resetPassword: "Aggiorna la password",
@@ -1030,7 +1186,8 @@ const fr: Dictionary = {
     title: "À propos",
     intro: (storeName: string) =>
       `Nous avons créé ${storeName} pour faire découvrir de véritables bijoux en verre de Murano soufflé à la main à celles et ceux qui ne peuvent pas visiter les fours en personne — chaque pièce est réalisée selon des techniques transmises depuis sept siècles sur l'île de Murano, expédiée directement depuis Venise.`,
-    heritageImageAlt: "La vitrine d'un atelier de bijoux en verre de Murano le long d'un canal de Venise",
+    heritageImageAlt:
+      "La vitrine d'un atelier de bijoux en verre de Murano le long d'un canal de Venise",
     valuesTitle: "Ce qui nous tient à cœur",
     value1Title: "La qualité avant tout",
     value1Body:
@@ -1055,7 +1212,8 @@ const fr: Dictionary = {
   },
   contact: {
     title: "Contactez-nous",
-    intro: "Des questions sur une commande, un produit ou autre chose — nous sommes ravis de vous aider.",
+    intro:
+      "Des questions sur une commande, un produit ou autre chose — nous sommes ravis de vous aider.",
     emailLabel: "Email",
     addressLabel: "Adresse",
     formName: "Nom",
@@ -1114,6 +1272,53 @@ const fr: Dictionary = {
     buyNow: "Acheter maintenant",
     reviews: "Avis",
     storyTitle: "L'histoire de cette pièce",
+    shippingBanner:
+      "Livraison offerte en Italie et en Europe · États-Unis et Canada 30 € · Reste du monde 40 €",
+    handmadeBadge: "Fait main en Italie",
+    lightweightBadge: "Léger",
+    seeReviews: "Voir les avis",
+    giftReassuranceTitle: "Le cadeau parfait pour chaque occasion",
+    giftReassuranceBody: "Élégance, savoir-faire et une histoire à offrir.",
+    giftSectionEyebrow: "Le cadeau parfait",
+    giftSectionHeadline: "Plus qu'un bijou, une émotion qui dure.",
+    giftSectionBody:
+      "Chaque pièce arrive joliment présentée dans notre emballage signature, prête à offrir telle quelle — pour un anniversaire, une occasion spéciale, ou simplement pour faire plaisir à quelqu'un.",
+    giftSectionLink: "Découvrez notre emballage cadeau",
+    giftFeature1: "Emballage élégant",
+    giftFeature2: "Prêt à offrir",
+    giftFeature3: "Un cadeau unique et précieux",
+    faq: [
+      {
+        question: "Est-ce du véritable verre de Murano ?",
+        answer:
+          "Oui — chaque pièce est en verre travaillé à la main à Murano, en Italie, selon les techniques traditionnelles du façonnage au chalumeau et du soufflage, jamais moulée ni produite en série. Consultez notre guide complet du verre de Murano pour apprendre à distinguer le verre authentique des imitations.",
+      },
+      {
+        question: "Où est-il fabriqué ?",
+        answer:
+          "À Murano, la petite île de la lagune vénitienne qui est depuis plus de 700 ans le centre italien du travail du verre. Chaque pièce est façonnée à la main dans une fournaise en activité sur l'île.",
+      },
+      {
+        question: "Comment entretenir mon bijou ?",
+        answer:
+          "Gardez-le au sec, évitez le contact avec le parfum et rangez chaque pièce séparément pour éviter les rayures. Avec un peu d'attention, le verre de Murano conserve sa couleur et son éclat toute une vie.",
+      },
+      {
+        question: "Puis-je retourner ma commande ?",
+        answer:
+          "Oui. Chaque commande bénéficie du droit de rétractation de 14 jours de l'UE — si elle ne vous convient pas, renvoyez-la pour un remboursement intégral, sans justification.",
+      },
+      {
+        question: "Quelles sont les options de livraison ?",
+        answer:
+          "La livraison est offerte en Italie et dans le reste de l'Europe. Les commandes vers les États-Unis et le Canada coûtent 30 €, et 40 € pour le reste du monde. La livraison standard prend 3 à 5 jours en Europe ; les commandes internationales peuvent être soumises à des droits de douane et taxes locales, non compris dans le prix.",
+      },
+      {
+        question: "Est-il livré emballé pour un cadeau ?",
+        answer:
+          "Oui — chaque pièce arrive dans notre écrin signature, prête à offrir telle quelle. Aucun emballage supplémentaire n'est nécessaire, que ce soit pour offrir ou pour se faire plaisir.",
+      },
+    ],
     noReviews: "Aucun avis pour le moment.",
     reviewCount: "{n} avis",
     yourRating: "Votre note",
@@ -1183,7 +1388,8 @@ const fr: Dictionary = {
     confirmEmailToWishlist: "Confirmez votre adresse e-mail pour utiliser votre liste de souhaits.",
     confirmEmailToReview: "Confirmez votre adresse e-mail pour laisser un avis.",
     productNotFound: "Produit introuvable.",
-    guestEmailRequired: "Connectez-vous ou saisissez une adresse e-mail pour commander en tant qu'invité.",
+    guestEmailRequired:
+      "Connectez-vous ou saisissez une adresse e-mail pour commander en tant qu'invité.",
     cartEmpty: "Votre panier est vide.",
     productUnavailable: "Un article de votre panier n'est plus disponible.",
     invalidQuantity: "Quantité non valide pour {name}.",
@@ -1195,7 +1401,8 @@ const fr: Dictionary = {
     orderNotFound: "Commande introuvable.",
     orderNotAwaitingPayment: "Cette commande n'est pas en attente de paiement.",
     paymentMethodUnavailable: "Ce mode de paiement n'est pas disponible.",
-    paymentProcessing: "Votre paiement est en cours de traitement. Veuillez revenir dans un instant.",
+    paymentProcessing:
+      "Votre paiement est en cours de traitement. Veuillez revenir dans un instant.",
     returnReasonRequired: "Veuillez indiquer le motif de votre retour.",
     returnNotEligible: "Cette commande n'est pas encore éligible à un retour.",
     returnInProgress: "Une demande de retour est déjà en cours pour cette commande.",
@@ -1207,36 +1414,46 @@ const fr: Dictionary = {
     returnStatusLabel: "Statut du retour",
     emailConfirmed: "Adresse e-mail confirmée, merci !",
     confirmLinkExpired: "Ce lien de confirmation a expiré. Demandez-en un nouveau ci-dessous.",
-    confirmEmailPrompt: "Veuillez confirmer votre adresse e-mail : un lien de confirmation vous attend dans votre boîte de réception.",
+    confirmEmailPrompt:
+      "Veuillez confirmer votre adresse e-mail : un lien de confirmation vous attend dans votre boîte de réception.",
     resendConfirmation: "Renvoyer l'e-mail de confirmation",
     confirmationSent: "E-mail de confirmation envoyé, vérifiez votre boîte de réception.",
     unsubscribeInvalidTitle: "Lien de désinscription non valide",
-    unsubscribeInvalidBody: "Ce lien ne contient pas d'adresse e-mail ou celle-ci n'est pas valide.",
+    unsubscribeInvalidBody:
+      "Ce lien ne contient pas d'adresse e-mail ou celle-ci n'est pas valide.",
     unsubscribedTitle: "Vous êtes désinscrit",
-    unsubscribedBody: "{email} ne recevra plus les e-mails de la newsletter. Vous pouvez vous réinscrire à tout moment depuis la page d'accueil.",
+    unsubscribedBody:
+      "{email} ne recevra plus les e-mails de la newsletter. Vous pouvez vous réinscrire à tout moment depuis la page d'accueil.",
     paginationLabel: "Pagination",
     minPriceLabel: "Prix minimum",
     maxPriceLabel: "Prix maximum",
     alreadyVerified: "Votre adresse e-mail est déjà confirmée.",
     incorrectPassword: "Mot de passe incorrect.",
-    oauthContactSupport: "Les comptes créés avec Google doivent contacter le support pour être supprimés.",
+    oauthContactSupport:
+      "Les comptes créés avec Google doivent contacter le support pour être supprimés.",
   },
   emails: {
     tagline: "{storeName} — authentique verre vénitien, fait main à Murano.",
-    copyLinkHint: "Si le bouton ne fonctionne pas, copiez et collez ce lien dans votre navigateur :",
+    copyLinkHint:
+      "Si le bouton ne fonctionne pas, copiez et collez ce lien dans votre navigateur :",
     verifySubject: "Confirmez votre adresse e-mail — {storeName}",
     verifyPreview: "Confirmez votre adresse e-mail — {storeName}",
     verifyHeading: "Confirmez votre adresse e-mail",
-    verifyBody: "Bienvenue chez {storeName}. Confirmez votre adresse e-mail pour activer votre compte : elle vous sera nécessaire pour laisser des avis et enregistrer des articles dans votre liste de souhaits.",
+    verifyBody:
+      "Bienvenue chez {storeName}. Confirmez votre adresse e-mail pour activer votre compte : elle vous sera nécessaire pour laisser des avis et enregistrer des articles dans votre liste de souhaits.",
     verifyButton: "Confirmer l'adresse e-mail",
-    verifyExpiry: "Ce lien expire dans {hours} heures. Si vous n'avez pas créé ce compte, vous pouvez ignorer cet e-mail.",
+    verifyExpiry:
+      "Ce lien expire dans {hours} heures. Si vous n'avez pas créé ce compte, vous pouvez ignorer cet e-mail.",
     resetSubject: "Réinitialisez votre mot de passe — {storeName}",
     resetHeading: "Réinitialisez votre mot de passe",
-    resetBody: "Nous avons reçu une demande de réinitialisation du mot de passe de votre compte {storeName}. Choisissez-en un nouveau avec le bouton ci-dessous.",
+    resetBody:
+      "Nous avons reçu une demande de réinitialisation du mot de passe de votre compte {storeName}. Choisissez-en un nouveau avec le bouton ci-dessous.",
     resetButton: "Choisir un nouveau mot de passe",
-    resetExpiry: "Ce lien expire dans {minutes} minutes et ne peut être utilisé qu'une fois. Si vous n'êtes pas à l'origine de cette demande, ignorez cet e-mail : votre mot de passe ne changera pas.",
+    resetExpiry:
+      "Ce lien expire dans {minutes} minutes et ne peut être utilisé qu'une fois. Si vous n'êtes pas à l'origine de cette demande, ignorez cet e-mail : votre mot de passe ne changera pas.",
     pwChangedSubject: "Votre mot de passe a été modifié — {storeName}",
-    pwChangedBody: "Le mot de passe de votre compte {storeName} vient d'être modifié et tous les appareils connectés ont été déconnectés.\n\nSi c'est bien vous, aucune action n'est nécessaire. Sinon, réinitialisez immédiatement votre mot de passe et contactez-nous{contact}.",
+    pwChangedBody:
+      "Le mot de passe de votre compte {storeName} vient d'être modifié et tous les appareils connectés ont été déconnectés.\n\nSi c'est bien vous, aucune action n'est nécessaire. Sinon, réinitialisez immédiatement votre mot de passe et contactez-nous{contact}.",
     pwChangedContact: " à l'adresse {email}",
     orderNumberLabel: "Numéro de commande",
     orderDateLabel: "Date de la commande",
@@ -1245,15 +1462,30 @@ const fr: Dictionary = {
     viewOrder: "Voir votre commande",
     orderQuestions: "Des questions sur cette commande ? Répondez simplement à cet e-mail.",
     orderSubject: "Commande {orderNumber} : {heading}",
-    unknownStatusBody: "Le statut de votre commande est passé à « {status} ».\n\nNuméro de commande : {orderNumber}",
+    unknownStatusBody:
+      "Le statut de votre commande est passé à « {status} ».\n\nNuméro de commande : {orderNumber}",
     vatLabel: "TVA {number}",
     abandonedSubject: "Vous avez laissé quelque chose dans votre panier",
-    abandonedBody: "Vous avez commencé une commande sans avoir encore finalisé le paiement :\n\n{items}\n\nFinalisez votre commande : {url}\n\nNuméro de commande : {orderNumber}",
+    abandonedBody:
+      "Vous avez commencé une commande sans avoir encore finalisé le paiement :\n\n{items}\n\nFinalisez votre commande : {url}\n\nNuméro de commande : {orderNumber}",
     status: {
-      paid: { heading: "Paiement reçu", message: "Nous avons bien reçu votre paiement et votre commande est en cours de préparation avec soin." },
-      processing: { heading: "Commande en préparation", message: "Votre commande est préparée avec soin par nos artisans." },
-      shipped: { heading: "Votre commande est en route", message: "Votre commande a été expédiée et est en route vers vous." },
-      delivered: { heading: "Commande livrée", message: "Votre commande a été livrée. Nous espérons qu'elle vous plaira !" },
+      paid: {
+        heading: "Paiement reçu",
+        message:
+          "Nous avons bien reçu votre paiement et votre commande est en cours de préparation avec soin.",
+      },
+      processing: {
+        heading: "Commande en préparation",
+        message: "Votre commande est préparée avec soin par nos artisans.",
+      },
+      shipped: {
+        heading: "Votre commande est en route",
+        message: "Votre commande a été expédiée et est en route vers vous.",
+      },
+      delivered: {
+        heading: "Commande livrée",
+        message: "Votre commande a été livrée. Nous espérons qu'elle vous plaira !",
+      },
       cancelled: { heading: "Commande annulée", message: "Votre commande a été annulée." },
       refunded: { heading: "Commande remboursée", message: "Votre commande a été remboursée." },
     },
@@ -1268,17 +1500,23 @@ const fr: Dictionary = {
     city: "Ville",
     postalCode: "Code postal",
     country: "Pays",
-    couldNotQuote: "Impossible de calculer le total de votre commande. Vérifiez vos informations et réessayez.",
-    couldNotPlaceOrder: "Impossible de passer votre commande. Vérifiez vos informations et réessayez, ou contactez-nous si le problème persiste.",
-    noShippingMethods: "La livraison n'est pas disponible pour ce pays actuellement. Choisissez un autre pays ou contactez-nous.",
+    couldNotQuote:
+      "Impossible de calculer le total de votre commande. Vérifiez vos informations et réessayez.",
+    couldNotPlaceOrder:
+      "Impossible de passer votre commande. Vérifiez vos informations et réessayez, ou contactez-nous si le problème persiste.",
+    noShippingMethods:
+      "La livraison n'est pas disponible pour ce pays actuellement. Choisissez un autre pays ou contactez-nous.",
     continueShopping: "Continuer vos achats",
     invalidPostalCode: "Ce code postal ne semble pas correct pour le pays sélectionné.",
     addressCheck: {
       checking: "Vérification de l'adresse sur la carte…",
       found: "Est-ce le bon endroit ? Vérifiez l'emplacement avant de commander.",
-      foundArea: "Nous n'avons trouvé que le quartier, pas le bâtiment exact. Ce n'est pas grave, mais vérifiez la rue et le numéro.",
-      notFound: "Nous ne trouvons pas cette adresse sur la carte. Vérifiez l'orthographe — vous pouvez quand même passer votre commande.",
-      unavailable: "La carte n'est pas disponible pour le moment. Vous pouvez quand même passer votre commande.",
+      foundArea:
+        "Nous n'avons trouvé que le quartier, pas le bâtiment exact. Ce n'est pas grave, mais vérifiez la rue et le numéro.",
+      notFound:
+        "Nous ne trouvons pas cette adresse sur la carte. Vérifiez l'orthographe — vous pouvez quand même passer votre commande.",
+      unavailable:
+        "La carte n'est pas disponible pour le moment. Vous pouvez quand même passer votre commande.",
       openMap: "Ouvrir la carte en grand",
       mapAlt: "Carte de l'adresse de livraison",
     },
@@ -1307,7 +1545,8 @@ const fr: Dictionary = {
     payWithCard: "Payer par carte ou portefeuille",
     payWithPayPal: "Payer avec PayPal",
     redirecting: "Redirection…",
-    cardHelp: "Carte, ainsi que tout portefeuille ou moyen de paiement local activé lors du paiement.",
+    cardHelp:
+      "Carte, ainsi que tout portefeuille ou moyen de paiement local activé lors du paiement.",
     bankTransfer: "Payer par virement bancaire",
     loading: "Chargement…",
     bankTitle: "Effectuez votre virement bancaire",
@@ -1316,7 +1555,8 @@ const fr: Dictionary = {
     bic: "BIC/SWIFT",
     reference: "Référence",
     amount: "Montant",
-    bankNote: "Indiquez la référence ci-dessus afin que nous puissions identifier votre paiement. Nous confirmerons votre commande dès réception du virement.",
+    bankNote:
+      "Indiquez la référence ci-dessus afin que nous puissions identifier votre paiement. Nous confirmerons votre commande dès réception du virement.",
     errStart: "Impossible de démarrer le paiement. Veuillez réessayer.",
     errBank: "Impossible de démarrer le virement bancaire. Veuillez réessayer.",
   },
@@ -1344,18 +1584,22 @@ const fr: Dictionary = {
       "La connexion avec Google n'est pas disponible pour les comptes avec authentification à deux facteurs ni pour les comptes admin/équipe. Connectez-vous avec votre e-mail, votre mot de passe et votre code d'authentification.",
     forgotPassword: "Mot de passe oublié ?",
     forgotPasswordTitle: "Réinitialisez votre mot de passe",
-    forgotPasswordIntro: "Saisissez l'adresse e-mail de votre compte et nous vous enverrons un lien pour choisir un nouveau mot de passe.",
+    forgotPasswordIntro:
+      "Saisissez l'adresse e-mail de votre compte et nous vous enverrons un lien pour choisir un nouveau mot de passe.",
     sendResetLink: "Envoyer le lien de réinitialisation",
     sendingResetLink: "Envoi en cours…",
-    resetLinkSent: "Si un compte existe pour cette adresse, un lien de réinitialisation est en route. Il expire dans 1 heure.",
+    resetLinkSent:
+      "Si un compte existe pour cette adresse, un lien de réinitialisation est en route. Il expire dans 1 heure.",
     resetPasswordTitle: "Choisissez un nouveau mot de passe",
     newPassword: "Nouveau mot de passe",
     resetPassword: "Mettre à jour le mot de passe",
     resettingPassword: "Mise à jour en cours…",
-    resetInvalid: "Ce lien de réinitialisation est invalide ou a expiré. Veuillez en demander un nouveau.",
+    resetInvalid:
+      "Ce lien de réinitialisation est invalide ou a expiré. Veuillez en demander un nouveau.",
     resetWeak: "Votre mot de passe doit contenir entre 8 et 72 caractères.",
     genericError: "Une erreur s'est produite. Veuillez réessayer dans une minute.",
-    passwordUpdated: "Votre mot de passe a été mis à jour. Connectez-vous avec votre nouveau mot de passe.",
+    passwordUpdated:
+      "Votre mot de passe a été mis à jour. Connectez-vous avec votre nouveau mot de passe.",
     backToSignIn: "Retour à la connexion",
     requestNewLink: "Demander un nouveau lien",
   },
@@ -1497,7 +1741,8 @@ const de: Dictionary = {
     title: "Über uns",
     intro: (storeName: string) =>
       `Wir haben ${storeName} gegründet, um handgeblasenen, authentischen Muranoglas-Schmuck zu Menschen zu bringen, die die Glashütten nicht selbst besuchen können — jedes Stück entsteht nach Techniken, die seit sieben Jahrhunderten auf der Insel Murano weitergegeben werden, und wird direkt aus Venedig verschickt.`,
-    heritageImageAlt: "Das Schaufenster einer Muranoglas-Schmuckwerkstatt an einem Kanal in Venedig",
+    heritageImageAlt:
+      "Das Schaufenster einer Muranoglas-Schmuckwerkstatt an einem Kanal in Venedig",
     valuesTitle: "Was uns wichtig ist",
     value1Title: "Qualität zuerst",
     value1Body:
@@ -1505,7 +1750,8 @@ const de: Dictionary = {
     value2Title: "Transparente Preise",
     value2Body: "Der angezeigte Preis beinhaltet die Steuer. Keine Überraschungen an der Kasse.",
     value3Title: "Echter Kundenservice",
-    value3Body: "Eine Person liest jede Nachricht, die an unsere Kontaktadresse gesendet wird — kein Bot.",
+    value3Body:
+      "Eine Person liest jede Nachricht, die an unsere Kontaktadresse gesendet wird — kein Bot.",
     contactCta: "Haben Sie eine Frage? ",
     contactLink: "Kontaktieren Sie uns",
     friendsIntro: "Wir sind mit dem Team von ",
@@ -1581,6 +1827,53 @@ const de: Dictionary = {
     buyNow: "Jetzt kaufen",
     reviews: "Bewertungen",
     storyTitle: "Die Geschichte hinter diesem Stück",
+    shippingBanner:
+      "Kostenloser Versand nach Italien und Europa · USA und Kanada 30 € · Restliche Welt 40 €",
+    handmadeBadge: "Handgefertigt in Italien",
+    lightweightBadge: "Leicht",
+    seeReviews: "Bewertungen ansehen",
+    giftReassuranceTitle: "Das perfekte Geschenk für jeden Anlass",
+    giftReassuranceBody: "Eleganz, Handwerkskunst und eine Geschichte, die man verschenken kann.",
+    giftSectionEyebrow: "Das perfekte Geschenk",
+    giftSectionHeadline: "Mehr als ein Schmuckstück – ein Gefühl, das bleibt.",
+    giftSectionBody:
+      "Jedes Stück wird wunderschön verpackt in unserer charakteristischen Geschenkbox geliefert, bereit zum Verschenken – zum Geburtstag, Jahrestag, zu einem besonderen Anlass oder einfach, um jemandem eine Freude zu machen.",
+    giftSectionLink: "Entdecken Sie unsere Geschenkverpackung",
+    giftFeature1: "Elegante Verpackung",
+    giftFeature2: "Verschenkfertig",
+    giftFeature3: "Ein einzigartiges, bedeutungsvolles Geschenk",
+    faq: [
+      {
+        question: "Ist das echtes Muranoglas?",
+        answer:
+          "Ja — jedes Stück ist von Hand gefertigtes Glas aus Murano, Italien, hergestellt mit den traditionellen Techniken der Lampenarbeit und des Glasblasens, nie gegossen oder in Serie produziert. Der vollständige Leitfaden zu Muranoglas erklärt, wie sich echtes Glas von Imitationen unterscheiden lässt.",
+      },
+      {
+        question: "Wo wird es hergestellt?",
+        answer:
+          "Auf Murano, der kleinen Insel in der venezianischen Lagune, die seit über 700 Jahren das Zentrum der italienischen Glaskunst ist. Jedes Stück wird von Hand in einem aktiven Ofen auf der Insel geformt.",
+      },
+      {
+        question: "Wie pflege ich meinen Schmuck?",
+        answer:
+          "Trocken aufbewahren, Kontakt mit Parfüm vermeiden und jedes Stück separat lagern, damit nichts verkratzt. Mit ein wenig Pflege behält Muranoglas seine Farbe und seinen Glanz ein Leben lang.",
+      },
+      {
+        question: "Kann ich meine Bestellung zurückgeben?",
+        answer:
+          "Ja. Jede Bestellung umfasst das 14-tägige Widerrufsrecht der EU — passt es nicht, kann es ohne Angabe von Gründen für eine vollständige Rückerstattung zurückgesendet werden.",
+      },
+      {
+        question: "Welche Versandoptionen gibt es?",
+        answer:
+          "Der Versand nach Italien und in den Rest Europas ist kostenlos. Bestellungen in die USA und nach Kanada kosten 30 €, in den Rest der Welt 40 €. Die Standardlieferung dauert innerhalb Europas 3–5 Tage; bei internationalen Bestellungen können lokale Einfuhrzölle und Steuern anfallen, die nicht im Preis enthalten sind.",
+      },
+      {
+        question: "Wird es als Geschenk verpackt geliefert?",
+        answer:
+          "Ja — jedes Stück kommt in unserer charakteristischen Geschenkbox an, verschenkfertig genau so, wie es ist. Keine zusätzliche Verpackung nötig, egal ob als Geschenk für jemand anderen oder als kleine Freude für sich selbst.",
+      },
+    ],
     noReviews: "Noch keine Bewertungen.",
     reviewCount: "{n} Bewertungen",
     yourRating: "Ihre Bewertung",
@@ -1594,7 +1887,8 @@ const de: Dictionary = {
     copyLink: "Link kopieren",
     linkCopied: "Link kopiert",
     youMightAlsoLike: "Das könnte Ihnen auch gefallen",
-    verifiedPurchaseOnly: "Nur Kunden, die dieses Produkt gekauft haben, können eine Bewertung abgeben.",
+    verifiedPurchaseOnly:
+      "Nur Kunden, die dieses Produkt gekauft haben, können eine Bewertung abgeben.",
     writeAReview: "Bewertung schreiben",
     ratingRequired: "Wählen Sie eine Bewertung, bevor Sie absenden.",
     ratingLabels: [
@@ -1650,7 +1944,8 @@ const de: Dictionary = {
     confirmEmailToWishlist: "Bestätigen Sie Ihre E-Mail-Adresse, um Ihre Wunschliste zu nutzen.",
     confirmEmailToReview: "Bestätigen Sie Ihre E-Mail-Adresse, um eine Bewertung abzugeben.",
     productNotFound: "Produkt nicht gefunden.",
-    guestEmailRequired: "Melden Sie sich an oder geben Sie eine E-Mail-Adresse ein, um als Gast zu bestellen.",
+    guestEmailRequired:
+      "Melden Sie sich an oder geben Sie eine E-Mail-Adresse ein, um als Gast zu bestellen.",
     cartEmpty: "Ihr Warenkorb ist leer.",
     productUnavailable: "Ein Artikel in Ihrem Warenkorb ist nicht mehr verfügbar.",
     invalidQuantity: "Ungültige Menge für {name}.",
@@ -1662,7 +1957,8 @@ const de: Dictionary = {
     orderNotFound: "Bestellung nicht gefunden.",
     orderNotAwaitingPayment: "Diese Bestellung wartet nicht auf eine Zahlung.",
     paymentMethodUnavailable: "Diese Zahlungsart ist nicht verfügbar.",
-    paymentProcessing: "Ihre Zahlung wird verarbeitet. Bitte schauen Sie in einem Moment noch einmal vorbei.",
+    paymentProcessing:
+      "Ihre Zahlung wird verarbeitet. Bitte schauen Sie in einem Moment noch einmal vorbei.",
     returnReasonRequired: "Bitte beschreiben Sie den Grund für Ihre Rücksendung.",
     returnNotEligible: "Diese Bestellung kann noch nicht zurückgesendet werden.",
     returnInProgress: "Für diese Bestellung läuft bereits eine Rücksendeanfrage.",
@@ -1674,13 +1970,15 @@ const de: Dictionary = {
     returnStatusLabel: "Status der Rücksendung",
     emailConfirmed: "E-Mail-Adresse bestätigt – vielen Dank!",
     confirmLinkExpired: "Dieser Bestätigungslink ist abgelaufen. Fordern Sie unten einen neuen an.",
-    confirmEmailPrompt: "Bitte bestätigen Sie Ihre E-Mail-Adresse – den Bestätigungslink finden Sie in Ihrem Posteingang.",
+    confirmEmailPrompt:
+      "Bitte bestätigen Sie Ihre E-Mail-Adresse – den Bestätigungslink finden Sie in Ihrem Posteingang.",
     resendConfirmation: "Bestätigungs-E-Mail erneut senden",
     confirmationSent: "Bestätigungs-E-Mail gesendet – bitte prüfen Sie Ihren Posteingang.",
     unsubscribeInvalidTitle: "Ungültiger Abmeldelink",
     unsubscribeInvalidBody: "Dem Link fehlt die E-Mail-Adresse, oder sie ist ungültig.",
     unsubscribedTitle: "Sie wurden abgemeldet",
-    unsubscribedBody: "{email} erhält keine Newsletter-E-Mails mehr. Sie können sich jederzeit über die Startseite wieder anmelden.",
+    unsubscribedBody:
+      "{email} erhält keine Newsletter-E-Mails mehr. Sie können sich jederzeit über die Startseite wieder anmelden.",
     paginationLabel: "Seitennavigation",
     minPriceLabel: "Mindestpreis",
     maxPriceLabel: "Höchstpreis",
@@ -1690,20 +1988,26 @@ const de: Dictionary = {
   },
   emails: {
     tagline: "{storeName} — authentisches venezianisches Glas, handgefertigt in Murano.",
-    copyLinkHint: "Falls die Schaltfläche nicht funktioniert, kopieren Sie diesen Link in Ihren Browser:",
+    copyLinkHint:
+      "Falls die Schaltfläche nicht funktioniert, kopieren Sie diesen Link in Ihren Browser:",
     verifySubject: "Bestätigen Sie Ihre E-Mail-Adresse — {storeName}",
     verifyPreview: "Bestätigen Sie Ihre E-Mail-Adresse — {storeName}",
     verifyHeading: "Bestätigen Sie Ihre E-Mail-Adresse",
-    verifyBody: "Willkommen bei {storeName}. Bestätigen Sie Ihre E-Mail-Adresse, um Ihr Konto zu aktivieren – Sie benötigen dies, um Bewertungen abzugeben und Artikel auf Ihrer Wunschliste zu speichern.",
+    verifyBody:
+      "Willkommen bei {storeName}. Bestätigen Sie Ihre E-Mail-Adresse, um Ihr Konto zu aktivieren – Sie benötigen dies, um Bewertungen abzugeben und Artikel auf Ihrer Wunschliste zu speichern.",
     verifyButton: "E-Mail-Adresse bestätigen",
-    verifyExpiry: "Dieser Link läuft in {hours} Stunden ab. Wenn Sie dieses Konto nicht erstellt haben, können Sie diese E-Mail ignorieren.",
+    verifyExpiry:
+      "Dieser Link läuft in {hours} Stunden ab. Wenn Sie dieses Konto nicht erstellt haben, können Sie diese E-Mail ignorieren.",
     resetSubject: "Passwort zurücksetzen — {storeName}",
     resetHeading: "Passwort zurücksetzen",
-    resetBody: "Wir haben eine Anfrage zum Zurücksetzen des Passworts für Ihr {storeName}-Konto erhalten. Wählen Sie mit der Schaltfläche unten ein neues Passwort.",
+    resetBody:
+      "Wir haben eine Anfrage zum Zurücksetzen des Passworts für Ihr {storeName}-Konto erhalten. Wählen Sie mit der Schaltfläche unten ein neues Passwort.",
     resetButton: "Neues Passwort festlegen",
-    resetExpiry: "Dieser Link läuft in {minutes} Minuten ab und kann nur einmal verwendet werden. Wenn Sie dies nicht angefordert haben, können Sie diese E-Mail ignorieren – Ihr Passwort bleibt unverändert.",
+    resetExpiry:
+      "Dieser Link läuft in {minutes} Minuten ab und kann nur einmal verwendet werden. Wenn Sie dies nicht angefordert haben, können Sie diese E-Mail ignorieren – Ihr Passwort bleibt unverändert.",
     pwChangedSubject: "Ihr Passwort wurde geändert — {storeName}",
-    pwChangedBody: "Das Passwort für Ihr {storeName}-Konto wurde soeben geändert, und alle angemeldeten Geräte wurden abgemeldet.\n\nWenn Sie das waren, ist nichts weiter zu tun. Wenn nicht, setzen Sie Ihr Passwort sofort erneut zurück und kontaktieren Sie uns{contact}.",
+    pwChangedBody:
+      "Das Passwort für Ihr {storeName}-Konto wurde soeben geändert, und alle angemeldeten Geräte wurden abgemeldet.\n\nWenn Sie das waren, ist nichts weiter zu tun. Wenn nicht, setzen Sie Ihr Passwort sofort erneut zurück und kontaktieren Sie uns{contact}.",
     pwChangedContact: " unter {email}",
     orderNumberLabel: "Bestellnummer",
     orderDateLabel: "Bestelldatum",
@@ -1712,15 +2016,30 @@ const de: Dictionary = {
     viewOrder: "Bestellung ansehen",
     orderQuestions: "Fragen zu dieser Bestellung? Antworten Sie einfach auf diese E-Mail.",
     orderSubject: "Bestellung {orderNumber}: {heading}",
-    unknownStatusBody: "Der Status Ihrer Bestellung hat sich auf „{status}“ geändert.\n\nBestellnummer: {orderNumber}",
+    unknownStatusBody:
+      "Der Status Ihrer Bestellung hat sich auf „{status}“ geändert.\n\nBestellnummer: {orderNumber}",
     vatLabel: "USt-IdNr. {number}",
     abandonedSubject: "Sie haben etwas in Ihrem Warenkorb gelassen",
-    abandonedBody: "Sie haben eine Bestellung begonnen, aber noch nicht bezahlt:\n\n{items}\n\nBestellung abschließen: {url}\n\nBestellnummer: {orderNumber}",
+    abandonedBody:
+      "Sie haben eine Bestellung begonnen, aber noch nicht bezahlt:\n\n{items}\n\nBestellung abschließen: {url}\n\nBestellnummer: {orderNumber}",
     status: {
-      paid: { heading: "Zahlung eingegangen", message: "Wir haben Ihre Zahlung erhalten, und Ihre Bestellung wird nun sorgfältig vorbereitet." },
-      processing: { heading: "Bestellung wird vorbereitet", message: "Ihre Bestellung wird von unseren Kunsthandwerkern sorgfältig vorbereitet." },
-      shipped: { heading: "Ihre Bestellung ist unterwegs", message: "Ihre Bestellung wurde versandt und ist auf dem Weg zu Ihnen." },
-      delivered: { heading: "Bestellung zugestellt", message: "Ihre Bestellung wurde zugestellt. Wir hoffen, sie gefällt Ihnen!" },
+      paid: {
+        heading: "Zahlung eingegangen",
+        message:
+          "Wir haben Ihre Zahlung erhalten, und Ihre Bestellung wird nun sorgfältig vorbereitet.",
+      },
+      processing: {
+        heading: "Bestellung wird vorbereitet",
+        message: "Ihre Bestellung wird von unseren Kunsthandwerkern sorgfältig vorbereitet.",
+      },
+      shipped: {
+        heading: "Ihre Bestellung ist unterwegs",
+        message: "Ihre Bestellung wurde versandt und ist auf dem Weg zu Ihnen.",
+      },
+      delivered: {
+        heading: "Bestellung zugestellt",
+        message: "Ihre Bestellung wurde zugestellt. Wir hoffen, sie gefällt Ihnen!",
+      },
       cancelled: { heading: "Bestellung storniert", message: "Ihre Bestellung wurde storniert." },
       refunded: { heading: "Bestellung erstattet", message: "Ihre Bestellung wurde erstattet." },
     },
@@ -1735,17 +2054,23 @@ const de: Dictionary = {
     city: "Stadt",
     postalCode: "Postleitzahl",
     country: "Land",
-    couldNotQuote: "Der Bestellbetrag konnte nicht berechnet werden. Bitte prüfen Sie Ihre Angaben und versuchen Sie es erneut.",
-    couldNotPlaceOrder: "Ihre Bestellung konnte nicht aufgegeben werden. Bitte prüfen Sie Ihre Angaben und versuchen Sie es erneut oder kontaktieren Sie uns, falls das Problem bestehen bleibt.",
-    noShippingMethods: "Der Versand in dieses Land ist derzeit nicht möglich. Bitte wählen Sie ein anderes Land oder kontaktieren Sie uns.",
+    couldNotQuote:
+      "Der Bestellbetrag konnte nicht berechnet werden. Bitte prüfen Sie Ihre Angaben und versuchen Sie es erneut.",
+    couldNotPlaceOrder:
+      "Ihre Bestellung konnte nicht aufgegeben werden. Bitte prüfen Sie Ihre Angaben und versuchen Sie es erneut oder kontaktieren Sie uns, falls das Problem bestehen bleibt.",
+    noShippingMethods:
+      "Der Versand in dieses Land ist derzeit nicht möglich. Bitte wählen Sie ein anderes Land oder kontaktieren Sie uns.",
     continueShopping: "Weiter einkaufen",
     invalidPostalCode: "Diese Postleitzahl scheint für das ausgewählte Land nicht korrekt zu sein.",
     addressCheck: {
       checking: "Adresse wird auf der Karte geprüft …",
       found: "Ist das der richtige Ort? Prüfen Sie die Position, bevor Sie bestellen.",
-      foundArea: "Wir haben nur die Gegend gefunden, nicht das genaue Gebäude. Das ist in Ordnung, prüfen Sie aber Straße und Hausnummer.",
-      notFound: "Wir finden diese Adresse nicht auf der Karte. Prüfen Sie die Schreibweise – Sie können Ihre Bestellung trotzdem aufgeben.",
-      unavailable: "Die Karte ist gerade nicht verfügbar. Sie können Ihre Bestellung trotzdem aufgeben.",
+      foundArea:
+        "Wir haben nur die Gegend gefunden, nicht das genaue Gebäude. Das ist in Ordnung, prüfen Sie aber Straße und Hausnummer.",
+      notFound:
+        "Wir finden diese Adresse nicht auf der Karte. Prüfen Sie die Schreibweise – Sie können Ihre Bestellung trotzdem aufgeben.",
+      unavailable:
+        "Die Karte ist gerade nicht verfügbar. Sie können Ihre Bestellung trotzdem aufgeben.",
       openMap: "Größere Karte öffnen",
       mapAlt: "Karte mit der Lieferadresse",
     },
@@ -1783,7 +2108,8 @@ const de: Dictionary = {
     bic: "BIC/SWIFT",
     reference: "Verwendungszweck",
     amount: "Betrag",
-    bankNote: "Bitte geben Sie den oben genannten Verwendungszweck an, damit wir Ihre Zahlung zuordnen können. Wir bestätigen Ihre Bestellung, sobald die Überweisung eingegangen ist.",
+    bankNote:
+      "Bitte geben Sie den oben genannten Verwendungszweck an, damit wir Ihre Zahlung zuordnen können. Wir bestätigen Ihre Bestellung, sobald die Überweisung eingegangen ist.",
     errStart: "Die Zahlung konnte nicht gestartet werden. Bitte versuchen Sie es erneut.",
     errBank: "Die Banküberweisung konnte nicht gestartet werden. Bitte versuchen Sie es erneut.",
   },
@@ -1811,18 +2137,22 @@ const de: Dictionary = {
       "Die Google-Anmeldung ist für Konten mit Zwei-Faktor-Authentifizierung sowie für Admin-/Team-Konten nicht verfügbar. Bitte melden Sie sich mit E-Mail, Passwort und Authenticator-Code an.",
     forgotPassword: "Passwort vergessen?",
     forgotPasswordTitle: "Passwort zurücksetzen",
-    forgotPasswordIntro: "Geben Sie die E-Mail-Adresse Ihres Kontos ein – wir senden Ihnen einen Link zum Festlegen eines neuen Passworts.",
+    forgotPasswordIntro:
+      "Geben Sie die E-Mail-Adresse Ihres Kontos ein – wir senden Ihnen einen Link zum Festlegen eines neuen Passworts.",
     sendResetLink: "Link zum Zurücksetzen senden",
     sendingResetLink: "Wird gesendet…",
-    resetLinkSent: "Falls ein Konto mit dieser Adresse existiert, ist ein Link zum Zurücksetzen unterwegs. Er ist 1 Stunde gültig.",
+    resetLinkSent:
+      "Falls ein Konto mit dieser Adresse existiert, ist ein Link zum Zurücksetzen unterwegs. Er ist 1 Stunde gültig.",
     resetPasswordTitle: "Neues Passwort festlegen",
     newPassword: "Neues Passwort",
     resetPassword: "Passwort aktualisieren",
     resettingPassword: "Wird aktualisiert…",
-    resetInvalid: "Dieser Link zum Zurücksetzen ist ungültig oder abgelaufen. Bitte fordern Sie einen neuen an.",
+    resetInvalid:
+      "Dieser Link zum Zurücksetzen ist ungültig oder abgelaufen. Bitte fordern Sie einen neuen an.",
     resetWeak: "Ihr Passwort muss zwischen 8 und 72 Zeichen lang sein.",
     genericError: "Etwas ist schiefgelaufen. Bitte versuchen Sie es in einer Minute erneut.",
-    passwordUpdated: "Ihr Passwort wurde aktualisiert. Bitte melden Sie sich mit dem neuen Passwort an.",
+    passwordUpdated:
+      "Ihr Passwort wurde aktualisiert. Bitte melden Sie sich mit dem neuen Passwort an.",
     backToSignIn: "Zurück zur Anmeldung",
     requestNewLink: "Neuen Link anfordern",
   },
@@ -1910,7 +2240,8 @@ const ar: Dictionary = {
     followUs: "تابعنا",
     tagline: "قطع مصنوعة يدويًا، تُشحن بعناية.",
     newsletterTitle: "ابقَ على اطلاع",
-    newsletterBody: "قطع جديدة وعروض بين الحين والآخر — بلا رسائل مزعجة، ويمكنك إلغاء الاشتراك في أي وقت.",
+    newsletterBody:
+      "قطع جديدة وعروض بين الحين والآخر — بلا رسائل مزعجة، ويمكنك إلغاء الاشتراك في أي وقت.",
     newsletterPlaceholder: "you@example.com",
     newsletterSubmit: "اشترك",
     newsletterSubmitting: "جارٍ الاشتراك…",
@@ -2039,7 +2370,8 @@ const ar: Dictionary = {
     sizeNecklace: "45–48 سم",
     sizeEarrings: "حوالي 4 سم طولاً",
     careLabel: "العناية",
-    careNote: "يُنصح بالحفاظ على القطعة جافة وتجنّب ملامستها للعطور وتخزينها بمفردها لتفادي الخدوش.",
+    careNote:
+      "يُنصح بالحفاظ على القطعة جافة وتجنّب ملامستها للعطور وتخزينها بمفردها لتفادي الخدوش.",
     inStock: "متوفر",
     vatIncluded: "شامل ضريبة القيمة المضافة",
     addToCart: "أضف إلى السلة",
@@ -2047,6 +2379,53 @@ const ar: Dictionary = {
     buyNow: "اشترِ الآن",
     reviews: "التقييمات",
     storyTitle: "قصة هذه القطعة",
+    shippingBanner:
+      "شحن مجاني إلى إيطاليا وأوروبا · الولايات المتحدة وكندا 30 يورو · باقي دول العالم 40 يورو",
+    handmadeBadge: "صناعة يدوية في إيطاليا",
+    lightweightBadge: "خفيف الوزن",
+    seeReviews: "عرض التقييمات",
+    giftReassuranceTitle: "الهدية المثالية لكل مناسبة",
+    giftReassuranceBody: "أناقة وحرفية وقصة تستحق أن تُهدى.",
+    giftSectionEyebrow: "الهدية المثالية",
+    giftSectionHeadline: "أكثر من مجرد مجوهرات، إنها مشاعر تدوم.",
+    giftSectionBody:
+      "تصل كل قطعة معبأة بعناية في صندوقنا المميز، جاهزة للإهداء كما هي — في عيد ميلاد أو ذكرى سنوية أو مناسبة خاصة، أو ببساطة لإسعاد شخص عزيز.",
+    giftSectionLink: "اكتشف تغليف الهدايا لدينا",
+    giftFeature1: "تغليف أنيق",
+    giftFeature2: "جاهزة للإهداء",
+    giftFeature3: "هدية فريدة وذات معنى",
+    faq: [
+      {
+        question: "هل هذا زجاج مورانو أصلي؟",
+        answer:
+          "نعم — كل قطعة مصنوعة يدويًا من زجاج مورانو الإيطالي، باستخدام تقنيات النفخ والتشكيل التقليدية، ولم يتم صبها أو إنتاجها بكميات كبيرة أبدًا. اطّلع على دليلنا الكامل لزجاج مورانو لمعرفة كيفية تمييز الزجاج الأصلي عن التقليد.",
+      },
+      {
+        question: "أين يتم تصنيعه؟",
+        answer:
+          "في مورانو، الجزيرة الصغيرة في بحيرة البندقية التي كانت مركز صناعة الزجاج في إيطاليا لأكثر من 700 عام. تُشكَّل كل قطعة يدويًا في فرن عامل على الجزيرة.",
+      },
+      {
+        question: "كيف أعتني بمجوهراتي؟",
+        answer:
+          "حافظ عليها جافة، وتجنّب ملامستها للعطور، واحفظ كل قطعة بمفردها لتفادي الخدوش. مع القليل من العناية، يحافظ زجاج مورانو على لونه ولمعانه مدى الحياة.",
+      },
+      {
+        question: "هل يمكنني إرجاع طلبي؟",
+        answer:
+          "نعم. يشمل كل طلب حق الانسحاب لمدة 14 يومًا وفق قوانين الاتحاد الأوروبي — إذا لم تكن القطعة مناسبة، يمكن إعادتها لاسترداد كامل المبلغ دون الحاجة لأي تبرير.",
+      },
+      {
+        question: "ما هي خيارات الشحن؟",
+        answer:
+          "الشحن مجاني إلى إيطاليا وباقي أوروبا. تبلغ تكلفة الشحن إلى الولايات المتحدة وكندا 30 يورو، و40 يورو لباقي دول العالم. يستغرق التوصيل القياسي من 3 إلى 5 أيام داخل أوروبا؛ وقد تخضع الطلبات الدولية لرسوم جمركية وضرائب محلية غير مشمولة في السعر.",
+      },
+      {
+        question: "هل تصل القطعة مُغلّفة كهدية؟",
+        answer:
+          "نعم — تصل كل قطعة في صندوقنا المميز، جاهزة للإهداء كما هي. لا حاجة لأي تغليف إضافي، سواء كانت هدية لشخص آخر أو مكافأة لنفسك.",
+      },
+    ],
     noReviews: "لا توجد تقييمات بعد.",
     reviewCount: "{n} تقييمًا",
     yourRating: "تقييمك",
@@ -2063,13 +2442,13 @@ const ar: Dictionary = {
     verifiedPurchaseOnly: "يمكن فقط لمن اشترى هذا المنتج ترك تقييم.",
     writeAReview: "اكتب تقييمًا",
     ratingRequired: "اختر تقييمًا قبل الإرسال.",
-    ratingLabels: [
-      "لا يناسبني",
-      "يمكن أن يكون أفضل",
-      "لطيف",
-      "جميل جدًا",
-      "مذهل تمامًا",
-    ] as [string, string, string, string, string],
+    ratingLabels: ["لا يناسبني", "يمكن أن يكون أفضل", "لطيف", "جميل جدًا", "مذهل تمامًا"] as [
+      string,
+      string,
+      string,
+      string,
+      string,
+    ],
     charactersLeft: "بقي {n} حرفًا",
     returnsBadge: "حق الانسحاب خلال 14 يومًا",
     secureBadge: "دفع آمن",
@@ -2146,7 +2525,8 @@ const ar: Dictionary = {
     unsubscribeInvalidTitle: "رابط إلغاء الاشتراك غير صالح",
     unsubscribeInvalidBody: "الرابط لا يتضمن بريدًا إلكترونيًا أو أن البريد غير صالح.",
     unsubscribedTitle: "تم إلغاء اشتراكك",
-    unsubscribedBody: "لن يتلقى {email} رسائل النشرة الإخبارية بعد الآن. يمكنك الاشتراك مجددًا في أي وقت من الصفحة الرئيسية.",
+    unsubscribedBody:
+      "لن يتلقى {email} رسائل النشرة الإخبارية بعد الآن. يمكنك الاشتراك مجددًا في أي وقت من الصفحة الرئيسية.",
     paginationLabel: "التنقل بين الصفحات",
     minPriceLabel: "الحد الأدنى للسعر",
     maxPriceLabel: "الحد الأقصى للسعر",
@@ -2160,16 +2540,21 @@ const ar: Dictionary = {
     verifySubject: "أكّد بريدك الإلكتروني — {storeName}",
     verifyPreview: "أكّد عنوان بريدك الإلكتروني — {storeName}",
     verifyHeading: "أكّد عنوان بريدك الإلكتروني",
-    verifyBody: "أهلًا بك في {storeName}. أكّد عنوان بريدك الإلكتروني لتفعيل حسابك — ستحتاج إلى ذلك لترك التقييمات وحفظ المنتجات في قائمة المفضلة.",
+    verifyBody:
+      "أهلًا بك في {storeName}. أكّد عنوان بريدك الإلكتروني لتفعيل حسابك — ستحتاج إلى ذلك لترك التقييمات وحفظ المنتجات في قائمة المفضلة.",
     verifyButton: "تأكيد البريد الإلكتروني",
-    verifyExpiry: "تنتهي صلاحية هذا الرابط خلال {hours} ساعة. إذا لم تنشئ هذا الحساب، يمكنك تجاهل هذه الرسالة.",
+    verifyExpiry:
+      "تنتهي صلاحية هذا الرابط خلال {hours} ساعة. إذا لم تنشئ هذا الحساب، يمكنك تجاهل هذه الرسالة.",
     resetSubject: "إعادة تعيين كلمة المرور — {storeName}",
     resetHeading: "إعادة تعيين كلمة المرور",
-    resetBody: "تلقينا طلبًا لإعادة تعيين كلمة مرور حسابك في {storeName}. اختر كلمة مرور جديدة باستخدام الزر أدناه.",
+    resetBody:
+      "تلقينا طلبًا لإعادة تعيين كلمة مرور حسابك في {storeName}. اختر كلمة مرور جديدة باستخدام الزر أدناه.",
     resetButton: "اختر كلمة مرور جديدة",
-    resetExpiry: "تنتهي صلاحية هذا الرابط خلال {minutes} دقيقة ويمكن استخدامه مرة واحدة. إذا لم تطلب ذلك، تجاهل هذه الرسالة — لن تتغير كلمة مرورك.",
+    resetExpiry:
+      "تنتهي صلاحية هذا الرابط خلال {minutes} دقيقة ويمكن استخدامه مرة واحدة. إذا لم تطلب ذلك، تجاهل هذه الرسالة — لن تتغير كلمة مرورك.",
     pwChangedSubject: "تم تغيير كلمة مرورك — {storeName}",
-    pwChangedBody: "تم تغيير كلمة مرور حسابك في {storeName} للتو، وتم تسجيل الخروج من جميع الأجهزة التي كانت مسجّلة الدخول.\n\nإذا كنت أنت من قام بذلك، فلا حاجة لأي إجراء. وإن لم تكن أنت، فأعد تعيين كلمة المرور فورًا وتواصل معنا{contact}.",
+    pwChangedBody:
+      "تم تغيير كلمة مرور حسابك في {storeName} للتو، وتم تسجيل الخروج من جميع الأجهزة التي كانت مسجّلة الدخول.\n\nإذا كنت أنت من قام بذلك، فلا حاجة لأي إجراء. وإن لم تكن أنت، فأعد تعيين كلمة المرور فورًا وتواصل معنا{contact}.",
     pwChangedContact: " على {email}",
     orderNumberLabel: "رقم الطلب",
     orderDateLabel: "تاريخ الطلب",
@@ -2181,9 +2566,13 @@ const ar: Dictionary = {
     unknownStatusBody: "تغيّرت حالة طلبك إلى {status}.\n\nرقم الطلب: {orderNumber}",
     vatLabel: "ضريبة القيمة المضافة {number}",
     abandonedSubject: "تركتَ شيئًا في سلة التسوق",
-    abandonedBody: "لقد بدأت طلبًا ولم تُكمل دفعه بعد:\n\n{items}\n\nأكمل طلبك: {url}\n\nرقم الطلب: {orderNumber}",
+    abandonedBody:
+      "لقد بدأت طلبًا ولم تُكمل دفعه بعد:\n\n{items}\n\nأكمل طلبك: {url}\n\nرقم الطلب: {orderNumber}",
     status: {
-      paid: { heading: "تم استلام الدفعة", message: "لقد استلمنا دفعتك ويجري الآن تجهيز طلبك بعناية." },
+      paid: {
+        heading: "تم استلام الدفعة",
+        message: "لقد استلمنا دفعتك ويجري الآن تجهيز طلبك بعناية.",
+      },
       processing: { heading: "طلبك قيد التجهيز", message: "يقوم حرفيونا بتجهيز طلبك بعناية." },
       shipped: { heading: "طلبك في الطريق إليك", message: "تم شحن طلبك وهو في طريقه إليك." },
       delivered: { heading: "تم تسليم الطلب", message: "تم تسليم طلبك. نأمل أن ينال إعجابك!" },
@@ -2202,7 +2591,8 @@ const ar: Dictionary = {
     postalCode: "الرمز البريدي",
     country: "الدولة",
     couldNotQuote: "تعذّر حساب إجمالي طلبك. تحقق من بياناتك وحاول مرة أخرى.",
-    couldNotPlaceOrder: "تعذّر إتمام طلبك. تحقق من بياناتك وحاول مرة أخرى، أو تواصل معنا إذا استمرت المشكلة.",
+    couldNotPlaceOrder:
+      "تعذّر إتمام طلبك. تحقق من بياناتك وحاول مرة أخرى، أو تواصل معنا إذا استمرت المشكلة.",
     noShippingMethods: "الشحن غير متاح إلى هذه الدولة حاليًا. اختر دولة أخرى أو تواصل معنا.",
     continueShopping: "متابعة التسوق",
     invalidPostalCode: "لا يبدو هذا الرمز البريدي صحيحًا للدولة المختارة.",
@@ -2210,7 +2600,8 @@ const ar: Dictionary = {
       checking: "جارٍ التحقق من العنوان على الخريطة…",
       found: "هل هذا هو المكان الصحيح؟ تحقق من الموقع قبل إتمام الطلب.",
       foundArea: "وجدنا المنطقة فقط وليس المبنى بالتحديد. لا بأس بذلك، لكن تحقق من الشارع والرقم.",
-      notFound: "لم نتمكن من العثور على هذا العنوان على الخريطة. تحقق من الإملاء — يمكنك مع ذلك إتمام طلبك.",
+      notFound:
+        "لم نتمكن من العثور على هذا العنوان على الخريطة. تحقق من الإملاء — يمكنك مع ذلك إتمام طلبك.",
       unavailable: "الخريطة غير متاحة حاليًا. يمكنك مع ذلك إتمام طلبك.",
       openMap: "افتح خريطة أكبر",
       mapAlt: "خريطة تعرض عنوان التوصيل",
@@ -2277,10 +2668,12 @@ const ar: Dictionary = {
       "تسجيل الدخول عبر Google غير متاح للحسابات التي تستخدم المصادقة الثنائية أو لحسابات المشرفين/الموظفين. يرجى تسجيل الدخول باستخدام البريد الإلكتروني وكلمة المرور ورمز تطبيق المصادقة.",
     forgotPassword: "هل نسيت كلمة المرور؟",
     forgotPasswordTitle: "إعادة تعيين كلمة المرور",
-    forgotPasswordIntro: "أدخل عنوان البريد الإلكتروني لحسابك وسنرسل إليك رابطًا لاختيار كلمة مرور جديدة.",
+    forgotPasswordIntro:
+      "أدخل عنوان البريد الإلكتروني لحسابك وسنرسل إليك رابطًا لاختيار كلمة مرور جديدة.",
     sendResetLink: "إرسال رابط إعادة التعيين",
     sendingResetLink: "جارٍ الإرسال…",
-    resetLinkSent: "إذا كان هناك حساب بهذا العنوان، فإن رابط إعادة التعيين في طريقه إليك. تنتهي صلاحيته بعد ساعة واحدة.",
+    resetLinkSent:
+      "إذا كان هناك حساب بهذا العنوان، فإن رابط إعادة التعيين في طريقه إليك. تنتهي صلاحيته بعد ساعة واحدة.",
     resetPasswordTitle: "اختر كلمة مرور جديدة",
     newPassword: "كلمة المرور الجديدة",
     resetPassword: "تحديث كلمة المرور",
@@ -2511,6 +2904,52 @@ const zh: Dictionary = {
     buyNow: "立即购买",
     reviews: "评价",
     storyTitle: "这件作品的故事",
+    shippingBanner: "意大利及欧洲地区免费配送 · 美国和加拿大30欧元 · 其他地区40欧元",
+    handmadeBadge: "意大利手工制作",
+    lightweightBadge: "轻盈佩戴",
+    seeReviews: "查看评价",
+    giftReassuranceTitle: "适合每个场合的完美礼物",
+    giftReassuranceBody: "优雅工艺，值得赠予的故事。",
+    giftSectionEyebrow: "完美的礼物",
+    giftSectionHeadline: "不只是珠宝，更是一份长久的感动。",
+    giftSectionBody:
+      "每件作品都精美地装在我们标志性的礼盒中送达，无需额外包装即可直接赠送——无论是生日、纪念日、特别的场合，还是单纯想让某人感到被重视。",
+    giftSectionLink: "了解我们的礼品包装",
+    giftFeature1: "优雅包装",
+    giftFeature2: "即可赠送",
+    giftFeature3: "独特而有意义的礼物",
+    faq: [
+      {
+        question: "这是真正的穆拉诺玻璃吗？",
+        answer:
+          "是的——每件作品都是在意大利穆拉诺岛用传统的灯工与吹制技法手工制作而成，从不使用模具或批量生产。请参阅我们完整的穆拉诺玻璃指南，了解如何辨别真品与仿制品。",
+      },
+      {
+        question: "它在哪里制作？",
+        answer:
+          "在穆拉诺岛——威尼斯泻湖中的一座小岛，700多年来一直是意大利玻璃工艺的中心。每一件作品都是在岛上一座仍在运作的熔炉旁手工塑形而成。",
+      },
+      {
+        question: "我该如何保养我的珠宝？",
+        answer:
+          "请保持干燥，避免接触香水，并将每件饰品单独存放以防刮擦。只需稍加呵护，穆拉诺玻璃的色彩与光泽便可维持一生。",
+      },
+      {
+        question: "我可以退货吗？",
+        answer:
+          "可以。每笔订单均享有欧盟规定的14天无理由退货权——如果不满意，无需说明理由即可退回并获得全额退款。",
+      },
+      {
+        question: "有哪些配送方式？",
+        answer:
+          "意大利及欧洲其他地区免费配送。发往美国和加拿大的订单需支付30欧元，发往世界其他地区需支付40欧元。欧洲境内标准配送需3至5天；国际订单可能需缴纳当地进口关税和税费，此费用不包含在商品价格内。",
+      },
+      {
+        question: "会附带礼品包装吗？",
+        answer:
+          "会的——每件作品都会装在我们标志性的礼盒中送达，无需额外包装即可直接赠送。无论是送给他人的礼物，还是犒赏自己的心意，都无需再另行包装。",
+      },
+    ],
     noReviews: "暂无评价。",
     reviewCount: "{n} 条评价",
     yourRating: "您的评分",
@@ -2527,13 +2966,13 @@ const zh: Dictionary = {
     verifiedPurchaseOnly: "仅购买过该商品的用户可发表评价。",
     writeAReview: "撰写评价",
     ratingRequired: "提交前请先选择评分。",
-    ratingLabels: [
-      "不太适合我",
-      "还可以更好",
-      "还不错",
-      "非常喜欢",
-      "惊艳绝伦",
-    ] as [string, string, string, string, string],
+    ratingLabels: ["不太适合我", "还可以更好", "还不错", "非常喜欢", "惊艳绝伦"] as [
+      string,
+      string,
+      string,
+      string,
+      string,
+    ],
     charactersLeft: "还可输入 {n} 个字符",
     returnsBadge: "14 天无理由退货",
     secureBadge: "安全结算",
@@ -2624,16 +3063,19 @@ const zh: Dictionary = {
     verifySubject: "请确认您的邮箱 — {storeName}",
     verifyPreview: "请确认您的邮箱地址 — {storeName}",
     verifyHeading: "请确认您的邮箱地址",
-    verifyBody: "欢迎来到 {storeName}。请确认您的邮箱地址以激活账户——发表评价和将商品保存到心愿单都需要先完成确认。",
+    verifyBody:
+      "欢迎来到 {storeName}。请确认您的邮箱地址以激活账户——发表评价和将商品保存到心愿单都需要先完成确认。",
     verifyButton: "确认邮箱地址",
     verifyExpiry: "此链接将在 {hours} 小时后失效。如果您没有创建此账户，请忽略这封邮件。",
     resetSubject: "重置您的密码 — {storeName}",
     resetHeading: "重置您的密码",
     resetBody: "我们收到了重置您 {storeName} 账户密码的请求。请点击下方按钮设置新密码。",
     resetButton: "设置新密码",
-    resetExpiry: "此链接将在 {minutes} 分钟后失效，且只能使用一次。如果这不是您本人的操作，请忽略这封邮件——您的密码不会更改。",
+    resetExpiry:
+      "此链接将在 {minutes} 分钟后失效，且只能使用一次。如果这不是您本人的操作，请忽略这封邮件——您的密码不会更改。",
     pwChangedSubject: "您的密码已更改 — {storeName}",
-    pwChangedBody: "您 {storeName} 账户的密码刚刚被更改，所有已登录的设备均已退出登录。\n\n如果是您本人操作，无需任何处理。如果不是，请立即重新重置密码并联系我们{contact}。",
+    pwChangedBody:
+      "您 {storeName} 账户的密码刚刚被更改，所有已登录的设备均已退出登录。\n\n如果是您本人操作，无需任何处理。如果不是，请立即重新重置密码并联系我们{contact}。",
     pwChangedContact: "（{email}）",
     orderNumberLabel: "订单号",
     orderDateLabel: "下单日期",
@@ -2645,7 +3087,8 @@ const zh: Dictionary = {
     unknownStatusBody: "您的订单状态已更新为：{status}。\n\n订单号：{orderNumber}",
     vatLabel: "增值税号 {number}",
     abandonedSubject: "您的购物车里还有商品",
-    abandonedBody: "您已开始下单，但尚未完成付款：\n\n{items}\n\n继续完成订单：{url}\n\n订单号：{orderNumber}",
+    abandonedBody:
+      "您已开始下单，但尚未完成付款：\n\n{items}\n\n继续完成订单：{url}\n\n订单号：{orderNumber}",
     status: {
       paid: { heading: "已收到付款", message: "我们已收到您的付款，正在精心为您准备订单。" },
       processing: { heading: "订单准备中", message: "我们的工匠正在精心准备您的订单。" },
@@ -2838,7 +3281,8 @@ const ru: Dictionary = {
     followUs: "Подписывайтесь на нас",
     tagline: "Изделия ручной работы, бережно упакованные и отправленные.",
     newsletterTitle: "Будьте в курсе",
-    newsletterBody: "Новые изделия и редкие акции — никакого спама, отписаться можно в любой момент.",
+    newsletterBody:
+      "Новые изделия и редкие акции — никакого спама, отписаться можно в любой момент.",
     newsletterPlaceholder: "you@example.com",
     newsletterSubmit: "Подписаться",
     newsletterSubmitting: "Оформляем подписку…",
@@ -2892,15 +3336,18 @@ const ru: Dictionary = {
     title: "О нас",
     intro: (storeName: string) =>
       `Мы основали ${storeName}, чтобы подлинные украшения из муранского стекла ручной работы могли получить те, кто не может лично посетить стекольные мастерские, — каждое изделие создаётся по технологиям, которые передаются на острове Мурано уже семь столетий, и отправляется прямо из Венеции.`,
-    heritageImageAlt: "Витрина мастерской украшений из муранского стекла на набережной венецианского канала",
+    heritageImageAlt:
+      "Витрина мастерской украшений из муранского стекла на набережной венецианского канала",
     valuesTitle: "Что для нас важно",
     value1Title: "Качество прежде всего",
     value1Body:
       "Каждое изделие изготавливается на Мурано с использованием традиционных техник работы на горелке и выдувания стекла — никаких форм, никакого массового производства.",
     value2Title: "Честные цены",
-    value2Body: "Цена, которую вы видите, уже включает налоги. Никаких сюрпризов при оформлении заказа.",
+    value2Body:
+      "Цена, которую вы видите, уже включает налоги. Никаких сюрпризов при оформлении заказа.",
     value3Title: "Реальная поддержка",
-    value3Body: "Каждое сообщение, отправленное на наш адрес для связи, читает живой человек — а не бот.",
+    value3Body:
+      "Каждое сообщение, отправленное на наш адрес для связи, читает живой человек — а не бот.",
     contactCta: "Есть вопрос? ",
     contactLink: "Свяжитесь с нами",
     friendsIntro: "Мы дружим с командой ",
@@ -2926,7 +3373,8 @@ const ru: Dictionary = {
     formSubmit: "Отправить сообщение",
     sending: "Отправка…",
     success: "Спасибо — мы скоро с вами свяжемся.",
-    error: "Не удалось отправить сообщение. Пожалуйста, напишите нам напрямую по электронной почте.",
+    error:
+      "Не удалось отправить сообщение. Пожалуйста, напишите нам напрямую по электронной почте.",
   },
   products: {
     allProducts: "Все товары",
@@ -2976,6 +3424,53 @@ const ru: Dictionary = {
     buyNow: "Купить сейчас",
     reviews: "Отзывы",
     storyTitle: "История этого изделия",
+    shippingBanner:
+      "Бесплатная доставка по Италии и Европе · США и Канада — 30 € · Остальной мир — 40 €",
+    handmadeBadge: "Ручная работа, Италия",
+    lightweightBadge: "Лёгкий вес",
+    seeReviews: "Смотреть отзывы",
+    giftReassuranceTitle: "Идеальный подарок для любого случая",
+    giftReassuranceBody: "Элегантность, мастерство и история, которую можно подарить.",
+    giftSectionEyebrow: "Идеальный подарок",
+    giftSectionHeadline: "Больше, чем украшение, — чувство, которое остаётся.",
+    giftSectionBody:
+      "Каждое изделие прибывает красиво упакованным в фирменную коробку, готовое стать подарком в том виде, в каком оно есть, — на день рождения, годовщину, особый случай или просто чтобы порадовать кого-то.",
+    giftSectionLink: "Узнать больше о подарочной упаковке",
+    giftFeature1: "Элегантная упаковка",
+    giftFeature2: "Готово к подарку",
+    giftFeature3: "Уникальный, наполненный смыслом подарок",
+    faq: [
+      {
+        question: "Это настоящее муранское стекло?",
+        answer:
+          "Да — каждое изделие представляет собой стекло ручной работы с острова Мурано, Италия, созданное с использованием традиционных техник ламповой обработки и выдувания, никогда не отлитое в форме и не произведённое массово. Ознакомьтесь с нашим полным руководством по муранскому стеклу, чтобы узнать, как отличить подлинное стекло от подделки.",
+      },
+      {
+        question: "Где это изготавливается?",
+        answer:
+          "На Мурано — небольшом острове в Венецианской лагуне, который уже более 700 лет остаётся центром стекольного искусства Италии. Каждое изделие формируется вручную в действующей печи на острове.",
+      },
+      {
+        question: "Как ухаживать за украшением?",
+        answer:
+          "Храните его в сухом месте, избегайте контакта с духами и храните каждое изделие отдельно, чтобы избежать царапин. При небольшом уходе муранское стекло сохраняет цвет и блеск на всю жизнь.",
+      },
+      {
+        question: "Могу ли я вернуть заказ?",
+        answer:
+          "Да. Каждый заказ включает 14-дневное право на отказ согласно законодательству ЕС — если товар не подошёл, его можно вернуть для полного возврата средств без объяснения причин.",
+      },
+      {
+        question: "Какие есть варианты доставки?",
+        answer:
+          "Доставка по Италии и остальной Европе бесплатна. Заказы в США и Канаду стоят 30 €, а в остальные страны мира — 40 €. Стандартная доставка по Европе занимает 3–5 дней; международные заказы могут облагаться местными таможенными пошлинами и налогами, не включёнными в цену.",
+      },
+      {
+        question: "Изделие приходит в подарочной упаковке?",
+        answer:
+          "Да — каждое изделие приходит в фирменной подарочной коробке, готовое стать подарком в том виде, в каком оно есть. Дополнительная упаковка не требуется — будь то подарок для кого-то ещё или приятный сюрприз для себя.",
+      },
+    ],
     noReviews: "Пока нет отзывов.",
     reviewCount: "Отзывов: {n}",
     yourRating: "Ваша оценка",
@@ -3045,7 +3540,8 @@ const ru: Dictionary = {
     confirmEmailToWishlist: "Подтвердите адрес электронной почты, чтобы пользоваться избранным.",
     confirmEmailToReview: "Подтвердите адрес электронной почты, чтобы оставить отзыв.",
     productNotFound: "Товар не найден.",
-    guestEmailRequired: "Войдите или укажите адрес электронной почты, чтобы оформить заказ как гость.",
+    guestEmailRequired:
+      "Войдите или укажите адрес электронной почты, чтобы оформить заказ как гость.",
     cartEmpty: "Ваша корзина пуста.",
     productUnavailable: "Один из товаров в корзине больше недоступен.",
     invalidQuantity: "Недопустимое количество для товара «{name}».",
@@ -3069,19 +3565,22 @@ const ru: Dictionary = {
     returnStatusLabel: "Статус возврата",
     emailConfirmed: "Адрес электронной почты подтверждён. Спасибо!",
     confirmLinkExpired: "Срок действия ссылки подтверждения истёк. Запросите новую ниже.",
-    confirmEmailPrompt: "Подтвердите адрес электронной почты — ссылка для подтверждения ждёт вас во входящих.",
+    confirmEmailPrompt:
+      "Подтвердите адрес электронной почты — ссылка для подтверждения ждёт вас во входящих.",
     resendConfirmation: "Отправить письмо с подтверждением ещё раз",
     confirmationSent: "Письмо с подтверждением отправлено — проверьте входящие.",
     unsubscribeInvalidTitle: "Недействительная ссылка для отписки",
     unsubscribeInvalidBody: "В ссылке отсутствует адрес электронной почты или он недействителен.",
     unsubscribedTitle: "Вы отписались от рассылки",
-    unsubscribedBody: "Адрес {email} больше не будет получать рассылку. Вы можете подписаться снова в любое время на главной странице.",
+    unsubscribedBody:
+      "Адрес {email} больше не будет получать рассылку. Вы можете подписаться снова в любое время на главной странице.",
     paginationLabel: "Постраничная навигация",
     minPriceLabel: "Минимальная цена",
     maxPriceLabel: "Максимальная цена",
     alreadyVerified: "Ваш адрес электронной почты уже подтверждён.",
     incorrectPassword: "Неверный пароль.",
-    oauthContactSupport: "Чтобы удалить аккаунт, созданный через Google, свяжитесь со службой поддержки.",
+    oauthContactSupport:
+      "Чтобы удалить аккаунт, созданный через Google, свяжитесь со службой поддержки.",
   },
   emails: {
     tagline: "{storeName} — подлинное венецианское стекло ручной работы из Мурано.",
@@ -3089,16 +3588,21 @@ const ru: Dictionary = {
     verifySubject: "Подтвердите адрес электронной почты — {storeName}",
     verifyPreview: "Подтвердите адрес электронной почты — {storeName}",
     verifyHeading: "Подтвердите адрес электронной почты",
-    verifyBody: "Добро пожаловать в {storeName}. Подтвердите адрес электронной почты, чтобы активировать аккаунт: это нужно, чтобы оставлять отзывы и сохранять товары в избранное.",
+    verifyBody:
+      "Добро пожаловать в {storeName}. Подтвердите адрес электронной почты, чтобы активировать аккаунт: это нужно, чтобы оставлять отзывы и сохранять товары в избранное.",
     verifyButton: "Подтвердить адрес",
-    verifyExpiry: "Срок действия ссылки — {hours} ч. Если вы не создавали этот аккаунт, просто проигнорируйте письмо.",
+    verifyExpiry:
+      "Срок действия ссылки — {hours} ч. Если вы не создавали этот аккаунт, просто проигнорируйте письмо.",
     resetSubject: "Сброс пароля — {storeName}",
     resetHeading: "Сброс пароля",
-    resetBody: "Мы получили запрос на сброс пароля для вашего аккаунта {storeName}. Задайте новый пароль с помощью кнопки ниже.",
+    resetBody:
+      "Мы получили запрос на сброс пароля для вашего аккаунта {storeName}. Задайте новый пароль с помощью кнопки ниже.",
     resetButton: "Задать новый пароль",
-    resetExpiry: "Ссылка действует {minutes} мин. и может быть использована один раз. Если вы не запрашивали сброс, просто проигнорируйте письмо — пароль не изменится.",
+    resetExpiry:
+      "Ссылка действует {minutes} мин. и может быть использована один раз. Если вы не запрашивали сброс, просто проигнорируйте письмо — пароль не изменится.",
     pwChangedSubject: "Ваш пароль изменён — {storeName}",
-    pwChangedBody: "Пароль вашего аккаунта {storeName} только что был изменён, все устройства, где вы были авторизованы, вышли из аккаунта.\n\nЕсли это были вы, ничего делать не нужно. Если нет — немедленно сбросьте пароль ещё раз и свяжитесь с нами{contact}.",
+    pwChangedBody:
+      "Пароль вашего аккаунта {storeName} только что был изменён, все устройства, где вы были авторизованы, вышли из аккаунта.\n\nЕсли это были вы, ничего делать не нужно. Если нет — немедленно сбросьте пароль ещё раз и свяжитесь с нами{contact}.",
     pwChangedContact: ": {email}",
     orderNumberLabel: "Номер заказа",
     orderDateLabel: "Дата заказа",
@@ -3110,14 +3614,30 @@ const ru: Dictionary = {
     unknownStatusBody: "Статус вашего заказа изменился: {status}.\n\nНомер заказа: {orderNumber}",
     vatLabel: "НДС {number}",
     abandonedSubject: "Вы оставили товары в корзине",
-    abandonedBody: "Вы начали оформлять заказ, но ещё не оплатили его:\n\n{items}\n\nЗавершить заказ: {url}\n\nНомер заказа: {orderNumber}",
+    abandonedBody:
+      "Вы начали оформлять заказ, но ещё не оплатили его:\n\n{items}\n\nЗавершить заказ: {url}\n\nНомер заказа: {orderNumber}",
     status: {
-      paid: { heading: "Оплата получена", message: "Мы получили вашу оплату, и ваш заказ уже бережно готовится." },
-      processing: { heading: "Заказ готовится", message: "Ваш заказ бережно готовят наши мастера." },
-      shipped: { heading: "Ваш заказ в пути", message: "Ваш заказ отправлен и уже направляется к вам." },
-      delivered: { heading: "Заказ доставлен", message: "Ваш заказ доставлен. Надеемся, он вам понравится!" },
+      paid: {
+        heading: "Оплата получена",
+        message: "Мы получили вашу оплату, и ваш заказ уже бережно готовится.",
+      },
+      processing: {
+        heading: "Заказ готовится",
+        message: "Ваш заказ бережно готовят наши мастера.",
+      },
+      shipped: {
+        heading: "Ваш заказ в пути",
+        message: "Ваш заказ отправлен и уже направляется к вам.",
+      },
+      delivered: {
+        heading: "Заказ доставлен",
+        message: "Ваш заказ доставлен. Надеемся, он вам понравится!",
+      },
       cancelled: { heading: "Заказ отменён", message: "Ваш заказ отменён." },
-      refunded: { heading: "Возврат средств по заказу", message: "Средства за ваш заказ возвращены." },
+      refunded: {
+        heading: "Возврат средств по заказу",
+        message: "Средства за ваш заказ возвращены.",
+      },
     },
   },
   checkout: {
@@ -3131,15 +3651,19 @@ const ru: Dictionary = {
     postalCode: "Почтовый индекс",
     country: "Страна",
     couldNotQuote: "Не удалось рассчитать сумму заказа. Проверьте данные и повторите попытку.",
-    couldNotPlaceOrder: "Не удалось оформить заказ. Проверьте данные и повторите попытку или свяжитесь с нами, если проблема повторяется.",
-    noShippingMethods: "Доставка в эту страну сейчас недоступна. Выберите другую страну или свяжитесь с нами.",
+    couldNotPlaceOrder:
+      "Не удалось оформить заказ. Проверьте данные и повторите попытку или свяжитесь с нами, если проблема повторяется.",
+    noShippingMethods:
+      "Доставка в эту страну сейчас недоступна. Выберите другую страну или свяжитесь с нами.",
     continueShopping: "Продолжить покупки",
     invalidPostalCode: "Этот почтовый индекс не соответствует выбранной стране.",
     addressCheck: {
       checking: "Проверяем адрес на карте…",
       found: "Это нужное место? Проверьте положение метки перед оформлением заказа.",
-      foundArea: "Мы нашли только район, а не точное здание. Это нормально, но проверьте улицу и номер дома.",
-      notFound: "Мы не нашли этот адрес на карте. Проверьте написание — вы всё равно можете оформить заказ.",
+      foundArea:
+        "Мы нашли только район, а не точное здание. Это нормально, но проверьте улицу и номер дома.",
+      notFound:
+        "Мы не нашли этот адрес на карте. Проверьте написание — вы всё равно можете оформить заказ.",
       unavailable: "Карта сейчас недоступна. Вы всё равно можете оформить заказ.",
       openMap: "Открыть крупную карту",
       mapAlt: "Карта с адресом доставки",
@@ -3169,7 +3693,8 @@ const ru: Dictionary = {
     payWithCard: "Оплатить картой или электронным кошельком",
     payWithPayPal: "Оплатить через PayPal",
     redirecting: "Перенаправление…",
-    cardHelp: "Карта, а также любые электронные кошельки и местные способы оплаты, доступные при оформлении заказа.",
+    cardHelp:
+      "Карта, а также любые электронные кошельки и местные способы оплаты, доступные при оформлении заказа.",
     bankTransfer: "Оплатить банковским переводом",
     loading: "Загрузка…",
     bankTitle: "Завершите банковский перевод",
@@ -3178,7 +3703,8 @@ const ru: Dictionary = {
     bic: "BIC/SWIFT",
     reference: "Назначение платежа",
     amount: "Сумма",
-    bankNote: "Укажите указанное выше назначение платежа, чтобы мы могли сопоставить ваш платёж. Мы подтвердим заказ после поступления перевода.",
+    bankNote:
+      "Укажите указанное выше назначение платежа, чтобы мы могли сопоставить ваш платёж. Мы подтвердим заказ после поступления перевода.",
     errStart: "Не удалось начать оплату. Повторите попытку.",
     errBank: "Не удалось начать банковский перевод. Повторите попытку.",
   },
@@ -3206,15 +3732,18 @@ const ru: Dictionary = {
       "Вход через Google недоступен для аккаунтов с двухфакторной аутентификацией и для аккаунтов администраторов/сотрудников. Войдите с помощью почты, пароля и кода аутентификатора.",
     forgotPassword: "Забыли пароль?",
     forgotPasswordTitle: "Сброс пароля",
-    forgotPasswordIntro: "Введите адрес электронной почты вашей учётной записи, и мы отправим ссылку для выбора нового пароля.",
+    forgotPasswordIntro:
+      "Введите адрес электронной почты вашей учётной записи, и мы отправим ссылку для выбора нового пароля.",
     sendResetLink: "Отправить ссылку для сброса",
     sendingResetLink: "Отправка…",
-    resetLinkSent: "Если учётная запись с таким адресом существует, ссылка для сброса уже отправлена. Она действует 1 час.",
+    resetLinkSent:
+      "Если учётная запись с таким адресом существует, ссылка для сброса уже отправлена. Она действует 1 час.",
     resetPasswordTitle: "Выберите новый пароль",
     newPassword: "Новый пароль",
     resetPassword: "Обновить пароль",
     resettingPassword: "Обновление…",
-    resetInvalid: "Эта ссылка для сброса недействительна или срок её действия истёк. Запросите новую.",
+    resetInvalid:
+      "Эта ссылка для сброса недействительна или срок её действия истёк. Запросите новую.",
     resetWeak: "Пароль должен содержать от 8 до 72 символов.",
     genericError: "Что-то пошло не так. Повторите попытку через минуту.",
     passwordUpdated: "Пароль обновлён. Войдите, используя новый пароль.",
@@ -3358,7 +3887,8 @@ const es: Dictionary = {
     title: "Sobre nosotros",
     intro: (storeName: string) =>
       `Creamos ${storeName} para llevar joyería auténtica de vidrio de Murano soplado a mano a quienes no pueden visitar los hornos en persona — cada pieza elaborada con técnicas transmitidas durante siete siglos en la isla de Murano, enviada directamente desde Venecia.`,
-    heritageImageAlt: "El escaparate de un taller de joyería de vidrio de Murano junto a un canal de Venecia",
+    heritageImageAlt:
+      "El escaparate de un taller de joyería de vidrio de Murano junto a un canal de Venecia",
     valuesTitle: "Lo que nos importa",
     value1Title: "La calidad primero",
     value1Body:
@@ -3383,7 +3913,8 @@ const es: Dictionary = {
   },
   contact: {
     title: "Contáctanos",
-    intro: "Preguntas sobre un pedido, un producto o cualquier otra cosa — estaremos encantados de ayudarte.",
+    intro:
+      "Preguntas sobre un pedido, un producto o cualquier otra cosa — estaremos encantados de ayudarte.",
     emailLabel: "Correo electrónico",
     addressLabel: "Dirección",
     formName: "Nombre",
@@ -3392,7 +3923,8 @@ const es: Dictionary = {
     formSubmit: "Enviar mensaje",
     sending: "Enviando…",
     success: "Gracias — te responderemos pronto.",
-    error: "No se pudo enviar tu mensaje. Prueba a escribirnos directamente por correo electrónico.",
+    error:
+      "No se pudo enviar tu mensaje. Prueba a escribirnos directamente por correo electrónico.",
   },
   products: {
     allProducts: "Todos los productos",
@@ -3442,6 +3974,53 @@ const es: Dictionary = {
     buyNow: "Comprar ahora",
     reviews: "Reseñas",
     storyTitle: "La historia de esta pieza",
+    shippingBanner:
+      "Envío gratuito a Italia y Europa · EE. UU. y Canadá 30 € · Resto del mundo 40 €",
+    handmadeBadge: "Hecho a mano en Italia",
+    lightweightBadge: "Ligero",
+    seeReviews: "Ver reseñas",
+    giftReassuranceTitle: "El regalo perfecto para cada ocasión",
+    giftReassuranceBody: "Elegancia, artesanía y una historia para regalar.",
+    giftSectionEyebrow: "El regalo perfecto",
+    giftSectionHeadline: "Más que una joya, una emoción que perdura.",
+    giftSectionBody:
+      "Cada pieza llega bellamente presentada en nuestro estuche exclusivo, lista para regalar tal cual — para un cumpleaños, un aniversario, una ocasión especial o simplemente para hacer sentir especial a alguien.",
+    giftSectionLink: "Descubre nuestro embalaje de regalo",
+    giftFeature1: "Embalaje elegante",
+    giftFeature2: "Lista para regalar",
+    giftFeature3: "Un regalo único y significativo",
+    faq: [
+      {
+        question: "¿Es vidrio de Murano auténtico?",
+        answer:
+          "Sí — cada pieza es vidrio trabajado a mano en Murano, Italia, con las técnicas tradicionales de trabajo a la lámpara y soplado, nunca moldeado ni producido en serie. Consulta nuestra guía completa del vidrio de Murano para aprender a distinguir el vidrio auténtico de las imitaciones.",
+      },
+      {
+        question: "¿Dónde se fabrica?",
+        answer:
+          "En Murano, la pequeña isla de la laguna veneciana que ha sido el centro del vidrio en Italia durante más de 700 años. Cada pieza se moldea a mano en un horno en funcionamiento en la isla.",
+      },
+      {
+        question: "¿Cómo debo cuidar mi joya?",
+        answer:
+          "Mantenla seca, evita el contacto con perfumes y guarda cada pieza por separado para que no se rayen entre sí. Con un poco de cuidado, el vidrio de Murano conserva su color y brillo toda la vida.",
+      },
+      {
+        question: "¿Puedo devolver mi pedido?",
+        answer:
+          "Sí. Todos los pedidos incluyen el derecho de desistimiento de 14 días de la UE — si no es lo que buscabas, puedes devolverlo para obtener un reembolso completo, sin necesidad de justificarlo.",
+      },
+      {
+        question: "¿Cuáles son las opciones de envío?",
+        answer:
+          "El envío es gratuito a Italia y al resto de Europa. Los pedidos a EE. UU. y Canadá cuestan 30 €, y 40 € al resto del mundo. La entrega estándar tarda de 3 a 5 días dentro de Europa; los pedidos internacionales pueden estar sujetos a aranceles e impuestos locales, no incluidos en el precio.",
+      },
+      {
+        question: "¿Llega envuelto para regalo?",
+        answer:
+          "Sí — cada pieza llega en nuestro estuche exclusivo, lista para regalar tal cual. No se necesita ningún envoltorio adicional, ya sea un regalo para otra persona o un capricho para ti.",
+      },
+    ],
     noReviews: "Aún no hay reseñas.",
     reviewCount: "{n} reseñas",
     yourRating: "Tu valoración",
@@ -3455,7 +4034,8 @@ const es: Dictionary = {
     copyLink: "Copiar enlace",
     linkCopied: "Enlace copiado",
     youMightAlsoLike: "También te podría gustar",
-    verifiedPurchaseOnly: "Solo los clientes que hayan comprado este producto pueden dejar una reseña.",
+    verifiedPurchaseOnly:
+      "Solo los clientes que hayan comprado este producto pueden dejar una reseña.",
     writeAReview: "Escribir una reseña",
     ratingRequired: "Elige una valoración antes de enviar.",
     ratingLabels: [
@@ -3535,19 +4115,22 @@ const es: Dictionary = {
     returnStatusLabel: "Estado de la devolución",
     emailConfirmed: "Correo electrónico confirmado. ¡Gracias!",
     confirmLinkExpired: "El enlace de confirmación ha caducado. Solicita uno nuevo a continuación.",
-    confirmEmailPrompt: "Confirma tu correo electrónico: te hemos enviado un enlace de confirmación.",
+    confirmEmailPrompt:
+      "Confirma tu correo electrónico: te hemos enviado un enlace de confirmación.",
     resendConfirmation: "Reenviar correo de confirmación",
     confirmationSent: "Correo de confirmación enviado: revisa tu bandeja de entrada.",
     unsubscribeInvalidTitle: "Enlace de baja no válido",
     unsubscribeInvalidBody: "Al enlace le falta la dirección de correo o esta no es válida.",
     unsubscribedTitle: "Te has dado de baja",
-    unsubscribedBody: "{email} ya no recibirá los correos de la newsletter. Puedes volver a suscribirte cuando quieras desde la página de inicio.",
+    unsubscribedBody:
+      "{email} ya no recibirá los correos de la newsletter. Puedes volver a suscribirte cuando quieras desde la página de inicio.",
     paginationLabel: "Paginación",
     minPriceLabel: "Precio mínimo",
     maxPriceLabel: "Precio máximo",
     alreadyVerified: "Tu correo electrónico ya está confirmado.",
     incorrectPassword: "Contraseña incorrecta.",
-    oauthContactSupport: "Las cuentas creadas con Google deben contactar con soporte para eliminarse.",
+    oauthContactSupport:
+      "Las cuentas creadas con Google deben contactar con soporte para eliminarse.",
   },
   emails: {
     tagline: "{storeName} — auténtico vidrio veneciano, hecho a mano en Murano.",
@@ -3555,16 +4138,21 @@ const es: Dictionary = {
     verifySubject: "Confirma tu correo electrónico — {storeName}",
     verifyPreview: "Confirma tu dirección de correo electrónico — {storeName}",
     verifyHeading: "Confirma tu dirección de correo electrónico",
-    verifyBody: "Te damos la bienvenida a {storeName}. Confirma tu dirección de correo electrónico para activar tu cuenta: la necesitarás para dejar reseñas y guardar artículos en tu lista de deseos.",
+    verifyBody:
+      "Te damos la bienvenida a {storeName}. Confirma tu dirección de correo electrónico para activar tu cuenta: la necesitarás para dejar reseñas y guardar artículos en tu lista de deseos.",
     verifyButton: "Confirmar dirección de correo",
-    verifyExpiry: "Este enlace caduca en {hours} horas. Si no has creado esta cuenta, puedes ignorar este correo.",
+    verifyExpiry:
+      "Este enlace caduca en {hours} horas. Si no has creado esta cuenta, puedes ignorar este correo.",
     resetSubject: "Restablece tu contraseña — {storeName}",
     resetHeading: "Restablece tu contraseña",
-    resetBody: "Hemos recibido una solicitud para restablecer la contraseña de tu cuenta de {storeName}. Elige una nueva con el botón de abajo.",
+    resetBody:
+      "Hemos recibido una solicitud para restablecer la contraseña de tu cuenta de {storeName}. Elige una nueva con el botón de abajo.",
     resetButton: "Elegir una nueva contraseña",
-    resetExpiry: "Este enlace caduca en {minutes} minutos y solo puede usarse una vez. Si no lo has solicitado, ignora este correo: tu contraseña no cambiará.",
+    resetExpiry:
+      "Este enlace caduca en {minutes} minutos y solo puede usarse una vez. Si no lo has solicitado, ignora este correo: tu contraseña no cambiará.",
     pwChangedSubject: "Tu contraseña ha cambiado — {storeName}",
-    pwChangedBody: "La contraseña de tu cuenta de {storeName} se acaba de cambiar y se ha cerrado la sesión en todos los dispositivos.\n\nSi has sido tú, no tienes que hacer nada. Si no, restablece la contraseña de inmediato y ponte en contacto con nosotros{contact}.",
+    pwChangedBody:
+      "La contraseña de tu cuenta de {storeName} se acaba de cambiar y se ha cerrado la sesión en todos los dispositivos.\n\nSi has sido tú, no tienes que hacer nada. Si no, restablece la contraseña de inmediato y ponte en contacto con nosotros{contact}.",
     pwChangedContact: " en {email}",
     orderNumberLabel: "Número de pedido",
     orderDateLabel: "Fecha del pedido",
@@ -3573,15 +4161,29 @@ const es: Dictionary = {
     viewOrder: "Ver tu pedido",
     orderQuestions: "¿Tienes preguntas sobre este pedido? Solo tienes que responder a este correo.",
     orderSubject: "Pedido {orderNumber}: {heading}",
-    unknownStatusBody: "El estado de tu pedido ha cambiado a {status}.\n\nNúmero de pedido: {orderNumber}",
+    unknownStatusBody:
+      "El estado de tu pedido ha cambiado a {status}.\n\nNúmero de pedido: {orderNumber}",
     vatLabel: "IVA {number}",
     abandonedSubject: "Has dejado algo en tu carrito",
-    abandonedBody: "Has empezado un pedido, pero aún no has completado el pago:\n\n{items}\n\nCompleta tu pedido: {url}\n\nNúmero de pedido: {orderNumber}",
+    abandonedBody:
+      "Has empezado un pedido, pero aún no has completado el pago:\n\n{items}\n\nCompleta tu pedido: {url}\n\nNúmero de pedido: {orderNumber}",
     status: {
-      paid: { heading: "Pago recibido", message: "Hemos recibido tu pago y tu pedido se está preparando con mucho cuidado." },
-      processing: { heading: "Pedido en preparación", message: "Nuestros artesanos están preparando tu pedido con esmero." },
-      shipped: { heading: "Tu pedido está en camino", message: "Tu pedido ha sido enviado y va de camino." },
-      delivered: { heading: "Pedido entregado", message: "Tu pedido ha sido entregado. ¡Esperamos que te encante!" },
+      paid: {
+        heading: "Pago recibido",
+        message: "Hemos recibido tu pago y tu pedido se está preparando con mucho cuidado.",
+      },
+      processing: {
+        heading: "Pedido en preparación",
+        message: "Nuestros artesanos están preparando tu pedido con esmero.",
+      },
+      shipped: {
+        heading: "Tu pedido está en camino",
+        message: "Tu pedido ha sido enviado y va de camino.",
+      },
+      delivered: {
+        heading: "Pedido entregado",
+        message: "Tu pedido ha sido entregado. ¡Esperamos que te encante!",
+      },
       cancelled: { heading: "Pedido cancelado", message: "Tu pedido ha sido cancelado." },
       refunded: { heading: "Pedido reembolsado", message: "Tu pedido ha sido reembolsado." },
     },
@@ -3596,16 +4198,21 @@ const es: Dictionary = {
     city: "Ciudad",
     postalCode: "Código postal",
     country: "País",
-    couldNotQuote: "No se pudo calcular el total del pedido. Revisa tus datos e inténtalo de nuevo.",
-    couldNotPlaceOrder: "No se pudo realizar tu pedido. Revisa tus datos e inténtalo de nuevo, o contáctanos si el problema continúa.",
-    noShippingMethods: "El envío a este país no está disponible por ahora. Elige otro país o contáctanos.",
+    couldNotQuote:
+      "No se pudo calcular el total del pedido. Revisa tus datos e inténtalo de nuevo.",
+    couldNotPlaceOrder:
+      "No se pudo realizar tu pedido. Revisa tus datos e inténtalo de nuevo, o contáctanos si el problema continúa.",
+    noShippingMethods:
+      "El envío a este país no está disponible por ahora. Elige otro país o contáctanos.",
     continueShopping: "Seguir comprando",
     invalidPostalCode: "Ese código postal no parece correcto para el país seleccionado.",
     addressCheck: {
       checking: "Comprobando la dirección en el mapa…",
       found: "¿Es este el lugar correcto? Comprueba la ubicación antes de hacer el pedido.",
-      foundArea: "Solo hemos encontrado la zona, no el edificio exacto. No pasa nada, pero revisa la calle y el número.",
-      notFound: "No encontramos esta dirección en el mapa. Revisa la ortografía; aun así puedes hacer el pedido.",
+      foundArea:
+        "Solo hemos encontrado la zona, no el edificio exacto. No pasa nada, pero revisa la calle y el número.",
+      notFound:
+        "No encontramos esta dirección en el mapa. Revisa la ortografía; aun así puedes hacer el pedido.",
       unavailable: "El mapa no está disponible ahora mismo. Aun así puedes hacer el pedido.",
       openMap: "Abrir mapa más grande",
       mapAlt: "Mapa con la dirección de entrega",
@@ -3644,7 +4251,8 @@ const es: Dictionary = {
     bic: "BIC/SWIFT",
     reference: "Referencia",
     amount: "Importe",
-    bankNote: "Incluye la referencia indicada arriba para que podamos identificar tu pago. Confirmaremos tu pedido cuando llegue la transferencia.",
+    bankNote:
+      "Incluye la referencia indicada arriba para que podamos identificar tu pago. Confirmaremos tu pedido cuando llegue la transferencia.",
     errStart: "No se pudo iniciar el pago. Inténtalo de nuevo.",
     errBank: "No se pudo iniciar la transferencia bancaria. Inténtalo de nuevo.",
   },
@@ -3672,10 +4280,12 @@ const es: Dictionary = {
       "El inicio de sesión con Google no está disponible para cuentas con autenticación de dos factores ni para cuentas de administrador/personal. Inicia sesión con tu correo, contraseña y código de autenticación.",
     forgotPassword: "¿Olvidaste tu contraseña?",
     forgotPasswordTitle: "Restablece tu contraseña",
-    forgotPasswordIntro: "Introduce el correo electrónico de tu cuenta y te enviaremos un enlace para elegir una nueva contraseña.",
+    forgotPasswordIntro:
+      "Introduce el correo electrónico de tu cuenta y te enviaremos un enlace para elegir una nueva contraseña.",
     sendResetLink: "Enviar enlace de restablecimiento",
     sendingResetLink: "Enviando…",
-    resetLinkSent: "Si existe una cuenta con esa dirección, el enlace de restablecimiento está en camino. Caduca en 1 hora.",
+    resetLinkSent:
+      "Si existe una cuenta con esa dirección, el enlace de restablecimiento está en camino. Caduca en 1 hora.",
     resetPasswordTitle: "Elige una nueva contraseña",
     newPassword: "Nueva contraseña",
     resetPassword: "Actualizar contraseña",
@@ -3825,7 +4435,8 @@ const pt: Dictionary = {
     title: "Sobre nós",
     intro: (storeName: string) =>
       `Criámos a ${storeName} para levar joias autênticas em vidro de Murano soprado à mão a quem não pode visitar as fornalhas pessoalmente — cada peça feita com técnicas transmitidas ao longo de sete séculos na ilha de Murano, enviada diretamente de Veneza.`,
-    heritageImageAlt: "A montra de um atelier de joalharia em vidro de Murano ao longo de um canal de Veneza",
+    heritageImageAlt:
+      "A montra de um atelier de joalharia em vidro de Murano ao longo de um canal de Veneza",
     valuesTitle: "O que nos importa",
     value1Title: "Qualidade em primeiro lugar",
     value1Body:
@@ -3833,7 +4444,8 @@ const pt: Dictionary = {
     value2Title: "Preços transparentes",
     value2Body: "O preço que vê inclui impostos. Sem surpresas na finalização da compra.",
     value3Title: "Apoio real",
-    value3Body: "Uma pessoa lê cada mensagem enviada para o nosso endereço de contacto — não um robô.",
+    value3Body:
+      "Uma pessoa lê cada mensagem enviada para o nosso endereço de contacto — não um robô.",
     contactCta: "Tem alguma pergunta? ",
     contactLink: "Entre em contacto",
     friendsIntro: "Somos amigos da equipa da ",
@@ -3850,7 +4462,8 @@ const pt: Dictionary = {
   },
   contact: {
     title: "Contacte-nos",
-    intro: "Perguntas sobre uma encomenda, um produto ou qualquer outra coisa — teremos todo o gosto em ajudar.",
+    intro:
+      "Perguntas sobre uma encomenda, um produto ou qualquer outra coisa — teremos todo o gosto em ajudar.",
     emailLabel: "Email",
     addressLabel: "Morada",
     formName: "Nome",
@@ -3900,7 +4513,8 @@ const pt: Dictionary = {
     sizeNecklace: "45–48 cm",
     sizeEarrings: "Cerca de 4 cm de comprimento",
     careLabel: "Cuidados",
-    careNote: "Mantenha seco, evite o contacto com perfumes e guarde separadamente para não riscar.",
+    careNote:
+      "Mantenha seco, evite o contacto com perfumes e guarde separadamente para não riscar.",
     inStock: "Em stock",
     vatIncluded: "IVA incluído",
     addToCart: "Adicionar ao carrinho",
@@ -3908,6 +4522,52 @@ const pt: Dictionary = {
     buyNow: "Comprar agora",
     reviews: "Avaliações",
     storyTitle: "A história desta peça",
+    shippingBanner: "Envio gratuito para Itália e Europa · EUA e Canadá 30 € · Resto do mundo 40 €",
+    handmadeBadge: "Feito à mão em Itália",
+    lightweightBadge: "Leve",
+    seeReviews: "Ver avaliações",
+    giftReassuranceTitle: "O presente perfeito para cada ocasião",
+    giftReassuranceBody: "Elegância, artesanato e uma história para oferecer.",
+    giftSectionEyebrow: "O presente perfeito",
+    giftSectionHeadline: "Mais do que uma joia, uma emoção que permanece.",
+    giftSectionBody:
+      "Cada peça chega belamente apresentada na nossa caixa exclusiva, pronta a oferecer tal como está — para um aniversário, um aniversário de casamento, uma ocasião especial, ou simplesmente para fazer alguém sentir-se especial.",
+    giftSectionLink: "Descubra a nossa embalagem de presente",
+    giftFeature1: "Embalagem elegante",
+    giftFeature2: "Pronta a oferecer",
+    giftFeature3: "Um presente único e especial",
+    faq: [
+      {
+        question: "É vidro de Murano genuíno?",
+        answer:
+          "Sim — cada peça é vidro trabalhado à mão em Murano, Itália, com as técnicas tradicionais de trabalho ao lume e sopro, nunca moldada ou produzida em série. Consulte o nosso guia completo sobre vidro de Murano para saber distinguir o vidro genuíno das imitações.",
+      },
+      {
+        question: "Onde é fabricado?",
+        answer:
+          "Em Murano, a pequena ilha da lagoa veneziana que há mais de 700 anos é o centro da vidraria em Itália. Cada peça é moldada à mão num forno em atividade na ilha.",
+      },
+      {
+        question: "Como devo cuidar da minha joia?",
+        answer:
+          "Mantenha-a seca, evite o contacto com perfumes e guarde cada peça separadamente para não se riscarem. Com um pouco de cuidado, o vidro de Murano mantém a cor e o brilho para toda a vida.",
+      },
+      {
+        question: "Posso devolver a minha encomenda?",
+        answer:
+          "Sim. Todas as encomendas incluem o direito de livre resolução de 14 dias da UE — se não for o que procurava, pode devolvê-la para um reembolso total, sem necessidade de justificação.",
+      },
+      {
+        question: "Quais são as opções de envio?",
+        answer:
+          "O envio é gratuito para Itália e restante Europa. As encomendas para os EUA e Canadá custam 30 €, e 40 € para o resto do mundo. A entrega padrão demora 3 a 5 dias dentro da Europa; as encomendas internacionais podem estar sujeitas a direitos aduaneiros e impostos locais, não incluídos no preço.",
+      },
+      {
+        question: "Vem embalado como presente?",
+        answer:
+          "Sim — cada peça chega na nossa caixa exclusiva, pronta a oferecer tal como está. Não é necessária qualquer embalagem adicional, seja para presentear outra pessoa ou para um mimo a si própria.",
+      },
+    ],
     noReviews: "Ainda não há avaliações.",
     reviewCount: "{n} avaliações",
     yourRating: "A sua avaliação",
@@ -3977,7 +4637,8 @@ const pt: Dictionary = {
     confirmEmailToWishlist: "Confirme o seu e-mail para utilizar a sua lista de desejos.",
     confirmEmailToReview: "Confirme o seu e-mail para deixar uma avaliação.",
     productNotFound: "Produto não encontrado.",
-    guestEmailRequired: "Inicie sessão ou indique um e-mail para finalizar a compra como convidado.",
+    guestEmailRequired:
+      "Inicie sessão ou indique um e-mail para finalizar a compra como convidado.",
     cartEmpty: "O seu carrinho está vazio.",
     productUnavailable: "Um artigo do seu carrinho já não está disponível.",
     invalidQuantity: "Quantidade inválida para {name}.",
@@ -3989,7 +4650,8 @@ const pt: Dictionary = {
     orderNotFound: "Encomenda não encontrada.",
     orderNotAwaitingPayment: "Esta encomenda não está a aguardar pagamento.",
     paymentMethodUnavailable: "Este método de pagamento não está disponível.",
-    paymentProcessing: "O seu pagamento está a ser processado. Volte a verificar dentro de instantes.",
+    paymentProcessing:
+      "O seu pagamento está a ser processado. Volte a verificar dentro de instantes.",
     returnReasonRequired: "Descreva o motivo da devolução.",
     returnNotEligible: "Esta encomenda ainda não é elegível para devolução.",
     returnInProgress: "Já existe um pedido de devolução em curso para esta encomenda.",
@@ -4007,13 +4669,15 @@ const pt: Dictionary = {
     unsubscribeInvalidTitle: "Ligação de cancelamento da subscrição inválida",
     unsubscribeInvalidBody: "A ligação não tem endereço de e-mail ou o endereço é inválido.",
     unsubscribedTitle: "A sua subscrição foi cancelada",
-    unsubscribedBody: "{email} deixará de receber os e-mails da newsletter. Pode voltar a subscrever a qualquer momento na página inicial.",
+    unsubscribedBody:
+      "{email} deixará de receber os e-mails da newsletter. Pode voltar a subscrever a qualquer momento na página inicial.",
     paginationLabel: "Paginação",
     minPriceLabel: "Preço mínimo",
     maxPriceLabel: "Preço máximo",
     alreadyVerified: "O seu e-mail já está confirmado.",
     incorrectPassword: "Palavra-passe incorreta.",
-    oauthContactSupport: "As contas criadas com o Google têm de contactar o apoio ao cliente para serem eliminadas.",
+    oauthContactSupport:
+      "As contas criadas com o Google têm de contactar o apoio ao cliente para serem eliminadas.",
   },
   emails: {
     tagline: "{storeName} — autêntico vidro veneziano, feito à mão em Murano.",
@@ -4021,16 +4685,21 @@ const pt: Dictionary = {
     verifySubject: "Confirme o seu e-mail — {storeName}",
     verifyPreview: "Confirme o seu endereço de e-mail — {storeName}",
     verifyHeading: "Confirme o seu endereço de e-mail",
-    verifyBody: "Bem-vindo(a) à {storeName}. Confirme o seu endereço de e-mail para ativar a conta: vai precisar disso para deixar avaliações e guardar artigos na lista de desejos.",
+    verifyBody:
+      "Bem-vindo(a) à {storeName}. Confirme o seu endereço de e-mail para ativar a conta: vai precisar disso para deixar avaliações e guardar artigos na lista de desejos.",
     verifyButton: "Confirmar endereço de e-mail",
-    verifyExpiry: "Esta ligação expira dentro de {hours} horas. Se não criou esta conta, pode ignorar este e-mail.",
+    verifyExpiry:
+      "Esta ligação expira dentro de {hours} horas. Se não criou esta conta, pode ignorar este e-mail.",
     resetSubject: "Redefina a sua palavra-passe — {storeName}",
     resetHeading: "Redefina a sua palavra-passe",
-    resetBody: "Recebemos um pedido para redefinir a palavra-passe da sua conta {storeName}. Escolha uma nova com o botão abaixo.",
+    resetBody:
+      "Recebemos um pedido para redefinir a palavra-passe da sua conta {storeName}. Escolha uma nova com o botão abaixo.",
     resetButton: "Escolher uma nova palavra-passe",
-    resetExpiry: "Esta ligação expira dentro de {minutes} minutos e só pode ser usada uma vez. Se não pediu esta alteração, ignore este e-mail — a sua palavra-passe não será alterada.",
+    resetExpiry:
+      "Esta ligação expira dentro de {minutes} minutos e só pode ser usada uma vez. Se não pediu esta alteração, ignore este e-mail — a sua palavra-passe não será alterada.",
     pwChangedSubject: "A sua palavra-passe foi alterada — {storeName}",
-    pwChangedBody: "A palavra-passe da sua conta {storeName} acabou de ser alterada e todos os dispositivos com sessão iniciada foram desligados.\n\nSe reconhece esta alteração, não precisa de fazer nada. Se não a reconhece, redefina de imediato a palavra-passe e contacte-nos{contact}.",
+    pwChangedBody:
+      "A palavra-passe da sua conta {storeName} acabou de ser alterada e todos os dispositivos com sessão iniciada foram desligados.\n\nSe reconhece esta alteração, não precisa de fazer nada. Se não a reconhece, redefina de imediato a palavra-passe e contacte-nos{contact}.",
     pwChangedContact: " através de {email}",
     orderNumberLabel: "Número da encomenda",
     orderDateLabel: "Data da encomenda",
@@ -4039,15 +4708,30 @@ const pt: Dictionary = {
     viewOrder: "Ver a sua encomenda",
     orderQuestions: "Tem dúvidas sobre esta encomenda? Basta responder a este e-mail.",
     orderSubject: "Encomenda {orderNumber}: {heading}",
-    unknownStatusBody: "O estado da sua encomenda passou a {status}.\n\nNúmero da encomenda: {orderNumber}",
+    unknownStatusBody:
+      "O estado da sua encomenda passou a {status}.\n\nNúmero da encomenda: {orderNumber}",
     vatLabel: "IVA {number}",
     abandonedSubject: "Deixou algo no seu carrinho",
-    abandonedBody: "Iniciou uma encomenda, mas ainda não concluiu o pagamento:\n\n{items}\n\nConclua a sua encomenda: {url}\n\nNúmero da encomenda: {orderNumber}",
+    abandonedBody:
+      "Iniciou uma encomenda, mas ainda não concluiu o pagamento:\n\n{items}\n\nConclua a sua encomenda: {url}\n\nNúmero da encomenda: {orderNumber}",
     status: {
-      paid: { heading: "Pagamento recebido", message: "Recebemos o seu pagamento e a sua encomenda está a ser preparada com todo o cuidado." },
-      processing: { heading: "Encomenda em preparação", message: "A sua encomenda está a ser preparada com cuidado pelos nossos artesãos." },
-      shipped: { heading: "A sua encomenda está a caminho", message: "A sua encomenda foi enviada e está a caminho." },
-      delivered: { heading: "Encomenda entregue", message: "A sua encomenda foi entregue. Esperamos que goste!" },
+      paid: {
+        heading: "Pagamento recebido",
+        message:
+          "Recebemos o seu pagamento e a sua encomenda está a ser preparada com todo o cuidado.",
+      },
+      processing: {
+        heading: "Encomenda em preparação",
+        message: "A sua encomenda está a ser preparada com cuidado pelos nossos artesãos.",
+      },
+      shipped: {
+        heading: "A sua encomenda está a caminho",
+        message: "A sua encomenda foi enviada e está a caminho.",
+      },
+      delivered: {
+        heading: "Encomenda entregue",
+        message: "A sua encomenda foi entregue. Esperamos que goste!",
+      },
       cancelled: { heading: "Encomenda cancelada", message: "A sua encomenda foi cancelada." },
       refunded: { heading: "Encomenda reembolsada", message: "A sua encomenda foi reembolsada." },
     },
@@ -4062,17 +4746,23 @@ const pt: Dictionary = {
     city: "Cidade",
     postalCode: "Código postal",
     country: "País",
-    couldNotQuote: "Não foi possível calcular o total da encomenda. Verifique os seus dados e tente novamente.",
-    couldNotPlaceOrder: "Não foi possível efetuar a sua encomenda. Verifique os seus dados e tente novamente, ou contacte-nos se o problema persistir.",
-    noShippingMethods: "O envio para este país não está disponível de momento. Escolha outro país ou contacte-nos.",
+    couldNotQuote:
+      "Não foi possível calcular o total da encomenda. Verifique os seus dados e tente novamente.",
+    couldNotPlaceOrder:
+      "Não foi possível efetuar a sua encomenda. Verifique os seus dados e tente novamente, ou contacte-nos se o problema persistir.",
+    noShippingMethods:
+      "O envio para este país não está disponível de momento. Escolha outro país ou contacte-nos.",
     continueShopping: "Continuar a comprar",
     invalidPostalCode: "Esse código postal não parece correto para o país selecionado.",
     addressCheck: {
       checking: "A verificar a morada no mapa…",
       found: "É este o local certo? Confirme a localização antes de encomendar.",
-      foundArea: "Só encontrámos a zona, não o edifício exato. Não há problema, mas confirme a rua e o número.",
-      notFound: "Não encontrámos esta morada no mapa. Verifique a ortografia — pode, ainda assim, finalizar a encomenda.",
-      unavailable: "O mapa não está disponível neste momento. Pode, ainda assim, finalizar a encomenda.",
+      foundArea:
+        "Só encontrámos a zona, não o edifício exato. Não há problema, mas confirme a rua e o número.",
+      notFound:
+        "Não encontrámos esta morada no mapa. Verifique a ortografia — pode, ainda assim, finalizar a encomenda.",
+      unavailable:
+        "O mapa não está disponível neste momento. Pode, ainda assim, finalizar a encomenda.",
       openMap: "Abrir mapa maior",
       mapAlt: "Mapa com a morada de entrega",
     },
@@ -4110,7 +4800,8 @@ const pt: Dictionary = {
     bic: "BIC/SWIFT",
     reference: "Referência",
     amount: "Montante",
-    bankNote: "Indique a referência acima para podermos associar o seu pagamento. Confirmaremos a sua encomenda quando a transferência chegar.",
+    bankNote:
+      "Indique a referência acima para podermos associar o seu pagamento. Confirmaremos a sua encomenda quando a transferência chegar.",
     errStart: "Não foi possível iniciar o pagamento. Tente novamente.",
     errBank: "Não foi possível iniciar a transferência bancária. Tente novamente.",
   },
@@ -4138,10 +4829,12 @@ const pt: Dictionary = {
       "O início de sessão com o Google não está disponível para contas com autenticação de dois fatores nem para contas de administrador/equipa. Inicie sessão com o seu email, palavra-passe e código de autenticação.",
     forgotPassword: "Esqueceu-se da palavra-passe?",
     forgotPasswordTitle: "Repor a palavra-passe",
-    forgotPasswordIntro: "Introduza o email da sua conta e enviaremos um link para escolher uma nova palavra-passe.",
+    forgotPasswordIntro:
+      "Introduza o email da sua conta e enviaremos um link para escolher uma nova palavra-passe.",
     sendResetLink: "Enviar link de reposição",
     sendingResetLink: "A enviar…",
-    resetLinkSent: "Se existir uma conta com esse endereço, um link de reposição está a caminho. Expira dentro de 1 hora.",
+    resetLinkSent:
+      "Se existir uma conta com esse endereço, um link de reposição está a caminho. Expira dentro de 1 hora.",
     resetPasswordTitle: "Escolha uma nova palavra-passe",
     newPassword: "Nova palavra-passe",
     resetPassword: "Atualizar palavra-passe",
@@ -4374,6 +5067,52 @@ const hi: Dictionary = {
     buyNow: "अभी खरीदें",
     reviews: "समीक्षाएं",
     storyTitle: "इस टुकड़े की कहानी",
+    shippingBanner: "इटली और यूरोप में मुफ़्त शिपिंग · अमेरिका और कनाडा €30 · शेष विश्व €40",
+    handmadeBadge: "इटली में हाथ से निर्मित",
+    lightweightBadge: "हल्का वज़न",
+    seeReviews: "समीक्षाएं देखें",
+    giftReassuranceTitle: "हर मौके के लिए एक बेहतरीन उपहार",
+    giftReassuranceBody: "सुंदरता, शिल्पकला और साझा करने लायक एक कहानी।",
+    giftSectionEyebrow: "बेहतरीन उपहार",
+    giftSectionHeadline: "एक आभूषण से कहीं बढ़कर, एक भावना जो हमेशा रहे।",
+    giftSectionBody:
+      "हर टुकड़ा हमारी खास पैकेजिंग में खूबसूरती से सजाकर आता है, बिल्कुल वैसे ही उपहार देने के लिए तैयार — जन्मदिन हो, सालगिरह हो, कोई खास मौका हो, या बस किसी को खास महसूस कराना हो।",
+    giftSectionLink: "हमारी उपहार पैकेजिंग देखें",
+    giftFeature1: "सुरुचिपूर्ण पैकेजिंग",
+    giftFeature2: "उपहार देने के लिए तैयार",
+    giftFeature3: "एक अनोखा और सार्थक उपहार",
+    faq: [
+      {
+        question: "क्या यह असली मुरानो ग्लास है?",
+        answer:
+          "हां — हर टुकड़ा इटली के मुरानो में पारंपरिक लैंपवर्किंग और ग्लासब्लोइंग तकनीकों से हाथ से बनाया गया है, कभी भी ढाला या बड़े पैमाने पर उत्पादित नहीं किया गया। असली ग्लास को नकली से पहचानने के तरीके के लिए हमारी पूरी मुरानो ग्लास गाइड पढ़ें।",
+      },
+      {
+        question: "यह कहां बनाया जाता है?",
+        answer:
+          "मुरानो में, वेनिस की लैगून का वह छोटा द्वीप जो 700 से अधिक वर्षों से इटली के कांच-निर्माण का केंद्र रहा है। हर टुकड़ा द्वीप की एक सक्रिय भट्टी में हाथ से आकार दिया जाता है।",
+      },
+      {
+        question: "मैं अपने आभूषण की देखभाल कैसे करूं?",
+        answer:
+          "इसे सूखा रखें, परफ्यूम के संपर्क से बचाएं, और खरोंच से बचाने के लिए हर टुकड़े को अलग रखें। थोड़ी सी देखभाल से, मुरानो ग्लास अपना रंग और चमक जीवनभर बनाए रखता है।",
+      },
+      {
+        question: "क्या मैं अपना ऑर्डर वापस कर सकता/सकती हूं?",
+        answer:
+          "हां। हर ऑर्डर में EU का 14-दिन का वापसी अधिकार शामिल है — अगर यह आपके लिए सही नहीं है, तो बिना किसी सवाल के पूरे रिफंड के लिए इसे वापस भेजें।",
+      },
+      {
+        question: "शिपिंग के क्या विकल्प हैं?",
+        answer:
+          "इटली और बाकी यूरोप में शिपिंग मुफ़्त है। अमेरिका और कनाडा के ऑर्डर के लिए €30 और बाकी दुनिया के लिए €40 लगते हैं। यूरोप के भीतर मानक डिलीवरी में 3-5 दिन लगते हैं; अंतरराष्ट्रीय ऑर्डर पर स्थानीय आयात शुल्क और कर लागू हो सकते हैं, जो कीमत में शामिल नहीं हैं।",
+      },
+      {
+        question: "क्या यह उपहार के रूप में पैक होकर आता है?",
+        answer:
+          "हां — हर टुकड़ा हमारी खास उपहार बॉक्स में आता है, बिल्कुल वैसे ही उपहार देने के लिए तैयार। किसी अतिरिक्त पैकिंग की ज़रूरत नहीं, चाहे यह किसी और के लिए उपहार हो या खुद के लिए एक खास तोहफ़ा।",
+      },
+    ],
     noReviews: "अभी तक कोई समीक्षा नहीं।",
     reviewCount: "{n} समीक्षाएं",
     yourRating: "आपकी रेटिंग",
@@ -4473,7 +5212,8 @@ const hi: Dictionary = {
     unsubscribeInvalidTitle: "अनसब्सक्राइब लिंक अमान्य है",
     unsubscribeInvalidBody: "इस लिंक में ईमेल पता नहीं है या वह अमान्य है।",
     unsubscribedTitle: "आपने अनसब्सक्राइब कर दिया है",
-    unsubscribedBody: "{email} को अब न्यूज़लेटर ईमेल नहीं मिलेंगे। आप कभी भी होमपेज से दोबारा सब्सक्राइब कर सकते हैं।",
+    unsubscribedBody:
+      "{email} को अब न्यूज़लेटर ईमेल नहीं मिलेंगे। आप कभी भी होमपेज से दोबारा सब्सक्राइब कर सकते हैं।",
     paginationLabel: "पेज नेविगेशन",
     minPriceLabel: "न्यूनतम मूल्य",
     maxPriceLabel: "अधिकतम मूल्य",
@@ -4487,16 +5227,21 @@ const hi: Dictionary = {
     verifySubject: "अपना ईमेल सत्यापित करें — {storeName}",
     verifyPreview: "अपना ईमेल पता सत्यापित करें — {storeName}",
     verifyHeading: "अपना ईमेल पता सत्यापित करें",
-    verifyBody: "{storeName} में आपका स्वागत है। अपना खाता सक्रिय करने के लिए ईमेल पता सत्यापित करें — समीक्षा देने और आइटम विशलिस्ट में सहेजने के लिए यह ज़रूरी है।",
+    verifyBody:
+      "{storeName} में आपका स्वागत है। अपना खाता सक्रिय करने के लिए ईमेल पता सत्यापित करें — समीक्षा देने और आइटम विशलिस्ट में सहेजने के लिए यह ज़रूरी है।",
     verifyButton: "ईमेल पता सत्यापित करें",
-    verifyExpiry: "यह लिंक {hours} घंटे में समाप्त हो जाएगा। यदि आपने यह खाता नहीं बनाया, तो इस ईमेल को अनदेखा कर दें।",
+    verifyExpiry:
+      "यह लिंक {hours} घंटे में समाप्त हो जाएगा। यदि आपने यह खाता नहीं बनाया, तो इस ईमेल को अनदेखा कर दें।",
     resetSubject: "अपना पासवर्ड रीसेट करें — {storeName}",
     resetHeading: "अपना पासवर्ड रीसेट करें",
-    resetBody: "हमें आपके {storeName} खाते का पासवर्ड रीसेट करने का अनुरोध मिला है। नीचे दिए बटन से नया पासवर्ड चुनें।",
+    resetBody:
+      "हमें आपके {storeName} खाते का पासवर्ड रीसेट करने का अनुरोध मिला है। नीचे दिए बटन से नया पासवर्ड चुनें।",
     resetButton: "नया पासवर्ड चुनें",
-    resetExpiry: "यह लिंक {minutes} मिनट में समाप्त हो जाएगा और केवल एक बार उपयोग किया जा सकता है। यदि आपने यह अनुरोध नहीं किया, तो इस ईमेल को अनदेखा करें — आपका पासवर्ड नहीं बदलेगा।",
+    resetExpiry:
+      "यह लिंक {minutes} मिनट में समाप्त हो जाएगा और केवल एक बार उपयोग किया जा सकता है। यदि आपने यह अनुरोध नहीं किया, तो इस ईमेल को अनदेखा करें — आपका पासवर्ड नहीं बदलेगा।",
     pwChangedSubject: "आपका पासवर्ड बदल दिया गया है — {storeName}",
-    pwChangedBody: "आपके {storeName} खाते का पासवर्ड अभी बदला गया है, और जिन डिवाइस पर आप साइन इन थे उन्हें साइन आउट कर दिया गया है।\n\nयदि यह आपने किया है, तो कुछ करने की आवश्यकता नहीं है। यदि नहीं, तो तुरंत पासवर्ड फिर से रीसेट करें और हमसे संपर्क करें{contact}।",
+    pwChangedBody:
+      "आपके {storeName} खाते का पासवर्ड अभी बदला गया है, और जिन डिवाइस पर आप साइन इन थे उन्हें साइन आउट कर दिया गया है।\n\nयदि यह आपने किया है, तो कुछ करने की आवश्यकता नहीं है। यदि नहीं, तो तुरंत पासवर्ड फिर से रीसेट करें और हमसे संपर्क करें{contact}।",
     pwChangedContact: ": {email}",
     orderNumberLabel: "ऑर्डर नंबर",
     orderDateLabel: "ऑर्डर की तारीख",
@@ -4508,14 +5253,30 @@ const hi: Dictionary = {
     unknownStatusBody: "आपके ऑर्डर की स्थिति बदलकर {status} हो गई है।\n\nऑर्डर नंबर: {orderNumber}",
     vatLabel: "वैट {number}",
     abandonedSubject: "आपने अपने कार्ट में कुछ छोड़ दिया है",
-    abandonedBody: "आपने ऑर्डर शुरू किया था, लेकिन अभी तक भुगतान पूरा नहीं किया है:\n\n{items}\n\nअपना ऑर्डर पूरा करें: {url}\n\nऑर्डर नंबर: {orderNumber}",
+    abandonedBody:
+      "आपने ऑर्डर शुरू किया था, लेकिन अभी तक भुगतान पूरा नहीं किया है:\n\n{items}\n\nअपना ऑर्डर पूरा करें: {url}\n\nऑर्डर नंबर: {orderNumber}",
     status: {
-      paid: { heading: "भुगतान प्राप्त हुआ", message: "हमें आपका भुगतान मिल गया है और आपका ऑर्डर अब सावधानी से तैयार किया जा रहा है।" },
-      processing: { heading: "ऑर्डर तैयार किया जा रहा है", message: "हमारे कारीगर आपका ऑर्डर ध्यान से तैयार कर रहे हैं।" },
-      shipped: { heading: "आपका ऑर्डर रास्ते में है", message: "आपका ऑर्डर भेज दिया गया है और आपके पास पहुँचने के रास्ते में है।" },
-      delivered: { heading: "ऑर्डर डिलीवर हो गया", message: "आपका ऑर्डर डिलीवर हो गया है। हमें आशा है कि आपको यह पसंद आएगा!" },
+      paid: {
+        heading: "भुगतान प्राप्त हुआ",
+        message: "हमें आपका भुगतान मिल गया है और आपका ऑर्डर अब सावधानी से तैयार किया जा रहा है।",
+      },
+      processing: {
+        heading: "ऑर्डर तैयार किया जा रहा है",
+        message: "हमारे कारीगर आपका ऑर्डर ध्यान से तैयार कर रहे हैं।",
+      },
+      shipped: {
+        heading: "आपका ऑर्डर रास्ते में है",
+        message: "आपका ऑर्डर भेज दिया गया है और आपके पास पहुँचने के रास्ते में है।",
+      },
+      delivered: {
+        heading: "ऑर्डर डिलीवर हो गया",
+        message: "आपका ऑर्डर डिलीवर हो गया है। हमें आशा है कि आपको यह पसंद आएगा!",
+      },
       cancelled: { heading: "ऑर्डर रद्द कर दिया गया", message: "आपका ऑर्डर रद्द कर दिया गया है।" },
-      refunded: { heading: "ऑर्डर का रिफंड हो गया", message: "आपके ऑर्डर का रिफंड कर दिया गया है।" },
+      refunded: {
+        heading: "ऑर्डर का रिफंड हो गया",
+        message: "आपके ऑर्डर का रिफंड कर दिया गया है।",
+      },
     },
   },
   checkout: {
@@ -4528,16 +5289,21 @@ const hi: Dictionary = {
     city: "शहर",
     postalCode: "पिन कोड",
     country: "देश",
-    couldNotQuote: "आपके ऑर्डर का कुल योग नहीं निकाला जा सका। कृपया अपनी जानकारी जाँचकर फिर कोशिश करें।",
-    couldNotPlaceOrder: "आपका ऑर्डर नहीं दिया जा सका। कृपया अपनी जानकारी जाँचकर फिर कोशिश करें, और समस्या बनी रहे तो हमसे संपर्क करें।",
-    noShippingMethods: "फ़िलहाल इस देश में शिपिंग उपलब्ध नहीं है। कृपया कोई दूसरा देश चुनें या हमसे संपर्क करें।",
+    couldNotQuote:
+      "आपके ऑर्डर का कुल योग नहीं निकाला जा सका। कृपया अपनी जानकारी जाँचकर फिर कोशिश करें।",
+    couldNotPlaceOrder:
+      "आपका ऑर्डर नहीं दिया जा सका। कृपया अपनी जानकारी जाँचकर फिर कोशिश करें, और समस्या बनी रहे तो हमसे संपर्क करें।",
+    noShippingMethods:
+      "फ़िलहाल इस देश में शिपिंग उपलब्ध नहीं है। कृपया कोई दूसरा देश चुनें या हमसे संपर्क करें।",
     continueShopping: "खरीदारी जारी रखें",
     invalidPostalCode: "चुने गए देश के लिए यह पिन कोड सही नहीं लगता।",
     addressCheck: {
       checking: "मानचित्र पर पता जाँचा जा रहा है…",
       found: "क्या यह सही जगह है? ऑर्डर करने से पहले स्थान जाँच लें।",
-      foundArea: "हमें केवल इलाका मिला, ठीक-ठीक इमारत नहीं। यह ठीक है, लेकिन सड़क और नंबर जाँच लें।",
-      notFound: "हमें मानचित्र पर यह पता नहीं मिला। वर्तनी जाँच लें — आप फिर भी अपना ऑर्डर दे सकते हैं।",
+      foundArea:
+        "हमें केवल इलाका मिला, ठीक-ठीक इमारत नहीं। यह ठीक है, लेकिन सड़क और नंबर जाँच लें।",
+      notFound:
+        "हमें मानचित्र पर यह पता नहीं मिला। वर्तनी जाँच लें — आप फिर भी अपना ऑर्डर दे सकते हैं।",
       unavailable: "मानचित्र अभी उपलब्ध नहीं है। आप फिर भी अपना ऑर्डर दे सकते हैं।",
       openMap: "बड़ा मानचित्र खोलें",
       mapAlt: "डिलीवरी पते को दिखाता मानचित्र",
@@ -4576,7 +5342,8 @@ const hi: Dictionary = {
     bic: "BIC/SWIFT",
     reference: "संदर्भ",
     amount: "राशि",
-    bankNote: "कृपया ऊपर दिया गया संदर्भ शामिल करें ताकि हम आपके भुगतान का मिलान कर सकें। ट्रांसफ़र आने पर हम आपके ऑर्डर की पुष्टि करेंगे।",
+    bankNote:
+      "कृपया ऊपर दिया गया संदर्भ शामिल करें ताकि हम आपके भुगतान का मिलान कर सकें। ट्रांसफ़र आने पर हम आपके ऑर्डर की पुष्टि करेंगे।",
     errStart: "भुगतान शुरू नहीं किया जा सका। कृपया फिर कोशिश करें।",
     errBank: "बैंक ट्रांसफ़र शुरू नहीं किया जा सका। कृपया फिर कोशिश करें।",
   },
@@ -4604,10 +5371,12 @@ const hi: Dictionary = {
       "दो-चरणीय प्रमाणीकरण वाले खातों और एडमिन/स्टाफ खातों के लिए Google साइन-इन उपलब्ध नहीं है। कृपया अपने ईमेल, पासवर्ड और ऑथेंटिकेटर कोड से साइन इन करें।",
     forgotPassword: "पासवर्ड भूल गए?",
     forgotPasswordTitle: "अपना पासवर्ड रीसेट करें",
-    forgotPasswordIntro: "अपने खाते का ईमेल पता दर्ज करें, हम नया पासवर्ड चुनने के लिए एक लिंक भेजेंगे।",
+    forgotPasswordIntro:
+      "अपने खाते का ईमेल पता दर्ज करें, हम नया पासवर्ड चुनने के लिए एक लिंक भेजेंगे।",
     sendResetLink: "रीसेट लिंक भेजें",
     sendingResetLink: "भेजा जा रहा है…",
-    resetLinkSent: "अगर इस पते से कोई खाता मौजूद है, तो रीसेट लिंक भेजा जा रहा है। यह 1 घंटे में समाप्त हो जाएगा।",
+    resetLinkSent:
+      "अगर इस पते से कोई खाता मौजूद है, तो रीसेट लिंक भेजा जा रहा है। यह 1 घंटे में समाप्त हो जाएगा।",
     resetPasswordTitle: "नया पासवर्ड चुनें",
     newPassword: "नया पासवर्ड",
     resetPassword: "पासवर्ड अपडेट करें",
@@ -4703,7 +5472,8 @@ const ja: Dictionary = {
     followUs: "フォローする",
     tagline: "手作りの一点物を、丁寧に梱包してお届けします。",
     newsletterTitle: "最新情報をお届け",
-    newsletterBody: "新作情報や時々のお得な情報をお届けします — 迷惑メールは送りません、いつでも解除できます。",
+    newsletterBody:
+      "新作情報や時々のお得な情報をお届けします — 迷惑メールは送りません、いつでも解除できます。",
     newsletterPlaceholder: "you@example.com",
     newsletterSubmit: "登録する",
     newsletterSubmitting: "登録中…",
@@ -4763,9 +5533,11 @@ const ja: Dictionary = {
     value1Body:
       "すべての商品はムラノ島で伝統的なランプワークとガラス吹きの技法により作られています — 型を使うことも、大量生産することも決してありません。",
     value2Title: "明瞭な価格設定",
-    value2Body: "表示価格には税金が含まれています。チェックアウト時に予期せぬ追加費用はありません。",
+    value2Body:
+      "表示価格には税金が含まれています。チェックアウト時に予期せぬ追加費用はありません。",
     value3Title: "誠実なサポート",
-    value3Body: "お問い合わせ先に届いたメッセージはすべて、ボットではなく実際のスタッフが目を通しています。",
+    value3Body:
+      "お問い合わせ先に届いたメッセージはすべて、ボットではなく実際のスタッフが目を通しています。",
     contactCta: "ご質問がありますか? ",
     contactLink: "お問い合わせはこちら",
     friendsIntro: "",
@@ -4832,7 +5604,8 @@ const ja: Dictionary = {
     sizeNecklace: "45〜48cm",
     sizeEarrings: "垂れ下がり部分 約4cm",
     careLabel: "お手入れ",
-    careNote: "乾いた状態を保ち、香水との接触を避け、傷を防ぐために他の製品とは分けて保管してください。",
+    careNote:
+      "乾いた状態を保ち、香水との接触を避け、傷を防ぐために他の製品とは分けて保管してください。",
     inStock: "在庫あり",
     vatIncluded: "VAT/IVA込み",
     addToCart: "カートに追加",
@@ -4840,6 +5613,53 @@ const ja: Dictionary = {
     buyNow: "今すぐ購入",
     reviews: "レビュー",
     storyTitle: "この作品のストーリー",
+    shippingBanner:
+      "イタリア・ヨーロッパは送料無料 · 米国・カナダは30ユーロ · その他の地域は40ユーロ",
+    handmadeBadge: "イタリア製ハンドメイド",
+    lightweightBadge: "軽い着け心地",
+    seeReviews: "レビューを見る",
+    giftReassuranceTitle: "どんな機会にもふさわしい特別な贈り物",
+    giftReassuranceBody: "エレガンスと職人技、そして贈るにふさわしい物語。",
+    giftSectionEyebrow: "特別な贈り物",
+    giftSectionHeadline: "ジュエリー以上の、いつまでも残る感動。",
+    giftSectionBody:
+      "すべての作品は、当店ならではのギフトボックスに美しく収められてお届けします。誕生日や記念日、特別な機会に、あるいは大切な人を思う気持ちを伝えるために、そのまま贈っていただけます。",
+    giftSectionLink: "ギフトパッケージを見る",
+    giftFeature1: "上品なパッケージ",
+    giftFeature2: "そのまま贈れる",
+    giftFeature3: "特別な意味を込めた贈り物",
+    faq: [
+      {
+        question: "本物のムラノガラスですか？",
+        answer:
+          "はい——すべての作品はイタリア・ムラノ島で、伝統的なランプワークと吹きガラスの技法を用いて手作業で作られており、型に流し込んだり大量生産されたりすることは一切ありません。本物のガラスと模造品の見分け方については、ムラノガラスの完全ガイドをご覧ください。",
+      },
+      {
+        question: "どこで作られていますか？",
+        answer:
+          "ヴェネツィアの潟にある小さな島、ムラノ島で作られています。この島は700年以上にわたりイタリアのガラス工芸の中心地です。すべての作品は、島にある現役の炉のそばで職人が手作業で形作ります。",
+      },
+      {
+        question: "ジュエリーのお手入れ方法は？",
+        answer:
+          "乾いた状態を保ち、香水との接触を避け、傷を防ぐために一つずつ分けて保管してください。少しの心配りで、ムラノガラスは色と輝きを一生保ちます。",
+      },
+      {
+        question: "注文をキャンセル・返品できますか？",
+        answer:
+          "はい。すべてのご注文にはEUの14日間の撤回権が適用されます——ご希望に合わない場合は、理由を問わず全額返金のためにご返送いただけます。",
+      },
+      {
+        question: "配送方法にはどのようなものがありますか？",
+        answer:
+          "イタリアおよびヨーロッパ域内は送料無料です。米国・カナダへのご注文は30ユーロ、その他の地域へは40ユーロがかかります。ヨーロッパ域内の標準配送は3〜5日です。海外へのご注文は、価格に含まれない現地の輸入関税や税金が発生する場合があります。",
+      },
+      {
+        question: "ギフト包装はされていますか？",
+        answer:
+          "はい——すべての作品は当店ならではのギフトボックスに入ってお届けされ、そのまま贈っていただけます。追加の包装は不要です。大切な方への贈り物にも、ご自身へのご褒美にも、そのままお使いいただけます。",
+      },
+    ],
     noReviews: "まだレビューはありません。",
     reviewCount: "{n}件のレビュー",
     yourRating: "評価",
@@ -4856,13 +5676,13 @@ const ja: Dictionary = {
     verifiedPurchaseOnly: "この商品を購入したお客様のみレビューを投稿できます。",
     writeAReview: "レビューを書く",
     ratingRequired: "送信する前に評価を選択してください。",
-    ratingLabels: [
-      "好みではない",
-      "もう少し良ければ",
-      "良い",
-      "とても素敵",
-      "最高に美しい",
-    ] as [string, string, string, string, string],
+    ratingLabels: ["好みではない", "もう少し良ければ", "良い", "とても素敵", "最高に美しい"] as [
+      string,
+      string,
+      string,
+      string,
+      string,
+    ],
     charactersLeft: "残り{n}文字",
     returnsBadge: "14日間の返品・撤回権",
     secureBadge: "安全な決済",
@@ -4909,7 +5729,8 @@ const ja: Dictionary = {
     confirmEmailToWishlist: "お気に入りを使うには、メールアドレスを確認してください。",
     confirmEmailToReview: "レビューを投稿するには、メールアドレスを確認してください。",
     productNotFound: "商品が見つかりません。",
-    guestEmailRequired: "ゲストとして購入するには、ログインするかメールアドレスを入力してください。",
+    guestEmailRequired:
+      "ゲストとして購入するには、ログインするかメールアドレスを入力してください。",
     cartEmpty: "カートは空です。",
     productUnavailable: "カート内の商品が販売終了になりました。",
     invalidQuantity: "{name} の数量が正しくありません。",
@@ -4932,14 +5753,16 @@ const ja: Dictionary = {
     sending: "送信中...",
     returnStatusLabel: "返品の状況",
     emailConfirmed: "メールアドレスを確認しました。ありがとうございます！",
-    confirmLinkExpired: "確認リンクの有効期限が切れています。下から新しいリンクをリクエストしてください。",
+    confirmLinkExpired:
+      "確認リンクの有効期限が切れています。下から新しいリンクをリクエストしてください。",
     confirmEmailPrompt: "メールアドレスをご確認ください。受信トレイに確認リンクを送信しました。",
     resendConfirmation: "確認メールを再送する",
     confirmationSent: "確認メールを送信しました。受信トレイをご確認ください。",
     unsubscribeInvalidTitle: "配信停止リンクが無効です",
     unsubscribeInvalidBody: "リンクにメールアドレスがないか、無効なメールアドレスです。",
     unsubscribedTitle: "配信を停止しました",
-    unsubscribedBody: "{email} 宛てのニュースレターの配信を停止しました。トップページからいつでも再登録できます。",
+    unsubscribedBody:
+      "{email} 宛てのニュースレターの配信を停止しました。トップページからいつでも再登録できます。",
     paginationLabel: "ページ送り",
     minPriceLabel: "最低価格",
     maxPriceLabel: "最高価格",
@@ -4953,16 +5776,21 @@ const ja: Dictionary = {
     verifySubject: "メールアドレスの確認 — {storeName}",
     verifyPreview: "メールアドレスをご確認ください — {storeName}",
     verifyHeading: "メールアドレスをご確認ください",
-    verifyBody: "{storeName}へようこそ。アカウントを有効にするため、メールアドレスをご確認ください。レビューの投稿やお気に入りへの保存にはこの確認が必要です。",
+    verifyBody:
+      "{storeName}へようこそ。アカウントを有効にするため、メールアドレスをご確認ください。レビューの投稿やお気に入りへの保存にはこの確認が必要です。",
     verifyButton: "メールアドレスを確認する",
-    verifyExpiry: "このリンクの有効期限は{hours}時間です。アカウントを作成した覚えがない場合は、このメールを無視してください。",
+    verifyExpiry:
+      "このリンクの有効期限は{hours}時間です。アカウントを作成した覚えがない場合は、このメールを無視してください。",
     resetSubject: "パスワードの再設定 — {storeName}",
     resetHeading: "パスワードの再設定",
-    resetBody: "{storeName}アカウントのパスワード再設定のリクエストを受け付けました。下のボタンから新しいパスワードを設定してください。",
+    resetBody:
+      "{storeName}アカウントのパスワード再設定のリクエストを受け付けました。下のボタンから新しいパスワードを設定してください。",
     resetButton: "新しいパスワードを設定",
-    resetExpiry: "このリンクの有効期限は{minutes}分で、1回のみ使用できます。心当たりがない場合は、このメールを無視してください。パスワードは変更されません。",
+    resetExpiry:
+      "このリンクの有効期限は{minutes}分で、1回のみ使用できます。心当たりがない場合は、このメールを無視してください。パスワードは変更されません。",
     pwChangedSubject: "パスワードが変更されました — {storeName}",
-    pwChangedBody: "{storeName}アカウントのパスワードが変更され、ログイン中だったすべての端末からログアウトされました。\n\nご自身で変更した場合は、対応は不要です。心当たりがない場合は、すぐにパスワードを再設定し、当店{contact}までご連絡ください。",
+    pwChangedBody:
+      "{storeName}アカウントのパスワードが変更され、ログイン中だったすべての端末からログアウトされました。\n\nご自身で変更した場合は、対応は不要です。心当たりがない場合は、すぐにパスワードを再設定し、当店{contact}までご連絡ください。",
     pwChangedContact: "（{email}）",
     orderNumberLabel: "ご注文番号",
     orderDateLabel: "ご注文日",
@@ -4971,16 +5799,33 @@ const ja: Dictionary = {
     viewOrder: "ご注文を確認する",
     orderQuestions: "このご注文についてご不明な点があれば、このメールにご返信ください。",
     orderSubject: "ご注文 {orderNumber}：{heading}",
-    unknownStatusBody: "ご注文のステータスが「{status}」に変更されました。\n\nご注文番号：{orderNumber}",
+    unknownStatusBody:
+      "ご注文のステータスが「{status}」に変更されました。\n\nご注文番号：{orderNumber}",
     vatLabel: "VAT {number}",
     abandonedSubject: "カートに商品が残っています",
-    abandonedBody: "ご注文の手続きが完了していません（お支払い未完了）：\n\n{items}\n\nご注文を完了する：{url}\n\nご注文番号：{orderNumber}",
+    abandonedBody:
+      "ご注文の手続きが完了していません（お支払い未完了）：\n\n{items}\n\nご注文を完了する：{url}\n\nご注文番号：{orderNumber}",
     status: {
-      paid: { heading: "お支払いを確認しました", message: "お支払いを確認しました。ご注文の商品を丁寧に準備しております。" },
-      processing: { heading: "ご注文を準備中です", message: "職人が心を込めてご注文の商品を準備しています。" },
-      shipped: { heading: "ご注文の商品を発送しました", message: "ご注文の商品を発送しました。お手元に届くまでしばらくお待ちください。" },
-      delivered: { heading: "ご注文の商品をお届けしました", message: "ご注文の商品をお届けしました。気に入っていただけたら嬉しいです。" },
-      cancelled: { heading: "ご注文はキャンセルされました", message: "ご注文はキャンセルされました。" },
+      paid: {
+        heading: "お支払いを確認しました",
+        message: "お支払いを確認しました。ご注文の商品を丁寧に準備しております。",
+      },
+      processing: {
+        heading: "ご注文を準備中です",
+        message: "職人が心を込めてご注文の商品を準備しています。",
+      },
+      shipped: {
+        heading: "ご注文の商品を発送しました",
+        message: "ご注文の商品を発送しました。お手元に届くまでしばらくお待ちください。",
+      },
+      delivered: {
+        heading: "ご注文の商品をお届けしました",
+        message: "ご注文の商品をお届けしました。気に入っていただけたら嬉しいです。",
+      },
+      cancelled: {
+        heading: "ご注文はキャンセルされました",
+        message: "ご注文はキャンセルされました。",
+      },
       refunded: { heading: "ご注文を返金しました", message: "ご注文の返金が完了しました。" },
     },
   },
@@ -4994,16 +5839,21 @@ const ja: Dictionary = {
     city: "市区町村",
     postalCode: "郵便番号",
     country: "国・地域",
-    couldNotQuote: "ご注文の合計金額を計算できませんでした。入力内容をご確認のうえ、もう一度お試しください。",
-    couldNotPlaceOrder: "ご注文を完了できませんでした。入力内容をご確認のうえ再度お試しいただき、解決しない場合はお問い合わせください。",
-    noShippingMethods: "現在、この国・地域への配送はご利用いただけません。別の国・地域をお選びいただくか、お問い合わせください。",
+    couldNotQuote:
+      "ご注文の合計金額を計算できませんでした。入力内容をご確認のうえ、もう一度お試しください。",
+    couldNotPlaceOrder:
+      "ご注文を完了できませんでした。入力内容をご確認のうえ再度お試しいただき、解決しない場合はお問い合わせください。",
+    noShippingMethods:
+      "現在、この国・地域への配送はご利用いただけません。別の国・地域をお選びいただくか、お問い合わせください。",
     continueShopping: "買い物を続ける",
     invalidPostalCode: "選択した国に対してこの郵便番号は正しくないようです。",
     addressCheck: {
       checking: "地図で住所を確認しています…",
       found: "こちらの場所で合っていますか？ ご注文の前に位置をご確認ください。",
-      foundArea: "おおよそのエリアのみ見つかり、正確な建物は特定できませんでした。問題ありませんが、通り名と番地をご確認ください。",
-      notFound: "地図上でこの住所が見つかりませんでした。綴りをご確認ください。このままご注文いただくこともできます。",
+      foundArea:
+        "おおよそのエリアのみ見つかり、正確な建物は特定できませんでした。問題ありませんが、通り名と番地をご確認ください。",
+      notFound:
+        "地図上でこの住所が見つかりませんでした。綴りをご確認ください。このままご注文いただくこともできます。",
       unavailable: "現在、地図をご利用いただけません。このままご注文いただけます。",
       openMap: "大きな地図を開く",
       mapAlt: "配送先住所を示す地図",
@@ -5042,7 +5892,8 @@ const ja: Dictionary = {
     bic: "BIC/SWIFT",
     reference: "参照番号",
     amount: "金額",
-    bankNote: "お支払いを確認できるよう、上記の参照番号を必ず記載してください。お振込みが確認でき次第、ご注文を確定いたします。",
+    bankNote:
+      "お支払いを確認できるよう、上記の参照番号を必ず記載してください。お振込みが確認でき次第、ご注文を確定いたします。",
     errStart: "お支払いを開始できませんでした。もう一度お試しください。",
     errBank: "銀行振込を開始できませんでした。もう一度お試しください。",
   },
@@ -5070,15 +5921,18 @@ const ja: Dictionary = {
       "2段階認証を設定しているアカウントおよび管理者/スタッフのアカウントでは、Google ログインをご利用いただけません。メールアドレス、パスワード、認証アプリのコードでログインしてください。",
     forgotPassword: "パスワードをお忘れですか？",
     forgotPasswordTitle: "パスワードの再設定",
-    forgotPasswordIntro: "アカウントのメールアドレスを入力してください。新しいパスワードを設定するためのリンクをお送りします。",
+    forgotPasswordIntro:
+      "アカウントのメールアドレスを入力してください。新しいパスワードを設定するためのリンクをお送りします。",
     sendResetLink: "再設定リンクを送信",
     sendingResetLink: "送信中…",
-    resetLinkSent: "このメールアドレスのアカウントが存在する場合、再設定リンクを送信しました。リンクの有効期限は1時間です。",
+    resetLinkSent:
+      "このメールアドレスのアカウントが存在する場合、再設定リンクを送信しました。リンクの有効期限は1時間です。",
     resetPasswordTitle: "新しいパスワードを設定",
     newPassword: "新しいパスワード",
     resetPassword: "パスワードを更新",
     resettingPassword: "更新中…",
-    resetInvalid: "この再設定リンクは無効か、有効期限が切れています。新しいリンクをリクエストしてください。",
+    resetInvalid:
+      "この再設定リンクは無効か、有効期限が切れています。新しいリンクをリクエストしてください。",
     resetWeak: "パスワードは8文字以上72文字以内で入力してください。",
     genericError: "問題が発生しました。1分ほど待ってからもう一度お試しください。",
     passwordUpdated: "パスワードを更新しました。新しいパスワードでログインしてください。",

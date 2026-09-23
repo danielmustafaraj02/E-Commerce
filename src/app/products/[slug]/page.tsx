@@ -2,6 +2,7 @@ import { siteBaseUrl } from "@/lib/site-url";
 import { cache } from "react";
 import type { Metadata } from "next";
 import { ProductGallery } from "@/components/product-gallery";
+import { CatalogImage } from "@/components/catalog-image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { auth } from "@/auth";
@@ -34,8 +35,114 @@ import { homeFontClasses } from "@/app/home-fonts";
 import "../../home.css";
 import "../../shop.css";
 import { TrustBadges } from "@/components/trust-badges";
+import { StarRating } from "@/components/star-rating";
 import { ReviewForm } from "./review-form";
 import { hasPurchased } from "./review-actions";
+
+// Small single-use icons for the shipping banner / gift sections below —
+// same stroke convention (1.8, round caps/joins, currentColor) as the
+// existing icons in components/trust-badges.tsx, kept local since nothing
+// else on the site needs them yet.
+function TruckIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="shrink-0"
+      aria-hidden="true"
+    >
+      <rect x="1" y="6" width="13" height="10" rx="1.5" />
+      <path d="M14 10h4l3 3v3h-7z" />
+      <circle cx="6" cy="18.5" r="1.8" />
+      <circle cx="17.5" cy="18.5" r="1.8" />
+    </svg>
+  );
+}
+function GiftIcon() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="shrink-0"
+      aria-hidden="true"
+    >
+      <rect x="3" y="9" width="18" height="12" rx="1.5" />
+      <path d="M3 9h18v4H3z" />
+      <path d="M12 9v12" />
+      <path d="M12 9C10 5 6 5 6 7.5S9 9 12 9Z" />
+      <path d="M12 9c2-4 6-4 6-1.5S15 9 12 9Z" />
+    </svg>
+  );
+}
+function HeartSmallIcon() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="shrink-0"
+      aria-hidden="true"
+    >
+      <path d="M20.8 4.6c-1.9-1.6-4.6-1.4-6.3.4L12 7.5l-2.5-2.5c-1.7-1.8-4.4-2-6.3-.4-2.1 1.8-2.2 5-.3 6.9L12 21l9.1-9.5c1.9-1.9 1.8-5.1-.3-6.9Z" />
+    </svg>
+  );
+}
+function SparkleIcon() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="shrink-0"
+      aria-hidden="true"
+    >
+      <path d="M12 3v5M12 16v5M3 12h5M16 12h5M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18" />
+    </svg>
+  );
+}
+// Arrow that flips for RTL via a logical transform instead of baking "→"
+// into the translated string (Arabic reads right-to-left, so the arrow
+// needs to point the other way, and a hardcoded glyph can't do that).
+function InlineArrowIcon() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="rtl:-scale-x-100"
+      aria-hidden="true"
+    >
+      <path d="M5 12h14M13 6l6 6-6 6" />
+    </svg>
+  );
+}
 
 // Module-level, not computed inside the component (react-hooks/purity
 // flags Date.now() during render) — evaluated once per server instance,
@@ -259,14 +366,13 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
     ],
   };
 
-  // Same two authenticity/origin questions as the homepage FAQ (dict.home.faq) —
-  // the ones a shopper is most likely to have right before buying a specific
-  // piece, not the full list (shipping/returns already live in TrustBadges
-  // and the checkout flow itself).
+  // The product page's own, longer FAQ (dict.product.faq) — covers
+  // authenticity, origin, care, returns, shipping and gift packaging, not
+  // just the two authenticity/origin questions the homepage FAQ has.
   const productFaqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: dict.home.faq.map((item) => ({
+    mainEntity: dict.product.faq.map((item) => ({
       "@type": "Question",
       name: item.question,
       acceptedAnswer: { "@type": "Answer", text: item.answer },
@@ -283,6 +389,11 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: toSafeJsonLd(breadcrumbJsonLd) }}
       />
+      <div className="shop-shipping-banner">
+        <TruckIcon />
+        {dict.product.shippingBanner}
+      </div>
+
       <section className="shelf-section shop-product">
         <div className="shelf-wrap">
           {product.category && (
@@ -296,6 +407,15 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
 
             <div>
               <h1 className="shop-product-title">{name}</h1>
+
+              {/* Restrained value row — material, provenance, weight — read in
+                  one glance, right under the title where a shopper looks first. */}
+              <p className="shop-value-row">
+                {[material, dict.product.handmadeBadge, dict.product.lightweightBadge]
+                  .filter(Boolean)
+                  .join(" · ")}
+              </p>
+
               <p className="shop-price">
                 {formatMoney(product.price, product.currency, settings.defaultLocale)}
                 {settings.pricesIncludeTax && (
@@ -305,7 +425,17 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                 )}
               </p>
 
-              <p className="mt-1 text-sm">
+              {averageRating !== null && (
+                <p className="mt-1.5 flex items-center gap-2 text-sm">
+                  <StarRating rating={averageRating} />
+                  <span className="text-foreground/70">({product.reviews.length})</span>
+                  <a href="#reviews" className="text-primary hover:underline">
+                    {dict.product.seeReviews}
+                  </a>
+                </p>
+              )}
+
+              <p className="mt-1.5 text-sm">
                 {outOfStock ? (
                   <span className="text-danger">{dict.product.outOfStock}</span>
                 ) : lowStock ? (
@@ -341,13 +471,6 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                 </p>
               )}
 
-              {averageRating !== null && (
-                <p className="text-foreground/70 mt-1 text-sm">
-                  {averageRating.toFixed(1)} / 5 (
-                  {applyTemplate(dict.product.reviewCount, { n: product.reviews.length })})
-                </p>
-              )}
-
               <p className="shop-prose">{description}</p>
 
               {/* True of every piece in the catalog, not per-product copy. */}
@@ -361,6 +484,16 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                 </li>
               </ul>
 
+              <div className="shop-gift-reassurance">
+                <GiftIcon />
+                <span>
+                  <strong className="text-foreground block font-medium">
+                    {dict.product.giftReassuranceTitle}
+                  </strong>
+                  <span className="text-foreground/70">{dict.product.giftReassuranceBody}</span>
+                </span>
+              </div>
+
               <AddToCartButton
                 product={{
                   id: product.id,
@@ -372,6 +505,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                   outOfStock,
                 }}
                 dict={dict.product}
+                className="shop-cta-teal"
               />
 
               {userId && !outOfStock && (
@@ -403,6 +537,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
               />
 
               <TrustBadges trustBadgeText={settings.trustBadgeText} dict={dict.product} />
+              <p className="text-foreground/60 mt-1.5 text-sm">{dict.product.shippingBanner}</p>
 
               <Link
                 href="/murano-glass#authenticity"
@@ -419,8 +554,47 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
         </div>
       </section>
 
+      {/* The gift-box photo is a shared packaging shot reused across the
+          catalog's galleries (see ProductGallery), not this product's own
+          photography — deliberately, since every piece ships in the same box. */}
+      <section className="shelf-section shelf-section--blush">
+        <div className="shelf-wrap shop-gift-section">
+          <div className="shop-gift-photo">
+            <CatalogImage
+              src="/products/orecchini-in-vetro-di-murano/orecchini-goccia-di-rubino-3.png"
+              alt={dict.product.giftSectionEyebrow}
+              fill
+              sizes="(min-width: 40rem) 45vw, 100vw"
+            />
+          </div>
+          <div>
+            <p className="shop-gift-eyebrow">{dict.product.giftSectionEyebrow}</p>
+            <h2 className="shop-gift-headline">{dict.product.giftSectionHeadline}</h2>
+            <p className="shop-gift-body">{dict.product.giftSectionBody}</p>
+            <a href="#gift-packaging" className="shop-gift-link">
+              {dict.product.giftSectionLink}
+              <InlineArrowIcon />
+            </a>
+            <ul className="shop-gift-features">
+              <li>
+                <GiftIcon />
+                {dict.product.giftFeature1}
+              </li>
+              <li>
+                <HeartSmallIcon />
+                {dict.product.giftFeature2}
+              </li>
+              <li>
+                <SparkleIcon />
+                {dict.product.giftFeature3}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
       {product.reviews.length > 0 && (
-        <section className="shelf-section">
+        <section id="reviews" className="shelf-section">
           <div className="shelf-wrap shop-reviews">
             <h2 className="shelf-heading">{dict.product.reviews}</h2>
             <ul className="flex flex-col gap-4">
@@ -456,31 +630,32 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
         </section>
       )}
 
-      {story && (
-        <section className="shelf-section">
-          <div className="shelf-wrap">
-            <h2 className="shelf-heading">{dict.product.storyTitle}</h2>
-            <p className="text-foreground/80 max-w-2xl text-base leading-relaxed">{story}</p>
-          </div>
-        </section>
-      )}
-
       <section className="shelf-section">
         <div className="shelf-wrap">
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: toSafeJsonLd(productFaqJsonLd) }}
           />
-          <div className="shelf-heading-row">
-            <h2 className="shelf-heading">{dict.home.faqTitle}</h2>
-          </div>
-          <div className="shelf-faq">
-            {dict.home.faq.map((item) => (
-              <details key={item.question}>
-                <summary>{item.question}</summary>
-                <p>{item.answer}</p>
-              </details>
-            ))}
+          <div className={story ? "shop-story-faq-grid" : undefined}>
+            {story && (
+              <div className="shop-story">
+                <h2 className="shelf-heading">{dict.product.storyTitle}</h2>
+                <p className="shop-story-prose">{story}</p>
+              </div>
+            )}
+            <div>
+              <div className="shelf-heading-row">
+                <h2 className="shelf-heading">{dict.home.faqTitle}</h2>
+              </div>
+              <div className="shelf-faq">
+                {dict.product.faq.map((item, index) => (
+                  <details key={item.question} id={index === 5 ? "gift-packaging" : undefined}>
+                    <summary>{item.question}</summary>
+                    <p>{item.answer}</p>
+                  </details>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
