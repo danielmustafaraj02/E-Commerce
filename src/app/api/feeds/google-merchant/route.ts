@@ -11,6 +11,7 @@ import {
   productMaterial,
 } from "@/lib/merchant-feed";
 import type { Locale } from "@/lib/i18n/locale";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 // Google Merchant Center product feed (RSS 2.0 + the `g:` namespace Google
 // defines) — https://support.google.com/merchants/answer/7052112. Point a
@@ -28,6 +29,9 @@ function xmlEscape(value: string): string {
 }
 
 export async function GET(request: Request) {
+  const { success } = await rateLimit(`google-merchant-feed:${clientIp(request)}`, 20, 60_000);
+  if (!success) return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+
   const { searchParams } = new URL(request.url);
   const locale: Locale = searchParams.get("locale") === "en" ? "en" : "it";
 
