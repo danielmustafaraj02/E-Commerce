@@ -6,6 +6,7 @@ import {
   missingChecklistItems,
 } from "@/lib/launch-checklist";
 import { TaskForm } from "./task-form";
+import { CopyPromptButton } from "./copy-prompt-button";
 import {
   toggleImprovementTask,
   deleteImprovementTask,
@@ -192,6 +193,7 @@ export default async function AdminRoadmapPage({ searchParams }: PageProps<"/adm
                         <span className="font-medium">{task.title}</span>
                       </div>
                       <div className="flex shrink-0 flex-wrap justify-end gap-3 text-sm">
+                        <CopyPromptButton task={task} />
                         <form action={boundClaude}>
                           <button type="submit" className="text-primary hover:underline">
                             {task.forClaude ? "Take back from Claude" : "Give to Claude"}
