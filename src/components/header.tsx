@@ -49,31 +49,103 @@ export async function Header({
   return (
     <header className="glass-rule bg-background/90 relative z-40 backdrop-blur-sm sm:sticky sm:top-0">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-3 px-4 py-3 sm:py-4">
-        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-          <Link href="/" className="flex shrink-0 items-center gap-2 text-lg font-semibold">
-            {logoUrl ? (
-              // Plain <img>, not next/image: logoUrl is admin-settable and
-              // could be an SVG (its own URL field, unrestricted by design —
-              // see next.config.ts), which next/image's optimizer refuses by
-              // default (a deliberate XSS guard) rather than being worth
-              // reconfiguring for a fixed 32px mark.
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={logoUrl} alt={storeName} className="h-8 w-8 rounded object-contain" />
-            ) : null}
-            {storeName}
-          </Link>
 
-          {/* flex-wrap (not shrink-0) so this cluster drops to its own line
-              on narrow phones instead of clipping past the viewport edge —
-              it was overflowing next to the store name at ~375px wide. */}
-          <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 text-sm">
+        {/* ── Row 1: category nav (left) + logo (right) ─────────────────── */}
+        <div className="flex items-center justify-between gap-x-4">
+          {/* Desktop category links — hidden on mobile, replaced by MobileNavMenu */}
+          <nav className="hidden items-center gap-4 text-sm whitespace-nowrap sm:flex">
+            {categories.map((category) => (
+              <Link key={category.id} href={`/category/${category.slug}`} className={navChipClass}>
+                {localizedName(category, locale)}
+              </Link>
+            ))}
+            <Link href="/about" className={navChipClass}>
+              {dict.footer.about}
+            </Link>
+            <Link href="/murano-glass" className={navChipClass}>
+              {dict.footer.muranoGuide}
+            </Link>
+          </nav>
+
+          {/* Spacer on mobile so logo stays right */}
+          <div className="sm:hidden" />
+
+          {/* Logo — links to home */}
+          <Link href="/" className="shrink-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo.png"
+              alt={storeName}
+              className="h-10 w-auto object-contain"
+            />
+          </Link>
+        </div>
+
+        {/* ── Row 2: search bar + icon cluster + mobile menu ────────────── */}
+        {/* On phones the menu button and search share this row;
+            sm:contents unwraps this wrapper once the desktop layout takes over. */}
+        <div className="flex items-center gap-2 sm:contents">
+          {/* Search bar */}
+          <form
+            action="/products"
+            method="GET"
+            role="search"
+            className="relative flex items-center max-sm:flex-1"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              className="text-foreground/50 pointer-events-none absolute start-3.5 sm:start-3"
+              aria-hidden="true"
+            >
+              <circle cx="9" cy="9" r="6.5" />
+              <path d="M18 18l-4-4" strokeLinecap="round" />
+            </svg>
+            <input
+              type="search"
+              name="q"
+              placeholder={dict.nav.searchPlaceholder}
+              aria-label={dict.nav.searchPlaceholder}
+              enterKeyHint="search"
+              autoComplete="off"
+              className="field w-full min-w-0 rounded-full ps-11 pe-14 text-base shadow-sm sm:w-64 sm:rounded-xl sm:py-1.5 sm:ps-10 sm:pe-3 sm:text-sm sm:shadow-none"
+            />
+            {/* Phones only — the keyboard Search key also submits */}
+            <button
+              type="submit"
+              aria-label={dict.nav.searchPlaceholder}
+              className="bg-accent hover:bg-accent-deep active:bg-accent-deep absolute end-1.5 flex size-9 items-center justify-center rounded-full text-white transition-colors sm:hidden"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="rtl:rotate-180"
+                aria-hidden="true"
+              >
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </button>
+          </form>
+
+          {/* Icon cluster: locale switcher, wishlist, cart, admin, account/login */}
+          <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1 text-sm max-sm:hidden">
             <LocaleSwitcher current={locale} />
             {session?.user ? (
               <Link
                 href="/account/wishlist"
                 aria-label={dict.nav.wishlist}
                 title={dict.nav.wishlist}
-                className="group link-underline text-foreground/80 hover:text-danger flex items-center gap-1 transition-colors max-sm:-m-1.5 max-sm:p-1.5"
+                className="group link-underline text-foreground/80 hover:text-danger flex items-center gap-1 transition-colors"
               >
                 <svg
                   width="18"
@@ -108,7 +180,7 @@ export async function Header({
                 href="/account"
                 aria-label={dict.nav.account}
                 title={dict.nav.account}
-                className="group link-underline text-foreground/80 hover:text-accent flex items-center max-sm:-m-1.5 max-sm:p-1.5"
+                className="group link-underline text-foreground/80 hover:text-accent flex items-center"
               >
                 <svg
                   width="18"
@@ -143,84 +215,61 @@ export async function Header({
               </>
             )}
           </div>
-        </div>
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          {/* Desktop only now — on phones this used to be a horizontally-scrolling
-              row (swipe to see the rest); MobileNavMenu below replaces that with a
-              single button that opens a full-screen list instead. */}
-          <nav className="hidden items-center gap-4 text-sm whitespace-nowrap sm:flex">
-            {categories.map((category) => (
-              <Link key={category.id} href={`/category/${category.slug}`} className={navChipClass}>
-                {localizedName(category, locale)}
-              </Link>
-            ))}
-            <Link href="/about" className={navChipClass}>
-              {dict.footer.about}
-            </Link>
-            <Link href="/murano-glass" className={navChipClass}>
-              {dict.footer.muranoGuide}
-            </Link>
-          </nav>
-
-          {/* Phones: search and the menu button share one row instead of
-              each getting a full-width row of their own — sm:contents
-              unwraps this back to two plain items of the flex row above
-              (after <nav>, same as before) once the desktop layout takes
-              over. */}
-          <div className="flex items-center gap-2 sm:contents">
-            <form
-              action="/products"
-              method="GET"
-              role="search"
-              className="relative flex items-center max-sm:flex-1"
-            >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 20 20"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="text-foreground/50 pointer-events-none absolute start-3.5 sm:start-3"
-                aria-hidden="true"
-              >
-                <circle cx="9" cy="9" r="6.5" />
-                <path d="M18 18l-4-4" strokeLinecap="round" />
-              </svg>
-              <input
-                type="search"
-                name="q"
-                placeholder={dict.nav.searchPlaceholder}
-                aria-label={dict.nav.searchPlaceholder}
-                enterKeyHint="search"
-                autoComplete="off"
-                className="field w-full min-w-0 rounded-full ps-11 pe-14 text-base shadow-sm sm:w-64 sm:rounded-xl sm:py-1.5 sm:ps-10 sm:pe-3 sm:text-sm sm:shadow-none"
-              />
-              {/* The keyboard's Search key submits too; this is for people who reach
-                  for a button. Phones only. */}
-              <button
-                type="submit"
-                aria-label={dict.nav.searchPlaceholder}
-                className="bg-accent hover:bg-accent-deep active:bg-accent-deep absolute end-1.5 flex size-9 items-center justify-center rounded-full text-white transition-colors sm:hidden"
+          {/* Mobile: show icon cluster + menu button */}
+          <div className="flex items-center gap-x-3 sm:hidden">
+            <LocaleSwitcher current={locale} />
+            {session?.user ? (
+              <Link
+                href="/account/wishlist"
+                aria-label={dict.nav.wishlist}
+                title={dict.nav.wishlist}
+                className="group link-underline text-foreground/80 hover:text-danger flex items-center gap-1 transition-colors -m-1.5 p-1.5"
               >
                 <svg
-                  width="16"
-                  height="16"
+                  width="18"
+                  height="18"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="2.5"
+                  strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="rtl:rotate-180"
+                  className="transition-transform duration-200 ease-out group-hover:-rotate-12 group-hover:scale-125"
                   aria-hidden="true"
                 >
-                  <path d="M5 12h14M13 6l6 6-6 6" />
+                  <path d="M20.8 4.6c-1.9-1.6-4.6-1.4-6.3.4L12 7.5l-2.5-2.5c-1.7-1.8-4.4-2-6.3-.4-2.1 1.8-2.2 5-.3 6.9L12 21l9.1-9.5c1.9-1.9 1.8-5.1-.3-6.9Z" />
                 </svg>
-              </button>
-            </form>
-
+                {wishlistCount > 0 ? <span className="text-sm">({wishlistCount})</span> : null}
+              </Link>
+            ) : (
+              <GuestWishlistLink label={dict.nav.wishlist} />
+            )}
+            <CartLink label={dict.nav.cart} />
+            {session?.user ? (
+              <Link
+                href="/account"
+                aria-label={dict.nav.account}
+                title={dict.nav.account}
+                className="group link-underline text-foreground/80 hover:text-accent flex items-center -m-1.5 p-1.5"
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="transition-transform duration-200 ease-out group-hover:-translate-y-0.5 group-hover:scale-110"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="8" r="3.5" />
+                  <path d="M4.5 20c1.4-4 4.2-6 7.5-6s6.1 2 7.5 6" />
+                </svg>
+              </Link>
+            ) : null}
             <MobileNavMenu
               links={mobileNavLinks}
               menuLabel={dict.nav.menu}
@@ -228,6 +277,7 @@ export async function Header({
             />
           </div>
         </div>
+
       </div>
     </header>
   );
