@@ -223,7 +223,7 @@ export async function Header({
             <button
               type="submit"
               aria-label={dict.nav.searchPlaceholder}
-              className="bg-accent hover:bg-accent-deep active:bg-accent-deep absolute end-1.5 flex size-9 items-center justify-center rounded-full text-white transition-colors"
+              className="bg-accent hover:bg-accent-deep active:bg-accent-deep absolute end-1 flex size-11 items-center justify-center rounded-full text-white transition-colors"
             >
               <svg
                 width="16"
