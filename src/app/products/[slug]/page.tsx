@@ -487,7 +487,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                 priceDisplay={priceDisplay}
                 dict={dict.product}
                 cartDict={dict.cart}
-                showBuyNow={Boolean(userId) && !outOfStock}
+                showBuyNow={!outOfStock}
                 wishlist={{
                   productId: product.id,
                   slug: product.slug,
