@@ -10,10 +10,11 @@
   color: var(--faq-ink);
 }
 .faq-intro p {
-  margin: 0.75rem 0 0;
+  margin: 0.9rem 0 0;
   max-width: 24rem;
-  color: var(--faq-soft);
-  line-height: 1.6;
+  color: color-mix(in srgb, var(--faq-ink) 88%, white);
+  font-size: 1.0625rem;
+  line-height: 1.65;
 }
 .faq-wave {
   margin-top: 1rem;
@@ -33,18 +34,21 @@
 .faq-question button {
   display: flex;
   width: 100%;
-  min-height: 3.25rem;
+  min-height: 3.75rem;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  padding: 0.85rem 0;
+  gap: 1.25rem;
+  padding: 1.15rem 0;
   background: none;
   border: 0;
   color: inherit;
-  font: inherit;
-  font-size: 1rem;
+  /* The questions are read, not admired: the text face, not the display serif
+     the surrounding <h3> would hand down. */
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 1.0625rem;
   font-weight: 500;
-  line-height: 1.4;
+  letter-spacing: 0;
+  line-height: 1.45;
   text-align: start;
   cursor: pointer;
 }
@@ -57,8 +61,9 @@
 .faq-icon {
   position: relative;
   flex-shrink: 0;
-  width: 0.85rem;
-  height: 0.85rem;
+  width: 1rem;
+  height: 1rem;
+  color: var(--gold, #b89a62);
 }
 .faq-icon::before,
 .faq-icon::after {
@@ -97,8 +102,9 @@
 .faq-answer p {
   margin: 0;
   max-width: 38rem;
-  color: var(--faq-soft);
-  line-height: 1.65;
+  color: color-mix(in srgb, var(--faq-ink) 88%, white);
+  font-size: 1rem;
+  line-height: 1.75;
 }
 .faq-link {
   display: inline-block;
