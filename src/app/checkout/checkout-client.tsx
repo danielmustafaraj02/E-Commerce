@@ -89,6 +89,7 @@ export function CheckoutClient({
   }, [locale]);
 
   const cartItems = items.map((item) => ({ productId: item.productId, quantity: item.quantity }));
+  const selectedShippingMethod = shippingMethods.find((m) => m.id === shippingMethodId);
 
   useEffect(() => {
     if (!country) return;
@@ -213,25 +214,27 @@ export function CheckoutClient({
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-6">
-      <div className="shop-panel shop-panel-pad">
-        <p className="text-accent-deep flex items-center text-sm font-medium">
-          <span className="shop-check shop-settle" aria-hidden="true">
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M20 6 9 17l-5-5" />
-            </svg>
-          </span>
-          {dict.freeShippingApplied}
-        </p>
-      </div>
+      {quote?.shippingAmount === 0 && (
+        <div className="shop-panel shop-panel-pad">
+          <p className="text-accent-deep flex items-center text-sm font-medium">
+            <span className="shop-check shop-settle" aria-hidden="true">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M20 6 9 17l-5-5" />
+              </svg>
+            </span>
+            {dict.freeShippingApplied}
+          </p>
+        </div>
+      )}
 
       {!isLoggedIn && (
         <div className="form-card">
@@ -395,6 +398,16 @@ export function CheckoutClient({
                   <span>{dict.discount}</span>
                   <span>-{formatMoney(quote.discountAmount, quote.currency, locale)}</span>
                 </div>
+              )}
+              <div className="text-foreground/70 flex justify-between">
+                <span>
+                  {dict.shipping}
+                  {selectedShippingMethod ? ` (${selectedShippingMethod.name})` : ""}
+                </span>
+                <span>{formatMoney(quote.shippingAmount, quote.currency, locale)}</span>
+              </div>
+              {quote.shippingAmount > 0 && (
+                <p className="text-foreground/60 text-xs">{dict.importDutiesNotice}</p>
               )}
               <div className="text-foreground/70 flex justify-between">
                 <span>
