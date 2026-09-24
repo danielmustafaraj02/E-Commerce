@@ -63,6 +63,7 @@ export async function Header({
     })),
     { href: "/about", label: dict.footer.about, icon: "about" as const },
     { href: "/murano-glass", label: dict.footer.muranoGuide, icon: "guide" as const },
+    { href: "/blog", label: dict.journal.title, icon: "journal" as const },
   ];
 
   return (
@@ -87,6 +88,11 @@ export async function Header({
           </Link>
           <Link href="/murano-glass" className={navChipClass}>
             {dict.footer.muranoGuide}
+          </Link>
+          {/* Wide screens only: the row is full at tablet widths; the journal
+              is also in the mobile menu and the footer. */}
+          <Link href="/blog" className={`${navChipClass} hidden lg:inline`}>
+            {dict.journal.nav}
           </Link>
         </nav>
 

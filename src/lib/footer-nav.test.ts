@@ -25,6 +25,7 @@ describe("buildFooterNav", () => {
       "/contact",
       "/about",
       "/murano-glass",
+      "/blog",
       "/legal/returns",
       "/legal/terms",
       "/legal/privacy",

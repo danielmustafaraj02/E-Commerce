@@ -90,7 +90,7 @@ export async function Footer({
             <BrandWave className="footer-wave" />
             <h2 className="footer-display">{f.editorialTitle}</h2>
             <p>{f.editorialText}</p>
-            <Link href="/murano-glass" className="footer-outline-button">
+            <Link href="/blog" className="footer-outline-button">
               {f.editorialCta} <span aria-hidden="true">→</span>
             </Link>
           </div>

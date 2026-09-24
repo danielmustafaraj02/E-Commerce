@@ -634,6 +634,9 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
               <div className="shop-story">
                 <h2 className="shelf-heading">{dict.product.storyTitle}</h2>
                 <p className="shop-story-prose">{story}</p>
+                <Link href="/blog/history-of-murano-glass" className="shelf-link">
+                  {dict.journal.storyLink} <span aria-hidden="true">→</span>
+                </Link>
               </div>
             )}
             <div>

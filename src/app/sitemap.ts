@@ -1,3 +1,4 @@
+import { ARTICLES } from "@/lib/journal";
 import type { MetadataRoute } from "next";
 import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
@@ -27,6 +28,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/about` },
     { url: `${base}/murano-glass` },
     { url: `${base}/contact` },
+    { url: `${base}/blog`, lastModified: new Date(ARTICLES[0].updated ?? ARTICLES[0].published) },
+    ...ARTICLES.map((article) => ({
+      url: `${base}/blog/${article.slug}`,
+      lastModified: new Date(article.updated ?? article.published),
+    })),
     ...categories.map((category) => ({
       url: `${base}/category/${category.slug}`,
       lastModified: catalogUpdatedAt,

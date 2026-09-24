@@ -32,6 +32,7 @@ export function buildFooterNav({
         links: [
           { href: "/about", label: f.about },
           { href: "/murano-glass", label: f.muranoGuide },
+          { href: "/blog", label: dict.journal.title },
         ],
       },
       {

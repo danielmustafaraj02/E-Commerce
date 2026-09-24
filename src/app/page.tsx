@@ -16,6 +16,7 @@ import { ShelfItem } from "@/components/shelf-item";
 import { CategoryStrip } from "@/components/category-strip";
 import { Reveal } from "@/components/reveal";
 import { NewsletterSignupForm } from "@/components/newsletter-signup-form";
+import { JournalTeaser } from "@/components/journal/journal-teaser";
 import { homeFontClasses } from "./home-fonts";
 import "./home.css";
 
@@ -334,6 +335,8 @@ export default async function Home() {
           </div>
         </section>
       )}
+
+      <JournalTeaser dict={dict.journal} />
 
       <section className="shelf-section">
         <div className="shelf-wrap">
