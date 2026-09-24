@@ -1,20 +1,17 @@
-import { Cardo, Hanken_Grotesk } from "next/font/google";
+import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 
-// Only the storefront pages that use the shelf design import this module (home,
-// product listings, category and product pages), so these two families are
-// preloaded there and not in checkout or admin. The variables are consumed by
-// home.css and shop.css.
-// Regular + italic only: headings are set at 400 and nothing uses Cardo
-// bold, so the 700 file was a preloaded download competing with the hero.
-const display = Cardo({
-  weight: ["400"],
+// The brand's two faces, applied on <html> in the root layout so every page
+// shares them: Cormorant Garamond for headings and prices, DM Sans for text,
+// navigation and controls. Consumed as --font-display / --font-ui.
+const display = Cormorant_Garamond({
+  weight: ["400", "500", "600"],
   style: ["normal", "italic"],
   subsets: ["latin"],
   variable: "--font-display",
   display: "swap",
 });
 
-const ui = Hanken_Grotesk({
+const ui = DM_Sans({
   subsets: ["latin"],
   variable: "--font-ui",
   display: "swap",

@@ -69,7 +69,7 @@ export async function Header({
   // it scrolls away anyway, and the backdrop-filter was a rendering cost.
   return (
     <header className="glass-rule bg-background/90 relative z-40 sm:sticky sm:top-0 sm:backdrop-blur-sm">
-      <div className="mx-auto flex w-full max-w-7xl items-center gap-6 px-4 py-2 sm:py-2">
+      <div className="mx-auto flex w-full max-w-7xl items-center gap-7 px-4 py-3 sm:px-6 sm:py-3.5">
 
         {/* ── Logo (far left, desktop only — mobile has its own centered logo below) ── */}
         <Link href="/" className="hidden shrink-0 self-stretch items-center sm:flex">
@@ -79,12 +79,12 @@ export async function Header({
             alt={storeName}
             width={284}
             height={168}
-            className="h-14 w-auto object-contain"
+            className="h-16 w-auto object-contain mix-blend-multiply"
           />
         </Link>
 
         {/* ── Category nav (desktop, right of logo) ─────────────────────── */}
-        <nav className="hidden items-center gap-4 text-sm whitespace-nowrap sm:flex">
+        <nav className="hidden items-center gap-6 text-[0.95rem] whitespace-nowrap sm:flex">
           {categories.map((category) => (
             <Link key={category.id} href={`/category/${category.slug}`} className={navChipClass}>
               {localizedName(category, locale)}
@@ -128,12 +128,12 @@ export async function Header({
             aria-label={dict.nav.searchPlaceholder}
             enterKeyHint="search"
             autoComplete="off"
-            className="field w-56 min-w-0 rounded-xl py-1.5 ps-10 pe-3 text-sm shadow-none"
+            className="field w-60 min-w-0 rounded-md py-2 ps-10 pe-3 text-sm shadow-none"
           />
         </form>
 
         {/* ── Icon cluster (locale, wishlist, cart, admin, account/login) ── */}
-        <div className="hidden items-center gap-x-3 text-sm sm:flex">
+        <div className="hidden items-center gap-x-4 text-[0.95rem] sm:flex">
           <LocaleSwitcher current={locale} />
           {session?.user ? (
             <Link
@@ -143,8 +143,8 @@ export async function Header({
               className="group link-underline text-foreground/80 hover:text-danger flex items-center gap-1 transition-colors"
             >
               <svg
-                width="18"
-                height="18"
+                width="20"
+                height="20"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -178,8 +178,8 @@ export async function Header({
               className="group link-underline text-foreground/80 hover:text-accent flex items-center"
             >
               <svg
-                width="18"
-                height="18"
+                width="20"
+                height="20"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -235,7 +235,7 @@ export async function Header({
               alt={storeName}
               width={284}
               height={168}
-              className="h-11 w-auto object-contain"
+              className="h-13 w-auto object-contain mix-blend-multiply"
             />
           </Link>
           <div className="flex items-center justify-end">

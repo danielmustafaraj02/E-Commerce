@@ -257,7 +257,7 @@ export default async function CategoryPage({
         />
       )}
       <header className="shop-head">
-        <div className="shelf-wrap">
+        <div className="shelf-wrap shelf-wrap--wide">
           <h1 className="shop-title">{categoryName}</h1>
           {category.children.length > 0 && (
             <div className="shop-chips">
@@ -271,7 +271,7 @@ export default async function CategoryPage({
         </div>
       </header>
 
-      <div className="shelf-wrap shop-layout">
+      <div className="shelf-wrap shelf-wrap--wide shop-layout">
         <ProductFilterPanel
           dict={dict.products}
           showCategory={false}

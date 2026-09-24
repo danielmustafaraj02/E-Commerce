@@ -238,7 +238,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
         />
       )}
       <header className="shop-head">
-        <div className="shelf-wrap">
+        <div className="shelf-wrap shelf-wrap--wide">
           <h1 className="shop-title">
             {filters.q
               ? dict.products.resultsFor(filters.q)
@@ -249,7 +249,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
         </div>
       </header>
 
-      <div className="shelf-wrap shop-layout">
+      <div className="shelf-wrap shelf-wrap--wide shop-layout">
         <ProductFilterPanel
           dict={dict.products}
           categories={categories.map((c) => ({

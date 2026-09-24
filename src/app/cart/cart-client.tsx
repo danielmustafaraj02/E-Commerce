@@ -7,7 +7,7 @@ import { useCartStore } from "@/lib/cart-store";
 import { formatMoney } from "@/lib/format";
 import { applyTemplate } from "@/lib/i18n/format";
 import { QuantityStepper } from "@/components/quantity-stepper";
-import { BeadMark } from "@/components/bead-mark";
+import { EmptyShelf } from "@/components/empty-shelf";
 import { ExpressCheckoutButton } from "@/components/express-checkout-button";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { cartLookSummary } from "@/lib/looks";
@@ -55,13 +55,7 @@ export function CartClient({
 
   if (items.length === 0) {
     return (
-      <div className="shop-panel shop-empty">
-        <BeadMark size={104} className="shop-settle" />
-        <p className="text-foreground/70 text-sm">{dict.empty}</p>
-        <Link href="/products" className="btn-primary text-sm">
-          {dict.browse}
-        </Link>
-      </div>
+      <EmptyShelf title={dict.empty} body={dict.emptyBody} cta={dict.browse} />
     );
   }
 

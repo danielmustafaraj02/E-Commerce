@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono } from "next/font/google";
+import { homeFontClasses } from "./home-fonts";
 import { getStoreSettings } from "@/lib/store-settings";
 import { ogLocale, ogAlternateLocales } from "@/lib/hreflang";
 import { absoluteUrl, isPlaceholderCompany, toSafeJsonLd } from "@/lib/json-ld";
@@ -14,15 +15,6 @@ import { FloatingCheckoutButton } from "@/components/floating-checkout-button";
 import { CookieConsent } from "@/components/cookie-consent";
 import { ConsentGatedAnalytics } from "@/components/consent-gated-analytics";
 import "./globals.css";
-
-// Not preloaded: storefront pages set their text in the shelf fonts
-// (home-fonts.ts), so on a phone's first screen Geist is unused and its
-// preload only competed with the hero image. It still loads (swap) where used.
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  preload: false,
-  subsets: ["latin"],
-});
 
 // Only admin screens use the monospace face, so don't preload it on every
 // storefront page, where it competed with the hero image.
@@ -117,7 +109,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang={locale}
       dir={localeDir(locale)}
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${homeFontClasses} ${geistMono.variable} h-full antialiased`}
       style={
         {
           "--store-primary": settings.primaryColor,

@@ -22,7 +22,9 @@ export default async function CartPage() {
 
   return (
     <ShelfMain>
-      <ShelfHead title={dict.cart.title} width="lg" />
+      <ShelfHead title={dict.cart.title} width="lg">
+        <p className="shop-lede">{dict.cart.subtitle}</p>
+      </ShelfHead>
       <ShelfBody width="lg">
         <CartClient
           locale={settings.defaultLocale}

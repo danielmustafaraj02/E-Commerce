@@ -28,26 +28,28 @@
    ------------------------------------------------------------------------- */
 
 .shelf {
-  --ground: #fff;
-  --tint-lilac: #f5f2f7;
-  --tint-aqua: #edf2f1;
-  --tint-sand: #f6f2ea;
-  --tint-blush: #f6eff1;
+  /* Warm ivory and soft pearl bands instead of coloured tints: the glass in
+     the photographs is the only saturated thing on the page. */
+  --ground: #f7f3ec;
+  --tint-lilac: #efe9df;
+  --tint-aqua: #f7f3ec;
+  --tint-sand: #efe9df;
+  --tint-blush: #f3eee6;
   --teal: #1f7a85;
   --rose: #c65b8a;
-  --ink: #0e3a46;
-  --ink-soft: color-mix(in srgb, var(--ink) 76%, transparent);
-  --rule: color-mix(in srgb, var(--ink) 18%, transparent);
-  --accent: #7b4b94;
-  --accent-deep: #5f3676;
-  --violet-night: #3f2154;
-  --aventurine: #b5813f;
-  --gold: #f5c451;
-  --gold-soft: #ffd977;
-  --aventurine-deep: #8a5a1c;
-  --wash-violet: #f0e8f4;
-  --wash-aqua: #e2eeec;
-  --wash-rose: #f4e8ec;
+  --ink: #123d43;
+  --ink-soft: #527176;
+  --rule: #d9cdbb;
+  --accent: #123d43;
+  --accent-deep: #0b3035;
+  --violet-night: #123d43;
+  --aventurine: #b89a62;
+  --gold: #b89a62;
+  --gold-soft: #d9c7a0;
+  --aventurine-deep: #7d6437;
+  --wash-violet: #efe9df;
+  --wash-aqua: #efe9df;
+  --wash-rose: #efe9df;
   --on-dark-error: #ffc9c9;
   --on-dark-ok: #b8f0c8;
 
@@ -61,9 +63,9 @@
 .shelf :where(h1, h2, h3) {
   text-wrap: balance;
   font-family: var(--font-display), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-weight: 400;
-  line-height: 1.12;
-  letter-spacing: -0.01em;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: 0;
   margin: 0;
 }
 
@@ -95,11 +97,11 @@
 /* Plain sections are white; a hairline, not a colour, tells them apart. Only the
    tinted (sand) band and the newsletter block carry colour. */
 .shelf-section + .shelf-section:not([class*="--"]):not(.shelf-newsletter) {
-  border-top: 1px solid color-mix(in srgb, var(--ink) 8%, transparent);
+  border-top: 1px solid var(--rule);
 }
 
 .shelf-heading {
-  font-size: clamp(1.75rem, 3.4vw, 2.4rem);
+  font-size: clamp(2rem, 3.8vw, 2.8rem);
 }
 
 .shelf-heading-row {
@@ -113,7 +115,7 @@
 
 .shelf-link {
   color: var(--accent);
-  font-weight: 600;
+  font-weight: 500;
   font-size: 0.95rem;
   text-underline-offset: 0.25em;
 }
@@ -274,36 +276,38 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 1.1rem;
-  /* Deep lagoon pill with the display serif in italic. */
-  --cta: var(--ink);
-  --cta-deep: #082a33;
-  background: var(--cta);
-  color: #fff;
-  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
-  font-style: italic;
-  font-size: 1.2rem;
-  letter-spacing: 0.01em;
-  padding: 0.9rem 2rem 0.9rem 2.25rem;
-  border-radius: 999px;
+  gap: 0.9rem;
+  /* Petrol, a hairline of Venetian gold, spaced capitals. */
+  background: var(--accent);
+  color: #fbf9f5;
+  border: 1px solid var(--gold);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  min-height: 3.25rem;
+  padding: 0.95rem 1.9rem;
+  border-radius: 6px;
   text-decoration: none;
-  box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--cta) 55%, transparent);
-  transition:
-    background-color 0.15s ease,
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
+  transition: background-color 0.2s ease;
 }
 .shelf-button:hover {
-  background: var(--cta-deep);
-  transform: translateY(-2px);
+  background: var(--accent-deep);
+}
+@media (max-width: 30rem) {
+  .shelf-button {
+    letter-spacing: 0.14em;
+    padding-inline: 1.4rem;
+  }
 }
 .shelf-hero-copy .shelf-button {
   position: relative;
   animation: hero-rise 0.7s cubic-bezier(0.22, 1.12, 0.36, 1) 260ms both;
 }
 .shelf-button-arrow {
-  font-style: normal;
-  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 1.05rem;
+  letter-spacing: 0;
   transition: transform 0.2s ease;
 }
 .shelf-button:hover .shelf-button-arrow {
@@ -518,10 +522,11 @@
   text-underline-offset: 0.2em;
 }
 .shelf-item-price {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--accent-deep);
-  font-variant-numeric: tabular-nums;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--ink);
+  font-variant-numeric: lining-nums;
 }
 .shelf-badge {
   position: absolute;
@@ -664,16 +669,20 @@
     gap: 3rem;
   }
 }
+/* A champagne hairline with a short gold rule over it, like a jewellery box. */
 .shelf-point {
-  --tone: var(--accent);
-  border-top: 4px solid var(--tone);
-  padding-top: 1rem;
+  position: relative;
+  border-top: 1px solid var(--rule);
+  padding-top: 1.25rem;
 }
-.shelf-point:nth-child(2) {
-  --tone: var(--teal);
-}
-.shelf-point:nth-child(3) {
-  --tone: var(--rose);
+.shelf-point::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  inset-inline-start: 0;
+  width: 2.5rem;
+  height: 1px;
+  background: var(--gold);
 }
 .shelf-point h3 {
   font-size: 1.35rem;
@@ -790,15 +799,15 @@
   margin: 0;
   color: color-mix(in srgb, #fff 82%, transparent);
 }
-/* On the dark band the button is the gold of the aventurine flecks. */
+/* On the petrol band the button turns ivory, keeping its gold hairline. */
 .shelf .shelf-newsletter .btn-primary {
-  background: var(--gold);
-  color: var(--violet-night);
-  font-weight: 600;
+  background: #fbf9f5;
+  color: var(--ink);
+  border-color: var(--gold);
 }
 .shelf .shelf-newsletter .btn-primary:hover {
-  background: var(--gold-soft);
-  color: var(--violet-night);
+  background: #fff;
+  color: var(--ink);
 }
 .shelf-newsletter a,
 .shelf-newsletter label {
@@ -820,11 +829,32 @@
 /* Shared form controls (defined globally in globals.css) take this page's
    accent instead of the site-wide warm-gold glow. Unlayered, so they win over
    the @layer components rules regardless of order. */
+/* Storefront buttons all speak the same way: petrol (or ivory, for the
+   secondary action), a hairline border, small spaced capitals. */
+.shelf .btn-secondary {
+  border-color: var(--ink);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.shelf .btn-secondary:hover:not(:disabled) {
+  background: #fbf9f5;
+  border-color: var(--ink);
+  color: var(--ink);
+}
 .shelf .btn-primary {
   background: var(--accent);
-  color: #fff;
-  border-color: transparent;
-  border-radius: 4px;
+  color: #fbf9f5;
+  border-color: var(--gold);
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 .shelf .btn-primary:hover {
   background: var(--accent-deep);
@@ -1058,8 +1088,6 @@
     display: none;
   }
   .shelf-hero-copy .shelf-button {
-    font-size: 1.05rem;
-    padding: 0.8rem 1.4rem 0.8rem 1.6rem;
     white-space: nowrap;
   }
   .shelf-hero .shelf-bead-carousel {

@@ -7,7 +7,7 @@ const defaults = {
   id: "default",
   storeName: "My Store",
   logoUrl: null as string | null,
-  primaryColor: "#111827",
+  primaryColor: "#123D43",
   secondaryColor: "#4F46E5",
   fontFamily: "Inter",
   defaultCurrency: "EUR",

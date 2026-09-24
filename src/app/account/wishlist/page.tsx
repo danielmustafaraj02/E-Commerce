@@ -12,7 +12,7 @@ import { toggleWishlist } from "@/app/products/[slug]/wishlist-actions";
 import { QuickAddButton } from "@/components/quick-add-button";
 import { ShelfMain } from "@/components/shelf-main";
 import { ShelfHead, ShelfBody } from "@/components/shelf-page";
-import { WishlistEmptyIcon } from "@/components/wishlist-empty-icon";
+import { EmptyShelf } from "@/components/empty-shelf";
 import { localizedName } from "@/lib/product-i18n";
 
 export default async function WishlistPage() {
@@ -49,13 +49,11 @@ export default async function WishlistPage() {
       </ShelfHead>
       <ShelfBody width="full">
         {items.length === 0 ? (
-          <div className="shop-panel shop-empty">
-            <WishlistEmptyIcon />
-            <p className="text-foreground/70 text-sm">{dict.wishlist.empty}</p>
-            <Link href="/products" className="btn-primary mt-1 text-sm">
-              {dict.wishlist.browse}
-            </Link>
-          </div>
+          <EmptyShelf
+            title={dict.wishlist.empty}
+            body={dict.wishlist.emptyBody}
+            cta={dict.wishlist.browse}
+          />
         ) : (
           <ul className="shelf-row">
             {items.map((item) => {

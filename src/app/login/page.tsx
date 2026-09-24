@@ -32,7 +32,6 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
 
   return (
     <main className={`shelf relative flex flex-1 flex-col overflow-hidden ${homeFontClasses}`}>
-      <div className="section-glass-bg" aria-hidden="true" />
       <div className="relative z-10 mx-auto flex w-full max-w-sm flex-1 flex-col justify-center px-4 py-16">
         <AuthCard
           initialMode="login"

@@ -1,19 +1,10 @@
 import type { CSSProperties } from "react";
 import Link from "next/link";
-import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import { PriceRangeSlider } from "@/components/price-range-slider";
 import { PRODUCT_COLOR_KEYS, PRODUCT_COLOR_SWATCH } from "@/lib/product-colors";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import "./product-filter-panel.css";
 
-const serif = Cormorant_Garamond({
-  weight: ["400", "500"],
-  style: ["normal", "italic"],
-  subsets: ["latin"],
-  variable: "--pf-serif",
-  display: "swap",
-});
-const sans = DM_Sans({ subsets: ["latin"], variable: "--pf-sans", display: "swap" });
 
 type Category = { id: string; slug: string; name: string };
 
@@ -76,7 +67,7 @@ export function ProductFilterPanel({
 
   return (
     <aside
-      className={`pf w-full shrink-0 sm:sticky sm:top-24 sm:w-72 sm:self-start ${serif.variable} ${sans.variable}`}
+      className="pf w-full shrink-0 sm:sticky sm:top-24 sm:w-72 sm:self-start"
     >
       <div className="pf-card">
         <input

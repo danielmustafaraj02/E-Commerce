@@ -2,22 +2,29 @@
 
 :root {
   color-scheme: light;
-  --background: #ffffff;
-  --foreground: #171717;
-  --surface: #f6f4f7;
+  /* Brand palette: warm ivory paper, deep petrol ink, champagne rules and a
+     sparing Venetian gold. The glass itself supplies any other colour. */
+  --background: #f7f3ec;
+  --foreground: #123d43;
+  --surface: #efe9df;
+  --ink-soft: #527176;
+  --champagne: #d9cdbb;
+  --gold: #b89a62;
+  --petrol: #123d43;
+  --petrol-deep: #0b3035;
   --danger: #dc2626;
   --success: #15803d;
   --warning: #b45309;
   /* Fixed brand palette taken from the glass itself. Unlike --store-primary
      these are not admin-editable: they are what makes hover/focus/checked
      states and the decorative bands colorful whatever primary color is set. */
-  --accent: #7b4b94;
-  --accent-deep: #5f3676;
+  --accent: var(--petrol);
+  --accent-deep: var(--petrol-deep);
   --glass-teal: #1f7a85;
   --glass-rose: #c65b8a;
   --glass-gold: #f5c451;
   /* Raw admin-picked brand colors, set inline on <html> from StoreSettings. */
-  --store-primary: #111827;
+  --store-primary: #123d43;
   --store-secondary: #4f46e5;
 }
 
@@ -37,14 +44,14 @@
   --color-warning: var(--warning);
   --color-accent: var(--accent);
   --color-accent-deep: var(--accent-deep);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-ui);
   --font-mono: var(--font-geist-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-ui), system-ui, sans-serif;
 }
 
 /* A thin band of the glass palette (violet, teal, rose, gold) on the edge of
@@ -664,9 +671,10 @@ button:not(:disabled),
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    border-radius: 0.75rem;
-    font-weight: 600;
+    gap: 0.6rem;
+    border-radius: 6px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
     line-height: 1.25;
     text-align: center;
     -webkit-tap-highlight-color: transparent;
@@ -679,30 +687,19 @@ button:not(:disabled),
     outline-offset: 2px;
   }
 
+  /* Petrol with a hairline of Venetian gold; hover only deepens the colour. */
   .btn-primary {
-    border: 1.5px solid transparent;
+    border: 1px solid var(--gold);
     background: var(--color-primary);
-    color: white;
-    padding: 0.65rem 1.25rem;
-    box-shadow:
-      0 1px 2px color-mix(in srgb, black 14%, transparent),
-      inset 0 1px 0 color-mix(in srgb, white 14%, transparent);
-    transition:
-      transform 0.15s ease,
-      background-color 0.15s ease,
-      box-shadow 0.15s ease;
+    color: #fbf9f5;
+    padding: 0.7rem 1.35rem;
+    transition: background-color 0.2s ease;
   }
   .btn-primary:hover:not(:disabled) {
-    transform: translateY(-1px);
-    background: color-mix(in srgb, var(--color-primary) 86%, black);
-    box-shadow:
-      0 8px 18px -8px color-mix(in srgb, var(--color-primary) 75%, transparent),
-      inset 0 1px 0 color-mix(in srgb, white 14%, transparent);
+    background: color-mix(in srgb, var(--color-primary) 72%, black);
   }
   .btn-primary:active:not(:disabled) {
-    transform: translateY(0);
-    background: color-mix(in srgb, var(--color-primary) 74%, black);
-    box-shadow: 0 1px 2px color-mix(in srgb, black 20%, transparent);
+    background: color-mix(in srgb, var(--color-primary) 60%, black);
   }
   .btn-primary:disabled {
     opacity: 0.55;
@@ -711,7 +708,7 @@ button:not(:disabled),
   }
 
   .btn-secondary {
-    border: 1.5px solid color-mix(in srgb, var(--foreground) 22%, transparent);
+    border: 1px solid var(--champagne);
     background: var(--background);
     color: var(--foreground);
     padding: 0.6rem 1.15rem;
@@ -721,9 +718,9 @@ button:not(:disabled),
       background-color 0.15s ease;
   }
   .btn-secondary:hover:not(:disabled) {
-    border-color: var(--accent);
-    color: var(--accent-deep);
-    background: color-mix(in srgb, var(--accent) 9%, var(--background));
+    border-color: var(--foreground);
+    color: var(--foreground);
+    background: var(--background);
   }
   .btn-secondary:active:not(:disabled) {
     background: color-mix(in srgb, var(--accent) 16%, var(--background));
@@ -1003,50 +1000,6 @@ button:not(:disabled),
   }
   to {
     transform: translate(6%, 8%) scale(1.12);
-  }
-}
-
-/* Newsletter section background — same colors and blob shape as
-   .hero-glass-bg, now drifting too (previously kept static to save a
-   second continuous compositor animation this far down the page, but
-   the motion reads better than the GPU cost it saves). Reuses
-   hero-drift at its own durations so the two sections don't sync up. */
-.section-glass-bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-.section-glass-bg::before,
-.section-glass-bg::after {
-  content: "";
-  position: absolute;
-  border-radius: 999px;
-  filter: blur(56px);
-  opacity: 0.8;
-  will-change: transform;
-}
-.section-glass-bg::before {
-  width: 22rem;
-  height: 22rem;
-  top: -6rem;
-  left: -4rem;
-  background: radial-gradient(circle, #f5c451 0%, #f5c451 25%, transparent 78%);
-}
-.section-glass-bg::after {
-  width: 24rem;
-  height: 24rem;
-  bottom: -7rem;
-  right: -5rem;
-  background: radial-gradient(circle, #7cc7c0 0%, #7cc7c0 25%, transparent 78%);
-}
-@media (prefers-reduced-motion: no-preference) {
-  .section-glass-bg::before {
-    animation: hero-drift 17s ease-in-out infinite alternate;
-  }
-  .section-glass-bg::after {
-    animation: hero-drift 21s ease-in-out infinite alternate;
   }
 }
 

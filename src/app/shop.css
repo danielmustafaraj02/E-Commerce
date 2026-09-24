@@ -14,58 +14,28 @@
    symmetric crop of it).
    ------------------------------------------------------------------------- */
 
-/* The store's primary colour is admin-editable and, by default, near-black.
-   On these pages the primary action takes the glass violet, as on the home page
-   (`.shelf-button`); hover and press darken it, as everywhere else. */
-.shelf .btn-primary {
-  background: var(--accent);
-}
-.shelf .btn-primary:hover:not(:disabled) {
-  background: var(--accent-deep);
-  box-shadow:
-    0 8px 18px -8px color-mix(in srgb, var(--accent) 70%, transparent),
-    inset 0 1px 0 color-mix(in srgb, white 14%, transparent);
-}
-.shelf .btn-primary:active:not(:disabled) {
-  background: color-mix(in srgb, var(--accent-deep) 85%, black);
-}
-
-/* Just the product page's Add to Cart button (.shop-cta-teal, passed via
-   AddToCartButton's className prop) — deliberately teal (--ink, the same
-   dark teal already used for every heading) rather than the violet accent
-   above, so it isn't lost against the accent-colored wishlist heart/links
-   right next to it. Every other .btn-primary on `.shelf` pages (quick-add,
-   login, newsletter) is untouched. */
-.shelf .btn-primary.shop-cta-teal {
-  background: var(--ink);
-}
-.shelf .btn-primary.shop-cta-teal:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--ink) 86%, black);
-  box-shadow:
-    0 8px 18px -8px color-mix(in srgb, var(--ink) 70%, transparent),
-    inset 0 1px 0 color-mix(in srgb, white 14%, transparent);
-}
-.shelf .btn-primary.shop-cta-teal:active:not(:disabled) {
-  background: color-mix(in srgb, var(--ink) 74%, black);
-}
+/* Buttons come from home.css (`.shelf .btn-primary` / `.btn-secondary`). */
 
 /* -- Page header band ------------------------------------------------------- */
 
 .shop-head {
-  /* White, with the faintest violet glow in one corner and a hairline below. */
-  background:
-    radial-gradient(
-      42% 130% at 94% 0%,
-      color-mix(in srgb, var(--wash-violet) 55%, transparent) 0%,
-      transparent 70%
-    ),
-    var(--ground);
-  border-bottom: 1px solid color-mix(in srgb, var(--ink) 8%, transparent);
-  padding-block: 2.75rem 2.25rem;
+  /* Plain ivory with a champagne hairline below; a short gold rule under the
+     title is the only ornament. */
+  background: var(--ground);
+  border-bottom: 1px solid var(--rule);
+  padding-block: 3.25rem 2.5rem;
 }
 .shop-title {
-  font-size: clamp(2.1rem, 5.5vw, 3.25rem);
+  font-size: clamp(2.3rem, 5.5vw, 3.5rem);
   overflow-wrap: anywhere;
+}
+.shop-head-text > :is(h1, .shop-title)::after {
+  content: "";
+  display: block;
+  width: 2.5rem;
+  height: 1px;
+  margin-top: 1.1rem;
+  background: var(--gold);
 }
 .shop-chips {
   display: flex;
@@ -105,9 +75,14 @@
   .shop-layout {
     flex-direction: row;
     align-items: flex-start;
-    gap: 2.5rem;
-    padding-block: 2.75rem 5rem;
+    gap: 3.5rem;
+    padding-block: 3rem 5rem;
   }
+}
+/* Listings use more of a wide screen than the 64rem reading column. */
+.shelf-wrap--wide {
+  max-width: 84rem;
+  padding-inline: clamp(1.25rem, 3vw, 2.5rem);
 }
 .shop-results {
   flex: 1;
@@ -124,7 +99,7 @@
 @media (min-width: 40rem) {
   .shop-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 2.5rem 1.5rem;
+    gap: 3.5rem 2.5rem;
   }
 }
 
@@ -513,10 +488,11 @@
 }
 .shop-price {
   margin: 1.1rem 0 0;
-  color: var(--accent-deep);
-  font-size: 1.85rem;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 2.1rem;
+  font-weight: 500;
+  font-variant-numeric: lining-nums;
 }
 .shop-price-compare {
   color: var(--ink-soft);
@@ -590,16 +566,20 @@
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 999px;
-  background: var(--accent);
-  color: #fff;
-  font-family: var(--font-ui), system-ui, sans-serif;
-  font-size: 1.35rem;
-  font-weight: 600;
+  border: 1px solid var(--rule);
+  background: #fbf9f5;
+  color: var(--gold);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 500;
 }
 .shop-lede {
-  margin: 0.6rem 0 0;
+  margin: 0.9rem 0 0;
   color: var(--ink-soft);
-  font-size: 0.95rem;
+  font-family: var(--font-display), Georgia, serif;
+  font-style: italic;
+  font-size: 1.2rem;
+  line-height: 1.4;
 }
 
 /* -- Panels and lists ---------------------------------------------------------- */
@@ -609,8 +589,8 @@
 .shop-panel,
 .shelf .form-card {
   border: 1px solid var(--rule);
-  border-radius: 14px;
-  background: color-mix(in srgb, #fff 65%, transparent);
+  border-radius: 12px;
+  background: #fbf9f5;
   box-shadow: none;
 }
 .shop-panel-pad {
@@ -624,6 +604,38 @@
 }
 .shop-list > li + li {
   border-top: 1px solid var(--rule);
+}
+/* Empty cart / wishlist (components/empty-shelf.tsx): no box, just the bead
+   strand, a serif line and the CTA, centred with plenty of air. */
+.shop-empty-atelier {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 1rem 3.5rem;
+  text-align: center;
+}
+.shop-empty-strand {
+  width: min(15rem, 70vw);
+  height: auto;
+  margin-bottom: 1.75rem;
+}
+.shop-empty-title {
+  font-size: clamp(1.9rem, 4.5vw, 2.5rem);
+}
+.shop-empty-body {
+  max-width: 26rem;
+  margin: 0.85rem 0 2rem;
+  color: var(--ink-soft);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+.shop-empty-signature {
+  margin: 2.25rem 0 0;
+  color: var(--gold);
+  font-family: var(--font-display), Georgia, serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
 }
 .shop-empty {
   display: flex;
@@ -676,7 +688,7 @@
 }
 .shop-tile-icon--violet {
   background: var(--tint-lilac);
-  color: var(--accent);
+  color: var(--gold);
 }
 
 /* Selectable option cards (shipping / payment method): violet, not the store's
@@ -690,7 +702,8 @@
 }
 .shelf .option-card:has(:checked) {
   border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 8%, #fff);
+  background: #fbf9f5;
+  box-shadow: inset 0 0 0 1px var(--accent);
 }
 .shelf .field-radio::after {
   background: var(--accent);
@@ -851,12 +864,6 @@
   .shop-cart-controls {
     display: contents;
   }
-}
-
-/* The sign-in/register glass blobs (globals.css), kept faint here. */
-.shelf .section-glass-bg::before,
-.shelf .section-glass-bg::after {
-  opacity: 0.25;
 }
 
 /* -- Quiet moments ------------------------------------------------------------------ */

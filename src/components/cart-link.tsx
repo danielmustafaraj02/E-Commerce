@@ -27,8 +27,8 @@ export function CartLink({ label }: { label: string }) {
       className="group link-underline text-foreground/80 hover:text-primary flex items-center gap-1 max-sm:-m-1.5 max-sm:p-1.5"
     >
       <svg
-        width="18"
-        height="18"
+        width="22"
+        height="22"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"

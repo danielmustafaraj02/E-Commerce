@@ -1,11 +1,11 @@
 "use client";
 
+import { EmptyShelf } from "@/components/empty-shelf";
 import Link from "next/link";
 import { CatalogImage } from "@/components/catalog-image";
 import { useWishlistStore } from "@/lib/wishlist-store";
 import { QuickAddButton } from "@/components/quick-add-button";
 import { ShelfHead, ShelfBody } from "@/components/shelf-page";
-import { WishlistEmptyIcon } from "@/components/wishlist-empty-icon";
 import { formatMoney } from "@/lib/format";
 import { applyTemplate } from "@/lib/i18n/format";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
@@ -41,13 +41,11 @@ export function GuestWishlistClient({
       </ShelfHead>
       <ShelfBody width="full">
         {items.length === 0 ? (
-          <div className="shop-panel shop-empty">
-            <WishlistEmptyIcon />
-            <p className="text-foreground/70 text-sm">{wishlistDict.empty}</p>
-            <Link href="/products" className="btn-primary mt-1 text-sm">
-              {wishlistDict.browse}
-            </Link>
-          </div>
+          <EmptyShelf
+            title={wishlistDict.empty}
+            body={wishlistDict.emptyBody}
+            cta={wishlistDict.browse}
+          />
         ) : (
           <>
             <ul className="shelf-row">
