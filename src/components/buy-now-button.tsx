@@ -4,11 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/cart-store";
 
-// Adds the item to the cart and goes straight to checkout, for a shopper
-// who's already signed in and just wants to pay — skips the extra trip
-// through /cart. Signed-out shoppers still get the normal add-to-cart flow;
-// checkout supports guest checkout too, but this shortcut is only offered
-// once someone's actually signed in.
+// Adds the item to the cart and goes straight to checkout, for a shopper who
+// just wants to pay — skips the extra trip through /cart. Works for guests
+// too: /checkout supports guest checkout, so this must never be gated on
+// being signed in (that would force account creation to buy fast).
 export function BuyNowButton({
   product,
   label,
