@@ -11,6 +11,7 @@ import { FormAlert } from "@/components/form-alert";
 import { AddressCheck } from "@/components/address-check";
 import { applyTemplate } from "@/lib/i18n/format";
 import { isValidPostalCode } from "@/lib/postal-code";
+import { isEuCountry } from "@/lib/countries";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
 // Loaded on demand (adds the Stripe SDK to the bundle) so a shopper who ends
@@ -428,7 +429,9 @@ export function CheckoutClient({
                   </span>
                   <span>{formatMoney(quote.shippingAmount, quote.currency, locale)}</span>
                 </div>
-                {quote.shippingAmount > 0 && (
+                {/* Duties depend on the destination, not the shipping cost: the UK,
+                    Switzerland and Norway ship free but are outside the EU customs union. */}
+                {country && !isEuCountry(country) && (
                   <p className="text-foreground/60 text-xs">{dict.importDutiesNotice}</p>
                 )}
                 <div className="text-foreground/70 flex justify-between">

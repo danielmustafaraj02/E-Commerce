@@ -96,6 +96,7 @@ const SOCIAL_LABELS: Record<keyof SocialLinks, string> = {
 export async function Footer({
   storeName,
   contactEmail,
+  shippingBanner,
   social,
   payments,
   dict,
@@ -103,6 +104,7 @@ export async function Footer({
 }: {
   storeName: string;
   contactEmail: string;
+  shippingBanner: string | null;
   social: SocialLinks;
   payments: PaymentMethods;
   dict: Dictionary;
@@ -142,7 +144,9 @@ export async function Footer({
               {storeName}
             </Link>
             <p className="text-foreground/60 max-w-[26ch] text-sm">{dict.footer.tagline}</p>
-            <p className="text-foreground/60 max-w-[30ch] text-xs">{dict.product.shippingBanner}</p>
+            {shippingBanner && (
+              <p className="text-foreground/60 max-w-[30ch] text-xs">{shippingBanner}</p>
+            )}
             {socialEntries.length > 0 && (
               <div className="mt-1 flex flex-wrap items-center gap-2">
                 {socialEntries.map((entry) => (

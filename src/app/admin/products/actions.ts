@@ -6,6 +6,7 @@ import { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
 import { requireStaff, requireAdmin } from "@/lib/require-admin";
 import { writeAuditLog } from "@/lib/audit-log";
+import { compareAtPriceError } from "@/lib/price-history";
 
 const productSchema = z.object({
   name: z.string().min(1).max(200),
@@ -38,9 +39,8 @@ const productSchema = z.object({
   story: z.string().max(2000).optional(),
   storyEn: z.string().max(2000).optional(),
   price: z.coerce.number().nonnegative(),
-  // Display-only "was" price for the homepage Special Selection — never
-  // charged. Optional; the section only shows a product once this is set
-  // higher than price.
+  // Display-only "was" price, shown crossed out — never charged. Checked
+  // against the price history (EU Omnibus rule) before saving.
   compareAtPrice: z.coerce.number().nonnegative().optional(),
   sku: z.string().min(1).max(100),
   stockQty: z.coerce.number().int().nonnegative(),
@@ -120,6 +120,18 @@ export async function createProduct(_prevState: unknown, formData: FormData) {
   const { imageUrls, price, compareAtPrice, costPrice, ...fields } = parsed.data;
   const images = parseImageUrls(imageUrls);
 
+  if (compareAtPrice !== undefined) {
+    // A new product has no earlier price, so this always explains why.
+    const error = compareAtPriceError({
+      price: Math.round(price * 100),
+      compareAtPrice: Math.round(compareAtPrice * 100),
+      currency: "EUR",
+      history: [],
+      now: new Date(),
+    });
+    if (error) return { error };
+  }
+
   let product;
   try {
     product = await db.product.create({
@@ -197,6 +209,21 @@ export async function updateProduct(productId: string, _prevState: unknown, form
 
   const before = await db.product.findUnique({ where: { id: productId } });
   if (!before) return { error: "Product not found" };
+
+  if (compareAtPrice !== undefined) {
+    const history = await db.productPriceChange.findMany({
+      where: { productId },
+      select: { price: true, changedAt: true },
+    });
+    const error = compareAtPriceError({
+      price: Math.round(price * 100),
+      compareAtPrice: Math.round(compareAtPrice * 100),
+      currency: before.currency,
+      history,
+      now: new Date(),
+    });
+    if (error) return { error };
+  }
 
   let product;
   try {

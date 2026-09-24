@@ -8,7 +8,7 @@ import { notFound } from "next/navigation";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
-import { formatMoney } from "@/lib/format";
+import { formatMoney, formatDiscountPercent } from "@/lib/format";
 import { absoluteUrl, toSafeJsonLd } from "@/lib/json-ld";
 import { buildReturnPolicy, buildShippingDetails } from "@/lib/offer-json-ld";
 import { productMaterial } from "@/lib/merchant-feed";
@@ -36,6 +36,7 @@ import { TrustBadges } from "@/components/trust-badges";
 import { StarRating } from "@/components/star-rating";
 import { ReviewForm } from "./review-form";
 import { hasPurchased } from "./review-actions";
+import { getShippingBanner } from "@/lib/shipping-banner";
 
 // Small single-use icons for the gift sections below — same stroke
 // convention (1.8, round caps/joins, currentColor) as the existing icons in
@@ -230,6 +231,11 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
 
   if (!product || !product.active) notFound();
   const dict = getDictionary(uiLocale);
+  const shippingBanner = await getShippingBanner(
+    dict.product.shippingBanner,
+    settings.defaultCurrency,
+    settings.defaultLocale
+  );
   const name = localizedName(product, uiLocale);
   const description = localizedDescription(product, uiLocale);
   const story = localizedStory(product, uiLocale);
@@ -280,6 +286,12 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
   const material = productMaterial(product.category);
   const sizeKey = productSizeDictKey(product.category);
   const priceDisplay = formatMoney(product.price, product.currency, settings.defaultLocale);
+  // Same rule as the shelf cards: only a compare-at price above the current
+  // price is a discount (staff can't save an invalid one; see price-history).
+  const compareAtPrice =
+    product.compareAtPrice !== null && product.compareAtPrice > product.price
+      ? product.compareAtPrice
+      : null;
 
   // The same shape AddToCartButton/BuyNowButton/WishlistButton each need —
   // computed once instead of three identical object literals.
@@ -402,7 +414,17 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
               </p>
 
               <p className="shop-price">
+                {compareAtPrice !== null && (
+                  <s className="shop-price-compare">
+                    {formatMoney(compareAtPrice, product.currency, settings.defaultLocale)}
+                  </s>
+                )}
                 {priceDisplay}
+                {compareAtPrice !== null && (
+                  <span className="shop-discount-badge">
+                    {formatDiscountPercent(product.price, compareAtPrice, settings.defaultLocale)}
+                  </span>
+                )}
                 {settings.pricesIncludeTax && (
                   <span className="text-foreground/60 ml-2 text-sm">
                     {dict.product.vatIncluded}
@@ -503,7 +525,9 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
               />
 
               <TrustBadges trustBadgeText={settings.trustBadgeText} dict={dict.product} />
-              <p className="text-foreground/60 mt-1.5 text-sm">{dict.product.shippingBanner}</p>
+              {shippingBanner && (
+                <p className="text-foreground/60 mt-1.5 text-sm">{shippingBanner}</p>
+              )}
 
               <Link
                 href="/murano-glass#authenticity"
