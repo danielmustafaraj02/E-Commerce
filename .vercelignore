@@ -1,0 +1,32 @@
+# Dependencies - Vercel reinstalls from package.json/lock
+node_modules
+
+# Build outputs - Vercel rebuilds these
+.next
+dist
+build
+out
+
+# Environment and config - ignored by default but being explicit
+.env.local
+.env.*.local
+
+# Test and docs
+.test
+coverage
+docs
+
+# OS and IDE
+.git
+.gitignore
+.DS_Store
+.vscode
+.idea
+*.swp
+
+# Logs
+logs
+*.log
+
+# Source maps (optional - keep if you need production debugging)
+# *.map
