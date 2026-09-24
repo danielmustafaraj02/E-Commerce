@@ -2,29 +2,17 @@
 
 import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
-import Image from "next/image";
 import Link from "next/link";
-import { CatalogImage } from "@/components/catalog-image";
 import { SocialLinks, type SocialUrls } from "@/components/social-links";
-import { BrandSignature, BrandWave } from "@/components/brand-signature";
+import { BrandSignature } from "@/components/brand-signature";
 import "./mobile-nav-menu.css";
 
 type NavLink = {
   href: string;
   label: string;
-  // A category's thumbnail (one of its pieces), or a line icon for pages.
-  imageUrl?: string | null;
-  icon?: "about" | "guide";
-};
-
-const ICONS = {
-  // A Venetian skyline: dome and campanile.
-  about: (
-    <path d="M3 21h18M5 21v-6h6v6M8 15v-3a3 3 0 0 1 6 0v3M14 21v-9h3v9M15.5 12V6l1.5-2 1.5 2v15M17 9h1.5" />
-  ),
-  guide: (
-    <path d="M3 5.5C5.5 4.5 9 4.5 12 6.5v13C9 17.5 5.5 17.5 3 18.5v-13ZM21 5.5c-2.5-1-6-1-9 1v13c3-2 6.5-2 9-1v-13Z" />
-  ),
+  // Pages about the house (About, the guide) sit in a quieter row under the
+  // collections.
+  secondary?: boolean;
 };
 
 const noopSubscribe = () => () => {};
@@ -193,59 +181,34 @@ export function MobileNavMenu({
 
             <nav aria-label={menuLabel}>
               <ul className="mobile-menu-links">
-                {links.map((link) => (
-                  <li key={link.href}>
-                    <Link href={link.href} onClick={close}>
-                      <span className="mobile-menu-thumb" aria-hidden="true">
-                        {link.imageUrl ? (
-                          <CatalogImage src={link.imageUrl} alt="" fill sizes="3.5rem" />
-                        ) : link.icon ? (
-                          <svg
-                            width="30"
-                            height="30"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.1"
-                            strokeLinejoin="round"
-                          >
-                            {ICONS[link.icon]}
-                          </svg>
-                        ) : null}
-                      </span>
-                      <span className="mobile-menu-label">{link.label}</span>
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        className="mobile-menu-chevron rtl:rotate-180"
-                        aria-hidden="true"
-                      >
-                        <path d="m9 6 6 6-6 6" />
-                      </svg>
-                    </Link>
-                  </li>
-                ))}
+                {links
+                  .filter((link) => !link.secondary)
+                  .map((link) => (
+                    <li key={link.href}>
+                      <Link href={link.href} onClick={close}>
+                        <span className="mobile-menu-label">{link.label}</span>
+                        <span className="mobile-menu-arrow rtl:rotate-180" aria-hidden="true">
+                          →
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+              </ul>
+              <ul className="mobile-menu-secondary">
+                {links
+                  .filter((link) => link.secondary)
+                  .map((link) => (
+                    <li key={link.href}>
+                      <Link href={link.href} onClick={close}>
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
               </ul>
             </nav>
 
             <div className="mobile-menu-closing">
-              <div className="mobile-menu-art" aria-hidden="true">
-                <Image
-                  src="/hero/handmade-red-murano-glass-necklace.jpg"
-                  alt=""
-                  fill
-                  sizes="60vw"
-                />
-              </div>
-              <p className="mobile-menu-tagline">
-                {tagline}
-                <BrandWave />
-              </p>
+              <p className="mobile-menu-tagline">{tagline}</p>
               <SocialLinks urls={social} label={socialLabel} />
               <nav aria-label={legalLabel}>
                 <ul className="footer-legal">

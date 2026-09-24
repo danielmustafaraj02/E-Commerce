@@ -199,7 +199,10 @@
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  background: var(--tint-lilac);
+  /* Pure white, the photos' own background, so no browser can show a seam
+     around them (iOS Safari doesn't always honour the multiply blend). */
+  background: #fff;
+  box-shadow: inset 0 0 0 1px var(--rule);
 }
 .shop-product-photo {
   width: 100%;
@@ -621,7 +624,7 @@
   width: 6.5rem;
   height: 6.5rem;
   margin-bottom: 1.75rem;
-  border: 1px solid var(--rule);
+  border: 1.5px solid var(--gold);
   border-radius: 999px;
   color: var(--ink);
 }
@@ -1042,9 +1045,21 @@
 }
 .shop-sticky-cta-price {
   color: var(--ink);
-  font-size: 1.05rem;
-  font-weight: 600;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 500;
   white-space: nowrap;
+}
+/* Phones: the sticky Add to Cart bar covers the bottom of the screen, so the
+   page's last section needs room to scroll clear of it, and a little air
+   before the footer. */
+@media (max-width: 39.99rem) {
+  .shop-product-page {
+    padding-bottom: 7rem;
+  }
+  .shop-product-page > section:last-of-type {
+    padding-bottom: 4.5rem;
+  }
 }
 .shop-sticky-cta .btn-primary {
   /* Higher specificity (0,2,0) than the button's own max-sm:w-full (0,1,0)
@@ -1084,7 +1099,8 @@ body:has(.shop-sticky-cta) footer {
    read as styled by the brand, not as a promotion. Photos are on white, so
    multiply drops them into the sand like the shelf cards. */
 .look-section {
-  background: var(--tint-sand);
+  background: #fff;
+  border-top: 1px solid var(--rule);
   padding-block: 3.5rem;
 }
 .look-grid {
@@ -1479,4 +1495,171 @@ a.look-piece-name:hover {
 .shop-info-details a {
   color: var(--ink);
   text-underline-offset: 0.2em;
+}
+
+/* -- Looks: /looks, /looks/[id] and the home page (components/look-card.tsx) -- */
+
+.look-cards {
+  display: grid;
+  gap: 3.5rem 2.5rem;
+}
+@media (min-width: 40rem) {
+  .look-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 64rem) {
+  .look-cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.look-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+/* The pieces laid out together in an ivory niche with a gold inner rule,
+   the same frame as the home page's categories, but rectangular. */
+.look-card-visual {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: #fff;
+}
+.look-card-visual::after {
+  content: "";
+  position: absolute;
+  inset: 0.65rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+  border-radius: 2px;
+  pointer-events: none;
+  transition: border-color 0.5s ease;
+}
+.look-card-visual .look-visual-layer {
+  transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.look-card-photo {
+  object-fit: cover;
+  transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.look-card:hover .look-card-visual::after {
+  border-color: var(--gold);
+}
+.look-card:hover .look-card-photo {
+  transform: scale(1.04);
+}
+.look-card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-top: 1.35rem;
+}
+.look-card-meta {
+  margin: 0;
+  color: var(--gold);
+  font-family: var(--font-display), Georgia, serif;
+  font-style: italic;
+  font-size: 1.05rem;
+}
+.look-card-name {
+  margin: 0.3rem 0 0;
+  font-size: 1.75rem;
+  font-weight: 500;
+  line-height: 1.15;
+}
+.look-card-name a {
+  color: inherit;
+  text-decoration: none;
+}
+.look-card-name a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.look-card:has(a:focus-visible) .look-card-visual {
+  outline: 1px solid var(--ink);
+  outline-offset: 4px;
+}
+.look-card-name a:focus-visible {
+  outline: none;
+}
+.look-card-price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin: 0.5rem 0 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+.look-card-price s {
+  color: var(--ink-soft);
+  font-size: 1.05rem;
+  font-weight: 400;
+}
+.look-card-cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1rem;
+  padding-bottom: 0.4rem;
+  color: var(--ink-soft);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+}
+.look-card-cta::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--gold);
+  transform: scaleX(0.25);
+  transform-origin: left;
+  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.look-card-arrow {
+  color: var(--gold);
+  font-size: 0.95rem;
+  letter-spacing: 0;
+  transition: transform 0.3s ease;
+}
+.look-card:hover .look-card-cta {
+  color: var(--ink);
+}
+.look-card:hover .look-card-cta::after {
+  transform: scaleX(1);
+}
+.look-card:hover .look-card-arrow {
+  transform: translateX(3px);
+}
+.look-grid-empty {
+  padding: 3rem 0;
+  color: var(--ink-soft);
+  font-family: var(--font-display), Georgia, serif;
+  font-style: italic;
+  font-size: 1.3rem;
+  text-align: center;
+}
+.look-back {
+  display: inline-flex;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.look-back:hover {
+  color: var(--ink);
 }

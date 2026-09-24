@@ -2,8 +2,8 @@
    and hairline language as the footer (components/footer.css, which also
    styles the shared social icons, legal row and brand signature). */
 .mobile-menu {
-  --footer-ground: #faf8f4;
-  --footer-ink: #0e3a46;
+  --footer-ground: #fff;
+  --footer-ink: #123d43;
   --footer-soft: color-mix(in srgb, var(--footer-ink) 72%, transparent);
   --footer-rule: color-mix(in srgb, var(--footer-ink) 14%, transparent);
   --footer-teal: #1f7a85;
@@ -29,7 +29,18 @@
 }
 .mobile-menu-top .brand-signature {
   margin: 0;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
+}
+.mobile-menu-top .brand-signature svg {
+  display: none;
+}
+.mobile-menu-top .brand-signature::after {
+  content: "";
+  display: block;
+  width: 2rem;
+  height: 1px;
+  margin: 0.7rem auto 0;
+  background: var(--gold, #b89a62);
 }
 .mobile-menu-close {
   position: absolute;
@@ -46,15 +57,14 @@
   cursor: pointer;
 }
 
+/* Search: one hairline to write on, no box, no button colour. */
 .mobile-menu-search {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.75rem;
   min-height: 3.25rem;
-  padding: 0.3rem 0.3rem 0.3rem 1.1rem;
-  background: #fff;
-  border: 1px solid var(--footer-rule);
-  border-radius: 999px;
+  margin-top: 0.5rem;
+  border-bottom: 1px solid var(--footer-ink);
 }
 .mobile-menu-search svg {
   flex-shrink: 0;
@@ -69,61 +79,74 @@
   color: inherit;
   outline: none;
 }
+.mobile-menu-search input::placeholder {
+  color: var(--footer-soft);
+}
 .mobile-menu-search button {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 2.75rem;
   height: 2.75rem;
+  margin-inline-end: -0.75rem;
   border: 0;
-  border-radius: 999px;
-  background: var(--footer-ink);
-  color: #fff;
+  background: none;
+  color: var(--footer-ink);
   cursor: pointer;
 }
-.mobile-menu-search button svg {
-  color: #fff;
-}
 
+/* The collections: names in the display serif, hairlines between, a thin gold
+   arrow that steps forward on press. */
 .mobile-menu-links {
   list-style: none;
-  margin: 1.25rem 0 0;
+  margin: 2rem 0 0;
   padding: 0;
-  border-top: 1px solid var(--footer-rule);
 }
-.mobile-menu-links li {
-  border-bottom: 1px solid var(--footer-rule);
+.mobile-menu-links li + li {
+  border-top: 1px solid var(--footer-rule);
 }
 .mobile-menu-links a {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 1rem;
-  min-height: 4.5rem;
-}
-.mobile-menu-thumb {
-  position: relative;
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  width: 3.5rem;
-  height: 3.5rem;
-}
-.mobile-menu-thumb img {
-  object-fit: contain;
-  mix-blend-mode: multiply;
+  min-height: 4.25rem;
 }
 .mobile-menu-label {
-  flex: 1;
   font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
-  font-size: 1.45rem;
+  font-size: 2rem;
+  font-weight: 500;
+  line-height: 1.1;
 }
-.mobile-menu-chevron {
+.mobile-menu-arrow {
+  color: var(--gold, #b89a62);
+  font-size: 1.1rem;
+  transition: transform 0.25s ease;
+}
+.mobile-menu-links a:active .mobile-menu-arrow,
+.mobile-menu-links a:hover .mobile-menu-arrow {
+  transform: translateX(4px);
+}
+
+/* About and the guide: a quieter row of small capitals. */
+.mobile-menu-secondary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.75rem;
+  list-style: none;
+  margin: 1.75rem 0 0;
+  padding: 1.5rem 0 0;
+  border-top: 1px solid var(--footer-rule);
+}
+.mobile-menu-secondary a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
   color: var(--footer-soft);
-  transition: transform 0.2s ease;
-}
-.mobile-menu-links a:hover .mobile-menu-chevron {
-  transform: translateX(3px);
 }
 
 .mobile-menu-closing {
@@ -136,35 +159,12 @@
   padding: 2.5rem 1.25rem 2rem;
   text-align: center;
 }
-.mobile-menu-art {
-  position: absolute;
-  inset: 0 45% 30% 0;
-  opacity: 0.55;
-  pointer-events: none;
-}
-.mobile-menu-art img {
-  object-fit: cover;
-  object-position: 50% 80%;
-  mix-blend-mode: multiply;
-  -webkit-mask-image: linear-gradient(to right, #000 30%, transparent);
-  mask-image: linear-gradient(to right, #000 30%, transparent);
-}
 .mobile-menu-tagline {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.6rem;
-  align-self: flex-end;
-  max-width: 14rem;
   margin: 0 0 0.5rem;
   font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
   font-style: italic;
-  font-size: 1.25rem;
-  line-height: 1.35;
-}
-.mobile-menu-tagline svg {
-  color: var(--footer-teal);
+  font-size: 1.15rem;
+  color: var(--footer-soft);
 }
 .mobile-menu-closing nav {
   position: relative;

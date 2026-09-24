@@ -390,3 +390,18 @@ fieldset.pf-section > .pf-label {
   font-size: 0.95rem;
   color: var(--pf-gold);
 }
+
+/* Category: one tickable line per category, same square box as "in stock". */
+.pf-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.pf-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 2.5rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+}

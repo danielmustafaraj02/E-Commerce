@@ -7,10 +7,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const settings = await getStoreSettings();
   const base = settings.siteUrl || process.env.NEXTAUTH_URL || "http://localhost:3000";
 
-  const [products, categories, legalPages] = await Promise.all([
+  const [products, categories, legalPages, looks] = await Promise.all([
     db.product.findMany({ where: { active: true }, select: { slug: true, updatedAt: true } }),
     db.category.findMany({ select: { slug: true } }),
     db.legalPage.findMany({ select: { slug: true, lastUpdated: true } }),
+    db.look.findMany({ where: { active: true }, select: { id: true, updatedAt: true } }),
   ]);
 
   // The newest product edit is the best available "last changed" signal for
@@ -26,6 +27,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: base, lastModified: catalogUpdatedAt },
     { url: `${base}/products`, lastModified: catalogUpdatedAt },
     { url: `${base}/gift-finder`, lastModified: catalogUpdatedAt },
+    { url: `${base}/looks` },
+    ...looks.map((look) => ({ url: `${base}/looks/${look.id}`, lastModified: look.updatedAt })),
     { url: `${base}/about` },
     { url: `${base}/murano-glass` },
     { url: `${base}/contact` },

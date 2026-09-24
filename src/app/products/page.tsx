@@ -20,7 +20,7 @@ const PAGE_SIZE = 12;
 
 const filtersSchema = z.object({
   q: z.string().trim().min(1).optional(),
-  category: z.string().trim().min(1).optional(),
+  category: z.array(z.string().trim().min(1)).optional(),
   minPrice: z.coerce.number().nonnegative().optional(),
   maxPrice: z.coerce.number().nonnegative().optional(),
   inStock: z.enum(["1"]).optional(),
@@ -108,9 +108,14 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
     isProductColorKey
   );
 
+  // Category checkboxes share name="category" too: several can be ticked.
+  const categoryValues = (
+    Array.isArray(raw.category) ? raw.category : raw.category ? [raw.category] : []
+  ).filter((value) => value.trim() !== "");
+
   const parsed = filtersSchema.safeParse({
     q: single(raw.q),
-    category: single(raw.category),
+    category: categoryValues.length ? categoryValues : undefined,
     minPrice: single(raw.minPrice),
     maxPrice: single(raw.maxPrice),
     inStock: single(raw.inStock),
@@ -140,7 +145,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
         { descriptionEn: { contains: filters.q } },
       ],
     }),
-    ...(filters.category && { category: { slug: filters.category } }),
+    ...(filters.category?.length && { category: { slug: { in: filters.category } } }),
     ...(filters.inStock && { stockQty: { gt: 0 } }),
     ...(filters.sale && { compareAtPrice: { not: null } }),
     ...(filters.color?.length && { color: { in: filters.color } }),
@@ -189,7 +194,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
   const buildPageHref = (page: number) => {
     const params = new URLSearchParams();
     if (filters.q) params.set("q", filters.q);
-    if (filters.category) params.set("category", filters.category);
+    for (const category of filters.category ?? []) params.append("category", category);
     if (filters.minPrice !== undefined) params.set("minPrice", String(filters.minPrice));
     if (filters.maxPrice !== undefined) params.set("maxPrice", String(filters.maxPrice));
     if (filters.inStock) params.set("inStock", filters.inStock);
@@ -204,7 +209,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
   // canonical ItemList.
   const isPlainBrowse =
     !filters.q &&
-    !filters.category &&
+    !filters.category?.length &&
     !filters.minPrice &&
     !filters.maxPrice &&
     !filters.color &&

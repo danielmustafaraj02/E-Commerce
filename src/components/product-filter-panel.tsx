@@ -42,7 +42,7 @@ export function ProductFilterPanel({
   showCategory?: boolean;
   filters: {
     q?: string;
-    category?: string;
+    category?: string[];
     minPrice?: number;
     maxPrice?: number;
     inStock?: "1";
@@ -58,7 +58,7 @@ export function ProductFilterPanel({
   priceLabels: { min: string; max: string };
 }) {
   const hasActiveFilters = Boolean(
-    (showCategory && filters.category) ||
+    (showCategory && filters.category?.length) ||
     filters.minPrice !== undefined ||
     filters.maxPrice !== undefined ||
     filters.inStock ||
@@ -127,24 +127,23 @@ export function ProductFilterPanel({
           {filters.sale && <input type="hidden" name="sale" value={filters.sale} />}
 
           {showCategory && categories && (
-            <div className="pf-section">
-              <label htmlFor="category" className="pf-label">
-                {dict.category}
-              </label>
-              <select
-                id="category"
-                name="category"
-                defaultValue={filters.category ?? ""}
-                className="pf-select"
-              >
-                <option value="">{dict.all}</option>
+            <fieldset className="pf-section">
+              <legend className="pf-label">{dict.category}</legend>
+              <div className="pf-options">
                 {categories.map((category) => (
-                  <option key={category.id} value={category.slug}>
+                  <label key={category.id} className="pf-option">
+                    <input
+                      type="checkbox"
+                      name="category"
+                      value={category.slug}
+                      defaultChecked={filters.category?.includes(category.slug)}
+                      className="pf-check"
+                    />
                     {category.name}
-                  </option>
+                  </label>
                 ))}
-              </select>
-            </div>
+              </div>
+            </fieldset>
           )}
 
           <div className="pf-section">

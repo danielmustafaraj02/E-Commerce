@@ -382,7 +382,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
   );
 
   return (
-    <main className={`shelf flex flex-1 flex-col ${homeFontClasses}`}>
+    <main className={`shelf shop-product-page flex flex-1 flex-col ${homeFontClasses}`}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: toSafeJsonLd(productJsonLd) }}

@@ -28,29 +28,24 @@ export type LookView = {
   available: boolean;
 };
 
-// Active looks containing any of these products, with all their pieces —
-// only looks whose full set of pieces is active, since checkout discounts
-// nothing less (lib/looks.ts).
-export async function getLooksForProducts(
-  productIds: string[],
-  locale: Locale
-): Promise<LookView[]> {
-  if (productIds.length === 0) return [];
-
-  const looks = await db.look.findMany({
-    where: { active: true, products: { some: { id: { in: productIds } } } },
+const LOOK_INCLUDE = {
+  products: {
+    where: { active: true },
+    orderBy: { createdAt: "asc" as const },
     include: {
-      products: {
-        where: { active: true },
-        orderBy: { createdAt: "asc" },
-        include: {
-          images: { take: 1, orderBy: { position: "asc" } },
-          category: { select: { name: true, nameEn: true, slug: true } },
-        },
-      },
+      images: { take: 1, orderBy: { position: "asc" as const } },
+      category: { select: { name: true, nameEn: true, slug: true } },
     },
-  });
+  },
+};
 
+type LookRow = Awaited<
+  ReturnType<typeof db.look.findMany<{ include: typeof LOOK_INCLUDE }>>
+>[number];
+
+// Only looks whose full set of pieces is active, since checkout discounts
+// nothing less (lib/looks.ts).
+function toLookViews(looks: LookRow[], locale: Locale): LookView[] {
   return looks
     .filter((look) => look.products.length === LOOK_SIZE)
     .map((look) => {
@@ -81,4 +76,34 @@ export async function getLooksForProducts(
         available: pieces.every((p) => p.available),
       };
     });
+}
+
+// Active looks containing any of these products, with all their pieces.
+export async function getLooksForProducts(
+  productIds: string[],
+  locale: Locale
+): Promise<LookView[]> {
+  if (productIds.length === 0) return [];
+  const looks = await db.look.findMany({
+    where: { active: true, products: { some: { id: { in: productIds } } } },
+    include: LOOK_INCLUDE,
+  });
+  return toLookViews(looks, locale);
+}
+
+// Every active, complete look, newest first: the /looks page and the home
+// page's looks section.
+export async function getAllLooks(locale: Locale, take?: number): Promise<LookView[]> {
+  const looks = await db.look.findMany({
+    where: { active: true },
+    orderBy: { createdAt: "desc" },
+    include: LOOK_INCLUDE,
+  });
+  const views = toLookViews(looks, locale);
+  return take === undefined ? views : views.slice(0, take);
+}
+
+export async function getLookById(id: string, locale: Locale): Promise<LookView | null> {
+  const look = await db.look.findFirst({ where: { id, active: true }, include: LOOK_INCLUDE });
+  return look ? (toLookViews([look], locale)[0] ?? null) : null;
 }

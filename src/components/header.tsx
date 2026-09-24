@@ -31,15 +31,6 @@ export async function Header({
       where: { parentId: null },
       orderBy: { name: "asc" },
       take: 8,
-      // One piece's photo per category, for the mobile menu's thumbnails.
-      include: {
-        products: {
-          where: { active: true },
-          orderBy: { createdAt: "asc" },
-          take: 1,
-          select: { images: { take: 1, orderBy: { position: "asc" }, select: { url: true } } },
-        },
-      },
     }),
   ]);
 
@@ -59,10 +50,10 @@ export async function Header({
     ...categories.map((category) => ({
       href: `/category/${category.slug}`,
       label: localizedName(category, locale),
-      imageUrl: category.products[0]?.images[0]?.url ?? null,
     })),
-    { href: "/about", label: dict.footer.about, icon: "about" as const },
-    { href: "/murano-glass", label: dict.footer.muranoGuide, icon: "guide" as const },
+    { href: "/looks", label: dict.looks.navLabel },
+    { href: "/about", label: dict.footer.about, secondary: true },
+    { href: "/murano-glass", label: dict.footer.muranoGuide, secondary: true },
   ];
 
   // The blur only matters where the header is sticky (sm and up); on phones
@@ -90,10 +81,13 @@ export async function Header({
               {localizedName(category, locale)}
             </Link>
           ))}
-          <Link href="/about" className={navChipClass}>
+          <Link href="/looks" className={navChipClass}>
+            {dict.looks.navLabel}
+          </Link>
+          <Link href="/about" className={`${navChipClass} hidden xl:inline-flex`}>
             {dict.footer.about}
           </Link>
-          <Link href="/murano-glass" className={navChipClass}>
+          <Link href="/murano-glass" className={`${navChipClass} hidden xl:inline-flex`}>
             {dict.footer.muranoGuide}
           </Link>
         </nav>
@@ -106,7 +100,7 @@ export async function Header({
           action="/products"
           method="GET"
           role="search"
-          className="relative hidden items-center sm:flex"
+          className="relative hidden items-center lg:flex"
         >
           <svg
             width="18"
@@ -128,12 +122,12 @@ export async function Header({
             aria-label={dict.nav.searchPlaceholder}
             enterKeyHint="search"
             autoComplete="off"
-            className="field w-60 min-w-0 rounded-md py-2 ps-10 pe-3 text-sm shadow-none"
+            className="field w-44 min-w-0 rounded-md py-2 ps-10 pe-3 text-sm shadow-none xl:w-52"
           />
         </form>
 
         {/* ── Icon cluster (locale, wishlist, cart, admin, account/login) ── */}
-        <div className="hidden items-center gap-x-4 text-[0.95rem] sm:flex">
+        <div className="hidden items-center gap-x-4 text-[0.95rem] whitespace-nowrap sm:flex">
           <LocaleSwitcher current={locale} />
           {session?.user ? (
             <Link
@@ -201,12 +195,14 @@ export async function Header({
               >
                 {dict.nav.signIn}
               </Link>
-              <Link
-                href="/register"
-                className="link-underline text-foreground/80 hover:text-accent transition-colors"
-              >
-                {dict.nav.register}
-              </Link>
+              <span className="hidden 2xl:inline">
+                <Link
+                  href="/register"
+                  className="link-underline text-foreground/80 hover:text-accent transition-colors"
+                >
+                  {dict.nav.register}
+                </Link>
+              </span>
             </>
           )}
         </div>

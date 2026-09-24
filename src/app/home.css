@@ -614,7 +614,7 @@
   align-items: center;
   text-align: center;
 }
-/* Each piece sits in a Venetian-window niche: warm ivory, with a gold inner
+/* Each piece sits in a Venetian-window niche: white, with a gold inner
    arch drawn a few millimetres inside the edge, the photo's white multiplied
    into the ivory. */
 .shelf-category-photo {
@@ -622,8 +622,9 @@
   width: 100%;
   aspect-ratio: 3 / 4;
   overflow: hidden;
+  border: 1px solid var(--rule);
   border-radius: 999px 999px 4px 4px;
-  background: #f4efe7;
+  background: #fff;
 }
 .shelf-category-photo::after {
   content: "";
@@ -1217,4 +1218,11 @@
   .shelf-home .shelf-hero + .shelf-section {
     padding-top: 2.5rem;
   }
+}
+
+/* Looks on the home page: the cards come from shop.css (.look-cards). */
+.shelf-looks-more {
+  display: flex;
+  justify-content: center;
+  margin: 3.5rem 0 0;
 }

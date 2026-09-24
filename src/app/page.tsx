@@ -21,6 +21,8 @@ import { getShippingFacts } from "@/lib/shipping-banner";
 import { GiftFinderArrow } from "@/components/gift-finder-arrow";
 import { HeroNecklaceCarousel, type HeroSlide } from "@/components/hero-necklace-carousel";
 import { db } from "@/lib/db";
+import { getAllLooks } from "@/lib/look-data";
+import { LookCard } from "@/components/look-card";
 import { homeFontClasses } from "./home-fonts";
 import "./home.css";
 
@@ -137,6 +139,7 @@ export default async function Home() {
     }),
   ]);
   const dict = getDictionary(locale);
+  const looks = await getAllLooks(locale, 3);
   const heroSlides: HeroSlide[] = [
     { src: HERO_SRC, alt: dict.home.heroImageAlt, href: null },
     ...HERO_NECKLACE_SLUGS.flatMap((slug) => {
@@ -296,6 +299,39 @@ export default async function Home() {
                 );
               })}
             </CategoryStrip>
+          </div>
+        </section>
+      )}
+
+      {looks.length > 0 && (
+        <section className="shelf-section shelf-section--looks">
+          <div className="shelf-wrap">
+            <div className="shelf-heading-row shelf-heading-row--center">
+              <p className="shelf-eyebrow shelf-eyebrow--center">{dict.look.kicker}</p>
+              <h2 className="shelf-heading">{dict.looks.title}</h2>
+            </div>
+            <div className="look-cards">
+              {looks.map((look) => (
+                <LookCard
+                  key={look.id}
+                  look={look}
+                  locale={settings.defaultLocale}
+                  labels={{
+                    view: dict.looks.viewLook,
+                    save: dict.look.save,
+                    pieces: dict.looks.pieces,
+                  }}
+                />
+              ))}
+            </div>
+            <p className="shelf-looks-more">
+              <Link href="/looks" className="shelf-button">
+                {dict.looks.allLooks}
+                <span aria-hidden="true" className="shelf-button-arrow">
+                  →
+                </span>
+              </Link>
+            </p>
           </div>
         </section>
       )}
