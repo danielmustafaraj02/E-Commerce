@@ -10,6 +10,7 @@ import { getDictionary } from "@/lib/i18n/dictionaries";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { AnnouncementBar } from "@/components/announcement-bar";
+import { getShippingBanner } from "@/lib/shipping-banner";
 import { FloatingCheckoutButton } from "@/components/floating-checkout-button";
 import { CookieConsent } from "@/components/cookie-consent";
 import { ConsentGatedAnalytics } from "@/components/consent-gated-analytics";
@@ -92,6 +93,11 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     isPaypalConfigured(),
   ]);
   const dict = getDictionary(locale);
+  const shippingBanner = await getShippingBanner(
+    dict.product.shippingBanner,
+    settings.defaultCurrency,
+    settings.defaultLocale
+  );
 
   return (
     <html
@@ -184,7 +190,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         >
           {dict.a11y.skipToContent}
         </a>
-        <AnnouncementBar message={dict.product.shippingBanner} />
+        {shippingBanner && <AnnouncementBar message={shippingBanner} />}
         <Header
           storeName={settings.storeName}
           logoUrl={settings.logoUrl}
@@ -196,6 +202,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <Footer
           storeName={settings.storeName}
           contactEmail={settings.contactEmail}
+          shippingBanner={shippingBanner}
           dict={dict}
           locale={locale}
           social={{
