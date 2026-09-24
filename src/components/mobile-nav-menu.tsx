@@ -14,7 +14,7 @@ type NavLink = {
   label: string;
   // A category's thumbnail (one of its pieces), or a line icon for pages.
   imageUrl?: string | null;
-  icon?: "about" | "guide" | "journal";
+  icon?: "about" | "guide";
 };
 
 const ICONS = {
@@ -22,8 +22,6 @@ const ICONS = {
   about: (
     <path d="M3 21h18M5 21v-6h6v6M8 15v-3a3 3 0 0 1 6 0v3M14 21v-9h3v9M15.5 12V6l1.5-2 1.5 2v15M17 9h1.5" />
   ),
-  // A quill: the journal.
-  journal: <path d="M20 4C13 5 8 10 6 17l-1 3M20 4c-1 5-4 9-9 11M9 13l-3 1M12 9l-2 1" />,
   guide: (
     <path d="M3 5.5C5.5 4.5 9 4.5 12 6.5v13C9 17.5 5.5 17.5 3 18.5v-13ZM21 5.5c-2.5-1-6-1-9 1v13c3-2 6.5-2 9-1v-13Z" />
   ),
