@@ -94,6 +94,7 @@ const HERO_NECKLACE_SLUGS = [
   "collana-perla-celeste-5e4eb6",
 ];
 const HERO_BACKGROUND_SRC = "/hero/ivory-marble-background.jpg";
+const ROMAN = ["I", "II", "III", "IV", "V", "VI"];
 
 export default async function Home() {
   // The hero photo is the LCP element: announce it in <head> with high
@@ -267,7 +268,7 @@ export default async function Home() {
               <h2 className="shelf-heading">{dict.home.shopByCategory}</h2>
             </div>
             <CategoryStrip className="shelf-categories">
-              {categoriesWithImage.map((category) => {
+              {categoriesWithImage.map((category, index) => {
                 const name = localizedName(category, locale);
                 return (
                   <li key={category.id} className="shelf-category">
@@ -281,11 +282,15 @@ export default async function Home() {
                         />
                       )}
                     </div>
+                    <span className="shelf-category-index" aria-hidden="true">
+                      {ROMAN[index] ?? index + 1}
+                    </span>
                     <h3 className="shelf-category-name">
                       <Link href={`/category/${category.slug}`}>{name}</Link>
                     </h3>
-                    <span className="shelf-category-more" aria-hidden="true">
-                      <span className="shelf-category-rule" />→
+                    <span className="shelf-category-cta" aria-hidden="true">
+                      {dict.home.shopCollection}
+                      <span className="shelf-category-arrow">→</span>
                     </span>
                   </li>
                 );
