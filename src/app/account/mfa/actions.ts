@@ -5,10 +5,17 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { verifyMfaToken } from "@/lib/mfa";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function confirmMfa(_prevState: unknown, formData: FormData) {
   const session = await auth();
   if (!session?.user) return { error: "Not signed in" };
+
+  // A 6-digit TOTP code is only ~1,000,000 possibilities and, unlike a
+  // password, isn't hashed with a slow algorithm — without this, a script
+  // could brute-force a code within the ~30s window it's valid for.
+  const { success: withinLimit } = await rateLimit(`mfa-confirm:${session.user.id}`, 5, 60_000);
+  if (!withinLimit) return { error: "Too many attempts — wait a minute and try again" };
 
   const code = String(formData.get("code") ?? "").trim();
   const user = await db.user.findUnique({ where: { id: session.user.id } });
@@ -25,6 +32,9 @@ export async function confirmMfa(_prevState: unknown, formData: FormData) {
 export async function disableMfa(_prevState: unknown, formData: FormData) {
   const session = await auth();
   if (!session?.user) return { error: "Not signed in" };
+
+  const { success: withinLimit } = await rateLimit(`mfa-disable:${session.user.id}`, 5, 60_000);
+  if (!withinLimit) return { error: "Too many attempts — wait a minute and try again" };
 
   const user = await db.user.findUnique({ where: { id: session.user.id } });
   if (!user) return { error: "Account not found" };
