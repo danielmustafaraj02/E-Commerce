@@ -16,6 +16,7 @@ import { ShelfHead, ShelfBody } from "@/components/shelf-page";
 import { ReturnRequestForm } from "./return-request-form";
 import { localizedName } from "@/lib/product-i18n";
 import { isPaypalConfigured } from "@/lib/paypal";
+import { LookPurchaseTracker } from "@/components/look-purchase-tracker";
 
 const RETURNABLE_STATUSES = ["paid", "processing", "shipped", "delivered"];
 
@@ -57,6 +58,9 @@ export default async function OrderConfirmationPage({
 
   return (
     <ShelfMain>
+      {order.bundleDiscountAmount > 0 && (
+        <LookPurchaseTracker orderNumber={order.orderNumber} saving={order.bundleDiscountAmount} />
+      )}
       <ShelfHead
         settle
         icon={

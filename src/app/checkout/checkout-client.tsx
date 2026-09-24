@@ -38,6 +38,7 @@ type Quote = {
   shippingAmount: number;
   freeShipping: boolean;
   discountAmount: number;
+  bundleDiscountAmount: number;
   total: number;
   currency: string;
   pricesIncludeTax: boolean;
@@ -416,6 +417,12 @@ export function CheckoutClient({
                   <span className="text-foreground/70">{dict.subtotal}</span>
                   <span>{formatMoney(quote.subtotal, quote.currency, locale)}</span>
                 </div>
+                {quote.bundleDiscountAmount > 0 && (
+                  <div className="text-success flex justify-between">
+                    <span>{dict.bundleSaving}</span>
+                    <span>-{formatMoney(quote.bundleDiscountAmount, quote.currency, locale)}</span>
+                  </div>
+                )}
                 {quote.discountAmount > 0 && (
                   <div className="text-success flex justify-between">
                     <span>{dict.discount}</span>

@@ -115,7 +115,10 @@ async function placeOrderOnce(input: PlaceOrderInput) {
         taxAmount: quote.taxAmount,
         taxRatePercent: quote.taxRatePercent,
         shippingAmount: quote.shippingAmount,
-        discountAmount: quote.discountAmount,
+        // One discount figure on the order (every receipt shows subtotal -
+        // discount + shipping = total), with the bundle part kept separately.
+        discountAmount: quote.discountAmount + quote.bundleDiscountAmount,
+        bundleDiscountAmount: quote.bundleDiscountAmount,
         total: quote.total,
         currency: quote.currency,
         locale: input.locale,

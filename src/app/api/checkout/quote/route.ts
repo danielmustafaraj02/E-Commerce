@@ -37,6 +37,7 @@ export async function POST(request: Request) {
       shippingAmount: quote.shippingAmount,
       freeShipping: quote.freeShipping,
       discountAmount: quote.discountAmount,
+      bundleDiscountAmount: quote.bundleDiscountAmount,
       total: quote.total,
       currency: quote.currency,
       pricesIncludeTax: quote.pricesIncludeTax,

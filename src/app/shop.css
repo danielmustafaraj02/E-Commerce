@@ -939,3 +939,209 @@ body:has(.shop-sticky-cta) footer {
     padding-bottom: 0;
   }
 }
+
+/* -- Complete the look (components/complete-the-look.tsx) ------------------- */
+
+/* Warm sand ground, dark type, hairline rules, no sale styling: the set should
+   read as styled by the brand, not as a promotion. Photos are on white, so
+   multiply drops them into the sand like the shelf cards. */
+.look-section {
+  background: var(--tint-sand);
+  padding-block: 3.5rem;
+}
+.look-grid {
+  display: grid;
+  gap: 2rem;
+}
+.look-kicker {
+  margin: 0 0 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.look-title {
+  margin: 0;
+}
+.look-subtitle {
+  margin: 0.5rem 0 0;
+  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+  font-size: 1.2rem;
+  color: var(--ink);
+}
+.look-copy {
+  margin: 0.9rem 0 0;
+  max-width: 34rem;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+.look-visual {
+  position: relative;
+  margin-top: 1.75rem;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 0.75rem;
+  aspect-ratio: 4 / 3;
+}
+.look-visual--styled {
+  display: block;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.look-visual-tile {
+  position: relative;
+}
+/* The first piece (in admin order, the necklace) anchors the composition. */
+.look-visual-tile:first-child {
+  grid-row: 1 / span 2;
+}
+.look-visual-tile img,
+.look-piece-photo img {
+  object-fit: cover;
+  mix-blend-mode: multiply;
+  filter: brightness(1.05) contrast(1.03);
+}
+.look-prices {
+  margin: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+.look-price-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--ink-soft);
+}
+.look-price-row dd,
+.look-save dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+.look-price-row--set {
+  color: var(--ink);
+  font-size: 1.2rem;
+}
+.look-price-row--set dd {
+  font-weight: 600;
+  font-size: 1.45rem;
+}
+.look-save {
+  justify-self: start;
+  display: inline-flex;
+  gap: 0.6rem;
+  margin-top: 0.35rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--teal) 12%, var(--ground));
+  color: var(--ink);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.look-save dt {
+  text-transform: uppercase;
+}
+.look-pieces {
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+.look-piece {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 0.9rem 0.6rem 0.6rem;
+  background: var(--ground);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+}
+.look-piece-photo {
+  position: relative;
+  aspect-ratio: 1;
+  background: var(--ground);
+}
+.look-piece-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+.look-piece-name {
+  color: var(--ink);
+  text-decoration: none;
+}
+a.look-piece-name:hover {
+  text-decoration: underline;
+}
+.look-piece-tag {
+  display: inline-block;
+  white-space: nowrap;
+  margin-inline-start: 0.35rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.look-piece-price {
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  font-variant-numeric: tabular-nums;
+}
+.look-piece-check {
+  width: 1.4rem;
+  height: 1.4rem;
+  accent-color: var(--ink);
+  cursor: pointer;
+}
+.look-piece-check:disabled {
+  cursor: not-allowed;
+}
+.shelf .btn-primary.look-cta {
+  width: 100%;
+  min-height: 3.25rem;
+  margin-top: 1.25rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+.look-note {
+  margin: 0.9rem 0 0;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+@media (min-width: 52rem) {
+  .look-section {
+    padding-block: 5rem;
+  }
+  .look-grid {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: 4rem;
+    align-items: start;
+  }
+  .look-details {
+    padding-top: 2.4rem;
+  }
+}
+
+/* Cart: "Complete the look?" when a look is partly in the cart. */
+.cart-look-upsell {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.25rem;
+}
+.cart-look-upsell-title {
+  margin: 0 0 0.2rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+}

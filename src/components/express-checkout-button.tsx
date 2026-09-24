@@ -130,17 +130,20 @@ export function ExpressCheckoutButton({
   publishableKey,
   locale,
   dividerLabel,
+  discount = 0,
 }: {
   publishableKey: string | null;
   locale: string;
   dividerLabel: string;
+  // Estimated complete-the-look saving, so the wallet sheet's estimate matches.
+  discount?: number;
 }) {
   const items = useCartStore((state) => state.items);
   const stripePromise = useMemo(
     () => (publishableKey ? loadStripe(publishableKey) : null),
     [publishableKey]
   );
-  const amount = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const amount = items.reduce((sum, item) => sum + item.price * item.quantity, 0) - discount;
   const currency = (items[0]?.currency ?? "eur").toLowerCase();
 
   if (!stripePromise || items.length === 0 || amount <= 0) return null;
