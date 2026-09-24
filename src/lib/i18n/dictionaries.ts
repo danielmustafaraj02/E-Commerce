@@ -6151,7 +6151,7 @@ const ja: Dictionary = {
     orderSubject: "ご注文 {orderNumber}：{heading}",
     unknownStatusBody:
       "ご注文のステータスが「{status}」に変更されました。\n\nご注文番号：{orderNumber}",
-    vatLabel: "VAT {number}",
+    vatLabel: "VAT/IVA {number}",
     abandonedSubject: "カートに商品が残っています",
     abandonedBody:
       "ご注文の手続きが完了していません（お支払い未完了）：\n\n{items}\n\nご注文を完了する：{url}\n\nご注文番号：{orderNumber}",
