@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import Image, { getImageProps } from "next/image";
 import { preload } from "react-dom";
@@ -91,13 +92,17 @@ const HERO_SRC = "/hero/handmade-red-murano-glass-necklace.jpg";
 const HERO_SIZES = "(min-width: 52rem) 36vw, 100vw";
 // Necklaces photographed in the same oval drape as the hero, so the rotation
 // reads as one frame changing colour. Slugs match the catalog photos' names.
-const HERO_NECKLACE_SLUGS = [
-  "collana-rame-antico-85514c",
-  "collana-ametista-9e7d11",
-  "collana-smeraldo-e-argento-a0dd26",
-  "collana-perla-rosa-antico-f396d8",
-  "collana-perla-celeste-5e4eb6",
+// Each carries the deep tone of its glass: the hero's button takes it on
+// while that necklace is showing (all dark enough for its white text).
+const HERO_ACCENT = "#7d1a24";
+const HERO_NECKLACES = [
+  { slug: "collana-rame-antico-85514c", accent: "#5a3522" },
+  { slug: "collana-ametista-9e7d11", accent: "#4b2a5c" },
+  { slug: "collana-smeraldo-e-argento-a0dd26", accent: "#1f4d3f" },
+  { slug: "collana-perla-rosa-antico-f396d8", accent: "#7a3f52" },
+  { slug: "collana-perla-celeste-5e4eb6", accent: "#2e5670" },
 ];
+const HERO_NECKLACE_SLUGS = HERO_NECKLACES.map((n) => n.slug);
 const HERO_BACKGROUND_SRC = "/hero/ivory-marble-background.jpg";
 const ROMAN = ["I", "II", "III", "IV", "V", "VI"];
 
@@ -144,8 +149,8 @@ export default async function Home() {
   const dict = getDictionary(locale);
   const looks = await getAllLooks(locale, 3);
   const heroSlides: HeroSlide[] = [
-    { src: HERO_SRC, alt: dict.home.heroImageAlt, href: null },
-    ...HERO_NECKLACE_SLUGS.flatMap((slug) => {
+    { src: HERO_SRC, alt: dict.home.heroImageAlt, href: null, accent: HERO_ACCENT },
+    ...HERO_NECKLACES.flatMap(({ slug, accent }) => {
       const product = heroNecklaces.find((p) => p.slug === slug);
       return product
         ? [
@@ -153,6 +158,7 @@ export default async function Home() {
               src: `/products/collane-in-vetro-di-murano/${slug}.png`,
               alt: localizedName(product, locale),
               href: `/products/${slug}`,
+              accent,
             },
           ]
         : [];
@@ -200,7 +206,10 @@ export default async function Home() {
   // into the ground instead of sitting in cards.
   return (
     <main className={`shelf shelf-home flex flex-1 flex-col ${homeFontClasses}`}>
-      <section className="shelf-hero">
+      <section
+        className="shelf-hero"
+        style={{ "--hero-accent": HERO_ACCENT } as CSSProperties}
+      >
         <Image
           src={HERO_BACKGROUND_SRC}
           alt=""

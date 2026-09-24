@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-export type HeroSlide = { src: string; alt: string; href: string | null };
+export type HeroSlide = { src: string; alt: string; href: string | null; accent: string };
 
 const INTERVAL_MS = 5000;
 
@@ -33,6 +33,14 @@ export function HeroNecklaceCarousel({
   }, [count, paused, index]);
 
   const active = slides[index];
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  // The hero's button wears the showing necklace's colour (--hero-accent,
+  // read by home.css); the page sets the first one so there's no flash.
+  useEffect(() => {
+    const hero = rootRef.current?.closest<HTMLElement>(".shelf-hero");
+    hero?.style.setProperty("--hero-accent", active.accent);
+  }, [active.accent]);
   const touchStartX = useRef<number | null>(null);
   const go = (step: number) => setIndex((i) => (i + step + count) % count);
 
@@ -40,6 +48,7 @@ export function HeroNecklaceCarousel({
     // Only a real mouse hovering pauses it: a tap fires pointerenter without a
     // matching leave, and a clicked arrow keeps focus, so either would freeze it.
     <div
+      ref={rootRef}
       className="shelf-bead-carousel"
       onPointerEnter={(e) => e.pointerType === "mouse" && setPaused(true)}
       onPointerLeave={(e) => e.pointerType === "mouse" && setPaused(false)}
