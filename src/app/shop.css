@@ -344,6 +344,31 @@
   color: var(--accent);
 }
 
+/* Subtle entry point to /gift-finder, next to the purchase panel — a small
+   text link, not a competing CTA. */
+.shop-giftfinder-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.9rem;
+  color: var(--accent-deep);
+  font-size: 0.85rem;
+  text-underline-offset: 0.2em;
+  transition: color 0.15s ease;
+}
+.shop-giftfinder-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+[dir="rtl"] .shop-giftfinder-link svg {
+  transform: scaleX(-1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .shop-giftfinder-link {
+    transition: none;
+  }
+}
+
 /* -- "THE PERFECT GIFT" editorial section --------------------------------------- */
 
 .shop-gift-section {

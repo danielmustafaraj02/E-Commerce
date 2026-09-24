@@ -295,6 +295,15 @@ model Product {
   lookId String?
   look   Look?   @relation(fields: [lookId], references: [id], onDelete: SetNull)
 
+  // Gift Finder tagging (Admin > Products), scored by lib/gift-finder.ts —
+  // free-form Postgres string arrays rather than a join table since the value
+  // sets are small and fixed (see the *_STYLES/OCCASIONS/RECIPIENTS constants
+  // there). Untagged products (the default, []) simply score 0 on that
+  // criterion instead of being excluded.
+  giftStyles     String[] @default([])
+  giftOccasions  String[] @default([])
+  giftRecipients String[] @default([])
+
   images        ProductImage[]
   orderItems    OrderItem[]
   reviews       Review[]

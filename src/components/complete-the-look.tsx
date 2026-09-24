@@ -20,12 +20,18 @@ export function CompleteTheLook({
   locale,
   dict,
   outOfStockLabel,
+  onAdded,
 }: {
   look: LookView;
   currentProductId: string;
   locale: string;
   dict: Dictionary["look"];
   outOfStockLabel: string;
+  // Optional extra hook for callers that need their own tracking/state on
+  // top of this component's own trackLookEvent("added_to_cart", ...) below
+  // — e.g. the Gift Finder result screen (lib/gift-finder-analytics.ts).
+  // Unused on the product page, so its behavior there is unchanged.
+  onAdded?: (chosenProductIds: string[]) => void;
 }) {
   const addItem = useCartStore((state) => state.addItem);
   const [selected, setSelected] = useState(
@@ -82,6 +88,7 @@ export function CompleteTheLook({
     });
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
+    onAdded?.(chosen.map((piece) => piece.productId));
   };
 
   return (
