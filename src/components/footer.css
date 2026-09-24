@@ -1,0 +1,428 @@
+/* Site footer (components/footer.tsx), plus the shared social icons and brand
+   signature the mobile menu reuses. Loaded from the root layout's footer, so
+   it's on every page. Ivory ground, dark ink, hairline rules, one teal accent:
+   the last page of an editorial site rather than a block of links. */
+
+.site-footer {
+  --footer-ground: #faf8f4;
+  --footer-ink: #0e3a46;
+  --footer-soft: color-mix(in srgb, var(--footer-ink) 72%, transparent);
+  --footer-rule: color-mix(in srgb, var(--footer-ink) 14%, transparent);
+  --footer-teal: #1f7a85;
+  background: var(--footer-ground);
+  color: var(--footer-ink);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  border-top: 1px solid var(--footer-rule);
+  /* Room under the last line for the floating checkout button and the
+     iPhone home indicator, so neither ever covers footer content. */
+  padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+}
+.site-footer a {
+  color: inherit;
+  text-decoration: none;
+}
+.site-footer a:hover {
+  color: var(--footer-teal);
+}
+.site-footer a:focus-visible,
+.site-footer button:focus-visible {
+  outline: 2px solid var(--footer-teal);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+.footer-display {
+  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(1.55rem, 6.5vw, 1.9rem);
+  line-height: 1.15;
+  margin: 0;
+}
+
+.site-footer-top,
+.site-footer-body,
+.site-footer-bottom {
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+/* -- Editorial band ------------------------------------------------------- */
+.footer-editorial {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 38%;
+  align-items: center;
+  margin-inline: -1.25rem;
+  padding: 2.25rem 0 2.25rem 1.25rem;
+  border-bottom: 1px solid var(--footer-rule);
+  overflow: hidden;
+}
+.footer-editorial-text {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+.footer-editorial-text p {
+  margin: 0;
+  color: var(--footer-soft);
+  line-height: 1.5;
+}
+.footer-wave {
+  color: var(--footer-teal);
+}
+.footer-outline-button {
+  display: inline-flex;
+  text-align: start;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.9rem;
+  margin-top: 0.4rem;
+  padding: 0 1.1rem;
+  border: 1px solid var(--footer-ink);
+  border-radius: 3px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+.site-footer .footer-outline-button:hover {
+  background: var(--footer-ink);
+  color: var(--footer-ground);
+}
+.footer-editorial-image {
+  position: relative;
+  align-self: stretch;
+  min-height: 11rem;
+}
+.footer-editorial-image img {
+  object-fit: cover;
+  object-position: 30% 80%;
+  mix-blend-mode: multiply;
+  /* Fade the photo's left edge into the text side. */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 45%);
+  mask-image: linear-gradient(to right, transparent, #000 45%);
+}
+
+/* -- Newsletter ----------------------------------------------------------- */
+.footer-newsletter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-block: 2.25rem;
+}
+.footer-newsletter > p {
+  margin: 0;
+  color: var(--footer-soft);
+  line-height: 1.5;
+}
+.footer-newsletter .field {
+  min-height: 3rem;
+  min-width: 0;
+  flex: 1;
+  background: #fff;
+  border-color: var(--footer-rule);
+  border-radius: 3px;
+}
+.footer-newsletter .btn-primary {
+  min-height: 3rem;
+  background: var(--footer-ink);
+  border-radius: 3px;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.footer-fineprint {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--footer-soft);
+}
+
+/* -- Link groups: accordion on phones -------------------------------------- */
+.footer-nav {
+  border-top: 1px solid var(--footer-rule);
+}
+.footer-group {
+  border-bottom: 1px solid var(--footer-rule);
+}
+.footer-group-heading {
+  margin: 0;
+  font: inherit;
+}
+.footer-group-heading button {
+  display: flex;
+  width: 100%;
+  min-height: 3.25rem;
+  align-items: center;
+  justify-content: space-between;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+/* A plus that turns into a minus. */
+.footer-group-icon {
+  position: relative;
+  width: 0.8rem;
+  height: 0.8rem;
+}
+.footer-group-icon::before,
+.footer-group-icon::after {
+  content: "";
+  position: absolute;
+  inset: 50% 0 auto;
+  height: 1px;
+  background: currentColor;
+  transition: transform 0.2s ease;
+}
+.footer-group-icon::after {
+  transform: rotate(90deg);
+}
+.footer-group-heading button[aria-expanded="true"] .footer-group-icon::after {
+  transform: rotate(0deg);
+}
+.footer-group-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition:
+    grid-template-rows 0.2s ease,
+    visibility 0s linear 0.2s;
+}
+.footer-group-panel[data-open="true"] {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition:
+    grid-template-rows 0.2s ease,
+    visibility 0s;
+}
+.footer-group-panel > ul {
+  min-height: 0;
+  overflow: hidden;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.footer-group-panel li:last-child {
+  padding-bottom: 0.75rem;
+}
+.footer-group-panel a {
+  display: flex;
+  align-items: center;
+  min-height: 2.75rem;
+  color: var(--footer-soft);
+  overflow-wrap: anywhere;
+}
+
+/* -- Trust strip --------------------------------------------------------- */
+.footer-trust {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 1.75rem 0;
+  border-bottom: 1px solid var(--footer-rule);
+}
+.footer-trust li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  text-align: center;
+  font-size: 0.78rem;
+  line-height: 1.3;
+  color: var(--footer-soft);
+}
+.footer-trust svg {
+  color: var(--footer-ink);
+}
+@media (min-width: 23rem) {
+  .footer-trust {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .footer-trust li + li {
+    border-inline-start: 1px solid var(--footer-rule);
+  }
+}
+.footer-shipping {
+  margin: 1.25rem 0 0;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--footer-soft);
+}
+
+/* -- Bottom: social, payments, legal, signature ------------------------- */
+.site-footer-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+  padding-top: 1.75rem;
+  text-align: center;
+}
+.social-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.social-links a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+}
+.footer-payments {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--footer-soft);
+}
+/* Payment badges stay secondary: smaller and slightly muted. */
+.footer-payments > div {
+  zoom: 0.85;
+  opacity: 0.9;
+}
+.footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: 1.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.8rem;
+  color: var(--footer-soft);
+}
+.footer-legal a {
+  display: inline-block;
+  padding-block: 0.6rem;
+}
+.footer-copyright {
+  margin: -0.5rem 0 0;
+  font-size: 0.78rem;
+  color: var(--footer-soft);
+}
+.brand-signature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0.75rem 0 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--footer-ink, #0e3a46);
+}
+.brand-signature svg {
+  color: var(--footer-teal, #1f7a85);
+}
+
+/* -- Desktop: an editorial, multi-column layout -------------------------- */
+@media (min-width: 48rem) {
+  .site-footer {
+    padding-bottom: calc(3rem + env(safe-area-inset-bottom, 0px));
+  }
+  .site-footer-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 3.5rem;
+    padding-block: 3.5rem;
+    border-bottom: 1px solid var(--footer-rule);
+  }
+  .footer-editorial {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    grid-template-columns: minmax(0, 1fr) 20rem;
+  }
+  .footer-editorial-image {
+    min-height: 14rem;
+  }
+  .footer-newsletter {
+    padding: 0;
+    justify-content: center;
+  }
+  .site-footer-body {
+    display: grid;
+    grid-template-columns: minmax(0, 2.4fr) minmax(0, 1fr);
+    gap: 3.5rem;
+    padding-block: 3rem 2rem;
+    border-bottom: 1px solid var(--footer-rule);
+  }
+  .footer-nav {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem;
+    border: 0;
+  }
+  .footer-group {
+    border: 0;
+  }
+  /* Columns are always open: the heading is just a heading. */
+  .footer-group-heading button {
+    min-height: 0;
+    margin-bottom: 0.9rem;
+    pointer-events: none;
+    cursor: default;
+  }
+  .footer-group-icon {
+    display: none;
+  }
+  .footer-group-panel,
+  .footer-group-panel[data-open="false"] {
+    grid-template-rows: 1fr;
+    visibility: visible;
+  }
+  .footer-group-panel a {
+    min-height: 2.1rem;
+  }
+  .footer-trust {
+    align-self: start;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border: 0;
+    padding: 0;
+  }
+  .footer-trust li + li {
+    border: 0;
+  }
+  .footer-shipping {
+    grid-column: 1 / -1;
+    margin: 0;
+  }
+  .site-footer-bottom {
+    padding-top: 2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-group-panel,
+  .footer-group-icon::before,
+  .footer-group-icon::after,
+  .footer-outline-button {
+    transition: none;
+  }
+}

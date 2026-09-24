@@ -9,21 +9,38 @@ import type { Locale } from "@/lib/i18n/locale";
 import { localizedName } from "@/lib/product-i18n";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { logoSrc } from "@/lib/store-settings";
+import { legalLinks } from "@/lib/footer-nav";
+import type { SocialUrls } from "@/components/social-links";
 
 export async function Header({
   storeName,
   logoUrl,
   locale,
   dict,
+  social,
 }: {
   storeName: string;
   logoUrl: string | null;
   locale: Locale;
   dict: Dictionary;
+  social: SocialUrls;
 }) {
   const [session, categories] = await Promise.all([
     auth(),
-    db.category.findMany({ where: { parentId: null }, orderBy: { name: "asc" }, take: 8 }),
+    db.category.findMany({
+      where: { parentId: null },
+      orderBy: { name: "asc" },
+      take: 8,
+      // One piece's photo per category, for the mobile menu's thumbnails.
+      include: {
+        products: {
+          where: { active: true },
+          orderBy: { createdAt: "asc" },
+          take: 1,
+          select: { images: { take: 1, orderBy: { position: "asc" }, select: { url: true } } },
+        },
+      },
+    }),
   ]);
 
   const isStaff = session?.user.role === "admin" || session?.user.role === "staff";
@@ -42,9 +59,10 @@ export async function Header({
     ...categories.map((category) => ({
       href: `/category/${category.slug}`,
       label: localizedName(category, locale),
+      imageUrl: category.products[0]?.images[0]?.url ?? null,
     })),
-    { href: "/about", label: dict.footer.about },
-    { href: "/murano-glass", label: dict.footer.muranoGuide },
+    { href: "/about", label: dict.footer.about, icon: "about" as const },
+    { href: "/murano-glass", label: dict.footer.muranoGuide, icon: "guide" as const },
   ];
 
   return (
@@ -194,6 +212,12 @@ export async function Header({
               closeLabel={dict.nav.closeMenu}
               searchPlaceholder={dict.nav.searchPlaceholder}
               searchLabel={dict.nav.search}
+              storeName={storeName}
+              tagline={dict.footer.brandTagline}
+              social={social}
+              socialLabel={dict.footer.socialNav}
+              legal={legalLinks(dict)}
+              legalLabel={dict.footer.legalNav}
             />
           </div>
           <Link href="/" className="flex items-center justify-center">

@@ -20,7 +20,7 @@ npx prisma generate         # after any schema.prisma change (also runs on npm i
 ```
 
 - Test files sit next to the code they cover and use the `@/` alias (= `src/`). Route handlers and server actions are tested by importing `GET`/`POST`/the action directly, mocking `@/lib/db` and friends with `vi.hoisted` + `vi.mock`.
-- `build` is `prisma migrate deploy && next build`. **Pushing to `main` deploys to production (https://perlamuranoglass.com) and applies pending migrations to the live database.**
+- `build` is `node scripts/migrate.mjs && next build`: `prisma migrate deploy`, skipped on Vercel preview deployments (their `DATABASE_URL` is the live database; set `MIGRATE_PREVIEWS=1` once previews have their own). **Pushing to `main` deploys to production (https://perlamuranoglass.com) and applies pending migrations to the live database.** A preview of a PR that adds columns can fail until it's merged.
 - Migrations are hand-written SQL in `prisma/migrations/`. Generate the SQL without a database: `npx prisma migrate diff --from-schema <old.prisma> --to-schema prisma/schema.prisma --script`. Don't run `prisma format` on the whole schema (it reflows unrelated lines).
 - Never run `db:seed` against a production `DATABASE_URL`: it creates demo data (it refuses `NODE_ENV=production`). It needs `SEED_ADMIN_PASSWORD` or prints a generated one; there is no default password.
 - Catalog scripts: `npx tsx scripts/<name>.ts --dry-run` first. All read `scripts/murano-manifest.json`.

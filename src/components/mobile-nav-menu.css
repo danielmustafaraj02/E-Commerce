@@ -1,0 +1,171 @@
+/* Full-screen mobile menu (components/mobile-nav-menu.tsx). Same ivory, ink
+   and hairline language as the footer (components/footer.css, which also
+   styles the shared social icons, legal row and brand signature). */
+.mobile-menu {
+  --footer-ground: #faf8f4;
+  --footer-ink: #0e3a46;
+  --footer-soft: color-mix(in srgb, var(--footer-ink) 72%, transparent);
+  --footer-rule: color-mix(in srgb, var(--footer-ink) 14%, transparent);
+  --footer-teal: #1f7a85;
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background: var(--footer-ground);
+  color: var(--footer-ink);
+  padding: env(safe-area-inset-top, 0px) 1.25rem env(safe-area-inset-bottom, 0px);
+}
+.mobile-menu a {
+  color: inherit;
+  text-decoration: none;
+}
+.mobile-menu-top {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding-block: 1rem 1.25rem;
+}
+.mobile-menu-top .brand-signature {
+  margin: 0;
+  font-size: 0.85rem;
+}
+.mobile-menu-close {
+  position: absolute;
+  inset-inline-end: -0.5rem;
+  top: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+}
+
+.mobile-menu-search {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 3.25rem;
+  padding: 0.3rem 0.3rem 0.3rem 1.1rem;
+  background: #fff;
+  border: 1px solid var(--footer-rule);
+  border-radius: 999px;
+}
+.mobile-menu-search svg {
+  flex-shrink: 0;
+  color: var(--footer-soft);
+}
+.mobile-menu-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: none;
+  font-size: 1rem;
+  color: inherit;
+  outline: none;
+}
+.mobile-menu-search button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--footer-ink);
+  color: #fff;
+  cursor: pointer;
+}
+.mobile-menu-search button svg {
+  color: #fff;
+}
+
+.mobile-menu-links {
+  list-style: none;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  border-top: 1px solid var(--footer-rule);
+}
+.mobile-menu-links li {
+  border-bottom: 1px solid var(--footer-rule);
+}
+.mobile-menu-links a {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 4.5rem;
+}
+.mobile-menu-thumb {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+}
+.mobile-menu-thumb img {
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+.mobile-menu-label {
+  flex: 1;
+  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+  font-size: 1.45rem;
+}
+.mobile-menu-chevron {
+  color: var(--footer-soft);
+  transition: transform 0.2s ease;
+}
+.mobile-menu-links a:hover .mobile-menu-chevron {
+  transform: translateX(3px);
+}
+
+.mobile-menu-closing {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  margin: 0 -1.25rem;
+  padding: 2.5rem 1.25rem 2rem;
+  text-align: center;
+}
+.mobile-menu-art {
+  position: absolute;
+  inset: 0 45% 30% 0;
+  opacity: 0.55;
+  pointer-events: none;
+}
+.mobile-menu-art img {
+  object-fit: cover;
+  object-position: 50% 80%;
+  mix-blend-mode: multiply;
+  -webkit-mask-image: linear-gradient(to right, #000 30%, transparent);
+  mask-image: linear-gradient(to right, #000 30%, transparent);
+}
+.mobile-menu-tagline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  align-self: flex-end;
+  max-width: 14rem;
+  margin: 0 0 0.5rem;
+  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+  font-style: italic;
+  font-size: 1.25rem;
+  line-height: 1.35;
+}
+.mobile-menu-tagline svg {
+  color: var(--footer-teal);
+}
+.mobile-menu-closing nav {
+  position: relative;
+}

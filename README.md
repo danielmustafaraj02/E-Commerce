@@ -138,7 +138,7 @@ Tests live next to the code they cover (`*.test.ts`).
 
 | Command                                        | What it does                                                                       |
 | ---------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `npm run dev` · `build` · `start`              | Dev server · production build (runs `prisma migrate deploy` first) · run the build |
+| `npm run dev` · `build` · `start`              | Dev server · production build (runs `prisma migrate deploy` first, except on Vercel previews — see `scripts/migrate.mjs`) · run the build |
 | `npm run lint` · `typecheck`                   | ESLint · TypeScript                                                                |
 | `npm test` · `test:watch`                      | Vitest once · watch                                                                |
 | `npm run format` · `format:check`              | Prettier                                                                           |
@@ -221,7 +221,7 @@ policies for AI assistants. Private and utility pages are `noindex`.
 
 1. Create a Postgres database (Neon via the Vercel Marketplace works well).
 2. Set the environment variables above (★ ones at minimum) in Vercel.
-3. `npm run build` runs `prisma migrate deploy`, so migrations apply on deploy.
+3. `npm run build` runs `prisma migrate deploy` (via `scripts/migrate.mjs`), so migrations apply on production deploys. Preview deploys skip them, since they share the production database.
 4. **Do not run `db:seed` against production** (it refuses to). Create your admin
    account another way — for example seed a scratch database with a strong
    `SEED_ADMIN_PASSWORD` and copy the row, or insert the user with a bcrypt hash

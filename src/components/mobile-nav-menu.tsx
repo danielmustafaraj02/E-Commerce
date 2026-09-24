@@ -1,44 +1,73 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
+import Image from "next/image";
 import Link from "next/link";
+import { CatalogImage } from "@/components/catalog-image";
+import { SocialLinks, type SocialUrls } from "@/components/social-links";
+import { BrandSignature, BrandWave } from "@/components/brand-signature";
+import "./mobile-nav-menu.css";
 
-type NavLink = { href: string; label: string };
+type NavLink = {
+  href: string;
+  label: string;
+  // A category's thumbnail (one of its pieces), or a line icon for pages.
+  imageUrl?: string | null;
+  icon?: "about" | "guide";
+};
 
-// Replaces the horizontally-scrolling category row on phones (sm:hidden) —
-// tapping it opens a full-screen list instead of asking someone to swipe to
-// see everything. Desktop is untouched: header.tsx keeps the original inline
-// row there, and this component's own trigger button is hidden at sm+.
+const ICONS = {
+  // A Venetian skyline: dome and campanile.
+  about: (
+    <path d="M3 21h18M5 21v-6h6v6M8 15v-3a3 3 0 0 1 6 0v3M14 21v-9h3v9M15.5 12V6l1.5-2 1.5 2v15M17 9h1.5" />
+  ),
+  guide: (
+    <path d="M3 5.5C5.5 4.5 9 4.5 12 6.5v13C9 17.5 5.5 17.5 3 18.5v-13ZM21 5.5c-2.5-1-6-1-9 1v13c3-2 6.5-2 9-1v-13Z" />
+  ),
+};
+
+const noopSubscribe = () => () => {};
+
 export function MobileNavMenu({
   links,
   menuLabel,
   closeLabel,
   searchPlaceholder,
   searchLabel,
+  storeName,
+  tagline,
+  social,
+  socialLabel,
+  legal,
+  legalLabel,
 }: {
   links: NavLink[];
   menuLabel: string;
   closeLabel: string;
   searchPlaceholder: string;
   searchLabel: string;
+  storeName: string;
+  tagline: string;
+  social: SocialUrls;
+  socialLabel: string;
+  legal: { href: string; label: string }[];
+  legalLabel: string;
 }) {
   const [open, setOpen] = useState(false);
-  // Only true after mount: document.body doesn't exist during the server
-  // render, so the portal below has to wait a tick before it can target it.
-  const [mounted, setMounted] = useState(false);
+  // False during the server render (no document.body for createPortal yet),
+  // true once hydrated.
+  const mounted = useSyncExternalStore(
+    noopSubscribe,
+    () => true,
+    () => false
+  );
   const triggerRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const panelId = useId();
 
-  useEffect(() => {
-    // Deliberate: document.body doesn't exist during the server render, so
-    // the portal can only target it after mount. Same pattern (and the same
-    // reason the lint rule's advice doesn't apply here) as CookieConsent.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-  }, []);
-
+  // While open: lock page scroll, move focus into the menu, close on Escape,
+  // and hand focus back to the trigger on close.
   useEffect(() => {
     if (!open) return;
     const previousOverflow = document.body.style.overflow;
@@ -56,11 +85,12 @@ export function MobileNavMenu({
     };
   }, [open]);
 
+  const close = () => setOpen(false);
+
   return (
     <>
       {/* Icon-only trigger: sits in the compact hamburger–logo–cart row
-          (header.tsx) so the header doesn't eat much vertical space and the
-          logo stays centered as the visual focus. */}
+          (header.tsx) so the logo stays centered as the visual focus. */}
       <button
         ref={triggerRef}
         type="button"
@@ -87,30 +117,23 @@ export function MobileNavMenu({
       {open &&
         mounted &&
         createPortal(
-          // Portaled straight to <body>: header.tsx's <header> has
-          // backdrop-blur (a backdrop-filter), and a filter/backdrop-filter
-          // on any ancestor creates a new containing block for position:fixed
-          // descendants — so nested here, "fixed inset-0" would only cover
-          // the header's own box instead of the real viewport. Rendering
-          // outside that subtree sidesteps it entirely.
+          // Portaled to <body>: the header's backdrop-filter would otherwise
+          // make "fixed inset-0" cover only the header's own box.
           <div
             id={panelId}
             role="dialog"
             aria-modal="true"
             aria-label={menuLabel}
-            className="animate-fade-up bg-background fixed inset-0 z-[60] flex flex-col overflow-y-auto sm:hidden"
-            style={{
-              paddingTop: "env(safe-area-inset-top, 0px)",
-              paddingBottom: "env(safe-area-inset-bottom, 0px)",
-            }}
+            className="mobile-menu animate-fade-up sm:hidden"
           >
-            <div className="flex items-center justify-end p-3">
+            <div className="mobile-menu-top">
+              <BrandSignature storeName={storeName} />
               <button
                 ref={closeButtonRef}
                 type="button"
-                onClick={() => setOpen(false)}
+                onClick={close}
                 aria-label={closeLabel}
-                className="text-foreground/70 hover:text-accent flex size-11 items-center justify-center rounded-full transition-colors"
+                className="mobile-menu-close"
               >
                 <svg
                   width="22"
@@ -118,7 +141,7 @@ export function MobileNavMenu({
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="2"
+                  strokeWidth="1.5"
                   strokeLinecap="round"
                   aria-hidden="true"
                 >
@@ -126,22 +149,17 @@ export function MobileNavMenu({
                 </svg>
               </button>
             </div>
-            {/* Search moved here from the compact mobile header row so the
-                logo can stay the visual focus there. */}
-            <form
-              action="/products"
-              method="GET"
-              role="search"
-              className="relative flex items-center px-6 pb-4"
-            >
+
+            {/* A plain GET form: submitting reloads the page, which also
+                closes the menu. */}
+            <form action="/products" method="GET" role="search" className="mobile-menu-search">
               <svg
                 width="18"
                 height="18"
                 viewBox="0 0 20 20"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="2"
-                className="text-foreground/50 pointer-events-none absolute start-9.5"
+                strokeWidth="1.8"
                 aria-hidden="true"
               >
                 <circle cx="9" cy="9" r="6.5" />
@@ -154,20 +172,15 @@ export function MobileNavMenu({
                 aria-label={searchPlaceholder}
                 enterKeyHint="search"
                 autoComplete="off"
-                className="field w-full min-w-0 rounded-full ps-11 pe-14 text-base shadow-sm"
               />
-              <button
-                type="submit"
-                aria-label={searchLabel}
-                className="bg-accent hover:bg-accent-deep active:bg-accent-deep absolute end-7 flex size-11 items-center justify-center rounded-full text-white transition-colors"
-              >
+              <button type="submit" aria-label={searchLabel}>
                 <svg
                   width="16"
                   height="16"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="2.5"
+                  strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   className="rtl:rotate-180"
@@ -177,18 +190,73 @@ export function MobileNavMenu({
                 </svg>
               </button>
             </form>
-            <nav className="flex flex-1 flex-col gap-1 px-6 pb-8">
-              {links.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setOpen(false)}
-                  className="border-foreground/10 text-foreground hover:text-accent border-b py-4 text-xl font-medium transition-colors"
-                >
-                  {link.label}
-                </Link>
-              ))}
+
+            <nav aria-label={menuLabel}>
+              <ul className="mobile-menu-links">
+                {links.map((link) => (
+                  <li key={link.href}>
+                    <Link href={link.href} onClick={close}>
+                      <span className="mobile-menu-thumb" aria-hidden="true">
+                        {link.imageUrl ? (
+                          <CatalogImage src={link.imageUrl} alt="" fill sizes="3.5rem" />
+                        ) : link.icon ? (
+                          <svg
+                            width="30"
+                            height="30"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.1"
+                            strokeLinejoin="round"
+                          >
+                            {ICONS[link.icon]}
+                          </svg>
+                        ) : null}
+                      </span>
+                      <span className="mobile-menu-label">{link.label}</span>
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        className="mobile-menu-chevron rtl:rotate-180"
+                        aria-hidden="true"
+                      >
+                        <path d="m9 6 6 6-6 6" />
+                      </svg>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </nav>
+
+            <div className="mobile-menu-closing">
+              <div className="mobile-menu-art" aria-hidden="true">
+                <Image src="/hero/perla-viola-murano.jpg" alt="" fill sizes="60vw" />
+              </div>
+              <p className="mobile-menu-tagline">
+                {tagline}
+                <BrandWave />
+              </p>
+              <SocialLinks urls={social} label={socialLabel} />
+              <nav aria-label={legalLabel}>
+                <ul className="footer-legal">
+                  {legal.map((link) => (
+                    <li key={link.href}>
+                      <Link href={link.href} onClick={close}>
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+              <p className="footer-copyright">
+                &copy; {new Date().getFullYear()} <span translate="no">{storeName}</span>
+              </p>
+            </div>
           </div>,
           document.body
         )}

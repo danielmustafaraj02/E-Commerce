@@ -16,6 +16,7 @@ import { ShelfItem } from "@/components/shelf-item";
 import { CategoryStrip } from "@/components/category-strip";
 import { Reveal } from "@/components/reveal";
 import { NewsletterSignupForm } from "@/components/newsletter-signup-form";
+import { JournalTeaser } from "@/components/journal/journal-teaser";
 import { homeFontClasses } from "./home-fonts";
 import "./home.css";
 
@@ -151,16 +152,26 @@ export default async function Home() {
       <section className="shelf-hero">
         <div className="shelf-wrap">
           <div className="shelf-hero-grid">
+            {/* Phones (below 52rem) swap in shorter copy via the -mobile/-desktop
+                spans (home.css): the header already shows the store name, so the
+                headline says what the pieces are instead. Desktop is unchanged. */}
             <div className="shelf-hero-copy">
               <h1 className="shelf-title">
-                <span translate="no">{settings.storeName}</span>
+                <span translate="no" className="shelf-hero-desktop">
+                  {settings.storeName}
+                </span>
+                <span className="shelf-hero-mobile">{dict.home.heroTagline}</span>
               </h1>
-              <p className="shelf-lede">{dict.home.heroSubtitle}</p>
+              <p className="shelf-lede">
+                <span className="shelf-hero-desktop">{dict.home.heroSubtitle}</span>
+                <span className="shelf-hero-mobile">{dict.home.heroMobileLede}</span>
+              </p>
               {settings.pricesIncludeTax && (
                 <p className="shelf-note">{dict.home.pricesIncludeTax}</p>
               )}
               <Link href="/products" className="shelf-button">
-                {dict.home.shopNow}
+                <span className="shelf-hero-desktop">{dict.home.shopNow}</span>
+                <span className="shelf-hero-mobile">{dict.home.shopCollection}</span>
               </Link>
               <ul className="shelf-facts">
                 {facts.map((fact) => (
@@ -324,6 +335,8 @@ export default async function Home() {
           </div>
         </section>
       )}
+
+      <JournalTeaser dict={dict.journal} />
 
       <section className="shelf-section">
         <div className="shelf-wrap">

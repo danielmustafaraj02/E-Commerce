@@ -93,6 +93,14 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     isPaypalConfigured(),
   ]);
   const dict = getDictionary(locale);
+  const social = {
+    facebookUrl: settings.facebookUrl,
+    instagramUrl: settings.instagramUrl,
+    twitterUrl: settings.twitterUrl,
+    tiktokUrl: settings.tiktokUrl,
+    youtubeUrl: settings.youtubeUrl,
+    linkedinUrl: settings.linkedinUrl,
+  };
   const shippingBanner = await getShippingBanner(
     dict.product.shippingBanner,
     settings.defaultCurrency,
@@ -196,6 +204,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           logoUrl={settings.logoUrl}
           locale={locale}
           dict={dict}
+          social={social}
         />
         {children}
         <FloatingCheckoutButton label={dict.cart.checkout} />
@@ -205,14 +214,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           shippingBanner={shippingBanner}
           dict={dict}
           locale={locale}
-          social={{
-            facebookUrl: settings.facebookUrl,
-            instagramUrl: settings.instagramUrl,
-            twitterUrl: settings.twitterUrl,
-            tiktokUrl: settings.tiktokUrl,
-            youtubeUrl: settings.youtubeUrl,
-            linkedinUrl: settings.linkedinUrl,
-          }}
+          social={social}
           payments={{
             cards: cardsEnabled,
             paypal: paypalEnabled,
