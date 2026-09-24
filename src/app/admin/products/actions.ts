@@ -7,7 +7,10 @@ import { db } from "@/lib/db";
 import { requireStaff, requireAdmin } from "@/lib/require-admin";
 import { writeAuditLog } from "@/lib/audit-log";
 import { compareAtPriceError } from "@/lib/price-history";
+<<<<<<< HEAD
 import { GIFT_STYLES, GIFT_OCCASIONS, GIFT_RECIPIENTS } from "@/lib/gift-finder";
+=======
+>>>>>>> main
 
 const productSchema = z.object({
   name: z.string().min(1).max(200),
