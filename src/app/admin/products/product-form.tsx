@@ -33,6 +33,7 @@ export type ProductFormValues = {
   story: string;
   storyEn: string | null;
   price: number; // cents
+  compareAtPrice: number | null; // cents
   sku: string;
   stockQty: number;
   lowStockThreshold: number;
@@ -332,6 +333,26 @@ export function ProductForm({
           <input name="sku" required defaultValue={initial?.sku} className="field" />
         </label>
       </div>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Compare-at price (optional)</span>
+        <input
+          name="compareAtPrice"
+          type="number"
+          min={0}
+          step="0.01"
+          defaultValue={
+            initial?.compareAtPrice !== null && initial?.compareAtPrice !== undefined
+              ? initial.compareAtPrice / 100
+              : undefined
+          }
+          className="field"
+        />
+        <span className="text-foreground/60 text-xs">
+          The original price, shown crossed out. Leave blank normally — set this only while the
+          price above is genuinely discounted, to feature the product in the homepage &quot;Special
+          Selection&quot;.
+        </span>
+      </label>
       <label className="flex cursor-pointer items-center gap-2 text-sm">
         <input
           type="checkbox"

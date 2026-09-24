@@ -38,6 +38,10 @@ const productSchema = z.object({
   story: z.string().max(2000).optional(),
   storyEn: z.string().max(2000).optional(),
   price: z.coerce.number().nonnegative(),
+  // Display-only "was" price for the homepage Special Selection — never
+  // charged. Optional; the section only shows a product once this is set
+  // higher than price.
+  compareAtPrice: z.coerce.number().nonnegative().optional(),
   sku: z.string().min(1).max(100),
   stockQty: z.coerce.number().int().nonnegative(),
   lowStockThreshold: z.coerce.number().int().nonnegative(),
@@ -93,6 +97,7 @@ function parseProductForm(formData: FormData) {
     story: formData.get("story") || undefined,
     storyEn: formData.get("storyEn") || undefined,
     price: formData.get("price"),
+    compareAtPrice: formData.get("compareAtPrice") || undefined,
     sku: formData.get("sku"),
     stockQty: formData.get("stockQty"),
     lowStockThreshold: formData.get("lowStockThreshold"),
@@ -112,7 +117,7 @@ export async function createProduct(_prevState: unknown, formData: FormData) {
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
-  const { imageUrls, price, costPrice, ...fields } = parsed.data;
+  const { imageUrls, price, compareAtPrice, costPrice, ...fields } = parsed.data;
   const images = parseImageUrls(imageUrls);
 
   let product;
@@ -121,6 +126,7 @@ export async function createProduct(_prevState: unknown, formData: FormData) {
       data: {
         ...fields,
         price: Math.round(price * 100),
+        compareAtPrice: compareAtPrice !== undefined ? Math.round(compareAtPrice * 100) : undefined,
         costPrice: costPrice !== undefined ? Math.round(costPrice * 100) : undefined,
         images: {
           create: images.map((img, position) => ({
@@ -159,6 +165,7 @@ export async function updateProduct(productId: string, _prevState: unknown, form
   const {
     imageUrls,
     price,
+    compareAtPrice,
     costPrice,
     supplierId,
     supplierSku,
@@ -200,6 +207,7 @@ export async function updateProduct(productId: string, _prevState: unknown, form
         price: Math.round(price * 100),
         // Explicit null (not undefined) so clearing these in the edit form
         // actually clears them — Prisma's `update` skips undefined fields.
+        compareAtPrice: compareAtPrice !== undefined ? Math.round(compareAtPrice * 100) : null,
         costPrice: costPrice !== undefined ? Math.round(costPrice * 100) : null,
         supplierId: supplierId ?? null,
         supplierSku: supplierSku ?? null,

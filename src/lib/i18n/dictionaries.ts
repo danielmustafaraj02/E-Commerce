@@ -42,6 +42,7 @@ const en = {
   },
   home: {
     heroEyebrow: "Welcome",
+    heroImageAlt: "Handmade red Murano glass bead necklace",
     // Intentionally store-specific rather than the platform-generic
     // wording this string used to carry — the store owner explicitly
     // asked for these exact phrases ("authentic Venetian lampwork glass",
@@ -54,6 +55,10 @@ const en = {
     shopNow: "Shop now",
     pricesIncludeTax: "All prices shown include VAT/IVA.",
     newArrivals: "New arrivals",
+    specialSelectionTitle: "Selected pieces, special prices.",
+    specialSelectionSubtitle:
+      "Discover a selection of handmade Murano glass jewelry at special prices, available while supplies last.",
+    specialSelectionCta: "Discover the selection",
     bestSellers: "Best sellers",
     shopByCategory: "Shop by category",
     whyUsTitle: "Why shop with us",
@@ -427,6 +432,8 @@ const en = {
     discount: "Discount",
     shipping: "Shipping",
     freeShippingApplied: "You qualify for free shipping!",
+    importDutiesNotice:
+      "Import duties and taxes for deliveries outside the EU are not included and are the recipient's responsibility.",
     includesVat: "Includes VAT/IVA",
     vat: "VAT/IVA",
     total: "Total",
@@ -593,11 +600,16 @@ const it: Dictionary = {
   },
   home: {
     heroEyebrow: "Benvenuto",
+    heroImageAlt: "Collana artigianale di perle in vetro di Murano rosso",
     heroSubtitle:
       "Vetro veneziano autentico lavorato a lume, fatto a mano a Murano, Italia — tradizione artigianale italiana, una perla alla volta.",
     shopNow: "Fai acquisti",
     pricesIncludeTax: "Tutti i prezzi mostrati includono IVA.",
     newArrivals: "Nuovi arrivi",
+    specialSelectionTitle: "Pezzi selezionati, prezzi speciali.",
+    specialSelectionSubtitle:
+      "Scopri una selezione di gioielli in vetro di Murano fatti a mano a prezzi speciali, disponibili fino a esaurimento scorte.",
+    specialSelectionCta: "Scopri la selezione",
     bestSellers: "I più venduti",
     shopByCategory: "Acquista per categoria",
     whyUsTitle: "Perché scegliere noi",
@@ -979,6 +991,8 @@ const it: Dictionary = {
     discount: "Sconto",
     shipping: "Spedizione",
     freeShippingApplied: "Hai diritto alla spedizione gratuita!",
+    importDutiesNotice:
+      "I dazi doganali e le imposte per le consegne fuori dall'UE non sono inclusi e sono a carico del destinatario.",
     includesVat: "IVA inclusa",
     vat: "IVA",
     total: "Totale",
@@ -1146,11 +1160,16 @@ const fr: Dictionary = {
   },
   home: {
     heroEyebrow: "Bienvenue",
+    heroImageAlt: "Collier artisanal en perles de verre de Murano rouge",
     heroSubtitle:
       "Verre vénitien authentique travaillé au chalumeau, fabriqué à la main à Murano, Italie — savoir-faire artisanal italien, une perle à la fois.",
     shopNow: "Achetez maintenant",
     pricesIncludeTax: "Tous les prix affichés incluent la TVA.",
     newArrivals: "Nouveautés",
+    specialSelectionTitle: "Pièces sélectionnées, prix spéciaux.",
+    specialSelectionSubtitle:
+      "Découvrez une sélection de bijoux en verre de Murano faits main à prix spéciaux, disponible jusqu'à épuisement des stocks.",
+    specialSelectionCta: "Découvrir la sélection",
     bestSellers: "Meilleures ventes",
     shopByCategory: "Acheter par catégorie",
     whyUsTitle: "Pourquoi acheter chez nous",
@@ -1535,6 +1554,8 @@ const fr: Dictionary = {
     discount: "Réduction",
     shipping: "Livraison",
     freeShippingApplied: "Vous bénéficiez de la livraison gratuite !",
+    importDutiesNotice:
+      "Les droits de douane et taxes pour les livraisons hors UE ne sont pas inclus et restent à la charge du destinataire.",
     includesVat: "TVA incluse",
     vat: "TVA",
     total: "Total",
@@ -1703,11 +1724,16 @@ const de: Dictionary = {
   },
   home: {
     heroEyebrow: "Willkommen",
+    heroImageAlt: "Handgefertigte Halskette aus roten Muranoglasperlen",
     heroSubtitle:
       "Authentisches venezianisches Lampenglas, handgefertigt in Murano, Italien — italienische Handwerkstradition, eine Perle nach der anderen.",
     shopNow: "Jetzt einkaufen",
     pricesIncludeTax: "Alle angezeigten Preise verstehen sich inklusive Mehrwertsteuer.",
     newArrivals: "Neuheiten",
+    specialSelectionTitle: "Ausgewählte Stücke, besondere Preise.",
+    specialSelectionSubtitle:
+      "Entdecken Sie eine Auswahl handgefertigten Muranoglas-Schmucks zu besonderen Preisen, erhältlich nur solange der Vorrat reicht.",
+    specialSelectionCta: "Auswahl entdecken",
     bestSellers: "Bestseller",
     shopByCategory: "Nach Kategorie einkaufen",
     whyUsTitle: "Warum bei uns einkaufen",
@@ -2091,6 +2117,8 @@ const de: Dictionary = {
     discount: "Rabatt",
     shipping: "Versand",
     freeShippingApplied: "Sie haben Anspruch auf kostenlosen Versand!",
+    importDutiesNotice:
+      "Einfuhrzölle und Steuern für Lieferungen außerhalb der EU sind nicht enthalten und gehen zulasten des Empfängers.",
     includesVat: "inkl. MwSt.",
     vat: "MwSt.",
     total: "Gesamt",
@@ -2250,7 +2278,7 @@ const ar: Dictionary = {
     newsletterTitle: "ابقَ على اطلاع",
     newsletterBody:
       "قطع جديدة وعروض بين الحين والآخر — بلا رسائل مزعجة، ويمكنك إلغاء الاشتراك في أي وقت.",
-    newsletterPlaceholder: "you@example.com",
+    newsletterPlaceholder: "أنت@example.com",
     newsletterSubmit: "اشترك",
     newsletterSubmitting: "جارٍ الاشتراك…",
     newsletterSuccess: "تم تسجيلك بنجاح — شكرًا لك!",
@@ -2259,11 +2287,16 @@ const ar: Dictionary = {
   },
   home: {
     heroEyebrow: "أهلاً بك",
+    heroImageAlt: "عقد يدوي الصنع من خرز زجاج مورانو الأحمر",
     heroSubtitle:
       "زجاج فينيسي أصيل مصنوع بتقنية اللهب، مصنوع يدويًا في مورانو بإيطاليا — حرفية إيطالية تقليدية، خرزة تلو الأخرى.",
     shopNow: "تسوّق الآن",
     pricesIncludeTax: "جميع الأسعار المعروضة تشمل ضريبة القيمة المضافة.",
     newArrivals: "وصل حديثًا",
+    specialSelectionTitle: "قطع مختارة، أسعار خاصة.",
+    specialSelectionSubtitle:
+      "اكتشف مجموعة مختارة من مجوهرات زجاج مورانو المصنوعة يدويًا بأسعار خاصة، متوفرة حتى نفاد الكمية.",
+    specialSelectionCta: "اكتشف المجموعة",
     bestSellers: "الأكثر مبيعًا",
     shopByCategory: "تسوّق حسب الفئة",
     whyUsTitle: "لماذا تتسوق معنا",
@@ -2625,6 +2658,8 @@ const ar: Dictionary = {
     discount: "الخصم",
     shipping: "الشحن",
     freeShippingApplied: "أنت مؤهل للشحن المجاني!",
+    importDutiesNotice:
+      "لا تشمل هذه التكلفة الرسوم الجمركية والضرائب على الشحنات خارج الاتحاد الأوروبي، وهي على مسؤولية المستلم.",
     includesVat: "شامل ضريبة القيمة المضافة",
     vat: "ضريبة القيمة المضافة",
     total: "الإجمالي",
@@ -2779,7 +2814,7 @@ const zh: Dictionary = {
     tagline: "手工制作，用心包装寄出。",
     newsletterTitle: "获取最新资讯",
     newsletterBody: "新品上架和偶尔的优惠信息——绝不打扰，随时可取消订阅。",
-    newsletterPlaceholder: "you@example.com",
+    newsletterPlaceholder: "您@example.com",
     newsletterSubmit: "订阅",
     newsletterSubmitting: "订阅中…",
     newsletterSuccess: "订阅成功，谢谢！",
@@ -2788,11 +2823,16 @@ const zh: Dictionary = {
   },
   home: {
     heroEyebrow: "欢迎光临",
+    heroImageAlt: "手工制作的红色穆拉诺玻璃珠项链",
     heroSubtitle:
       "源自威尼斯的正宗灯工玻璃，在意大利穆拉诺岛手工制作——传承的意大利工艺，一颗玻璃珠一颗玻璃珠地打磨而成。",
     shopNow: "立即选购",
     pricesIncludeTax: "所有显示价格均含增值税。",
     newArrivals: "新品上架",
+    specialSelectionTitle: "精选臻品，特惠价格。",
+    specialSelectionSubtitle:
+      "探索精选的穆拉诺手工玻璃饰品，特惠价格，数量有限，售完为止。",
+    specialSelectionCta: "探索精选",
     bestSellers: "热销商品",
     shopByCategory: "按分类选购",
     whyUsTitle: "为什么选择我们",
@@ -3143,6 +3183,7 @@ const zh: Dictionary = {
     discount: "优惠",
     shipping: "运费",
     freeShippingApplied: "您已符合免费配送条件！",
+    importDutiesNotice: "欧盟以外地区的进口关税和税费不包含在内，由收件人自行承担。",
     includesVat: "含增值税",
     vat: "增值税",
     total: "总计",
@@ -3295,7 +3336,7 @@ const ru: Dictionary = {
     newsletterTitle: "Будьте в курсе",
     newsletterBody:
       "Новые изделия и редкие акции — никакого спама, отписаться можно в любой момент.",
-    newsletterPlaceholder: "you@example.com",
+    newsletterPlaceholder: "вы@example.com",
     newsletterSubmit: "Подписаться",
     newsletterSubmitting: "Оформляем подписку…",
     newsletterSuccess: "Вы подписаны — спасибо!",
@@ -3304,11 +3345,16 @@ const ru: Dictionary = {
   },
   home: {
     heroEyebrow: "Добро пожаловать",
+    heroImageAlt: "Ожерелье ручной работы из красных муранских стеклянных бусин",
     heroSubtitle:
       "Подлинное венецианское стекло ручной работы на горелке, изготовленное вручную на острове Мурано в Италии — итальянское мастерство, передаваемое из поколения в поколение, бусина за бусиной.",
     shopNow: "В магазин",
     pricesIncludeTax: "Все указанные цены включают НДС.",
     newArrivals: "Новинки",
+    specialSelectionTitle: "Избранные изделия, особые цены.",
+    specialSelectionSubtitle:
+      "Откройте для себя подборку украшений ручной работы из муранского стекла по особым ценам — количество ограничено.",
+    specialSelectionCta: "Смотреть подборку",
     bestSellers: "Хиты продаж",
     shopByCategory: "Покупки по категориям",
     whyUsTitle: "Почему стоит выбрать нас",
@@ -3691,6 +3737,8 @@ const ru: Dictionary = {
     discount: "Скидка",
     shipping: "Доставка",
     freeShippingApplied: "Вам доступна бесплатная доставка!",
+    importDutiesNotice:
+      "Импортные пошлины и налоги при доставке за пределы ЕС не включены и оплачиваются получателем.",
     includesVat: "с учётом НДС",
     vat: "НДС",
     total: "Итого",
@@ -3857,11 +3905,16 @@ const es: Dictionary = {
   },
   home: {
     heroEyebrow: "Bienvenido",
+    heroImageAlt: "Collar artesanal de cuentas de vidrio de Murano rojo",
     heroSubtitle:
       "Vidrio veneciano auténtico trabajado a la llama, hecho a mano en Murano, Italia — artesanía tradicional italiana, una cuenta a la vez.",
     shopNow: "Comprar ahora",
     pricesIncludeTax: "Todos los precios mostrados incluyen IVA.",
     newArrivals: "Novedades",
+    specialSelectionTitle: "Piezas seleccionadas, precios especiales.",
+    specialSelectionSubtitle:
+      "Descubre una selección de joyas artesanales de vidrio de Murano a precios especiales, disponibles hasta agotar existencias.",
+    specialSelectionCta: "Descubrir la selección",
     bestSellers: "Más vendidos",
     shopByCategory: "Comprar por categoría",
     whyUsTitle: "Por qué comprar con nosotros",
@@ -4242,6 +4295,8 @@ const es: Dictionary = {
     discount: "Descuento",
     shipping: "Envío",
     freeShippingApplied: "¡Tienes envío gratis!",
+    importDutiesNotice:
+      "Los aranceles de importación e impuestos para envíos fuera de la UE no están incluidos y corren a cargo del destinatario.",
     includesVat: "IVA incluido",
     vat: "IVA",
     total: "Total",
@@ -4407,11 +4462,16 @@ const pt: Dictionary = {
   },
   home: {
     heroEyebrow: "Bem-vindo",
+    heroImageAlt: "Colar artesanal de contas em vidro de Murano vermelho",
     heroSubtitle:
       "Vidro veneziano autêntico trabalhado ao maçarico, feito à mão em Murano, Itália — artesanato tradicional italiano, uma conta de cada vez.",
     shopNow: "Comprar agora",
     pricesIncludeTax: "Todos os preços apresentados incluem IVA.",
     newArrivals: "Novidades",
+    specialSelectionTitle: "Peças selecionadas, preços especiais.",
+    specialSelectionSubtitle:
+      "Descubra uma seleção de joias artesanais em vidro de Murano a preços especiais, disponíveis até esgotar o stock.",
+    specialSelectionCta: "Descobrir a seleção",
     bestSellers: "Mais vendidos",
     shopByCategory: "Comprar por categoria",
     whyUsTitle: "Porquê comprar connosco",
@@ -4793,6 +4853,8 @@ const pt: Dictionary = {
     discount: "Desconto",
     shipping: "Envio",
     freeShippingApplied: "Tem direito a envio gratuito!",
+    importDutiesNotice:
+      "Os direitos aduaneiros e impostos de importação para entregas fora da UE não estão incluídos e são da responsabilidade do destinatário.",
     includesVat: "IVA incluído",
     vat: "IVA",
     total: "Total",
@@ -4949,7 +5011,7 @@ const hi: Dictionary = {
     tagline: "हाथ से बने उत्पाद, सावधानी से भेजे गए।",
     newsletterTitle: "अपडेट पाते रहें",
     newsletterBody: "नए उत्पाद और कभी-कभार ऑफर — कोई स्पैम नहीं, कभी भी सदस्यता रद्द करें।",
-    newsletterPlaceholder: "you@example.com",
+    newsletterPlaceholder: "आप@example.com",
     newsletterSubmit: "सब्सक्राइब करें",
     newsletterSubmitting: "सब्सक्राइब हो रहा है…",
     newsletterSuccess: "आप सूची में जुड़ गए हैं — धन्यवाद!",
@@ -4958,11 +5020,16 @@ const hi: Dictionary = {
   },
   home: {
     heroEyebrow: "स्वागत है",
+    heroImageAlt: "हाथ से बनी लाल मुरानो ग्लास मनकों की माला",
     heroSubtitle:
       "प्रामाणिक वेनिसियन लैंपवर्क ग्लास, इटली के मुरानो में हाथ से बना — पारंपरिक इतालवी शिल्पकला, एक-एक मनका करके।",
     shopNow: "अभी खरीदें",
     pricesIncludeTax: "दिखाई गई सभी कीमतों में VAT/IVA शामिल है।",
     newArrivals: "नए आगमन",
+    specialSelectionTitle: "चुनिंदा टुकड़े, खास कीमतें।",
+    specialSelectionSubtitle:
+      "हाथ से बनी मुरानो ग्लास ज्वेलरी का चुनिंदा संग्रह खास कीमतों पर देखें, स्टॉक खत्म होने तक उपलब्ध।",
+    specialSelectionCta: "संग्रह देखें",
     bestSellers: "बेस्ट सेलर",
     shopByCategory: "श्रेणी के अनुसार खरीदारी करें",
     whyUsTitle: "हमारे साथ खरीदारी क्यों करें",
@@ -5337,6 +5404,8 @@ const hi: Dictionary = {
     discount: "छूट",
     shipping: "शिपिंग",
     freeShippingApplied: "आप मुफ़्त शिपिंग के पात्र हैं!",
+    importDutiesNotice:
+      "यूरोपीय संघ के बाहर डिलीवरी के लिए आयात शुल्क और कर शामिल नहीं हैं और ये प्राप्तकर्ता की ज़िम्मेदारी हैं।",
     includesVat: "VAT/IVA शामिल",
     vat: "VAT/IVA",
     total: "कुल",
@@ -5503,11 +5572,16 @@ const ja: Dictionary = {
   },
   home: {
     heroEyebrow: "ようこそ",
+    heroImageAlt: "手作りの赤いムラノガラスビーズネックレス",
     heroSubtitle:
       "本場ヴェネツィアのランプワークガラス、イタリア・ムラノ島で手作り — 伝統のイタリア職人技を、ひと粒ひと粒に込めて。",
     shopNow: "今すぐ購入",
     pricesIncludeTax: "表示価格はすべて付加価値税(VAT/IVA)込みです。",
     newArrivals: "新着商品",
+    specialSelectionTitle: "厳選アイテム、特別価格。",
+    specialSelectionSubtitle:
+      "ムラノガラスのハンドメイドジュエリーを特別価格でセレクトしました。在庫がなくなり次第終了です。",
+    specialSelectionCta: "セレクションを見る",
     bestSellers: "人気商品",
     shopByCategory: "カテゴリーから探す",
     whyUsTitle: "当店が選ばれる理由",
@@ -5889,6 +5963,7 @@ const ja: Dictionary = {
     discount: "割引",
     shipping: "送料",
     freeShippingApplied: "送料無料が適用されます!",
+    importDutiesNotice: "EU域外への配送にかかる輸入関税・税金は含まれておらず、受取人のご負担となります。",
     includesVat: "VAT/IVA込み",
     vat: "VAT/IVA",
     total: "合計",

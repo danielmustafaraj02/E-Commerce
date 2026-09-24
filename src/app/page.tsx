@@ -14,6 +14,7 @@ import { truncateAtWord } from "@/lib/text";
 import { CatalogImage } from "@/components/catalog-image";
 import { ShelfItem } from "@/components/shelf-item";
 import { CategoryStrip } from "@/components/category-strip";
+import { Reveal } from "@/components/reveal";
 import { NewsletterSignupForm } from "@/components/newsletter-signup-form";
 import { homeFontClasses } from "./home-fonts";
 import "./home.css";
@@ -77,8 +78,11 @@ const SHELF_SIZE = 4;
 const NEW_ARRIVALS_SIZE = 8;
 
 export default async function Home() {
-  const [settings, locale, { products, categoriesWithImage, bestSellers, reviews }] =
-    await Promise.all([getStoreSettings(), getLocale(), getHomepageData()]);
+  const [
+    settings,
+    locale,
+    { products, specialSelection, categoriesWithImage, bestSellers, reviews },
+  ] = await Promise.all([getStoreSettings(), getLocale(), getHomepageData()]);
   const dict = getDictionary(locale);
   const testimonials = reviews
     .filter((review) => review.comment)
@@ -167,7 +171,7 @@ export default async function Home() {
             <div className="shelf-bead">
               <Image
                 src="/hero/perla-viola-murano.jpg"
-                alt=""
+                alt={dict.home.heroImageAlt}
                 fill
                 priority
                 sizes="(min-width: 52rem) 36vw, 100vw"
@@ -246,6 +250,35 @@ export default async function Home() {
                 />
               ))}
             </ul>
+          </div>
+        </section>
+      )}
+
+      {specialSelection.length > 0 && (
+        <section className="shelf-section">
+          <div className="shelf-wrap">
+            <Reveal>
+              <div className="shelf-heading-row">
+                <div>
+                  <h2 className="shelf-heading">{dict.home.specialSelectionTitle}</h2>
+                  <p className="shelf-special-subtitle">{dict.home.specialSelectionSubtitle}</p>
+                </div>
+              </div>
+              <ul className="shelf-row shelf-row--special">
+                {specialSelection.map((product) => (
+                  <ShelfItem
+                    key={product.slug}
+                    product={localizedCardProduct(product, locale)}
+                    {...shelfProps}
+                  />
+                ))}
+              </ul>
+              <div className="shelf-special-cta">
+                <Link href="/products" className="shelf-button">
+                  {dict.home.specialSelectionCta}
+                </Link>
+              </div>
+            </Reveal>
           </div>
         </section>
       )}

@@ -258,6 +258,10 @@ model Product {
   story             String   @default("")
   storyEn           String?
   price             Int // cents, tax-inclusive display price (see StoreSettings.pricesIncludeTax)
+  // Display-only "was" price for the homepage Special Selection (cents) — set
+  // by staff, never charged. A product is eligible for that section only
+  // while this is set and higher than `price` (see lib/homepage-data.ts).
+  compareAtPrice    Int?
   currency          String   @default("EUR")
   sku               String   @unique
   stockQty          Int      @default(0)

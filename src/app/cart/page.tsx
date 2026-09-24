@@ -22,6 +22,7 @@ export default async function CartPage() {
           locale={settings.defaultLocale}
           uiLocale={uiLocale}
           dict={dict.cart}
+          shippingBanner={dict.product.shippingBanner}
           freeShippingThreshold={settings.freeShippingThreshold}
           stripePublishableKey={stripePublishableKey}
         />
