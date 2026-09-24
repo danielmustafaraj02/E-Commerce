@@ -309,31 +309,3 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
-
-/* -- Homepage teaser (components/journal/journal-teaser.tsx) --------------- */
-.journal-teaser {
-  display: grid;
-  gap: 2rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.journal-teaser a {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  color: var(--ink);
-  text-decoration: none;
-}
-@media (min-width: 48rem) {
-  .journal-teaser {
-    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-    grid-template-rows: auto auto;
-  }
-  .journal-teaser-featured {
-    grid-row: 1 / span 2;
-  }
-  .journal-teaser-featured .journal-related-title {
-    font-size: 1.7rem;
-  }
-}
