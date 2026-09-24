@@ -258,9 +258,11 @@ model Product {
   story             String   @default("")
   storyEn           String?
   price             Int // cents, tax-inclusive display price (see StoreSettings.pricesIncludeTax)
-  // Display-only "was" price for the homepage Special Selection (cents) — set
-  // by staff, never charged. A product is eligible for that section only
-  // while this is set and higher than `price` (see lib/homepage-data.ts).
+  // Display-only "was" price (cents), shown crossed out with a discount badge
+  // — never charged. Staff can only set it to at most the lowest price in the
+  // 30 days before the current price took effect (EU Omnibus rule, checked
+  // against ProductPriceChange in lib/price-history.ts). Shown only while
+  // higher than `price`.
   compareAtPrice    Int?
   currency          String   @default("EUR")
   sku               String   @unique
@@ -292,6 +294,7 @@ model Product {
   orderItems    OrderItem[]
   reviews       Review[]
   wishlistItems WishlistItem[]
+  priceChanges  ProductPriceChange[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -299,6 +302,20 @@ model Product {
   @@index([categoryId])
   @@index([supplierId])
   @@index([active, createdAt])
+}
+
+// Every price a product has had. Written by a database trigger on Product
+// (see migration 20260924120000_add_product_price_history), not by app code,
+// so admin edits, scripts and raw SQL are all recorded. Backs the Omnibus
+// check on compareAtPrice.
+model ProductPriceChange {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  price     Int // cents
+  changedAt DateTime @default(now())
+
+  @@index([productId, changedAt])
 }
 
 // ---------------------------------------------------------------------------

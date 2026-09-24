@@ -95,7 +95,12 @@ async function main() {
     }
 
     if (product.price !== price) {
-      await db.product.update({ where: { id: product.id }, data: { price } });
+      // Also ends any discount, whose compare-at price was checked against the
+      // old price (lib/price-history.ts).
+      await db.product.update({
+        where: { id: product.id },
+        data: { price, compareAtPrice: null },
+      });
       console.log(`Updated "${product.name}": ${from} -> ${to}`);
     }
     updated++;

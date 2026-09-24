@@ -32,7 +32,11 @@ async function main() {
     return;
   }
 
-  await db.product.updateMany({ data: { price: { increment: increaseCents } } });
+  // A price change ends any discount: its compare-at price was checked against
+  // the old price history (lib/price-history.ts), not this one.
+  await db.product.updateMany({
+    data: { price: { increment: increaseCents }, compareAtPrice: null },
+  });
 
   console.log(`\nDone. ${products.length} product(s) increased by €${euros.toFixed(2)}.`);
 }

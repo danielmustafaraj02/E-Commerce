@@ -4,6 +4,7 @@ const mocks = vi.hoisted(() => ({
   create: vi.fn(),
   update: vi.fn(),
   findUnique: vi.fn(),
+  priceHistory: vi.fn(),
   requireStaff: vi.fn(),
   writeAuditLog: vi.fn(),
   redirect: vi.fn(),
@@ -22,6 +23,7 @@ vi.mock("@/lib/db", () => ({
       update: mocks.update,
       findUnique: mocks.findUnique,
     },
+    productPriceChange: { findMany: mocks.priceHistory },
   },
 }));
 vi.mock("@/lib/require-admin", () => ({
@@ -51,17 +53,20 @@ beforeEach(() => {
   vi.resetAllMocks();
   mocks.requireStaff.mockResolvedValue({ user: { id: "staff1" } });
   mocks.create.mockResolvedValue({ id: "p1" });
-  mocks.findUnique.mockResolvedValue({ id: "p1", name: "Collana Fiore" });
+  mocks.findUnique.mockResolvedValue({ id: "p1", name: "Collana Fiore", currency: "EUR" });
+  // Priced at €89 for the last 60 days.
+  mocks.priceHistory.mockResolvedValue([
+    { price: 8900, changedAt: new Date(Date.now() - 60 * 86_400_000) },
+  ]);
   mocks.update.mockResolvedValue({ id: "p1" });
 });
 
 describe("createProduct compareAtPrice", () => {
-  it("stores an admin-entered compare-at price in cents", async () => {
-    await expect(createProduct(null, form({ compareAtPrice: "69" }))).rejects.toThrow(
-      "NEXT_REDIRECT"
-    );
+  it("refuses a compare-at price, since a new product has no earlier price", async () => {
+    const result = await createProduct(null, form({ compareAtPrice: "99" }));
 
-    expect(mocks.create.mock.calls[0][0].data.compareAtPrice).toBe(6900);
+    expect(result).toEqual({ error: expect.stringMatching(/Omnibus/) });
+    expect(mocks.create).not.toHaveBeenCalled();
   });
 
   it("leaves compareAtPrice unset when left blank", async () => {
@@ -72,12 +77,29 @@ describe("createProduct compareAtPrice", () => {
 });
 
 describe("updateProduct compareAtPrice", () => {
-  it("stores an admin-entered compare-at price in cents", async () => {
-    await expect(updateProduct("p1", null, form({ compareAtPrice: "69" }))).rejects.toThrow(
-      "NEXT_REDIRECT"
-    );
+  it("stores the earlier price in cents when the price is reduced in the same save", async () => {
+    await expect(
+      updateProduct("p1", null, form({ price: "69", compareAtPrice: "89" }))
+    ).rejects.toThrow("NEXT_REDIRECT");
 
-    expect(mocks.update.mock.calls[0][0].data.compareAtPrice).toBe(6900);
+    expect(mocks.priceHistory).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { productId: "p1" } })
+    );
+    expect(mocks.update.mock.calls[0][0].data.compareAtPrice).toBe(8900);
+  });
+
+  it("refuses a compare-at price above the lowest price of the last 30 days", async () => {
+    const result = await updateProduct("p1", null, form({ price: "69", compareAtPrice: "99" }));
+
+    expect(result).toEqual({ error: expect.stringMatching(/at most €89\.00/) });
+    expect(mocks.update).not.toHaveBeenCalled();
+  });
+
+  it("refuses a compare-at price when the price hasn't been reduced", async () => {
+    const result = await updateProduct("p1", null, form({ compareAtPrice: "99" }));
+
+    expect(result).toEqual({ error: expect.stringMatching(/hasn't been reduced/) });
+    expect(mocks.update).not.toHaveBeenCalled();
   });
 
   it("clears compareAtPrice (sets null, not undefined) when the field is left blank", async () => {

@@ -8,7 +8,7 @@ import { notFound } from "next/navigation";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
-import { formatMoney } from "@/lib/format";
+import { formatMoney, formatDiscountPercent } from "@/lib/format";
 import { absoluteUrl, toSafeJsonLd } from "@/lib/json-ld";
 import { buildReturnPolicy, buildShippingDetails } from "@/lib/offer-json-ld";
 import { productMaterial } from "@/lib/merchant-feed";
@@ -280,6 +280,12 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
   const material = productMaterial(product.category);
   const sizeKey = productSizeDictKey(product.category);
   const priceDisplay = formatMoney(product.price, product.currency, settings.defaultLocale);
+  // Same rule as the shelf cards: only a compare-at price above the current
+  // price is a discount (staff can't save an invalid one; see price-history).
+  const compareAtPrice =
+    product.compareAtPrice !== null && product.compareAtPrice > product.price
+      ? product.compareAtPrice
+      : null;
 
   // The same shape AddToCartButton/BuyNowButton/WishlistButton each need —
   // computed once instead of three identical object literals.
@@ -402,7 +408,17 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
               </p>
 
               <p className="shop-price">
+                {compareAtPrice !== null && (
+                  <s className="shop-price-compare">
+                    {formatMoney(compareAtPrice, product.currency, settings.defaultLocale)}
+                  </s>
+                )}
                 {priceDisplay}
+                {compareAtPrice !== null && (
+                  <span className="shop-discount-badge">
+                    {formatDiscountPercent(product.price, compareAtPrice, settings.defaultLocale)}
+                  </span>
+                )}
                 {settings.pricesIncludeTax && (
                   <span className="text-foreground/60 ml-2 text-sm">
                     {dict.product.vatIncluded}

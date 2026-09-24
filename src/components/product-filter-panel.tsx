@@ -43,6 +43,7 @@ export function ProductFilterPanel({
     minPrice?: number;
     maxPrice?: number;
     inStock?: "1";
+    sale?: "1";
     color?: string[];
   };
   priceMin: number;
@@ -113,6 +114,7 @@ export function ProductFilterPanel({
           className="mt-5 hidden flex-col gap-5 peer-checked:flex sm:!flex sm:flex-col"
         >
           {filters.q && <input type="hidden" name="q" value={filters.q} />}
+          {filters.sale && <input type="hidden" name="sale" value={filters.sale} />}
 
           {showCategory && categories && (
             <div className="flex flex-col gap-1.5">

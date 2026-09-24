@@ -348,9 +348,10 @@ export function ProductForm({
           className="field"
         />
         <span className="text-foreground/60 text-xs">
-          The original price, shown crossed out. Leave blank normally — set this only while the
-          price above is genuinely discounted, to feature the product in the homepage &quot;Special
-          Selection&quot;.
+          The earlier price, shown crossed out with a discount badge and in the homepage
+          &quot;Special Selection&quot;. Leave blank normally. EU rules allow at most the lowest
+          price this product had in the 30 days before the current price, so lower the price first
+          (or in the same save). Price changes made by scripts clear it.
         </span>
       </label>
       <label className="flex cursor-pointer items-center gap-2 text-sm">

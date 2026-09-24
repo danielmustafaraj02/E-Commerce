@@ -447,6 +447,24 @@
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
+.shop-price-compare {
+  color: var(--ink-soft);
+  font-size: 1.15rem;
+  font-weight: 400;
+  margin-inline-end: 0.6rem;
+}
+/* Same restrained look as .shelf-discount-badge on the product cards. */
+.shop-discount-badge {
+  display: inline-block;
+  vertical-align: middle;
+  margin-inline-start: 0.6rem;
+  color: var(--accent-deep);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  padding: 0.1rem 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--accent-deep) 30%, transparent);
+  border-radius: 2px;
+}
 .shop-prose {
   margin: 1.5rem 0 0;
   max-width: 34rem;
