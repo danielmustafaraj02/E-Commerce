@@ -55,7 +55,7 @@ export function CartClient({
 
   if (items.length === 0) {
     return (
-      <EmptyShelf title={dict.empty} body={dict.emptyBody} cta={dict.browse} />
+      <EmptyShelf icon="cart" title={dict.empty} body={dict.emptyBody} cta={dict.browse} />
     );
   }
 

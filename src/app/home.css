@@ -28,13 +28,13 @@
    ------------------------------------------------------------------------- */
 
 .shelf {
-  /* Warm ivory and soft pearl bands instead of coloured tints: the glass in
-     the photographs is the only saturated thing on the page. */
-  --ground: #f7f3ec;
-  --tint-lilac: #efe9df;
-  --tint-aqua: #f7f3ec;
-  --tint-sand: #efe9df;
-  --tint-blush: #f3eee6;
+  /* White pages with barely-warm bands instead of coloured tints: the glass
+     in the photographs is the only saturated thing on the page. */
+  --ground: #fff;
+  --tint-lilac: #faf8f5;
+  --tint-aqua: #fff;
+  --tint-sand: #faf8f5;
+  --tint-blush: #faf8f5;
   --teal: #1f7a85;
   --rose: #c65b8a;
   --ink: #123d43;
@@ -47,9 +47,9 @@
   --gold: #b89a62;
   --gold-soft: #d9c7a0;
   --aventurine-deep: #7d6437;
-  --wash-violet: #efe9df;
-  --wash-aqua: #efe9df;
-  --wash-rose: #efe9df;
+  --wash-violet: #faf8f5;
+  --wash-aqua: #faf8f5;
+  --wash-rose: #faf8f5;
   --on-dark-error: #ffc9c9;
   --on-dark-ok: #b8f0c8;
 

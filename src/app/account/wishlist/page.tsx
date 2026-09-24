@@ -50,6 +50,7 @@ export default async function WishlistPage() {
       <ShelfBody width="full">
         {items.length === 0 ? (
           <EmptyShelf
+            icon="heart"
             title={dict.wishlist.empty}
             body={dict.wishlist.emptyBody}
             cta={dict.wishlist.browse}

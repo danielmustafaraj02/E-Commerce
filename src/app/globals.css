@@ -2,11 +2,11 @@
 
 :root {
   color-scheme: light;
-  /* Brand palette: warm ivory paper, deep petrol ink, champagne rules and a
+  /* Brand palette: white paper, deep petrol ink, champagne rules and a
      sparing Venetian gold. The glass itself supplies any other colour. */
-  --background: #f7f3ec;
+  --background: #ffffff;
   --foreground: #123d43;
-  --surface: #efe9df;
+  --surface: #faf8f5;
   --ink-soft: #527176;
   --champagne: #d9cdbb;
   --gold: #b89a62;

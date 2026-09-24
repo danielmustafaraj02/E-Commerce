@@ -42,6 +42,7 @@ export function GuestWishlistClient({
       <ShelfBody width="full">
         {items.length === 0 ? (
           <EmptyShelf
+            icon="heart"
             title={wishlistDict.empty}
             body={wishlistDict.emptyBody}
             cta={wishlistDict.browse}
