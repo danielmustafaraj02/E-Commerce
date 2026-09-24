@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { db } from "@/lib/db";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
@@ -6,6 +5,7 @@ import type { Locale } from "@/lib/i18n/locale";
 import { localizedName } from "@/lib/product-i18n";
 import { buildFooterNav } from "@/lib/footer-nav";
 import { PaymentIcons } from "@/components/payment-icons";
+import { CatalogImage } from "@/components/catalog-image";
 import { NewsletterSignupForm } from "@/components/newsletter-signup-form";
 import { FooterAccordion } from "@/components/footer-accordion";
 import { SocialLinks, type SocialUrls } from "@/components/social-links";
@@ -19,6 +19,9 @@ type PaymentMethods = {
   klarna: boolean;
   bankTransfer: boolean;
 };
+
+// Emerald Waves Necklace; falls back to the hero photo if it's ever removed.
+const FOOTER_PRODUCT_SLUG = "collana-onde-di-smeraldo-143dbf";
 
 // Small line icons for the trust strip, drawn in currentColor.
 const TRUST_ICONS = {
@@ -63,11 +66,19 @@ export async function Footer({
   dict: Dictionary;
   locale: Locale;
 }) {
-  const categories = await db.category.findMany({
-    where: { parentId: null },
-    orderBy: { name: "asc" },
-    take: 6,
-  });
+  const [categories, featured] = await Promise.all([
+    db.category.findMany({
+      where: { parentId: null },
+      orderBy: { name: "asc" },
+      take: 6,
+    }),
+    // The piece shown beside "Discover the world of Murano glass".
+    db.product.findUnique({
+      where: { slug: FOOTER_PRODUCT_SLUG },
+      select: { images: { take: 1, orderBy: { position: "asc" }, select: { url: true } } },
+    }),
+  ]);
+  const featuredImage = featured?.images[0]?.url ?? "/hero/perla-viola-murano.jpg";
   const f = dict.footer;
   const nav = buildFooterNav({
     dict,
@@ -95,12 +106,7 @@ export async function Footer({
             </Link>
           </div>
           <div className="footer-editorial-image" aria-hidden="true">
-            <Image
-              src="/hero/perla-viola-murano.jpg"
-              alt=""
-              fill
-              sizes="(min-width: 48rem) 20rem, 40vw"
-            />
+            <CatalogImage src={featuredImage} alt="" fill sizes="(min-width: 48rem) 20rem, 40vw" />
           </div>
         </section>
 
