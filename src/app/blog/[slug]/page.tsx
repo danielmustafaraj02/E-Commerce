@@ -7,6 +7,7 @@ import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { applyTemplate } from "@/lib/i18n/format";
 import { toSafeJsonLd, absoluteUrl } from "@/lib/json-ld";
+import { hreflangAlternates } from "@/lib/hreflang";
 import {
   ARTICLES,
   articleProductSlugs,
@@ -36,7 +37,7 @@ export async function generateMetadata({ params }: PageProps<"/blog/[slug]">): P
   return {
     title: article.seoTitle,
     description: article.description,
-    alternates: { canonical },
+    alternates: { canonical, languages: hreflangAlternates(canonical) },
     openGraph: {
       title: article.seoTitle,
       description: article.description,
