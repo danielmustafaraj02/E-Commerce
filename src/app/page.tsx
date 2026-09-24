@@ -80,7 +80,7 @@ const SHELF_SIZE = 4;
 // keeps it to two rows of two.
 const NEW_ARRIVALS_SIZE = 8;
 
-const HERO_SRC = "/hero/perla-viola-murano.jpg";
+const HERO_SRC = "/hero/handmade-red-murano-glass-necklace.jpg";
 const HERO_SIZES = "(min-width: 52rem) 36vw, 100vw";
 
 export default async function Home() {

@@ -78,7 +78,7 @@ export async function Footer({
       select: { images: { take: 1, orderBy: { position: "asc" }, select: { url: true } } },
     }),
   ]);
-  const featuredImage = featured?.images[0]?.url ?? "/hero/perla-viola-murano.jpg";
+  const featuredImage = featured?.images[0]?.url ?? "/hero/handmade-red-murano-glass-necklace.jpg";
   const f = dict.footer;
   const nav = buildFooterNav({
     dict,

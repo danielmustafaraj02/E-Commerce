@@ -235,7 +235,12 @@ export function MobileNavMenu({
 
             <div className="mobile-menu-closing">
               <div className="mobile-menu-art" aria-hidden="true">
-                <Image src="/hero/perla-viola-murano.jpg" alt="" fill sizes="60vw" />
+                <Image
+                  src="/hero/handmade-red-murano-glass-necklace.jpg"
+                  alt=""
+                  fill
+                  sizes="60vw"
+                />
               </div>
               <p className="mobile-menu-tagline">
                 {tagline}

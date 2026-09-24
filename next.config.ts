@@ -9,6 +9,17 @@ const nextConfig: NextConfig = {
     // to add another host.
     remotePatterns: imageRemotePatterns(),
   },
+  // Renamed images keep working at their old addresses (search engines may
+  // have indexed them).
+  async redirects() {
+    return [
+      {
+        source: "/hero/perla-viola-murano.jpg",
+        destination: "/hero/handmade-red-murano-glass-necklace.jpg",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {
