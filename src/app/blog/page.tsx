@@ -9,6 +9,7 @@ import type { JournalCategory } from "@/lib/journal/types";
 import { getJournalProducts } from "@/lib/journal/products";
 import { JournalImage } from "@/components/journal/journal-image";
 import { homeFontClasses } from "@/app/home-fonts";
+import { hreflangAlternates } from "@/lib/hreflang";
 import { categoryLabel, formatArticleDate } from "./journal-shared";
 import "../home.css";
 import "./journal.css";
@@ -22,7 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: dict.title,
     description: dict.intro,
-    alternates: { canonical: "/blog" },
+    alternates: { canonical: "/blog", languages: hreflangAlternates("/blog") },
     openGraph: {
       title: dict.title,
       description: dict.intro,
