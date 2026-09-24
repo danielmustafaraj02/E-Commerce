@@ -66,6 +66,9 @@ export default async function EditProductPage({ params }: PageProps<"/admin/prod
           supplierId: product.supplierId,
           supplierSku: product.supplierSku,
           costPrice: product.costPrice,
+          giftStyles: product.giftStyles,
+          giftOccasions: product.giftOccasions,
+          giftRecipients: product.giftRecipients,
         }}
       />
 

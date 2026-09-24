@@ -25,6 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     { url: base, lastModified: catalogUpdatedAt },
     { url: `${base}/products`, lastModified: catalogUpdatedAt },
+    { url: `${base}/gift-finder`, lastModified: catalogUpdatedAt },
     { url: `${base}/about` },
     { url: `${base}/murano-glass` },
     { url: `${base}/contact` },

@@ -7,6 +7,7 @@ import { db } from "@/lib/db";
 import { requireStaff, requireAdmin } from "@/lib/require-admin";
 import { writeAuditLog } from "@/lib/audit-log";
 import { compareAtPriceError } from "@/lib/price-history";
+import { GIFT_STYLES, GIFT_OCCASIONS, GIFT_RECIPIENTS } from "@/lib/gift-finder";
 
 const productSchema = z.object({
   name: z.string().min(1).max(200),
@@ -53,6 +54,11 @@ const productSchema = z.object({
   supplierId: z.string().min(1).optional(),
   supplierSku: z.string().max(100).optional(),
   costPrice: z.coerce.number().nonnegative().optional(),
+  // Gift Finder tagging (see lib/gift-finder.ts) — checkbox groups, so
+  // "nothing checked" must parse as [] rather than fail validation.
+  giftStyles: z.array(z.enum(GIFT_STYLES)).default([]),
+  giftOccasions: z.array(z.enum(GIFT_OCCASIONS)).default([]),
+  giftRecipients: z.array(z.enum(GIFT_RECIPIENTS)).default([]),
 });
 
 // Each line is a URL, optionally followed by whitespace and the literal
@@ -108,6 +114,9 @@ function parseProductForm(formData: FormData) {
     supplierId: formData.get("supplierId") || undefined,
     supplierSku: formData.get("supplierSku") || undefined,
     costPrice: formData.get("costPrice") || undefined,
+    giftStyles: formData.getAll("giftStyles"),
+    giftOccasions: formData.getAll("giftOccasions"),
+    giftRecipients: formData.getAll("giftRecipients"),
   });
 }
 

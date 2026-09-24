@@ -39,6 +39,7 @@ import { hasPurchased } from "./review-actions";
 import { getShippingBanner } from "@/lib/shipping-banner";
 import { getLooksForProducts } from "@/lib/look-data";
 import { CompleteTheLook } from "@/components/complete-the-look";
+import { GiftFinderArrow } from "@/components/gift-finder-arrow";
 
 // Small single-use icons for the gift sections below — same stroke
 // convention (1.8, round caps/joins, currentColor) as the existing icons in
@@ -526,6 +527,11 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                   removeLabel: dict.product.removeFromWishlist,
                 }}
               />
+
+              <Link href="/gift-finder" className="shop-giftfinder-link">
+                <GiftFinderArrow />
+                <span>{dict.giftFinder.productCtaLine}</span>
+              </Link>
 
               <TrustBadges trustBadgeText={settings.trustBadgeText} dict={dict.product} />
               {shippingBanner && (

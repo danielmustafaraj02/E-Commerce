@@ -16,6 +16,7 @@ import { ShelfItem } from "@/components/shelf-item";
 import { CategoryStrip } from "@/components/category-strip";
 import { Reveal } from "@/components/reveal";
 import { NewsletterSignupForm } from "@/components/newsletter-signup-form";
+import { GiftFinderArrow } from "@/components/gift-finder-arrow";
 import { homeFontClasses } from "./home-fonts";
 import "./home.css";
 
@@ -263,6 +264,15 @@ export default async function Home() {
           </div>
         </section>
       )}
+
+      <section className="shelf-section shelf-giftfinder-band">
+        <div className="shelf-wrap">
+          <Link href="/gift-finder" className="shelf-giftfinder-link">
+            <span>{dict.giftFinder.homeCtaLine}</span>
+            <GiftFinderArrow />
+          </Link>
+        </div>
+      </section>
 
       {specialSelection.length > 0 && (
         <section className="shelf-section">
