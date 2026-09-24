@@ -91,27 +91,22 @@ async function main() {
       log("Earring photos already match their names, skipping.");
     } else {
       log(`Swapping photos: "${a.name}" <-> "${b.name}"`);
-      if (a.images.length !== b.images.length) {
-        console.error("The two earrings have a different number of photos — not swapped.");
-        process.exitCode = 1;
-      } else if (!dryRun) {
-        // Swap the photo files position by position; each product keeps its
-        // own image rows (and alt text).
-        await db.$transaction(
-          a.images.flatMap((imageA, i) => {
-            const imageB = b.images[i];
-            return [
-              db.productImage.update({
-                where: { id: imageA.id },
-                data: { url: imageB.url, isLifestyle: imageB.isLifestyle },
-              }),
-              db.productImage.update({
-                where: { id: imageB.id },
-                data: { url: imageA.url, isLifestyle: imageA.isLifestyle },
-              }),
-            ];
-          })
-        );
+      if (!dryRun) {
+        // Move each product's whole set of photos to the other one (they may
+        // have different numbers of photos). Rows are recreated rather than
+        // re-pointed, with the receiving product's name as alt text.
+        const photos = (from: typeof a, to: typeof a) =>
+          from.images.map((image) => ({
+            productId: to.id,
+            url: image.url,
+            altText: to.name,
+            position: image.position,
+            isLifestyle: image.isLifestyle,
+          }));
+        await db.$transaction([
+          db.productImage.deleteMany({ where: { productId: { in: [a.id, b.id] } } }),
+          db.productImage.createMany({ data: [...photos(a, b), ...photos(b, a)] }),
+        ]);
       }
     }
   }
