@@ -27,14 +27,17 @@ export function JournalImage({
   const src = journalImageSrc(image, products);
   if (!src) return null;
   const showCredit = image.rights.license !== "own-photography";
+  // `priority` is deprecated in Next 16; eager + high fetch priority is the
+  // documented way to load an above-the-fold (LCP) image first.
+  const loadingProps = priority ? ({ loading: "eager", fetchPriority: "high" } as const) : {};
 
   return (
     <figure className={`journal-figure ${className}`}>
       <div className="journal-figure-frame">
         {image.kind === "file" ? (
-          <Image src={src} alt={image.alt} fill sizes={sizes} priority={priority} />
+          <Image src={src} alt={image.alt} fill sizes={sizes} {...loadingProps} />
         ) : (
-          <CatalogImage src={src} alt={image.alt} fill sizes={sizes} priority={priority} />
+          <CatalogImage src={src} alt={image.alt} fill sizes={sizes} {...loadingProps} />
         )}
       </div>
       {(image.caption || showCredit) && (

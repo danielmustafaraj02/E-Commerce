@@ -8,7 +8,7 @@ import { MobileNavMenu } from "@/components/mobile-nav-menu";
 import type { Locale } from "@/lib/i18n/locale";
 import { localizedName } from "@/lib/product-i18n";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
-import { logoSrc } from "@/lib/store-settings";
+import { headerLogoSrc } from "@/lib/store-settings";
 import { legalLinks } from "@/lib/footer-nav";
 import type { SocialUrls } from "@/components/social-links";
 
@@ -72,7 +72,13 @@ export async function Header({
         {/* ── Logo (far left, desktop only — mobile has its own centered logo below) ── */}
         <Link href="/" className="hidden shrink-0 self-stretch items-center sm:flex">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={logoSrc(logoUrl)} alt={storeName} className="h-14 w-auto object-contain" />
+          <img
+            src={headerLogoSrc(logoUrl)}
+            alt={storeName}
+            width={284}
+            height={168}
+            className="h-14 w-auto object-contain"
+          />
         </Link>
 
         {/* ── Category nav (desktop, right of logo) ─────────────────────── */}
@@ -222,7 +228,13 @@ export async function Header({
           </div>
           <Link href="/" className="flex items-center justify-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={logoSrc(logoUrl)} alt={storeName} className="h-11 w-auto object-contain" />
+            <img
+              src={headerLogoSrc(logoUrl)}
+              alt={storeName}
+              width={284}
+              height={168}
+              className="h-11 w-auto object-contain"
+            />
           </Link>
           <div className="flex items-center justify-end">
             <CartLink label={dict.nav.cart} />

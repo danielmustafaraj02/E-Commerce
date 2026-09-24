@@ -184,7 +184,8 @@ export default async function Home() {
                 src="/hero/perla-viola-murano.jpg"
                 alt={dict.home.heroImageAlt}
                 fill
-                priority
+                loading="eager"
+                fetchPriority="high"
                 sizes="(min-width: 52rem) 36vw, 100vw"
               />
             </div>

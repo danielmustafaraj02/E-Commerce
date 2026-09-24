@@ -79,3 +79,11 @@ export function ogImage(settings: Pick<StoreSettings, "ogImageUrl" | "logoUrl">)
 export function logoSrc(logoUrl: string | null) {
   return logoUrl || "/logo.png";
 }
+
+// The bundled logo is a 1808px PNG (~200 KB) — right for emails and social
+// previews, far too heavy for a ~50px-tall header slot on every page. The
+// header uses a 3x-resolution WebP copy instead; an admin-uploaded logo is
+// used as-is.
+export function headerLogoSrc(logoUrl: string | null) {
+  return !logoUrl || logoUrl === "/logo.png" ? "/logo-header.webp" : logoUrl;
+}

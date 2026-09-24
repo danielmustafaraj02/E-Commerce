@@ -41,7 +41,8 @@ export function ProductImageZoom({
         src={src}
         alt={alt}
         fill
-        priority
+        loading="eager"
+        fetchPriority="high"
         sizes="(min-width: 640px) 50vw, 100vw"
         className={`transition-transform duration-300 ease-out ${isLifestyle ? "shop-photo--lifestyle" : ""}`}
         style={{

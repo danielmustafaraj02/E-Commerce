@@ -20,8 +20,11 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
+// Only admin screens use the monospace face, so don't preload it on every
+// storefront page, where it competed with the hero image.
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
+  preload: false,
   subsets: ["latin"],
 });
 
