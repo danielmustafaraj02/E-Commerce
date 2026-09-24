@@ -339,70 +339,73 @@
    the ground; the whole piece is kept in frame (object-fit: contain) rather
    than cropped, since a full necklace reads as broken if any of its loop is
    cut off. */
+.shelf-bead-carousel {
+  width: 100%;
+  max-width: 34rem;
+  justify-self: center;
+}
 .shelf-bead {
   position: relative;
   aspect-ratio: 1 / 1;
   width: 100%;
-  max-width: 34rem;
-  justify-self: center;
 }
 .shelf-bead img {
   object-fit: contain;
   object-position: 50% 50%;
   mix-blend-mode: multiply;
-  animation: shelf-settle 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  transform: scale(1.24);
+  opacity: 0;
+  transition: opacity 0.8s ease;
 }
-@keyframes shelf-settle {
-  from {
-    opacity: 0;
-    transform: scale(1.32) translateY(-2%);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1.24);
-  }
+.shelf-bead img.is-active {
+  opacity: 1;
 }
-
-/* A single light-catching sweep across the glass once it's settled — on
-   theme (the copy itself says the beads "catturano la luce", catch the
-   light), and it plays once then fades out rather than looping, so it reads
-   as a moment, not a busy loading effect. Starts right as shelf-settle
-   above finishes (1.2s) so the two feel like one continuous motion. */
-.shelf-bead::after {
-  content: "";
+.shelf-bead-link {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    115deg,
-    transparent 42%,
-    color-mix(in srgb, white 70%, transparent) 50%,
-    transparent 58%
-  );
-  background-size: 300% 300%;
-  background-position: -100% -100%;
-  mix-blend-mode: overlay;
-  pointer-events: none;
-  opacity: 0;
-  animation: shelf-shimmer 1.3s ease-out 1.15s 1 both;
+  z-index: 1;
 }
-@keyframes shelf-shimmer {
-  from {
-    background-position: -100% -100%;
-    opacity: 1;
-  }
-  to {
-    background-position: 100% 100%;
-    opacity: 0;
-  }
+.shelf-bead-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  margin-top: 2.75rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  color: var(--ink-soft);
 }
-
+.shelf-bead-controls button {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: color-mix(in srgb, #fff 55%, transparent);
+  color: var(--ink);
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+.shelf-bead-controls button:hover {
+  background: #fff;
+  border-color: var(--ink);
+}
+.shelf-bead-count {
+  min-width: 3.5em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
 @media (min-width: 52rem) {
   .shelf-hero-grid {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
     gap: 2rem;
     padding-block: 3.5rem 1.5rem;
   }
-  .shelf-bead {
+  .shelf-bead-carousel {
     justify-self: end;
     margin-inline-end: -6%;
   }
@@ -981,9 +984,8 @@
     padding-block: 2.25rem 1.5rem;
   }
   .shelf-home .shelf-hero-copy {
-    position: relative;
     gap: 1.1rem;
-    max-width: 62%;
+    max-width: 30rem;
   }
   .shelf-eyebrow {
     font-size: 0.66rem;
@@ -1008,19 +1010,16 @@
     padding: 0.8rem 1.4rem 0.8rem 1.6rem;
     white-space: nowrap;
   }
-  .shelf-hero .shelf-bead {
-    position: absolute;
-    top: 18%;
-    right: -14%;
-    width: 60%;
-    max-width: 22rem;
-    aspect-ratio: 3 / 4;
-    pointer-events: none;
-    /* Positioned, so blend the frame itself rather than only the photo inside it. */
-    mix-blend-mode: multiply;
+  .shelf-hero .shelf-bead-carousel {
+    width: 82%;
+    max-width: 21rem;
+    margin: 1.5rem auto 0;
+  }
+  .shelf-bead-controls {
+    margin-top: 1rem;
   }
   .shelf-hero .shelf-bead img {
-    animation: shelf-settle-mobile 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    transform: scale(1.12);
   }
   .shelf-facts {
     padding: 1.25rem 0 1.5rem;
@@ -1034,13 +1033,5 @@
   }
   .shelf-home .shelf-hero + .shelf-section {
     padding-top: 2.5rem;
-  }
-}
-@keyframes shelf-settle-mobile {
-  from {
-    transform: scale(1.05);
-  }
-  to {
-    transform: scale(1);
   }
 }

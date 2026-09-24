@@ -19,6 +19,8 @@ import { FaqSection } from "@/components/faq-section";
 import { buildFaq } from "@/lib/faq";
 import { getShippingFacts } from "@/lib/shipping-banner";
 import { GiftFinderArrow } from "@/components/gift-finder-arrow";
+import { HeroNecklaceCarousel, type HeroSlide } from "@/components/hero-necklace-carousel";
+import { db } from "@/lib/db";
 import { homeFontClasses } from "./home-fonts";
 import "./home.css";
 
@@ -82,6 +84,15 @@ const NEW_ARRIVALS_SIZE = 8;
 
 const HERO_SRC = "/hero/handmade-red-murano-glass-necklace.jpg";
 const HERO_SIZES = "(min-width: 52rem) 36vw, 100vw";
+// Necklaces photographed in the same oval drape as the hero, so the rotation
+// reads as one frame changing colour. Slugs match the catalog photos' names.
+const HERO_NECKLACE_SLUGS = [
+  "collana-rame-antico-85514c",
+  "collana-ametista-9e7d11",
+  "collana-smeraldo-e-argento-a0dd26",
+  "collana-perla-rosa-antico-f396d8",
+  "collana-perla-celeste-5e4eb6",
+];
 const HERO_BACKGROUND_SRC = "/hero/ivory-marble-background.jpg";
 
 export default async function Home() {
@@ -101,8 +112,45 @@ export default async function Home() {
     settings,
     locale,
     { products, specialSelection, categoriesWithImage, bestSellers, reviews },
-  ] = await Promise.all([getStoreSettings(), getLocale(), getHomepageData()]);
+    heroNecklaces,
+  ] = await Promise.all([
+    getStoreSettings(),
+    getLocale(),
+    getHomepageData(),
+    db.product.findMany({
+      where: { slug: { in: HERO_NECKLACE_SLUGS }, active: true },
+      select: {
+        slug: true,
+        name: true,
+        nameEn: true,
+        nameFr: true,
+        nameDe: true,
+        nameEs: true,
+        namePt: true,
+        nameJa: true,
+        nameZh: true,
+        nameRu: true,
+        nameAr: true,
+        nameHi: true,
+      },
+    }),
+  ]);
   const dict = getDictionary(locale);
+  const heroSlides: HeroSlide[] = [
+    { src: HERO_SRC, alt: dict.home.heroImageAlt, href: null },
+    ...HERO_NECKLACE_SLUGS.flatMap((slug) => {
+      const product = heroNecklaces.find((p) => p.slug === slug);
+      return product
+        ? [
+            {
+              src: `/products/collane-in-vetro-di-murano/${slug}.png`,
+              alt: localizedName(product, locale),
+              href: `/products/${slug}`,
+            },
+          ]
+        : [];
+    }),
+  ];
   const testimonials = reviews
     .filter((review) => review.comment)
     .map((review) => ({
@@ -172,16 +220,12 @@ export default async function Home() {
                 <p className="shelf-note">{dict.home.pricesIncludeTax}</p>
               )}
             </div>
-            <div className="shelf-bead">
-              <Image
-                src={HERO_SRC}
-                alt={dict.home.heroImageAlt}
-                fill
-                loading="eager"
-                fetchPriority="high"
-                sizes={HERO_SIZES}
-              />
-            </div>
+            <HeroNecklaceCarousel
+              slides={heroSlides}
+              sizes={HERO_SIZES}
+              previousLabel={dict.home.previousSlide}
+              nextLabel={dict.home.nextSlide}
+            />
           </div>
           {facts.length > 0 && (
             <ul className="shelf-facts">
