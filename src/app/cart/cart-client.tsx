@@ -13,6 +13,8 @@ import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { cartLookSummary, type PieceKind } from "@/lib/looks";
 import { trackLookEvent } from "@/lib/look-analytics";
 import type { LookView } from "@/lib/look-data";
+import { GiftCardPreview } from "@/components/gift-card-preview";
+import { giftCardLines } from "@/lib/gift-card";
 
 export function CartClient({
   locale,
@@ -21,6 +23,7 @@ export function CartClient({
   shippingBanner,
   freeShippingThreshold,
   stripePublishableKey,
+  giftCardOffer,
 }: {
   locale: string;
   uiLocale: string;
@@ -28,7 +31,13 @@ export function CartClient({
   shippingBanner: string | null;
   freeShippingThreshold: number | null;
   stripePublishableKey: string | null;
+  // The personalised gift card add-on, while the store offers it.
+  giftCardOffer: { price: number; dict: Dictionary["giftCard"]; brand: string } | null;
 }) {
+  const storedGiftCard = useCartStore((state) => state.giftCard);
+  const removeGiftCard = useCartStore((state) => state.removeGiftCard);
+  const giftCard = giftCardOffer ? storedGiftCard : null;
+  const giftAmount = giftCard && giftCardOffer ? giftCardOffer.price : 0;
   const items = useCartStore((state) => state.items);
   const setQuantity = useCartStore((state) => state.setQuantity);
   const removeItem = useCartStore((state) => state.removeItem);
@@ -64,7 +73,8 @@ export function CartClient({
 
   // Display estimate only — the server recomputes authoritative pricing,
   // stock, tax, and shipping from live product data at checkout.
-  const estimatedSubtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const estimatedSubtotal =
+    items.reduce((sum, item) => sum + item.price * item.quantity, 0) + giftAmount;
   const lookSummary = cartLookSummary(items, looks, kinds);
 
   return (
@@ -190,6 +200,50 @@ export function CartClient({
         </div>
       ))}
 
+      {giftCardOffer && giftCard && (
+        <div className="shop-panel shop-panel-pad cart-gift">
+          <GiftCardPreview
+            size="small"
+            font={giftCard.font}
+            brand={giftCardOffer.brand}
+            lines={giftCardLines(giftCard, giftCardOffer.dict)}
+          />
+          <div className="cart-gift-details">
+            <p className="cart-gift-title">
+              <span>{giftCardOffer.dict.productName}</span>
+              <span>{formatMoney(giftCardOffer.price, items[0].currency, locale)}</span>
+            </p>
+            <p className="cart-gift-meta">
+              <span>{giftCardOffer.dict.yourMessage}:</span> &ldquo;{giftCard.message}&rdquo;
+            </p>
+            <p className="cart-gift-meta">
+              <span>{giftCardOffer.dict.fontLabel}:</span>{" "}
+              {giftCardOffer.dict.fonts[giftCard.font]}
+            </p>
+            <p className="cart-gift-actions">
+              <Link href="/personalised-gift-card">{giftCardOffer.dict.edit}</Link>
+              <button type="button" onClick={removeGiftCard}>
+                {giftCardOffer.dict.remove}
+              </button>
+            </p>
+          </div>
+        </div>
+      )}
+
+      {giftCardOffer && !giftCard && (
+        <Link href="/personalised-gift-card" className="shop-panel shop-panel-pad cart-gift-invite">
+          <span className="cart-gift-invite-title">{giftCardOffer.dict.pdpTitle}</span>
+          <span className="cart-gift-invite-body">
+            {applyTemplate(giftCardOffer.dict.pdpLine, {
+              price: formatMoney(giftCardOffer.price, items[0].currency, locale),
+            })}
+          </span>
+          <span className="cart-gift-invite-cta">
+            {giftCardOffer.dict.pdpCta} <span aria-hidden="true">→</span>
+          </span>
+        </Link>
+      )}
+
       <div className="shop-panel shop-panel-pad flex flex-col gap-2">
         {lookSummary.saving > 0 && (
           <div className="text-success flex items-center justify-between text-sm">
@@ -211,12 +265,16 @@ export function CartClient({
         {dict.checkout}
       </Link>
 
-      <ExpressCheckoutButton
-        publishableKey={stripePublishableKey}
-        discount={lookSummary.saving}
-        locale={uiLocale}
-        dividerLabel={dict.expressCheckoutOr}
-      />
+      {/* The wallet sheet can't carry the card's details, so a card means
+          the full checkout. */}
+      {!giftCard && (
+        <ExpressCheckoutButton
+          publishableKey={stripePublishableKey}
+          discount={lookSummary.saving}
+          locale={uiLocale}
+          dividerLabel={dict.expressCheckoutOr}
+        />
+      )}
     </div>
   );
 }

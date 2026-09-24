@@ -39,6 +39,7 @@ type Quote = {
   freeShipping: boolean;
   discountAmount: number;
   bundleDiscountAmount: number;
+  giftCardAmount: number;
   total: number;
   currency: string;
   pricesIncludeTax: boolean;
@@ -55,6 +56,7 @@ export function CheckoutClient({
   expressCheckoutLabel,
   nonce,
   dict,
+  giftCardOffer,
 }: {
   locale: string;
   uiLocale: string;
@@ -66,8 +68,12 @@ export function CheckoutClient({
   expressCheckoutLabel: string;
   nonce?: string;
   dict: Dictionary["checkout"];
+  // The personalised gift card add-on, while the store offers it.
+  giftCardOffer: { productName: string; printedNote: string } | null;
 }) {
   const router = useRouter();
+  const storedGiftCard = useCartStore((state) => state.giftCard);
+  const giftCard = giftCardOffer ? storedGiftCard : null;
   const items = useCartStore((state) => state.items);
   const clearCart = useCartStore((state) => state.clear);
   const formRef = useRef<HTMLFormElement>(null);
@@ -152,6 +158,7 @@ export function CheckoutClient({
         country,
         shippingMethodId,
         discountCode: appliedDiscountCode,
+        giftCard: Boolean(giftCard),
       }),
     })
       .then(async (res) => {
@@ -172,7 +179,7 @@ export function CheckoutClient({
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [country, shippingMethodId, appliedDiscountCode, JSON.stringify(cartItems)]);
+  }, [country, shippingMethodId, appliedDiscountCode, JSON.stringify(cartItems), Boolean(giftCard)]);
 
   if (items.length === 0) {
     return (
@@ -212,6 +219,7 @@ export function CheckoutClient({
           address: { fullName, street, city, postalCode, country, phone: phone || undefined },
           shippingMethodId,
           discountCode: appliedDiscountCode,
+          giftCard: giftCard ?? undefined,
           turnstileToken,
         }),
       });
@@ -231,11 +239,14 @@ export function CheckoutClient({
 
   return (
     <div className="flex flex-col gap-6">
-      <ExpressCheckoutButton
-        publishableKey={stripePublishableKey}
-        locale={uiLocale}
-        dividerLabel={expressCheckoutLabel}
-      />
+      {/* The wallet sheet can't carry a gift card's details. */}
+      {!giftCard && (
+        <ExpressCheckoutButton
+          publishableKey={stripePublishableKey}
+          locale={uiLocale}
+          dividerLabel={expressCheckoutLabel}
+        />
+      )}
 
       <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-6">
         {quote?.shippingAmount === 0 && (
@@ -417,6 +428,12 @@ export function CheckoutClient({
                   <span className="text-foreground/70">{dict.subtotal}</span>
                   <span>{formatMoney(quote.subtotal, quote.currency, locale)}</span>
                 </div>
+                {quote.giftCardAmount > 0 && giftCardOffer && (
+                  <div className="text-foreground/70 flex justify-between">
+                    <span>{giftCardOffer.productName}</span>
+                    <span>{formatMoney(quote.giftCardAmount, quote.currency, locale)}</span>
+                  </div>
+                )}
                 {quote.bundleDiscountAmount > 0 && (
                   <div className="text-success flex justify-between">
                     <span>{dict.bundleSaving}</span>
@@ -453,6 +470,9 @@ export function CheckoutClient({
                   <span>{dict.total}</span>
                   <span>{formatMoney(quote.total, quote.currency, locale)}</span>
                 </div>
+                {quote.giftCardAmount > 0 && giftCardOffer && (
+                  <p className="checkout-gift-note">{giftCardOffer.printedNote}</p>
+                )}
               </div>
             )}
           </div>

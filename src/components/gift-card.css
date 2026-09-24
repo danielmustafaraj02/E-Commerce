@@ -1,0 +1,367 @@
+/* Personalised gift card: the card itself (components/gift-card-preview.tsx)
+   and its designer (components/gift-card-designer.tsx). */
+
+/* -- The card ---------------------------------------------------------------- */
+
+.gc-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  aspect-ratio: 4 / 5;
+  width: 100%;
+  max-width: 24rem;
+  margin-inline: auto;
+  padding: 2.25rem 1.75rem 1.75rem;
+  color: #123d43;
+  text-align: center;
+  /* Ivory stock with the faintest grain, lifted off the page by a soft shadow. */
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgb(18 61 67 / 0.006) 0 1px,
+      transparent 1px 3px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgb(18 61 67 / 0.004) 0 1px,
+      transparent 1px 4px
+    ),
+    #fdfbf6;
+  border-radius: 3px;
+  box-shadow:
+    0 1px 2px rgb(18 61 67 / 0.08),
+    0 18px 40px -22px rgb(18 61 67 / 0.35);
+}
+.gc-card::after {
+  content: "";
+  position: absolute;
+  inset: 0.7rem;
+  border: 1px solid color-mix(in srgb, #b89a62 55%, transparent);
+  pointer-events: none;
+}
+.gc-card-brand {
+  margin: 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+}
+.gc-card-rule {
+  display: block;
+  width: 2rem;
+  height: 1px;
+  margin: 0.75rem auto 0;
+  background: #b89a62;
+}
+.gc-card-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.1rem;
+  width: 100%;
+  overflow-wrap: anywhere;
+}
+.gc-card-text p {
+  margin: 0;
+  font-size: 1.35rem;
+  line-height: 1.35;
+  white-space: pre-line;
+}
+.gc-card-text p:first-child:not(:only-child),
+.gc-card-text p:last-child:not(:only-child) {
+  font-size: 1.1rem;
+}
+.gc-card-text--script p {
+  font-size: 1.75rem;
+  line-height: 1.25;
+}
+.gc-card-text--script p:first-child:not(:only-child),
+.gc-card-text--script p:last-child:not(:only-child) {
+  font-size: 1.4rem;
+}
+.gc-card-text--handwritten p {
+  font-size: 1.5rem;
+}
+.gc-card-text--modern p {
+  font-size: 1.1rem;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+}
+.gc-card-foot {
+  margin: 0;
+  color: #b89a62;
+  font-family: var(--font-display), Georgia, serif;
+  font-style: italic;
+  font-size: 0.85rem;
+}
+.gc-card--small {
+  max-width: 13rem;
+  padding: 1.25rem 1rem 1rem;
+}
+.gc-card--small::after {
+  inset: 0.4rem;
+}
+.gc-card--small .gc-card-text {
+  gap: 0.5rem;
+}
+.gc-card--small .gc-card-text p {
+  font-size: 0.85rem;
+}
+.gc-card--small .gc-card-text--script p {
+  font-size: 1.05rem;
+}
+.gc-card--small .gc-card-foot,
+.gc-card--small .gc-card-brand {
+  font-size: 0.5rem;
+}
+
+/* -- The designer -------------------------------------------------------------- */
+
+.gc-designer {
+  display: grid;
+  gap: 2.5rem;
+}
+.gc-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 1rem 2.5rem;
+  background: #f7f3ec;
+  border-radius: 4px;
+}
+.gc-step-kicker {
+  margin: 0;
+  color: #b89a62;
+  font-family: var(--font-display), Georgia, serif;
+  font-style: italic;
+  font-size: 1.15rem;
+}
+.gc-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  min-width: 0;
+}
+.gc-step {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+.gc-step + .gc-step {
+  padding-top: 2.25rem;
+  border-top: 1px solid var(--rule, #d9cdbb);
+}
+.gc-step-title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 500;
+}
+.gc-step-number {
+  color: #b89a62;
+  font-style: italic;
+  font-size: 1.1rem;
+}
+.gc-names {
+  display: grid;
+  gap: 1rem;
+}
+@media (min-width: 30rem) {
+  .gc-names {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.gc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.gc-field > span:first-child {
+  color: var(--ink-soft, #527176);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.gc-field input,
+.gc-field textarea {
+  width: 100%;
+  padding: 0.7rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--rule, #d9cdbb);
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 1.05rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+.gc-field textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+.gc-field input:focus,
+.gc-field textarea:focus {
+  border-bottom-color: #123d43;
+}
+.gc-field textarea[aria-invalid="true"] {
+  border-bottom-color: var(--danger, #dc2626);
+}
+.gc-counter {
+  align-self: flex-end;
+  color: var(--ink-soft, #527176);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+.gc-tabs {
+  display: flex;
+  gap: 1.75rem;
+  border-bottom: 1px solid var(--rule, #d9cdbb);
+}
+.gc-tab {
+  position: relative;
+  padding: 0.6rem 0;
+  border: 0;
+  background: none;
+  color: var(--ink-soft, #527176);
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.gc-tab[aria-selected="true"] {
+  color: #123d43;
+}
+.gc-tab[aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: #b89a62;
+}
+.gc-presets {
+  display: flex;
+  flex-direction: column;
+}
+.gc-preset {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  min-height: 3.25rem;
+  padding: 0.6rem 0.25rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--rule, #d9cdbb) 60%, transparent);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.gc-preset input,
+.gc-font input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.gc-preset::before {
+  content: "";
+  flex: none;
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 1px solid #b89a62;
+  border-radius: 999px;
+  transition: box-shadow 0.2s ease;
+}
+.gc-preset:has(input:checked)::before {
+  box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 10px #123d43;
+}
+.gc-preset:has(input:focus-visible),
+.gc-font:has(input:focus-visible) {
+  outline: 1px solid #123d43;
+  outline-offset: 2px;
+}
+.gc-fonts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+  gap: 0.75rem;
+}
+.gc-font {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 1rem 0.5rem 0.85rem;
+  border: 1px solid var(--rule, #d9cdbb);
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.2s ease;
+}
+.gc-font:has(input:checked) {
+  border-color: #b89a62;
+  box-shadow: inset 0 0 0 1px #b89a62;
+}
+.gc-font-sample {
+  font-size: 1.9rem;
+  line-height: 1.1;
+}
+.gc-font-name {
+  color: var(--ink-soft, #527176);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+}
+.gc-add {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--rule, #d9cdbb);
+}
+.gc-add-button {
+  min-height: 3.25rem;
+}
+.gc-error {
+  margin: 0;
+  color: var(--danger, #dc2626);
+  font-size: 0.9rem;
+}
+.gc-note {
+  margin: 0;
+  color: var(--ink-soft, #527176);
+  font-family: var(--font-display), Georgia, serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.45;
+}
+.gc-final-preview {
+  padding: 1.5rem 1rem;
+  background: #f7f3ec;
+  border-radius: 4px;
+}
+@media (min-width: 52rem) {
+  .gc-final-preview {
+    display: none;
+  }
+  .gc-designer {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: 4rem;
+    align-items: start;
+  }
+  .gc-stage {
+    position: sticky;
+    top: 7rem;
+    padding: 3rem 2rem 3.5rem;
+  }
+}

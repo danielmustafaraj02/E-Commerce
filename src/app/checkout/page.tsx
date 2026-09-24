@@ -30,6 +30,14 @@ export default async function CheckoutPage() {
       <ShelfHead title={dict.checkout.title} />
       <ShelfBody>
         <CheckoutClient
+          giftCardOffer={
+            settings.giftCardEnabled
+              ? {
+                  productName: dict.giftCard.productName,
+                  printedNote: dict.giftCard.printedNote,
+                }
+              : null
+          }
           locale={settings.defaultLocale}
           uiLocale={uiLocale}
           countries={countries}

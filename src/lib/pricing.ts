@@ -37,16 +37,27 @@ export type QuoteInput = {
   country: string;
   shippingMethodId: string;
   discountCode?: string;
+  // A personalised gift card goes with the order (lib/gift-card.ts). Charged
+  // only while the store offers it; otherwise ignored.
+  giftCard?: boolean;
 };
 
 // Single source of truth for checkout math, used by both the live preview
 // (/api/checkout/quote) and the order-committing endpoint (/api/checkout).
 // Never trusts client-supplied prices — always re-reads product/shipping/tax
 // rows from the DB.
-export async function quoteOrder({ items, country, shippingMethodId, discountCode }: QuoteInput) {
+export async function quoteOrder({
+  items,
+  country,
+  shippingMethodId,
+  discountCode,
+  giftCard,
+}: QuoteInput) {
   if (items.length === 0) throw new PricingError("Cart is empty", 400, "cart-empty");
 
   const settings = await getStoreSettings();
+  // Part of the subtotal like any goods, but not reduced by discount codes.
+  const giftCardAmount = giftCard && settings.giftCardEnabled ? settings.giftCardPrice : 0;
 
   const products = await db.product.findMany({
     where: { id: { in: items.map((i) => i.productId) } },
@@ -134,6 +145,17 @@ export async function quoteOrder({ items, country, shippingMethodId, discountCod
       ? Math.round((taxable * rate) / (100 + rate))
       : Math.round((taxable * rate) / 100);
   }
+  if (giftCardAmount > 0) {
+    const rate = rateForCategory(null);
+    if (rate === null) {
+      missingTaxRule = true;
+    } else {
+      distinctRates.add(rate);
+      taxAmount += settings.pricesIncludeTax
+        ? Math.round((giftCardAmount * rate) / (100 + rate))
+        : Math.round((giftCardAmount * rate) / 100);
+    }
+  }
   const taxRatePercent = distinctRates.size === 1 ? [...distinctRates][0] : null;
 
   // --- Shipping: method must belong to a zone covering the destination ---
@@ -176,19 +198,22 @@ export async function quoteOrder({ items, country, shippingMethodId, discountCod
 
   const freeShipping =
     settings.freeShippingThreshold !== null &&
-    goodsTotal - discountAmount >= settings.freeShippingThreshold;
+    goodsTotal - discountAmount + giftCardAmount >= settings.freeShippingThreshold;
   const shippingAmount = freeShipping ? 0 : shippingMethod.basePrice;
 
   // Prices are tax-inclusive by default (settings.pricesIncludeTax), so tax
   // is extracted from — not added on top of — the subtotal.
   const total = settings.pricesIncludeTax
-    ? goodsTotal - discountAmount + shippingAmount
-    : goodsTotal + taxAmount - discountAmount + shippingAmount;
+    ? goodsTotal - discountAmount + giftCardAmount + shippingAmount
+    : goodsTotal + giftCardAmount + taxAmount - discountAmount + shippingAmount;
 
   return {
     lines,
     currency,
-    subtotal,
+    // Every receipt reads subtotal - discount + shipping = total, so the gift
+    // card is part of the subtotal.
+    subtotal: subtotal + giftCardAmount,
+    giftCardAmount,
     taxAmount,
     taxRatePercent,
     missingTaxRule,

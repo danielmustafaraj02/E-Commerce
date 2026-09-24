@@ -5,6 +5,7 @@ import { quoteOrder, PricingError, type QuoteInput } from "@/lib/pricing";
 import { cancelExpiredOrders, notifyCancelledOrders } from "@/lib/abandoned-orders";
 import { geocodeAndStoreAddress } from "@/lib/geocode-address";
 import { captureError } from "@/lib/monitoring";
+import type { GiftCard } from "@/lib/gift-card";
 
 // The single place an Order row gets created — both the full checkout form
 // (src/app/api/checkout/route.ts) and Express Checkout
@@ -28,6 +29,8 @@ export type PlaceOrderInput = {
   userId?: string;
   guestEmail?: string | null;
   locale: string;
+  // The personalised card to print and pack (full checkout only).
+  giftCard?: GiftCard;
 };
 
 // Express Checkout (src/app/api/checkout/express/route.ts) has no manual
@@ -61,7 +64,10 @@ async function placeOrderOnce(input: PlaceOrderInput) {
     country: input.address.country,
     shippingMethodId: input.shippingMethodId,
     discountCode: input.discountCode,
+    giftCard: Boolean(input.giftCard),
   });
+  // Saved only when it was actually charged (the store offers it).
+  const giftCard = quote.giftCardAmount > 0 ? input.giftCard : undefined;
 
   const orderNumber = generateOrderNumber();
 
@@ -122,6 +128,14 @@ async function placeOrderOnce(input: PlaceOrderInput) {
         total: quote.total,
         currency: quote.currency,
         locale: input.locale,
+        ...(giftCard && {
+          giftCardAmount: quote.giftCardAmount,
+          giftCardMessageType: giftCard.messageType,
+          giftCardMessage: giftCard.message,
+          giftCardRecipient: giftCard.recipient || null,
+          giftCardSender: giftCard.sender || null,
+          giftCardFont: giftCard.font,
+        }),
         addressId: address.id,
         shippingMethodId: quote.shippingMethod.id,
         discountCodeId: quote.discountCodeId,

@@ -44,6 +44,10 @@ model StoreSettings {
   // fabricated), but some stores launch before they have enough of them to
   // look credible, so admins can hide the section entirely until then.
   showTestimonials       Boolean  @default(true)
+  // Personalised gift card add-on (/personalised-gift-card): offered only
+  // while enabled; the price is charged per order, in cents.
+  giftCardEnabled        Boolean  @default(false)
+  giftCardPrice          Int      @default(500)
 
   // SEO — Admin > Settings > SEO. All optional with fallbacks applied in
   // src/lib/store-settings.ts and consumed by src/app/layout.tsx,
@@ -551,6 +555,14 @@ model Order {
   discountAmount Int    @default(0) // cents, discount code + complete-the-look saving
   // The complete-the-look part of discountAmount (see lib/looks.ts).
   bundleDiscountAmount Int @default(0) // cents
+  // Personalised gift card printed and packed with the order (lib/gift-card.ts):
+  // its price (part of subtotal) and exactly what to print.
+  giftCardAmount      Int     @default(0) // cents
+  giftCardMessageType String? // preset | custom
+  giftCardMessage     String?
+  giftCardRecipient   String?
+  giftCardSender      String?
+  giftCardFont        String?
   total          Int // cents
   currency       String @default("EUR")
   // The storefront language the customer checked out in. Emails about the order

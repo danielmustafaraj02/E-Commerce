@@ -405,3 +405,86 @@ describe("quoteOrder", () => {
     });
   });
 });
+
+describe("quoteOrder: personalised gift card", () => {
+  const oneItem = [{ productId: "p1", quantity: 1 }];
+
+  it("adds the card's price to the subtotal, VAT and total while it is offered", async () => {
+    mockSettings.mockResolvedValue({
+      pricesIncludeTax: true,
+      freeShippingThreshold: null,
+      giftCardEnabled: true,
+      giftCardPrice: 500,
+    });
+    mockDb.product.findMany.mockResolvedValue([product()]);
+
+    const quote = await quoteOrder({
+      items: oneItem,
+      country: "IT",
+      shippingMethodId: "m1",
+      giftCard: true,
+    });
+
+    expect(quote.giftCardAmount).toBe(500);
+    expect(quote.subtotal).toBe(1100 + 500);
+    expect(quote.taxAmount).toBe(Math.round((1100 * 22) / 122) + Math.round((500 * 22) / 122));
+    expect(quote.total).toBe(1100 + 500 + 500);
+    // Receipts rely on subtotal - discount + shipping = total.
+    expect(quote.subtotal - quote.discountAmount - quote.bundleDiscountAmount + quote.shippingAmount).toBe(
+      quote.total
+    );
+  });
+
+  it("charges nothing for a card while the store does not offer it", async () => {
+    mockSettings.mockResolvedValue({
+      pricesIncludeTax: true,
+      freeShippingThreshold: null,
+      giftCardEnabled: false,
+      giftCardPrice: 500,
+    });
+    mockDb.product.findMany.mockResolvedValue([product()]);
+
+    const quote = await quoteOrder({
+      items: oneItem,
+      country: "IT",
+      shippingMethodId: "m1",
+      giftCard: true,
+    });
+
+    expect(quote.giftCardAmount).toBe(0);
+    expect(quote.total).toBe(1100 + 500);
+  });
+
+  it("keeps discount codes off the card and counts it towards free shipping", async () => {
+    mockSettings.mockResolvedValue({
+      pricesIncludeTax: true,
+      freeShippingThreshold: 1500,
+      giftCardEnabled: true,
+      giftCardPrice: 500,
+    });
+    mockDb.product.findMany.mockResolvedValue([product()]);
+    mockDb.discountCode.findUnique.mockResolvedValue({
+      id: "d1",
+      code: "SAVE10",
+      percentOff: 10,
+      amountOff: null,
+      active: true,
+      expiresAt: null,
+      maxUses: null,
+      usedCount: 0,
+    });
+
+    const quote = await quoteOrder({
+      items: oneItem,
+      country: "IT",
+      shippingMethodId: "m1",
+      discountCode: "SAVE10",
+      giftCard: true,
+    });
+
+    expect(quote.discountAmount).toBe(110);
+    // 1100 - 110 + 500 = 1490: just under the 1500 threshold.
+    expect(quote.freeShipping).toBe(false);
+    expect(quote.total).toBe(1100 - 110 + 500 + 500);
+  });
+});

@@ -21,6 +21,9 @@ const settingsSchema = z.object({
   freeShippingThreshold: z.coerce.number().nonnegative().optional(),
   trustBadgeText: z.string().max(200).optional().or(z.literal("")),
   showTestimonials: z.coerce.boolean(),
+  giftCardEnabled: z.coerce.boolean(),
+  // Euros in the form, cents in the database.
+  giftCardPrice: z.coerce.number().min(0).max(1000).optional(),
   siteUrl: z.string().url().optional().or(z.literal("")),
   metaDescription: z.string().max(300).optional().or(z.literal("")),
   ogImageUrl: z.string().url().optional().or(z.literal("")),
@@ -52,6 +55,8 @@ export async function updateStoreSettings(_prevState: unknown, formData: FormDat
     freeShippingThreshold: formData.get("freeShippingThreshold") || undefined,
     trustBadgeText: formData.get("trustBadgeText") || "",
     showTestimonials: formData.get("showTestimonials") === "on",
+    giftCardEnabled: formData.get("giftCardEnabled") === "on",
+    giftCardPrice: formData.get("giftCardPrice") || undefined,
     siteUrl: formData.get("siteUrl") || "",
     metaDescription: formData.get("metaDescription") || "",
     ogImageUrl: formData.get("ogImageUrl") || "",
@@ -77,6 +82,10 @@ export async function updateStoreSettings(_prevState: unknown, formData: FormDat
     companyLegalName: data.companyLegalName || null,
     companyAddress: data.companyAddress || null,
     trustBadgeText: data.trustBadgeText || null,
+    giftCardPrice:
+      data.giftCardPrice !== undefined
+        ? Math.round(data.giftCardPrice * 100)
+        : (before?.giftCardPrice ?? 500),
     freeShippingThreshold:
       data.freeShippingThreshold !== undefined
         ? Math.round(data.freeShippingThreshold * 100)

@@ -527,6 +527,25 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                 </span>
               </div>
 
+              {settings.giftCardEnabled && (
+                <Link href="/personalised-gift-card" className="shop-gift-card-offer">
+                  <span className="shop-gift-card-offer-kicker">{dict.giftCard.pdpTitle}</span>
+                  <span className="shop-gift-card-offer-line">
+                    {applyTemplate(dict.giftCard.pdpLine, {
+                      price: formatMoney(
+                        settings.giftCardPrice,
+                        settings.defaultCurrency,
+                        settings.defaultLocale
+                      ),
+                    })}
+                  </span>
+                  <span className="shop-gift-card-offer-body">{dict.giftCard.pdpBody}</span>
+                  <span className="shop-gift-card-offer-cta">
+                    {dict.giftCard.pdpCta} <span aria-hidden="true">→</span>
+                  </span>
+                </Link>
+              )}
+
               {/* Secondary information grouped instead of many small lines of
                   equal weight: each opens on demand. */}
               <div className="shop-info-details">

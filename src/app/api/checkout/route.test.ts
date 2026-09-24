@@ -80,11 +80,12 @@ const quote = {
   shippingMethod: { id: "ship1" },
 };
 
-function checkout() {
+function checkout(extra: Record<string, unknown> = {}) {
   return POST(
     new Request("https://shop.test/api/checkout", {
       method: "POST",
       body: JSON.stringify({
+        ...extra,
         items: [{ productId: "p1", quantity: 1 }],
         guestEmail: "buyer@example.com",
         address: {
@@ -184,5 +185,49 @@ describe("POST /api/checkout stock conflicts", () => {
 
     expect(res.status).toBe(400);
     expect(mocks.cancelExpiredOrders).not.toHaveBeenCalled();
+  });
+});
+
+describe("POST /api/checkout personalised gift card", () => {
+  const card = {
+    messageType: "preset",
+    message: "A little piece of Venice, just for you.",
+    recipient: "Sofia",
+    sender: "Marco",
+    font: "script",
+  };
+
+  it("asks for the card to be priced and saves what to print on the order", async () => {
+    mocks.quoteOrder.mockResolvedValue({ ...quote, giftCardAmount: 500, total: 5500 });
+
+    const res = await checkout({ giftCard: card });
+
+    expect(res.status).toBe(201);
+    expect(mocks.quoteOrder).toHaveBeenCalledWith(expect.objectContaining({ giftCard: true }));
+    expect(mocks.orderCreated).toHaveBeenCalledWith(
+      expect.objectContaining({
+        giftCardAmount: 500,
+        giftCardMessageType: "preset",
+        giftCardMessage: card.message,
+        giftCardRecipient: "Sofia",
+        giftCardSender: "Marco",
+        giftCardFont: "script",
+      })
+    );
+  });
+
+  it("saves no card when the store doesn't charge for one (switched off)", async () => {
+    mocks.quoteOrder.mockResolvedValue({ ...quote, giftCardAmount: 0 });
+
+    await checkout({ giftCard: card });
+
+    const data = mocks.orderCreated.mock.calls[0][0];
+    expect(data.giftCardMessage).toBeUndefined();
+  });
+
+  it("rejects a message longer than the card allows", async () => {
+    const res = await checkout({ giftCard: { ...card, message: "x".repeat(201) } });
+    expect(res.status).toBe(400);
+    expect(mocks.quoteOrder).not.toHaveBeenCalled();
   });
 });

@@ -12,6 +12,7 @@ const quoteSchema = z.object({
   country: z.string().length(2),
   shippingMethodId: z.string().min(1),
   discountCode: z.string().min(1).max(50).optional(),
+  giftCard: z.boolean().optional(),
 });
 
 export async function POST(request: Request) {
@@ -38,6 +39,7 @@ export async function POST(request: Request) {
       freeShipping: quote.freeShipping,
       discountAmount: quote.discountAmount,
       bundleDiscountAmount: quote.bundleDiscountAmount,
+      giftCardAmount: quote.giftCardAmount,
       total: quote.total,
       currency: quote.currency,
       pricesIncludeTax: quote.pricesIncludeTax,

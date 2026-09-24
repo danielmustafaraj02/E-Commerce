@@ -20,6 +20,8 @@ type Settings = {
   freeShippingThreshold: number | null;
   trustBadgeText: string | null;
   showTestimonials: boolean;
+  giftCardEnabled: boolean;
+  giftCardPrice: number;
   siteUrl: string | null;
   metaDescription: string | null;
   ogImageUrl: string | null;
@@ -171,6 +173,37 @@ export function SettingsForm({ settings }: { settings: Settings }) {
         />
         Show &quot;What customers say&quot; on the homepage
       </label>
+
+      <fieldset className="border-foreground/10 bg-background/50 flex flex-col gap-3 rounded-lg border p-4">
+        <legend className="px-1 text-sm font-medium">Personalised gift card</legend>
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            name="giftCardEnabled"
+            defaultChecked={settings.giftCardEnabled}
+            className="field-checkbox"
+          />
+          Offer the personalised gift card
+        </label>
+        <span className="text-foreground/60 text-xs">
+          When on: the /personalised-gift-card page, the &quot;Make it a gift&quot; block on
+          product pages, the cart invitation and the home page banner. Each card&apos;s text,
+          names and font appear on the order to print. When off, all of it disappears and
+          checkout ignores any card.
+        </span>
+        <label className="flex flex-col gap-1 text-sm">
+          Price (€)
+          <input
+            name="giftCardPrice"
+            type="number"
+            min="0"
+            max="1000"
+            step="0.01"
+            defaultValue={(settings.giftCardPrice / 100).toFixed(2)}
+            className="field max-w-40"
+          />
+        </label>
+      </fieldset>
 
       <fieldset className="border-foreground/10 bg-background/50 flex flex-col gap-3 rounded-lg border p-4">
         <legend className="px-1 text-sm font-medium">SEO</legend>

@@ -24,6 +24,8 @@ import { db } from "@/lib/db";
 import { getAllLooks } from "@/lib/look-data";
 import { LookCard } from "@/components/look-card";
 import { ComposePromo } from "@/components/compose-promo";
+import { GiftCardAd } from "@/components/gift-card-ad";
+import { formatMoney } from "@/lib/format";
 import { homeFontClasses } from "./home-fonts";
 import "./home.css";
 
@@ -450,6 +452,18 @@ export default async function Home() {
             </ul>
           </div>
         </section>
+      )}
+
+      {settings.giftCardEnabled && (
+        <GiftCardAd
+          dict={dict.giftCard}
+          brand={settings.storeName}
+          price={formatMoney(
+            settings.giftCardPrice,
+            settings.defaultCurrency,
+            settings.defaultLocale
+          )}
+        />
       )}
 
       <section className="shelf-newsletter shelf-section">

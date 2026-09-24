@@ -10,6 +10,11 @@ import { FulfillmentTrackingForm } from "./fulfillment-tracking-form";
 import { ConfirmForm } from "@/components/confirm-form";
 import { AddressMap } from "@/components/address-map";
 import { findOrderOnMap } from "./geocode-actions";
+import { GiftCardPreview } from "@/components/gift-card-preview";
+import { giftCardLines, GIFT_CARD_FONTS, type GiftCardFont } from "@/lib/gift-card";
+import { giftCardFontClasses } from "@/lib/gift-card-fonts";
+import { getDictionary } from "@/lib/i18n/dictionaries";
+import { locales, type Locale } from "@/lib/i18n/locale";
 
 export default async function AdminOrderDetailPage({
   params,
@@ -45,6 +50,28 @@ export default async function AdminOrderDetailPage({
     ? await db.supplier.findMany({ where: { id: { in: pendingSupplierIds } } })
     : [];
 
+  // The card is printed in the language the customer ordered in.
+  const giftLocale: Locale = (locales as readonly string[]).includes(order.locale ?? "")
+    ? (order.locale as Locale)
+    : "en";
+  const giftDict = getDictionary(giftLocale).giftCard;
+  const giftFont: GiftCardFont = (GIFT_CARD_FONTS as readonly string[]).includes(
+    order.giftCardFont ?? ""
+  )
+    ? (order.giftCardFont as GiftCardFont)
+    : "serif";
+  const giftLines =
+    order.giftCardAmount > 0 && order.giftCardMessage
+      ? giftCardLines(
+          {
+            message: order.giftCardMessage,
+            recipient: order.giftCardRecipient ?? undefined,
+            sender: order.giftCardSender ?? undefined,
+          },
+          giftDict
+        )
+      : null;
+
   return (
     <div className="max-w-3xl">
       <h1 className="mb-1 text-2xl font-semibold">Order {order.orderNumber}</h1>
@@ -53,10 +80,45 @@ export default async function AdminOrderDetailPage({
         {order.user?.email ?? order.guestEmail ?? "guest"}
       </p>
 
+      {giftLines && (
+        <section className={`form-card mb-8 flex flex-col gap-5 sm:flex-row ${giftCardFontClasses}`}>
+          <GiftCardPreview lines={giftLines} font={giftFont} brand={settings.storeName} size="small" />
+          <div className="flex min-w-0 flex-col gap-2 text-sm">
+            <h2 className="text-lg font-medium">Personalised gift card to print</h2>
+            <p className="text-foreground/70">
+              Print this card and place it inside the package. Language: {giftLocale}.
+            </p>
+            <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
+              <dt className="text-foreground/60">Printed text</dt>
+              <dd className="whitespace-pre-line">{giftLines.join("\n\n")}</dd>
+              <dt className="text-foreground/60">Message</dt>
+              <dd>
+                {order.giftCardMessage} (
+                {order.giftCardMessageType === "custom" ? "written by the customer" : "chosen from our messages"})
+              </dd>
+              <dt className="text-foreground/60">For</dt>
+              <dd>{order.giftCardRecipient || "—"}</dd>
+              <dt className="text-foreground/60">From</dt>
+              <dd>{order.giftCardSender || "—"}</dd>
+              <dt className="text-foreground/60">Font</dt>
+              <dd>{giftDict.fonts[giftFont]} ({giftFont})</dd>
+            </dl>
+          </div>
+        </section>
+      )}
+
       <div className="grid gap-8 sm:grid-cols-2">
         <section>
           <h2 className="mb-3 text-lg font-medium">Items</h2>
           <ul className="divide-foreground/10 flex flex-col divide-y text-sm">
+            {order.giftCardAmount > 0 && (
+              <li className="flex justify-between py-2">
+                <span>Personalised gift card (see below)</span>
+                <span>
+                  {formatMoney(order.giftCardAmount, order.currency, settings.defaultLocale)}
+                </span>
+              </li>
+            )}
             {order.items.map((item) => (
               <li key={item.id} className="flex justify-between py-2">
                 <span>

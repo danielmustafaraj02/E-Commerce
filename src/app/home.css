@@ -1226,3 +1226,46 @@
   justify-content: center;
   margin: 2.5rem 0 0;
 }
+
+/* -- Home: the personalised gift card ad (components/gift-card-ad.tsx) ------- */
+
+.gc-ad {
+  background: #faf8f5;
+}
+.gc-ad-grid {
+  display: grid;
+  gap: 3rem;
+  align-items: center;
+}
+.gc-ad-card {
+  padding: 1rem;
+}
+.gc-ad-card .gc-card {
+  max-width: 19rem;
+  transform: rotate(-2deg);
+}
+.gc-ad-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.9rem;
+}
+.gc-ad-sub {
+  margin: 0;
+  color: var(--gold);
+  font-family: var(--font-display), Georgia, serif;
+  font-style: italic;
+  font-size: 1.6rem;
+}
+.gc-ad-body {
+  max-width: 30rem;
+  margin: 0 0 0.75rem;
+  color: color-mix(in srgb, var(--ink) 85%, white);
+  line-height: 1.7;
+}
+@media (min-width: 52rem) {
+  .gc-ad-grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: 5rem;
+  }
+}

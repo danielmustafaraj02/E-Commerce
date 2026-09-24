@@ -3,6 +3,7 @@ import { z } from "zod";
 import { auth } from "@/auth";
 import { PricingError } from "@/lib/pricing";
 import { placeOrderWithRetry } from "@/lib/place-order";
+import { giftCardSchema } from "@/lib/gift-card";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { isValidPostalCode } from "@/lib/postal-code";
@@ -30,6 +31,7 @@ const checkoutSchema = z.object({
     }),
   shippingMethodId: z.string().min(1),
   discountCode: z.string().min(1).max(50).optional(),
+  giftCard: giftCardSchema.optional(),
   turnstileToken: z.string().optional(),
 });
 
@@ -67,6 +69,7 @@ export async function POST(request: Request) {
       address: input.address,
       shippingMethodId: input.shippingMethodId,
       discountCode: input.discountCode,
+      giftCard: input.giftCard,
       userId: session?.user?.id,
       guestEmail: input.guestEmail,
       locale,

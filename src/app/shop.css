@@ -1983,3 +1983,162 @@ a.look-piece-name:hover {
     top: 7rem;
   }
 }
+
+/* -- Cart: the personalised gift card (app/cart/cart-client.tsx) ------------- */
+
+.cart-gift {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: center;
+}
+.cart-gift .gc-card--small {
+  max-width: 7rem;
+  padding: 0.8rem 0.55rem 0.6rem;
+  box-shadow: 0 8px 18px -12px rgb(18 61 67 / 0.4);
+}
+.cart-gift .gc-card--small .gc-card-text p {
+  font-size: 0.55rem;
+}
+.cart-gift .gc-card--small .gc-card-text--script p {
+  font-size: 0.7rem;
+}
+.cart-gift .gc-card--small .gc-card-brand,
+.cart-gift .gc-card--small .gc-card-foot {
+  font-size: 0.38rem;
+}
+.cart-gift-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+.cart-gift-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+.cart-gift-meta {
+  margin: 0;
+  color: color-mix(in srgb, var(--ink) 85%, white);
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+.cart-gift-meta span {
+  color: var(--ink-soft);
+}
+.cart-gift-actions {
+  display: flex;
+  gap: 1.25rem;
+  margin: 0.35rem 0 0;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.cart-gift-actions a,
+.cart-gift-actions button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--gold);
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+.cart-gift-invite {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.2s ease;
+}
+.cart-gift-invite:hover {
+  border-color: var(--gold);
+}
+.cart-gift-invite-title {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+.cart-gift-invite-body {
+  color: color-mix(in srgb, var(--ink) 85%, white);
+  font-size: 0.95rem;
+}
+.cart-gift-invite-cta {
+  margin-top: 0.4rem;
+  color: var(--ink);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.checkout-gift-note {
+  margin: 0.75rem 0 0;
+  color: var(--ink-soft);
+  font-family: var(--font-display), Georgia, serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.45;
+}
+
+/* -- Product page: the gift card offer --------------------------------------- */
+
+.shop-gift-card-offer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-top: 1rem;
+  padding: 1.25rem 1.35rem;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: #fff;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.3s ease;
+}
+.shop-gift-card-offer::after {
+  content: "";
+  position: absolute;
+  inset: 0.4rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 40%, transparent);
+  border-radius: 2px;
+  pointer-events: none;
+}
+.shop-gift-card-offer:hover {
+  border-color: var(--gold);
+}
+.shop-gift-card-offer-kicker {
+  color: var(--gold);
+  font-family: var(--font-display), Georgia, serif;
+  font-style: italic;
+  font-size: 1.05rem;
+}
+.shop-gift-card-offer-line {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+.shop-gift-card-offer-body {
+  color: color-mix(in srgb, var(--ink) 85%, white);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+.shop-gift-card-offer-cta {
+  margin-top: 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}

@@ -20,6 +20,8 @@ const defaults = {
   freeShippingThreshold: null as number | null,
   trustBadgeText: null as string | null,
   showTestimonials: true,
+  giftCardEnabled: false,
+  giftCardPrice: 500,
   siteUrl: null as string | null,
   metaDescription: null as string | null,
   ogImageUrl: null as string | null,

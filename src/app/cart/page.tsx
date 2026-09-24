@@ -6,6 +6,7 @@ import { getShippingBanner } from "@/lib/shipping-banner";
 import { ShelfMain } from "@/components/shelf-main";
 import { ShelfHead, ShelfBody } from "@/components/shelf-page";
 import { CartClient } from "./cart-client";
+import { giftCardFontClasses } from "@/lib/gift-card-fonts";
 
 export default async function CartPage() {
   const [settings, uiLocale, stripePublishableKey] = await Promise.all([
@@ -26,6 +27,7 @@ export default async function CartPage() {
         <p className="shop-lede">{dict.cart.subtitle}</p>
       </ShelfHead>
       <ShelfBody width="lg">
+        <div className={giftCardFontClasses}>
         <CartClient
           locale={settings.defaultLocale}
           uiLocale={uiLocale}
@@ -33,7 +35,13 @@ export default async function CartPage() {
           shippingBanner={shippingBanner}
           freeShippingThreshold={settings.freeShippingThreshold}
           stripePublishableKey={stripePublishableKey}
+          giftCardOffer={
+            settings.giftCardEnabled
+              ? { price: settings.giftCardPrice, dict: dict.giftCard, brand: settings.storeName }
+              : null
+          }
         />
+        </div>
       </ShelfBody>
     </ShelfMain>
   );
