@@ -1,11 +1,17 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function GET() {
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: "Not signed in" }, { status: 401 });
+  }
+
+  const { success } = await rateLimit(`account-export:${session.user.id}`, 5, 60_000);
+  if (!success) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   }
 
   const user = await db.user.findUnique({
