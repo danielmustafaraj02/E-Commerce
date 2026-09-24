@@ -295,7 +295,6 @@ export function CheckoutClient({
             onChange={(e) => setFullName(e.target.value)}
             className="field"
           />
-<<<<<<< HEAD
           <input
             required
             name="street-address"
@@ -340,55 +339,6 @@ export function CheckoutClient({
             <p id="postal-code-error" role="alert" className="text-danger -mt-2 text-xs">
               {dict.invalidPostalCode}
             </p>
-=======
-          <button
-            type="button"
-            onClick={() => setAppliedDiscountCode(discountCodeInput || undefined)}
-            className="btn-secondary shrink-0 text-sm"
-          >
-            {dict.apply}
-          </button>
-        </div>
-
-        <div aria-live="polite">
-          {quote && (
-            <div className="border-foreground/10 animate-fade-up flex flex-col gap-1.5 border-t pt-4 text-sm tabular-nums">
-              <div className="flex justify-between">
-                <span className="text-foreground/70">{dict.subtotal}</span>
-                <span>{formatMoney(quote.subtotal, quote.currency, locale)}</span>
-              </div>
-              {quote.discountAmount > 0 && (
-                <div className="text-success flex justify-between">
-                  <span>{dict.discount}</span>
-                  <span>-{formatMoney(quote.discountAmount, quote.currency, locale)}</span>
-                </div>
-              )}
-              <div className="text-foreground/70 flex justify-between">
-                <span>
-                  {dict.shipping}
-                  {selectedShippingMethod ? ` (${selectedShippingMethod.name})` : ""}
-                </span>
-                <span>{formatMoney(quote.shippingAmount, quote.currency, locale)}</span>
-              </div>
-              {/* Duties depend on the destination, not the shipping cost: the UK,
-                  Switzerland and Norway ship free but are outside the EU customs union. */}
-              {country && !isEuCountry(country) && (
-                <p className="text-foreground/60 text-xs">{dict.importDutiesNotice}</p>
-              )}
-              <div className="text-foreground/70 flex justify-between">
-                <span>
-                  {quote.pricesIncludeTax ? dict.includesVat : dict.vat}
-                  {quote.taxRatePercent !== null ? ` (${quote.taxRatePercent}%)` : ""}
-                </span>
-                <span>{formatMoney(quote.taxAmount, quote.currency, locale)}</span>
-              </div>
-              {quote.missingTaxRule && <p className="text-warning">{dict.missingTaxRule}</p>}
-              <div className="border-foreground/10 mt-1 flex justify-between border-t pt-2 text-base font-semibold">
-                <span>{dict.total}</span>
-                <span>{formatMoney(quote.total, quote.currency, locale)}</span>
-              </div>
-            </div>
->>>>>>> main
           )}
           <select
             name="country"

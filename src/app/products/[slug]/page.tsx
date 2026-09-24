@@ -37,11 +37,8 @@ import { StarRating } from "@/components/star-rating";
 import { ReviewForm } from "./review-form";
 import { hasPurchased } from "./review-actions";
 import { getShippingBanner } from "@/lib/shipping-banner";
-<<<<<<< HEAD
 import { getLooksForProducts } from "@/lib/look-data";
 import { CompleteTheLook } from "@/components/complete-the-look";
-=======
->>>>>>> main
 
 // Small single-use icons for the gift sections below — same stroke
 // convention (1.8, round caps/joins, currentColor) as the existing icons in
@@ -241,10 +238,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
     settings.defaultCurrency,
     settings.defaultLocale
   );
-<<<<<<< HEAD
   const [look] = await getLooksForProducts([product.id], uiLocale);
-=======
->>>>>>> main
   const name = localizedName(product, uiLocale);
   const description = localizedDescription(product, uiLocale);
   const story = localizedStory(product, uiLocale);
