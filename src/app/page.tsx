@@ -274,7 +274,7 @@ export default async function Home() {
                 ))}
               </ul>
               <div className="shelf-special-cta">
-                <Link href="/products" className="shelf-button">
+                <Link href="/products?sale=1" className="shelf-button">
                   {dict.home.specialSelectionCta}
                 </Link>
               </div>
