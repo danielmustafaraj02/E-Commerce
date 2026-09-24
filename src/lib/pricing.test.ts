@@ -326,7 +326,7 @@ describe("quoteOrder", () => {
       );
     });
 
-    it("gives no bundle discount when a piece is missing", async () => {
+    it("takes 10% off when two pieces of the look are bought", async () => {
       mockDb.product.findMany.mockResolvedValue(pieces().slice(0, 2));
       mockDb.look.findMany.mockResolvedValue([look]);
 
@@ -336,8 +336,21 @@ describe("quoteOrder", () => {
         shippingMethodId: "m1",
       });
 
+      expect(quote.bundleDiscountAmount).toBe(1200 + 450);
+      expect(quote.total).toBe(16500 - 1650 + 500);
+    });
+
+    it("gives no bundle discount for a single piece", async () => {
+      mockDb.product.findMany.mockResolvedValue(pieces().slice(0, 1));
+      mockDb.look.findMany.mockResolvedValue([look]);
+
+      const quote = await quoteOrder({
+        items: allThree.slice(0, 1),
+        country: "IT",
+        shippingMethodId: "m1",
+      });
+
       expect(quote.bundleDiscountAmount).toBe(0);
-      expect(quote.total).toBe(16500 + 500);
     });
 
     it("applies a percent discount code to the price after the bundle saving", async () => {

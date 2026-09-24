@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import type { Locale } from "@/lib/i18n/locale";
 import { localizedName, productImageAlt } from "@/lib/product-i18n";
 import { LOOK_SIZE, lookPricing } from "@/lib/looks";
+import { deriveProductType, type ProductType } from "@/lib/gift-finder";
 
 export type LookPieceView = {
   productId: string;
@@ -12,6 +13,8 @@ export type LookPieceView = {
   imageUrl: string | null;
   imageAlt: string;
   available: boolean;
+  // Necklace, bracelet or earrings (from the category), for the composition.
+  kind: ProductType | null;
 };
 
 export type LookView = {
@@ -40,7 +43,10 @@ export async function getLooksForProducts(
       products: {
         where: { active: true },
         orderBy: { createdAt: "asc" },
-        include: { images: { take: 1, orderBy: { position: "asc" } } },
+        include: {
+          images: { take: 1, orderBy: { position: "asc" } },
+          category: { select: { name: true, nameEn: true, slug: true } },
+        },
       },
     },
   });
@@ -59,6 +65,7 @@ export async function getLooksForProducts(
           imageUrl: product.images[0]?.url ?? null,
           imageAlt: productImageAlt(name, locale),
           available: !product.trackInventory || product.stockQty > 0,
+          kind: deriveProductType(product.category ?? null),
         };
       });
       return {

@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { bundleDiscounts, cartLookSummary, lookPricing, LOOK_SIZE } from "./looks";
+import {
+  bundleDiscounts,
+  cartLookSummary,
+  lookPricing,
+  LOOK_SIZE,
+  PAIR_DISCOUNT_PERCENT,
+} from "./looks";
 
 describe("lookPricing", () => {
   it("prices the complete set from the pieces' real prices", () => {
@@ -31,9 +37,18 @@ describe("bundleDiscounts", () => {
     expect(result.lookIds).toEqual(["look1"]);
   });
 
-  it("gives nothing when a piece is missing", () => {
+  it("takes 10% off two pieces of the same look bought together", () => {
+    expect(PAIR_DISCOUNT_PERCENT).toBe(10);
     const result = bundleDiscounts([line("n", 12000), line("b", 4500)], [look]);
-    expect(result).toEqual({ total: 0, byProduct: {}, lookIds: [] });
+    expect(result).toEqual({ total: 1650, byProduct: { n: 1200, b: 450 }, lookIds: ["look1"] });
+  });
+
+  it("gives nothing for a single piece", () => {
+    expect(bundleDiscounts([line("n", 12000)], [look])).toEqual({
+      total: 0,
+      byProduct: {},
+      lookIds: [],
+    });
   });
 
   it("counts only complete sets when quantities differ", () => {
@@ -41,8 +56,8 @@ describe("bundleDiscounts", () => {
       [line("n", 12000, 2), line("b", 4500, 2), line("e", 1500, 1)],
       [look]
     );
-    // One complete set: the second necklace and bracelet are full price.
-    expect(result.total).toBe(2700);
+    // One complete set at 15%, then the extra necklace + bracelet as a pair at 10%.
+    expect(result.total).toBe(2700 + 1200 + 450);
   });
 
   it("discounts two complete sets", () => {
@@ -51,6 +66,11 @@ describe("bundleDiscounts", () => {
       [look]
     );
     expect(result.total).toBe(5400);
+  });
+
+  it("never gives a pair more than the look's own set discount", () => {
+    const small = { id: "look3", discountPercent: 5, productIds: ["n", "b", "e"] };
+    expect(bundleDiscounts([line("n", 10000), line("b", 10000)], [small]).total).toBe(1000);
   });
 
   it("ignores looks that don't have exactly the full number of pieces", () => {

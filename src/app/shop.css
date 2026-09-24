@@ -1005,28 +1005,61 @@ body:has(.shop-sticky-cta) footer {
   position: relative;
   margin-top: 1.75rem;
   display: grid;
-  grid-template-columns: 1.3fr 1fr;
-  grid-template-rows: 1fr 1fr;
   gap: 0.75rem;
-  aspect-ratio: 4 / 3;
+  /* Phones: the necklace on top, full width; bracelet and earrings below. */
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1.7fr 1fr;
+  grid-template-areas:
+    "necklace necklace"
+    "bracelet earrings";
+  aspect-ratio: 4 / 5;
 }
 .look-visual--styled {
   display: block;
   border-radius: 4px;
   overflow: hidden;
+  aspect-ratio: 4 / 3;
 }
 .look-visual-tile {
   position: relative;
 }
-/* The first piece (in admin order, the necklace) anchors the composition. */
-.look-visual-tile:first-child {
-  grid-row: 1 / span 2;
+/* Placed by piece type (lib/look-data.ts): the necklace is the hero piece. */
+.look-visual-tile--necklace {
+  grid-area: necklace;
+}
+.look-visual-tile--bracelet {
+  grid-area: bracelet;
+}
+.look-visual-tile--earrings {
+  grid-area: earrings;
+}
+/* Each photo is shown whole — contain, never cropped — and multiply drops
+   its white background into the sand. The catalog photos have wide white
+   margins, so they're scaled up a little to fill their tiles. */
+.look-visual-tile img {
+  object-fit: contain;
+  transform: scale(1.2);
 }
 .look-visual-tile img,
 .look-piece-photo img {
-  object-fit: cover;
   mix-blend-mode: multiply;
   filter: brightness(1.05) contrast(1.03);
+}
+.look-piece-photo img {
+  object-fit: cover;
+}
+@media (min-width: 40rem) {
+  /* Bracelet top-left, earrings lower-centre, necklace filling the right
+     half at full height: roughly half the showcase. */
+  .look-visual {
+    grid-template-columns: 1fr 1fr 1.9fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas:
+      "bracelet . necklace"
+      "bracelet earrings necklace";
+    gap: 1rem;
+    aspect-ratio: 4 / 3;
+  }
 }
 .look-prices {
   margin: 0;

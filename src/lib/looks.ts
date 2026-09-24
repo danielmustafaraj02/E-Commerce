@@ -5,6 +5,10 @@
 
 export const LOOK_SIZE = 3;
 
+// Any two different pieces of a look bought together: a smaller saving than
+// the full set (never more than the look's own set discount).
+export const PAIR_DISCOUNT_PERCENT = 10;
+
 // Rounded per piece, exactly as bundleDiscounts applies it at checkout, so the
 // advertised set price is the price charged.
 function pieceSaving(price: number, discountPercent: number) {
@@ -20,26 +24,40 @@ export function lookPricing(prices: number[], discountPercent: number) {
 export type LookRule = { id: string; discountPercent: number; productIds: string[] };
 type CartLine = { productId: string; price: number; quantity: number };
 
-// Discount for every complete set of a look in the cart: min(quantity) across
-// its pieces, so extra units of one piece stay full price.
+// Discount for each complete set of a look in the cart (min quantity across
+// its pieces) at the look's percentage, then for each remaining pair of two
+// different pieces at PAIR_DISCOUNT_PERCENT. Extra single pieces stay full price.
 export function bundleDiscounts(lines: CartLine[], looks: LookRule[]) {
   const byProduct: Record<string, number> = {};
   const lookIds: string[] = [];
   let total = 0;
 
+  const discount = (piece: CartLine, percent: number, count: number) => {
+    const amount = pieceSaving(piece.price, percent) * count;
+    byProduct[piece.productId] = (byProduct[piece.productId] ?? 0) + amount;
+    total += amount;
+  };
+
   for (const look of looks) {
     if (look.productIds.length !== LOOK_SIZE) continue;
-    const pieces = look.productIds.map((id) => lines.find((l) => l.productId === id));
-    if (pieces.some((piece) => !piece)) continue;
-    const sets = Math.min(...pieces.map((piece) => piece!.quantity));
-    if (sets < 1) continue;
+    const pieces = look.productIds.flatMap((id) => {
+      const piece = lines.find((l) => l.productId === id);
+      return piece && piece.quantity > 0 ? [piece] : [];
+    });
+    if (pieces.length < 2) continue;
 
-    lookIds.push(look.id);
-    for (const piece of pieces as CartLine[]) {
-      const amount = pieceSaving(piece.price, look.discountPercent) * sets;
-      byProduct[piece.productId] = (byProduct[piece.productId] ?? 0) + amount;
-      total += amount;
+    const sets = pieces.length === LOOK_SIZE ? Math.min(...pieces.map((p) => p.quantity)) : 0;
+    for (const piece of pieces) if (sets > 0) discount(piece, look.discountPercent, sets);
+
+    // What's left after the complete sets: at most two pieces still have units.
+    const left = pieces.filter((p) => p.quantity > sets);
+    if (left.length === 2) {
+      const pairs = Math.min(left[0].quantity - sets, left[1].quantity - sets);
+      const percent = Math.min(PAIR_DISCOUNT_PERCENT, look.discountPercent);
+      for (const piece of left) discount(piece, percent, pairs);
     }
+
+    if (sets > 0 || left.length === 2) lookIds.push(look.id);
   }
   return { total, byProduct, lookIds };
 }

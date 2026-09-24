@@ -7,6 +7,7 @@ import { useCartStore } from "@/lib/cart-store";
 import { formatMoney } from "@/lib/format";
 import { applyTemplate } from "@/lib/i18n/format";
 import { trackLookEvent } from "@/lib/look-analytics";
+import { lookPricing, PAIR_DISCOUNT_PERCENT } from "@/lib/looks";
 import type { LookView } from "@/lib/look-data";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
@@ -59,8 +60,23 @@ export function CompleteTheLook({
   const money = (cents: number) => formatMoney(cents, currency, locale);
   const chosen = look.pieces.filter((p) => selected.has(p.productId));
   const completeSet = look.available && chosen.length === look.pieces.length;
+  // Two pieces also save (lib/looks.ts: the same rule checkout applies).
+  const pairPercent = Math.min(PAIR_DISCOUNT_PERCENT, look.discountPercent);
+  const pair = chosen.length === 2;
   const chosenTotal = chosen.reduce((sum, p) => sum + p.price, 0);
   const percent = { percent: look.discountPercent };
+  const offer = completeSet
+    ? { label: dict.setTotal, pricing: look.pricing, percent: look.discountPercent }
+    : pair
+      ? {
+          label: dict.pairTotal,
+          pricing: lookPricing(
+            chosen.map((p) => p.price),
+            pairPercent
+          ),
+          percent: pairPercent,
+        }
+      : null;
 
   const toggle = (productId: string) => {
     const next = new Set(selected);
@@ -101,6 +117,9 @@ export function CompleteTheLook({
           </h2>
           <p className="look-subtitle">{dict.subtitle}</p>
           <p className="look-copy">{dict.intro}</p>
+          <p className="look-copy look-pair-hint">
+            {applyTemplate(dict.pairHint, { percent: pairPercent })}
+          </p>
 
           {look.imageUrl ? (
             <div className="look-visual look-visual--styled">
@@ -112,17 +131,26 @@ export function CompleteTheLook({
               />
             </div>
           ) : (
-            // No styled photo: arrange the pieces' own photos as one composition.
+            // No styled photo: the pieces' own photos as one composition, the
+            // necklace large on the right, bracelet and earrings beside it
+            // (placed by piece type in shop.css).
             <div className="look-visual" aria-hidden="true">
               {look.pieces.map(
                 (piece) =>
                   piece.imageUrl && (
-                    <div key={piece.productId} className="look-visual-tile">
+                    <div
+                      key={piece.productId}
+                      className={`look-visual-tile look-visual-tile--${piece.kind ?? "other"}`}
+                    >
                       <CatalogImage
                         src={piece.imageUrl}
                         alt=""
                         fill
-                        sizes="(min-width: 52rem) 22vw, 50vw"
+                        sizes={
+                          piece.kind === "necklace"
+                            ? "(min-width: 52rem) 24vw, 90vw"
+                            : "(min-width: 52rem) 14vw, 45vw"
+                        }
                       />
                     </div>
                   )
@@ -135,19 +163,17 @@ export function CompleteTheLook({
           <dl className="look-prices" aria-live="polite">
             <div className="look-price-row">
               <dt>{dict.individualTotal}</dt>
-              <dd>
-                {completeSet ? <s>{money(look.pricing.individualTotal)}</s> : money(chosenTotal)}
-              </dd>
+              <dd>{offer ? <s>{money(chosenTotal)}</s> : money(chosenTotal)}</dd>
             </div>
-            {completeSet && (
+            {offer && (
               <>
                 <div className="look-price-row look-price-row--set">
-                  <dt>{dict.setTotal}</dt>
-                  <dd>{money(look.pricing.setTotal)}</dd>
+                  <dt>{offer.label}</dt>
+                  <dd>{money(offer.pricing.setTotal)}</dd>
                 </div>
                 <div className="look-save">
-                  <dt>{applyTemplate(dict.save, percent)}</dt>
-                  <dd>-{money(look.pricing.saving)}</dd>
+                  <dt>{applyTemplate(dict.save, { percent: offer.percent })}</dt>
+                  <dd>-{money(offer.pricing.saving)}</dd>
                 </div>
               </>
             )}
@@ -197,7 +223,9 @@ export function CompleteTheLook({
               ? `✓ ${dict.added}`
               : completeSet
                 ? applyTemplate(dict.addSet, percent)
-                : dict.addSelected}
+                : pair
+                  ? applyTemplate(dict.addPair, { percent: pairPercent })
+                  : dict.addSelected}
           </button>
 
           {!look.available && <p className="look-note">{dict.unavailable}</p>}
