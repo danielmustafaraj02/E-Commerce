@@ -37,7 +37,7 @@ export function ExpandableText({
       <p
         ref={ref}
         className={className}
-        style={expanded ? undefined : { WebkitLineClamp: lines }}
+        style={{ "--lines": lines } as React.CSSProperties}
         data-clamped={!expanded}
       >
         {text}
