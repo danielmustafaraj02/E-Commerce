@@ -108,3 +108,67 @@ describe("updateProduct compareAtPrice", () => {
     expect(mocks.update.mock.calls[0][0].data.compareAtPrice).toBeNull();
   });
 });
+
+function formWithGiftTags(fields: Record<string, string>, checkboxes: Record<string, string[]>) {
+  const data = form(fields);
+  for (const [key, values] of Object.entries(checkboxes)) {
+    data.delete(key);
+    for (const value of values) data.append(key, value);
+  }
+  return data;
+}
+
+describe("createProduct gift metadata", () => {
+  it("stores the checked gift style/occasion/recipient values", async () => {
+    await expect(
+      createProduct(
+        null,
+        formWithGiftTags(
+          {},
+          {
+            giftStyles: ["elegant", "romantic"],
+            giftOccasions: ["birthday"],
+            giftRecipients: ["partner", "myself"],
+          }
+        )
+      )
+    ).rejects.toThrow("NEXT_REDIRECT");
+
+    const data = mocks.create.mock.calls[0][0].data;
+    expect(data.giftStyles).toEqual(["elegant", "romantic"]);
+    expect(data.giftOccasions).toEqual(["birthday"]);
+    expect(data.giftRecipients).toEqual(["partner", "myself"]);
+  });
+
+  it("defaults to empty arrays when nothing is checked", async () => {
+    await expect(createProduct(null, form({}))).rejects.toThrow("NEXT_REDIRECT");
+
+    const data = mocks.create.mock.calls[0][0].data;
+    expect(data.giftStyles).toEqual([]);
+    expect(data.giftOccasions).toEqual([]);
+    expect(data.giftRecipients).toEqual([]);
+  });
+
+  it("rejects an unknown gift style value", async () => {
+    const result = await createProduct(
+      null,
+      formWithGiftTags({}, { giftStyles: ["not-a-real-style"] })
+    );
+
+    expect(result).toEqual({ error: expect.any(String) });
+    expect(mocks.create).not.toHaveBeenCalled();
+  });
+});
+
+describe("updateProduct gift metadata", () => {
+  it("replaces the stored tags with the newly checked values, including clearing them", async () => {
+    await expect(
+      updateProduct("p1", null, formWithGiftTags({}, { giftOccasions: ["christmas"] }))
+    ).rejects.toThrow("NEXT_REDIRECT");
+
+    const data = mocks.update.mock.calls[0][0].data;
+    expect(data.giftStyles).toEqual([]);
+    expect(data.giftOccasions).toEqual(["christmas"]);
+    expect(data.giftRecipients).toEqual([]);
+  });
+});
