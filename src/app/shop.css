@@ -193,10 +193,29 @@
 }
 @media (min-width: 40rem) {
   .shop-product-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 3.5rem;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: 2.5rem;
     align-items: start;
   }
+}
+/* Large screens: a wider hero than the rest of the page (64rem), the
+   gallery taking ~57% and staying in view while the details scroll past. */
+@media (min-width: 64rem) {
+  .shop-product > .shelf-wrap {
+    max-width: 80rem;
+    padding-inline: 2rem;
+  }
+  .shop-product-grid {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: 4.5rem;
+  }
+  .shop-product-grid > .shop-gallery {
+    position: sticky;
+    top: 6rem;
+  }
+}
+.shop-product-info {
+  max-width: 32rem;
 }
 
 .shop-product-photo,
@@ -315,16 +334,42 @@
      a thumb strip underneath it — the grid column itself (.shop-product-grid)
      already gives it the space; this just lets it use all of it. */
   .shop-gallery .shop-product-photo {
-    aspect-ratio: 4 / 4.6;
+    aspect-ratio: 4 / 5;
+    max-height: calc(100svh - 8rem);
+    margin-inline: auto;
   }
+  .shop-gallery-desktop > :last-child {
+    flex: 1;
+    min-width: 0;
+  }
+}
+/* The whole piece is always visible: studio shots are contained (their white
+   background melts into the lilac via multiply) instead of cropped.
+   On-model photos keep filling the frame. */
+.shop-gallery .shop-product-photo img:not(.shop-photo--lifestyle),
+.shop-gallery-swipe .shop-product-photo img:not(.shop-photo--lifestyle) {
+  object-fit: contain;
+}
+.shop-thumb {
+  opacity: 0.7;
+  transition:
+    opacity 180ms ease,
+    border-color 180ms ease;
+}
+.shop-thumb:hover,
+.shop-thumb--active {
+  opacity: 1;
 }
 
 /* -- Value row / gift reassurance strip ----------------------------------------- */
 
 .shop-value-row {
   color: var(--ink-soft);
-  margin-top: 0.6rem;
-  font-size: 0.9rem;
+  margin-top: 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 .shop-gift-reassurance {
@@ -462,13 +507,14 @@
 }
 
 .shop-product-title {
-  font-size: clamp(2rem, 4.6vw, 2.9rem);
+  font-size: clamp(2.2rem, 3.6vw, 3.25rem);
+  line-height: 1.05;
   overflow-wrap: anywhere;
 }
 .shop-price {
-  margin: 0.9rem 0 0;
+  margin: 1.1rem 0 0;
   color: var(--accent-deep);
-  font-size: 1.65rem;
+  font-size: 1.85rem;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
@@ -491,7 +537,7 @@
   border-radius: 2px;
 }
 .shop-prose {
-  margin: 1.5rem 0 0;
+  margin: 1.75rem 0 0;
   max-width: 34rem;
   font-family: var(--font-display), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
   font-size: 1.2rem;
@@ -1243,4 +1289,124 @@ a.look-piece-name:hover {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink);
+}
+
+/* -- Product hero: description, purchase, reassurance, details -------------- */
+
+.expandable [data-clamped="true"] {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.expandable-toggle {
+  margin-top: 0.4rem;
+  min-height: 2.75rem;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+  cursor: pointer;
+}
+
+/* Purchase: Add to cart is the primary action and fills the row beside the
+   quantity; Buy now is a full-width outline; wishlist is a quiet text action.
+   Scoped here (the shared components are used elsewhere too). */
+.shop-buy {
+  margin-top: 1.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+}
+.shop-buy > div:first-child {
+  margin-top: 0;
+  flex-wrap: nowrap;
+}
+.shop-buy .shop-cta-teal {
+  flex: 1;
+  min-height: 3.1rem;
+  letter-spacing: 0.02em;
+}
+.shop-buy > div:first-child > div:first-child {
+  height: 3.1rem;
+}
+.shop-buy > div:first-child > div:first-child button {
+  width: 2.75rem;
+}
+.shop-buy .btn-secondary {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  min-height: 3.1rem;
+}
+.shop-buy button[aria-pressed] {
+  min-height: 2.75rem;
+  padding-inline: 0;
+  border: 0;
+  background: none;
+  font-weight: 500;
+}
+.shop-buy button[aria-pressed]:hover {
+  background: none;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+.shop-product-info .shop-gift-reassurance {
+  margin-top: 1.5rem;
+}
+.shop-product-info .shop-giftfinder-link {
+  margin-top: 0.4rem;
+}
+
+.shop-info-details {
+  margin-top: 1.75rem;
+  border-top: 1px solid var(--rule);
+}
+.shop-info-details details {
+  border-bottom: 1px solid var(--rule);
+}
+.shop-info-details summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 3rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  cursor: pointer;
+  list-style: none;
+}
+.shop-info-details summary::-webkit-details-marker {
+  display: none;
+}
+.shop-info-details summary::after {
+  content: "+";
+  font-weight: 400;
+  font-size: 1.1rem;
+  transition: transform 200ms ease;
+}
+.shop-info-details details[open] summary::after {
+  transform: rotate(45deg);
+}
+.shop-info-details details > div {
+  padding-bottom: 1rem;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+.shop-info-details p {
+  margin: 0;
+}
+.shop-info-details p + p {
+  margin-top: 0.5rem;
+}
+.shop-info-details a {
+  color: var(--ink);
+  text-underline-offset: 0.2em;
 }

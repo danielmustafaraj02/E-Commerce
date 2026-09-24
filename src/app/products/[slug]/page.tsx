@@ -37,6 +37,7 @@ import { StarRating } from "@/components/star-rating";
 import { ReviewForm } from "./review-form";
 import { hasPurchased } from "./review-actions";
 import { getShippingBanner, getShippingFacts } from "@/lib/shipping-banner";
+import { ExpandableText } from "@/components/expandable-text";
 import { buildFaq } from "@/lib/faq";
 import { FaqSection } from "@/components/faq-section";
 import { getLooksForProducts } from "@/lib/look-data";
@@ -401,7 +402,9 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
           <div className="shop-product-grid">
             <ProductGallery images={product.images} alt={productImageAlt(name, uiLocale)} />
 
-            <div>
+            {/* Image → product → story → purchase → reassurance, in one
+                readable column (layout in shop.css). */}
+            <div className="shop-product-info">
               <h1 className="shop-product-title">{name}</h1>
 
               {/* Restrained value row — material, provenance, weight — read in
@@ -477,21 +480,38 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                 </p>
               )}
 
-              {/* Clamped to a short teaser here — the full text is still in
-                  the DOM (fine for SEO/screen readers) and fully visible
-                  further down in "The story behind this piece". */}
-              <p className="shop-prose line-clamp-3">{description}</p>
+              {/* The full description with a deliberate "Read more", never a
+                  sentence cut off mid-word. */}
+              <ExpandableText
+                text={description}
+                moreLabel={dict.journal.readMore}
+                lessLabel={dict.product.readLess}
+                className="shop-prose"
+              />
 
-              {/* True of every piece in the catalog, not per-product copy. */}
-              <ul className="border-foreground/10 text-foreground/70 mt-4 flex flex-col gap-1.5 border-t pt-4 text-sm">
-                <li>
-                  <span className="text-foreground font-medium">{dict.product.careLabel}:</span>{" "}
-                  {dict.product.careNote}{" "}
-                  <Link href="/murano-glass#care" className="text-primary hover:underline">
-                    {dict.footer.muranoGuide}
-                  </Link>
-                </li>
-              </ul>
+              <div className="shop-buy">
+                <ProductPurchasePanel
+                  product={cartProduct}
+                  priceDisplay={priceDisplay}
+                  dict={dict.product}
+                  cartDict={dict.cart}
+                  showBuyNow={!outOfStock}
+                  wishlist={{
+                    productId: product.id,
+                    slug: product.slug,
+                    name,
+                    price: product.price,
+                    currency: product.currency,
+                    imageUrl: product.images[0]?.url ?? null,
+                    initialSaved: Boolean(wishlistItem),
+                    isSignedIn: Boolean(userId),
+                    addLabel: dict.product.addToWishlist,
+                    removeLabel: dict.product.removeFromWishlist,
+                  }}
+                />
+              </div>
+
+              <TrustBadges trustBadgeText={settings.trustBadgeText} dict={dict.product} />
 
               <div className="shop-gift-reassurance">
                 <GiftIcon />
@@ -500,45 +520,44 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                     {dict.product.giftReassuranceTitle}
                   </strong>
                   <span className="text-foreground/70">{dict.product.giftReassuranceBody}</span>
+                  <Link href="/gift-finder" className="shop-giftfinder-link">
+                    <GiftFinderArrow />
+                    <span>{dict.giftFinder.productCtaLine}</span>
+                  </Link>
                 </span>
               </div>
 
-              <ProductPurchasePanel
-                product={cartProduct}
-                priceDisplay={priceDisplay}
-                dict={dict.product}
-                cartDict={dict.cart}
-                showBuyNow={!outOfStock}
-                wishlist={{
-                  productId: product.id,
-                  slug: product.slug,
-                  name,
-                  price: product.price,
-                  currency: product.currency,
-                  imageUrl: product.images[0]?.url ?? null,
-                  initialSaved: Boolean(wishlistItem),
-                  isSignedIn: Boolean(userId),
-                  addLabel: dict.product.addToWishlist,
-                  removeLabel: dict.product.removeFromWishlist,
-                }}
-              />
-
-              <Link href="/gift-finder" className="shop-giftfinder-link">
-                <GiftFinderArrow />
-                <span>{dict.giftFinder.productCtaLine}</span>
-              </Link>
-
-              <TrustBadges trustBadgeText={settings.trustBadgeText} dict={dict.product} />
-              {shippingBanner && (
-                <p className="text-foreground/60 mt-1.5 text-sm">{shippingBanner}</p>
-              )}
-
-              <Link
-                href="/murano-glass#authenticity"
-                className="text-foreground/60 hover:text-primary mt-2 inline-block text-xs underline"
-              >
-                {dict.product.authenticityLink}
-              </Link>
+              {/* Secondary information grouped instead of many small lines of
+                  equal weight: each opens on demand. */}
+              <div className="shop-info-details">
+                <details>
+                  <summary>{dict.product.shippingReturnsLabel}</summary>
+                  <div>
+                    {shippingBanner && <p>{shippingBanner}</p>}
+                    <p>
+                      {dict.product.returnsBadge}.{" "}
+                      <Link href="/legal/returns">{dict.footer.returns}</Link>
+                    </p>
+                  </div>
+                </details>
+                <details>
+                  <summary>{dict.product.careLabel}</summary>
+                  <div>
+                    <p>
+                      {dict.product.careNote}{" "}
+                      <Link href="/murano-glass#care">{dict.footer.muranoGuide}</Link>
+                    </p>
+                  </div>
+                </details>
+                <details>
+                  <summary>{dict.footer.muranoGuide}</summary>
+                  <div>
+                    <p>
+                      <Link href="/murano-glass#authenticity">{dict.product.authenticityLink}</Link>
+                    </p>
+                  </div>
+                </details>
+              </div>
 
               <div className="border-foreground/10 mt-6 border-t pt-4">
                 <ShareButtons url={productUrl} title={name} dict={dict.product} />

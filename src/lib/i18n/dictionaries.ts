@@ -335,6 +335,8 @@ const en = {
     sizeNecklace: "45–48 cm",
     sizeEarrings: "About 4 cm drop",
     careLabel: "Care",
+    readLess: "Show less",
+    shippingReturnsLabel: "Shipping & returns",
     careNote:
       "Keep dry, avoid contact with perfume, and store separately so pieces don't scratch each other.",
     vatIncluded: "VAT/IVA included",
@@ -1048,6 +1050,8 @@ const it: Dictionary = {
     sizeNecklace: "45–48 cm",
     sizeEarrings: "Circa 4 cm di lunghezza",
     careLabel: "Cura",
+    readLess: "Mostra meno",
+    shippingReturnsLabel: "Spedizione e resi",
     careNote:
       "Tenere all'asciutto, evitare il contatto con i profumi e conservare separatamente per evitare graffi.",
     inStock: "Disponibile",
@@ -1769,6 +1773,8 @@ const fr: Dictionary = {
     sizeNecklace: "45–48 cm",
     sizeEarrings: "Environ 4 cm de long",
     careLabel: "Entretien",
+    readLess: "Afficher moins",
+    shippingReturnsLabel: "Livraison et retours",
     careNote:
       "Gardez au sec, évitez le contact avec le parfum et rangez séparément pour éviter les rayures.",
     inStock: "En stock",
@@ -2494,6 +2500,8 @@ const de: Dictionary = {
     sizeNecklace: "45–48 cm",
     sizeEarrings: "Ca. 4 cm Länge",
     careLabel: "Pflege",
+    readLess: "Weniger anzeigen",
+    shippingReturnsLabel: "Versand und Rückgabe",
     careNote:
       "Trocken aufbewahren, Kontakt mit Parfüm vermeiden und separat lagern, damit die Stücke sich nicht verkratzen.",
     inStock: "Auf Lager",
@@ -3216,6 +3224,8 @@ const ar: Dictionary = {
     sizeNecklace: "45–48 سم",
     sizeEarrings: "حوالي 4 سم طولاً",
     careLabel: "العناية",
+    readLess: "عرض أقل",
+    shippingReturnsLabel: "الشحن والإرجاع",
     careNote:
       "يُنصح بالحفاظ على القطعة جافة وتجنّب ملامستها للعطور وتخزينها بمفردها لتفادي الخدوش.",
     inStock: "متوفر",
@@ -3911,6 +3921,8 @@ const zh: Dictionary = {
     sizeNecklace: "45–48厘米",
     sizeEarrings: "垂坠约4厘米",
     careLabel: "保养",
+    readLess: "收起",
+    shippingReturnsLabel: "配送与退货",
     careNote: "请保持干燥，避免接触香水，并单独存放以防刮擦。",
     inStock: "有货",
     vatIncluded: "含增值税",
@@ -4599,6 +4611,8 @@ const ru: Dictionary = {
     sizeNecklace: "45–48 см",
     sizeEarrings: "Длина подвески около 4 см",
     careLabel: "Уход",
+    readLess: "Свернуть",
+    shippingReturnsLabel: "Доставка и возврат",
     careNote:
       "Храните в сухом месте, избегайте контакта с духами и храните отдельно, чтобы избежать царапин.",
     inStock: "В наличии",
@@ -5319,6 +5333,8 @@ const es: Dictionary = {
     sizeNecklace: "45–48 cm",
     sizeEarrings: "Unos 4 cm de largo",
     careLabel: "Cuidado",
+    readLess: "Mostrar menos",
+    shippingReturnsLabel: "Envíos y devoluciones",
     careNote:
       "Mantenlo seco, evita el contacto con perfumes y guárdalo por separado para que no se raye.",
     inStock: "En stock",
@@ -6037,6 +6053,8 @@ const pt: Dictionary = {
     sizeNecklace: "45–48 cm",
     sizeEarrings: "Cerca de 4 cm de comprimento",
     careLabel: "Cuidados",
+    readLess: "Mostrar menos",
+    shippingReturnsLabel: "Envios e devoluções",
     careNote:
       "Mantenha seco, evite o contacto com perfumes e guarde separadamente para não riscar.",
     inStock: "Em stock",
@@ -6753,6 +6771,8 @@ const hi: Dictionary = {
     sizeNecklace: "45–48 सेमी",
     sizeEarrings: "लगभग 4 सेमी लंबाई",
     careLabel: "देखभाल",
+    readLess: "कम दिखाएँ",
+    shippingReturnsLabel: "शिपिंग और रिटर्न",
     careNote: "सूखा रखें, परफ्यूम के संपर्क से बचाएं, और खरोंच से बचाने के लिए अलग रखें।",
     inStock: "स्टॉक में",
     vatIncluded: "VAT/IVA शामिल",
@@ -7468,6 +7488,8 @@ const ja: Dictionary = {
     sizeNecklace: "45〜48cm",
     sizeEarrings: "垂れ下がり部分 約4cm",
     careLabel: "お手入れ",
+    readLess: "閉じる",
+    shippingReturnsLabel: "配送・返品",
     careNote:
       "乾いた状態を保ち、香水との接触を避け、傷を防ぐために他の製品とは分けて保管してください。",
     inStock: "在庫あり",
