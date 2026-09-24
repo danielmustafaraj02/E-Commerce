@@ -17,9 +17,9 @@ export const howToRecognizeAuthenticMuranoGlass: Article = {
     "how to tell if murano glass is real",
   ],
   hero: {
-    kind: "product",
-    productSlug: "collana-notte-stellata-92b5fd",
-    alt: "A Murano glass bead necklace in deep blue tones",
+    kind: "file",
+    src: "/blog/burano-colorful-houses-canal.jpg",
+    alt: "Brightly painted houses along a canal on Burano, in the Venetian lagoon",
     rights: OWN_PHOTO,
   },
   intro:

@@ -23,9 +23,9 @@ export const historyOfMuranoGlass: Article = {
     "murano glass museum",
   ],
   hero: {
-    kind: "product",
-    productSlug: "collana-turchese-sfaccettato-8e4504",
-    alt: "A necklace of faceted turquoise Murano glass beads",
+    kind: "file",
+    src: "/blog/venice-canal-bridge-gondola-lion-flag.jpg",
+    alt: "A Venice canal with a brick bridge and the red-and-gold flag of the Lion of Saint Mark",
     rights: OWN_PHOTO,
   },
   intro:

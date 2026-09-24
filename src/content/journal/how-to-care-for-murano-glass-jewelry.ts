@@ -16,9 +16,9 @@ export const howToCareForMuranoGlassJewelry: Article = {
     "murano glass care",
   ],
   hero: {
-    kind: "product",
-    productSlug: "orecchini-blu-profondo-fa4c96",
-    alt: "Deep blue Murano glass earrings",
+    kind: "file",
+    src: "/about/venice-moored-gondolas.jpg",
+    alt: "Gondolas moored along a quiet canal in Venice",
     rights: OWN_PHOTO,
   },
   intro:

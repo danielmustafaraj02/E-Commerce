@@ -23,9 +23,9 @@ export const venetianGlassBeads: Article = {
     "chevron beads",
   ],
   hero: {
-    kind: "product",
-    productSlug: "bracciale-laguna-azzurra-5ae8cc",
-    alt: "A bracelet of aquamarine and turquoise Murano glass beads",
+    kind: "file",
+    src: "/blog/venice-gondoliers-canal-golden-light.jpg",
+    alt: "Gondoliers rowing along a Venice canal in warm evening light",
     rights: OWN_PHOTO,
   },
   intro:
