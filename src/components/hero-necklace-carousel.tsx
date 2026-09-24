@@ -35,12 +35,12 @@ export function HeroNecklaceCarousel({
   const active = slides[index];
 
   return (
+    // Only a real mouse hovering pauses it: a tap fires pointerenter without a
+    // matching leave, and a clicked arrow keeps focus, so either would freeze it.
     <div
       className="shelf-bead-carousel"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onBlur={() => setPaused(false)}
+      onPointerEnter={(e) => e.pointerType === "mouse" && setPaused(true)}
+      onPointerLeave={(e) => e.pointerType === "mouse" && setPaused(false)}
     >
       <div className="shelf-bead">
         {slides.map((slide, i) => (
@@ -66,7 +66,19 @@ export function HeroNecklaceCarousel({
             aria-label={previousLabel}
             onClick={() => setIndex((i) => (i - 1 + count) % count)}
           >
-            <span aria-hidden="true">←</span>
+            <svg
+              viewBox="0 0 24 24"
+              width="26"
+              height="26"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M21 12H3m6-6-6 6 6 6" />
+            </svg>
           </button>
           <span className="shelf-bead-count" aria-hidden="true">
             {index + 1} / {count}
@@ -76,7 +88,19 @@ export function HeroNecklaceCarousel({
             aria-label={nextLabel}
             onClick={() => setIndex((i) => (i + 1) % count)}
           >
-            <span aria-hidden="true">→</span>
+            <svg
+              viewBox="0 0 24 24"
+              width="26"
+              height="26"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M3 12h18m-6-6 6 6-6 6" />
+            </svg>
           </button>
         </div>
       )}
