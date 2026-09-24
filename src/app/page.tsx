@@ -167,7 +167,7 @@ export default async function Home() {
             <div className="shelf-bead">
               <Image
                 src="/hero/perla-viola-murano.jpg"
-                alt=""
+                alt={dict.home.heroImageAlt}
                 fill
                 priority
                 sizes="(min-width: 52rem) 36vw, 100vw"
