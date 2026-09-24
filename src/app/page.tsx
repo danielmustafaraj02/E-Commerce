@@ -326,15 +326,6 @@ export default async function Home() {
         </section>
       )}
 
-      <section className="shelf-section shelf-giftfinder-band">
-        <div className="shelf-wrap">
-          <Link href="/gift-finder" className="shelf-giftfinder-link">
-            <span>{dict.giftFinder.homeCtaLine}</span>
-            <GiftFinderArrow />
-          </Link>
-        </div>
-      </section>
-
       <section className="shelf-section shelf-section--looks">
         <div className="shelf-wrap">
           <div className="shelf-heading-row shelf-heading-row--center">
@@ -404,6 +395,21 @@ export default async function Home() {
         </section>
       )}
 
+      <section className="shelf-section">
+        <div className="shelf-wrap">
+          <FaqSection items={faq} dict={dict} />
+        </div>
+      </section>
+
+      <section className="shelf-section shelf-giftfinder-band">
+        <div className="shelf-wrap">
+          <Link href="/gift-finder" className="shelf-giftfinder-link">
+            <span>{dict.giftFinder.homeCtaLine}</span>
+            <GiftFinderArrow />
+          </Link>
+        </div>
+      </section>
+
       <section className="shelf-section shelf-section--sand">
         <div className="shelf-wrap">
           <div className="shelf-heading-row">
@@ -445,12 +451,6 @@ export default async function Home() {
           </div>
         </section>
       )}
-
-      <section className="shelf-section">
-        <div className="shelf-wrap">
-          <FaqSection items={faq} dict={dict} />
-        </div>
-      </section>
 
       <section className="shelf-newsletter shelf-section">
         <div className="shelf-wrap">

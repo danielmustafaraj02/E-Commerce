@@ -52,6 +52,8 @@ export default async function ComposeLookPage() {
             add: dict.looks.composeAdd,
             added: dict.look.added,
             outOfStock: dict.product.outOfStock,
+            previous: dict.home.previousSlide,
+            next: dict.home.nextSlide,
           }}
         />
       </ShelfBody>
