@@ -193,7 +193,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         />
       </head>
       <body
-        className="bg-background text-foreground flex min-h-full flex-col"
+        className="bg-background text-foreground flex min-h-full flex-col vc-init"
         style={{ fontFamily: `${settings.fontFamily}, var(--font-sans)` }}
       >
         {/* First tab stop: lets keyboard and screen-reader users jump past the
