@@ -39,15 +39,15 @@ export function PriceRangeSlider({
   ]);
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex items-center justify-between text-sm font-medium">
+    <div className="pf-price">
+      <div className="pf-price-values">
         <span>{formatMoney(Math.round(value[0] * 100), currency, locale)}</span>
-        <span className="text-foreground/40">{separatorLabel}</span>
+        <span className="pf-price-sep">{separatorLabel}</span>
         <span>{formatMoney(Math.round(value[1] * 100), currency, locale)}</span>
       </div>
 
       <Slider.Root
-        className="relative flex h-5 w-full touch-none items-center select-none max-sm:h-8"
+        className="pf-slider"
         min={sliderMin}
         max={sliderMax}
         step={step}
@@ -55,20 +55,11 @@ export function PriceRangeSlider({
         value={value}
         onValueChange={(next) => setValue([next[0], next[1]])}
       >
-        <Slider.Track className="bg-foreground/10 relative h-1.5 w-full grow overflow-hidden rounded-full">
-          <Slider.Range className="absolute h-full rounded-full bg-[linear-gradient(90deg,#e0a92e,#f5c451)]" />
+        <Slider.Track className="pf-slider-track">
+          <Slider.Range className="pf-slider-range" />
         </Slider.Track>
-        {/* Larger drag target on phones (was 18px, too small to grab
-            precisely with a finger) without changing the visible thumb
-            size on desktop, where a mouse pointer is precise. */}
-        <Slider.Thumb
-          aria-label={minLabel}
-          className="bg-background block h-4.5 w-4.5 rounded-full border-2 border-[#f5c451] shadow transition-transform hover:scale-110 focus-visible:ring-4 focus-visible:ring-[#f5c451]/25 focus-visible:outline-none max-sm:h-7 max-sm:w-7"
-        />
-        <Slider.Thumb
-          aria-label={maxLabel}
-          className="bg-background block h-4.5 w-4.5 rounded-full border-2 border-[#f5c451] shadow transition-transform hover:scale-110 focus-visible:ring-4 focus-visible:ring-[#f5c451]/25 focus-visible:outline-none max-sm:h-7 max-sm:w-7"
-        />
+        <Slider.Thumb aria-label={minLabel} className="pf-slider-thumb" />
+        <Slider.Thumb aria-label={maxLabel} className="pf-slider-thumb" />
       </Slider.Root>
 
       <input type="hidden" name="minPrice" value={value[0]} />

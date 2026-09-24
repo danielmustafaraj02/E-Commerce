@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -33,6 +33,8 @@ export function HeroNecklaceCarousel({
   }, [count, paused, index]);
 
   const active = slides[index];
+  const touchStartX = useRef<number | null>(null);
+  const go = (step: number) => setIndex((i) => (i + step + count) % count);
 
   return (
     // Only a real mouse hovering pauses it: a tap fires pointerenter without a
@@ -42,7 +44,18 @@ export function HeroNecklaceCarousel({
       onPointerEnter={(e) => e.pointerType === "mouse" && setPaused(true)}
       onPointerLeave={(e) => e.pointerType === "mouse" && setPaused(false)}
     >
-      <div className="shelf-bead">
+      <div
+        className="shelf-bead"
+        onTouchStart={(e) => {
+          touchStartX.current = e.touches[0].clientX;
+        }}
+        onTouchEnd={(e) => {
+          if (touchStartX.current === null) return;
+          const dx = e.changedTouches[0].clientX - touchStartX.current;
+          touchStartX.current = null;
+          if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
+        }}
+      >
         {slides.map((slide, i) => (
           <Image
             key={slide.src}
@@ -64,7 +77,7 @@ export function HeroNecklaceCarousel({
           <button
             type="button"
             aria-label={previousLabel}
-            onClick={() => setIndex((i) => (i - 1 + count) % count)}
+            onClick={() => go(-1)}
           >
             <svg
               viewBox="0 0 24 24"
@@ -86,7 +99,7 @@ export function HeroNecklaceCarousel({
           <button
             type="button"
             aria-label={nextLabel}
-            onClick={() => setIndex((i) => (i + 1) % count)}
+            onClick={() => go(1)}
           >
             <svg
               viewBox="0 0 24 24"
@@ -102,6 +115,20 @@ export function HeroNecklaceCarousel({
               <path d="M3 12h18m-6-6 6 6-6 6" />
             </svg>
           </button>
+        </div>
+      )}
+      {count > 1 && (
+        <div className="shelf-bead-dots">
+          {slides.map((slide, i) => (
+            <button
+              key={slide.src}
+              type="button"
+              className={i === index ? "is-active" : undefined}
+              aria-label={`${i + 1} / ${count}`}
+              aria-current={i === index ? "true" : undefined}
+              onClick={() => setIndex(i)}
+            />
+          ))}
         </div>
       )}
     </div>

@@ -1,0 +1,392 @@
+/* Product filter panel: a Venetian atelier card. Ivory paper, petrol ink,
+   champagne rules and one note of Venetian gold; the colour swatches are
+   drawn as small glass beads. Scoped to `.pf`. */
+
+.pf {
+  --pf-card: #fbf9f5;
+  --pf-ink: #123d43;
+  --pf-ink-soft: #527176;
+  --pf-gold: #b89a62;
+  --pf-rule: #d9cdbb;
+  --pf-cta: #123d43;
+  --pf-cta-hover: #0b3035;
+  color: var(--pf-ink);
+  font-family: var(--pf-sans), system-ui, sans-serif;
+  font-size: 0.9rem;
+}
+
+.pf-card {
+  padding: 1.5rem 1.5rem 1.25rem;
+  background: var(--pf-card);
+  border: 1px solid var(--pf-rule);
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgb(18 61 67 / 0.04);
+}
+
+/* -- Header ------------------------------------------------------------------ */
+
+.pf-head {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  cursor: pointer;
+}
+.pf-head-icon {
+  flex: none;
+  color: var(--pf-gold);
+}
+.pf-title {
+  font-family: var(--pf-serif), Georgia, serif;
+  font-size: 1.85rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+.pf-active-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--pf-gold);
+}
+.pf-toggle {
+  flex: none;
+  margin-inline-start: auto;
+  color: var(--pf-ink-soft);
+}
+.pf-toggle--open,
+.peer:checked ~ .pf-head .pf-toggle--closed {
+  display: none;
+}
+.peer:checked ~ .pf-head .pf-toggle--open {
+  display: block;
+}
+.peer:focus-visible ~ .pf-head {
+  outline: 1px solid var(--pf-ink);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* -- Body -------------------------------------------------------------------- */
+
+/* Collapsed on phones until the header is tapped; always open from 40rem. */
+.pf-form {
+  display: none;
+  flex-direction: column;
+  margin-top: 1.25rem;
+}
+.peer:checked ~ .pf-form {
+  display: flex;
+}
+@media (min-width: 40rem) {
+  .pf-head {
+    cursor: default;
+    pointer-events: none;
+  }
+  .pf-toggle {
+    display: none !important;
+  }
+  .pf-form {
+    display: flex;
+  }
+}
+
+/* A short gold hairline under the title, like the rule on a jewellery box. */
+.pf-form::before {
+  content: "";
+  width: 2.25rem;
+  height: 1px;
+  margin-bottom: 0.5rem;
+  background: var(--pf-gold);
+}
+
+.pf-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  min-width: 0;
+  margin: 0;
+  padding: 1.35rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--pf-rule);
+}
+.pf-label {
+  padding: 0;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--pf-ink-soft);
+}
+/* A legend sits in the fieldset's top edge, above its padding, so the section's
+   top spacing moves onto the legend itself. */
+fieldset.pf-section {
+  padding-top: 0;
+}
+fieldset.pf-section > .pf-label {
+  padding-top: 1.35rem;
+  margin-bottom: 0.9rem;
+}
+
+.pf-select {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--pf-rule);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--pf-ink);
+  font: inherit;
+}
+.pf-select:focus-visible {
+  outline: 1px solid var(--pf-ink);
+  outline-offset: 1px;
+}
+
+/* -- Price ------------------------------------------------------------------- */
+
+.pf-price {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.pf-price-values {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-family: var(--pf-serif), Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 500;
+  font-variant-numeric: lining-nums;
+}
+.pf-price-sep {
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--pf-ink-soft);
+}
+.pf-slider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 1.5rem;
+  touch-action: none;
+  user-select: none;
+}
+.pf-slider-track {
+  position: relative;
+  flex-grow: 1;
+  height: 2px;
+  background: var(--pf-rule);
+}
+.pf-slider-range {
+  position: absolute;
+  height: 100%;
+  background: var(--pf-gold);
+}
+.pf-slider-thumb {
+  display: block;
+  width: 15px;
+  height: 15px;
+  border: 1.5px solid var(--pf-gold);
+  border-radius: 999px;
+  background: var(--pf-card);
+  box-shadow: 0 1px 2px rgb(18 61 67 / 0.12);
+  cursor: grab;
+  transition: transform 0.15s ease;
+}
+.pf-slider-thumb:hover {
+  transform: scale(1.15);
+}
+.pf-slider-thumb:focus-visible {
+  outline: 1px solid var(--pf-ink);
+  outline-offset: 3px;
+}
+/* A bigger grab area for fingers, without a bigger handle. */
+.pf-slider-thumb::before {
+  content: "";
+  position: absolute;
+  inset: -10px;
+}
+.pf-slider-thumb {
+  position: relative;
+}
+
+/* -- Colour: glass beads ------------------------------------------------------ */
+
+.pf-beads {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.6rem 0;
+  justify-items: center;
+}
+@media (max-width: 39.99rem) {
+  .pf-beads {
+    grid-template-columns: repeat(auto-fill, minmax(2.75rem, 1fr));
+  }
+}
+.pf-bead {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.pf-bead input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.pf-bead-glass {
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 999px;
+  pointer-events: none;
+  background:
+    /* specular highlight */
+    radial-gradient(circle at 32% 27%, rgb(255 255 255 / 0.9) 0 7%, rgb(255 255 255 / 0) 24%),
+    /* light caught on the far side of the glass */
+    radial-gradient(circle at 68% 80%, rgb(255 255 255 / 0.32) 0, rgb(255 255 255 / 0) 34%),
+    /* faint marbling */
+    conic-gradient(
+      from 210deg at 58% 58%,
+      rgb(255 255 255 / 0.14),
+      rgb(255 255 255 / 0) 25%,
+      rgb(0 0 0 / 0.08) 45%,
+      rgb(255 255 255 / 0.1) 70%,
+      rgb(255 255 255 / 0)
+    ),
+    /* depth toward the edge */
+    radial-gradient(circle at 50% 45%, rgb(0 0 0 / 0) 52%, rgb(0 0 0 / 0.3) 100%),
+    var(--bead);
+  box-shadow:
+    0 0 0 1px var(--pf-rule),
+    0 1px 2px rgb(18 61 67 / 0.18);
+  opacity: 0.94;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.pf-bead:hover .pf-bead-glass {
+  transform: scale(1.08);
+}
+.pf-bead:has(:checked) .pf-bead-glass {
+  box-shadow:
+    0 0 0 2px var(--pf-card),
+    0 0 0 3.5px var(--pf-gold),
+    0 1px 2px rgb(18 61 67 / 0.18);
+}
+.pf-bead:has(:focus-visible) {
+  outline: 1px solid var(--pf-ink);
+  outline-offset: 0;
+}
+
+/* -- Availability ------------------------------------------------------------- */
+
+.pf-stock {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  font-size: 0.92rem;
+}
+.pf-check {
+  appearance: none;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin: 0;
+  border: 1px solid var(--pf-gold);
+  border-radius: 3px;
+  background: #fff;
+  cursor: pointer;
+}
+.pf-check::after {
+  content: "";
+  width: 0.32rem;
+  height: 0.6rem;
+  margin-top: -0.12rem;
+  border: solid var(--pf-card);
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+  opacity: 0;
+}
+.pf-check:checked {
+  background: var(--pf-ink);
+  border-color: var(--pf-ink);
+}
+.pf-check:checked::after {
+  opacity: 1;
+}
+.pf-check:focus-visible {
+  outline: 1px solid var(--pf-ink);
+  outline-offset: 2px;
+}
+
+/* -- Actions ------------------------------------------------------------------ */
+
+.pf-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.85rem;
+  padding-top: 1.5rem;
+}
+.pf-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  min-height: 3rem;
+  padding: 0.8rem 1.25rem;
+  border: 1px solid var(--pf-gold);
+  border-radius: 6px;
+  background: var(--pf-cta);
+  color: #fbf9f5;
+  font-family: var(--pf-sans), system-ui, sans-serif;
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+.pf-submit:hover {
+  background: var(--pf-cta-hover);
+}
+.pf-submit:focus-visible {
+  outline: 1px solid var(--pf-ink);
+  outline-offset: 3px;
+}
+.pf-submit span {
+  font-size: 1rem;
+  letter-spacing: 0;
+  transition: transform 0.2s ease;
+}
+.pf-submit:hover span {
+  transform: translateX(3px);
+}
+.pf-clear {
+  align-self: center;
+  font-size: 0.8rem;
+  color: var(--pf-ink-soft);
+  text-decoration: underline;
+  text-decoration-color: var(--pf-rule);
+  text-underline-offset: 3px;
+}
+.pf-clear:hover {
+  color: var(--pf-ink);
+}
+
+.pf-signature {
+  margin: 1.25rem 0 0;
+  text-align: center;
+  font-family: var(--pf-serif), Georgia, serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--pf-gold);
+}

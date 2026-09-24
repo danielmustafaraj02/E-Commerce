@@ -404,6 +404,29 @@
   outline-offset: 2px;
   border-radius: 999px;
 }
+.shelf-bead-dots {
+  display: none;
+  justify-content: center;
+  gap: 0.15rem;
+  margin-top: 0.75rem;
+}
+.shelf-bead-dots button {
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0.5rem;
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ink) 25%, transparent);
+  background-clip: content-box;
+  cursor: pointer;
+  transition:
+    width 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background-color 0.25s ease;
+}
+.shelf-bead-dots button.is-active {
+  width: 2.5rem;
+  background-color: var(--ink);
+}
 .shelf-bead-count {
   min-width: 3.5em;
   text-align: center;
@@ -988,14 +1011,33 @@
   .shelf-hero-backdrop {
     object-position: 78% 0%;
   }
+  /* Copy, then the necklace, then the CTA: the copy wrapper steps aside
+     (display: contents) so the button can be ordered after the carousel. */
   .shelf-home .shelf-hero-grid {
-    position: relative;
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.1rem;
     padding-block: 2.25rem 1.5rem;
   }
   .shelf-home .shelf-hero-copy {
-    gap: 1.1rem;
+    display: contents;
+  }
+  .shelf-home .shelf-hero-copy > * {
     max-width: 30rem;
+  }
+  .shelf-hero .shelf-bead-carousel {
+    order: 1;
+  }
+  .shelf-hero-copy .shelf-button {
+    order: 2;
+    align-self: center;
+  }
+  .shelf-bead-controls {
+    display: none;
+  }
+  .shelf-bead-dots {
+    display: flex;
   }
   .shelf-eyebrow {
     font-size: 0.66rem;
@@ -1021,12 +1063,10 @@
     white-space: nowrap;
   }
   .shelf-hero .shelf-bead-carousel {
+    align-self: center;
     width: 82%;
     max-width: 21rem;
-    margin: 1.5rem auto 0;
-  }
-  .shelf-bead-controls {
-    margin-top: 1rem;
+    margin-top: 0.25rem;
   }
   .shelf-hero .shelf-bead img {
     transform: scale(1.12);
