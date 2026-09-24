@@ -421,6 +421,62 @@
   border-radius: 2px;
 }
 
+/* -- Special Selection: a handful of pieces with a genuine "was" price ------ */
+
+/* A quiet corner tag, not a shouting red sticker — the same restrained
+   ink/ground pairing as .shelf-badge, just on the opposite corner so it never
+   collides with an out-of-stock badge (the two never render together). */
+.shelf-discount-badge {
+  position: absolute;
+  top: 0.25rem;
+  inset-inline-end: 0;
+  z-index: 1;
+  background: var(--ground);
+  color: var(--accent-deep);
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.4;
+  padding: 0.1rem 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--accent-deep) 30%, transparent);
+  border-radius: 2px;
+}
+.shelf-item-price-compare {
+  color: var(--ink-soft);
+  font-weight: 400;
+  text-decoration: line-through;
+  margin-inline-end: 0.5rem;
+}
+.shelf-special-subtitle {
+  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+  font-style: italic;
+  color: var(--ink-soft);
+  font-size: 1.05rem;
+  max-width: 34rem;
+  margin: 0.5rem 0 0;
+}
+.shelf-special-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+}
+.shelf-special-cta .shelf-button {
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  font-size: 0.9rem;
+  padding: 0.9rem 2.5rem;
+}
+/* Subtle zoom on the photo, scoped to this one section — the rest of the
+   shelf deliberately has no hover motion (see the file banner comment). */
+.shelf-row--special .shelf-item-photo {
+  overflow: hidden;
+}
+.shelf-row--special .shelf-item-photo img {
+  transition: transform 0.5s ease;
+}
+.shelf-row--special .shelf-item:hover .shelf-item-photo img {
+  transform: scale(1.02);
+}
+
 /* -- Categories: the pieces themselves, deliberately uneven ---------------- */
 
 .shelf-categories {
