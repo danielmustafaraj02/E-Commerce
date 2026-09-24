@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
+import { bundleDiscounts } from "@/lib/looks";
 
 // `message` stays English (logs, tests); `code` + `params` let the route return
 // the visitor's language instead (see src/lib/pricing-messages.ts).
@@ -81,6 +82,28 @@ export async function quoteOrder({ items, country, shippingMethodId, discountCod
   const subtotal = lines.reduce((sum, l) => sum + l.lineSubtotal, 0);
   const currency = lines[0].product.currency;
 
+  // --- Complete the look: a percentage off each piece of a whole set ---
+  const looks = await db.look.findMany({
+    where: { active: true, products: { some: { id: { in: items.map((i) => i.productId) } } } },
+    select: {
+      id: true,
+      discountPercent: true,
+      products: { where: { active: true }, select: { id: true } },
+    },
+  });
+  const bundle = bundleDiscounts(
+    lines.map((l) => ({ productId: l.product.id, price: l.product.price, quantity: l.quantity })),
+    looks.map((look) => ({
+      id: look.id,
+      discountPercent: look.discountPercent,
+      productIds: look.products.map((p) => p.id),
+    }))
+  );
+  const bundleDiscountAmount = bundle.total;
+  // What the goods actually cost after the bundle saving; discount codes,
+  // tax and the free-shipping threshold all work from this.
+  const goodsTotal = subtotal - bundleDiscountAmount;
+
   // --- Tax: itemized per line, by destination country + product category ---
   const taxRules = await db.taxRule.findMany({ where: { country } });
   const rateForCategory = (categoryId: string | null) => {
@@ -101,9 +124,10 @@ export async function quoteOrder({ items, country, shippingMethodId, discountCod
       continue;
     }
     distinctRates.add(rate);
+    const taxable = line.lineSubtotal - (bundle.byProduct[line.product.id] ?? 0);
     taxAmount += settings.pricesIncludeTax
-      ? Math.round((line.lineSubtotal * rate) / (100 + rate))
-      : Math.round((line.lineSubtotal * rate) / 100);
+      ? Math.round((taxable * rate) / (100 + rate))
+      : Math.round((taxable * rate) / 100);
   }
   const taxRatePercent = distinctRates.size === 1 ? [...distinctRates][0] : null;
 
@@ -138,23 +162,23 @@ export async function quoteOrder({ items, country, shippingMethodId, discountCod
       throw new PricingError("Discount code has reached its usage limit", 400, "discount-limit");
     }
     discountAmount = discount.percentOff
-      ? Math.round((subtotal * discount.percentOff) / 100)
+      ? Math.round((goodsTotal * discount.percentOff) / 100)
       : discount.amountOff
-        ? Math.min(discount.amountOff, subtotal)
+        ? Math.min(discount.amountOff, goodsTotal)
         : 0;
     discountCodeId = discount.id;
   }
 
   const freeShipping =
     settings.freeShippingThreshold !== null &&
-    subtotal - discountAmount >= settings.freeShippingThreshold;
+    goodsTotal - discountAmount >= settings.freeShippingThreshold;
   const shippingAmount = freeShipping ? 0 : shippingMethod.basePrice;
 
   // Prices are tax-inclusive by default (settings.pricesIncludeTax), so tax
   // is extracted from — not added on top of — the subtotal.
   const total = settings.pricesIncludeTax
-    ? subtotal - discountAmount + shippingAmount
-    : subtotal + taxAmount - discountAmount + shippingAmount;
+    ? goodsTotal - discountAmount + shippingAmount
+    : goodsTotal + taxAmount - discountAmount + shippingAmount;
 
   return {
     lines,
@@ -168,6 +192,8 @@ export async function quoteOrder({ items, country, shippingMethodId, discountCod
     shippingMethod,
     discountAmount,
     discountCodeId,
+    bundleDiscountAmount,
+    bundleLookIds: bundle.lookIds,
     total,
     pricesIncludeTax: settings.pricesIncludeTax,
   };

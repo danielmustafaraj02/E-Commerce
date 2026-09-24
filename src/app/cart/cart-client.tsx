@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { CatalogImage } from "@/components/catalog-image";
 import Link from "next/link";
 import { useCartStore } from "@/lib/cart-store";
@@ -9,6 +10,9 @@ import { QuantityStepper } from "@/components/quantity-stepper";
 import { BeadMark } from "@/components/bead-mark";
 import { ExpressCheckoutButton } from "@/components/express-checkout-button";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
+import { cartLookSummary } from "@/lib/looks";
+import { trackLookEvent } from "@/lib/look-analytics";
+import type { LookView } from "@/lib/look-data";
 
 export function CartClient({
   locale,
@@ -28,6 +32,26 @@ export function CartClient({
   const items = useCartStore((state) => state.items);
   const setQuantity = useCartStore((state) => state.setQuantity);
   const removeItem = useCartStore((state) => state.removeItem);
+  const addItem = useCartStore((state) => state.addItem);
+  const [looks, setLooks] = useState<LookView[]>([]);
+
+  // Which looks the cart's pieces belong to: for the set-saving estimate and
+  // the "complete the look" upsell. Refetched only when the set of products
+  // changes, not on quantity changes.
+  const productKey = [...new Set(items.map((i) => i.productId))].sort().join(",");
+  useEffect(() => {
+    if (!productKey) return;
+    let cancelled = false;
+    fetch(`/api/looks?productIds=${encodeURIComponent(productKey)}`)
+      .then((res) => (res.ok ? res.json() : { looks: [] }))
+      .then((data: { looks: LookView[] }) => {
+        if (!cancelled) setLooks(data.looks);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [productKey]);
 
   if (items.length === 0) {
     return (
@@ -44,6 +68,7 @@ export function CartClient({
   // Display estimate only — the server recomputes authoritative pricing,
   // stock, tax, and shipping from live product data at checkout.
   const estimatedSubtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const lookSummary = cartLookSummary(items, looks);
 
   return (
     <div className="flex flex-col gap-6">
@@ -131,11 +156,56 @@ export function CartClient({
         ))}
       </ul>
 
-      <div className="shop-panel shop-panel-pad flex items-center justify-between">
-        <span className="text-foreground/70 text-sm">{dict.estimatedSubtotal}</span>
-        <span className="shop-total">
-          {formatMoney(estimatedSubtotal, items[0].currency, locale)}
-        </span>
+      {lookSummary.upsells.map(({ look, missing }) => (
+        <div key={look.id} className="shop-panel shop-panel-pad cart-look-upsell">
+          <div>
+            <p className="cart-look-upsell-title">{dict.lookUpsellTitle}</p>
+            <p className="text-foreground/70 text-sm">
+              {applyTemplate(dict.lookUpsellText, { percent: look.discountPercent })}
+            </p>
+            <p className="text-foreground/60 mt-1 text-xs">
+              {missing.map((piece) => piece.name).join(" · ")}
+            </p>
+          </div>
+          <button
+            type="button"
+            className="btn-secondary text-sm"
+            onClick={() => {
+              for (const piece of missing) {
+                addItem({
+                  productId: piece.productId,
+                  slug: piece.slug,
+                  name: piece.name,
+                  price: piece.price,
+                  currency: piece.currency,
+                  imageUrl: piece.imageUrl,
+                });
+              }
+              trackLookEvent("added_to_cart", {
+                lookId: look.id,
+                pieces: missing.length,
+                source: "cart",
+              });
+            }}
+          >
+            {dict.lookUpsellCta}
+          </button>
+        </div>
+      ))}
+
+      <div className="shop-panel shop-panel-pad flex flex-col gap-2">
+        {lookSummary.saving > 0 && (
+          <div className="text-success flex items-center justify-between text-sm">
+            <span>{dict.bundleSaving}</span>
+            <span>-{formatMoney(lookSummary.saving, items[0].currency, locale)}</span>
+          </div>
+        )}
+        <div className="flex items-center justify-between">
+          <span className="text-foreground/70 text-sm">{dict.estimatedSubtotal}</span>
+          <span className="shop-total">
+            {formatMoney(estimatedSubtotal - lookSummary.saving, items[0].currency, locale)}
+          </span>
+        </div>
       </div>
 
       {shippingBanner && <p className="text-foreground/70 -mt-3 text-sm">{shippingBanner}</p>}
@@ -146,6 +216,7 @@ export function CartClient({
 
       <ExpressCheckoutButton
         publishableKey={stripePublishableKey}
+        discount={lookSummary.saving}
         locale={uiLocale}
         dividerLabel={dict.expressCheckoutOr}
       />

@@ -290,6 +290,11 @@ model Product {
   categoryId String?
   category   Category? @relation(fields: [categoryId], references: [id])
 
+  // The styled set this piece belongs to ("Complete the look" on the product
+  // page, bundle discount at checkout — see lib/looks.ts).
+  lookId String?
+  look   Look?   @relation(fields: [lookId], references: [id], onDelete: SetNull)
+
   images        ProductImage[]
   orderItems    OrderItem[]
   reviews       Review[]
@@ -302,6 +307,24 @@ model Product {
   @@index([categoryId])
   @@index([supplierId])
   @@index([active, createdAt])
+  @@index([lookId])
+}
+
+// A matching set (necklace + bracelet + earrings) grouped by staff in
+// Admin > Looks. Buying all its pieces together takes discountPercent off
+// each one, applied server-side in lib/pricing.ts.
+model Look {
+  id              String   @id @default(cuid())
+  name            String
+  // Optional styled photo of the pieces together; without it the product
+  // page composes the pieces' own photos.
+  imageUrl        String?
+  discountPercent Int      @default(15)
+  active          Boolean  @default(true)
+  products        Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // Every price a product has had. Written by a database trigger on Product
@@ -516,7 +539,9 @@ model Order {
   taxAmount      Int // cents
   taxRatePercent Float?
   shippingAmount Int // cents
-  discountAmount Int    @default(0) // cents
+  discountAmount Int    @default(0) // cents, discount code + complete-the-look saving
+  // The complete-the-look part of discountAmount (see lib/looks.ts).
+  bundleDiscountAmount Int @default(0) // cents
   total          Int // cents
   currency       String @default("EUR")
   // The storefront language the customer checked out in. Emails about the order

@@ -11,6 +11,7 @@ const { mockDb, mockSettings } = vi.hoisted(() => ({
     taxRule: { findMany: vi.fn() },
     shippingZone: { findFirst: vi.fn() },
     discountCode: { findUnique: vi.fn() },
+    look: { findMany: vi.fn() },
   },
   mockSettings: vi.fn(),
 }));
@@ -57,6 +58,7 @@ beforeEach(() => {
     methods: [{ methodId: "m1", method: shippingMethod() }],
   });
   mockDb.taxRule.findMany.mockResolvedValue([{ categoryId: null, ratePercent: 22 }]);
+  mockDb.look.findMany.mockResolvedValue([]);
 });
 
 describe("quoteOrder", () => {
@@ -287,5 +289,92 @@ describe("quoteOrder", () => {
     expect(quote.discountAmount).toBe(500);
     // Tax-inclusive, fully discounted subtotal: only shipping remains.
     expect(quote.total).toBe(500);
+  });
+
+  describe("complete-the-look bundle", () => {
+    const pieces = () => [
+      product({ id: "n", price: 12000 }),
+      product({ id: "b", price: 4500 }),
+      product({ id: "e", price: 1500 }),
+    ];
+    const look = {
+      id: "look1",
+      discountPercent: 15,
+      products: [{ id: "n" }, { id: "b" }, { id: "e" }],
+    };
+    const allThree = [
+      { productId: "n", quantity: 1 },
+      { productId: "b", quantity: 1 },
+      { productId: "e", quantity: 1 },
+    ];
+
+    it("takes 15% off every piece when the whole look is bought", async () => {
+      mockDb.product.findMany.mockResolvedValue(pieces());
+      mockDb.look.findMany.mockResolvedValue([look]);
+
+      const quote = await quoteOrder({ items: allThree, country: "IT", shippingMethodId: "m1" });
+
+      expect(quote.subtotal).toBe(18000);
+      expect(quote.bundleDiscountAmount).toBe(2700);
+      expect(quote.bundleLookIds).toEqual(["look1"]);
+      expect(quote.total).toBe(18000 - 2700 + 500);
+      // VAT is extracted from what's actually paid for the goods (15300).
+      expect(quote.taxAmount).toBe(
+        Math.round(((12000 - 1800) * 22) / 122) +
+          Math.round(((4500 - 675) * 22) / 122) +
+          Math.round(((1500 - 225) * 22) / 122)
+      );
+    });
+
+    it("gives no bundle discount when a piece is missing", async () => {
+      mockDb.product.findMany.mockResolvedValue(pieces().slice(0, 2));
+      mockDb.look.findMany.mockResolvedValue([look]);
+
+      const quote = await quoteOrder({
+        items: allThree.slice(0, 2),
+        country: "IT",
+        shippingMethodId: "m1",
+      });
+
+      expect(quote.bundleDiscountAmount).toBe(0);
+      expect(quote.total).toBe(16500 + 500);
+    });
+
+    it("applies a percent discount code to the price after the bundle saving", async () => {
+      mockDb.product.findMany.mockResolvedValue(pieces());
+      mockDb.look.findMany.mockResolvedValue([look]);
+      mockDb.discountCode.findUnique.mockResolvedValue({
+        id: "d1",
+        code: "SAVE10",
+        percentOff: 10,
+        amountOff: null,
+        expiresAt: null,
+        maxUses: null,
+        usedCount: 0,
+        active: true,
+      });
+
+      const quote = await quoteOrder({
+        items: allThree,
+        country: "IT",
+        shippingMethodId: "m1",
+        discountCode: "SAVE10",
+      });
+
+      expect(quote.discountAmount).toBe(1530);
+      expect(quote.total).toBe(18000 - 2700 - 1530 + 500);
+    });
+
+    it("only asks for active looks containing the cart's products", async () => {
+      mockDb.product.findMany.mockResolvedValue(pieces());
+
+      await quoteOrder({ items: allThree, country: "IT", shippingMethodId: "m1" });
+
+      expect(mockDb.look.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { active: true, products: { some: { id: { in: ["n", "b", "e"] } } } },
+        })
+      );
+    });
   });
 });
