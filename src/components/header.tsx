@@ -60,7 +60,7 @@ export async function Header({
   // it scrolls away anyway, and the backdrop-filter was a rendering cost.
   return (
     <header className="glass-rule bg-background/90 relative z-40 sm:sticky sm:top-0 sm:backdrop-blur-sm">
-      <div className="mx-auto flex w-full max-w-7xl items-center gap-7 px-4 py-3 sm:px-6 sm:py-3.5">
+      <div className="mx-auto flex w-full max-w-7xl items-center gap-7 px-4 py-4 sm:px-6 sm:py-3.5">
 
         {/* ── Logo (far left, desktop only — mobile has its own centered logo below) ── */}
         <Link href="/" className="hidden shrink-0 self-stretch items-center sm:flex">
@@ -231,7 +231,7 @@ export async function Header({
               alt={storeName}
               width={284}
               height={168}
-              className="h-13 w-auto object-contain mix-blend-multiply"
+              className="h-15 w-auto object-contain mix-blend-multiply"
             />
           </Link>
           <div className="flex items-center justify-end">

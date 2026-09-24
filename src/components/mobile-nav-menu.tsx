@@ -86,11 +86,11 @@ export function MobileNavMenu({
         aria-expanded={open}
         aria-controls={panelId}
         aria-label={menuLabel}
-        className="-ms-2 grid h-11 w-11 shrink-0 place-items-center rounded-md sm:hidden"
+        className="-ms-2 grid h-12 w-12 shrink-0 place-items-center rounded-md sm:hidden"
       >
         <svg
-          width="22"
-          height="22"
+          width="26"
+          height="26"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
