@@ -13,7 +13,8 @@ import {
   toggleClaudeTask,
   askClaudeAgain,
 } from "./actions";
-import { importLaunchChecklist } from "./import-actions";
+import { importLaunchChecklist, importTranslationTasks } from "./import-actions";
+import { missingTranslationTasks, TRANSLATION_TASKS } from "@/lib/translation-tasks";
 import { StatusBadge } from "@/components/status-badge";
 import { isClaimFresh, PRIORITY_RANK } from "@/lib/roadmap-claude";
 
@@ -29,6 +30,10 @@ export default async function AdminRoadmapPage({ searchParams }: PageProps<"/adm
   const isAdmin = session?.user?.role === "admin";
   const missing = missingChecklistItems(tasks.map((task) => task.title));
   const importedParam = Array.isArray(params.imported) ? params.imported[0] : params.imported;
+  const missingTranslations = missingTranslationTasks(tasks.map((task) => task.title));
+  const translationsParam = Array.isArray(params.translations)
+    ? params.translations[0]
+    : params.translations;
 
   const open = tasks
     .filter((t) => t.status !== "done")
@@ -61,6 +66,33 @@ export default async function AdminRoadmapPage({ searchParams }: PageProps<"/adm
             ? `Imported ${Number(importedParam)} checklist items.`
             : "The launch checklist was already on the roadmap — nothing to import."}
         </p>
+      )}
+
+      {translationsParam !== undefined && (
+        <p className="alert alert-success mb-6 text-sm">
+          {Number(translationsParam) > 0
+            ? `Added ${Number(translationsParam)} translation tasks, one per language.`
+            : "The translation tasks were already on the roadmap. Nothing to add."}
+        </p>
+      )}
+
+      {isAdmin && missingTranslations.length > 0 && (
+        <div className="form-card mb-8 flex flex-col gap-3">
+          <div>
+            <h2 className="font-medium">Translation prompts</h2>
+            <p className="text-foreground/70 mt-1 text-sm">
+              {TRANSLATION_TASKS.length} tasks, one per language (Italian is the source). Each
+              holds the full prompt to translate the catalog into that language and check its
+              storefront text, and is given to the nightly Claude routine. Use &ldquo;Take back
+              from Claude&rdquo; on any you&apos;d rather run by hand (&ldquo;Copy prompt&rdquo;).
+            </p>
+          </div>
+          <form action={importTranslationTasks}>
+            <button type="submit" className="btn-primary">
+              Add {missingTranslations.length} translation tasks
+            </button>
+          </form>
+        </div>
       )}
 
       {isAdmin && missing.length > 0 && (
