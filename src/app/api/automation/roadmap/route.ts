@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { captureError } from "@/lib/monitoring";
 import { isValidBearerToken } from "@/lib/bearer-auth";
+import { TASK_DETAILS_MAX } from "@/lib/roadmap-claude";
 
 const PRIORITIES = new Set(["low", "medium", "high"]);
 
@@ -33,6 +34,12 @@ export async function POST(request: Request) {
   }
   if (description !== undefined && typeof description !== "string") {
     return NextResponse.json({ error: "description must be a string" }, { status: 400 });
+  }
+  if (typeof description === "string" && description.length > TASK_DETAILS_MAX) {
+    return NextResponse.json(
+      { error: `description must be at most ${TASK_DETAILS_MAX} characters` },
+      { status: 400 }
+    );
   }
   if (priority !== undefined && (typeof priority !== "string" || !PRIORITIES.has(priority))) {
     return NextResponse.json({ error: "priority must be low, medium, or high" }, { status: 400 });
