@@ -22,7 +22,7 @@ export const howToCareForMuranoGlassJewelry: Article = {
     rights: OWN_PHOTO,
   },
   intro:
-    "Glass is one of the most durable materials people have ever made — the Murano Glass Museum holds Roman pieces from the first to the third century AD. Worn every day, though, a piece of jewellery meets water, perfume, knocks and changes of temperature. A few habits keep it looking as it did the day it arrived.",
+    "Glass is one of the most durable materials people have ever made, the Murano Glass Museum holds Roman pieces from the first to the third century AD. Worn every day, though, a piece of jewellery meets water, perfume, knocks and changes of temperature. A few habits keep it looking as it did the day it arrived.",
   body: [
     {
       type: "facts",
@@ -71,12 +71,12 @@ export const howToCareForMuranoGlassJewelry: Article = {
     { type: "h2", text: "Storing it" },
     {
       type: "p",
-      text: "Glass beads can chip or scratch each other, so store each piece on its own — in its pouch or box, or in a lined compartment. Lay necklaces flat rather than hanging them for long periods, so the thread isn't under constant tension. Conservators line shelves for glass with soft padding and make sure objects can't shift about; a soft-lined box does the same job for jewellery.",
+      text: "Glass beads can chip or scratch each other, so store each piece on its own, in its pouch or box, or in a lined compartment. Lay necklaces flat rather than hanging them for long periods, so the thread isn't under constant tension. Conservators line shelves for glass with soft padding and make sure objects can't shift about; a soft-lined box does the same job for jewellery.",
     },
     { type: "h2", text: "When something needs attention" },
     {
       type: "p",
-      text: "If a thread starts to look worn or a clasp loosens, stop wearing the piece until it has been re-strung or repaired: the glass will outlast the thread many times over. Handmade beads are made to last — lampworking on Murano, as the [Glass Museum](https://museovetro.visitmuve.it/en/il-museo/layout-and-collections/venetian-beads/) explains, goes back to the seventeenth century — and with a little care, yours will too. You can read more about how they are made in our article on [Venetian glass beads](/blog/venetian-glass-beads), or go further back with [the history of Murano glass](/blog/history-of-murano-glass).",
+      text: "If a thread starts to look worn or a clasp loosens, stop wearing the piece until it has been re-strung or repaired: the glass will outlast the thread many times over. Handmade beads are made to last, lampworking on Murano, as the [Glass Museum](https://museovetro.visitmuve.it/en/il-museo/layout-and-collections/venetian-beads/) explains, goes back to the seventeenth century, and with a little care, yours will too. You can read more about how they are made in our article on [Venetian glass beads](/blog/venetian-glass-beads), or go further back with [the history of Murano glass](/blog/history-of-murano-glass).",
     },
     {
       type: "products",

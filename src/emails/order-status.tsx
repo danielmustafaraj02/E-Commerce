@@ -205,8 +205,8 @@ export default function OrderStatusEmail({
               {companyLegalName ? (
                 <Text className="m-0 mt-2">
                   {companyLegalName}
-                  {companyAddress ? ` — ${companyAddress}` : ""}
-                  {vatNumber ? ` — ${applyTemplate(t.vatLabel, { number: vatNumber })}` : ""}
+                  {companyAddress ? ` · ${companyAddress}` : ""}
+                  {vatNumber ? ` · ${applyTemplate(t.vatLabel, { number: vatNumber })}` : ""}
                 </Text>
               ) : null}
             </Section>

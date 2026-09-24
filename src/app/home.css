@@ -602,8 +602,7 @@
 .shelf-categories {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 2rem 1rem;
-  align-items: end;
+  gap: 2.5rem 1rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -613,20 +612,40 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.4rem;
   text-align: center;
 }
+/* Each piece sits in an arched frame, like a Venetian window: warm white
+   inside a champagne hairline, the photo's white multiplied into it. */
 .shelf-category-photo {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: 999px 999px 6px 6px;
+  background: #faf8f5;
+  transition: border-color 0.4s ease;
 }
+.shelf-home .shelf-category-photo img,
 .shelf-category-photo img {
-  object-position: 50% 48%;
+  object-fit: contain;
+  object-position: 50% 58%;
+  padding: 22% 14% 12%;
+  -webkit-mask-image: none;
+  mask-image: none;
+  transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.shelf-category:hover .shelf-category-photo {
+  border-color: var(--gold);
+}
+.shelf-category:hover .shelf-category-photo img {
+  transform: scale(1.04);
 }
 .shelf-category-name {
+  margin-top: 1.4rem !important;
   font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
-  font-size: 1.5rem;
+  font-size: 1.65rem;
+  font-weight: 500;
   line-height: 1.2;
 }
 .shelf-category-name a {
@@ -638,20 +657,67 @@
   position: absolute;
   inset: 0;
 }
-.shelf-category-name a:hover {
-  text-decoration: underline;
-  text-decoration-color: var(--accent);
-  text-underline-offset: 0.2em;
+.shelf-category-name a:focus-visible {
+  outline: none;
+}
+.shelf-category:has(a:focus-visible) .shelf-category-photo {
+  outline: 1px solid var(--ink);
+  outline-offset: 4px;
+}
+/* A short gold rule that lengthens, and an arrow that arrives, on hover. */
+.shelf-category-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.7rem;
+  color: var(--gold);
+  font-size: 0.95rem;
+  line-height: 1;
+}
+.shelf-category-rule {
+  width: 1.75rem;
+  height: 1px;
+  background: currentColor;
+  transition: width 0.4s ease;
+}
+.shelf-category-more {
+  opacity: 0.85;
+}
+.shelf-category:hover .shelf-category-rule {
+  width: 3rem;
 }
 @media (min-width: 48rem) {
   .shelf-categories {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 2rem 3rem;
+    gap: 2rem 3.5rem;
   }
-  /* Not a grid of identical tiles: the middle piece sits higher. */
-  .shelf-category:nth-child(3n + 2) {
-    padding-bottom: 3.5rem;
+}
+
+/* Centred section title with an eyebrow above and a gold rule below. */
+.shelf-heading-row--center {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.9rem;
+}
+.shelf-heading-row--center .shelf-heading::after {
+  content: "";
+  display: block;
+  width: 2.5rem;
+  height: 1px;
+  margin: 1.1rem auto 0;
+  background: var(--gold);
+}
+@media (min-width: 30rem) {
+  .shelf-eyebrow {
+    white-space: nowrap;
   }
+}
+.shelf-eyebrow--center::after {
+  content: "";
+  flex: 0 0 2.5rem;
+  height: 1px;
+  background: currentColor;
 }
 
 /* -- Why buy here: three short paragraphs, no cards ------------------------ */
@@ -1030,6 +1096,9 @@
   }
   .category-dots {
     display: flex;
+  }
+  .shelf-category-photo {
+    max-width: 19rem;
   }
 }
 

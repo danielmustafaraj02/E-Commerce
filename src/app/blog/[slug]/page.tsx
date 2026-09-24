@@ -169,7 +169,7 @@ export default async function JournalArticlePage({ params }: PageProps<"/blog/[s
                   <a href={source.url} target="_blank" rel="noopener noreferrer">
                     {source.title}
                   </a>
-                  {" — "}
+                  {", "}
                   {source.publisher}
                   {source.published ? ` (${source.published})` : ""}
                 </li>

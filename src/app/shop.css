@@ -575,11 +575,12 @@
 }
 .shop-lede {
   margin: 0.9rem 0 0;
-  color: var(--ink-soft);
+  max-width: 42rem;
+  color: var(--ink);
   font-family: var(--font-display), Georgia, serif;
-  font-style: italic;
-  font-size: 1.2rem;
-  line-height: 1.4;
+  font-size: 1.4rem;
+  font-weight: 500;
+  line-height: 1.45;
 }
 
 /* -- Panels and lists ---------------------------------------------------------- */
@@ -827,12 +828,17 @@
   margin: 0 0 0.5rem;
   font-size: 1.5rem;
 }
-/* Long-form copy in the display face, as on the home page's running text. */
+/* Long-form copy (About, the Murano glass guide, legal pages) in the text
+   face: Cormorant is kept for headings, where its fine strokes read well at
+   size, and running paragraphs get DM Sans in near-full ink with a
+   comfortable measure. */
 .shop-editorial p,
 .shop-editorial li {
-  font-family: var(--font-display), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-size: 1.15rem;
-  line-height: 1.65;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: color-mix(in srgb, var(--ink) 92%, white);
+  max-width: 42rem;
 }
 .shop-editorial summary {
   font-size: 1.05rem;

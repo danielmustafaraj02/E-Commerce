@@ -260,9 +260,10 @@ export default async function Home() {
       )}
 
       {categoriesWithImage.length > 0 && (
-        <section className="shelf-section">
+        <section className="shelf-section shelf-section--categories">
           <div className="shelf-wrap">
-            <div className="shelf-heading-row">
+            <div className="shelf-heading-row shelf-heading-row--center">
+              <p className="shelf-eyebrow shelf-eyebrow--center">{dict.home.heroTagline}</p>
               <h2 className="shelf-heading">{dict.home.shopByCategory}</h2>
             </div>
             <CategoryStrip className="shelf-categories">
@@ -283,6 +284,9 @@ export default async function Home() {
                     <h3 className="shelf-category-name">
                       <Link href={`/category/${category.slug}`}>{name}</Link>
                     </h3>
+                    <span className="shelf-category-more" aria-hidden="true">
+                      <span className="shelf-category-rule" />→
+                    </span>
                   </li>
                 );
               })}

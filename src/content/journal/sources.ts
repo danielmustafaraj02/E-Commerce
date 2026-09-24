@@ -3,7 +3,7 @@ import type { Source } from "@/lib/journal/types";
 // Sources consulted for the journal, shared between articles. Each was read
 // on the date given; `usedFor` is filled in per article.
 const ACCESSED = "2026-09-24";
-const MUVE = "Fondazione Musei Civici di Venezia — Museo del Vetro, Murano";
+const MUVE = "Fondazione Musei Civici di Venezia, Museo del Vetro, Murano";
 
 export const MUSEUM_GALLERY_GUIDE: Omit<Source, "usedFor"> = {
   title: "Glass Museum of Murano: room-by-room gallery guide (English)",

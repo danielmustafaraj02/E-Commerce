@@ -23,7 +23,7 @@ export const howToRecognizeAuthenticMuranoGlass: Article = {
     rights: OWN_PHOTO,
   },
   intro:
-    "“Murano” is one of the most borrowed words in glass. Because the name carries so much history, it also attracts imitation. The good news is that there is an official, checkable mark — and a few simple questions that will tell you a lot about any piece.",
+    "“Murano” is one of the most borrowed words in glass. Because the name carries so much history, it also attracts imitation. The good news is that there is an official, checkable mark, and a few simple questions that will tell you a lot about any piece.",
   body: [
     {
       type: "facts",
@@ -63,7 +63,7 @@ export const howToRecognizeAuthenticMuranoGlass: Article = {
       title: "Before you buy",
       items: [
         "Where exactly was the glass worked, and by whom?",
-        "Which technique was used — for beads, for example, lampwork or cut cane?",
+        "Which technique was used, for beads, for example, lampwork or cut cane?",
         "Does the piece carry the Vetro Artistico® Murano label, and can you see its codes?",
         "What are the other materials: the thread, the clasp, the findings?",
       ],
@@ -74,7 +74,7 @@ export const howToRecognizeAuthenticMuranoGlass: Article = {
     },
     {
       type: "p",
-      text: "If you have a question about the origin of any of our pieces, [write to us](/contact) — we will answer as specifically as we can.",
+      text: "If you have a question about the origin of any of our pieces, [write to us](/contact), we will answer as specifically as we can.",
     },
     {
       type: "products",

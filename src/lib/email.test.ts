@@ -134,7 +134,7 @@ describe("sendPasswordChangedEmail", () => {
     await sendPasswordChangedEmail("user@example.com", "fr");
 
     const sent = mocks.send.mock.calls[0][0];
-    expect(sent.subject).toBe("Votre mot de passe a été modifié — Perla Murano Glass");
+    expect(sent.subject).toBe("Votre mot de passe a été modifié · Perla Murano Glass");
     expect(sent.text).toContain("à l'adresse help@example.com");
   });
 
@@ -142,7 +142,7 @@ describe("sendPasswordChangedEmail", () => {
     await sendPasswordChangedEmail("user@example.com");
 
     expect(mocks.send.mock.calls[0][0].subject).toBe(
-      "Your password was changed — Perla Murano Glass"
+      "Your password was changed · Perla Murano Glass"
     );
   });
 });

@@ -62,7 +62,7 @@ export function ReviewForm({
                   value={n}
                   checked={rating === n}
                   onChange={() => setRating(n)}
-                  aria-label={`${n} / 5 — ${dict.ratingLabels[n - 1]}`}
+                  aria-label={`${n} / 5, ${dict.ratingLabels[n - 1]}`}
                   className="sr-only"
                 />
                 <svg

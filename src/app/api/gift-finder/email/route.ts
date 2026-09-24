@@ -76,10 +76,10 @@ export async function POST(request: Request) {
   const text = [
     dict.giftFinder.resultsTitle,
     "",
-    ...picks.map((pick) => `${pick.name} — ${pick.price}\n${pick.url}`),
+    ...picks.map((pick) => `${pick.name} · ${pick.price}\n${pick.url}`),
   ].join("\n");
   const html = `<p>${dict.giftFinder.resultsTitle}</p><ul>${picks
-    .map((pick) => `<li><a href="${pick.url}">${pick.name}</a> — ${pick.price}</li>`)
+    .map((pick) => `<li><a href="${pick.url}">${pick.name}</a> · ${pick.price}</li>`)
     .join("")}</ul>`;
 
   await sendEmail({ to: parsed.data.email, subject: dict.giftFinder.emailTitle, text, html });

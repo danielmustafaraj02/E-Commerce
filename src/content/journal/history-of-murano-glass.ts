@@ -29,7 +29,7 @@ export const historyOfMuranoGlass: Article = {
     rights: OWN_PHOTO,
   },
   intro:
-    "A small island in the Venetian lagoon has been synonymous with glass for more than seven centuries. Its story is one of fire, invention, near-collapse and revival — and it is told best by the objects themselves, many of which are kept today in the Glass Museum on Murano.",
+    "A small island in the Venetian lagoon has been synonymous with glass for more than seven centuries. Its story is one of fire, invention, near-collapse and revival, and it is told best by the objects themselves, many of which are kept today in the Glass Museum on Murano.",
   body: [
     {
       type: "facts",
@@ -49,7 +49,7 @@ export const historyOfMuranoGlass: Article = {
     },
     {
       type: "p",
-      text: "The trade grew quickly — so quickly that in 1291 the government of Venice decided to move all glass production to the island of Murano, to limit the risk of fire from the furnaces in a city built so densely. That decision made Murano what it still is: an island whose identity is bound up with glass.",
+      text: "The trade grew quickly, so quickly that in 1291 the government of Venice decided to move all glass production to the island of Murano, to limit the risk of fire from the furnaces in a city built so densely. That decision made Murano what it still is: an island whose identity is bound up with glass.",
     },
     { type: "h2", text: "Cristallo and the Golden Age" },
     {
@@ -63,7 +63,7 @@ export const historyOfMuranoGlass: Article = {
     },
     {
       type: "p",
-      text: "Decorated with enamel and gold, the new transparent glass was sought after by great families, doges and even the pope. In the sixteenth century Murano's work became openly virtuosic, much of it shaped free-hand — a way of working that, as the museum notes, still distinguishes the island's master glassmakers today. New kinds of glass appeared, among them ice glass, with its rough, translucent surface, and filigree, invented around 1527, in which rods containing fine threads of white or coloured glass are worked into twisted (a retortoli) or net-like (a reticello) patterns.",
+      text: "Decorated with enamel and gold, the new transparent glass was sought after by great families, doges and even the pope. In the sixteenth century Murano's work became openly virtuosic, much of it shaped free-hand, a way of working that, as the museum notes, still distinguishes the island's master glassmakers today. New kinds of glass appeared, among them ice glass, with its rough, translucent surface, and filigree, invented around 1527, in which rods containing fine threads of white or coloured glass are worked into twisted (a retortoli) or net-like (a reticello) patterns.",
     },
     { type: "h2", text: "Imitation, decline and the fall of the Republic" },
     {
@@ -76,7 +76,7 @@ export const historyOfMuranoGlass: Article = {
     },
     {
       type: "p",
-      text: "One branch of the craft held firm: beads. While blown glass declined, [Venetian bead-making](/blog/venetian-glass-beads) kept its factories and sales networks — with, the museum notes, a significant presence of women both among the workers and as designers.",
+      text: "One branch of the craft held firm: beads. While blown glass declined, [Venetian bead-making](/blog/venetian-glass-beads) kept its factories and sales networks, with, the museum notes, a significant presence of women both among the workers and as designers.",
     },
     { type: "h2", text: "The nineteenth-century revival" },
     {

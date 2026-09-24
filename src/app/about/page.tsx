@@ -74,7 +74,7 @@ export default async function AboutPage() {
       </ShelfHead>
       <ShelfBody width="lg" editorial airy>
         <Reveal delayMs={250}>
-          <div className="relative aspect-video w-full overflow-hidden rounded-2xl shadow-lg">
+          <div className="relative aspect-video w-full overflow-hidden rounded-md">
             <Image
               src="/blog/burano-colorful-houses-canal.jpg"
               alt={dict.about.heritageImageAlt}

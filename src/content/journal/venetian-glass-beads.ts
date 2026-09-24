@@ -12,7 +12,7 @@ export const venetianGlassBeads: Article = {
   title: "Venetian Glass Beads: Conterie, Chevrons and Lampwork",
   seoTitle: "Venetian Glass Beads: History and How They Are Made",
   description:
-    "The three kinds of Venetian glass beads — conterie, chevron and lampwork — how each is made, and how beads kept Murano working through its hardest years.",
+    "The three kinds of Venetian glass beads, conterie, chevron and lampwork, how each is made, and how beads kept Murano working through its hardest years.",
   category: "craft",
   published: "2026-09-24",
   primaryKeyword: "venetian glass beads",
@@ -35,14 +35,14 @@ export const venetianGlassBeads: Article = {
       type: "facts",
       title: "At a glance",
       items: [
-        "Conterie (seed beads): tiny, single-coloured, cut from thin hollow canes — documented on Murano from the fourteenth century.",
-        "Rosetta (chevron beads): layered canes with a star-shaped cross-section — traditionally credited to Marietta Barovier in the fifteenth century.",
-        "A lume (lampwork beads): shaped one by one in a flame — traced back to the seventeenth century.",
+        "Conterie (seed beads): tiny, single-coloured, cut from thin hollow canes, documented on Murano from the fourteenth century.",
+        "Rosetta (chevron beads): layered canes with a star-shaped cross-section, traditionally credited to Marietta Barovier in the fifteenth century.",
+        "A lume (lampwork beads): shaped one by one in a flame, traced back to the seventeenth century.",
       ],
     },
     {
       type: "p",
-      text: "The museum groups Venetian beads by how they are made. All three begin with glass rods — thin or thick, of one colour or built from concentric layers, solid or pierced through the middle — but they become very different objects.",
+      text: "The museum groups Venetian beads by how they are made. All three begin with glass rods, thin or thick, of one colour or built from concentric layers, solid or pierced through the middle, but they become very different objects.",
     },
     { type: "h2", text: "Conterie: seed beads by the thousand" },
     {
@@ -62,7 +62,7 @@ export const venetianGlassBeads: Article = {
     { type: "h2", text: "A lume: beads shaped in a flame" },
     {
       type: "p",
-      text: "Lampwork beads are the most individual of the three, and they can be traced back to the seventeenth century. Here the starting point is a solid rod. The glassworker heats it in a flame — the lume that gives the technique its name — and lets the softened glass wind onto a metal wire held in one hand and turned continuously. Colours, layers and surface effects are added bead by bead, so no two come out quite the same.",
+      text: "Lampwork beads are the most individual of the three, and they can be traced back to the seventeenth century. Here the starting point is a solid rod. The glassworker heats it in a flame, the lume that gives the technique its name, and lets the softened glass wind onto a metal wire held in one hand and turned continuously. Colours, layers and surface effects are added bead by bead, so no two come out quite the same.",
     },
     {
       type: "image",

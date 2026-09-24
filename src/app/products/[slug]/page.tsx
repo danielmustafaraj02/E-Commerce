@@ -177,19 +177,19 @@ export async function generateMetadata({
     hi: "मुरानो ग्लास",
     ja: "ムラノガラス",
   };
-  const title = fitTitle([`${name} — ${keywordByLocale[locale]}`, name], settings.storeName);
+  const title = fitTitle([`${name} · ${keywordByLocale[locale]}`, name], settings.storeName);
   const fallbackDescriptionByLocale: Record<Locale, string> = {
-    en: `${name} — handmade Murano glass, from ${settings.storeName}.`,
-    it: `${name} — vetro di Murano fatto a mano, da ${settings.storeName}.`,
-    fr: `${name} — verre de Murano fait main, par ${settings.storeName}.`,
-    de: `${name} — handgefertigtes Muranoglas von ${settings.storeName}.`,
-    ar: `${name} — زجاج مورانو مصنوع يدويًا، من ${settings.storeName}.`,
-    zh: `${name} — 来自 ${settings.storeName} 的手工穆拉诺玻璃。`,
-    ru: `${name} — муранское стекло ручной работы от ${settings.storeName}.`,
-    es: `${name} — vidrio de Murano hecho a mano, de ${settings.storeName}.`,
-    pt: `${name} — vidro de Murano feito à mão, da ${settings.storeName}.`,
-    hi: `${name} — ${settings.storeName} का हाथ से बना मुरानो ग्लास।`,
-    ja: `${name} — ${settings.storeName}の手作りムラノガラス。`,
+    en: `${name}, handmade Murano glass, from ${settings.storeName}.`,
+    it: `${name}, vetro di Murano fatto a mano, da ${settings.storeName}.`,
+    fr: `${name}, verre de Murano fait main, par ${settings.storeName}.`,
+    de: `${name}, handgefertigtes Muranoglas von ${settings.storeName}.`,
+    ar: `${name}، زجاج مورانو مصنوع يدويًا، من ${settings.storeName}.`,
+    zh: `${name}，来自 ${settings.storeName} 的手工穆拉诺玻璃。`,
+    ru: `${name}, муранское стекло ручной работы от ${settings.storeName}.`,
+    es: `${name}, vidrio de Murano hecho a mano, de ${settings.storeName}.`,
+    pt: `${name}, vidro de Murano feito à mão, da ${settings.storeName}.`,
+    hi: `${name}, ${settings.storeName} का हाथ से बना मुरानो ग्लास।`,
+    ja: `${name}、${settings.storeName}の手作りムラノガラス。`,
   };
   // Price and a call to action close the snippet (both lift click-through);
   // an out-of-stock product says so instead of inviting a purchase it can't take.
