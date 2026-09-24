@@ -183,7 +183,7 @@ const en = {
     reviews: "Reviews",
     storyTitle: "The story behind this piece",
     shippingBanner:
-      "Complimentary shipping across Italy & Europe · USA & Canada €30 · Rest of World €40",
+      "Complimentary shipping across Italy & Europe · USA & Canada {northAmerica} · Rest of World {rest}",
     handmadeBadge: "Handmade in Italy",
     lightweightBadge: "Lightweight",
     seeReviews: "See reviews",
@@ -736,7 +736,7 @@ const it: Dictionary = {
     reviews: "Recensioni",
     storyTitle: "La storia di questo pezzo",
     shippingBanner:
-      "Spedizione omaggio in Italia ed Europa · USA e Canada 30€ · Resto del mondo 40€",
+      "Spedizione omaggio in Italia ed Europa · USA e Canada {northAmerica} · Resto del mondo {rest}",
     handmadeBadge: "Fatto a mano in Italia",
     lightweightBadge: "Leggero",
     seeReviews: "Vedi le recensioni",
@@ -1296,7 +1296,7 @@ const fr: Dictionary = {
     reviews: "Avis",
     storyTitle: "L'histoire de cette pièce",
     shippingBanner:
-      "Livraison offerte en Italie et en Europe · États-Unis et Canada 30 € · Reste du monde 40 €",
+      "Livraison offerte en Italie et en Europe · États-Unis et Canada {northAmerica} · Reste du monde {rest}",
     handmadeBadge: "Fait main en Italie",
     lightweightBadge: "Léger",
     seeReviews: "Voir les avis",
@@ -1860,7 +1860,7 @@ const de: Dictionary = {
     reviews: "Bewertungen",
     storyTitle: "Die Geschichte hinter diesem Stück",
     shippingBanner:
-      "Kostenloser Versand nach Italien und Europa · USA und Kanada 30 € · Restliche Welt 40 €",
+      "Kostenloser Versand nach Italien und Europa · USA und Kanada {northAmerica} · Restliche Welt {rest}",
     handmadeBadge: "Handgefertigt in Italien",
     lightweightBadge: "Leicht",
     seeReviews: "Bewertungen ansehen",
@@ -2421,7 +2421,7 @@ const ar: Dictionary = {
     reviews: "التقييمات",
     storyTitle: "قصة هذه القطعة",
     shippingBanner:
-      "شحن مجاني إلى إيطاليا وأوروبا · الولايات المتحدة وكندا 30 يورو · باقي دول العالم 40 يورو",
+      "شحن مجاني إلى إيطاليا وأوروبا · الولايات المتحدة وكندا {northAmerica} · باقي دول العالم {rest}",
     handmadeBadge: "صناعة يدوية في إيطاليا",
     lightweightBadge: "خفيف الوزن",
     seeReviews: "عرض التقييمات",
@@ -2954,7 +2954,7 @@ const zh: Dictionary = {
     buyNow: "立即购买",
     reviews: "评价",
     storyTitle: "这件作品的故事",
-    shippingBanner: "意大利及欧洲地区免费配送 · 美国和加拿大30欧元 · 其他地区40欧元",
+    shippingBanner: "意大利及欧洲地区免费配送 · 美国和加拿大 {northAmerica} · 其他地区 {rest}",
     handmadeBadge: "意大利手工制作",
     lightweightBadge: "轻盈佩戴",
     seeReviews: "查看评价",
@@ -3483,7 +3483,7 @@ const ru: Dictionary = {
     reviews: "Отзывы",
     storyTitle: "История этого изделия",
     shippingBanner:
-      "Бесплатная доставка по Италии и Европе · США и Канада — 30 € · Остальной мир — 40 €",
+      "Бесплатная доставка по Италии и Европе · США и Канада — {northAmerica} · Остальной мир — {rest}",
     handmadeBadge: "Ручная работа, Италия",
     lightweightBadge: "Лёгкий вес",
     seeReviews: "Смотреть отзывы",
@@ -4042,7 +4042,7 @@ const es: Dictionary = {
     reviews: "Reseñas",
     storyTitle: "La historia de esta pieza",
     shippingBanner:
-      "Envío gratuito a Italia y Europa · EE. UU. y Canadá 30 € · Resto del mundo 40 €",
+      "Envío gratuito a Italia y Europa · EE. UU. y Canadá {northAmerica} · Resto del mundo {rest}",
     handmadeBadge: "Hecho a mano en Italia",
     lightweightBadge: "Ligero",
     seeReviews: "Ver reseñas",
@@ -4598,7 +4598,7 @@ const pt: Dictionary = {
     buyNow: "Comprar agora",
     reviews: "Avaliações",
     storyTitle: "A história desta peça",
-    shippingBanner: "Envio gratuito para Itália e Europa · EUA e Canadá 30 € · Resto do mundo 40 €",
+    shippingBanner: "Envio gratuito para Itália e Europa · EUA e Canadá {northAmerica} · Resto do mundo {rest}",
     handmadeBadge: "Feito à mão em Itália",
     lightweightBadge: "Leve",
     seeReviews: "Ver avaliações",
@@ -5152,7 +5152,7 @@ const hi: Dictionary = {
     buyNow: "अभी खरीदें",
     reviews: "समीक्षाएं",
     storyTitle: "इस टुकड़े की कहानी",
-    shippingBanner: "इटली और यूरोप में मुफ़्त शिपिंग · अमेरिका और कनाडा €30 · शेष विश्व €40",
+    shippingBanner: "इटली और यूरोप में मुफ़्त शिपिंग · अमेरिका और कनाडा {northAmerica} · शेष विश्व {rest}",
     handmadeBadge: "इटली में हाथ से निर्मित",
     lightweightBadge: "हल्का वज़न",
     seeReviews: "समीक्षाएं देखें",
@@ -5708,7 +5708,7 @@ const ja: Dictionary = {
     reviews: "レビュー",
     storyTitle: "この作品のストーリー",
     shippingBanner:
-      "イタリア・ヨーロッパは送料無料 · 米国・カナダは30ユーロ · その他の地域は40ユーロ",
+      "イタリア・ヨーロッパは送料無料 · 米国・カナダは{northAmerica} · その他の地域は{rest}",
     handmadeBadge: "イタリア製ハンドメイド",
     lightweightBadge: "軽い着け心地",
     seeReviews: "レビューを見る",

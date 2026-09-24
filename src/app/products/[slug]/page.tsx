@@ -36,6 +36,7 @@ import { TrustBadges } from "@/components/trust-badges";
 import { StarRating } from "@/components/star-rating";
 import { ReviewForm } from "./review-form";
 import { hasPurchased } from "./review-actions";
+import { getShippingBanner } from "@/lib/shipping-banner";
 
 // Small single-use icons for the gift sections below — same stroke
 // convention (1.8, round caps/joins, currentColor) as the existing icons in
@@ -230,6 +231,11 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
 
   if (!product || !product.active) notFound();
   const dict = getDictionary(uiLocale);
+  const shippingBanner = await getShippingBanner(
+    dict.product.shippingBanner,
+    settings.defaultCurrency,
+    settings.defaultLocale
+  );
   const name = localizedName(product, uiLocale);
   const description = localizedDescription(product, uiLocale);
   const story = localizedStory(product, uiLocale);
@@ -519,7 +525,9 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
               />
 
               <TrustBadges trustBadgeText={settings.trustBadgeText} dict={dict.product} />
-              <p className="text-foreground/60 mt-1.5 text-sm">{dict.product.shippingBanner}</p>
+              {shippingBanner && (
+                <p className="text-foreground/60 mt-1.5 text-sm">{shippingBanner}</p>
+              )}
 
               <Link
                 href="/murano-glass#authenticity"
