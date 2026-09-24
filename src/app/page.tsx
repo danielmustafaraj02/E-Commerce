@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
+import { preload } from "react-dom";
 import Link from "next/link";
 import { getStoreSettings, ogImage } from "@/lib/store-settings";
 import { getHomepageData } from "@/lib/homepage-data";
@@ -78,7 +79,22 @@ const SHELF_SIZE = 4;
 // keeps it to two rows of two.
 const NEW_ARRIVALS_SIZE = 8;
 
+const HERO_SRC = "/hero/perla-viola-murano.jpg";
+const HERO_SIZES = "(min-width: 52rem) 36vw, 100vw";
+
 export default async function Home() {
+  // The hero photo is the LCP element: announce it in <head> with high
+  // priority so it's requested alongside the fonts instead of after the
+  // whole HTML has streamed in. Same srcSet/sizes as the <Image> below, so
+  // the browser picks the same file and downloads it once.
+  const hero = getImageProps({ src: HERO_SRC, alt: "", fill: true, sizes: HERO_SIZES }).props;
+  preload(hero.src, {
+    as: "image",
+    imageSrcSet: hero.srcSet,
+    imageSizes: hero.sizes,
+    fetchPriority: "high",
+  });
+
   const [
     settings,
     locale,
@@ -181,12 +197,12 @@ export default async function Home() {
             </div>
             <div className="shelf-bead">
               <Image
-                src="/hero/perla-viola-murano.jpg"
+                src={HERO_SRC}
                 alt={dict.home.heroImageAlt}
                 fill
                 loading="eager"
                 fetchPriority="high"
-                sizes="(min-width: 52rem) 36vw, 100vw"
+                sizes={HERO_SIZES}
               />
             </div>
           </div>

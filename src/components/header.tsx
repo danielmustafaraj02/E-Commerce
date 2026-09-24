@@ -65,8 +65,10 @@ export async function Header({
     { href: "/murano-glass", label: dict.footer.muranoGuide, icon: "guide" as const },
   ];
 
+  // The blur only matters where the header is sticky (sm and up); on phones
+  // it scrolls away anyway, and the backdrop-filter was a rendering cost.
   return (
-    <header className="glass-rule bg-background/90 relative z-40 backdrop-blur-sm sm:sticky sm:top-0">
+    <header className="glass-rule bg-background/90 relative z-40 sm:sticky sm:top-0 sm:backdrop-blur-sm">
       <div className="mx-auto flex w-full max-w-7xl items-center gap-6 px-4 py-2 sm:py-2">
 
         {/* ── Logo (far left, desktop only — mobile has its own centered logo below) ── */}
