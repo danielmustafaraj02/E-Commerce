@@ -53,6 +53,10 @@ const en = {
     heroSubtitle:
       "Authentic Venetian lampwork glass, handmade in Murano, Italy — traditional Italian craftsmanship, one bead at a time.",
     shopNow: "Shop now",
+    // Mobile-only hero (below 52rem): headline, one short sentence, CTA.
+    heroTagline: "Authentic Murano Glass",
+    heroMobileLede: "Handmade in Murano, Italy, one bead at a time.",
+    shopCollection: "Shop Collection",
     pricesIncludeTax: "All prices shown include VAT/IVA.",
     newArrivals: "New arrivals",
     specialSelectionTitle: "Selected pieces, special prices.",
@@ -604,6 +608,9 @@ const it: Dictionary = {
     heroSubtitle:
       "Vetro veneziano autentico lavorato a lume, fatto a mano a Murano, Italia — tradizione artigianale italiana, una perla alla volta.",
     shopNow: "Fai acquisti",
+    heroTagline: "Autentico vetro di Murano",
+    heroMobileLede: "Fatto a mano a Murano, una perla alla volta.",
+    shopCollection: "Scopri la collezione",
     pricesIncludeTax: "Tutti i prezzi mostrati includono IVA.",
     newArrivals: "Nuovi arrivi",
     specialSelectionTitle: "Pezzi selezionati, prezzi speciali.",
@@ -1164,6 +1171,9 @@ const fr: Dictionary = {
     heroSubtitle:
       "Verre vénitien authentique travaillé au chalumeau, fabriqué à la main à Murano, Italie — savoir-faire artisanal italien, une perle à la fois.",
     shopNow: "Achetez maintenant",
+    heroTagline: "Authentique verre de Murano",
+    heroMobileLede: "Fait main à Murano, en Italie, perle après perle.",
+    shopCollection: "Voir la collection",
     pricesIncludeTax: "Tous les prix affichés incluent la TVA.",
     newArrivals: "Nouveautés",
     specialSelectionTitle: "Pièces sélectionnées, prix spéciaux.",
@@ -1728,6 +1738,9 @@ const de: Dictionary = {
     heroSubtitle:
       "Authentisches venezianisches Lampenglas, handgefertigt in Murano, Italien — italienische Handwerkstradition, eine Perle nach der anderen.",
     shopNow: "Jetzt einkaufen",
+    heroTagline: "Echtes Muranoglas",
+    heroMobileLede: "Handgefertigt auf Murano, Italien, Perle für Perle.",
+    shopCollection: "Kollektion entdecken",
     pricesIncludeTax: "Alle angezeigten Preise verstehen sich inklusive Mehrwertsteuer.",
     newArrivals: "Neuheiten",
     specialSelectionTitle: "Ausgewählte Stücke, besondere Preise.",
@@ -2291,6 +2304,9 @@ const ar: Dictionary = {
     heroSubtitle:
       "زجاج فينيسي أصيل مصنوع بتقنية اللهب، مصنوع يدويًا في مورانو بإيطاليا — حرفية إيطالية تقليدية، خرزة تلو الأخرى.",
     shopNow: "تسوّق الآن",
+    heroTagline: "زجاج مورانو الأصلي",
+    heroMobileLede: "مصنوع يدويًا في مورانو بإيطاليا، خرزة تلو الأخرى.",
+    shopCollection: "تسوّق المجموعة",
     pricesIncludeTax: "جميع الأسعار المعروضة تشمل ضريبة القيمة المضافة.",
     newArrivals: "وصل حديثًا",
     specialSelectionTitle: "قطع مختارة، أسعار خاصة.",
@@ -2827,6 +2843,9 @@ const zh: Dictionary = {
     heroSubtitle:
       "源自威尼斯的正宗灯工玻璃，在意大利穆拉诺岛手工制作——传承的意大利工艺，一颗玻璃珠一颗玻璃珠地打磨而成。",
     shopNow: "立即选购",
+    heroTagline: "正宗穆拉诺玻璃",
+    heroMobileLede: "在意大利穆拉诺岛手工制作，一颗一颗精心打造。",
+    shopCollection: "选购系列",
     pricesIncludeTax: "所有显示价格均含增值税。",
     newArrivals: "新品上架",
     specialSelectionTitle: "精选臻品，特惠价格。",
@@ -3349,6 +3368,9 @@ const ru: Dictionary = {
     heroSubtitle:
       "Подлинное венецианское стекло ручной работы на горелке, изготовленное вручную на острове Мурано в Италии — итальянское мастерство, передаваемое из поколения в поколение, бусина за бусиной.",
     shopNow: "В магазин",
+    heroTagline: "Подлинное муранское стекло",
+    heroMobileLede: "Ручная работа с острова Мурано, бусина за бусиной.",
+    shopCollection: "Смотреть коллекцию",
     pricesIncludeTax: "Все указанные цены включают НДС.",
     newArrivals: "Новинки",
     specialSelectionTitle: "Избранные изделия, особые цены.",
@@ -3909,6 +3931,9 @@ const es: Dictionary = {
     heroSubtitle:
       "Vidrio veneciano auténtico trabajado a la llama, hecho a mano en Murano, Italia — artesanía tradicional italiana, una cuenta a la vez.",
     shopNow: "Comprar ahora",
+    heroTagline: "Auténtico cristal de Murano",
+    heroMobileLede: "Hecho a mano en Murano, Italia, cuenta a cuenta.",
+    shopCollection: "Ver la colección",
     pricesIncludeTax: "Todos los precios mostrados incluyen IVA.",
     newArrivals: "Novedades",
     specialSelectionTitle: "Piezas seleccionadas, precios especiales.",
@@ -4466,6 +4491,9 @@ const pt: Dictionary = {
     heroSubtitle:
       "Vidro veneziano autêntico trabalhado ao maçarico, feito à mão em Murano, Itália — artesanato tradicional italiano, uma conta de cada vez.",
     shopNow: "Comprar agora",
+    heroTagline: "Autêntico vidro de Murano",
+    heroMobileLede: "Feito à mão em Murano, Itália, conta a conta.",
+    shopCollection: "Ver a coleção",
     pricesIncludeTax: "Todos os preços apresentados incluem IVA.",
     newArrivals: "Novidades",
     specialSelectionTitle: "Peças selecionadas, preços especiais.",
@@ -5024,6 +5052,9 @@ const hi: Dictionary = {
     heroSubtitle:
       "प्रामाणिक वेनिसियन लैंपवर्क ग्लास, इटली के मुरानो में हाथ से बना — पारंपरिक इतालवी शिल्पकला, एक-एक मनका करके।",
     shopNow: "अभी खरीदें",
+    heroTagline: "प्रामाणिक मुरानो ग्लास",
+    heroMobileLede: "इटली के मुरानो में हाथ से बना, एक-एक मनका।",
+    shopCollection: "संग्रह देखें",
     pricesIncludeTax: "दिखाई गई सभी कीमतों में VAT/IVA शामिल है।",
     newArrivals: "नए आगमन",
     specialSelectionTitle: "चुनिंदा टुकड़े, खास कीमतें।",
@@ -5576,6 +5607,9 @@ const ja: Dictionary = {
     heroSubtitle:
       "本場ヴェネツィアのランプワークガラス、イタリア・ムラノ島で手作り — 伝統のイタリア職人技を、ひと粒ひと粒に込めて。",
     shopNow: "今すぐ購入",
+    heroTagline: "本物のムラーノガラス",
+    heroMobileLede: "イタリア・ムラーノ島で、ひと粒ずつ手作り。",
+    shopCollection: "コレクションを見る",
     pricesIncludeTax: "表示価格はすべて付加価値税(VAT/IVA)込みです。",
     newArrivals: "新着商品",
     specialSelectionTitle: "厳選アイテム、特別価格。",
