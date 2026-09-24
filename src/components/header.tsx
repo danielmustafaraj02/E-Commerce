@@ -51,14 +51,10 @@ export async function Header({
     <header className="glass-rule bg-background/90 relative z-40 backdrop-blur-sm sm:sticky sm:top-0">
       <div className="mx-auto flex w-full max-w-7xl items-center gap-6 px-4 py-2 sm:py-2">
 
-        {/* ── Logo (far left) ───────────────────────────────────────────── */}
-        <Link href="/" className="shrink-0 self-stretch flex items-center">
+        {/* ── Logo (far left, desktop only — mobile has its own centered logo below) ── */}
+        <Link href="/" className="hidden shrink-0 self-stretch items-center sm:flex">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={logoSrc(logoUrl)}
-            alt={storeName}
-            className="h-12 w-auto object-contain sm:h-14"
-          />
+          <img src={logoSrc(logoUrl)} alt={storeName} className="h-14 w-auto object-contain" />
         </Link>
 
         {/* ── Category nav (desktop, right of logo) ─────────────────────── */}
@@ -76,8 +72,8 @@ export async function Header({
           </Link>
         </nav>
 
-        {/* ── Spacer pushes everything after here to the right ──────────── */}
-        <div className="flex-1" />
+        {/* ── Spacer pushes everything after here to the right (desktop only) ── */}
+        <div className="hidden flex-1 sm:block" />
 
         {/* ── Search bar ────────────────────────────────────────────────── */}
         <form
@@ -189,64 +185,24 @@ export async function Header({
           )}
         </div>
 
-        {/* ── Mobile: search + icons + hamburger ────────────────────────── */}
-        <div className="flex items-center gap-3 sm:hidden">
-          {/* Inline search on mobile */}
-          <form
-            action="/products"
-            method="GET"
-            role="search"
-            className="relative flex flex-1 items-center"
-          >
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 20 20"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              className="text-foreground/50 pointer-events-none absolute start-3.5"
-              aria-hidden="true"
-            >
-              <circle cx="9" cy="9" r="6.5" />
-              <path d="M18 18l-4-4" strokeLinecap="round" />
-            </svg>
-            <input
-              type="search"
-              name="q"
-              placeholder={dict.nav.searchPlaceholder}
-              aria-label={dict.nav.searchPlaceholder}
-              enterKeyHint="search"
-              autoComplete="off"
-              className="field w-full min-w-0 rounded-full ps-11 pe-14 text-base shadow-sm"
+        {/* ── Mobile: hamburger — logo — cart, logo stays the visual focus ── */}
+        <div className="grid w-full grid-cols-3 items-center sm:hidden">
+          <div className="flex items-center">
+            <MobileNavMenu
+              links={mobileNavLinks}
+              menuLabel={dict.nav.menu}
+              closeLabel={dict.nav.closeMenu}
+              searchPlaceholder={dict.nav.searchPlaceholder}
+              searchLabel={dict.nav.search}
             />
-            <button
-              type="submit"
-              aria-label={dict.nav.searchPlaceholder}
-              className="bg-accent hover:bg-accent-deep active:bg-accent-deep absolute end-1 flex size-11 items-center justify-center rounded-full text-white transition-colors"
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="rtl:rotate-180"
-                aria-hidden="true"
-              >
-                <path d="M5 12h14M13 6l6 6-6 6" />
-              </svg>
-            </button>
-          </form>
-          <CartLink label={dict.nav.cart} />
-          <MobileNavMenu
-            links={mobileNavLinks}
-            menuLabel={dict.nav.menu}
-            closeLabel={dict.nav.closeMenu}
-          />
+          </div>
+          <Link href="/" className="flex items-center justify-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={logoSrc(logoUrl)} alt={storeName} className="h-11 w-auto object-contain" />
+          </Link>
+          <div className="flex items-center justify-end">
+            <CartLink label={dict.nav.cart} />
+          </div>
         </div>
 
       </div>
