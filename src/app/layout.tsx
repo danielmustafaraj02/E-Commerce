@@ -15,8 +15,12 @@ import { CookieConsent } from "@/components/cookie-consent";
 import { ConsentGatedAnalytics } from "@/components/consent-gated-analytics";
 import "./globals.css";
 
+// Not preloaded: storefront pages set their text in the shelf fonts
+// (home-fonts.ts), so on a phone's first screen Geist is unused and its
+// preload only competed with the hero image. It still loads (swap) where used.
 const geistSans = Geist({
   variable: "--font-geist-sans",
+  preload: false,
   subsets: ["latin"],
 });
 
