@@ -116,6 +116,12 @@ function withSecurityHeaders(response: NextResponse) {
   response.headers.set("X-Content-Type-Options", "nosniff");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  // Isolates this site's tabs/windows from ones opened by (or opening) it —
+  // no page here relies on `window.opener`/cross-window access (sign-in is a
+  // full-page redirect, not a popup), so this is free hardening against
+  // cross-origin tab-napping and Spectre-style timing attacks. Doesn't affect
+  // the Stripe/PayPal iframes, which are governed by frame-ancestors above.
+  response.headers.set("Cross-Origin-Opener-Policy", "same-origin");
   // Every page's <html lang> and content (product names/descriptions,
   // titles) switch on Accept-Language (see src/lib/i18n/locale.ts) even
   // though the URL stays the same — this is Google's documented "dynamic
