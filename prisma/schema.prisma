@@ -350,20 +350,6 @@ model ProductPriceChange {
   @@index([productId, changedAt])
 }
 
-// Every price a product has had. Written by a database trigger on Product
-// (see migration 20260924120000_add_product_price_history), not by app code,
-// so admin edits, scripts and raw SQL are all recorded. Backs the Omnibus
-// check on compareAtPrice.
-model ProductPriceChange {
-  id        String   @id @default(cuid())
-  productId String
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  price     Int // cents
-  changedAt DateTime @default(now())
-
-  @@index([productId, changedAt])
-}
-
 // ---------------------------------------------------------------------------
 // Dropshipping
 // ---------------------------------------------------------------------------
