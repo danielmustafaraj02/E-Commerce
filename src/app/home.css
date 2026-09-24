@@ -887,3 +887,83 @@
     display: flex;
   }
 }
+
+/* -- Mobile hero (below the 52rem two-column breakpoint) -------------------------- */
+
+/* A deliberate phone layout rather than the desktop hero stacked: the photo
+   first, cropped to the arc of large beads, then headline, one sentence and a
+   full-width CTA, short enough that the next section starts on screen. Nothing
+   here applies at 52rem and up, so the desktop hero is untouched. The -mobile
+   and -desktop spans (app/page.tsx) swap the copy. */
+.shelf-hero-mobile {
+  display: none;
+}
+@media (max-width: 51.99rem) {
+  .shelf-hero-desktop {
+    display: none;
+  }
+  .shelf-hero-mobile {
+    display: inline;
+  }
+  .shelf-home .shelf-hero-grid {
+    gap: 1.25rem;
+    padding-block: 0.75rem 0.5rem;
+  }
+  .shelf-hero .shelf-bead {
+    order: -1;
+    /* Fixed frame, so the layout doesn't move while the photo loads. */
+    aspect-ratio: 4 / 3;
+    max-width: 30rem;
+    max-height: 46svh;
+  }
+  .shelf-hero .shelf-bead img {
+    /* The necklace is portrait; on a phone show its lower arc, where the
+       large beads are, at full width instead of shrinking the whole piece. */
+    object-fit: cover;
+    object-position: 50% 82%;
+    /* Fade the cropped bottom edge into the copy below instead of a hard line. */
+    -webkit-mask-image: linear-gradient(to bottom, #000 82%, transparent);
+    mask-image: linear-gradient(to bottom, #000 82%, transparent);
+    /* Starts visible (a small settle, no fade-in) so the photo can count as
+       the largest paint right away. */
+    animation: shelf-settle-mobile 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .shelf-home .shelf-hero-copy {
+    align-items: center;
+    gap: 1rem;
+    margin-inline: auto;
+    max-width: 24rem;
+    text-align: center;
+  }
+  .shelf-hero .shelf-title {
+    font-size: clamp(2rem, 9vw, 2.6rem);
+    line-height: 1.1;
+  }
+  .shelf-hero .shelf-lede {
+    font-size: clamp(1.05rem, 4.4vw, 1.2rem);
+    text-wrap: balance;
+  }
+  /* Headline, one sentence, one CTA: the VAT note and trust facts are
+     repeated on every product page and at checkout. */
+  .shelf-hero-copy > .shelf-note,
+  .shelf-hero-copy > .shelf-facts {
+    display: none;
+  }
+  .shelf-hero-copy .shelf-button {
+    width: 100%;
+    min-height: 3.25rem;
+    margin-top: 0.25rem;
+  }
+  /* Bring the first section's heading up into view under the hero. */
+  .shelf-home .shelf-hero + .shelf-section {
+    padding-top: 2.5rem;
+  }
+}
+@keyframes shelf-settle-mobile {
+  from {
+    transform: scale(1.05);
+  }
+  to {
+    transform: scale(1);
+  }
+}
