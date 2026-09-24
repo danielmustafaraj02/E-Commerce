@@ -1004,43 +1004,49 @@ body:has(.shop-sticky-cta) footer {
 .look-visual {
   position: relative;
   margin-top: 1.75rem;
-  display: grid;
-  gap: 0.75rem;
-  /* Phones: the necklace on top, full width; bracelet and earrings below. */
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1.7fr 1fr;
-  grid-template-areas:
-    "necklace necklace"
-    "bracelet earrings";
   aspect-ratio: 4 / 5;
 }
 .look-visual--styled {
-  display: block;
   border-radius: 4px;
   overflow: hidden;
   aspect-ratio: 4 / 3;
 }
-.look-visual-tile {
-  position: relative;
+/* One full-size layer per piece, moved and scaled into its slot (from
+   lib/look-composition.ts, via --mx/--my/--ms on phones and --x/--y/--s from
+   40rem). Only transform and opacity change, so re-arranging never causes a
+   layout jump. Photos are contained — never cropped — and multiply drops
+   their white backgrounds into the sand. */
+.look-visual-layer {
+  --cx: var(--mx);
+  --cy: var(--my);
+  --cs: var(--ms);
+  position: absolute;
+  inset: 0;
+  opacity: 1;
+  transform: translate(calc((var(--cx) - 0.5) * 100%), calc((var(--cy) - 0.5) * 100%))
+    scale(var(--cs));
+  transition:
+    transform 320ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity 240ms ease-out;
+  pointer-events: none;
+  /* The blend sits on the moving layer itself: a transformed or fading
+     element is isolated, so a blend on the image inside it would only mix
+     with the transparent layer and leave the photo's white box visible. */
+  mix-blend-mode: multiply;
 }
-/* Placed by piece type (lib/look-data.ts): the necklace is the hero piece. */
-.look-visual-tile--necklace {
-  grid-area: necklace;
+/* Leaving: a little faster, fading and settling slightly smaller in place. */
+.look-visual-layer[data-visible="false"] {
+  opacity: 0;
+  transform: translate(calc((var(--cx) - 0.5) * 100%), calc((var(--cy) - 0.5) * 100%))
+    scale(calc(var(--cs) * 0.9));
+  transition:
+    transform 180ms ease-in,
+    opacity 160ms ease-in;
 }
-.look-visual-tile--bracelet {
-  grid-area: bracelet;
-}
-.look-visual-tile--earrings {
-  grid-area: earrings;
-}
-/* Each photo is shown whole — contain, never cropped — and multiply drops
-   its white background into the sand. The catalog photos have wide white
-   margins, so they're scaled up a little to fill their tiles. */
-.look-visual-tile img {
+.look-visual-layer img {
   object-fit: contain;
-  transform: scale(1.2);
+  filter: brightness(1.05) contrast(1.03);
 }
-.look-visual-tile img,
 .look-piece-photo img {
   mix-blend-mode: multiply;
   filter: brightness(1.05) contrast(1.03);
@@ -1048,17 +1054,52 @@ body:has(.shop-sticky-cta) footer {
 .look-piece-photo img {
   object-fit: cover;
 }
+.look-visual-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 1rem;
+  text-align: center;
+  font-family: var(--font-display), Georgia, serif;
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--ink-soft);
+  opacity: 0;
+  transition: opacity 240ms ease-out;
+}
+.look-visual-empty[data-visible="true"] {
+  opacity: 1;
+}
 @media (min-width: 40rem) {
-  /* Bracelet top-left, earrings lower-centre, necklace filling the right
-     half at full height: roughly half the showcase. */
   .look-visual {
-    grid-template-columns: 1fr 1fr 1.9fr;
-    grid-template-rows: 1fr 1fr;
-    grid-template-areas:
-      "bracelet . necklace"
-      "bracelet earrings necklace";
-    gap: 1rem;
     aspect-ratio: 4 / 3;
+  }
+  .look-visual-layer {
+    --cx: var(--x);
+    --cy: var(--y);
+    --cs: var(--s);
+  }
+}
+/* The cards echo the showcase: an unselected piece's thumbnail dims. */
+.look-piece-photo,
+.look-piece-price {
+  cursor: pointer;
+}
+.look-piece-photo {
+  display: block;
+  transition: opacity 200ms ease;
+}
+.look-piece[data-selected="false"] .look-piece-photo {
+  opacity: 0.45;
+}
+@media (prefers-reduced-motion: reduce) {
+  /* No movement: pieces just fade in and out of their places. */
+  .look-visual-layer,
+  .look-visual-layer[data-visible="false"] {
+    transition: opacity 150ms ease;
   }
 }
 .look-prices {

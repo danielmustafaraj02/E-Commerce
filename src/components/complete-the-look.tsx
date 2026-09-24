@@ -8,6 +8,7 @@ import { formatMoney } from "@/lib/format";
 import { applyTemplate } from "@/lib/i18n/format";
 import { trackLookEvent } from "@/lib/look-analytics";
 import { lookPricing, PAIR_DISCOUNT_PERCENT } from "@/lib/looks";
+import { lookComposition, type Slot } from "@/lib/look-composition";
 import type { LookView } from "@/lib/look-data";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
@@ -78,6 +79,22 @@ export function CompleteTheLook({
         }
       : null;
 
+  // The showcase follows the same selection as the cards (one source of
+  // truth): unselected pieces fade out and the rest move into a new layout.
+  const placements = lookComposition(
+    look.pieces.map((p) => ({ kind: p.kind, selected: selected.has(p.productId) }))
+  );
+  const anyShown = placements.some((p) => p.visible);
+  const slotVars = (d: Slot, m: Slot) =>
+    ({
+      "--x": d.x,
+      "--y": d.y,
+      "--s": d.s,
+      "--mx": m.x,
+      "--my": m.y,
+      "--ms": m.s,
+    }) as React.CSSProperties;
+
   const toggle = (productId: string) => {
     const next = new Set(selected);
     if (next.has(productId)) next.delete(productId);
@@ -131,30 +148,33 @@ export function CompleteTheLook({
               />
             </div>
           ) : (
-            // No styled photo: the pieces' own photos as one composition, the
-            // necklace large on the right, bracelet and earrings beside it
-            // (placed by piece type in shop.css).
+            // No styled photo: the pieces' own photos as one composition,
+            // arranged by lib/look-composition.ts for whatever is selected.
             <div className="look-visual" aria-hidden="true">
-              {look.pieces.map(
-                (piece) =>
-                  piece.imageUrl && (
-                    <div
-                      key={piece.productId}
-                      className={`look-visual-tile look-visual-tile--${piece.kind ?? "other"}`}
-                    >
-                      <CatalogImage
-                        src={piece.imageUrl}
-                        alt=""
-                        fill
-                        sizes={
-                          piece.kind === "necklace"
-                            ? "(min-width: 52rem) 24vw, 90vw"
-                            : "(min-width: 52rem) 14vw, 45vw"
-                        }
-                      />
-                    </div>
-                  )
+              {look.pieces.map((piece, i) =>
+                piece.imageUrl ? (
+                  <div
+                    key={piece.productId}
+                    className="look-visual-layer"
+                    data-visible={placements[i].visible}
+                    style={slotVars(placements[i].desktop, placements[i].mobile)}
+                  >
+                    <CatalogImage
+                      src={piece.imageUrl}
+                      alt=""
+                      fill
+                      sizes={
+                        piece.kind === "necklace"
+                          ? "(min-width: 52rem) 40vw, 90vw"
+                          : "(min-width: 52rem) 20vw, 45vw"
+                      }
+                    />
+                  </div>
+                ) : null
               )}
+              <p className="look-visual-empty" data-visible={!anyShown}>
+                {dict.emptyState}
+              </p>
             </div>
           )}
         </div>
@@ -181,12 +201,18 @@ export function CompleteTheLook({
 
           <ul className="look-pieces">
             {look.pieces.map((piece) => (
-              <li key={piece.productId} className="look-piece">
-                <div className="look-piece-photo">
+              <li
+                key={piece.productId}
+                className="look-piece"
+                data-selected={selected.has(piece.productId)}
+              >
+                {/* The photo and price are labels for the checkbox, so
+                    clicking the card toggles the same single selection. */}
+                <label htmlFor={`look-check-${piece.productId}`} className="look-piece-photo">
                   {piece.imageUrl && (
                     <CatalogImage src={piece.imageUrl} alt={piece.imageAlt} fill sizes="4rem" />
                   )}
-                </div>
+                </label>
                 <div className="look-piece-text">
                   {piece.productId === currentProductId ? (
                     <span className="look-piece-name">
@@ -197,11 +223,12 @@ export function CompleteTheLook({
                       {piece.name}
                     </Link>
                   )}
-                  <span className="look-piece-price">
+                  <label htmlFor={`look-check-${piece.productId}`} className="look-piece-price">
                     {piece.available ? money(piece.price) : outOfStockLabel}
-                  </span>
+                  </label>
                 </div>
                 <input
+                  id={`look-check-${piece.productId}`}
                   type="checkbox"
                   className="look-piece-check"
                   checked={selected.has(piece.productId)}
