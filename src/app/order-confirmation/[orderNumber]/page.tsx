@@ -17,6 +17,7 @@ import { ReturnRequestForm } from "./return-request-form";
 import { localizedName } from "@/lib/product-i18n";
 import { isPaypalConfigured } from "@/lib/paypal";
 import { LookPurchaseTracker } from "@/components/look-purchase-tracker";
+import { GiftFinderPurchaseTracker } from "@/components/gift-finder-purchase-tracker";
 
 const RETURNABLE_STATUSES = ["paid", "processing", "shipped", "delivered"];
 
@@ -61,6 +62,7 @@ export default async function OrderConfirmationPage({
       {order.bundleDiscountAmount > 0 && (
         <LookPurchaseTracker orderNumber={order.orderNumber} saving={order.bundleDiscountAmount} />
       )}
+      <GiftFinderPurchaseTracker orderNumber={order.orderNumber} />
       <ShelfHead
         settle
         icon={

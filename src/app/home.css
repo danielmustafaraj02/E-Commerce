@@ -122,6 +122,54 @@
   text-decoration: underline;
 }
 
+/* -- Gift Finder entry band -------------------------------------------------
+   A single quiet line, not a full marketing block — the flow itself is the
+   pitch. Sits on the lilac tint so it reads as its own small moment between
+   New arrivals and Special selection without competing with either. */
+.shelf-giftfinder-band {
+  padding-block: 2rem;
+  background: var(--tint-lilac);
+}
+.shelf-giftfinder-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  text-align: center;
+  font-family: var(--font-display), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: 1.15rem;
+  color: var(--accent-deep);
+  transition: color 0.2s ease;
+}
+.shelf-giftfinder-link:hover {
+  color: var(--accent);
+}
+.shelf-giftfinder-link .giftfinder-arrow {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+.shelf-giftfinder-link:hover .giftfinder-arrow {
+  transform: translateX(0.2em);
+}
+[dir="rtl"] .shelf-giftfinder-link .giftfinder-arrow {
+  transform: scaleX(-1);
+}
+[dir="rtl"] .shelf-giftfinder-link:hover .giftfinder-arrow {
+  transform: scaleX(-1) translateX(0.2em);
+}
+@media (prefers-reduced-motion: reduce) {
+  .shelf-giftfinder-link,
+  .shelf-giftfinder-link .giftfinder-arrow {
+    transition: none;
+  }
+  .shelf-giftfinder-link:hover .giftfinder-arrow {
+    transform: none;
+  }
+  [dir="rtl"] .shelf-giftfinder-link .giftfinder-arrow {
+    transform: scaleX(-1);
+  }
+}
+
 /* -- Hero ------------------------------------------------------------------ */
 
 .shelf-hero {

@@ -69,8 +69,8 @@ export type GiftCandidateProduct = {
 
 export type MatchCriterion = "style" | "occasion" | "budget" | "type";
 
-export type GiftFinderMatch = {
-  product: GiftCandidateProduct;
+export type GiftFinderMatch<T extends GiftCandidateProduct = GiftCandidateProduct> = {
+  product: T;
   score: number; // 0-100
   matched: MatchCriterion[];
 };
@@ -116,12 +116,14 @@ function typeScore(product: GiftCandidateProduct, preference: FinderPreference):
 
 // Scores every available candidate against the shopper's answers and returns
 // the top 3 (or fewer), highest score first. Ties break alphabetically by
-// name for a stable, testable order.
-export function scoreGiftCandidates(
-  candidates: GiftCandidateProduct[],
+// name for a stable, testable order. Generic so callers can pass richer
+// candidate shapes (e.g. the client component's product + imageAlt) through
+// unchanged — scoring only ever reads the GiftCandidateProduct fields.
+export function scoreGiftCandidates<T extends GiftCandidateProduct>(
+  candidates: T[],
   answers: GiftFinderAnswers,
   maxResults = MAX_RESULTS
-): GiftFinderMatch[] {
+): GiftFinderMatch<T>[] {
   return candidates
     .filter(isProductAvailable)
     .map((product) => {
