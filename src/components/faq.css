@@ -1,0 +1,157 @@
+/* "Common questions" (components/faq-section.tsx). Ink on the page's own
+   ground, hairline rules, no cards: easy to scan, calm. Uses the shelf tokens
+   (home.css) with fallbacks. */
+.faq {
+  --faq-ink: var(--ink, #0e3a46);
+  --faq-soft: var(--ink-soft, color-mix(in srgb, #0e3a46 76%, transparent));
+  --faq-rule: var(--rule, color-mix(in srgb, #0e3a46 18%, transparent));
+  display: grid;
+  gap: 1.5rem;
+  color: var(--faq-ink);
+}
+.faq-intro p {
+  margin: 0.75rem 0 0;
+  max-width: 24rem;
+  color: var(--faq-soft);
+  line-height: 1.6;
+}
+.faq-wave {
+  margin-top: 1rem;
+  color: var(--teal, #1f7a85);
+}
+
+.faq-accordion {
+  border-top: 1px solid var(--faq-rule);
+}
+.faq-item {
+  border-bottom: 1px solid var(--faq-rule);
+}
+.faq-question {
+  margin: 0;
+  font: inherit;
+}
+.faq-question button {
+  display: flex;
+  width: 100%;
+  min-height: 3.25rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: start;
+  cursor: pointer;
+}
+.faq-question button:focus-visible,
+.faq-more:focus-visible {
+  outline: 2px solid var(--teal, #1f7a85);
+  outline-offset: 2px;
+}
+/* A plus that becomes a minus. */
+.faq-icon {
+  position: relative;
+  flex-shrink: 0;
+  width: 0.85rem;
+  height: 0.85rem;
+}
+.faq-icon::before,
+.faq-icon::after {
+  content: "";
+  position: absolute;
+  inset: 50% 0 auto;
+  height: 1px;
+  background: currentColor;
+  transition: transform 0.2s ease;
+}
+.faq-icon::after {
+  transform: rotate(90deg);
+}
+.faq-question button[aria-expanded="true"] .faq-icon::after {
+  transform: rotate(0deg);
+}
+.faq-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition:
+    grid-template-rows 0.2s ease,
+    visibility 0s linear 0.2s;
+}
+.faq-answer[data-open="true"] {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition:
+    grid-template-rows 0.2s ease,
+    visibility 0s;
+}
+.faq-answer > div {
+  min-height: 0;
+  overflow: hidden;
+}
+.faq-answer p {
+  margin: 0;
+  max-width: 38rem;
+  color: var(--faq-soft);
+  line-height: 1.65;
+}
+.faq-link {
+  display: inline-block;
+  margin: 0.6rem 0 1.1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--faq-ink);
+  text-underline-offset: 0.2em;
+}
+.faq-answer p:last-child {
+  padding-bottom: 1.1rem;
+}
+.faq-more {
+  margin-top: 1rem;
+  min-height: 2.75rem;
+  padding: 0 1.1rem;
+  background: none;
+  border: 1px solid var(--faq-rule);
+  border-radius: 999px;
+  color: var(--faq-ink);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.faq-contact {
+  margin: 1.5rem 0 0;
+  color: var(--faq-soft);
+}
+.faq-contact a {
+  margin-inline-start: 0.35rem;
+  color: var(--faq-ink);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.faq-contact a:hover {
+  text-decoration: underline;
+}
+
+@media (min-width: 52rem) {
+  .faq--editorial {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+    gap: 4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-answer,
+  .faq-icon::before,
+  .faq-icon::after {
+    transition: none;
+  }
+}

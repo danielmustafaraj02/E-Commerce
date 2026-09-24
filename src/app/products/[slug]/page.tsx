@@ -36,7 +36,9 @@ import { TrustBadges } from "@/components/trust-badges";
 import { StarRating } from "@/components/star-rating";
 import { ReviewForm } from "./review-form";
 import { hasPurchased } from "./review-actions";
-import { getShippingBanner } from "@/lib/shipping-banner";
+import { getShippingBanner, getShippingFacts } from "@/lib/shipping-banner";
+import { buildFaq } from "@/lib/faq";
+import { FaqSection } from "@/components/faq-section";
 import { getLooksForProducts } from "@/lib/look-data";
 import { CompleteTheLook } from "@/components/complete-the-look";
 import { GiftFinderArrow } from "@/components/gift-finder-arrow";
@@ -372,18 +374,11 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
     ],
   };
 
-  // The product page's own, longer FAQ (dict.product.faq) — covers
-  // authenticity, origin, care, returns, shipping and gift packaging, not
-  // just the two authenticity/origin questions the homepage FAQ has.
-  const productFaqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: dict.product.faq.map((item) => ({
-      "@type": "Question",
-      name: item.question,
-      acceptedAnswer: { "@type": "Answer", text: item.answer },
-    })),
-  };
+  const faq = buildFaq(
+    dict,
+    await getShippingFacts(settings.defaultCurrency, settings.defaultLocale),
+    settings.contactEmail
+  );
 
   return (
     <main className={`shelf flex flex-1 flex-col ${homeFontClasses}`}>
@@ -631,10 +626,6 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
 
       <section className="shelf-section">
         <div className="shelf-wrap">
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: toSafeJsonLd(productFaqJsonLd) }}
-          />
           <div className={story ? "shop-story-faq-grid" : undefined}>
             {story && (
               <div className="shop-story">
@@ -645,19 +636,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                 </Link>
               </div>
             )}
-            <div>
-              <div className="shelf-heading-row">
-                <h2 className="shelf-heading">{dict.home.faqTitle}</h2>
-              </div>
-              <div className="shelf-faq">
-                {dict.product.faq.map((item, index) => (
-                  <details key={item.question} id={index === 5 ? "gift-packaging" : undefined}>
-                    <summary>{item.question}</summary>
-                    <p>{item.answer}</p>
-                  </details>
-                ))}
-              </div>
-            </div>
+            <FaqSection items={faq} dict={dict} variant="compact" />
           </div>
         </div>
       </section>

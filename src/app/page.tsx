@@ -7,8 +7,6 @@ import { getHomepageData } from "@/lib/homepage-data";
 import { getLocale, type Locale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { localizedName, localizedCardProduct } from "@/lib/product-i18n";
-import { formatMoney } from "@/lib/format";
-import { toSafeJsonLd } from "@/lib/json-ld";
 import { hreflangAlternates } from "@/lib/hreflang";
 import { fitTitle } from "@/lib/seo-text";
 import { truncateAtWord } from "@/lib/text";
@@ -17,6 +15,9 @@ import { ShelfItem } from "@/components/shelf-item";
 import { CategoryStrip } from "@/components/category-strip";
 import { Reveal } from "@/components/reveal";
 import { NewsletterSignupForm } from "@/components/newsletter-signup-form";
+import { FaqSection } from "@/components/faq-section";
+import { buildFaq } from "@/lib/faq";
+import { getShippingFacts } from "@/lib/shipping-banner";
 import { GiftFinderArrow } from "@/components/gift-finder-arrow";
 import { homeFontClasses } from "./home-fonts";
 import "./home.css";
@@ -113,35 +114,13 @@ export default async function Home() {
       productName: localizedName(review.product, locale),
     }));
 
-  const freeShippingAmount = settings.freeShippingThreshold
-    ? formatMoney(settings.freeShippingThreshold, settings.defaultCurrency, settings.defaultLocale)
-    : null;
-  const homeFaq = [
-    ...dict.home.faq,
-    ...(freeShippingAmount
-      ? [
-          {
-            question: dict.home.faqShippingQuestion,
-            answer: dict.home.faqShippingAnswer(freeShippingAmount),
-          },
-        ]
-      : []),
-  ];
-  // Direct-answer FAQ content, marked up as FAQPage — the format AI answer
-  // engines (Perplexity, ChatGPT, etc.) lean on most for quoting a source
-  // directly, and it can also render as an expandable rich result in
-  // Google. Kept honest by only asserting what's actually configured
-  // (e.g. the shipping answer is skipped if no free-shipping threshold is
-  // set, rather than guessing at a number).
-  const homeFaqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: homeFaq.map((item) => ({
-      "@type": "Question",
-      name: item.question,
-      acceptedAnswer: { "@type": "Answer", text: item.answer },
-    })),
-  };
+  // The FAQ answers restate the site's own settings: shipping figures come
+  // from the shipping zones (lib/shipping-banner.ts), not fixed text.
+  const faq = buildFaq(
+    dict,
+    await getShippingFacts(settings.defaultCurrency, settings.defaultLocale),
+    settings.contactEmail
+  );
 
   const shelfProps = {
     locale: settings.defaultLocale,
@@ -364,21 +343,7 @@ export default async function Home() {
 
       <section className="shelf-section">
         <div className="shelf-wrap">
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: toSafeJsonLd(homeFaqJsonLd) }}
-          />
-          <div className="shelf-heading-row">
-            <h2 className="shelf-heading">{dict.home.faqTitle}</h2>
-          </div>
-          <div className="shelf-faq">
-            {homeFaq.map((item) => (
-              <details key={item.question}>
-                <summary>{item.question}</summary>
-                <p>{item.answer}</p>
-              </details>
-            ))}
-          </div>
+          <FaqSection items={faq} dict={dict} />
         </div>
       </section>
 
