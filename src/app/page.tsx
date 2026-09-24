@@ -82,6 +82,7 @@ const NEW_ARRIVALS_SIZE = 8;
 
 const HERO_SRC = "/hero/handmade-red-murano-glass-necklace.jpg";
 const HERO_SIZES = "(min-width: 52rem) 36vw, 100vw";
+const HERO_BACKGROUND_SRC = "/hero/ivory-marble-background.jpg";
 
 export default async function Home() {
   // The hero photo is the LCP element: announce it in <head> with high
@@ -134,10 +135,10 @@ export default async function Home() {
     { title: dict.home.whyReturns, body: dict.home.whyReturnsBody },
   ];
   const facts = [
-    settings.trustBadgeText,
-    dict.product.returnsBadge,
-    dict.product.secureBadge,
-  ].filter(Boolean);
+    { icon: "badge", text: settings.trustBadgeText },
+    { icon: "returns", text: dict.product.returnsBadge },
+    { icon: "secure", text: dict.product.secureBadge },
+  ].filter((fact): fact is { icon: FactIconName; text: string } => Boolean(fact.text));
 
   // The design (app/home.css) is scoped to `.shelf`: the glass is the only
   // saturated thing on the page, and the product photos are blended straight
@@ -145,34 +146,31 @@ export default async function Home() {
   return (
     <main className={`shelf shelf-home flex flex-1 flex-col ${homeFontClasses}`}>
       <section className="shelf-hero">
+        <Image
+          src={HERO_BACKGROUND_SRC}
+          alt=""
+          fill
+          loading="eager"
+          sizes="100vw"
+          className="shelf-hero-backdrop"
+        />
         <div className="shelf-wrap">
           <div className="shelf-hero-grid">
-            {/* Phones (below 52rem) swap in shorter copy via the -mobile/-desktop
-                spans (home.css): the header already shows the store name, so the
-                headline says what the pieces are instead. Desktop is unchanged. */}
             <div className="shelf-hero-copy">
-              <h1 className="shelf-title">
-                <span translate="no" className="shelf-hero-desktop">
-                  {settings.storeName}
-                </span>
-                <span className="shelf-hero-mobile">{dict.home.heroTagline}</span>
+              <p className="shelf-eyebrow">{dict.home.heroTagline}</p>
+              <h1 className="shelf-title" translate="no">
+                {settings.storeName}
               </h1>
-              <p className="shelf-lede">
-                <span className="shelf-hero-desktop">{dict.home.heroSubtitle}</span>
-                <span className="shelf-hero-mobile">{dict.home.heroMobileLede}</span>
-              </p>
+              <p className="shelf-lede">{dict.home.heroSubtitle}</p>
+              <Link href="/products" className="shelf-button">
+                {dict.home.shopCollection}
+                <span aria-hidden="true" className="shelf-button-arrow">
+                  →
+                </span>
+              </Link>
               {settings.pricesIncludeTax && (
                 <p className="shelf-note">{dict.home.pricesIncludeTax}</p>
               )}
-              <Link href="/products" className="shelf-button">
-                <span className="shelf-hero-desktop">{dict.home.shopNow}</span>
-                <span className="shelf-hero-mobile">{dict.home.shopCollection}</span>
-              </Link>
-              <ul className="shelf-facts">
-                {facts.map((fact) => (
-                  <li key={fact}>{fact}</li>
-                ))}
-              </ul>
             </div>
             <div className="shelf-bead">
               <Image
@@ -185,6 +183,16 @@ export default async function Home() {
               />
             </div>
           </div>
+          {facts.length > 0 && (
+            <ul className="shelf-facts">
+              {facts.map((fact) => (
+                <li key={fact.text}>
+                  <FactIcon name={fact.icon} />
+                  <span>{fact.text}</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </section>
 
@@ -357,5 +365,31 @@ export default async function Home() {
         </div>
       </section>
     </main>
+  );
+}
+
+type FactIconName = "badge" | "returns" | "secure";
+
+const FACT_ICON_PATHS: Record<FactIconName, string> = {
+  badge: "M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3z M8.8 12.2l2.2 2.2 4.4-4.6",
+  returns: "M4 9h11a5 5 0 010 10H9 M4 9l4-4 M4 9l4 4",
+  secure: "M6 11h12v9H6z M8.5 11V8a3.5 3.5 0 017 0v3 M12 15v2",
+};
+
+function FactIcon({ name }: { name: FactIconName }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="28"
+      height="28"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d={FACT_ICON_PATHS[name]} />
+    </svg>
   );
 }

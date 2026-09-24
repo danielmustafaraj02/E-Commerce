@@ -116,7 +116,7 @@ const en = {
     title: "About us",
     intro: (storeName: string) =>
       `We started ${storeName} to bring authentic, hand-blown Murano glass jewelry to people who can't visit the furnaces themselves — every piece made using techniques passed down over seven centuries on the island of Murano, shipped straight from Venice.`,
-    heritageImageAlt: "Gondolas moored along a quiet canal in Venice",
+    heritageImageAlt: "Brightly painted houses along a canal on Burano, in the Venetian lagoon",
     valuesTitle: "What we care about",
     value1Title: "Quality first",
     value1Body:
@@ -835,7 +835,7 @@ const it: Dictionary = {
     intro: (storeName: string) =>
       `Abbiamo creato ${storeName} per portare gioielli autentici in vetro di Murano soffiato a mano a chi non può visitare di persona le fornaci — ogni pezzo realizzato con tecniche tramandate da sette secoli sull'isola di Murano, spedito direttamente da Venezia.`,
     heritageImageAlt:
-      "Gondole ormeggiate lungo un tranquillo canale di Venezia",
+      "Case dai colori vivaci lungo un canale di Burano, nella laguna di Venezia",
     valuesTitle: "Cosa ci sta a cuore",
     value1Title: "Prima la qualità",
     value1Body:
@@ -1558,7 +1558,7 @@ const fr: Dictionary = {
     intro: (storeName: string) =>
       `Nous avons créé ${storeName} pour faire découvrir de véritables bijoux en verre de Murano soufflé à la main à celles et ceux qui ne peuvent pas visiter les fours en personne — chaque pièce est réalisée selon des techniques transmises depuis sept siècles sur l'île de Murano, expédiée directement depuis Venise.`,
     heritageImageAlt:
-      "Des gondoles amarrées le long d'un canal paisible de Venise",
+      "Des maisons aux couleurs vives le long d'un canal de Burano, dans la lagune de Venise",
     valuesTitle: "Ce qui nous tient à cœur",
     value1Title: "La qualité avant tout",
     value1Body:
@@ -2285,7 +2285,7 @@ const de: Dictionary = {
     intro: (storeName: string) =>
       `Wir haben ${storeName} gegründet, um handgeblasenen, authentischen Muranoglas-Schmuck zu Menschen zu bringen, die die Glashütten nicht selbst besuchen können — jedes Stück entsteht nach Techniken, die seit sieben Jahrhunderten auf der Insel Murano weitergegeben werden, und wird direkt aus Venedig verschickt.`,
     heritageImageAlt:
-      "Gondeln, festgemacht an einem ruhigen Kanal in Venedig",
+      "Bunt gestrichene Häuser an einem Kanal auf Burano in der Lagune von Venedig",
     valuesTitle: "Was uns wichtig ist",
     value1Title: "Qualität zuerst",
     value1Body:
@@ -3010,7 +3010,7 @@ const ar: Dictionary = {
     title: "من نحن",
     intro: (storeName: string) =>
       `أطلقنا ${storeName} لنقدّم مجوهرات زجاج مورانو الأصيلة المنفوخة يدويًا لمن لا يستطيعون زيارة الأفران بأنفسهم — كل قطعة مصنوعة بتقنيات توارثتها الأجيال منذ سبعة قرون في جزيرة مورانو، وتُشحن مباشرة من البندقية.`,
-    heritageImageAlt: "جندولات راسية على قناة هادئة في البندقية",
+    heritageImageAlt: "بيوت بألوان زاهية على طول قناة في بورانو، في بحيرة البندقية",
     valuesTitle: "ما يهمنا",
     value1Title: "الجودة أولاً",
     value1Body:
@@ -3709,7 +3709,7 @@ const zh: Dictionary = {
     title: "关于我们",
     intro: (storeName: string) =>
       `我们创立 ${storeName}，希望把正宗的穆拉诺手工吹制玻璃珠宝带给那些无法亲自到访玻璃炉窑的人们——每件作品都采用穆拉诺岛七个世纪以来代代相传的工艺制作，从威尼斯直接发货。`,
-    heritageImageAlt: "停泊在威尼斯一条宁静运河边的贡多拉",
+    heritageImageAlt: "威尼斯潟湖布拉诺岛运河边色彩缤纷的房屋",
     valuesTitle: "我们所坚持的",
     value1Title: "品质至上",
     value1Body: "每件作品都在穆拉诺岛以传统的灯工和吹制玻璃工艺制作——绝不使用模具，绝不批量生产。",
@@ -4394,7 +4394,7 @@ const ru: Dictionary = {
     intro: (storeName: string) =>
       `Мы основали ${storeName}, чтобы подлинные украшения из муранского стекла ручной работы могли получить те, кто не может лично посетить стекольные мастерские, — каждое изделие создаётся по технологиям, которые передаются на острове Мурано уже семь столетий, и отправляется прямо из Венеции.`,
     heritageImageAlt:
-      "Гондолы у причала на тихом канале в Венеции",
+      "Ярко окрашенные дома вдоль канала на острове Бурано в Венецианской лагуне",
     valuesTitle: "Что для нас важно",
     value1Title: "Качество прежде всего",
     value1Body:
@@ -5117,7 +5117,7 @@ const es: Dictionary = {
     intro: (storeName: string) =>
       `Creamos ${storeName} para llevar joyería auténtica de vidrio de Murano soplado a mano a quienes no pueden visitar los hornos en persona — cada pieza elaborada con técnicas transmitidas durante siete siglos en la isla de Murano, enviada directamente desde Venecia.`,
     heritageImageAlt:
-      "Góndolas amarradas junto a un tranquilo canal de Venecia",
+      "Casas de colores vivos junto a un canal de Burano, en la laguna de Venecia",
     valuesTitle: "Lo que nos importa",
     value1Title: "La calidad primero",
     value1Body:
@@ -5837,7 +5837,7 @@ const pt: Dictionary = {
     intro: (storeName: string) =>
       `Criámos a ${storeName} para levar joias autênticas em vidro de Murano soprado à mão a quem não pode visitar as fornalhas pessoalmente — cada peça feita com técnicas transmitidas ao longo de sete séculos na ilha de Murano, enviada diretamente de Veneza.`,
     heritageImageAlt:
-      "Gôndolas atracadas ao longo de um canal tranquilo de Veneza",
+      "Casas de cores vivas ao longo de um canal de Burano, na lagoa de Veneza",
     valuesTitle: "O que nos importa",
     value1Title: "Qualidade em primeiro lugar",
     value1Body:
@@ -6557,7 +6557,7 @@ const hi: Dictionary = {
     title: "हमारे बारे में",
     intro: (storeName: string) =>
       `हमने ${storeName} की शुरुआत उन लोगों तक प्रामाणिक, हाथ से फूंके गए मुरानो ग्लास के आभूषण पहुंचाने के लिए की जो खुद भट्टियों तक नहीं जा सकते — हर उत्पाद मुरानो द्वीप पर सात शताब्दियों से चली आ रही तकनीकों का उपयोग करके बनाया गया है, सीधे वेनिस से भेजा गया।`,
-    heritageImageAlt: "वेनिस की एक शांत नहर के किनारे बंधी गोंडोला नावें",
+    heritageImageAlt: "वेनिस लैगून में बुरानो की एक नहर के किनारे चटकीले रंगों वाले घर",
     valuesTitle: "हमारे लिए क्या मायने रखता है",
     value1Title: "गुणवत्ता सबसे पहले",
     value1Body:
@@ -7272,7 +7272,7 @@ const ja: Dictionary = {
     title: "会社概要",
     intro: (storeName: string) =>
       `${storeName}は、工房を直接訪れることができない方々に、本物の手吹きムラノガラスジュエリーをお届けするために立ち上げました — すべての商品は、ムラノ島で700年にわたり受け継がれてきた技法で作られ、ヴェネツィアから直接発送されます。`,
-    heritageImageAlt: "ヴェネツィアの静かな運河沿いに係留されたゴンドラ",
+    heritageImageAlt: "ヴェネツィアのラグーンに浮かぶブラーノ島の運河沿いに並ぶ色鮮やかな家々",
     valuesTitle: "私たちが大切にしていること",
     value1Title: "品質第一",
     value1Body:

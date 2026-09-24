@@ -76,7 +76,7 @@ export default async function AboutPage() {
         <Reveal delayMs={250}>
           <div className="relative aspect-video w-full overflow-hidden rounded-2xl shadow-lg">
             <Image
-              src="/about/venice-moored-gondolas.jpg"
+              src="/blog/burano-colorful-houses-canal.jpg"
               alt={dict.about.heritageImageAlt}
               fill
               sizes="(min-width: 768px) 768px, 100vw"
