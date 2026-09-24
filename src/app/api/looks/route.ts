@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
-import { getLooksForProducts } from "@/lib/look-data";
+import { getLooksForProducts, getPieceKinds } from "@/lib/look-data";
 import { getLocale } from "@/lib/i18n/locale";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 // The cart lives in the browser, so the cart page asks here which looks its
-// products belong to (for the "complete the look" upsell and saving estimate).
+// products belong to (for the "complete the look" upsell and saving estimate),
+// and what kind of piece each is (for the composed-look saving).
 const MAX_IDS = 50;
 
 export async function GET(request: Request) {
@@ -16,8 +17,11 @@ export async function GET(request: Request) {
     .map((id) => id.trim())
     .filter(Boolean)
     .slice(0, MAX_IDS);
-  if (ids.length === 0) return NextResponse.json({ looks: [] });
+  if (ids.length === 0) return NextResponse.json({ looks: [], kinds: {} });
 
-  const looks = await getLooksForProducts(ids, await getLocale());
-  return NextResponse.json({ looks });
+  const [looks, kinds] = await Promise.all([
+    getLooksForProducts(ids, await getLocale()),
+    getPieceKinds(ids),
+  ]);
+  return NextResponse.json({ looks, kinds });
 }

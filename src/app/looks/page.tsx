@@ -7,6 +7,7 @@ import { getAllLooks } from "@/lib/look-data";
 import { ShelfMain } from "@/components/shelf-main";
 import { ShelfHead, ShelfBody } from "@/components/shelf-page";
 import { LookCard } from "@/components/look-card";
+import { ComposePromo } from "@/components/compose-promo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const [settings, locale] = await Promise.all([getStoreSettings(), getLocale()]);
@@ -36,6 +37,14 @@ export default async function LooksPage() {
         <p className="shop-lede">{dict.looks.subtitle}</p>
       </ShelfHead>
       <ShelfBody width="full">
+        <ComposePromo
+          labels={{
+            kicker: dict.looks.composeKicker,
+            title: dict.looks.composeTitle,
+            subtitle: dict.looks.composeSubtitle,
+            cta: dict.looks.composeCta,
+          }}
+        />
         {looks.length === 0 ? (
           <p className="look-grid-empty">{dict.looks.empty}</p>
         ) : (

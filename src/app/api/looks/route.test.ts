@@ -3,7 +3,10 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => ({ getLooks: vi.fn(), rateLimit: vi.fn() }));
 
 vi.mock("@/lib/rate-limit", () => ({ rateLimit: mocks.rateLimit, clientIp: () => "203.0.113.7" }));
-vi.mock("@/lib/look-data", () => ({ getLooksForProducts: mocks.getLooks }));
+vi.mock("@/lib/look-data", () => ({
+  getLooksForProducts: mocks.getLooks,
+  getPieceKinds: async () => ({ p1: "necklace" }),
+}));
 vi.mock("@/lib/i18n/locale", () => ({ getLocale: async () => "it" }));
 
 import { GET } from "./route";
@@ -20,7 +23,7 @@ describe("GET /api/looks", () => {
     const response = await get("?productIds=a,b");
 
     expect(response.status).toBe(200);
-    expect(await response.json()).toEqual({ looks: [{ id: "look1" }] });
+    expect(await response.json()).toEqual({ looks: [{ id: "look1" }], kinds: { p1: "necklace" } });
     expect(mocks.getLooks).toHaveBeenCalledWith(["a", "b"], "it");
   });
 
@@ -34,7 +37,7 @@ describe("GET /api/looks", () => {
   it("answers an empty list without a lookup", async () => {
     const response = await get("");
 
-    expect(await response.json()).toEqual({ looks: [] });
+    expect(await response.json()).toEqual({ looks: [], kinds: {} });
     expect(mocks.getLooks).not.toHaveBeenCalled();
   });
 

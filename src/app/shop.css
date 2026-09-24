@@ -1503,6 +1503,12 @@ a.look-piece-name:hover {
   display: grid;
   gap: 3.5rem 2.5rem;
 }
+.compose-promo + .look-cards {
+  margin-top: 4rem;
+}
+.shop-body > .compose-promo:first-child {
+  margin-top: 0;
+}
 @media (min-width: 40rem) {
   .look-cards {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1662,4 +1668,254 @@ a.look-piece-name:hover {
 }
 .look-back:hover {
   color: var(--ink);
+}
+
+/* -- Compose your own look: the promo (components/compose-promo.tsx) ------- */
+
+.compose-promo {
+  position: relative;
+  display: grid;
+  gap: 1.25rem;
+  align-items: center;
+  margin-top: 3.5rem;
+  padding: 2.25rem 1.75rem;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: #fff;
+  text-align: center;
+  justify-items: center;
+}
+.compose-promo::after {
+  content: "";
+  position: absolute;
+  inset: 0.65rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+  border-radius: 2px;
+  pointer-events: none;
+}
+.compose-promo-figure {
+  margin: 0;
+  color: var(--gold);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(3.5rem, 9vw, 5rem);
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1;
+}
+.compose-promo-kicker {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.compose-promo-title {
+  margin: 0.4rem 0 0;
+  font-size: clamp(1.9rem, 4vw, 2.5rem);
+  font-weight: 500;
+}
+.compose-promo-body {
+  max-width: 30rem;
+  margin: 0.6rem auto 0;
+  color: color-mix(in srgb, var(--ink) 85%, white);
+  line-height: 1.6;
+}
+.compose-promo-cta {
+  position: relative;
+  z-index: 1;
+}
+@media (min-width: 52rem) {
+  .compose-promo {
+    grid-template-columns: auto 1fr auto;
+    gap: 2.75rem;
+    padding: 2.5rem 3.25rem;
+    text-align: start;
+    justify-items: start;
+  }
+  .compose-promo-body {
+    margin-inline: 0;
+  }
+}
+
+/* -- The composer (components/look-composer.tsx) --------------------------- */
+
+.composer {
+  display: grid;
+  gap: 2.5rem;
+}
+.composer-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.composer-visual {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  width: 100%;
+  max-width: 26rem;
+  margin-inline: auto;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: #fff;
+}
+.composer-visual::after {
+  content: "";
+  position: absolute;
+  inset: 0.65rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+  border-radius: 2px;
+  pointer-events: none;
+}
+.composer-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  text-align: center;
+}
+.composer-total-label {
+  margin: 0;
+  color: var(--gold);
+  font-family: var(--font-display), Georgia, serif;
+  font-style: italic;
+  font-size: 1.1rem;
+}
+.composer-total {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin: 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 2rem;
+  font-weight: 500;
+}
+.composer-total s {
+  color: var(--ink-soft);
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+.composer-save {
+  margin: 0 0 0.5rem;
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.composer-hint {
+  max-width: 22rem;
+  margin: 0 0 0.75rem;
+  color: var(--ink-soft);
+  font-family: var(--font-display), Georgia, serif;
+  font-style: italic;
+  font-size: 1.2rem;
+  line-height: 1.4;
+}
+.composer-add {
+  width: 100%;
+  max-width: 26rem;
+  min-height: 3.25rem;
+}
+.composer-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  min-width: 0;
+}
+.composer-row {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.composer-row-title {
+  margin-bottom: 0.9rem;
+  padding: 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 500;
+}
+/* One swipeable row per kind. */
+.composer-options {
+  display: flex;
+  gap: 0.9rem;
+  margin: 0;
+  padding: 0.25rem 0.1rem 0.75rem;
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+}
+.composer-options li {
+  flex: 0 0 8.5rem;
+  scroll-snap-align: start;
+}
+.composer-option {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+.composer-option:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+.composer-option-photo {
+  position: relative;
+  display: block;
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: #fff;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.composer-option-photo img {
+  object-fit: contain;
+  padding: 8%;
+}
+.composer-option[aria-pressed="true"] .composer-option-photo {
+  border-color: var(--gold);
+  box-shadow: inset 0 0 0 1px var(--gold);
+}
+.composer-option:hover:not(:disabled) .composer-option-photo {
+  border-color: var(--gold);
+}
+.composer-option:focus-visible {
+  outline: none;
+}
+.composer-option:focus-visible .composer-option-photo {
+  outline: 1px solid var(--ink);
+  outline-offset: 3px;
+}
+.composer-option-name {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+.composer-option-price {
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+}
+@media (min-width: 52rem) {
+  .composer {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 3.5rem;
+    align-items: start;
+  }
+  .composer-stage {
+    position: sticky;
+    top: 7rem;
+  }
 }

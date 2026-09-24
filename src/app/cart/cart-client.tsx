@@ -10,7 +10,7 @@ import { QuantityStepper } from "@/components/quantity-stepper";
 import { EmptyShelf } from "@/components/empty-shelf";
 import { ExpressCheckoutButton } from "@/components/express-checkout-button";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
-import { cartLookSummary } from "@/lib/looks";
+import { cartLookSummary, type PieceKind } from "@/lib/looks";
 import { trackLookEvent } from "@/lib/look-analytics";
 import type { LookView } from "@/lib/look-data";
 
@@ -34,6 +34,7 @@ export function CartClient({
   const removeItem = useCartStore((state) => state.removeItem);
   const addItem = useCartStore((state) => state.addItem);
   const [looks, setLooks] = useState<LookView[]>([]);
+  const [kinds, setKinds] = useState<Record<string, PieceKind | null>>({});
 
   // Which looks the cart's pieces belong to: for the set-saving estimate and
   // the "complete the look" upsell. Refetched only when the set of products
@@ -43,9 +44,11 @@ export function CartClient({
     if (!productKey) return;
     let cancelled = false;
     fetch(`/api/looks?productIds=${encodeURIComponent(productKey)}`)
-      .then((res) => (res.ok ? res.json() : { looks: [] }))
-      .then((data: { looks: LookView[] }) => {
-        if (!cancelled) setLooks(data.looks);
+      .then((res) => (res.ok ? res.json() : { looks: [], kinds: {} }))
+      .then((data: { looks: LookView[]; kinds?: Record<string, PieceKind | null> }) => {
+        if (cancelled) return;
+        setLooks(data.looks);
+        setKinds(data.kinds ?? {});
       })
       .catch(() => {});
     return () => {
@@ -62,7 +65,7 @@ export function CartClient({
   // Display estimate only — the server recomputes authoritative pricing,
   // stock, tax, and shipping from live product data at checkout.
   const estimatedSubtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const lookSummary = cartLookSummary(items, looks);
+  const lookSummary = cartLookSummary(items, looks, kinds);
 
   return (
     <div className="flex flex-col gap-6">

@@ -340,6 +340,20 @@ describe("quoteOrder", () => {
       expect(quote.total).toBe(16500 - 1650 + 500);
     });
 
+    it("takes 10% off a necklace, bracelet and earrings the shopper composed", async () => {
+      mockDb.product.findMany.mockResolvedValue([
+        product({ id: "n", price: 12000, category: { name: "Collane", slug: "collane" } }),
+        product({ id: "b", price: 4500, category: { name: "Bracciali", slug: "bracciali" } }),
+        product({ id: "e", price: 1500, category: { name: "Orecchini", slug: "orecchini" } }),
+      ]);
+      mockDb.look.findMany.mockResolvedValue([]);
+
+      const quote = await quoteOrder({ items: allThree, country: "IT", shippingMethodId: "m1" });
+
+      expect(quote.bundleDiscountAmount).toBe(1200 + 450 + 150);
+      expect(quote.total).toBe(18000 - 1800 + 500);
+    });
+
     it("gives no bundle discount for a single piece", async () => {
       mockDb.product.findMany.mockResolvedValue(pieces().slice(0, 1));
       mockDb.look.findMany.mockResolvedValue([look]);

@@ -23,6 +23,7 @@ import { HeroNecklaceCarousel, type HeroSlide } from "@/components/hero-necklace
 import { db } from "@/lib/db";
 import { getAllLooks } from "@/lib/look-data";
 import { LookCard } from "@/components/look-card";
+import { ComposePromo } from "@/components/compose-promo";
 import { homeFontClasses } from "./home-fonts";
 import "./home.css";
 
@@ -303,39 +304,6 @@ export default async function Home() {
         </section>
       )}
 
-      {looks.length > 0 && (
-        <section className="shelf-section shelf-section--looks">
-          <div className="shelf-wrap">
-            <div className="shelf-heading-row shelf-heading-row--center">
-              <p className="shelf-eyebrow shelf-eyebrow--center">{dict.look.kicker}</p>
-              <h2 className="shelf-heading">{dict.looks.title}</h2>
-            </div>
-            <div className="look-cards">
-              {looks.map((look) => (
-                <LookCard
-                  key={look.id}
-                  look={look}
-                  locale={settings.defaultLocale}
-                  labels={{
-                    view: dict.looks.viewLook,
-                    save: dict.look.save,
-                    pieces: dict.looks.pieces,
-                  }}
-                />
-              ))}
-            </div>
-            <p className="shelf-looks-more">
-              <Link href="/looks" className="shelf-button">
-                {dict.looks.allLooks}
-                <span aria-hidden="true" className="shelf-button-arrow">
-                  →
-                </span>
-              </Link>
-            </p>
-          </div>
-        </section>
-      )}
-
       {products.length > 0 && (
         <section className="shelf-section">
           <div className="shelf-wrap">
@@ -364,6 +332,46 @@ export default async function Home() {
             <span>{dict.giftFinder.homeCtaLine}</span>
             <GiftFinderArrow />
           </Link>
+        </div>
+      </section>
+
+      <section className="shelf-section shelf-section--looks">
+        <div className="shelf-wrap">
+          <div className="shelf-heading-row shelf-heading-row--center">
+            <p className="shelf-eyebrow shelf-eyebrow--center">{dict.look.kicker}</p>
+            <h2 className="shelf-heading">{dict.looks.title}</h2>
+          </div>
+          {looks.length > 0 && (
+            <div className="look-cards">
+              {looks.map((look) => (
+                <LookCard
+                  key={look.id}
+                  look={look}
+                  locale={settings.defaultLocale}
+                  labels={{
+                    view: dict.looks.viewLook,
+                    save: dict.look.save,
+                    pieces: dict.looks.pieces,
+                  }}
+                />
+              ))}
+            </div>
+          )}
+          <ComposePromo
+            labels={{
+              kicker: dict.looks.composeKicker,
+              title: dict.looks.composeTitle,
+              subtitle: dict.looks.composeSubtitle,
+              cta: dict.looks.composeCta,
+            }}
+          />
+          {looks.length > 0 && (
+            <p className="shelf-looks-more">
+              <Link href="/looks" className="shelf-link">
+                {dict.looks.allLooks} <span aria-hidden="true">→</span>
+              </Link>
+            </p>
+          )}
         </div>
       </section>
 

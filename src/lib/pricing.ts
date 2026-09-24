@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
 import { bundleDiscounts } from "@/lib/looks";
+import { deriveProductType } from "@/lib/gift-finder";
 
 // `message` stays English (logs, tests); `code` + `params` let the route return
 // the visitor's language instead (see src/lib/pricing-messages.ts).
@@ -49,6 +50,9 @@ export async function quoteOrder({ items, country, shippingMethodId, discountCod
 
   const products = await db.product.findMany({
     where: { id: { in: items.map((i) => i.productId) } },
+    // The category says whether a piece is a necklace, bracelet or earrings,
+    // for the composed-look saving below.
+    include: { category: { select: { name: true, nameEn: true, slug: true } } },
   });
   const productMap = new Map(products.map((p) => [p.id, p]));
 
@@ -82,7 +86,7 @@ export async function quoteOrder({ items, country, shippingMethodId, discountCod
   const subtotal = lines.reduce((sum, l) => sum + l.lineSubtotal, 0);
   const currency = lines[0].product.currency;
 
-  // --- Complete the look: a percentage off each piece of a whole set ---
+  // --- Looks: staff-made sets, composed looks and pairs (lib/looks.ts) ---
   const looks = await db.look.findMany({
     where: { active: true, products: { some: { id: { in: items.map((i) => i.productId) } } } },
     select: {
@@ -97,7 +101,8 @@ export async function quoteOrder({ items, country, shippingMethodId, discountCod
       id: look.id,
       discountPercent: look.discountPercent,
       productIds: look.products.map((p) => p.id),
-    }))
+    })),
+    Object.fromEntries(lines.map((l) => [l.product.id, deriveProductType(l.product.category)]))
   );
   const bundleDiscountAmount = bundle.total;
   // What the goods actually cost after the bundle saving; discount codes,

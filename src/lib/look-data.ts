@@ -107,3 +107,59 @@ export async function getLookById(id: string, locale: Locale): Promise<LookView 
   const look = await db.look.findFirst({ where: { id, active: true }, include: LOOK_INCLUDE });
   return look ? (toLookViews([look], locale)[0] ?? null) : null;
 }
+
+// What each product is (necklace, bracelet, earrings or none of those), from
+// its category: the cart's estimate of the composed-look saving needs it.
+export async function getPieceKinds(
+  productIds: string[]
+): Promise<Record<string, ProductType | null>> {
+  if (productIds.length === 0) return {};
+  const products = await db.product.findMany({
+    where: { id: { in: productIds } },
+    select: { id: true, category: { select: { name: true, nameEn: true, slug: true } } },
+  });
+  return Object.fromEntries(products.map((p) => [p.id, deriveProductType(p.category)]));
+}
+
+export type ComposerPiece = Omit<LookPieceView, "kind"> & { kind: ProductType };
+
+// Everything the look composer (/looks/compose) can offer, grouped by kind:
+// active pieces with a photo whose category makes them a necklace, bracelet
+// or earrings. In-stock pieces first.
+export async function getComposerPieces(
+  locale: Locale
+): Promise<Record<ProductType, ComposerPiece[]>> {
+  const products = await db.product.findMany({
+    where: { active: true, images: { some: {} } },
+    orderBy: { createdAt: "desc" },
+    include: {
+      images: { take: 1, orderBy: { position: "asc" } },
+      category: { select: { name: true, nameEn: true, slug: true } },
+    },
+  });
+  const groups: Record<ProductType, ComposerPiece[]> = {
+    necklace: [],
+    bracelet: [],
+    earrings: [],
+  };
+  for (const product of products) {
+    const kind = deriveProductType(product.category ?? null);
+    if (!kind) continue;
+    const name = localizedName(product, locale);
+    groups[kind].push({
+      productId: product.id,
+      slug: product.slug,
+      name,
+      price: product.price,
+      currency: product.currency,
+      imageUrl: product.images[0]?.url ?? null,
+      imageAlt: productImageAlt(name, locale),
+      available: !product.trackInventory || product.stockQty > 0,
+      kind,
+    });
+  }
+  for (const kind of Object.keys(groups) as ProductType[]) {
+    groups[kind].sort((a, b) => Number(b.available) - Number(a.available));
+  }
+  return groups;
+}

@@ -3,6 +3,7 @@ import {
   bundleDiscounts,
   cartLookSummary,
   lookPricing,
+  COMPOSED_LOOK_DISCOUNT_PERCENT,
   LOOK_SIZE,
   PAIR_DISCOUNT_PERCENT,
 } from "./looks";
@@ -40,7 +41,12 @@ describe("bundleDiscounts", () => {
   it("takes 10% off two pieces of the same look bought together", () => {
     expect(PAIR_DISCOUNT_PERCENT).toBe(10);
     const result = bundleDiscounts([line("n", 12000), line("b", 4500)], [look]);
-    expect(result).toEqual({ total: 1650, byProduct: { n: 1200, b: 450 }, lookIds: ["look1"] });
+    expect(result).toEqual({
+      total: 1650,
+      byProduct: { n: 1200, b: 450 },
+      lookIds: ["look1"],
+      composedLooks: 0,
+    });
   });
 
   it("gives nothing for a single piece", () => {
@@ -48,6 +54,7 @@ describe("bundleDiscounts", () => {
       total: 0,
       byProduct: {},
       lookIds: [],
+      composedLooks: 0,
     });
   });
 
@@ -113,5 +120,74 @@ describe("cartLookSummary", () => {
       pieces: [piece("n", 12000), piece("b", 4500, false), piece("e", 1500)],
     };
     expect(cartLookSummary([item("n", 12000)], [soldOut]).upsells).toEqual([]);
+  });
+});
+
+describe("bundleDiscounts: composed looks", () => {
+  const line = (productId: string, price: number, quantity = 1) => ({
+    productId,
+    price,
+    quantity,
+  });
+  const kinds = {
+    n1: "necklace",
+    n2: "necklace",
+    b1: "bracelet",
+    e1: "earrings",
+    e2: "earrings",
+  } as const;
+
+  it("takes 10% off any necklace, bracelet and earrings bought together", () => {
+    expect(COMPOSED_LOOK_DISCOUNT_PERCENT).toBe(10);
+    const result = bundleDiscounts(
+      [line("n1", 12000), line("b1", 8000), line("e1", 6000)],
+      [],
+      kinds
+    );
+    expect(result.composedLooks).toBe(1);
+    expect(result.byProduct).toEqual({ n1: 1200, b1: 800, e1: 600 });
+    expect(result.total).toBe(2600);
+  });
+
+  it("needs all three kinds, and the product kinds to know them", () => {
+    expect(bundleDiscounts([line("n1", 12000), line("e1", 6000)], [], kinds).total).toBe(0);
+    expect(
+      bundleDiscounts([line("n1", 12000), line("b1", 8000), line("e1", 6000)], []).total
+    ).toBe(0);
+  });
+
+  it("uses the dearest pieces of each kind when there are spares", () => {
+    const result = bundleDiscounts(
+      [line("n1", 12000), line("n2", 20000), line("b1", 8000), line("e1", 6000), line("e2", 9000)],
+      [],
+      kinds
+    );
+    expect(result.composedLooks).toBe(1);
+    expect(result.byProduct).toEqual({ n2: 2000, b1: 800, e2: 900 });
+  });
+
+  it("never discounts a piece twice: staff sets first, then composed looks", () => {
+    const look = { id: "set", discountPercent: 15, productIds: ["n1", "b1", "e1"] };
+    const result = bundleDiscounts(
+      [line("n1", 12000, 2), line("b1", 8000, 1), line("e1", 6000, 2)],
+      [look],
+      kinds
+    );
+    // One set at 15%; the spare necklace and earrings have no bracelet left,
+    // so they form a pair of the same look at 10% instead.
+    expect(result.composedLooks).toBe(0);
+    expect(result.total).toBe(1800 + 1200 + 900 + 1200 + 600);
+  });
+
+  it("prefers a composed look of three over a pair of two", () => {
+    const look = { id: "set", discountPercent: 15, productIds: ["n1", "b1", "x"] };
+    const result = bundleDiscounts(
+      [line("n1", 12000), line("b1", 8000), line("e1", 6000)],
+      [look],
+      kinds
+    );
+    expect(result.composedLooks).toBe(1);
+    expect(result.lookIds).toEqual([]);
+    expect(result.total).toBe(2600);
   });
 });
