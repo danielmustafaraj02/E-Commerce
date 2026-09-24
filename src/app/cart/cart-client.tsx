@@ -14,12 +14,14 @@ export function CartClient({
   locale,
   uiLocale,
   dict,
+  shippingBanner,
   freeShippingThreshold,
   stripePublishableKey,
 }: {
   locale: string;
   uiLocale: string;
   dict: Dictionary["cart"];
+  shippingBanner: string;
   freeShippingThreshold: number | null;
   stripePublishableKey: string | null;
 }) {
@@ -136,7 +138,7 @@ export function CartClient({
         </span>
       </div>
 
-      <p className="text-foreground/70 -mt-3 text-sm">{dict.shippingNote}</p>
+      <p className="text-foreground/70 -mt-3 text-sm">{shippingBanner}</p>
 
       <Link href="/checkout" className="btn-primary text-center">
         {dict.checkout}

@@ -427,6 +427,8 @@ const en = {
     discount: "Discount",
     shipping: "Shipping",
     freeShippingApplied: "You qualify for free shipping!",
+    importDutiesNotice:
+      "Import duties and taxes for deliveries outside the EU are not included and are the recipient's responsibility.",
     includesVat: "Includes VAT/IVA",
     vat: "VAT/IVA",
     total: "Total",
@@ -979,6 +981,8 @@ const it: Dictionary = {
     discount: "Sconto",
     shipping: "Spedizione",
     freeShippingApplied: "Hai diritto alla spedizione gratuita!",
+    importDutiesNotice:
+      "I dazi doganali e le imposte per le consegne fuori dall'UE non sono inclusi e sono a carico del destinatario.",
     includesVat: "IVA inclusa",
     vat: "IVA",
     total: "Totale",
@@ -1535,6 +1539,8 @@ const fr: Dictionary = {
     discount: "Réduction",
     shipping: "Livraison",
     freeShippingApplied: "Vous bénéficiez de la livraison gratuite !",
+    importDutiesNotice:
+      "Les droits de douane et taxes pour les livraisons hors UE ne sont pas inclus et restent à la charge du destinataire.",
     includesVat: "TVA incluse",
     vat: "TVA",
     total: "Total",
@@ -2091,6 +2097,8 @@ const de: Dictionary = {
     discount: "Rabatt",
     shipping: "Versand",
     freeShippingApplied: "Sie haben Anspruch auf kostenlosen Versand!",
+    importDutiesNotice:
+      "Einfuhrzölle und Steuern für Lieferungen außerhalb der EU sind nicht enthalten und gehen zulasten des Empfängers.",
     includesVat: "inkl. MwSt.",
     vat: "MwSt.",
     total: "Gesamt",
@@ -2625,6 +2633,8 @@ const ar: Dictionary = {
     discount: "الخصم",
     shipping: "الشحن",
     freeShippingApplied: "أنت مؤهل للشحن المجاني!",
+    importDutiesNotice:
+      "لا تشمل هذه التكلفة الرسوم الجمركية والضرائب على الشحنات خارج الاتحاد الأوروبي، وهي على مسؤولية المستلم.",
     includesVat: "شامل ضريبة القيمة المضافة",
     vat: "ضريبة القيمة المضافة",
     total: "الإجمالي",
@@ -3143,6 +3153,7 @@ const zh: Dictionary = {
     discount: "优惠",
     shipping: "运费",
     freeShippingApplied: "您已符合免费配送条件！",
+    importDutiesNotice: "欧盟以外地区的进口关税和税费不包含在内，由收件人自行承担。",
     includesVat: "含增值税",
     vat: "增值税",
     total: "总计",
@@ -3691,6 +3702,8 @@ const ru: Dictionary = {
     discount: "Скидка",
     shipping: "Доставка",
     freeShippingApplied: "Вам доступна бесплатная доставка!",
+    importDutiesNotice:
+      "Импортные пошлины и налоги при доставке за пределы ЕС не включены и оплачиваются получателем.",
     includesVat: "с учётом НДС",
     vat: "НДС",
     total: "Итого",
@@ -4242,6 +4255,8 @@ const es: Dictionary = {
     discount: "Descuento",
     shipping: "Envío",
     freeShippingApplied: "¡Tienes envío gratis!",
+    importDutiesNotice:
+      "Los aranceles de importación e impuestos para envíos fuera de la UE no están incluidos y corren a cargo del destinatario.",
     includesVat: "IVA incluido",
     vat: "IVA",
     total: "Total",
@@ -4793,6 +4808,8 @@ const pt: Dictionary = {
     discount: "Desconto",
     shipping: "Envio",
     freeShippingApplied: "Tem direito a envio gratuito!",
+    importDutiesNotice:
+      "Os direitos aduaneiros e impostos de importação para entregas fora da UE não estão incluídos e são da responsabilidade do destinatário.",
     includesVat: "IVA incluído",
     vat: "IVA",
     total: "Total",
@@ -5337,6 +5354,8 @@ const hi: Dictionary = {
     discount: "छूट",
     shipping: "शिपिंग",
     freeShippingApplied: "आप मुफ़्त शिपिंग के पात्र हैं!",
+    importDutiesNotice:
+      "यूरोपीय संघ के बाहर डिलीवरी के लिए आयात शुल्क और कर शामिल नहीं हैं और ये प्राप्तकर्ता की ज़िम्मेदारी हैं।",
     includesVat: "VAT/IVA शामिल",
     vat: "VAT/IVA",
     total: "कुल",
@@ -5889,6 +5908,7 @@ const ja: Dictionary = {
     discount: "割引",
     shipping: "送料",
     freeShippingApplied: "送料無料が適用されます!",
+    importDutiesNotice: "EU域外への配送にかかる輸入関税・税金は含まれておらず、受取人のご負担となります。",
     includesVat: "VAT/IVA込み",
     vat: "VAT/IVA",
     total: "合計",

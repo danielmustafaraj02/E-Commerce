@@ -9,6 +9,7 @@ import { getLocale, localeDir } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { AnnouncementBar } from "@/components/announcement-bar";
 import { FloatingCheckoutButton } from "@/components/floating-checkout-button";
 import { CookieConsent } from "@/components/cookie-consent";
 import { ConsentGatedAnalytics } from "@/components/consent-gated-analytics";
@@ -183,6 +184,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         >
           {dict.a11y.skipToContent}
         </a>
+        <AnnouncementBar message={dict.product.shippingBanner} />
         <Header
           storeName={settings.storeName}
           logoUrl={settings.logoUrl}
