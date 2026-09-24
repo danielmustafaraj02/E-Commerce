@@ -228,49 +228,35 @@ export function CheckoutClient({
   }
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-6">
-      {quote?.shippingAmount === 0 && (
-        <div className="shop-panel shop-panel-pad">
-          <p className="text-accent-deep flex items-center text-sm font-medium">
-            <span className="shop-check shop-settle" aria-hidden="true">
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M20 6 9 17l-5-5" />
-              </svg>
-            </span>
-            {dict.freeShippingApplied}
-          </p>
-        </div>
-      )}
+    <div className="flex flex-col gap-6">
+      <ExpressCheckoutButton
+        publishableKey={stripePublishableKey}
+        locale={uiLocale}
+        dividerLabel={expressCheckoutLabel}
+      />
 
       <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-6">
-        <div className="shop-panel shop-panel-pad">
-          <p className="text-accent-deep flex items-center text-sm font-medium">
-            <span className="shop-check shop-settle" aria-hidden="true">
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M20 6 9 17l-5-5" />
-              </svg>
-            </span>
-            {dict.freeShippingApplied}
-          </p>
-        </div>
+        {quote?.shippingAmount === 0 && (
+          <div className="shop-panel shop-panel-pad">
+            <p className="text-accent-deep flex items-center text-sm font-medium">
+              <span className="shop-check shop-settle" aria-hidden="true">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+              </span>
+              {dict.freeShippingApplied}
+            </p>
+          </div>
+        )}
 
         {!isLoggedIn && (
           <div className="form-card">
@@ -437,6 +423,16 @@ export function CheckoutClient({
                 )}
                 <div className="text-foreground/70 flex justify-between">
                   <span>
+                    {dict.shipping}
+                    {selectedShippingMethod ? ` (${selectedShippingMethod.name})` : ""}
+                  </span>
+                  <span>{formatMoney(quote.shippingAmount, quote.currency, locale)}</span>
+                </div>
+                {quote.shippingAmount > 0 && (
+                  <p className="text-foreground/60 text-xs">{dict.importDutiesNotice}</p>
+                )}
+                <div className="text-foreground/70 flex justify-between">
+                  <span>
                     {quote.pricesIncludeTax ? dict.includesVat : dict.vat}
                     {quote.taxRatePercent !== null ? ` (${quote.taxRatePercent}%)` : ""}
                   </span>
@@ -447,28 +443,6 @@ export function CheckoutClient({
                   <span>{dict.total}</span>
                   <span>{formatMoney(quote.total, quote.currency, locale)}</span>
                 </div>
-              )}
-              <div className="text-foreground/70 flex justify-between">
-                <span>
-                  {dict.shipping}
-                  {selectedShippingMethod ? ` (${selectedShippingMethod.name})` : ""}
-                </span>
-                <span>{formatMoney(quote.shippingAmount, quote.currency, locale)}</span>
-              </div>
-              {quote.shippingAmount > 0 && (
-                <p className="text-foreground/60 text-xs">{dict.importDutiesNotice}</p>
-              )}
-              <div className="text-foreground/70 flex justify-between">
-                <span>
-                  {quote.pricesIncludeTax ? dict.includesVat : dict.vat}
-                  {quote.taxRatePercent !== null ? ` (${quote.taxRatePercent}%)` : ""}
-                </span>
-                <span>{formatMoney(quote.taxAmount, quote.currency, locale)}</span>
-              </div>
-              {quote.missingTaxRule && <p className="text-warning">{dict.missingTaxRule}</p>}
-              <div className="border-foreground/10 mt-1 flex justify-between border-t pt-2 text-base font-semibold">
-                <span>{dict.total}</span>
-                <span>{formatMoney(quote.total, quote.currency, locale)}</span>
               </div>
             )}
           </div>
