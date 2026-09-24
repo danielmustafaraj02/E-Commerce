@@ -6,7 +6,7 @@ import { getStoreSettings, ogImage } from "@/lib/store-settings";
 import { getLocale } from "@/lib/i18n/locale";
 import { getMuranoGuideContent } from "@/lib/murano-guide-content";
 import { localizedName } from "@/lib/product-i18n";
-import { toSafeJsonLd } from "@/lib/json-ld";
+import { absoluteUrl, toSafeJsonLd } from "@/lib/json-ld";
 import { hreflangAlternates } from "@/lib/hreflang";
 import { AnimatedHeading } from "@/components/animated-heading";
 import { Reveal } from "@/components/reveal";
@@ -49,12 +49,17 @@ export default async function MuranoGlassGuidePage() {
   const content = getMuranoGuideContent(locale);
   const base = siteBaseUrl(settings);
   const pageUrl = `${base}/murano-glass`;
+  const image = ogImage(settings);
 
+  // Google's Article rich-result guidelines require an `image`, unlike the
+  // metadata-only OG/Twitter tags above — same image, since the page has no
+  // dedicated hero photo of its own to point to instead.
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: content.title,
     description: content.metaDescription,
+    image: image ? [absoluteUrl(image, base)] : undefined,
     inLanguage: locale,
     mainEntityOfPage: pageUrl,
     author: { "@type": "Organization", name: settings.storeName },

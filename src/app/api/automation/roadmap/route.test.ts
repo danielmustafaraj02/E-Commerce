@@ -57,7 +57,11 @@ describe("POST /api/automation/roadmap", () => {
   });
 
   it("creates a task with description and priority", async () => {
-    await post({ title: "Rotate a dependency", description: "npm audit found X", priority: "high" });
+    await post({
+      title: "Rotate a dependency",
+      description: "npm audit found X",
+      priority: "high",
+    });
 
     expect(mocks.createTask).toHaveBeenCalledWith({
       data: { title: "Rotate a dependency", description: "npm audit found X", priority: "high" },
@@ -74,6 +78,11 @@ describe("POST /api/automation/roadmap", () => {
 
   it("rejects an invalid priority", async () => {
     expect((await post({ title: "x", priority: "urgent" })).status).toBe(400);
+  });
+
+  it("rejects a description over the shared task-details limit", async () => {
+    expect((await post({ title: "x", description: "y".repeat(30_001) })).status).toBe(400);
+    expect(mocks.createTask).not.toHaveBeenCalled();
   });
 
   it("rejects malformed JSON", async () => {
