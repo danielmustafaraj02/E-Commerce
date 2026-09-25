@@ -369,37 +369,17 @@ button:not(:disabled),
   transform-origin: left;
 }
 
-/* Header nav-link (header.tsx) hover feedback — a lift plus a soft pill
-   background fading in behind the text, on top of the underline-draw above.
-   Kept outside the reduced-motion guard (see .nav-link's entrance animation
-   further up) since it's interaction-triggered, not auto-playing. The pill
-   is a ::before, not padding/background on the element itself — .nav-link
-   is also .link-underline, whose ::after bar sizes itself to 100% of this
-   same box, so touching this element's own box model would stretch that
-   bar along with it. An absolutely-positioned, negative-z-index ::before
-   sidesteps that entirely: it can't affect layout, sizing, or the
-   underline, only paint a shape behind the text. */
+/* Header links use only a slow underline draw; keep the labels still and
+   unhighlighted so the navigation stays quiet. */
 .nav-link {
   position: relative;
-  transition: transform 0.15s ease;
 }
-.nav-link::before {
-  content: "";
-  position: absolute;
-  inset: -0.2rem -0.55rem;
-  z-index: -1;
-  border-radius: 999px;
-  background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
-  opacity: 0;
-  transition: opacity 0.2s ease;
+.nav-link.link-underline::after {
+  transition: transform 0.5s ease;
 }
 .nav-link:hover,
 .nav-link:focus-visible {
-  transform: translateY(-2px);
-}
-.nav-link:hover::before,
-.nav-link:focus-visible::before {
-  opacity: 1;
+  transform: none;
 }
 
 /* Header category row (header.tsx) can overflow horizontally on narrow
@@ -1076,4 +1056,3 @@ h2,
 h3 {
   text-wrap: balance;
 }
-

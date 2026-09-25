@@ -41,8 +41,7 @@ export async function Header({
     ? await db.wishlistItem.count({ where: { userId: session.user.id } })
     : 0;
 
-  const navChipClass =
-    "nav-link link-underline text-foreground/80 hover:text-accent shrink-0 transition-colors";
+  const navChipClass = "nav-link link-underline text-foreground/80 shrink-0";
 
   // Same destinations as the desktop row below, for the full-screen mobile
   // menu (MobileNavMenu) — resolved here since it needs plain strings, not
@@ -89,12 +88,10 @@ export async function Header({
         </Link>
 
         {/* ── Category nav (desktop, right of logo) ─────────────────────────
-            overflow-x-auto + scrollbar-hide + edge-fade-x: the dropdown trigger
-            below keeps this row narrow, but Looks/About/Guide alongside it can
-            still outgrow the available width just past 1024px before the
-            spacer/search/icon-cluster claim theirs; this scrolls instead of
-            wrapping or squeezing, with the mask signaling more content. ── */}
-        <nav className="hidden min-w-0 items-center gap-6 overflow-x-auto text-[0.95rem] whitespace-nowrap scrollbar-hide edge-fade-x lg:flex">
+            Keep overflow visible so the Products menu can extend below the
+            header. A scroll container clips absolutely positioned descendants,
+            even when overflow-y is set to visible. ── */}
+        <nav className="hidden min-w-0 items-center gap-6 text-[0.95rem] whitespace-nowrap lg:flex">
           <ProductsDropdown
             categories={categories.map((category) => ({
               href: `/category/${category.slug}`,
