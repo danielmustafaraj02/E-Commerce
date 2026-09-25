@@ -14,6 +14,8 @@ const en = {
     register: "Register",
     menu: "Menu",
     closeMenu: "Close menu",
+    products: "Products",
+    viewAll: "View all",
   },
   footer: {
     editorialTitle: "Discover the world of Murano glass",
@@ -860,6 +862,8 @@ const it: Dictionary = {
     register: "Registrati",
     menu: "Menu",
     closeMenu: "Chiudi il menu",
+    products: "Prodotti",
+    viewAll: "Vedi tutto",
   },
   footer: {
     editorialTitle: "Scopri il mondo del vetro di Murano",
@@ -1705,6 +1709,8 @@ const fr: Dictionary = {
     register: "S'inscrire",
     menu: "Menu",
     closeMenu: "Fermer le menu",
+    products: "Produits",
+    viewAll: "Tout voir",
   },
   footer: {
     editorialTitle: "Découvrez l'univers du verre de Murano",
@@ -2555,6 +2561,8 @@ const de: Dictionary = {
     register: "Registrieren",
     menu: "Menü",
     closeMenu: "Menü schließen",
+    products: "Produkte",
+    viewAll: "Alle anzeigen",
   },
   footer: {
     editorialTitle: "Entdecken Sie die Welt des Muranoglases",
@@ -3402,6 +3410,8 @@ const ar: Dictionary = {
     register: "إنشاء حساب",
     menu: "القائمة",
     closeMenu: "إغلاق القائمة",
+    products: "المنتجات",
+    viewAll: "عرض الكل",
   },
   footer: {
     editorialTitle: "اكتشف عالم زجاج مورانو",
@@ -4223,6 +4233,8 @@ const zh: Dictionary = {
     register: "注册",
     menu: "菜单",
     closeMenu: "关闭菜单",
+    products: "产品",
+    viewAll: "查看全部",
   },
   footer: {
     editorialTitle: "探索穆拉诺玻璃的世界",
@@ -5026,6 +5038,8 @@ const ru: Dictionary = {
     register: "Регистрация",
     menu: "Меню",
     closeMenu: "Закрыть меню",
+    products: "Товары",
+    viewAll: "Смотреть все",
   },
   footer: {
     editorialTitle: "Откройте мир муранского стекла",
@@ -5872,6 +5886,8 @@ const es: Dictionary = {
     register: "Registrarse",
     menu: "Menú",
     closeMenu: "Cerrar menú",
+    products: "Productos",
+    viewAll: "Ver todo",
   },
   footer: {
     editorialTitle: "Descubre el mundo del cristal de Murano",
@@ -6713,6 +6729,8 @@ const pt: Dictionary = {
     register: "Registar",
     menu: "Menu",
     closeMenu: "Fechar menu",
+    products: "Produtos",
+    viewAll: "Ver tudo",
   },
   footer: {
     editorialTitle: "Descubra o mundo do vidro de Murano",
@@ -7556,6 +7574,8 @@ const hi: Dictionary = {
     register: "रजिस्टर करें",
     menu: "मेनू",
     closeMenu: "मेनू बंद करें",
+    products: "उत्पाद",
+    viewAll: "सभी देखें",
   },
   footer: {
     editorialTitle: "मुरानो ग्लास की दुनिया खोजें",
@@ -8391,6 +8411,8 @@ const ja: Dictionary = {
     register: "新規登録",
     menu: "メニュー",
     closeMenu: "メニューを閉じる",
+    products: "商品",
+    viewAll: "すべて見る",
   },
   footer: {
     editorialTitle: "ムラーノガラスの世界へ",

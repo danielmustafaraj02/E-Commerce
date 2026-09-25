@@ -5,6 +5,7 @@ import { CartLink } from "@/components/cart-link";
 import { GuestWishlistLink } from "@/components/guest-wishlist-link";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { MobileNavMenu } from "@/components/mobile-nav-menu";
+import { ProductsDropdown } from "@/components/products-dropdown";
 import type { Locale } from "@/lib/i18n/locale";
 import { localizedName } from "@/lib/product-i18n";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
@@ -76,11 +77,14 @@ export async function Header({
 
         {/* ── Category nav (desktop, right of logo) ─────────────────────── */}
         <nav className="hidden items-center gap-6 text-[0.95rem] whitespace-nowrap sm:flex">
-          {categories.map((category) => (
-            <Link key={category.id} href={`/category/${category.slug}`} className={navChipClass}>
-              {localizedName(category, locale)}
-            </Link>
-          ))}
+          <ProductsDropdown
+            categories={categories.map((category) => ({
+              href: `/category/${category.slug}`,
+              label: localizedName(category, locale),
+            }))}
+            label={dict.nav.products}
+            viewAllLabel={dict.nav.viewAll}
+          />
           <Link href="/looks" className={navChipClass}>
             {dict.looks.navLabel}
           </Link>
