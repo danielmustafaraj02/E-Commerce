@@ -17,7 +17,7 @@ export default async function GuestWishlistPage() {
   const dict = getDictionary(uiLocale);
 
   return (
-    <ShelfMain>
+    <ShelfMain className="shelf--footer-space">
       <GuestWishlistClient
         wishlistDict={dict.wishlist}
         addToCartLabel={dict.product.addToCart}

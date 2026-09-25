@@ -1,13 +1,16 @@
 /* Gift Finder (/gift-finder) — a 5-step stylist quiz on top of the shelf
    design (home.css): warm white ground, ink type, thin hairline borders,
    generous whitespace. One question per screen, full-width selectable
-   cards with large touch targets. Transitions are short (150-250ms) and
-   collapse entirely under prefers-reduced-motion. */
+   cards with large touch targets. Each answer step enters from the direction
+   the visitor moved; motion collapses under prefers-reduced-motion. */
 
 .giftfinder {
-  padding-block: 2.5rem 4rem;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  min-height: clamp(42rem, calc(100svh - 6.25rem), 58rem);
+  padding-block: clamp(3rem, 8vh, 6rem) 5rem;
   background: var(--tint-sand);
-  min-height: 60vh;
 }
 .giftfinder-wrap {
   max-width: 38rem;
@@ -24,10 +27,46 @@
 .giftfinder-progress-bar {
   height: 100%;
   background: var(--accent);
-  transition: width 0.2s ease;
+  transition: width 0.55s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 /* -- Step ---------------------------------------------------------------- */
+.giftfinder-step[data-direction="forward"],
+.giftfinder-results[data-direction="forward"] {
+  animation: giftfinder-step-from-right 0.62s cubic-bezier(0.2, 0.72, 0.25, 1) both;
+}
+.giftfinder-step[data-direction="backward"],
+.giftfinder-results[data-direction="backward"] {
+  animation: giftfinder-step-from-left 0.62s cubic-bezier(0.2, 0.72, 0.25, 1) both;
+}
+.giftfinder-step[data-direction="forward"] .giftfinder-option {
+  animation: giftfinder-option-from-right 0.58s cubic-bezier(0.2, 0.72, 0.25, 1) both;
+}
+.giftfinder-step[data-direction="backward"] .giftfinder-option {
+  animation: giftfinder-option-from-left 0.58s cubic-bezier(0.2, 0.72, 0.25, 1) both;
+}
+.giftfinder-step .giftfinder-option:nth-child(2) { animation-delay: 45ms; }
+.giftfinder-step .giftfinder-option:nth-child(3) { animation-delay: 90ms; }
+.giftfinder-step .giftfinder-option:nth-child(4) { animation-delay: 135ms; }
+.giftfinder-step .giftfinder-option:nth-child(5) { animation-delay: 180ms; }
+.giftfinder-step .giftfinder-option:nth-child(6) { animation-delay: 225ms; }
+
+@keyframes giftfinder-step-from-right {
+  from { opacity: 0; transform: translateX(2.2rem); filter: blur(3px); }
+  to { opacity: 1; transform: translateX(0); filter: blur(0); }
+}
+@keyframes giftfinder-step-from-left {
+  from { opacity: 0; transform: translateX(-2.2rem); filter: blur(3px); }
+  to { opacity: 1; transform: translateX(0); filter: blur(0); }
+}
+@keyframes giftfinder-option-from-right {
+  from { opacity: 0; transform: translateX(1.1rem) scale(0.985); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes giftfinder-option-from-left {
+  from { opacity: 0; transform: translateX(-1.1rem) scale(0.985); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
 .giftfinder-counter {
   margin: 0 0 0.4rem;
   font-size: 0.75rem;
@@ -41,7 +80,8 @@
   font-size: 1.7rem;
 }
 .giftfinder-subtitle {
-  margin: -0.75rem 0 1.75rem;
+  margin: 0 0 1.75rem;
+  padding-top: 0.5rem;
   color: var(--ink-soft);
 }
 
@@ -254,6 +294,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .giftfinder-step,
+  .giftfinder-results,
+  .giftfinder-option {
+    animation: none !important;
+  }
   .giftfinder-progress-bar,
   .giftfinder-option {
     transition: none;

@@ -10,10 +10,12 @@ export function buildFooterNav({
   dict,
   categories,
   contactEmail,
+  giftCardEnabled = false,
 }: {
   dict: Dictionary;
   categories: { slug: string; label: string }[];
   contactEmail: string;
+  giftCardEnabled?: boolean;
 }): { sections: FooterSection[]; legal: FooterLink[] } {
   const f = dict.footer;
   return {
@@ -24,6 +26,10 @@ export function buildFooterNav({
         links: [
           { href: "/products", label: f.allProducts },
           ...categories.map((c) => ({ href: `/category/${c.slug}`, label: c.label })),
+          { href: "/gift-finder", label: dict.giftFinder.metaTitle },
+          ...(giftCardEnabled
+            ? [{ href: "/personalised-gift-card", label: dict.giftCard.productName }]
+            : []),
         ],
       },
       {

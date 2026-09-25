@@ -308,6 +308,8 @@ const en = {
   // entry points on the homepage and product page.
   giftFinder: {
     homeCtaLine: "Not sure what to choose? Find the perfect Murano gift",
+    homeCtaTime: "5 questions · about 5 minutes",
+    homeCtaDetails: "Tell us who it’s for, the occasion, their style, your budget and the kind of jewellery. We’ll match you with real Murano pieces in stock.",
     productCtaLine: "Not sure this is the one? Try our Gift Finder",
     metaTitle: "Gift Finder: Find the Perfect Murano Glass Gift",
     metaDescription:
@@ -420,8 +422,8 @@ const en = {
     shippingTimeFallback: "The estimated delivery time for each shipping method is shown at checkout, before you pay.",
     returnsQ: "Can I return or exchange my order?",
     returnsA: "Yes. You have 14 days from delivery to withdraw from your purchase, and we refund your original payment method within 14 days, including standard delivery. Return shipping is at your cost unless the piece is faulty. For an exchange, just contact us.",
-    giftQ: "Is it suitable as a gift?",
-    giftA: "Very much so: every piece arrives ready to give. If you're not sure which one to choose, our Gift Finder suggests pieces in a few quick questions.",
+    giftQ: "Is Murano glass jewelry a good gift?",
+    giftA: "Yes. Each piece is handmade in Italy from authentic Murano glass, so it feels personal and distinctive rather than mass-produced. It arrives in our signature gift box, ready for a birthday, anniversary, Mother's Day or a thoughtful thank-you. Our Gift Finder can help if you're unsure which style to choose.",
     damagedQ: "What if my piece arrives damaged?",
     damagedA: "Contact us with your order number and, if you can, a photo. We'll arrange a replacement, a repair or a full refund, including return shipping.",
     contactQ: "How can I contact you?",
@@ -451,16 +453,16 @@ const en = {
     handmadeBadge: "Handmade in Italy",
     lightweightBadge: "Lightweight",
     seeReviews: "See reviews",
-    giftReassuranceTitle: "A perfect gift for every occasion",
-    giftReassuranceBody: "Elegance, craftsmanship, and a story to give.",
+    giftReassuranceTitle: "A handmade Murano glass gift to remember",
+    giftReassuranceBody: "Made by hand in Italy, beautifully presented and ready to give.",
     giftSectionEyebrow: "The perfect gift",
     giftSectionHeadline: "More than a jewel, a lasting emotion.",
     giftSectionBody:
-      "Every piece arrives beautifully presented in our signature packaging, ready to give exactly as it is, for a birthday, an anniversary, a special occasion, or simply to make someone feel special.",
+      "Handmade in Italy from authentic Murano glass, each piece has its own colour and character—an original alternative to a mass-produced gift. It arrives in our signature gift box, ready for a birthday, anniversary, Mother's Day, or a thoughtful thank-you. Choose it for someone special, or as a lasting keepsake for yourself.",
     giftSectionLink: "Discover our gift packaging",
-    giftFeature1: "Elegant packaging",
-    giftFeature2: "Ready to gift",
-    giftFeature3: "A unique, meaningful present",
+    giftFeature1: "Handmade with authentic Murano glass",
+    giftFeature2: "Signature gift box, ready to give",
+    giftFeature3: "A distinctive piece with its own character",
     faq: [
       {
         question: "Is this real Murano glass?",
@@ -1165,6 +1167,8 @@ const it: Dictionary = {
   },
   giftFinder: {
     homeCtaLine: "Non sai cosa scegliere? Trova il regalo di Murano perfetto",
+    homeCtaTime: "5 domande · circa 5 minuti",
+    homeCtaDetails: "Dicci per chi è, l’occasione, lo stile, il budget e il tipo di gioiello: ti abbineremo pezzi in vetro di Murano davvero disponibili.",
     productCtaLine: "Non sei sicuro che sia quello giusto? Prova il nostro Trova Regalo",
     metaTitle: "Trova Regalo: il regalo perfetto in vetro di Murano",
     metaDescription:
@@ -1276,8 +1280,8 @@ const it: Dictionary = {
     shippingTimeFallback: "I tempi di consegna stimati per ogni metodo di spedizione sono indicati al checkout, prima del pagamento.",
     returnsQ: "Posso restituire o cambiare il mio ordine?",
     returnsA: "Sì. Hai 14 giorni dalla consegna per recedere dall'acquisto e ti rimborsiamo sul metodo di pagamento originale entro 14 giorni, spedizione standard inclusa. Le spese di reso sono a tuo carico, salvo che il pezzo sia difettoso. Per un cambio, contattaci.",
-    giftQ: "È adatto come regalo?",
-    giftA: "Assolutamente sì: ogni pezzo arriva pronto da regalare. Se non sai quale scegliere, il nostro Trova Regalo ti suggerisce dei pezzi in poche domande.",
+    giftQ: "Un gioiello in vetro di Murano è una bella idea regalo?",
+    giftA: "Sì. Ogni gioiello è lavorato a mano in Italia con autentico vetro di Murano: un dono personale e ricco di carattere, diverso da un accessorio prodotto in serie. Arriva nella nostra confezione firmata, già pronto per un compleanno, un anniversario, la festa della mamma o per dire grazie. Se hai un dubbio sul modello, il Trova Regalo ti aiuta a scegliere.",
     damagedQ: "E se il mio gioiello arriva danneggiato?",
     damagedA: "Contattaci indicando il numero d'ordine e, se possibile, una foto. Organizzeremo una sostituzione, una riparazione o un rimborso completo, spese di reso incluse.",
     contactQ: "Come posso contattarvi?",
@@ -1307,16 +1311,16 @@ const it: Dictionary = {
     handmadeBadge: "Fatto a mano in Italia",
     lightweightBadge: "Leggero",
     seeReviews: "Vedi le recensioni",
-    giftReassuranceTitle: "Il regalo perfetto per ogni occasione",
-    giftReassuranceBody: "Eleganza, artigianalità e una storia da regalare.",
+    giftReassuranceTitle: "Un regalo in vetro di Murano da ricordare",
+    giftReassuranceBody: "Lavorato a mano in Italia, confezionato con cura e pronto da donare.",
     giftSectionEyebrow: "Il regalo perfetto",
     giftSectionHeadline: "Più di un gioiello, un'emozione che resta.",
     giftSectionBody:
-      "Ogni gioiello arriva confezionato con cura nella nostra scatola firmata, pronto da regalare così com'è, per un compleanno, un anniversario, un'occasione speciale, o semplicemente per far sentire qualcuno importante.",
+      "Lavorato a mano in Italia con autentico vetro di Murano, ogni gioiello ha colori e dettagli propri: un'alternativa speciale ai regali prodotti in serie. Arriva nella nostra confezione firmata, già pronto per un compleanno, un anniversario, la festa della mamma o per dire grazie. Sceglilo per una persona cara o come ricordo prezioso da tenere per te.",
     giftSectionLink: "Scopri la nostra confezione regalo",
-    giftFeature1: "Confezione elegante",
-    giftFeature2: "Pronto da regalare",
-    giftFeature3: "Un dono unico e speciale",
+    giftFeature1: "Autentico vetro di Murano lavorato a mano",
+    giftFeature2: "Confezione firmata, pronta da regalare",
+    giftFeature3: "Un gioiello dal carattere unico",
     faq: [
       {
         question: "È vero vetro di Murano?",
@@ -2029,6 +2033,8 @@ const fr: Dictionary = {
   },
   giftFinder: {
     homeCtaLine: "Vous hésitez ? Trouvez le cadeau Murano parfait",
+    homeCtaTime: "5 questions · environ 5 minutes",
+    homeCtaDetails: "Indiquez la personne, l’occasion, le style, le budget et le type de bijou. Nous vous proposerons des pièces en verre de Murano réellement disponibles.",
     productCtaLine: "Pas sûr que ce soit le bon ? Essayez notre Cadeau Idéal",
     metaTitle: "Cadeau Idéal, Le cadeau parfait en verre de Murano",
     metaDescription:
@@ -2897,6 +2903,8 @@ const de: Dictionary = {
   },
   giftFinder: {
     homeCtaLine: "Unentschlossen? Finden Sie das perfekte Murano-Geschenk",
+    homeCtaTime: "5 Fragen · etwa 5 Minuten",
+    homeCtaDetails: "Nennen Sie die beschenkte Person, den Anlass, den Stil, das Budget und die Schmuckart. Wir finden passende Murano-Glasstücke, die tatsächlich verfügbar sind.",
     productCtaLine: "Nicht sicher, ob das das Richtige ist? Testen Sie unseren Geschenkfinder",
     metaTitle: "Geschenkfinder, Das perfekte Geschenk aus Muranoglas",
     metaDescription:
@@ -3762,6 +3770,8 @@ const ar: Dictionary = {
   },
   giftFinder: {
     homeCtaLine: "لست متأكدًا مما تختار؟ اعثر على هدية مورانو المثالية",
+    homeCtaTime: "5 أسئلة · نحو 5 دقائق",
+    homeCtaDetails: "أخبرنا لمن الهدية والمناسبة والأسلوب والميزانية ونوع المجوهرات، لنقترح عليك قطعًا من زجاج مورانو متوفرة فعلًا.",
     productCtaLine: "غير متأكد أن هذا هو الخيار الأنسب؟ جرّب أداة اختيار الهدية لدينا",
     metaTitle: "أداة اختيار الهدية، الهدية المثالية من زجاج مورانو",
     metaDescription:
@@ -4600,6 +4610,8 @@ const zh: Dictionary = {
   },
   giftFinder: {
     homeCtaLine: "不确定选什么？找到完美的穆拉诺礼物",
+    homeCtaTime: "5个问题 · 约5分钟",
+    homeCtaDetails: "告诉我们赠送对象、场合、风格、预算和首饰类型，即可查看当前有货的穆拉诺玻璃作品。",
     productCtaLine: "不确定这是不是合适的礼物？试试我们的礼物查找器",
     metaTitle: "礼物查找器，完美的穆拉诺玻璃礼物",
     metaDescription: "回答五个简单问题，我们将为您推荐完美的手工穆拉诺玻璃礼物，均从真实现货中挑选。",
@@ -5428,6 +5440,8 @@ const ru: Dictionary = {
   },
   giftFinder: {
     homeCtaLine: "Не знаете, что выбрать? Найдите идеальный подарок из муранского стекла",
+    homeCtaTime: "5 вопросов · около 5 минут",
+    homeCtaDetails: "Укажите получателя, повод, стиль, бюджет и тип украшения. Мы подберём изделия из муранского стекла, которые действительно есть в наличии.",
     productCtaLine: "Не уверены, что это то самое? Попробуйте наш Подборщик подарков",
     metaTitle: "Подборщик подарков, идеальный подарок из муранского стекла",
     metaDescription:
@@ -6291,6 +6305,8 @@ const es: Dictionary = {
   },
   giftFinder: {
     homeCtaLine: "¿No sabes qué elegir? Encuentra el regalo perfecto de Murano",
+    homeCtaTime: "5 preguntas · unos 5 minutos",
+    homeCtaDetails: "Cuéntanos para quién es, la ocasión, el estilo, tu presupuesto y el tipo de joya. Te mostraremos piezas de vidrio de Murano realmente disponibles.",
     productCtaLine: "¿No estás seguro de que sea el indicado? Prueba nuestro Buscador de Regalos",
     metaTitle: "Buscador de Regalos, El regalo perfecto de vidrio de Murano",
     metaDescription:
@@ -7151,6 +7167,8 @@ const pt: Dictionary = {
   },
   giftFinder: {
     homeCtaLine: "Não sabe o que escolher? Encontre o presente de Murano perfeito",
+    homeCtaTime: "5 perguntas · cerca de 5 minutos",
+    homeCtaDetails: "Indique para quem é, a ocasião, o estilo, o orçamento e o tipo de joia. Vamos sugerir peças de vidro de Murano realmente disponíveis.",
     productCtaLine: "Não tem a certeza se é a peça certa? Experimente o nosso Localizador de Presentes",
     metaTitle: "Localizador de Presentes, O presente perfeito em vidro de Murano",
     metaDescription:
@@ -8010,6 +8028,8 @@ const hi: Dictionary = {
   },
   giftFinder: {
     homeCtaLine: "समझ नहीं आ रहा क्या चुनें? परफेक्ट मुरानो गिफ्ट खोजें",
+    homeCtaTime: "5 सवाल · लगभग 5 मिनट",
+    homeCtaDetails: "बताइए यह किसके लिए है, अवसर, पसंदीदा शैली, बजट और गहने का प्रकार क्या है। हम उपलब्ध मुरानो ग्लास के असली गहने सुझाएँगे।",
     productCtaLine: "पक्का नहीं कि यही सही है? हमारा गिफ्ट फाइंडर आज़माएं",
     metaTitle: "गिफ्ट फाइंडर, मुरानो ग्लास का परफेक्ट गिफ्ट",
     metaDescription:
@@ -8867,6 +8887,8 @@ const ja: Dictionary = {
   },
   giftFinder: {
     homeCtaLine: "何を選べばいいかお悩みですか？ぴったりのムラーノギフトを見つけましょう",
+    homeCtaTime: "5つの質問・約5分",
+    homeCtaDetails: "贈る相手、贈る場面、好み、予算、ジュエリーの種類を教えてください。在庫のあるムラーノガラス作品からご提案します。",
     productCtaLine: "これで決まりか迷ったら？ギフトファインダーをお試しください",
     metaTitle: "ギフトファインダー、ムラーノガラスのぴったりの贈り物",
     metaDescription:

@@ -132,6 +132,7 @@ export function GiftFinderFlow({
   const addItem = useCartStore((state) => state.addItem);
 
   const [step, setStep] = useState(1);
+  const [stepDirection, setStepDirection] = useState<"forward" | "backward">("forward");
   const [answers, setAnswers] = useState<AnswerState>(EMPTY_ANSWERS);
   const [phase, setPhase] = useState<"quiz" | "results">("quiz");
   const [results, setResults] = useState<GiftFinderMatch<GiftFinderCandidate>[]>([]);
@@ -170,6 +171,7 @@ export function GiftFinderFlow({
 
   const goNext = () => {
     if (!currentAnswer) return;
+    setStepDirection("forward");
     if (step < TOTAL_STEPS) {
       setStep(step + 1);
       return;
@@ -188,6 +190,7 @@ export function GiftFinderFlow({
   };
 
   const goBack = () => {
+    setStepDirection("backward");
     if (phase === "results") {
       setPhase("quiz");
       return;
@@ -196,6 +199,7 @@ export function GiftFinderFlow({
   };
 
   const startOver = () => {
+    setStepDirection("backward");
     setStep(1);
     setAnswers(EMPTY_ANSWERS);
     setPhase("quiz");
@@ -264,7 +268,11 @@ export function GiftFinderFlow({
         </div>
 
         {phase === "quiz" && (
-          <div className="giftfinder-step">
+          <div
+            key={`quiz-${step}`}
+            className="giftfinder-step"
+            data-direction={stepDirection}
+          >
             <p className="giftfinder-counter">
               {applyTemplate(dict.stepCounter, { current: step, total: TOTAL_STEPS })}
             </p>
@@ -312,7 +320,11 @@ export function GiftFinderFlow({
         )}
 
         {phase === "results" && (
-          <div className="giftfinder-results">
+          <div
+            key="giftfinder-results"
+            className="giftfinder-results"
+            data-direction={stepDirection}
+          >
             <button type="button" className="giftfinder-back" onClick={goBack}>
               {dict.back}
             </button>

@@ -187,6 +187,151 @@ button:not(:disabled),
   }
 }
 
+@keyframes cart-celebration-drive {
+  0% {
+    opacity: 0;
+    transform: translate3d(-72vw, 17vh, 0) scale(0.42) rotate(-10deg);
+  }
+  12% {
+    opacity: 1;
+  }
+  52% {
+    opacity: 1;
+    transform: translate3d(-5vw, 0, 0) scale(1.16) rotate(0deg);
+  }
+  72% {
+    transform: translate3d(21vw, -5vh, 0) scale(1.38) rotate(2deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(72vw, -18vh, 0) scale(1.72) rotate(5deg);
+  }
+}
+
+@keyframes cart-celebration-confetti {
+  0% {
+    opacity: 0;
+    transform: translate3d(-50%, -50%, 0) scale(0.2) rotate(0deg);
+  }
+  12% {
+    opacity: 1;
+  }
+  72% {
+    opacity: 1;
+    transform: translate3d(
+        calc(-50% + var(--confetti-x)),
+        calc(-50% + var(--confetti-y)),
+        0
+      )
+      rotate(var(--confetti-rotation)) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(
+        calc(-50% + var(--confetti-x)),
+        calc(-50% + var(--confetti-y) + 18vh),
+        0
+      )
+      rotate(calc(var(--confetti-rotation) + 120deg)) scale(0.55);
+  }
+}
+
+@keyframes cart-celebration-wheel-roll {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.cart-celebration {
+  --cart-celebration-petrol: #123d43;
+  --cart-celebration-gold: #b89a62;
+  --cart-celebration-ground: #fffaf4;
+  position: fixed;
+  z-index: 80;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.cart-celebration__confetti {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  opacity: 0;
+  animation: cart-celebration-confetti 2.35s cubic-bezier(0.18, 0.62, 0.28, 1)
+    var(--confetti-delay) both;
+}
+.cart-celebration__confetti--square {
+  border-radius: 1px;
+}
+.cart-celebration__confetti--round {
+  border-radius: 50%;
+}
+.cart-celebration__confetti--petrol {
+  background: var(--cart-celebration-petrol);
+}
+.cart-celebration__confetti--gold {
+  background: var(--cart-celebration-gold);
+}
+.cart-celebration__confetti--rose {
+  background: #c65b8a;
+}
+.cart-celebration__confetti--teal {
+  background: #1f7a85;
+}
+.cart-celebration__vehicle {
+  position: absolute;
+  top: 54%;
+  left: 50%;
+  width: clamp(6rem, 11vw, 9rem);
+  color: var(--cart-celebration-petrol);
+  filter: drop-shadow(0 10px 18px rgb(18 61 67 / 20%));
+  animation: cart-celebration-drive 1.9s cubic-bezier(0.2, 0.7, 0.25, 1) both;
+}
+.cart-celebration__vehicle svg {
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+.cart-celebration__speed-line {
+  position: absolute;
+  right: 83%;
+  width: 38%;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, var(--cart-celebration-gold));
+  transform-origin: right center;
+  animation: cart-speed-trail 0.42s ease-out infinite alternate;
+}
+.cart-celebration__speed-line--one {
+  top: 36%;
+}
+.cart-celebration__speed-line--two {
+  top: 56%;
+  width: 27%;
+  animation-delay: 0.16s;
+}
+.cart-celebration__wheel-spokes {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cart-celebration-wheel-roll 0.42s linear infinite;
+}
+@keyframes cart-speed-trail {
+  from {
+    opacity: 0.25;
+    transform: scaleX(0.45);
+  }
+  to {
+    opacity: 0.9;
+    transform: scaleX(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cart-celebration {
+    display: none;
+  }
+}
+
 @keyframes word-in {
   from {
     opacity: 0;
@@ -213,8 +358,8 @@ button:not(:disabled),
     opacity: 0;
     transform: translateY(12px);
     transition:
-      opacity 0.6s ease,
-      transform 0.6s ease;
+      opacity 0.9s ease,
+      transform 0.9s ease;
     transition-delay: var(--reveal-delay, 0s);
   }
   [data-reveal="true"] {
@@ -223,7 +368,7 @@ button:not(:disabled),
   }
 
   .animate-fade-up {
-    animation: fade-up 0.6s ease both;
+    animation: fade-up 0.9s ease both;
     animation-delay: var(--reveal-delay, 0s);
   }
   .animate-pop-in {
@@ -300,7 +445,7 @@ button:not(:disabled),
     transform: translateY(16px) scale(0.94);
   }
   [data-reveal="true"] .category-card {
-    animation: card-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: card-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
     animation-delay: var(--card-delay, 0s);
   }
 
@@ -308,11 +453,11 @@ button:not(:disabled),
      links sat immediately visible with zero entrance, unlike the rest of
      the page's staggered fade-ups. Fade-up, staggered per item via
      nth-child since this list renders server-side with no per-item delay
-     prop. The hover feedback itself (lift + pill) lives outside this guard,
-     next to .link-underline below — same reasoning: entrance/auto-play
+     prop. Underline feedback lives outside this guard, next to .link-underline
+     below — same reasoning: entrance/auto-play
      motion respects reduced-motion, interaction-triggered feedback doesn't. */
   .nav-link {
-    animation: fade-up 0.45s ease both;
+    animation: fade-up 0.7s ease both;
   }
   .nav-link:nth-child(1) {
     animation-delay: 0ms;
@@ -361,45 +506,227 @@ button:not(:disabled),
   width: 100%;
   background: currentColor;
   transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.25s ease;
+  transform-origin: center;
+  transition: transform 1.5s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 .link-underline:hover::after {
   transform: scaleX(1);
-  transform-origin: left;
+  transform-origin: center;
 }
 
-/* Header nav-link (header.tsx) hover feedback — a lift plus a soft pill
-   background fading in behind the text, on top of the underline-draw above.
-   Kept outside the reduced-motion guard (see .nav-link's entrance animation
-   further up) since it's interaction-triggered, not auto-playing. The pill
-   is a ::before, not padding/background on the element itself — .nav-link
-   is also .link-underline, whose ::after bar sizes itself to 100% of this
-   same box, so touching this element's own box model would stretch that
-   bar along with it. An absolutely-positioned, negative-z-index ::before
-   sidesteps that entirely: it can't affect layout, sizing, or the
-   underline, only paint a shape behind the text. */
+/* Header links use only a slow underline draw; keep the labels still and
+   unhighlighted so the navigation stays quiet. */
 .nav-link {
   position: relative;
-  transition: transform 0.15s ease;
 }
-.nav-link::before {
-  content: "";
-  position: absolute;
-  inset: -0.2rem -0.55rem;
-  z-index: -1;
-  border-radius: 999px;
-  background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
-  opacity: 0;
-  transition: opacity 0.2s ease;
+.nav-link.link-underline::after {
+  background: var(--gold);
+  transform-origin: center;
+  transition: transform 1.5s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 .nav-link:hover,
 .nav-link:focus-visible {
-  transform: translateY(-2px);
+  transform: none;
 }
-.nav-link:hover::before,
-.nav-link:focus-visible::before {
-  opacity: 1;
+
+/* Language flags give the locale control a small, tactile response: a soft
+   wave on hover, then a quick turn when the newly selected locale arrives. */
+.locale-switcher-current-flag,
+.locale-switcher-option-flag {
+  display: inline-block;
+  transform-origin: 50% 65%;
+}
+.locale-switcher-current-flag {
+  animation: locale-flag-arrive 0.68s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+.locale-switcher-trigger:hover .locale-switcher-current-flag,
+.locale-switcher-trigger:focus-visible .locale-switcher-current-flag {
+  animation: locale-flag-wave 0.62s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.locale-switcher-menu .locale-switcher-option {
+  animation: locale-option-arrive 0.34s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+.locale-switcher-menu li:nth-child(2) .locale-switcher-option { animation-delay: 25ms; }
+.locale-switcher-menu li:nth-child(3) .locale-switcher-option { animation-delay: 50ms; }
+.locale-switcher-menu li:nth-child(4) .locale-switcher-option { animation-delay: 75ms; }
+.locale-switcher-menu li:nth-child(5) .locale-switcher-option { animation-delay: 100ms; }
+.locale-switcher-menu li:nth-child(6) .locale-switcher-option { animation-delay: 125ms; }
+.locale-switcher-menu li:nth-child(7) .locale-switcher-option { animation-delay: 150ms; }
+.locale-switcher-menu li:nth-child(8) .locale-switcher-option { animation-delay: 175ms; }
+.locale-switcher-menu li:nth-child(9) .locale-switcher-option { animation-delay: 200ms; }
+.locale-switcher-menu li:nth-child(10) .locale-switcher-option { animation-delay: 225ms; }
+.locale-switcher-menu li:nth-child(11) .locale-switcher-option { animation-delay: 250ms; }
+.locale-switcher-menu .locale-switcher-option-flag {
+  transition: transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.locale-switcher-menu .locale-switcher-option:hover .locale-switcher-option-flag,
+.locale-switcher-menu .locale-switcher-option:focus-visible .locale-switcher-option-flag {
+  transform: scale(1.18) rotate(-7deg);
+}
+@keyframes locale-flag-wave {
+  0%, 100% { transform: rotate(0) scale(1); }
+  35% { transform: rotate(-12deg) scale(1.16); }
+  68% { transform: rotate(8deg) scale(1.08); }
+}
+@keyframes locale-flag-arrive {
+  0% { opacity: 0; transform: perspective(80px) rotateY(-85deg) scale(0.72); }
+  68% { opacity: 1; transform: perspective(80px) rotateY(12deg) scale(1.15); }
+  100% { opacity: 1; transform: perspective(80px) rotateY(0) scale(1); }
+}
+@keyframes locale-option-arrive {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.locale-transition-overlay {
+  position: fixed;
+  z-index: 9999;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 248, 240, 0.95) 0%, rgba(245, 235, 220, 0.92) 100%);
+  backdrop-filter: blur(8px);
+  animation: locale-overlay-in 0.42s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+.locale-transition-content {
+  display: grid;
+  justify-items: center;
+  width: min(100%, 34rem);
+  text-align: center;
+}
+.locale-transition-kicker {
+  margin: 0 0 0.6rem;
+  color: rgb(102 91 80 / 65%);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  animation: locale-label-arrive 0.6s ease-out 0.1s both;
+}
+.locale-transition-stage {
+  position: relative;
+  display: grid;
+  width: min(100%, 32rem);
+  height: clamp(13rem, 34vh, 18rem);
+  place-items: center;
+  perspective: 1000px;
+}
+.locale-transition-stage::before,
+.locale-transition-stage::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: clamp(9.5rem, 35vw, 13rem);
+  aspect-ratio: 1;
+  border: 2px solid rgb(217 199 160 / 18%);
+  border-radius: 50%;
+  content: "";
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0.4;
+}
+.locale-transition-stage::before {
+  box-shadow: 0 0 0 0.8rem rgb(217 199 160 / 4%);
+  animation: locale-orbit 6s linear infinite;
+}
+.locale-transition-stage::after {
+  width: clamp(12rem, 48vw, 18rem);
+  border-color: rgb(217 199 160 / 8%);
+  border-style: dashed;
+  animation: locale-orbit 20s linear infinite reverse;
+}
+.locale-transition-flag {
+  display: grid;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: clamp(8rem, 27vw, 10.5rem);
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1.5px solid rgb(217 199 160 / 55%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fffbf5 0%, #fef8f2 35%, #f5ebe0 100%);
+  box-shadow:
+    0 0 0 1rem rgb(217 199 160 / 3%),
+    0 2rem 5rem rgb(102 91 80 / 12%),
+    inset 0 1px 2px rgb(255 255 255 / 60%),
+    inset 0 -1px 2px rgb(102 91 80 / 8%);
+  font-size: clamp(4.5rem, 16vw, 6.7rem);
+  line-height: 1;
+  will-change: transform, opacity;
+}
+.locale-transition-flag--from {
+  animation: locale-flag-leave-cute 0.95s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+.locale-transition-flag--to {
+  animation: locale-flag-land-cute 1.05s cubic-bezier(0.15, 0.85, 0.35, 1) 0.15s both;
+}
+.locale-transition-arrow {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  width: 2.6rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1.5px solid rgb(217 199 160 / 50%);
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fef9f0 0%, #f9f0e6 100%);
+  box-shadow: 0 0.6rem 1.5rem rgb(102 91 80 / 15%);
+  color: rgb(217 199 160 / 85%);
+  font-family: Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 300;
+  transform: translate(-50%, -50%);
+  animation: locale-arrow-sweep-cute 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.28s both;
+}
+.locale-transition-label {
+  display: flex;
+  align-items: baseline;
+  gap: 0.65rem;
+  margin: 1.2rem 0 0;
+  color: rgb(60 55 50 / 85%);
+  font-family: var(--font-display, Georgia), Georgia, serif;
+  font-size: clamp(1.4rem, 4vw, 1.85rem);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  animation: locale-label-arrive-cute 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.35s both;
+}
+.locale-transition-label span {
+  color: rgb(217 199 160 / 75%);
+  font-size: 0.75rem;
+  font-family: var(--font-ui, system-ui), system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+}
+@keyframes locale-overlay-in {
+  from { opacity: 0; backdrop-filter: blur(0); }
+  to { opacity: 1; backdrop-filter: blur(8px); }
+}
+@keyframes locale-flag-leave-cute {
+  0% { opacity: 1; transform: translate(-50%, -50%) rotateY(0) rotateZ(0) scale(1); }
+  40% { opacity: 1; transform: translate(-50%, -50%) rotateY(100deg) rotateZ(8deg) scale(1.08); }
+  100% { opacity: 0; transform: translate(calc(-50% - clamp(3rem, 11vw, 6rem)), -50%) rotateY(180deg) rotateZ(-12deg) scale(0.55); }
+}
+@keyframes locale-flag-land-cute {
+  0% { opacity: 0; transform: translate(calc(-50% + clamp(3rem, 11vw, 6rem)), -50%) rotateY(-100deg) rotateZ(12deg) scale(0.55); }
+  55% { opacity: 1; transform: translate(calc(-50% - 0.4rem), -50%) rotateY(15deg) rotateZ(-3deg) scale(1.1); }
+  78% { opacity: 1; transform: translate(calc(-50% + 0.2rem), -50%) rotateY(-4deg) rotateZ(1deg) scale(0.99); }
+  100% { opacity: 1; transform: translate(-50%, -50%) rotateY(0) rotateZ(0) scale(1); }
+}
+@keyframes locale-arrow-sweep-cute {
+  from { opacity: 0; transform: translate(calc(-50% - 0.6rem), -50%) scale(0.4) rotate(-90deg); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0); }
+}
+@keyframes locale-label-arrive-cute {
+  from { opacity: 0; transform: translateY(0.6rem) scale(0.92); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes locale-orbit {
+  from { rotate: 0deg; }
+  to { rotate: 360deg; }
 }
 
 /* Header category row (header.tsx) can overflow horizontally on narrow
@@ -1076,4 +1403,3 @@ h2,
 h3 {
   text-wrap: balance;
 }
-

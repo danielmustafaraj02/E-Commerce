@@ -19,8 +19,9 @@ import {
 // on demand by components/gift-card-3d.tsx, so three.js never reaches pages
 // that don't show it.
 //
-// It sits still, facing the viewer, and turns over only when asked (the
-// "See the back" button calls flip()). It renders only while turning.
+// On first reveal it glides in from a distant tilt, grows to scale, and lifts
+// into place. It turns over on request (the "See the back" button calls
+// flip()) and renders only during those two animations.
 
 const CARD_W = 1;
 const CARD_H = 1.25; // 4:5, like the printed card
@@ -62,6 +63,7 @@ function texture(canvas: HTMLCanvasElement, renderer: WebGLRenderer) {
 }
 
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
+const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
 
 export type CardScene = {
   setFaces: (front: HTMLCanvasElement, back: HTMLCanvasElement, backEdge: string) => void;
@@ -116,7 +118,10 @@ export function mountCardScene(
   let angle = 0; // around Y: 0 is the front, π the back
   let showingBack = false;
   let turn: { from: number; to: number; start: number } | null = null;
+  let entrance: { start: number } | null = null;
+  let entrancePlayed = false;
   const TURN_MS = options.reducedMotion ? 0 : 1100;
+  const ENTRANCE_MS = options.reducedMotion ? 0 : 2300;
 
   const draw = () => {
     card.rotation.y = angle;
@@ -129,12 +134,48 @@ export function mountCardScene(
   let frameId = 0;
   const tick = (now: number) => {
     frameId = 0;
-    if (!turn) return;
-    const t = TURN_MS ? Math.min((now - turn.start) / TURN_MS, 1) : 1;
-    angle = turn.from + (turn.to - turn.from) * easeInOut(t);
-    draw();
-    if (t < 1) frameId = requestAnimationFrame(tick);
-    else turn = null;
+    let changed = false;
+
+    if (entrance) {
+      const progress = Math.min((now - entrance.start) / ENTRANCE_MS, 1);
+      // Give the card one complete turn while it rises in, then leave the
+      // final quarter of the entrance for a clean, face-forward landing.
+      const spinProgress = Math.min(progress / 0.76, 1);
+      angle = Math.PI * 2 * easeInOut(spinProgress);
+      if (progress < 0.74) {
+        const t = easeOutCubic(progress / 0.74);
+        card.scale.setScalar(0.24 + 0.86 * t);
+        card.rotation.x = -0.66 * (1 - t) - 0.035 * t;
+        card.rotation.z = 0.055 * (1 - t) - 0.025 * t;
+        card.position.y = -0.24 * (1 - t) + 0.06 * t;
+      } else {
+        const t = easeInOut((progress - 0.74) / 0.26);
+        card.scale.setScalar(1.1 - 0.1 * t);
+        card.rotation.x = -0.035 * (1 - t);
+        card.rotation.z = -0.025 * (1 - t);
+        card.position.y = 0.06 * (1 - t);
+      }
+      changed = true;
+
+      if (progress >= 1) {
+        angle = 0;
+        card.scale.setScalar(1);
+        card.rotation.x = 0;
+        card.rotation.z = 0;
+        card.position.y = 0;
+        entrance = null;
+      }
+    }
+
+    if (turn) {
+      const t = TURN_MS ? Math.min((now - turn.start) / TURN_MS, 1) : 1;
+      angle = turn.from + (turn.to - turn.from) * easeInOut(t);
+      changed = true;
+      if (t >= 1) turn = null;
+    }
+
+    if (changed) draw();
+    if (entrance || turn) frameId = requestAnimationFrame(tick);
   };
 
   const flip = () => {
@@ -173,6 +214,17 @@ export function mountCardScene(
       frontMaterial.needsUpdate = true;
       backMaterial.needsUpdate = true;
       edgeColour.set(backEdge);
+      if (!entrancePlayed) {
+        entrancePlayed = true;
+        if (ENTRANCE_MS) {
+          card.scale.setScalar(0.24);
+          card.rotation.x = -0.66;
+          card.rotation.z = 0.055;
+          card.position.y = -0.24;
+          entrance = { start: performance.now() };
+          if (!frameId) frameId = requestAnimationFrame(tick);
+        }
+      }
       draw();
     },
     flip,

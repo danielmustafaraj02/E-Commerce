@@ -93,7 +93,7 @@ export function GiftCard3D({
           onFaceChange: setShowBack,
         });
       },
-      { rootMargin: "300px" }
+      { rootMargin: "0px", threshold: 0.22 }
     );
     observer.observe(stage);
     return () => {

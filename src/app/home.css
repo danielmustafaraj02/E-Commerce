@@ -22,9 +22,9 @@
    names and running copy; Hanken Grotesk for UI (buttons, prices, forms). Both
    are loaded only on this route (see home-fonts.ts).
 
-   Motion: one moment (the hero bead settling on load). No scroll reveals, no
-   hover lifts. The global prefers-reduced-motion rule in globals.css collapses
-   the settle for visitors who ask for that.
+   Motion: a restrained hero entrance, slow underlines and a few sequenced
+   section reveals. The global prefers-reduced-motion rule in globals.css
+   collapses these for visitors who ask for that.
    ------------------------------------------------------------------------- */
 
 .shelf {
@@ -123,46 +123,173 @@
   color: var(--accent-deep);
   text-decoration: underline;
 }
+.shelf-heading-row .shelf-link {
+  background-image: linear-gradient(var(--gold), var(--gold));
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: 0 1px;
+  padding-bottom: 0.08em;
+  text-decoration: none;
+  transition:
+    color 0.3s ease,
+    background-size 1.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.shelf-heading-row .shelf-link:hover,
+.shelf-heading-row .shelf-link:focus-visible {
+  background-size: 100% 1px;
+}
 
 /* -- Gift Finder entry band -------------------------------------------------
-   A single quiet line, not a full marketing block — the flow itself is the
-   pitch. Sits on the lilac tint so it reads as its own small moment between
-   New arrivals and Special selection without competing with either. */
+   Give the five-minute tool a clear invitation and enough context to earn a
+   click, while keeping the frame and motion restrained and editorial. */
 .shelf-giftfinder-band {
-  padding-block: 2rem;
+  padding-block: clamp(3.25rem, 7vw, 5.5rem);
   background: var(--tint-lilac);
 }
+.shelf-giftfinder-content {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  justify-items: center;
+  gap: 0.75rem;
+  max-width: 54rem;
+  margin-inline: auto;
+  padding: clamp(1.5rem, 4vw, 2.75rem) clamp(1.1rem, 4vw, 3rem);
+  text-align: center;
+}
+.shelf-giftfinder-content::before,
+.shelf-giftfinder-content::after {
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  content: "";
+}
+.shelf-giftfinder-content::before {
+  inset: 0;
+  border-block: 1px solid color-mix(in srgb, var(--gold) 52%, transparent);
+  transform: scaleX(0.06);
+}
+.shelf-giftfinder-content::after {
+  inset: 0.45rem 0.55rem;
+  border-inline: 1px solid color-mix(in srgb, var(--gold) 42%, transparent);
+  transform: scaleY(0.06);
+}
+.shelf-giftfinder-time,
+.shelf-giftfinder-details {
+  margin: 0;
+  color: var(--ink-soft);
+}
+.shelf-giftfinder-time {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.19em;
+  text-transform: uppercase;
+}
 .shelf-giftfinder-link {
-  display: flex;
+  position: relative;
+  display: inline-flex;
+  max-width: 100%;
   align-items: center;
   justify-content: center;
-  gap: 0.6rem;
+  gap: 0.8rem;
   text-align: center;
   font-family: var(--font-display), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-size: 1.15rem;
+  font-size: clamp(1.35rem, 2.8vw, 2rem);
+  line-height: 1.25;
   color: var(--accent-deep);
-  transition: color 0.2s ease;
+  transition: color 0.45s ease;
 }
-.shelf-giftfinder-link:hover {
+.shelf-giftfinder-link::after {
+  position: absolute;
+  right: 0;
+  bottom: -0.3rem;
+  left: 0;
+  height: 1px;
+  background: var(--gold);
+  content: "";
+  transform: scaleX(0.16);
+  transform-origin: center;
+  transition: transform 1.2s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.shelf-giftfinder-link:hover,
+.shelf-giftfinder-link:focus-visible {
   color: var(--accent);
+}
+.shelf-giftfinder-link:hover::after,
+.shelf-giftfinder-link:focus-visible::after {
+  transform: scaleX(1);
+}
+.shelf-giftfinder-details {
+  max-width: 42rem;
+  font-size: 0.98rem;
+  line-height: 1.75;
+}
+@media (max-width: 35rem) {
+  .shelf-giftfinder-band {
+    padding-block: 2.75rem;
+  }
+  .shelf-giftfinder-content {
+    gap: 0.65rem;
+    padding-inline: 0.9rem;
+  }
+  .shelf-giftfinder-link {
+    gap: 0.5rem;
+    font-size: clamp(1.3rem, 6vw, 1.65rem);
+  }
+  .shelf-giftfinder-details {
+    font-size: 0.92rem;
+  }
 }
 .shelf-giftfinder-link .giftfinder-arrow {
   flex-shrink: 0;
-  transition: transform 0.2s ease;
+  transition: transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 .shelf-giftfinder-link:hover .giftfinder-arrow {
-  transform: translateX(0.2em);
+  transform: translateX(0.35em);
 }
 [dir="rtl"] .shelf-giftfinder-link .giftfinder-arrow {
   transform: scaleX(-1);
 }
 [dir="rtl"] .shelf-giftfinder-link:hover .giftfinder-arrow {
-  transform: scaleX(-1) translateX(0.2em);
+  transform: scaleX(-1) translateX(0.35em);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .shelf-giftfinder-reveal[data-reveal="true"] .shelf-giftfinder-content::before {
+    animation: giftfinder-rule-open 1.35s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s both;
+  }
+  .shelf-giftfinder-reveal[data-reveal="true"] .shelf-giftfinder-content::after {
+    animation: giftfinder-frame-open 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) 0.72s both;
+  }
+  .shelf-giftfinder-reveal[data-reveal="true"] .shelf-giftfinder-time,
+  .shelf-giftfinder-reveal[data-reveal="true"] .shelf-giftfinder-link,
+  .shelf-giftfinder-reveal[data-reveal="true"] .shelf-giftfinder-details {
+    animation: giftfinder-copy-in 1.05s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  }
+  .shelf-giftfinder-reveal[data-reveal="true"] .shelf-giftfinder-time { animation-delay: 0.18s; }
+  .shelf-giftfinder-reveal[data-reveal="true"] .shelf-giftfinder-link { animation-delay: 0.42s; }
+  .shelf-giftfinder-reveal[data-reveal="true"] .shelf-giftfinder-details { animation-delay: 0.68s; }
+}
+@keyframes giftfinder-rule-open {
+  from { transform: scaleX(0.06); opacity: 0.35; }
+  to { transform: scaleX(1); opacity: 1; }
+}
+@keyframes giftfinder-frame-open {
+  from { transform: scaleY(0.06); opacity: 0.25; }
+  to { transform: scaleY(1); opacity: 1; }
+}
+@keyframes giftfinder-copy-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 @media (prefers-reduced-motion: reduce) {
   .shelf-giftfinder-link,
-  .shelf-giftfinder-link .giftfinder-arrow {
+  .shelf-giftfinder-link .giftfinder-arrow,
+  .shelf-giftfinder-link::after {
     transition: none;
+  }
+  .shelf-giftfinder-content::before,
+  .shelf-giftfinder-content::after {
+    transform: none;
   }
   .shelf-giftfinder-link:hover .giftfinder-arrow {
     transform: none;
@@ -237,12 +364,9 @@
   color: var(--ink-soft);
 }
 
-/* Hero copy enters as a short staggered cascade alongside the bead settling
-   in (see .shelf-bead below) — the text used to just appear all at once,
-   the only motion on the page being the necklace. A back-out easing (rather
-   than plain ease) gives it a bit of a "rise and settle" pop instead of a
-   flat glide. Respects prefers-reduced-motion through globals.css's
-   blanket `*` rule, not a local guard here. */
+/* The hero arrives in one quick, coordinated beat: the copy rises, while the
+   necklace lifts and turns slightly into place. Reduced motion is handled by
+   the global preference rule. */
 @keyframes hero-rise {
   from {
     opacity: 0;
@@ -253,26 +377,40 @@
     transform: translateY(0) scale(1);
   }
 }
+@keyframes hero-necklace-settle {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.92) rotate(-3deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(var(--hero-bead-scale, 1.24)) rotate(0);
+  }
+}
 /* The h1 is excluded here — it plays its own word-by-word .word-in entrance
    (see AnimatedHeading) instead of the whole-line rise every other child
    gets, so the store name doesn't get two competing entrance motions. */
 .shelf-hero-copy > *:not(h1) {
-  animation: hero-rise 0.7s cubic-bezier(0.22, 1.12, 0.36, 1) both;
+  animation: hero-rise 0.78s cubic-bezier(0.2, 0.75, 0.3, 1) both;
 }
-.shelf-hero-copy > *:not(h1):nth-child(1) {
-  animation-delay: 0ms;
+.shelf-hero-copy .shelf-title .word-in {
+  animation-duration: 0.42s;
+  animation-timing-function: cubic-bezier(0.2, 0.75, 0.3, 1);
 }
-.shelf-hero-copy > *:not(h1):nth-child(2) {
+.shelf-hero-copy .shelf-title .word-in:nth-of-type(2) {
   animation-delay: 90ms;
 }
-.shelf-hero-copy > *:not(h1):nth-child(3) {
+.shelf-hero-copy .shelf-title .word-in:nth-of-type(3) {
   animation-delay: 180ms;
 }
-.shelf-hero-copy > *:not(h1):nth-child(4) {
-  animation-delay: 260ms;
+.shelf-hero-copy .shelf-lede {
+  animation-delay: 320ms;
 }
-.shelf-hero-copy > *:not(h1):nth-child(5) {
-  animation-delay: 340ms;
+.shelf-hero-copy .shelf-button {
+  animation-delay: 560ms;
+}
+.shelf-hero-copy .shelf-note {
+  animation-delay: 680ms;
 }
 
 .shelf-button {
@@ -320,7 +458,9 @@
 }
 .shelf-hero-copy .shelf-button {
   position: relative;
-  animation: hero-rise 0.7s cubic-bezier(0.22, 1.12, 0.36, 1) 260ms both;
+  animation-name: hero-rise;
+  animation-duration: 0.78s;
+  animation-timing-function: cubic-bezier(0.2, 0.75, 0.3, 1);
 }
 .shelf-button-arrow {
   font-size: 1.05rem;
@@ -371,15 +511,21 @@
   width: 100%;
 }
 .shelf-bead img {
+  --hero-bead-scale: 1.24;
   object-fit: contain;
   object-position: 50% 50%;
   mix-blend-mode: multiply;
   transform: scale(1.24);
   opacity: 0;
-  transition: opacity 0.8s ease;
+  visibility: hidden;
+  transition: opacity 0.55s ease;
+}
+.shelf-bead img:first-child {
+  animation: hero-necklace-settle 1.15s cubic-bezier(0.2, 0.75, 0.3, 1) 100ms both;
 }
 .shelf-bead img.is-active {
   opacity: 1;
+  visibility: visible;
 }
 .shelf-bead-link {
   position: absolute;
@@ -530,16 +676,21 @@
 .shelf-item-name a {
   color: inherit;
   text-decoration: none;
+  background-image: linear-gradient(var(--gold), var(--gold));
+  background-repeat: no-repeat;
+  background-position: center calc(100% - 0.04em);
+  background-size: 0 1px;
+  padding-bottom: 0.12em;
+  transition: background-size 1.5s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 .shelf-item-name a::after {
   content: "";
   position: absolute;
   inset: 0;
 }
-.shelf-item-name a:hover {
-  text-decoration: underline;
-  text-decoration-color: var(--accent);
-  text-underline-offset: 0.2em;
+.shelf-item:hover .shelf-item-name a,
+.shelf-item-name a:focus-visible {
+  background-size: 100% 1px;
 }
 .shelf-item-price {
   font-family: var(--font-display), Georgia, serif;
@@ -619,6 +770,11 @@
 
 /* -- Categories: the pieces themselves, deliberately uneven ---------------- */
 
+.shelf-section--categories {
+  background: #f8f6f1;
+  border-block: 1px solid color-mix(in srgb, var(--champagne) 58%, #fff);
+}
+
 .shelf-categories {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -633,43 +789,46 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
+  padding: 0.8rem 0.8rem 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--champagne) 72%, #fff);
+  background: #fff;
+  box-shadow: 0 2px 12px color-mix(in srgb, var(--foreground) 4%, transparent);
+  transition:
+    transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
+    box-shadow 0.45s ease;
 }
-/* Each piece sits in a Venetian-window niche: white, with a gold inner
-   arch drawn a few millimetres inside the edge, the photo's white multiplied
-   into the ivory. */
+@media (hover: hover) and (pointer: fine) {
+  .shelf-category:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 9px 24px color-mix(in srgb, var(--foreground) 8%, transparent);
+  }
+}
+/* The product sits free on the paper-white card, without a frame around it. */
 .shelf-category-photo {
   position: relative;
   width: 100%;
-  aspect-ratio: 3 / 4;
-  overflow: hidden;
-  border: 1px solid var(--rule);
-  border-radius: 999px 999px 4px 4px;
-  background: #fff;
+  aspect-ratio: 1 / 1;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 .shelf-category-photo::after {
-  content: "";
-  position: absolute;
-  inset: 0.65rem;
-  border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
-  border-radius: 999px 999px 2px 2px;
-  pointer-events: none;
-  transition: border-color 0.5s ease;
+  display: none;
 }
 .shelf-home .shelf-category-photo img,
 .shelf-category-photo img {
   object-fit: contain;
-  object-position: 50% 58%;
-  padding: 9% 6% 5%;
+  object-position: center;
+  padding: 2%;
   -webkit-mask-image: none;
   mask-image: none;
-  transform: scale(1.1);
-  transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-.shelf-category:hover .shelf-category-photo::after {
-  border-color: var(--gold);
+  mix-blend-mode: multiply;
+  transform: scale(1.04);
+  transition: transform 1.2s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 .shelf-category:hover .shelf-category-photo img {
-  transform: scale(1.15);
+  transform: scale(1.08);
 }
 .shelf-category-index {
   margin-top: 1.5rem;
@@ -726,7 +885,8 @@
   height: 1px;
   background: var(--gold);
   transform: scaleX(0.25);
-  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transform-origin: center;
+  transition: transform 1.2s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 .shelf-category-arrow {
   color: var(--gold);
@@ -777,6 +937,123 @@
   background: currentColor;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .home-category-reveal[data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .home-category-reveal[data-reveal="false"] .shelf-eyebrow,
+  .home-category-reveal[data-reveal="false"] .shelf-heading {
+    opacity: 0;
+    transform: translateY(0.65rem);
+  }
+  .home-category-reveal[data-reveal="false"] .shelf-eyebrow::before,
+  .home-category-reveal[data-reveal="false"] .shelf-eyebrow::after,
+  .home-category-reveal[data-reveal="false"] .shelf-heading::after {
+    transform: scaleX(0);
+  }
+  .home-category-reveal[data-reveal="true"] .shelf-eyebrow {
+    animation: home-look-copy-in 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  }
+  .home-category-reveal[data-reveal="true"] .shelf-heading {
+    animation: home-look-copy-in 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) 0.4s both;
+  }
+  .home-category-reveal[data-reveal="true"] .shelf-eyebrow::before,
+  .home-category-reveal[data-reveal="true"] .shelf-eyebrow::after {
+    animation: home-look-rule-in 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s both;
+  }
+  .home-category-reveal[data-reveal="true"] .shelf-heading::after {
+    animation: home-look-rule-in 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) 0.95s both;
+  }
+  @keyframes home-category-card-in {
+    from {
+      opacity: 0;
+      translate: 1.25rem 0;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+  @media (min-width: 48rem) {
+    .home-category-reveal[data-reveal="false"] .shelf-category {
+      opacity: 0;
+      translate: 1.25rem 0;
+    }
+    .home-category-reveal[data-reveal="true"] .shelf-category {
+      animation: home-category-card-in 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    }
+    .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(1) {
+      animation-delay: 1.2s;
+    }
+    .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(2) {
+      animation-delay: 1.5s;
+    }
+    .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(3) {
+      animation-delay: 1.8s;
+    }
+    .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(4) {
+      animation-delay: 2.1s;
+    }
+    .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(5) {
+      animation-delay: 2.4s;
+    }
+    .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(6) {
+      animation-delay: 2.7s;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .home-looks-heading-reveal[data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .home-looks-heading-reveal[data-reveal="false"] .shelf-eyebrow,
+  .home-looks-heading-reveal[data-reveal="false"] .shelf-heading {
+    opacity: 0;
+    transform: translateY(0.65rem);
+  }
+  .home-looks-heading-reveal[data-reveal="false"] .shelf-eyebrow::before,
+  .home-looks-heading-reveal[data-reveal="false"] .shelf-eyebrow::after,
+  .home-looks-heading-reveal[data-reveal="false"] .shelf-heading::after {
+    transform: scaleX(0);
+  }
+  .home-looks-heading-reveal[data-reveal="true"] .shelf-eyebrow {
+    animation: home-look-copy-in 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  }
+  .home-looks-heading-reveal[data-reveal="true"] .shelf-heading {
+    animation: home-look-copy-in 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) 0.4s both;
+  }
+  .home-looks-heading-reveal[data-reveal="true"] .shelf-eyebrow::before,
+  .home-looks-heading-reveal[data-reveal="true"] .shelf-eyebrow::after {
+    animation: home-look-rule-in 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s both;
+  }
+  .home-looks-heading-reveal[data-reveal="true"] .shelf-heading::after {
+    animation: home-look-rule-in 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) 0.95s both;
+  }
+  @keyframes home-look-copy-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.65rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes home-look-rule-in {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+}
+
 /* -- Why buy here: three short paragraphs, no cards ------------------------ */
 
 .shelf-points {
@@ -797,6 +1074,14 @@
   position: relative;
   border-top: 1px solid var(--rule);
   padding-top: 1.25rem;
+}
+@media (hover: hover) and (pointer: fine) {
+  .shelf-point {
+    transition: transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .shelf-point:hover {
+    transform: translateY(-6px);
+  }
 }
 .shelf-point::before {
   content: "";
@@ -911,16 +1196,50 @@
 .shelf-newsletter :where(h2) {
   color: #fff;
 }
+.shelf-newsletter-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(1.5rem, 5vw, 4rem);
+  min-height: 20rem;
+}
 .shelf-newsletter-inner {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 0.75rem;
   max-width: 30rem;
 }
+.shelf-newsletter-discount {
+  justify-self: center;
+  color: var(--gold-soft);
+  font-family: var(--font-display), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: clamp(10rem, 23vw, 19rem);
+  font-weight: 400;
+  letter-spacing: -0.09em;
+  line-height: 0.8;
+  white-space: nowrap;
+  opacity: 0.92;
+}
 .shelf-newsletter p {
   margin: 0;
   color: color-mix(in srgb, #fff 82%, transparent);
+}
+@media (max-width: 47.99rem) {
+  .shelf-newsletter-wrap {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
+    min-height: 0;
+  }
+  .shelf-newsletter-inner {
+    max-width: 34rem;
+  }
+  .shelf-newsletter-discount {
+    justify-self: end;
+    font-size: clamp(6rem, 25vw, 10rem);
+  }
 }
 /* On the petrol band the button turns ivory, keeping its gold hairline. */
 .shelf .shelf-newsletter .btn-primary {
@@ -1115,6 +1434,12 @@
    first/last card off-screen and silently re-centers on the real one once a
    swipe — or autoplay — lands on a clone, so it never visibly "runs out"). */
 @media (max-width: 47.99rem) {
+  .shelf-home .shelf-section--categories {
+    padding-block: 3.25rem;
+  }
+  .shelf-home .shelf-section--categories .shelf-heading-row {
+    margin-bottom: 1.75rem;
+  }
   .shelf-categories {
     display: flex;
     /* Without this, a card's offsetLeft (which CategoryStrip.tsx reads to
@@ -1134,28 +1459,57 @@
     display: none;
   }
   .shelf-category {
+    display: grid;
     flex: 0 0 100%;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    grid-template-rows: auto 1fr auto;
+    align-items: center;
+    gap: 0.2rem 1rem;
+    padding: 0.8rem;
+    text-align: start;
     scroll-snap-align: center;
     /* Without this, a fast flick can coast straight past a card instead of
        stopping on it — "always" forces every swipe to land on one card. */
     scroll-snap-stop: always;
   }
-  /* A light press-down on tap, the same interaction-triggered feedback
-     already used elsewhere (see .nav-link's hover in globals.css) — kept
-     outside any reduced-motion guard for the same reason: it's triggered by
-     touch, not autoplay. No shadow/border/background added, so the "pieces
-     dissolve into the page, no boxes" treatment above is untouched. */
+  /* A restrained press response keeps the image tactile on touch screens. */
   .shelf-category-photo img {
-    transition: transform 0.2s ease;
+    transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .shelf-category-photo {
+    grid-column: 1;
+    grid-row: 1 / 4;
+    width: 100%;
+    max-width: none;
+    aspect-ratio: 1 / 1;
+  }
+  .shelf-category-index {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: start;
+    margin: 0;
+    font-size: 0.9rem;
+  }
+  .shelf-category-name {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: start;
+    margin: 0 !important;
+    font-size: clamp(1.35rem, 6vw, 1.85rem);
+  }
+  .shelf-category-cta {
+    grid-column: 2;
+    grid-row: 3;
+    justify-self: start;
+    margin-top: 0.65rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
   }
   .shelf-category:active .shelf-category-photo img {
-    transform: scale(0.96);
+    transform: scale(1.06);
   }
   .category-dots {
     display: flex;
-  }
-  .shelf-category-photo {
-    max-width: 19rem;
   }
 }
 
@@ -1223,6 +1577,7 @@
     margin-top: 0.25rem;
   }
   .shelf-hero .shelf-bead img {
+    --hero-bead-scale: 1.12;
     transform: scale(1.12);
   }
   .shelf-facts {

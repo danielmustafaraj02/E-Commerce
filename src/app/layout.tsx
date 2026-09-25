@@ -12,6 +12,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { getShippingBanner } from "@/lib/shipping-banner";
 import { FloatingCheckoutButton } from "@/components/floating-checkout-button";
+import { CartCelebration } from "@/components/cart-celebration";
 import { CookieConsent } from "@/components/cookie-consent";
 import { ConsentGatedAnalytics } from "@/components/consent-gated-analytics";
 import "./globals.css";
@@ -208,12 +209,14 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         />
         {children}
         <FloatingCheckoutButton label={dict.cart.checkout} />
+        <CartCelebration />
         <Footer
           storeName={settings.storeName}
           contactEmail={settings.contactEmail}
           shippingBanner={shippingBanner}
           dict={dict}
           locale={locale}
+          giftCardEnabled={settings.giftCardEnabled}
           social={social}
           payments={{
             cards: cardsEnabled,

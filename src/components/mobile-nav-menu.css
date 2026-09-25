@@ -55,6 +55,17 @@
   border: 0;
   color: inherit;
   cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  border-radius: 50%;
+}
+.mobile-menu-close:hover,
+.mobile-menu-close:focus-visible {
+  background: color-mix(in srgb, var(--gold, #b89a62) 12%, #fff);
+  color: var(--accent, #123d43);
+  transform: rotate(90deg);
 }
 
 /* Search: one hairline to write on, no box, no button colour. */
@@ -106,11 +117,15 @@
   border-top: 1px solid var(--footer-rule);
 }
 .mobile-menu-links a {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
   min-height: 4.25rem;
+  transition:
+    color 0.2s ease,
+    padding-inline 0.25s ease;
 }
 .mobile-menu-label {
   font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
@@ -121,11 +136,23 @@
 .mobile-menu-arrow {
   color: var(--gold, #b89a62);
   font-size: 1.1rem;
-  transition: transform 0.25s ease;
+  transition:
+    transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+    color 0.2s ease;
 }
 .mobile-menu-links a:active .mobile-menu-arrow,
-.mobile-menu-links a:hover .mobile-menu-arrow {
-  transform: translateX(4px);
+.mobile-menu-links a:hover .mobile-menu-arrow,
+.mobile-menu-links a:focus-visible .mobile-menu-arrow {
+  transform: translateX(6px);
+  color: var(--footer-teal);
+}
+.mobile-menu-links a:hover,
+.mobile-menu-links a:focus-visible {
+  color: var(--footer-teal);
+  padding-inline-start: 0.25rem;
+}
+.mobile-menu-links a:active {
+  color: var(--footer-ink);
 }
 
 /* About and the guide: a quieter row of small capitals. */

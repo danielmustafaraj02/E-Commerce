@@ -1,6 +1,7 @@
 import { siteBaseUrl } from "@/lib/site-url";
 import { cache } from "react";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { z } from "zod";
 import { db } from "@/lib/db";
@@ -271,6 +272,22 @@ export default async function CategoryPage({
               ))}
             </div>
           )}
+          <nav className="shop-chips" aria-label={dict.footer.shopHeading}>
+            <Link href="/products" className="shop-chip">
+              {dict.footer.allProducts}
+            </Link>
+            <Link href="/gift-finder" className="shop-chip">
+              {dict.giftFinder.metaTitle}
+            </Link>
+            {settings.giftCardEnabled && (
+              <Link href="/personalised-gift-card" className="shop-chip">
+                {dict.giftCard.productName}
+              </Link>
+            )}
+            <Link href="/murano-glass" className="shop-chip">
+              {dict.footer.muranoGuide}
+            </Link>
+          </nav>
         </div>
       </header>
 

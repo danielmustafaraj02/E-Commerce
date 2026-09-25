@@ -10,6 +10,7 @@ import { NewsletterSignupForm } from "@/components/newsletter-signup-form";
 import { FooterAccordion } from "@/components/footer-accordion";
 import { SocialLinks, type SocialUrls } from "@/components/social-links";
 import { BrandSignature, BrandWave } from "@/components/brand-signature";
+import { Reveal } from "@/components/reveal";
 import { homeFontClasses } from "@/app/home-fonts";
 import "./footer.css";
 
@@ -57,6 +58,7 @@ export async function Footer({
   payments,
   dict,
   locale,
+  giftCardEnabled,
 }: {
   storeName: string;
   contactEmail: string;
@@ -65,6 +67,7 @@ export async function Footer({
   payments: PaymentMethods;
   dict: Dictionary;
   locale: Locale;
+  giftCardEnabled: boolean;
 }) {
   const [categories, featured] = await Promise.all([
     db.category.findMany({
@@ -84,6 +87,7 @@ export async function Footer({
     dict,
     categories: categories.map((c) => ({ slug: c.slug, label: localizedName(c, locale) })),
     contactEmail,
+    giftCardEnabled,
   });
   const trust = [
     { key: "handcrafted", label: f.trustHandcrafted },
@@ -105,9 +109,12 @@ export async function Footer({
               {f.editorialCta} <span aria-hidden="true">→</span>
             </Link>
           </div>
-          <div className="footer-editorial-image" aria-hidden="true">
+          <Reveal
+            className="footer-editorial-image footer-editorial-image-reveal"
+            repeatOnView
+          >
             <CatalogImage src={featuredImage} alt="" fill sizes="(min-width: 48rem) 20rem, 40vw" />
-          </div>
+          </Reveal>
         </section>
 
         <section className="footer-newsletter">

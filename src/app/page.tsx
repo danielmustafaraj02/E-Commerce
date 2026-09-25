@@ -219,6 +219,8 @@ export default async function Home() {
           alt=""
           fill
           loading="eager"
+          priority
+          quality={90}
           sizes="100vw"
           className="shelf-hero-backdrop"
         />
@@ -284,39 +286,41 @@ export default async function Home() {
       {categoriesWithImage.length > 0 && (
         <section className="shelf-section shelf-section--categories">
           <div className="shelf-wrap">
-            <div className="shelf-heading-row shelf-heading-row--center">
-              <p className="shelf-eyebrow shelf-eyebrow--center">{dict.home.heroTagline}</p>
-              <h2 className="shelf-heading">{dict.home.shopByCategory}</h2>
-            </div>
-            <CategoryStrip className="shelf-categories">
-              {categoriesWithImage.map((category, index) => {
-                const name = localizedName(category, locale);
-                return (
-                  <li key={category.id} className="shelf-category">
-                    <div className="shelf-category-photo">
-                      {category.image && (
-                        <CatalogImage
-                          src={category.image.url}
-                          alt={name}
-                          fill
-                          sizes="(min-width: 64rem) 19rem, (min-width: 48rem) 30vw, 50vw"
-                        />
-                      )}
-                    </div>
-                    <span className="shelf-category-index" aria-hidden="true">
-                      {ROMAN[index] ?? index + 1}
-                    </span>
-                    <h3 className="shelf-category-name">
-                      <Link href={`/category/${category.slug}`}>{name}</Link>
-                    </h3>
-                    <span className="shelf-category-cta" aria-hidden="true">
-                      {dict.home.shopCollection}
-                      <span className="shelf-category-arrow">→</span>
-                    </span>
-                  </li>
-                );
-              })}
-            </CategoryStrip>
+            <Reveal className="home-category-reveal" repeatOnView>
+              <div className="shelf-heading-row shelf-heading-row--center">
+                <p className="shelf-eyebrow shelf-eyebrow--center">{dict.home.heroTagline}</p>
+                <h2 className="shelf-heading">{dict.home.shopByCategory}</h2>
+              </div>
+              <CategoryStrip className="shelf-categories">
+                {categoriesWithImage.map((category, index) => {
+                  const name = localizedName(category, locale);
+                  return (
+                    <li key={category.id} className="shelf-category">
+                      <div className="shelf-category-photo">
+                        {category.image && (
+                          <CatalogImage
+                            src={category.image.url}
+                            alt={name}
+                            fill
+                            sizes="(min-width: 64rem) 19rem, (min-width: 48rem) 30vw, 50vw"
+                          />
+                        )}
+                      </div>
+                      <span className="shelf-category-index" aria-hidden="true">
+                        {ROMAN[index] ?? index + 1}
+                      </span>
+                      <h3 className="shelf-category-name">
+                        <Link href={`/category/${category.slug}`}>{name}</Link>
+                      </h3>
+                      <span className="shelf-category-cta" aria-hidden="true">
+                        {dict.home.shopCollection}
+                        <span className="shelf-category-arrow">→</span>
+                      </span>
+                    </li>
+                  );
+                })}
+              </CategoryStrip>
+            </Reveal>
           </div>
         </section>
       )}
@@ -345,10 +349,12 @@ export default async function Home() {
 
       <section className="shelf-section shelf-section--looks">
         <div className="shelf-wrap">
-          <div className="shelf-heading-row shelf-heading-row--center">
-            <p className="shelf-eyebrow shelf-eyebrow--center">{dict.look.kicker}</p>
-            <h2 className="shelf-heading">{dict.looks.title}</h2>
-          </div>
+          <Reveal className="home-looks-heading-reveal" repeatOnView>
+            <div className="shelf-heading-row shelf-heading-row--center">
+              <p className="shelf-eyebrow shelf-eyebrow--center">{dict.look.kicker}</p>
+              <h2 className="shelf-heading">{dict.looks.title}</h2>
+            </div>
+          </Reveal>
           {looks.length > 0 && (
             <div className="look-cards">
               {looks.map((look) => (
@@ -418,15 +424,6 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="shelf-section shelf-giftfinder-band">
-        <div className="shelf-wrap">
-          <Link href="/gift-finder" className="shelf-giftfinder-link">
-            <span>{dict.giftFinder.homeCtaLine}</span>
-            <GiftFinderArrow />
-          </Link>
-        </div>
-      </section>
-
       <section className="shelf-section shelf-section--sand">
         <div className="shelf-wrap">
           <div className="shelf-heading-row">
@@ -441,6 +438,21 @@ export default async function Home() {
             ))}
           </ul>
         </div>
+      </section>
+
+      <section className="shelf-section shelf-giftfinder-band">
+        <Reveal className="shelf-wrap shelf-giftfinder-reveal" repeatOnView>
+          <div className="shelf-giftfinder-content">
+            <p className="shelf-giftfinder-time">{dict.giftFinder.homeCtaTime}</p>
+            <Link href="/gift-finder" className="shelf-giftfinder-link">
+              <span>{dict.giftFinder.homeCtaLine}</span>
+              <GiftFinderArrow />
+            </Link>
+            <p className="shelf-giftfinder-details">
+              {dict.giftFinder.homeCtaDetails}
+            </p>
+          </div>
+        </Reveal>
       </section>
 
       {settings.showTestimonials && testimonials.length > 0 && (
@@ -482,12 +494,15 @@ export default async function Home() {
       )}
 
       <section className="shelf-newsletter shelf-section">
-        <div className="shelf-wrap">
+        <div className="shelf-wrap shelf-newsletter-wrap">
           <div className="shelf-newsletter-inner">
             <h2 className="shelf-heading">{dict.home.newsletterCtaTitle}</h2>
             <p>{dict.home.newsletterCtaBody}</p>
             <NewsletterSignupForm dict={dict.footer} />
           </div>
+          <span className="shelf-newsletter-discount" aria-hidden="true">
+            −10%
+          </span>
         </div>
       </section>
     </main>

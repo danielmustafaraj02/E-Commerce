@@ -19,7 +19,7 @@ export default async function ResetPasswordPage({ searchParams }: PageProps<"/re
   const dict = getDictionary(locale).auth;
 
   return (
-    <main className="bg-surface relative flex flex-1 flex-col overflow-hidden">
+    <main className="auth-flow-page bg-surface relative flex flex-1 flex-col overflow-hidden">
       <div className="relative z-10 mx-auto flex w-full max-w-sm flex-1 flex-col justify-center px-4 py-16">
         <h1 className="mb-1 text-center text-2xl font-semibold">{dict.resetPasswordTitle}</h1>
         <p className="text-foreground/60 mb-6 text-center text-sm">{settings.storeName}</p>

@@ -7,11 +7,9 @@ import { splitLocalePrefix } from "@/lib/i18n/locale-constants";
 
 // A persistent nudge toward checkout once there's something in the cart —
 // the same pattern most stores use so a shopper never has to hunt for the
-// cart icon in the header after adding something. Hidden on /cart and
-// /checkout themselves, since the shopper is already there, and on product
-// pages, which have their own bottom-fixed sticky Add to Cart bar
-// (components/product-purchase-panel.tsx) — showing both would be two
-// competing fixed elements fighting for the same corner of the screen.
+// cart icon in the header after adding something. Hidden on cart and checkout,
+// product pages with their own sticky purchase bar, and account access forms
+// where a checkout prompt would distract from the task.
 export function FloatingCheckoutButton({ label }: { label: string }) {
   const count = useCartStore((state) => state.items.reduce((sum, item) => sum + item.quantity, 0));
   const { rest: path } = splitLocalePrefix(usePathname());
@@ -19,6 +17,9 @@ export function FloatingCheckoutButton({ label }: { label: string }) {
   if (count === 0) return null;
   if (path === "/cart" || path === "/checkout") return null;
   if (path.startsWith("/products/")) return null;
+  if (["/login", "/register", "/forgot-password", "/reset-password"].includes(path)) {
+    return null;
+  }
 
   return (
     <Link

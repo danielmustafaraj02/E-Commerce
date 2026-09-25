@@ -18,8 +18,8 @@ function HeartIcon({ filled }: { filled: boolean }) {
       strokeLinejoin="round"
       className={
         filled
-          ? "fill-danger stroke-danger transition-all duration-150"
-          : "fill-none stroke-current transition-all duration-150"
+          ? "wishlist-heart fill-danger stroke-danger transition-all duration-150"
+          : "wishlist-heart fill-none stroke-current transition-all duration-150"
       }
       aria-hidden="true"
     >
@@ -73,7 +73,7 @@ export function WishlistButton({
   };
 
   const buttonClass = (isSaved: boolean) =>
-    `border-foreground/15 hover:border-danger/50 hover:bg-danger/5 inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors disabled:opacity-50 max-sm:w-full max-sm:justify-center ${
+    `wishlist-action border-foreground/15 hover:border-danger/50 hover:bg-danger/5 inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors disabled:opacity-50 max-sm:w-full max-sm:justify-center ${
       isSaved ? "text-danger border-danger/30 bg-danger/5" : "text-foreground/80"
     }`;
 
@@ -89,9 +89,12 @@ export function WishlistButton({
               toggleGuest({ productId, slug, name, price, currency, imageUrl });
             }}
             className={buttonClass(guestSaved)}
+            data-celebrate={celebrate ? "true" : "false"}
           >
             <HeartIcon filled={guestSaved} />
-            {guestSaved ? removeLabel : addLabel}
+            <span className="wishlist-action-label">
+              {guestSaved ? removeLabel : addLabel}
+            </span>
           </button>
           {celebrate && <ConfettiBurst />}
         </div>
@@ -121,9 +124,12 @@ export function WishlistButton({
             });
           }}
           className={buttonClass(saved)}
+          data-celebrate={celebrate ? "true" : "false"}
         >
           <HeartIcon filled={saved} />
-          {saved ? removeLabel : addLabel}
+          <span className="wishlist-action-label">
+            {saved ? removeLabel : addLabel}
+          </span>
         </button>
         {celebrate && <ConfettiBurst />}
       </div>

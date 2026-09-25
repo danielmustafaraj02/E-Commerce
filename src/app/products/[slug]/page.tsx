@@ -29,6 +29,7 @@ import { hreflangAlternates, localizedCanonical, ogLocale } from "@/lib/hreflang
 import { ProductPurchasePanel } from "@/components/product-purchase-panel";
 import { ShareButtons } from "@/components/share-buttons";
 import { ShelfItem } from "@/components/shelf-item";
+import { Reveal } from "@/components/reveal";
 import { GiftCardAd } from "@/components/gift-card-ad";
 import { homeFontClasses } from "@/app/home-fonts";
 import "../../home.css";
@@ -161,13 +162,12 @@ export async function generateMetadata({
   if (!product || !product.active) return {};
 
   const name = localizedName(product, locale);
-  // "Murano glass" in the locale's own words is worth having in the title (a
-  // high-intent search term), but only when it still fits: search results show
-  // ~60 characters and the layout appends " | {store name}". fitTitle() takes
-  // the keyword form when it fits and otherwise the plain product name.
+  // Include a gift-intent phrase for the two main storefront languages when it
+  // fits; otherwise preserve the product name and the core Murano-glass term.
+  // fitTitle() accounts for the store name appended by the root title template.
   const keywordByLocale: Record<Locale, string> = {
-    en: "Murano Glass",
-    it: "Vetro di Murano",
+    en: "Murano Glass Gift",
+    it: "Regalo in vetro di Murano",
     fr: "Verre de Murano",
     de: "Muranoglas",
     ar: "زجاج مورانو",
@@ -178,7 +178,15 @@ export async function generateMetadata({
     hi: "मुरानो ग्लास",
     ja: "ムラノガラス",
   };
-  const title = fitTitle([`${name} · ${keywordByLocale[locale]}`, name], settings.storeName);
+  const fallbackKeywordByLocale: Record<Locale, string> = {
+    ...keywordByLocale,
+    en: "Murano Glass",
+    it: "Vetro di Murano",
+  };
+  const title = fitTitle(
+    [`${name} · ${keywordByLocale[locale]}`, `${name} · ${fallbackKeywordByLocale[locale]}`, name],
+    settings.storeName
+  );
   const fallbackDescriptionByLocale: Record<Locale, string> = {
     en: `${name}, handmade Murano glass, from ${settings.storeName}.`,
     it: `${name}, vetro di Murano fatto a mano, da ${settings.storeName}.`,
@@ -591,7 +599,10 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
           catalog's galleries (see ProductGallery), not this product's own
           photography — deliberately, since every piece ships in the same box. */}
       <section className="shelf-section shelf-section--blush">
-        <div className="shelf-wrap shop-gift-section">
+        <Reveal
+          className="shelf-wrap shop-gift-section shop-gift-reveal"
+          repeatOnView
+        >
           <div className="shop-gift-photo">
             <CatalogImage
               src="/products/orecchini-in-vetro-di-murano/orecchini-goccia-di-rubino-3.png"
@@ -600,7 +611,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
               sizes="(min-width: 40rem) 45vw, 100vw"
             />
           </div>
-          <div>
+          <div className="shop-gift-copy">
             <p className="shop-gift-eyebrow">{dict.product.giftSectionEyebrow}</p>
             <h2 className="shop-gift-headline">{dict.product.giftSectionHeadline}</h2>
             <p className="shop-gift-body">{dict.product.giftSectionBody}</p>
@@ -623,7 +634,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
               </li>
             </ul>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       {product.reviews.length > 0 && (
@@ -667,13 +678,16 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
         <div className="shelf-wrap">
           <div className={story ? "shop-story-faq-grid" : undefined}>
             {story && (
-              <div className="shop-story">
-                <h2 className="shelf-heading">{dict.product.storyTitle}</h2>
+              <Reveal className="shop-story shop-story-reveal">
+                <h2 className="shelf-heading shop-story-heading">{dict.product.storyTitle}</h2>
                 <p className="shop-story-prose">{story}</p>
-                <Link href="/blog/history-of-murano-glass" className="shelf-link">
+                <Link
+                  href="/blog/history-of-murano-glass"
+                  className="shelf-link shop-story-link"
+                >
                   {dict.journal.storyLink} <span aria-hidden="true">→</span>
                 </Link>
-              </div>
+              </Reveal>
             )}
             <FaqSection items={faq} dict={dict} variant="compact" />
           </div>

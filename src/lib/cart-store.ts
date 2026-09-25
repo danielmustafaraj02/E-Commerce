@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 import type { GiftCard } from "@/lib/gift-card";
 
 export const MAX_CART_QUANTITY = 10;
+export const CART_ITEM_ADDED_EVENT = "cart:item-added";
 
 // Display-only snapshot. Price/stock here is never trusted at checkout —
 // the server always re-reads the authoritative product row by productId.
@@ -36,7 +37,7 @@ export const useCartStore = create<CartState>()(
       giftCard: null,
       setGiftCard: (card) => set({ giftCard: card }),
       removeGiftCard: () => set({ giftCard: null }),
-      addItem: (item, quantity = 1) =>
+      addItem: (item, quantity = 1) => {
         set((state) => {
           const existing = state.items.find((i) => i.productId === item.productId);
           if (existing) {
@@ -49,7 +50,11 @@ export const useCartStore = create<CartState>()(
             };
           }
           return { items: [...state.items, { ...item, quantity: Math.min(quantity, MAX_CART_QUANTITY) }] };
-        }),
+        });
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new Event(CART_ITEM_ADDED_EVENT));
+        }
+      },
       removeItem: (productId) =>
         set((state) => ({ items: state.items.filter((i) => i.productId !== productId) })),
       setQuantity: (productId, quantity) =>

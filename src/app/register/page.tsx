@@ -22,7 +22,9 @@ export default async function RegisterPage() {
   );
 
   return (
-    <main className={`shelf relative flex flex-1 flex-col overflow-hidden ${homeFontClasses}`}>
+    <main
+      className={`auth-flow-page shelf relative flex flex-1 flex-col overflow-hidden ${homeFontClasses}`}
+    >
       <div className="relative z-10 mx-auto flex w-full max-w-sm flex-1 flex-col justify-center px-4 py-16">
         <AuthCard
           initialMode="register"
