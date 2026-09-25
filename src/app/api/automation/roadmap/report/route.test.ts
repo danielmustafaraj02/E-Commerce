@@ -2,12 +2,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   updateMany: vi.fn(),
+  rateLimit: vi.fn(),
 }));
 
 vi.mock("@/lib/db", () => ({
   db: { improvementTask: { updateMany: mocks.updateMany } },
 }));
 vi.mock("@/lib/monitoring", () => ({ captureError: vi.fn() }));
+vi.mock("@/lib/rate-limit", () => ({ rateLimit: mocks.rateLimit, clientIp: () => "203.0.113.7" }));
 
 import { POST } from "./route";
 
@@ -22,6 +24,7 @@ const post = (body: unknown, token = "test-secret") =>
 
 beforeEach(() => {
   mocks.updateMany.mockReset().mockResolvedValue({ count: 1 });
+  mocks.rateLimit.mockReset().mockResolvedValue({ success: true, remaining: 19 });
   process.env.AUTOMATION_ROADMAP_TOKEN = "test-secret";
 });
 
@@ -62,5 +65,14 @@ describe("POST /api/automation/roadmap/report", () => {
 
   it("rejects malformed JSON", async () => {
     expect((await post("not json")).status).toBe(400);
+  });
+
+  it("stops a caller that posts too often, before checking the token", async () => {
+    mocks.rateLimit.mockResolvedValue({ success: false, remaining: 0 });
+
+    const response = await post({ id: "t1", report: "x" }, "wrong");
+
+    expect(response.status).toBe(429);
+    expect(mocks.updateMany).not.toHaveBeenCalled();
   });
 });
