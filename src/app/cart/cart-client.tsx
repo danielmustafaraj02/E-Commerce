@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { CatalogImage } from "@/components/catalog-image";
 import Link from "next/link";
-import { useCartStore } from "@/lib/cart-store";
+import { useCartStore, MAX_CART_QUANTITY } from "@/lib/cart-store";
 import { formatMoney } from "@/lib/format";
 import { applyTemplate } from "@/lib/i18n/format";
 import { QuantityStepper } from "@/components/quantity-stepper";
 import { EmptyShelf } from "@/components/empty-shelf";
 import { ExpressCheckoutButton } from "@/components/express-checkout-button";
+import { CartUndoToast, type PendingRemoval } from "@/components/cart-undo-toast";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { cartLookSummary, type PieceKind } from "@/lib/looks";
 import { trackLookEvent } from "@/lib/look-analytics";
@@ -31,7 +32,6 @@ export function CartClient({
   shippingBanner: string | null;
   freeShippingThreshold: number | null;
   stripePublishableKey: string | null;
-  // The personalised gift card add-on, while the store offers it.
   giftCardOffer: { price: number; dict: Dictionary["giftCard"]; brand: string } | null;
 }) {
   const storedGiftCard = useCartStore((state) => state.giftCard);
@@ -44,6 +44,44 @@ export function CartClient({
   const addItem = useCartStore((state) => state.addItem);
   const [looks, setLooks] = useState<LookView[]>([]);
   const [kinds, setKinds] = useState<Record<string, PieceKind | null>>({});
+  const [pendingRemoval, setPendingRemoval] = useState<PendingRemoval | null>(null);
+  const [upsellBusy, setUpsellBusy] = useState(false);
+
+  const handleRemove = useCallback(
+    (item: (typeof items)[number]) => {
+      setPendingRemoval({
+        productId: item.productId,
+        slug: item.slug,
+        name: item.name,
+        price: item.price,
+        currency: item.currency,
+        imageUrl: item.imageUrl,
+        quantity: item.quantity,
+      });
+      removeItem(item.productId);
+    },
+    [removeItem]
+  );
+
+  const handleUndo = useCallback(() => {
+    if (!pendingRemoval) return;
+    addItem(
+      {
+        productId: pendingRemoval.productId,
+        slug: pendingRemoval.slug,
+        name: pendingRemoval.name,
+        price: pendingRemoval.price,
+        currency: pendingRemoval.currency,
+        imageUrl: pendingRemoval.imageUrl,
+      },
+      pendingRemoval.quantity
+    );
+    setPendingRemoval(null);
+  }, [pendingRemoval, addItem]);
+
+  const handleExpire = useCallback(() => {
+    setPendingRemoval(null);
+  }, []);
 
   // Which looks the cart's pieces belong to: for the set-saving estimate and
   // the "complete the look" upsell. Refetched only when the set of products
@@ -65,7 +103,7 @@ export function CartClient({
     };
   }, [productKey]);
 
-  if (items.length === 0) {
+  if (items.length === 0 && !pendingRemoval) {
     return (
       <EmptyShelf icon="cart" title={dict.empty} body={dict.emptyBody} cta={dict.browse} />
     );
@@ -142,7 +180,7 @@ export function CartClient({
               </p>
               <button
                 type="button"
-                onClick={() => removeItem(item.productId)}
+                onClick={() => handleRemove(item)}
                 className="text-foreground/60 hover:text-danger mt-1 text-xs underline-offset-2 transition-colors hover:underline"
               >
                 {dict.remove}
@@ -152,6 +190,7 @@ export function CartClient({
               <QuantityStepper
                 value={item.quantity}
                 onChange={(next) => setQuantity(item.productId, next)}
+                max={MAX_CART_QUANTITY}
                 decreaseLabel={dict.decreaseQuantity}
                 increaseLabel={dict.increaseQuantity}
               />
@@ -177,7 +216,9 @@ export function CartClient({
           <button
             type="button"
             className="btn-secondary text-sm"
+            disabled={upsellBusy}
             onClick={() => {
+              setUpsellBusy(true);
               for (const piece of missing) {
                 addItem({
                   productId: piece.productId,
@@ -193,6 +234,7 @@ export function CartClient({
                 pieces: missing.length,
                 source: "cart",
               });
+              setTimeout(() => setUpsellBusy(false), 1500);
             }}
           >
             {dict.lookUpsellCta}
@@ -278,6 +320,16 @@ export function CartClient({
           discount={lookSummary.saving}
           locale={uiLocale}
           dividerLabel={dict.expressCheckoutOr}
+        />
+      )}
+
+      {pendingRemoval && (
+        <CartUndoToast
+          pending={pendingRemoval}
+          label={applyTemplate(dict.itemRemoved, { name: pendingRemoval.name })}
+          undoLabel={dict.undo}
+          onUndo={handleUndo}
+          onExpire={handleExpire}
         />
       )}
     </div>

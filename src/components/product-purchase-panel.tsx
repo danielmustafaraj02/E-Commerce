@@ -5,6 +5,7 @@ import { QuantityStepper } from "@/components/quantity-stepper";
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { BuyNowButton } from "@/components/buy-now-button";
 import { WishlistButton } from "@/components/wishlist-button";
+import { MAX_CART_QUANTITY } from "@/lib/cart-store";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
 type CartProduct = {
@@ -78,6 +79,7 @@ export function ProductPurchasePanel({
         <QuantityStepper
           value={quantity}
           onChange={(next) => setQuantity(Math.max(1, next))}
+          max={MAX_CART_QUANTITY}
           decreaseLabel={cartDict.decreaseQuantity}
           increaseLabel={cartDict.increaseQuantity}
         />

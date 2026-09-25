@@ -555,6 +555,8 @@ const en = {
     increaseQuantity: "Increase quantity",
     freeShippingProgress: "Add {amount} more to your cart for free shipping",
     freeShippingUnlocked: "You've unlocked free shipping!",
+    itemRemoved: "{name} removed",
+    undo: "Undo",
   },
   feedback: {
     notSignedIn: "You need to sign in first.",
@@ -835,6 +837,19 @@ const en = {
     body: "The page you're looking for doesn't exist or may have been moved.",
     backHome: "Back to home",
     browseProducts: "Browse products",
+  },
+  journey: {
+    title: "Your Murano Journey",
+    welcomeBack: "Welcome Back",
+    welcomeBackSub: "Continue where you left off",
+    subOne: "A piece that caught your eye",
+    subMany: "Pieces that caught your eye",
+    seenLabel: "Viewed",
+    cta: "Explore all pieces",
+    relatedTitle: "You might also love",
+    emptyTitle: "Begin Your Journey",
+    emptyBody: "Explore our collection and discover handcrafted Murano glass pieces.",
+    emptyCta: "Browse the collection",
   },
   cookieConsent: {
     message:
@@ -1394,6 +1409,8 @@ const it: Dictionary = {
     increaseQuantity: "Aumenta quantità",
     freeShippingProgress: "Aggiungi {amount} al carrello per la spedizione gratuita",
     freeShippingUnlocked: "Hai sbloccato la spedizione gratuita!",
+    itemRemoved: "{name} rimosso",
+    undo: "Annulla",
   },
   feedback: {
     notSignedIn: "Devi prima accedere.",
@@ -1682,6 +1699,19 @@ const it: Dictionary = {
     body: "La pagina che stai cercando non esiste o potrebbe essere stata spostata.",
     backHome: "Torna alla home",
     browseProducts: "Sfoglia i prodotti",
+  },
+  journey: {
+    title: "Il tuo viaggio a Murano",
+    welcomeBack: "Bentornato",
+    welcomeBackSub: "Continua da dove avevi lasciato",
+    subOne: "Un pezzo che ha catturato la tua attenzione",
+    subMany: "Pezzi che hanno catturato la tua attenzione",
+    seenLabel: "Visto",
+    cta: "Esplora tutti i pezzi",
+    relatedTitle: "Potrebbe piacerti anche",
+    emptyTitle: "Inizia il tuo viaggio",
+    emptyBody: "Esplora la nostra collezione e scopri pezzi in vetro di Murano fatti a mano.",
+    emptyCta: "Sfoglia la collezione",
   },
   cookieConsent: {
     message:
@@ -2241,6 +2271,8 @@ const fr: Dictionary = {
     increaseQuantity: "Augmenter la quantité",
     freeShippingProgress: "Ajoutez {amount} à votre panier pour la livraison gratuite",
     freeShippingUnlocked: "Vous avez débloqué la livraison gratuite !",
+    itemRemoved: "{name} retiré",
+    undo: "Annuler",
   },
   feedback: {
     notSignedIn: "Veuillez d'abord vous connecter.",
@@ -2534,6 +2566,19 @@ const fr: Dictionary = {
     body: "La page que vous recherchez n'existe pas ou a peut-être été déplacée.",
     backHome: "Retour à l'accueil",
     browseProducts: "Parcourir les produits",
+  },
+  journey: {
+    title: "Votre voyage à Murano",
+    welcomeBack: "Bon retour",
+    welcomeBackSub: "Reprenez là où vous vous êtes arrêté",
+    subOne: "Une pièce qui a retenu votre attention",
+    subMany: "Des pièces qui ont retenu votre attention",
+    seenLabel: "Vu",
+    cta: "Explorer toutes les pièces",
+    relatedTitle: "Vous pourriez aussi aimer",
+    emptyTitle: "Commencez votre voyage",
+    emptyBody: "Explorez notre collection et découvrez des pièces en verre de Murano faites à la main.",
+    emptyCta: "Parcourir la collection",
   },
   cookieConsent: {
     message:
@@ -3093,6 +3138,8 @@ const de: Dictionary = {
     increaseQuantity: "Menge erhöhen",
     freeShippingProgress: "Legen Sie noch {amount} in den Warenkorb für kostenlosen Versand",
     freeShippingUnlocked: "Sie haben kostenlosen Versand freigeschaltet!",
+    itemRemoved: "{name} entfernt",
+    undo: "Rückgängig",
   },
   feedback: {
     notSignedIn: "Bitte melden Sie sich zuerst an.",
@@ -3383,6 +3430,19 @@ const de: Dictionary = {
     body: "Die gesuchte Seite existiert nicht oder wurde möglicherweise verschoben.",
     backHome: "Zurück zur Startseite",
     browseProducts: "Produkte durchstöbern",
+  },
+  journey: {
+    title: "Ihre Murano-Reise",
+    welcomeBack: "Willkommen zurück",
+    welcomeBackSub: "Machen Sie dort weiter, wo Sie aufgehört haben",
+    subOne: "Ein Stück, das Ihnen ins Auge gefallen ist",
+    subMany: "Stücke, die Ihnen ins Auge gefallen sind",
+    seenLabel: "Angesehen",
+    cta: "Alle Stücke entdecken",
+    relatedTitle: "Das könnte Ihnen auch gefallen",
+    emptyTitle: "Beginnen Sie Ihre Reise",
+    emptyBody: "Entdecken Sie unsere Kollektion handgefertigter Murano-Glaskunstwerke.",
+    emptyCta: "Kollektion durchstöbern",
   },
   cookieConsent: {
     message:
@@ -3940,6 +4000,8 @@ const ar: Dictionary = {
     increaseQuantity: "زيادة الكمية",
     freeShippingProgress: "أضف {amount} إلى سلتك للحصول على شحن مجاني",
     freeShippingUnlocked: "لقد حصلت على شحن مجاني!",
+    itemRemoved: "تمت إزالة {name}",
+    undo: "تراجع",
   },
   feedback: {
     notSignedIn: "يجب تسجيل الدخول أولًا.",
@@ -4206,6 +4268,19 @@ const ar: Dictionary = {
     body: "الصفحة التي تبحث عنها غير موجودة أو ربما تم نقلها.",
     backHome: "العودة إلى الصفحة الرئيسية",
     browseProducts: "تصفّح المنتجات",
+  },
+  journey: {
+    title: "رحلتك في مورانو",
+    welcomeBack: "مرحبًا بعودتك",
+    welcomeBackSub: "تابع من حيث توقفت",
+    subOne: "قطعة لفتت انتباهك",
+    subMany: "قطع لفتت انتباهك",
+    seenLabel: "تمت المشاهدة",
+    cta: "استكشف جميع القطع",
+    relatedTitle: "قد يعجبك أيضًا",
+    emptyTitle: "ابدأ رحلتك",
+    emptyBody: "استكشف مجموعتنا واكتشف قطعًا يدوية الصنع من زجاج مورانو.",
+    emptyCta: "تصفّح المجموعة",
   },
   cookieConsent: {
     message:
@@ -4758,6 +4833,8 @@ const zh: Dictionary = {
     increaseQuantity: "增加数量",
     freeShippingProgress: "购物车再加 {amount} 即可享受免费配送",
     freeShippingUnlocked: "您已解锁免费配送！",
+    itemRemoved: "已移除 {name}",
+    undo: "撤销",
   },
   feedback: {
     notSignedIn: "请先登录。",
@@ -5011,6 +5088,19 @@ const zh: Dictionary = {
     body: "您要查找的页面不存在，或可能已被移动。",
     backHome: "返回首页",
     browseProducts: "浏览商品",
+  },
+  journey: {
+    title: "您的穆拉诺之旅",
+    welcomeBack: "欢迎回来",
+    welcomeBackSub: "从上次浏览的地方继续",
+    subOne: "吸引您目光的作品",
+    subMany: "吸引您目光的作品",
+    seenLabel: "已浏览",
+    cta: "探索所有作品",
+    relatedTitle: "您可能还喜欢",
+    emptyTitle: "开始您的旅程",
+    emptyBody: "探索我们的系列，发现手工制作的穆拉诺玻璃艺术品。",
+    emptyCta: "浏览系列",
   },
   cookieConsent: {
     message:
@@ -5572,6 +5662,8 @@ const ru: Dictionary = {
     increaseQuantity: "Увеличить количество",
     freeShippingProgress: "Добавьте в корзину товаров ещё на {amount} для бесплатной доставки",
     freeShippingUnlocked: "Вы получили бесплатную доставку!",
+    itemRemoved: "{name} удалён",
+    undo: "Отменить",
   },
   feedback: {
     notSignedIn: "Сначала войдите в аккаунт.",
@@ -5859,6 +5951,19 @@ const ru: Dictionary = {
     body: "Страница, которую вы ищете, не существует или могла быть перемещена.",
     backHome: "На главную",
     browseProducts: "Смотреть товары",
+  },
+  journey: {
+    title: "Ваше путешествие в Мурано",
+    welcomeBack: "С возвращением",
+    welcomeBackSub: "Продолжите с того места, где остановились",
+    subOne: "Изделие, которое привлекло ваше внимание",
+    subMany: "Изделия, которые привлекли ваше внимание",
+    seenLabel: "Просмотрено",
+    cta: "Смотреть все изделия",
+    relatedTitle: "Вам также может понравиться",
+    emptyTitle: "Начните своё путешествие",
+    emptyBody: "Исследуйте нашу коллекцию и откройте для себя изделия ручной работы из муранского стекла.",
+    emptyCta: "Смотреть коллекцию",
   },
   cookieConsent: {
     message:
@@ -6419,6 +6524,8 @@ const es: Dictionary = {
     increaseQuantity: "Aumentar cantidad",
     freeShippingProgress: "Añade {amount} más a tu carrito para envío gratis",
     freeShippingUnlocked: "¡Has desbloqueado el envío gratis!",
+    itemRemoved: "{name} eliminado",
+    undo: "Deshacer",
   },
   feedback: {
     notSignedIn: "Primero debes iniciar sesión.",
@@ -6702,6 +6809,19 @@ const es: Dictionary = {
     body: "La página que buscas no existe o puede haber sido movida.",
     backHome: "Volver al inicio",
     browseProducts: "Explorar productos",
+  },
+  journey: {
+    title: "Tu viaje a Murano",
+    welcomeBack: "Bienvenido de nuevo",
+    welcomeBackSub: "Continúa donde lo dejaste",
+    subOne: "Una pieza que llamó tu atención",
+    subMany: "Piezas que llamaron tu atención",
+    seenLabel: "Visto",
+    cta: "Explorar todas las piezas",
+    relatedTitle: "También te podría gustar",
+    emptyTitle: "Comienza tu viaje",
+    emptyBody: "Explora nuestra colección y descubre piezas de vidrio de Murano hechas a mano.",
+    emptyCta: "Explorar la colección",
   },
   cookieConsent: {
     message:
@@ -7260,6 +7380,8 @@ const pt: Dictionary = {
     increaseQuantity: "Aumentar quantidade",
     freeShippingProgress: "Adicione mais {amount} ao seu carrinho para envio gratuito",
     freeShippingUnlocked: "Desbloqueou o envio gratuito!",
+    itemRemoved: "{name} removido",
+    undo: "Desfazer",
   },
   feedback: {
     notSignedIn: "É necessário iniciar sessão primeiro.",
@@ -7547,6 +7669,19 @@ const pt: Dictionary = {
     body: "A página que procura não existe ou pode ter sido movida.",
     backHome: "Voltar ao início",
     browseProducts: "Explorar produtos",
+  },
+  journey: {
+    title: "A sua viagem a Murano",
+    welcomeBack: "Bem-vindo de volta",
+    welcomeBackSub: "Continue de onde parou",
+    subOne: "Uma peça que chamou a sua atenção",
+    subMany: "Peças que chamaram a sua atenção",
+    seenLabel: "Visto",
+    cta: "Explorar todas as peças",
+    relatedTitle: "Também poderá gostar",
+    emptyTitle: "Comece a sua viagem",
+    emptyBody: "Explore a nossa coleção e descubra peças de vidro de Murano feitas à mão.",
+    emptyCta: "Explorar a coleção",
   },
   cookieConsent: {
     message:
@@ -8101,6 +8236,8 @@ const hi: Dictionary = {
     increaseQuantity: "मात्रा बढ़ाएं",
     freeShippingProgress: "मुफ़्त शिपिंग के लिए अपने कार्ट में {amount} और जोड़ें",
     freeShippingUnlocked: "आपने मुफ़्त शिपिंग अनलॉक कर ली है!",
+    itemRemoved: "{name} हटाया गया",
+    undo: "पूर्ववत करें",
   },
   feedback: {
     notSignedIn: "कृपया पहले साइन इन करें।",
@@ -8384,6 +8521,19 @@ const hi: Dictionary = {
     body: "जिस पेज को आप खोज रहे हैं वह मौजूद नहीं है या शायद स्थानांतरित कर दिया गया हो।",
     backHome: "होम पर वापस जाएं",
     browseProducts: "उत्पाद ब्राउज़ करें",
+  },
+  journey: {
+    title: "आपकी मुरानो यात्रा",
+    welcomeBack: "वापसी पर स्वागत है",
+    welcomeBackSub: "जहां आपने छोड़ा था वहीं से जारी रखें",
+    subOne: "एक टुकड़ा जिसने आपका ध्यान खींचा",
+    subMany: "टुकड़े जिन्होंने आपका ध्यान खींचा",
+    seenLabel: "देखा गया",
+    cta: "सभी टुकड़े देखें",
+    relatedTitle: "आपको यह भी पसंद आ सकता है",
+    emptyTitle: "अपनी यात्रा शुरू करें",
+    emptyBody: "हमारे संग्रह को देखें और हस्तनिर्मित मुरानो कांच के टुकड़ों की खोज करें।",
+    emptyCta: "संग्रह ब्राउज़ करें",
   },
   cookieConsent: {
     message:
@@ -8943,6 +9093,8 @@ const ja: Dictionary = {
     increaseQuantity: "数量を増やす",
     freeShippingProgress: "あと{amount}で送料無料",
     freeShippingUnlocked: "送料無料の条件を達成しました!",
+    itemRemoved: "{name}を削除しました",
+    undo: "元に戻す",
   },
   feedback: {
     notSignedIn: "先にログインしてください。",
@@ -9229,6 +9381,19 @@ const ja: Dictionary = {
     body: "お探しのページは存在しないか、移動した可能性があります。",
     backHome: "ホームに戻る",
     browseProducts: "商品を見る",
+  },
+  journey: {
+    title: "あなたのムラーノの旅",
+    welcomeBack: "おかえりなさい",
+    welcomeBackSub: "前回の続きからどうぞ",
+    subOne: "目に留まった作品",
+    subMany: "目に留まった作品たち",
+    seenLabel: "閲覧済み",
+    cta: "すべての作品を見る",
+    relatedTitle: "こちらもおすすめ",
+    emptyTitle: "旅を始めましょう",
+    emptyBody: "コレクションを探索して、手作りのムラーノガラス作品をご覧ください。",
+    emptyCta: "コレクションを見る",
   },
   cookieConsent: {
     message:

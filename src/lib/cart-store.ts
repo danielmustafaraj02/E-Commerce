@@ -2,6 +2,8 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { GiftCard } from "@/lib/gift-card";
 
+export const MAX_CART_QUANTITY = 10;
+
 // Display-only snapshot. Price/stock here is never trusted at checkout —
 // the server always re-reads the authoritative product row by productId.
 export type CartItem = {
@@ -40,11 +42,13 @@ export const useCartStore = create<CartState>()(
           if (existing) {
             return {
               items: state.items.map((i) =>
-                i.productId === item.productId ? { ...i, quantity: i.quantity + quantity } : i
+                i.productId === item.productId
+                  ? { ...i, quantity: Math.min(i.quantity + quantity, MAX_CART_QUANTITY) }
+                  : i
               ),
             };
           }
-          return { items: [...state.items, { ...item, quantity }] };
+          return { items: [...state.items, { ...item, quantity: Math.min(quantity, MAX_CART_QUANTITY) }] };
         }),
       removeItem: (productId) =>
         set((state) => ({ items: state.items.filter((i) => i.productId !== productId) })),
@@ -53,7 +57,11 @@ export const useCartStore = create<CartState>()(
           items:
             quantity <= 0
               ? state.items.filter((i) => i.productId !== productId)
-              : state.items.map((i) => (i.productId === productId ? { ...i, quantity } : i)),
+              : state.items.map((i) =>
+                  i.productId === productId
+                    ? { ...i, quantity: Math.min(quantity, MAX_CART_QUANTITY) }
+                    : i
+                ),
         })),
       clear: () => set({ items: [], giftCard: null }),
     }),
