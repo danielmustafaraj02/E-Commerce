@@ -216,6 +216,24 @@ describe("POST /api/checkout personalised gift card", () => {
     );
   });
 
+  it("saves the stickers and the back the customer designed", async () => {
+    mocks.quoteOrder.mockResolvedValue({ ...quote, giftCardAmount: 500, total: 5500 });
+    const stickers = [{ icon: "heart", x: 18.5, y: 22 }];
+
+    const res = await checkout({ giftCard: { ...card, stickers, back: "ruby" } });
+
+    expect(res.status).toBe(201);
+    expect(mocks.orderCreated).toHaveBeenCalledWith(
+      expect.objectContaining({ giftCardStickers: stickers, giftCardBack: "ruby" })
+    );
+  });
+
+  it("rejects more than three stickers", async () => {
+    const heart = { icon: "heart", x: 50, y: 50 };
+    const res = await checkout({ giftCard: { ...card, stickers: [heart, heart, heart, heart] } });
+    expect(res.status).toBe(400);
+  });
+
   it("saves no card when the store doesn't charge for one (switched off)", async () => {
     mocks.quoteOrder.mockResolvedValue({ ...quote, giftCardAmount: 0 });
 

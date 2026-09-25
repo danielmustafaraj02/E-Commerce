@@ -10,8 +10,14 @@ import { FulfillmentTrackingForm } from "./fulfillment-tracking-form";
 import { ConfirmForm } from "@/components/confirm-form";
 import { AddressMap } from "@/components/address-map";
 import { findOrderOnMap } from "./geocode-actions";
-import { GiftCardPreview } from "@/components/gift-card-preview";
-import { giftCardLines, GIFT_CARD_FONTS, type GiftCardFont } from "@/lib/gift-card";
+import { GiftCardBackFace, GiftCardPreview } from "@/components/gift-card-preview";
+import {
+  giftCardLines,
+  parseGiftCardBack,
+  parseGiftCardStickers,
+  GIFT_CARD_FONTS,
+  type GiftCardFont,
+} from "@/lib/gift-card";
 import { giftCardFontClasses } from "@/lib/gift-card-fonts";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { locales, type Locale } from "@/lib/i18n/locale";
@@ -71,6 +77,8 @@ export default async function AdminOrderDetailPage({
           giftDict
         )
       : null;
+  const giftStickers = parseGiftCardStickers(order.giftCardStickers);
+  const giftBack = parseGiftCardBack(order.giftCardBack);
 
   return (
     <div className="max-w-3xl">
@@ -82,7 +90,16 @@ export default async function AdminOrderDetailPage({
 
       {giftLines && (
         <section className={`form-card mb-8 flex flex-col gap-5 sm:flex-row ${giftCardFontClasses}`}>
-          <GiftCardPreview lines={giftLines} font={giftFont} brand={settings.storeName} size="small" />
+          <div className="flex shrink-0 gap-3">
+            <GiftCardPreview
+              lines={giftLines}
+              font={giftFont}
+              brand={settings.storeName}
+              stickers={giftStickers}
+              size="small"
+            />
+            <GiftCardBackFace back={giftBack} size="small" />
+          </div>
           <div className="flex min-w-0 flex-col gap-2 text-sm">
             <h2 className="text-lg font-medium">Personalised gift card to print</h2>
             <p className="text-foreground/70">
@@ -102,6 +119,16 @@ export default async function AdminOrderDetailPage({
               <dd>{order.giftCardSender || "—"}</dd>
               <dt className="text-foreground/60">Font</dt>
               <dd>{giftDict.fonts[giftFont]} ({giftFont})</dd>
+              <dt className="text-foreground/60">Motifs</dt>
+              <dd>
+                {giftStickers.length
+                  ? giftStickers
+                      .map((s) => `${s.icon} at ${Math.round(s.x)}% across, ${Math.round(s.y)}% down`)
+                      .join("; ")
+                  : "—"}
+              </dd>
+              <dt className="text-foreground/60">Back</dt>
+              <dd>{giftBack}</dd>
             </dl>
           </div>
         </section>

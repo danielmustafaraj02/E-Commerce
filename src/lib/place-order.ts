@@ -135,6 +135,8 @@ async function placeOrderOnce(input: PlaceOrderInput) {
           giftCardRecipient: giftCard.recipient || null,
           giftCardSender: giftCard.sender || null,
           giftCardFont: giftCard.font,
+          ...(giftCard.stickers?.length && { giftCardStickers: giftCard.stickers }),
+          giftCardBack: giftCard.back ?? null,
         }),
         addressId: address.id,
         shippingMethodId: quote.shippingMethod.id,

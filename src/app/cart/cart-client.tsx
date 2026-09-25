@@ -207,6 +207,7 @@ export function CartClient({
             font={giftCard.font}
             brand={giftCardOffer.brand}
             lines={giftCardLines(giftCard, giftCardOffer.dict)}
+            stickers={giftCard.stickers}
           />
           <div className="cart-gift-details">
             <p className="cart-gift-title">
@@ -219,6 +220,10 @@ export function CartClient({
             <p className="cart-gift-meta">
               <span>{giftCardOffer.dict.fontLabel}:</span>{" "}
               {giftCardOffer.dict.fonts[giftCard.font]}
+            </p>
+            <p className="cart-gift-meta">
+              <span>{giftCardOffer.dict.backLabel}:</span>{" "}
+              {giftCardOffer.dict.backs[giftCard.back ?? "ivory"]}
             </p>
             <p className="cart-gift-actions">
               <Link href="/personalised-gift-card">{giftCardOffer.dict.edit}</Link>
