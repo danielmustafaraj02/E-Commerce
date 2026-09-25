@@ -608,6 +608,9 @@ const en = {
     alreadyVerified: "Your email address is already confirmed.",
     incorrectPassword: "Incorrect password.",
     oauthContactSupport: "Accounts created with Google must contact support to be deleted.",
+    invalidMfaCode: "Invalid code.",
+    mfaSetupNotFound: "No pending MFA setup found — reload the page.",
+    oauthNoMfaPassword: "Accounts created with Google must contact support to change this.",
   },
   emails: {
     tagline: "{storeName}. Authentic Venetian glass, handmade in Murano.",
@@ -796,6 +799,22 @@ const en = {
     deleting: "Deleting…",
     confirmDeletion: "Confirm deletion",
     cancel: "Cancel",
+  },
+  mfa: {
+    pageTitle: "Two-factor authentication",
+    requiredNotice:
+      "Two-factor authentication is required for admin/staff accounts before you can access the admin panel.",
+    enabledNotice: "Enabled — your account requires a code at sign-in.",
+    setupIntro:
+      "Scan this QR code with an authenticator app (Google Authenticator, 1Password, Authy), then enter the 6-digit code it shows to finish enabling MFA. You'll need to sign out and back in afterward for admin access to pick up the change.",
+    qrAlt: "MFA QR code",
+    manualEntryKey: (key: string) => `Manual entry key: ${key}`,
+    codeLabel: "6-digit code",
+    verifying: "Verifying…",
+    enableButton: "Enable MFA",
+    confirmPasswordLabel: "Confirm password to disable",
+    disabling: "Disabling…",
+    disableButton: "Disable MFA",
   },
   orderConfirmation: {
     almostThere: "Almost there",
@@ -1429,6 +1448,10 @@ const it: Dictionary = {
     incorrectPassword: "Password errata.",
     oauthContactSupport:
       "Gli account creati con Google devono contattare l'assistenza per essere eliminati.",
+    invalidMfaCode: "Codice non valido.",
+    mfaSetupNotFound: "Nessuna configurazione MFA in sospeso: ricarica la pagina.",
+    oauthNoMfaPassword:
+      "Gli account creati con Google devono contattare l'assistenza per modificare questa impostazione.",
   },
   emails: {
     tagline: "{storeName}. Autentico vetro veneziano, fatto a mano a Murano.",
@@ -1621,6 +1644,22 @@ const it: Dictionary = {
     deleting: "Eliminazione…",
     confirmDeletion: "Conferma eliminazione",
     cancel: "Annulla",
+  },
+  mfa: {
+    pageTitle: "Autenticazione a due fattori",
+    requiredNotice:
+      "L'autenticazione a due fattori è obbligatoria per gli account staff/admin prima di poter accedere al pannello di amministrazione.",
+    enabledNotice: "Attiva: il tuo account richiede un codice per accedere.",
+    setupIntro:
+      "Scansiona questo codice QR con un'app di autenticazione (Google Authenticator, 1Password, Authy), poi inserisci il codice a 6 cifre mostrato per completare l'attivazione. Dovrai disconnetterti e riaccedere perché l'accesso all'area admin recepisca la modifica.",
+    qrAlt: "Codice QR per l'autenticazione a due fattori",
+    manualEntryKey: (key: string) => `Chiave di inserimento manuale: ${key}`,
+    codeLabel: "Codice a 6 cifre",
+    verifying: "Verifica…",
+    enableButton: "Attiva l'autenticazione a due fattori",
+    confirmPasswordLabel: "Conferma la password per disattivare",
+    disabling: "Disattivazione…",
+    disableButton: "Disattiva l'autenticazione a due fattori",
   },
   orderConfirmation: {
     almostThere: "Ci siamo quasi",
@@ -2255,6 +2294,10 @@ const fr: Dictionary = {
     incorrectPassword: "Mot de passe incorrect.",
     oauthContactSupport:
       "Les comptes créés avec Google doivent contacter le support pour être supprimés.",
+    invalidMfaCode: "Code invalide.",
+    mfaSetupNotFound: "Aucune configuration MFA en attente : rechargez la page.",
+    oauthNoMfaPassword:
+      "Les comptes créés avec Google doivent contacter le support pour modifier ce paramètre.",
   },
   emails: {
     tagline: "{storeName}, authentique verre vénitien, fait main à Murano.",
@@ -2451,6 +2494,22 @@ const fr: Dictionary = {
     deleting: "Suppression…",
     confirmDeletion: "Confirmer la suppression",
     cancel: "Annuler",
+  },
+  mfa: {
+    pageTitle: "Authentification à deux facteurs",
+    requiredNotice:
+      "L'authentification à deux facteurs est obligatoire pour les comptes staff/admin avant de pouvoir accéder au panneau d'administration.",
+    enabledNotice: "Activée : votre compte nécessite un code à la connexion.",
+    setupIntro:
+      "Scannez ce code QR avec une application d'authentification (Google Authenticator, 1Password, Authy), puis saisissez le code à 6 chiffres affiché pour terminer l'activation. Vous devrez vous déconnecter puis vous reconnecter pour que l'accès admin prenne en compte le changement.",
+    qrAlt: "Code QR d'authentification à deux facteurs",
+    manualEntryKey: (key: string) => `Clé de saisie manuelle : ${key}`,
+    codeLabel: "Code à 6 chiffres",
+    verifying: "Vérification…",
+    enableButton: "Activer l'authentification à deux facteurs",
+    confirmPasswordLabel: "Confirmez le mot de passe pour désactiver",
+    disabling: "Désactivation…",
+    disableButton: "Désactiver l'authentification à deux facteurs",
   },
   orderConfirmation: {
     almostThere: "Presque terminé",
@@ -3083,6 +3142,10 @@ const de: Dictionary = {
     alreadyVerified: "Ihre E-Mail-Adresse ist bereits bestätigt.",
     incorrectPassword: "Falsches Passwort.",
     oauthContactSupport: "Mit Google erstellte Konten können nur über den Support gelöscht werden.",
+    invalidMfaCode: "Ungültiger Code.",
+    mfaSetupNotFound: "Keine ausstehende MFA-Einrichtung gefunden. Laden Sie die Seite neu.",
+    oauthNoMfaPassword:
+      "Mit Google erstellte Konten müssen sich zur Änderung dieser Einstellung an den Support wenden.",
   },
   emails: {
     tagline: "{storeName}, authentisches venezianisches Glas, handgefertigt in Murano.",
@@ -3278,6 +3341,22 @@ const de: Dictionary = {
     deleting: "Wird gelöscht…",
     confirmDeletion: "Löschung bestätigen",
     cancel: "Abbrechen",
+  },
+  mfa: {
+    pageTitle: "Zwei-Faktor-Authentifizierung",
+    requiredNotice:
+      "Für Mitarbeiter-/Admin-Konten ist die Zwei-Faktor-Authentifizierung erforderlich, bevor Sie auf das Admin-Panel zugreifen können.",
+    enabledNotice: "Aktiviert: Ihr Konto erfordert bei der Anmeldung einen Code.",
+    setupIntro:
+      "Scannen Sie diesen QR-Code mit einer Authenticator-App (Google Authenticator, 1Password, Authy) und geben Sie dann den angezeigten 6-stelligen Code ein, um die Aktivierung abzuschließen. Sie müssen sich anschließend ab- und wieder anmelden, damit der Admin-Zugriff die Änderung übernimmt.",
+    qrAlt: "QR-Code für die Zwei-Faktor-Authentifizierung",
+    manualEntryKey: (key: string) => `Schlüssel zur manuellen Eingabe: ${key}`,
+    codeLabel: "6-stelliger Code",
+    verifying: "Wird überprüft…",
+    enableButton: "Zwei-Faktor-Authentifizierung aktivieren",
+    confirmPasswordLabel: "Bestätigen Sie Ihr Passwort, um zu deaktivieren",
+    disabling: "Wird deaktiviert…",
+    disableButton: "Zwei-Faktor-Authentifizierung deaktivieren",
   },
   orderConfirmation: {
     almostThere: "Fast geschafft",
@@ -3905,6 +3984,9 @@ const ar: Dictionary = {
     alreadyVerified: "تم تأكيد بريدك الإلكتروني بالفعل.",
     incorrectPassword: "كلمة المرور غير صحيحة.",
     oauthContactSupport: "الحسابات المنشأة عبر Google تتطلب التواصل مع الدعم لحذفها.",
+    invalidMfaCode: "رمز غير صالح.",
+    mfaSetupNotFound: "لم يتم العثور على إعداد مصادقة ثنائية معلّق، أعد تحميل الصفحة.",
+    oauthNoMfaPassword: "يجب على الحسابات التي أُنشئت عبر Google التواصل مع الدعم لتغيير هذا الإعداد.",
   },
   emails: {
     tagline: "{storeName}، زجاج فينيسي أصيل، مصنوع يدويًا في مورانو.",
@@ -4081,6 +4163,22 @@ const ar: Dictionary = {
     deleting: "جارٍ الحذف…",
     confirmDeletion: "تأكيد الحذف",
     cancel: "إلغاء",
+  },
+  mfa: {
+    pageTitle: "المصادقة الثنائية",
+    requiredNotice:
+      "المصادقة الثنائية إلزامية لحسابات الموظفين/المشرفين قبل أن تتمكن من الوصول إلى لوحة الإدارة.",
+    enabledNotice: "مفعّلة: يتطلب حسابك رمزًا عند تسجيل الدخول.",
+    setupIntro:
+      "امسح رمز QR هذا باستخدام تطبيق مصادقة (Google Authenticator أو 1Password أو Authy)، ثم أدخل الرمز المكوّن من 6 أرقام الذي يعرضه لإتمام التفعيل. ستحتاج إلى تسجيل الخروج ثم الدخول مرة أخرى ليعكس وصول لوحة الإدارة هذا التغيير.",
+    qrAlt: "رمز QR للمصادقة الثنائية",
+    manualEntryKey: (key: string) => `مفتاح الإدخال اليدوي: ${key}`,
+    codeLabel: "رمز مكوّن من 6 أرقام",
+    verifying: "جارٍ التحقق…",
+    enableButton: "تفعيل المصادقة الثنائية",
+    confirmPasswordLabel: "أكّد كلمة المرور لإلغاء التفعيل",
+    disabling: "جارٍ إلغاء التفعيل…",
+    disableButton: "إلغاء تفعيل المصادقة الثنائية",
   },
   orderConfirmation: {
     almostThere: "أوشكت على الانتهاء",
@@ -4701,6 +4799,9 @@ const zh: Dictionary = {
     alreadyVerified: "您的邮箱地址已确认。",
     incorrectPassword: "密码不正确。",
     oauthContactSupport: "使用 Google 创建的账户需联系客服才能删除。",
+    invalidMfaCode: "验证码无效。",
+    mfaSetupNotFound: "未找到待完成的双重验证设置，请刷新页面。",
+    oauthNoMfaPassword: "使用 Google 创建的账户需联系客服才能更改此设置。",
   },
   emails: {
     tagline: "{storeName}，正宗威尼斯玻璃，穆拉诺手工制作。",
@@ -4866,6 +4967,21 @@ const zh: Dictionary = {
     deleting: "删除中…",
     confirmDeletion: "确认删除",
     cancel: "取消",
+  },
+  mfa: {
+    pageTitle: "双重身份验证",
+    requiredNotice: "员工/管理员账户在访问管理后台之前必须启用双重身份验证。",
+    enabledNotice: "已启用：登录时需要输入验证码。",
+    setupIntro:
+      "使用身份验证器应用（如 Google Authenticator、1Password、Authy）扫描此二维码，然后输入其显示的 6 位验证码以完成启用。之后您需要退出并重新登录，管理后台的权限才会生效。",
+    qrAlt: "双重身份验证二维码",
+    manualEntryKey: (key: string) => `手动输入密钥：${key}`,
+    codeLabel: "6 位验证码",
+    verifying: "验证中…",
+    enableButton: "启用双重身份验证",
+    confirmPasswordLabel: "请输入密码以确认停用",
+    disabling: "停用中…",
+    disableButton: "停用双重身份验证",
   },
   orderConfirmation: {
     almostThere: "即将完成",
@@ -5499,6 +5615,10 @@ const ru: Dictionary = {
     incorrectPassword: "Неверный пароль.",
     oauthContactSupport:
       "Чтобы удалить аккаунт, созданный через Google, свяжитесь со службой поддержки.",
+    invalidMfaCode: "Неверный код.",
+    mfaSetupNotFound: "Незавершённая настройка двухфакторной аутентификации не найдена, обновите страницу.",
+    oauthNoMfaPassword:
+      "Чтобы изменить эту настройку для аккаунта, созданного через Google, обратитесь в поддержку.",
   },
   emails: {
     tagline: "{storeName}, подлинное венецианское стекло ручной работы из Мурано.",
@@ -5692,6 +5812,22 @@ const ru: Dictionary = {
     deleting: "Удаление…",
     confirmDeletion: "Подтвердить удаление",
     cancel: "Отмена",
+  },
+  mfa: {
+    pageTitle: "Двухфакторная аутентификация",
+    requiredNotice:
+      "Для учётных записей персонала и администраторов двухфакторная аутентификация обязательна, прежде чем вы сможете получить доступ к панели администратора.",
+    enabledNotice: "Включена: при входе потребуется код.",
+    setupIntro:
+      "Отсканируйте этот QR-код с помощью приложения-аутентификатора (Google Authenticator, 1Password, Authy), затем введите показанный 6-значный код, чтобы завершить включение. После этого вам нужно будет выйти и снова войти в аккаунт, чтобы доступ к панели администратора учёл это изменение.",
+    qrAlt: "QR-код для двухфакторной аутентификации",
+    manualEntryKey: (key: string) => `Ключ для ручного ввода: ${key}`,
+    codeLabel: "6-значный код",
+    verifying: "Проверка…",
+    enableButton: "Включить двухфакторную аутентификацию",
+    confirmPasswordLabel: "Подтвердите пароль, чтобы отключить",
+    disabling: "Отключение…",
+    disableButton: "Отключить двухфакторную аутентификацию",
   },
   orderConfirmation: {
     almostThere: "Почти готово",
@@ -6323,6 +6459,9 @@ const es: Dictionary = {
     incorrectPassword: "Contraseña incorrecta.",
     oauthContactSupport:
       "Las cuentas creadas con Google deben contactar con soporte para eliminarse.",
+    invalidMfaCode: "Código no válido.",
+    mfaSetupNotFound: "No se encontró ninguna configuración de MFA pendiente. Recarga la página.",
+    oauthNoMfaPassword: "Las cuentas creadas con Google deben contactar con soporte para cambiar esto.",
   },
   emails: {
     tagline: "{storeName}, auténtico vidrio veneciano, hecho a mano en Murano.",
@@ -6513,6 +6652,22 @@ const es: Dictionary = {
     deleting: "Eliminando…",
     confirmDeletion: "Confirmar eliminación",
     cancel: "Cancelar",
+  },
+  mfa: {
+    pageTitle: "Autenticación en dos pasos",
+    requiredNotice:
+      "La autenticación en dos pasos es obligatoria para las cuentas de personal/administrador antes de poder acceder al panel de administración.",
+    enabledNotice: "Activada: tu cuenta requiere un código al iniciar sesión.",
+    setupIntro:
+      "Escanea este código QR con una aplicación de autenticación (Google Authenticator, 1Password, Authy) y luego introduce el código de 6 dígitos que muestra para completar la activación. Después tendrás que cerrar sesión y volver a iniciarla para que el acceso de administrador refleje el cambio.",
+    qrAlt: "Código QR de autenticación en dos pasos",
+    manualEntryKey: (key: string) => `Clave de introducción manual: ${key}`,
+    codeLabel: "Código de 6 dígitos",
+    verifying: "Verificando…",
+    enableButton: "Activar la autenticación en dos pasos",
+    confirmPasswordLabel: "Confirma tu contraseña para desactivar",
+    disabling: "Desactivando…",
+    disableButton: "Desactivar la autenticación en dos pasos",
   },
   orderConfirmation: {
     almostThere: "Ya casi está",
@@ -7144,6 +7299,10 @@ const pt: Dictionary = {
     incorrectPassword: "Palavra-passe incorreta.",
     oauthContactSupport:
       "As contas criadas com o Google têm de contactar o apoio ao cliente para serem eliminadas.",
+    invalidMfaCode: "Código inválido.",
+    mfaSetupNotFound: "Não foi encontrada nenhuma configuração de MFA pendente. Atualize a página.",
+    oauthNoMfaPassword:
+      "As contas criadas com o Google têm de contactar o apoio ao cliente para alterar isto.",
   },
   emails: {
     tagline: "{storeName}, autêntico vidro veneziano, feito à mão em Murano.",
@@ -7336,6 +7495,22 @@ const pt: Dictionary = {
     deleting: "A eliminar…",
     confirmDeletion: "Confirmar eliminação",
     cancel: "Cancelar",
+  },
+  mfa: {
+    pageTitle: "Autenticação de dois fatores",
+    requiredNotice:
+      "A autenticação de dois fatores é obrigatória para contas de equipa/administrador antes de poder aceder ao painel de administração.",
+    enabledNotice: "Ativada: a sua conta exige um código ao iniciar sessão.",
+    setupIntro:
+      "Digitalize este código QR com uma aplicação de autenticação (Google Authenticator, 1Password, Authy) e, depois, introduza o código de 6 dígitos apresentado para concluir a ativação. Terá de terminar sessão e voltar a iniciá-la para que o acesso de administrador reflita a alteração.",
+    qrAlt: "Código QR de autenticação de dois fatores",
+    manualEntryKey: (key: string) => `Chave de introdução manual: ${key}`,
+    codeLabel: "Código de 6 dígitos",
+    verifying: "A verificar…",
+    enableButton: "Ativar a autenticação de dois fatores",
+    confirmPasswordLabel: "Confirme a sua palavra-passe para desativar",
+    disabling: "A desativar…",
+    disableButton: "Desativar a autenticação de dois fatores",
   },
   orderConfirmation: {
     almostThere: "Quase lá",
@@ -7960,6 +8135,9 @@ const hi: Dictionary = {
     alreadyVerified: "आपका ईमेल पता पहले ही सत्यापित हो चुका है।",
     incorrectPassword: "पासवर्ड गलत है।",
     oauthContactSupport: "Google से बनाए गए खातों को हटाने के लिए सहायता से संपर्क करना होगा।",
+    invalidMfaCode: "कोड अमान्य है।",
+    mfaSetupNotFound: "कोई लंबित MFA सेटअप नहीं मिला, पेज को फिर से लोड करें।",
+    oauthNoMfaPassword: "इसे बदलने के लिए Google से बनाए गए खातों को सहायता से संपर्क करना होगा।",
   },
   emails: {
     tagline: "{storeName}, प्रामाणिक वेनिस का कांच, मुरानो में हाथ से बना।",
@@ -8152,6 +8330,22 @@ const hi: Dictionary = {
     deleting: "हटाया जा रहा है…",
     confirmDeletion: "हटाने की पुष्टि करें",
     cancel: "रद्द करें",
+  },
+  mfa: {
+    pageTitle: "दो-चरणीय प्रमाणीकरण",
+    requiredNotice:
+      "एडमिन पैनल तक पहुँचने से पहले स्टाफ़/एडमिन खातों के लिए दो-चरणीय प्रमाणीकरण अनिवार्य है।",
+    enabledNotice: "सक्षम: साइन इन करते समय आपके खाते के लिए कोड आवश्यक होगा।",
+    setupIntro:
+      "इस QR कोड को किसी ऑथेंटिकेटर ऐप (Google Authenticator, 1Password, Authy) से स्कैन करें, फिर सक्षम करना पूरा करने के लिए दिखाया गया 6-अंकों का कोड डालें। एडमिन एक्सेस में यह बदलाव दिखने के लिए आपको बाद में साइन आउट करके दोबारा साइन इन करना होगा।",
+    qrAlt: "दो-चरणीय प्रमाणीकरण के लिए QR कोड",
+    manualEntryKey: (key: string) => `मैन्युअल एंट्री कुंजी: ${key}`,
+    codeLabel: "6-अंकों का कोड",
+    verifying: "सत्यापन हो रहा है…",
+    enableButton: "दो-चरणीय प्रमाणीकरण सक्षम करें",
+    confirmPasswordLabel: "अक्षम करने के लिए पासवर्ड की पुष्टि करें",
+    disabling: "अक्षम किया जा रहा है…",
+    disableButton: "दो-चरणीय प्रमाणीकरण अक्षम करें",
   },
   orderConfirmation: {
     almostThere: "लगभग हो गया",
@@ -8783,6 +8977,9 @@ const ja: Dictionary = {
     alreadyVerified: "メールアドレスはすでに確認済みです。",
     incorrectPassword: "パスワードが正しくありません。",
     oauthContactSupport: "Googleで作成したアカウントを削除するには、サポートまでご連絡ください。",
+    invalidMfaCode: "コードが正しくありません。",
+    mfaSetupNotFound: "保留中のMFA設定が見つかりません。ページを再読み込みしてください。",
+    oauthNoMfaPassword: "Googleで作成したアカウントでこの設定を変更するには、サポートまでご連絡ください。",
   },
   emails: {
     tagline: "{storeName}、ムラノ島で手作りされた、本物のヴェネチアングラス。",
@@ -8976,6 +9173,22 @@ const ja: Dictionary = {
     deleting: "削除中…",
     confirmDeletion: "削除を確認",
     cancel: "キャンセル",
+  },
+  mfa: {
+    pageTitle: "二段階認証",
+    requiredNotice:
+      "管理パネルにアクセスするには、スタッフ・管理者アカウントで二段階認証を有効にする必要があります。",
+    enabledNotice: "有効です。ログイン時にコードの入力が必要になります。",
+    setupIntro:
+      "認証アプリ（Google Authenticator、1Password、Authyなど）でこのQRコードを読み取り、表示された6桁のコードを入力して設定を完了してください。管理者アクセスに変更を反映させるには、その後一度サインアウトしてから再度サインインする必要があります。",
+    qrAlt: "二段階認証のQRコード",
+    manualEntryKey: (key: string) => `手動入力用キー：${key}`,
+    codeLabel: "6桁のコード",
+    verifying: "確認中…",
+    enableButton: "二段階認証を有効にする",
+    confirmPasswordLabel: "無効にするにはパスワードを確認してください",
+    disabling: "無効化中…",
+    disableButton: "二段階認証を無効にする",
   },
   orderConfirmation: {
     almostThere: "もう少しです",
