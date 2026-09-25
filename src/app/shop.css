@@ -1103,6 +1103,18 @@
   padding-inline: 1.25rem;
   padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
 }
+/* Whatever section is mid-scroll (related products, the bundle promo, etc.)
+   meets the bar's hard edge with no transition — this fades it out instead,
+   so content reads as easing behind the bar rather than getting clipped. */
+.shop-sticky-cta--visible::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 100%;
+  height: 1.75rem;
+  background: linear-gradient(to bottom, transparent, var(--ground));
+  pointer-events: none;
+}
 .shop-sticky-cta-inner {
   display: flex;
   align-items: center;
