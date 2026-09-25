@@ -7,8 +7,24 @@ import { getStoreSettings } from "@/lib/store-settings";
 // instances. Used automatically when Upstash isn't configured.
 const memoryHits = new Map<string, { count: number; resetAt: number }>();
 
+// A key (an IP, a user id, an email address) only ever gets overwritten when
+// that same key is rate-limited again — an expired entry otherwise sits in
+// the map forever. On a long-lived process this is unbounded growth from
+// ordinary traffic alone, so once the map gets big, sweep out anything
+// that's expired before adding more. Threshold keeps normal-sized traffic
+// from paying for a sweep on every request.
+const MEMORY_SWEEP_THRESHOLD = 5000;
+
+function sweepExpired(now: number) {
+  if (memoryHits.size < MEMORY_SWEEP_THRESHOLD) return;
+  for (const [key, entry] of memoryHits) {
+    if (entry.resetAt <= now) memoryHits.delete(key);
+  }
+}
+
 function memoryRateLimit(key: string, limit: number, windowMs: number) {
   const now = Date.now();
+  sweepExpired(now);
   const entry = memoryHits.get(key);
 
   if (!entry || entry.resetAt <= now) {
@@ -65,4 +81,11 @@ export async function rateLimit(key: string, limit: number, windowMs: number) {
 export function clientIp(request: Request): string {
   const forwardedFor = request.headers.get("x-forwarded-for");
   return forwardedFor?.split(",")[0]?.trim() ?? "unknown";
+}
+
+// Test-only window into the in-memory table's size, so rate-limit.test.ts
+// can assert the sweep actually frees expired entries rather than just
+// trusting that it runs.
+export function _memoryTableSizeForTesting(): number {
+  return memoryHits.size;
 }
