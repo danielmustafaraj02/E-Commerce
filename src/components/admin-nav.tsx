@@ -74,7 +74,7 @@ export function AdminShell({
                     key={item.href}
                     href={item.href}
                     aria-current={active ? "page" : undefined}
-                    className={`flex items-center gap-2 rounded px-3 py-2 transition-colors ${
+                    className={`admin-sidebar-link flex items-center gap-2 rounded px-3 py-2 transition-colors ${
                       active
                         ? "bg-accent/10 text-accent-deep font-medium"
                         : "text-foreground/80 hover:bg-foreground/5 hover:text-accent-deep"

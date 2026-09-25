@@ -21,7 +21,7 @@ export default async function AdminReturnsPage({ searchParams }: PageProps<"/adm
       <div className="mb-5 flex flex-wrap gap-2 text-sm">
         <Link
           href="/admin/returns"
-          className={`rounded-full px-3 py-1 transition-colors ${
+          className={`admin-pill inline-flex items-center justify-center rounded-full px-3 py-1 transition-colors ${
             !statusFilter
               ? "bg-primary text-white"
               : "bg-foreground/5 text-foreground/70 hover:bg-foreground/10"
@@ -33,7 +33,7 @@ export default async function AdminReturnsPage({ searchParams }: PageProps<"/adm
           <Link
             key={s}
             href={`/admin/returns?status=${s}`}
-            className={`rounded-full px-3 py-1 capitalize transition-colors ${
+            className={`admin-pill inline-flex items-center justify-center rounded-full px-3 py-1 capitalize transition-colors ${
               statusFilter === s
                 ? "bg-primary text-white"
                 : "bg-foreground/5 text-foreground/70 hover:bg-foreground/10"

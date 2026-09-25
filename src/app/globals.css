@@ -781,6 +781,15 @@ button:not(:disabled),
     .field:not(textarea) {
       min-height: 2.9rem;
     }
+    /* Admin status-filter pills and sidebar nav links: dense by design for
+       mouse+keyboard (admin is Operate-mode), but staff do open it on a
+       tablet — bump to the same touch-target floor as every other control
+       only when the input is actually coarse, so desktop density is
+       untouched. */
+    .admin-pill,
+    .admin-sidebar-link {
+      min-height: 2.75rem;
+    }
   }
 
   /* Alerts — small icon + message chip used for every inline form error and
