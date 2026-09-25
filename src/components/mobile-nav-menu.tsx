@@ -13,6 +13,9 @@ type NavLink = {
   // Pages about the house (About, the guide) sit in a quieter row under the
   // collections.
   secondary?: boolean;
+  // Account/wishlist/sign-in: the menu's only path to these below the lg
+  // breakpoint, since the header's own icon cluster is hidden there.
+  account?: boolean;
 };
 
 const noopSubscribe = () => () => {};
@@ -86,7 +89,7 @@ export function MobileNavMenu({
         aria-expanded={open}
         aria-controls={panelId}
         aria-label={menuLabel}
-        className="-ms-2 grid h-12 w-12 shrink-0 place-items-center rounded-md sm:hidden"
+        className="-ms-2 grid h-12 w-12 shrink-0 place-items-center rounded-md lg:hidden"
       >
         <svg
           width="26"
@@ -112,7 +115,7 @@ export function MobileNavMenu({
             role="dialog"
             aria-modal="true"
             aria-label={menuLabel}
-            className="mobile-menu animate-fade-up sm:hidden"
+            className="mobile-menu animate-fade-up lg:hidden"
           >
             <div className="mobile-menu-top">
               <BrandSignature storeName={storeName} />
@@ -178,6 +181,20 @@ export function MobileNavMenu({
                 </svg>
               </button>
             </form>
+
+            {links.some((link) => link.account) && (
+              <ul className="mobile-menu-secondary mobile-menu-account">
+                {links
+                  .filter((link) => link.account)
+                  .map((link) => (
+                    <li key={link.href}>
+                      <Link href={link.href} onClick={close}>
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+              </ul>
+            )}
 
             <nav aria-label={menuLabel}>
               <ul className="mobile-menu-links">

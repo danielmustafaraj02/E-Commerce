@@ -4,12 +4,34 @@ import { getStoreSettings } from "@/lib/store-settings";
 import { formatMoney } from "@/lib/format";
 import { StatusBadge } from "@/components/status-badge";
 import { CatalogImage } from "@/components/catalog-image";
+import type { Prisma } from "@prisma/client";
 
-export default async function AdminProductsPage() {
-  const [settings, products] = await Promise.all([
+const PAGE_SIZE = 50;
+
+export default async function AdminProductsPage({ searchParams }: PageProps<"/admin/products">) {
+  const { q, page: pageParam } = await searchParams;
+  const query = typeof q === "string" ? q.trim() : "";
+  // Floored: a non-integer page (?page=3.7, a stray decimal from hand-edited
+  // URLs) would otherwise reach Prisma's `skip` and throw at request time.
+  const page = Math.max(1, Math.floor(Number(typeof pageParam === "string" ? pageParam : 1) || 1));
+
+  const where: Prisma.ProductWhereInput = query
+    ? {
+        OR: [
+          { name: { contains: query, mode: "insensitive" } },
+          { sku: { contains: query, mode: "insensitive" } },
+        ],
+      }
+    : {};
+
+  const [settings, totalCount, products] = await Promise.all([
     getStoreSettings(),
+    db.product.count({ where }),
     db.product.findMany({
+      where,
       orderBy: { createdAt: "desc" },
+      skip: (page - 1) * PAGE_SIZE,
+      take: PAGE_SIZE,
       include: {
         supplier: true,
         // Only the first picture, for the thumbnail beside the name.
@@ -17,6 +39,17 @@ export default async function AdminProductsPage() {
       },
     }),
   ]);
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
+  const buildHref = (overrides: Record<string, string | undefined>) => {
+    const params = new URLSearchParams();
+    if (query) params.set("q", query);
+    for (const [key, value] of Object.entries(overrides)) {
+      if (value) params.set(key, value);
+      else params.delete(key);
+    }
+    const qs = params.toString();
+    return qs ? `/admin/products?${qs}` : "/admin/products";
+  };
 
   return (
     <div>
@@ -29,6 +62,28 @@ export default async function AdminProductsPage() {
           New product
         </Link>
       </div>
+
+      <form className="mb-5 flex max-w-sm gap-2">
+        <input
+          type="search"
+          name="q"
+          defaultValue={query}
+          placeholder="Search by name or SKU"
+          className="field"
+          aria-label="Search products by name or SKU"
+        />
+        <button type="submit" className="btn-primary text-sm whitespace-nowrap">
+          Search
+        </button>
+        {query && (
+          <Link
+            href="/admin/products"
+            className="text-foreground/60 self-center text-sm whitespace-nowrap hover:underline"
+          >
+            Clear
+          </Link>
+        )}
+      </form>
 
       <div className="border-foreground/10 bg-surface overflow-hidden rounded-lg border">
         <div className="overflow-x-auto">
@@ -108,9 +163,47 @@ export default async function AdminProductsPage() {
           </table>
         </div>
         {products.length === 0 && (
-          <p className="text-foreground/70 px-4 py-8 text-center text-sm">No products yet.</p>
+          <p className="text-foreground/70 px-4 py-8 text-center text-sm">
+            {page > 1 ? (
+              <>
+                Page {page} is past the last result.{" "}
+                <Link href={buildHref({ page: undefined })} className="text-primary hover:underline">
+                  Back to page 1
+                </Link>
+              </>
+            ) : query ? (
+              <>
+                No products match &ldquo;{query}&rdquo;.{" "}
+                <Link href="/admin/products" className="text-primary hover:underline">
+                  Clear search
+                </Link>
+              </>
+            ) : (
+              "No products yet."
+            )}
+          </p>
         )}
       </div>
+
+      {totalCount > 0 && (
+        <div className="text-foreground/60 mt-4 flex items-center justify-between text-sm">
+          <p>
+            Page {page} of {totalPages} &middot; {totalCount} product{totalCount === 1 ? "" : "s"}
+          </p>
+          <div className="flex gap-3">
+            {page > 1 && (
+              <Link href={buildHref({ page: String(page - 1) })} className="hover:underline">
+                &larr; Previous
+              </Link>
+            )}
+            {page < totalPages && (
+              <Link href={buildHref({ page: String(page + 1) })} className="hover:underline">
+                Next &rarr;
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

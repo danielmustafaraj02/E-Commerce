@@ -41,12 +41,25 @@ export async function Header({
     : 0;
 
   const navChipClass =
-    "nav-link link-underline text-foreground/80 hover:text-accent transition-colors";
+    "nav-link link-underline text-foreground/80 hover:text-accent shrink-0 transition-colors";
 
   // Same destinations as the desktop row below, for the full-screen mobile
   // menu (MobileNavMenu) — resolved here since it needs plain strings, not
-  // JSX, and this component already has locale/dict in scope.
+  // JSX, and this component already has locale/dict in scope. This is now
+  // the *only* path to Account/Wishlist/Sign-in below the lg breakpoint,
+  // since the header's own icon cluster is hidden there — see `account: true`.
   const mobileNavLinks = [
+    session?.user
+      ? {
+          href: "/account/wishlist",
+          label:
+            wishlistCount > 0 ? `${dict.nav.wishlist} (${wishlistCount})` : dict.nav.wishlist,
+          account: true,
+        }
+      : { href: "/wishlist", label: dict.nav.wishlist, account: true },
+    session?.user
+      ? { href: "/account", label: dict.nav.account, account: true }
+      : { href: "/login", label: dict.nav.signIn, account: true },
     ...categories.map((category) => ({
       href: `/category/${category.slug}`,
       label: localizedName(category, locale),
@@ -63,7 +76,7 @@ export async function Header({
       <div className="mx-auto flex w-full max-w-7xl items-center gap-7 px-4 py-4 sm:px-6 sm:py-3.5">
 
         {/* ── Logo (far left, desktop only — mobile has its own centered logo below) ── */}
-        <Link href="/" className="hidden shrink-0 self-stretch items-center sm:flex">
+        <Link href="/" className="hidden shrink-0 self-stretch items-center lg:flex">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={headerLogoSrc(logoUrl)}
@@ -74,8 +87,13 @@ export async function Header({
           />
         </Link>
 
-        {/* ── Category nav (desktop, right of logo) ─────────────────────── */}
-        <nav className="hidden items-center gap-6 text-[0.95rem] whitespace-nowrap sm:flex">
+        {/* ── Category nav (desktop, right of logo) ─────────────────────────
+            overflow-x-auto + scrollbar-hide + edge-fade-x: at the narrow end
+            of this row's range (just past 1024px) a full category list plus
+            Looks/About/Guide can outgrow the available width before the
+            spacer/search/icon-cluster claim theirs; this scrolls instead of
+            wrapping or squeezing, with the mask signaling more content. ── */}
+        <nav className="hidden min-w-0 items-center gap-6 overflow-x-auto text-[0.95rem] whitespace-nowrap scrollbar-hide edge-fade-x lg:flex">
           {categories.map((category) => (
             <Link key={category.id} href={`/category/${category.slug}`} className={navChipClass}>
               {localizedName(category, locale)}
@@ -84,16 +102,16 @@ export async function Header({
           <Link href="/looks" className={navChipClass}>
             {dict.looks.navLabel}
           </Link>
-          <Link href="/about" className={`${navChipClass} hidden xl:inline-flex`}>
+          <Link href="/about" className={navChipClass}>
             {dict.footer.about}
           </Link>
-          <Link href="/murano-glass" className={`${navChipClass} hidden xl:inline-flex`}>
+          <Link href="/murano-glass" className={navChipClass}>
             {dict.footer.muranoGuide}
           </Link>
         </nav>
 
         {/* ── Spacer pushes everything after here to the right (desktop only) ── */}
-        <div className="hidden flex-1 sm:block" />
+        <div className="hidden flex-1 lg:block" />
 
         {/* ── Search bar ────────────────────────────────────────────────── */}
         <form
@@ -127,7 +145,7 @@ export async function Header({
         </form>
 
         {/* ── Icon cluster (locale, wishlist, cart, admin, account/login) ── */}
-        <div className="hidden items-center gap-x-4 text-[0.95rem] whitespace-nowrap sm:flex">
+        <div className="hidden items-center gap-x-4 text-[0.95rem] whitespace-nowrap lg:flex">
           <LocaleSwitcher current={locale} />
           {session?.user ? (
             <Link
@@ -207,8 +225,12 @@ export async function Header({
           )}
         </div>
 
-        {/* ── Mobile: hamburger — logo — cart, logo stays the visual focus ── */}
-        <div className="grid w-full grid-cols-3 items-center sm:hidden">
+        {/* ── Mobile: hamburger — logo — cart, logo stays the visual focus ──
+            lg:hidden: this compact row (and its hamburger menu, which now
+            also carries search + account/wishlist/sign-in) is the only header
+            below 1024px — the desktop row above no longer partially overlaps
+            it at 640-1023px. ── */}
+        <div className="grid w-full grid-cols-3 items-center lg:hidden">
           <div className="flex items-center">
             <MobileNavMenu
               links={mobileNavLinks}

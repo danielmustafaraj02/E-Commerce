@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useCartStore } from "@/lib/cart-store";
 import { formatMoney } from "@/lib/format";
+import { CatalogImage } from "@/components/catalog-image";
 import { TurnstileWidget } from "@/components/turnstile-widget";
 import { FormAlert } from "@/components/form-alert";
 import { AddressCheck } from "@/components/address-check";
@@ -249,6 +250,35 @@ export function CheckoutClient({
       )}
 
       <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-6">
+        <details open className="shop-panel">
+          <summary className="shop-ui flex cursor-pointer items-center justify-between p-4 font-medium">
+            <span>{dict.orderSummary}</span>
+            <span className="text-foreground/60 text-sm font-normal">({items.length})</span>
+          </summary>
+          <ul className="shop-list">
+            {items.map((item) => (
+              <li key={item.productId} className="flex items-center gap-3 p-4">
+                {item.imageUrl ? (
+                  <span className="shop-thumb shop-thumb--cart">
+                    <CatalogImage src={item.imageUrl} alt="" fill sizes="64px" />
+                  </span>
+                ) : (
+                  <span className="shop-thumb shop-thumb--cart" aria-hidden="true" />
+                )}
+                <div className="min-w-0 flex-1">
+                  <p className="shop-line-name line-clamp-2">{item.name}</p>
+                  <p className="text-foreground/70 mt-0.5 text-sm">
+                    {formatMoney(item.price, item.currency, locale)} &times; {item.quantity}
+                  </p>
+                </div>
+                <span className="shop-cart-total shrink-0">
+                  {formatMoney(item.price * item.quantity, item.currency, locale)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </details>
+
         {quote?.shippingAmount === 0 && (
           <div className="shop-panel shop-panel-pad">
             <p className="text-accent-deep flex items-center text-sm font-medium">
@@ -453,6 +483,15 @@ export function CheckoutClient({
                   </span>
                   <span>{formatMoney(quote.shippingAmount, quote.currency, locale)}</span>
                 </div>
+                {selectedShippingMethod && (
+                  <p className="text-foreground/60 -mt-1 text-xs">
+                    {applyTemplate(dict.days, {
+                      min: String(selectedShippingMethod.estimatedDaysMin),
+                      max: String(selectedShippingMethod.estimatedDaysMax),
+                    })}
+                    {shippingMethods.length === 1 ? ` · ${dict.onlyShippingMethod}` : ""}
+                  </p>
+                )}
                 {/* Duties depend on the destination, not the shipping cost: the UK,
                     Switzerland and Norway ship free but are outside the EU customs union. */}
                 {country && !isEuCountry(country) && (

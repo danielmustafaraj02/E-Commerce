@@ -149,6 +149,15 @@
   color: var(--footer-soft);
 }
 
+/* Account/wishlist/sign-in: same quiet small-caps row as .mobile-menu-secondary,
+   but it sits directly under the search field, which already supplies its own
+   hairline — a second border-top here would double up that one boundary. */
+.mobile-menu-account {
+  margin-top: 0.5rem;
+  padding-top: 0;
+  border-top: none;
+}
+
 .mobile-menu-closing {
   position: relative;
   display: flex;

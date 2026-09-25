@@ -21,6 +21,11 @@ const discountSchema = z
   })
   .refine((data) => data.percentOff || data.amountOff, {
     message: "Set either a percent-off or amount-off value",
+  })
+  // The form only ever renders one of the two inputs, but this guards direct
+  // requests (or a future UI regression) from creating an ambiguous code.
+  .refine((data) => !(data.percentOff !== undefined && data.amountOff !== undefined), {
+    message: "Set only one of percent-off or amount-off, not both",
   });
 
 export async function createDiscountCode(_prevState: unknown, formData: FormData) {
