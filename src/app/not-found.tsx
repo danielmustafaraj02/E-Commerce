@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { ShelfMain } from "@/components/shelf-main";

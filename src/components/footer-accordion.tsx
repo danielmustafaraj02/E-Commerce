@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useSyncExternalStore } from "react";
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import type { FooterSection } from "@/lib/footer-nav";
 
 // Footer link groups: collapsible on phones (one tap opens a group), always

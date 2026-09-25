@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { useActionState } from "react";
 import { requestReset, type ForgotPasswordState } from "./actions";
 import { TurnstileWidget } from "@/components/turnstile-widget";

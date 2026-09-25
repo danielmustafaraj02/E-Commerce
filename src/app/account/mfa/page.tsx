@@ -17,7 +17,10 @@ export default async function MfaPage({
   searchParams: Promise<{ required?: string }>;
 }) {
   const session = await auth();
-  if (!session?.user) redirect("/login?callbackUrl=/account/mfa");
+  if (!session?.user) {
+    const locale = await getLocale();
+    redirect(`/${locale}/login?callbackUrl=/${locale}/account/mfa`);
+  }
 
   const { required } = await searchParams;
 
@@ -26,7 +29,7 @@ export default async function MfaPage({
     db.user.findUnique({ where: { id: session.user.id } }),
     getLocale(),
   ]);
-  if (!user) redirect("/login");
+  if (!user) redirect(`/${uiLocale}/login`);
   const dict = getDictionary(uiLocale).mfa;
 
   const requiredNotice = required === "1" && (user.role === "admin" || user.role === "staff") && (

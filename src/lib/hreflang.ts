@@ -1,17 +1,22 @@
-import { locales, type Locale } from "./i18n/locale-constants";
+import { locales, defaultLocale, type Locale } from "./i18n/locale-constants";
 
-// Self-referencing hreflang: this site serves every language from the same
-// URL (locale is cookie/Accept-Language driven, see src/lib/i18n/locale.ts),
-// which is Google's documented "dynamic serving" pattern — same URL for
-// every language, paired with a `Vary: Accept-Language` response header
-// (see src/proxy.ts). Real locale-prefixed URLs (/en/, /it/, ...) would be a
-// stronger signal but are a bigger routing change; this is the correct,
-// honest markup for the current architecture.
-export function hreflangAlternates(canonicalPath: string): Record<string, string> {
+// Real, distinct, independently-crawlable URLs per locale (proxy.ts rewrites
+// /xx/<path> internally to the unprefixed route and sets X-Locale — the
+// page files themselves never moved). x-default points at the default
+// locale's URL, which is also what a bare unprefixed request permanently
+// redirects to for a visitor Google can't otherwise classify.
+export function hreflangAlternates(unprefixedPath: string): Record<string, string> {
+  const path = unprefixedPath === "/" ? "" : unprefixedPath;
   return {
-    ...Object.fromEntries(locales.map((locale) => [locale, canonicalPath])),
-    "x-default": canonicalPath,
+    ...Object.fromEntries(locales.map((locale) => [locale, `/${locale}${path}`])),
+    "x-default": `/${defaultLocale}${path}`,
   };
+}
+
+// The current page's own canonical URL — self-referencing per locale, as
+// distinct from the other 10 languages' versions in hreflangAlternates.
+export function localizedCanonical(locale: Locale, unprefixedPath: string): string {
+  return `/${locale}${unprefixedPath === "/" ? "" : unprefixedPath}`;
 }
 
 // og:locale wants full language_TERRITORY tags, not our bare Locale codes.

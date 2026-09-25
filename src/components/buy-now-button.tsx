@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useLocalizedRouter } from "@/components/localized-link";
 import { useCartStore } from "@/lib/cart-store";
 
 // Adds the item to the cart and goes straight to checkout, for a shopper who
@@ -28,7 +28,7 @@ export function BuyNowButton({
   className?: string;
 }) {
   const addItem = useCartStore((state) => state.addItem);
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const [pending, setPending] = useState(false);
 
   return (

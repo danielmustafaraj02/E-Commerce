@@ -3,7 +3,7 @@ import { db } from "@/lib/db";
 import { getStoreSettings, ogImage } from "@/lib/store-settings";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-import { hreflangAlternates } from "@/lib/hreflang";
+import { hreflangAlternates, localizedCanonical } from "@/lib/hreflang";
 import { localizedName, productImageAlt } from "@/lib/product-i18n";
 import { getLooksForProducts } from "@/lib/look-data";
 import { deriveProductType } from "@/lib/gift-finder";
@@ -25,7 +25,10 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: dict.metaTitle,
     description: dict.metaDescription,
-    alternates: { canonical, languages: hreflangAlternates(canonical) },
+    alternates: {
+      canonical: localizedCanonical(locale, canonical),
+      languages: hreflangAlternates(canonical),
+    },
     openGraph: {
       title: dict.metaTitle,
       description: dict.metaDescription,

@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
+import { defaultLocale, LOCALE_COOKIE, splitLocalePrefix, type Locale } from "./lib/i18n/locale-constants";
+import { detectLocale } from "./lib/i18n/detect-locale";
 
 // Coarse-grained gate only. Every admin route/API handler must also check
 // `role === "admin"` itself — proxy does not run for Server Functions, so it
@@ -30,8 +32,45 @@ import { getToken } from "next-auth/jwt";
 // click.
 const ADMIN_SESSION_MAX_AGE_SECONDS = Number(process.env.ADMIN_SESSION_MAX_AGE_MINUTES || 240) * 60;
 
+// Routes that never get a locale prefix: the admin backend (internal,
+// unlocalized per PRODUCT.md), and well-known files whose path is fixed by
+// convention (robots.txt, sitemap.xml, the manifest, llms.txt, the two
+// file-convention icons — favicon.ico is already excluded by the matcher
+// below, unlike these, so it needs listing here too for consistency even
+// though it never actually reaches this check with the current matcher).
+const UNLOCALIZED_PATH_RE =
+  /^\/(admin|robots\.txt|sitemap\.xml|manifest\.webmanifest|llms\.txt|icon\.png|apple-icon\.png|favicon\.ico)(\/|$)/;
+
 export default async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const unlocalized = UNLOCALIZED_PATH_RE.test(pathname);
+
+  // Locale now lives in the URL. A request with no valid /xx prefix (a bare
+  // "/products/foo", or an old bookmarked/indexed pre-migration URL) gets a
+  // *permanent* redirect to its prefixed equivalent — this is the step that
+  // carries existing search-engine equity over to the new URLs rather than
+  // losing it. A request that already carries a valid prefix is rewritten
+  // internally to the unprefixed route (the actual page files never moved),
+  // with the locale carried forward via the X-Locale header for
+  // src/lib/i18n/locale.ts's getLocale() to read.
+  let locale: Locale = defaultLocale;
+  let logicalPathname = pathname;
+
+  if (!unlocalized) {
+    const split = splitLocalePrefix(pathname);
+    if (!split.locale) {
+      const preferred = detectLocale(
+        request.cookies.get(LOCALE_COOKIE)?.value,
+        request.headers.get("accept-language") ?? undefined
+      );
+      const target = request.nextUrl.clone();
+      target.pathname = `/${preferred}${pathname}`;
+      return withSecurityHeaders(NextResponse.redirect(target, 308));
+    }
+    locale = split.locale;
+    logicalPathname = split.rest;
+  }
+
   // secureCookie must be forced rather than left to getToken()'s own
   // protocol-sniffing: on Vercel's Edge runtime, the request as seen by
   // middleware doesn't reliably report https, so auto-detection looks for
@@ -45,13 +84,15 @@ export default async function proxy(request: NextRequest) {
   });
   const role = token?.role as string | undefined;
 
-  if (pathname.startsWith("/admin")) {
+  if (logicalPathname.startsWith("/admin")) {
     const issuedAt = typeof token?.iat === "number" ? token.iat : 0;
     const sessionTooOld = Date.now() / 1000 - issuedAt > ADMIN_SESSION_MAX_AGE_SECONDS;
 
     if ((role !== "admin" && role !== "staff") || sessionTooOld) {
-      const loginUrl = new URL("/login", request.url);
-      loginUrl.searchParams.set("callbackUrl", pathname);
+      // Admin is unlocalized, and so is the login it bounces to here —
+      // staff sign-in doesn't need per-visitor language detection.
+      const loginUrl = new URL(`/${defaultLocale}/login`, request.url);
+      loginUrl.searchParams.set("callbackUrl", logicalPathname);
       return withSecurityHeaders(NextResponse.redirect(loginUrl));
     }
 
@@ -60,15 +101,15 @@ export default async function proxy(request: NextRequest) {
     // auth.ts's jwt callback), so this deliberately sends them to set it up
     // rather than silently letting a not-yet-enrolled admin session through.
     if (!token?.mfaEnabled) {
-      const mfaUrl = new URL("/account/mfa", request.url);
+      const mfaUrl = new URL(`/${defaultLocale}/account/mfa`, request.url);
       mfaUrl.searchParams.set("required", "1");
       return withSecurityHeaders(NextResponse.redirect(mfaUrl));
     }
   }
 
-  if (pathname.startsWith("/account") && !token) {
-    const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("callbackUrl", pathname);
+  if (logicalPathname.startsWith("/account") && !token) {
+    const loginUrl = new URL(`/${locale}/login`, request.url);
+    loginUrl.searchParams.set("callbackUrl", `/${locale}${logicalPathname}`);
     return withSecurityHeaders(NextResponse.redirect(loginUrl));
   }
 
@@ -105,8 +146,18 @@ export default async function proxy(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-nonce", nonce);
   requestHeaders.set("Content-Security-Policy", csp);
+  if (!unlocalized) requestHeaders.set("x-locale", locale);
 
-  const response = NextResponse.next({ request: { headers: requestHeaders } });
+  const response = unlocalized
+    ? NextResponse.next({ request: { headers: requestHeaders } })
+    : NextResponse.rewrite(
+        (() => {
+          const url = request.nextUrl.clone();
+          url.pathname = logicalPathname;
+          return url;
+        })(),
+        { request: { headers: requestHeaders } }
+      );
   response.headers.set("Content-Security-Policy", csp);
   return withSecurityHeaders(response);
 }
@@ -122,14 +173,11 @@ function withSecurityHeaders(response: NextResponse) {
   // cross-origin tab-napping and Spectre-style timing attacks. Doesn't affect
   // the Stripe/PayPal iframes, which are governed by frame-ancestors above.
   response.headers.set("Cross-Origin-Opener-Policy", "same-origin");
-  // Every page's <html lang> and content (product names/descriptions,
-  // titles) switch on Accept-Language (see src/lib/i18n/locale.ts) even
-  // though the URL stays the same — this is Google's documented "dynamic
-  // serving" pattern, and it's what makes the self-referencing hreflang
-  // alternates (see each page's `alternates.languages`) valid rather than
-  // misleading: without it, a shared cache could serve the wrong language
-  // to a crawler or visitor with different header/cookie state.
-  response.headers.append("Vary", "Accept-Language");
+  // Locale now lives in the URL path, not Accept-Language content
+  // negotiation at a shared URL — so this response no longer varies by
+  // that header. (Kept documented here rather than silently dropped: if a
+  // dynamic-serving fallback is ever reintroduced for an unlocalized path,
+  // this is where its Vary would need to come back.)
   if (process.env.NODE_ENV === "production") {
     response.headers.set(
       "Strict-Transport-Security",

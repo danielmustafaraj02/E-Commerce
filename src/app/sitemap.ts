@@ -2,6 +2,8 @@ import { ARTICLES } from "@/lib/journal";
 import type { MetadataRoute } from "next";
 import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
+import { locales } from "@/lib/i18n/locale-constants";
+import { hreflangAlternates } from "@/lib/hreflang";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const settings = await getStoreSettings();
@@ -21,35 +23,48 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     undefined
   );
 
-  // Google ignores <changefreq> and <priority>; only <lastmod> is used, and
-  // only when it is accurate — so pages with no real modification date omit it.
-  return [
-    { url: base, lastModified: catalogUpdatedAt },
-    { url: `${base}/products`, lastModified: catalogUpdatedAt },
-    { url: `${base}/gift-finder`, lastModified: catalogUpdatedAt },
-    { url: `${base}/looks` },
-    { url: `${base}/looks/compose` },
-    ...(settings.giftCardEnabled ? [{ url: `${base}/personalised-gift-card` }] : []),
-    ...looks.map((look) => ({ url: `${base}/looks/${look.id}`, lastModified: look.updatedAt })),
-    { url: `${base}/about` },
-    { url: `${base}/murano-glass` },
-    { url: `${base}/contact` },
-    { url: `${base}/blog`, lastModified: new Date(ARTICLES[0].updated ?? ARTICLES[0].published) },
+  // Every resource on the site as one unprefixed path + its own lastModified
+  // — expanded into one sitemap entry per locale below, each carrying the
+  // full hreflang cluster so Google can move between a resource's languages
+  // directly from the sitemap. Google ignores <changefreq>/<priority>; only
+  // <lastmod> is used, and only when accurate, so entries with no real
+  // modification date omit it.
+  const resources: { path: string; lastModified?: Date }[] = [
+    { path: "/", lastModified: catalogUpdatedAt },
+    { path: "/products", lastModified: catalogUpdatedAt },
+    { path: "/gift-finder", lastModified: catalogUpdatedAt },
+    { path: "/looks" },
+    { path: "/looks/compose" },
+    ...(settings.giftCardEnabled ? [{ path: "/personalised-gift-card" }] : []),
+    ...looks.map((look) => ({ path: `/looks/${look.id}`, lastModified: look.updatedAt })),
+    { path: "/about" },
+    { path: "/murano-glass" },
+    { path: "/contact" },
+    { path: "/blog", lastModified: new Date(ARTICLES[0].updated ?? ARTICLES[0].published) },
     ...ARTICLES.map((article) => ({
-      url: `${base}/blog/${article.slug}`,
+      path: `/blog/${article.slug}`,
       lastModified: new Date(article.updated ?? article.published),
     })),
     ...categories.map((category) => ({
-      url: `${base}/category/${category.slug}`,
+      path: `/category/${category.slug}`,
       lastModified: catalogUpdatedAt,
     })),
     ...products.map((product) => ({
-      url: `${base}/products/${product.slug}`,
+      path: `/products/${product.slug}`,
       lastModified: product.updatedAt,
     })),
-    ...legalPages.map((page) => ({
-      url: `${base}/legal/${page.slug}`,
-      lastModified: page.lastUpdated,
-    })),
+    ...legalPages.map((page) => ({ path: `/legal/${page.slug}`, lastModified: page.lastUpdated })),
   ];
+
+  return resources.flatMap(({ path, lastModified }) => {
+    const alternates = hreflangAlternates(path);
+    const languages = Object.fromEntries(
+      Object.entries(alternates).map(([code, altPath]) => [code, `${base}${altPath}`])
+    );
+    return locales.map((locale) => ({
+      url: `${base}${alternates[locale]}`,
+      lastModified,
+      alternates: { languages },
+    }));
+  });
 }

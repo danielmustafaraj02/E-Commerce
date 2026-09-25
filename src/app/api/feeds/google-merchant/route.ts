@@ -66,7 +66,7 @@ export async function GET(request: Request) {
       <g:id>${xmlEscape(product.sku)}</g:id>
       <title>${xmlEscape(feedTitle(name, locale))}</title>
       <description>${xmlEscape(description)}</description>
-      <link>${xmlEscape(`${base}/products/${product.slug}`)}</link>
+      <link>${xmlEscape(`${base}/${locale}/products/${product.slug}`)}</link>
       <g:image_link>${xmlEscape(mainImage)}</g:image_link>
       ${extraImages.map((url) => `<g:additional_image_link>${xmlEscape(url)}</g:additional_image_link>`).join("\n      ")}
       <g:availability>${availability}</g:availability>

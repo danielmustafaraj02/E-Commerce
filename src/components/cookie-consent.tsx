@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { CONSENT_CHANGED_EVENT, CONSENT_STORAGE_KEY } from "@/lib/consent";
 

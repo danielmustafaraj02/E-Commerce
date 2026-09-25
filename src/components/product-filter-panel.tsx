@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { PriceRangeSlider } from "@/components/price-range-slider";
 import { PRODUCT_COLOR_KEYS, PRODUCT_COLOR_SWATCH } from "@/lib/product-colors";
 import type { Dictionary } from "@/lib/i18n/dictionaries";

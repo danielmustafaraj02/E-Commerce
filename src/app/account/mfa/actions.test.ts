@@ -16,6 +16,10 @@ vi.mock("next/navigation", () => ({
     throw new Error("NEXT_REDIRECT");
   },
 }));
+vi.mock("next/headers", () => ({
+  headers: async () => new Headers(),
+  cookies: async () => ({ get: () => undefined }),
+}));
 vi.mock("@/lib/rate-limit", () => ({ rateLimit: mocks.rateLimit }));
 vi.mock("@/auth", () => ({ auth: mocks.auth }));
 vi.mock("@/lib/db", () => ({

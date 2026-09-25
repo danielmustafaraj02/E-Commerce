@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { useWishlistStore } from "@/lib/wishlist-store";
 
 // Signed-out counterpart to the account wishlist link in header.tsx — reads

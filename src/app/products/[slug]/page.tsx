@@ -3,7 +3,7 @@ import { cache } from "react";
 import type { Metadata } from "next";
 import { ProductGallery } from "@/components/product-gallery";
 import { CatalogImage } from "@/components/catalog-image";
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { notFound } from "next/navigation";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
@@ -25,7 +25,7 @@ import {
   productImageAlt,
 } from "@/lib/product-i18n";
 import { buildProductMetaDescription, fitTitle } from "@/lib/seo-text";
-import { hreflangAlternates, ogLocale } from "@/lib/hreflang";
+import { hreflangAlternates, localizedCanonical, ogLocale } from "@/lib/hreflang";
 import { ProductPurchasePanel } from "@/components/product-purchase-panel";
 import { ShareButtons } from "@/components/share-buttons";
 import { ShelfItem } from "@/components/shelf-item";
@@ -207,7 +207,7 @@ export async function generateMetadata({
     title,
     description,
     alternates: {
-      canonical: `/products/${product.slug}`,
+      canonical: localizedCanonical(locale, `/products/${product.slug}`),
       languages: hreflangAlternates(`/products/${product.slug}`),
     },
     openGraph: {

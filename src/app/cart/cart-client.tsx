@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CatalogImage } from "@/components/catalog-image";
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { useCartStore, MAX_CART_QUANTITY } from "@/lib/cart-store";
 import { formatMoney } from "@/lib/format";
 import { applyTemplate } from "@/lib/i18n/format";

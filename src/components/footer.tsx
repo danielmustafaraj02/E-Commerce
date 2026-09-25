@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { db } from "@/lib/db";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import type { Locale } from "@/lib/i18n/locale";

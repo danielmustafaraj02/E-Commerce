@@ -2,13 +2,13 @@ import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import Image, { getImageProps } from "next/image";
 import { preload } from "react-dom";
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { getStoreSettings, ogImage } from "@/lib/store-settings";
 import { getHomepageData } from "@/lib/homepage-data";
 import { getLocale, type Locale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { localizedName, localizedCardProduct } from "@/lib/product-i18n";
-import { hreflangAlternates } from "@/lib/hreflang";
+import { hreflangAlternates, localizedCanonical } from "@/lib/hreflang";
 import { fitTitle } from "@/lib/seo-text";
 import { truncateAtWord } from "@/lib/text";
 import { CatalogImage } from "@/components/catalog-image";
@@ -67,7 +67,10 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title,
     description,
-    alternates: { canonical, languages: hreflangAlternates(canonical) },
+    alternates: {
+      canonical: localizedCanonical(locale, canonical),
+      languages: hreflangAlternates(canonical),
+    },
     openGraph: {
       title: candidates[0],
       description,

@@ -14,6 +14,7 @@ import {
 import { rateLimit } from "@/lib/rate-limit";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { getFeedback } from "@/lib/i18n/feedback";
+import { getLocale } from "@/lib/i18n/locale";
 
 export async function login(_prevState: unknown, formData: FormData) {
   const t = await getFeedback();
@@ -26,7 +27,7 @@ export async function login(_prevState: unknown, formData: FormData) {
   const email = String(formData.get("email") ?? "");
   const password = String(formData.get("password") ?? "");
   const totpCode = String(formData.get("totpCode") ?? "").trim() || undefined;
-  const callbackUrl = String(formData.get("callbackUrl") ?? "/account");
+  const callbackUrl = String(formData.get("callbackUrl") ?? `/${await getLocale()}/account`);
 
   // Turnstile tokens are single-use, so the second (authenticator-code) step
   // can't present a fresh one. It may only skip the captcha by showing the

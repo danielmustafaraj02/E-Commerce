@@ -6,6 +6,7 @@ import { rateLimit } from "@/lib/rate-limit";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { signIn } from "@/auth";
 import { getFeedback } from "@/lib/i18n/feedback";
+import { getLocale } from "@/lib/i18n/locale";
 
 export async function register(_prevState: unknown, formData: FormData) {
   const t = await getFeedback();
@@ -44,7 +45,7 @@ export async function register(_prevState: unknown, formData: FormData) {
   await signIn("credentials", {
     email: parsed.data.email,
     password: parsed.data.password,
-    redirectTo: "/account?welcome=1",
+    redirectTo: `/${await getLocale()}/account?welcome=1`,
   });
   return { error: null };
 }

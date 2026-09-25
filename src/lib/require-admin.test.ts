@@ -23,19 +23,19 @@ describe("requireStaff", () => {
   it("redirects signed-out visitors to login", async () => {
     mocks.auth.mockResolvedValue(null);
     await expect(requireStaff()).rejects.toThrow("NEXT_REDIRECT");
-    expect(mocks.redirect).toHaveBeenCalledWith("/login?callbackUrl=/admin");
+    expect(mocks.redirect).toHaveBeenCalledWith("/en/login?callbackUrl=/admin");
   });
 
   it("redirects a customer role", async () => {
     mocks.auth.mockResolvedValue({ user: { role: "customer", mfaEnabled: false } });
     await expect(requireStaff()).rejects.toThrow("NEXT_REDIRECT");
-    expect(mocks.redirect).toHaveBeenCalledWith("/login?callbackUrl=/admin");
+    expect(mocks.redirect).toHaveBeenCalledWith("/en/login?callbackUrl=/admin");
   });
 
   it("redirects staff/admin without completed MFA to enroll", async () => {
     mocks.auth.mockResolvedValue({ user: { role: "staff", mfaEnabled: false } });
     await expect(requireStaff()).rejects.toThrow("NEXT_REDIRECT");
-    expect(mocks.redirect).toHaveBeenCalledWith("/account/mfa?required=1");
+    expect(mocks.redirect).toHaveBeenCalledWith("/en/account/mfa?required=1");
   });
 
   it("allows staff/admin with MFA on", async () => {
@@ -56,7 +56,7 @@ describe("requireAdmin", () => {
   it("redirects an admin without completed MFA to enroll", async () => {
     mocks.auth.mockResolvedValue({ user: { role: "admin", mfaEnabled: false } });
     await expect(requireAdmin()).rejects.toThrow("NEXT_REDIRECT");
-    expect(mocks.redirect).toHaveBeenCalledWith("/account/mfa?required=1");
+    expect(mocks.redirect).toHaveBeenCalledWith("/en/account/mfa?required=1");
   });
 
   it("allows an admin with MFA on", async () => {

@@ -1,8 +1,9 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { usePathname } from "next/navigation";
 import { useCartStore } from "@/lib/cart-store";
+import { splitLocalePrefix } from "@/lib/i18n/locale-constants";
 
 // A persistent nudge toward checkout once there's something in the cart —
 // the same pattern most stores use so a shopper never has to hunt for the
@@ -13,11 +14,11 @@ import { useCartStore } from "@/lib/cart-store";
 // competing fixed elements fighting for the same corner of the screen.
 export function FloatingCheckoutButton({ label }: { label: string }) {
   const count = useCartStore((state) => state.items.reduce((sum, item) => sum + item.quantity, 0));
-  const pathname = usePathname();
+  const { rest: path } = splitLocalePrefix(usePathname());
 
   if (count === 0) return null;
-  if (pathname === "/cart" || pathname === "/checkout") return null;
-  if (pathname.startsWith("/products/")) return null;
+  if (path === "/cart" || path === "/checkout") return null;
+  if (path.startsWith("/products/")) return null;
 
   return (
     <Link

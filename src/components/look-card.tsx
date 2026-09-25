@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { CatalogImage } from "@/components/catalog-image";
 import { formatMoney } from "@/lib/format";
 import { applyTemplate } from "@/lib/i18n/format";

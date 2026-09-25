@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { rateLimit } from "@/lib/rate-limit";
 import { newPasswordSchema, resetPassword } from "@/lib/password-reset";
+import { getLocale } from "@/lib/i18n/locale";
 
 export type ResetPasswordState = { error: "invalid" | "weak" | "generic" | null };
 
@@ -24,5 +25,5 @@ export async function submitNewPassword(
   if (result === "invalid") return { error: "invalid" };
 
   // Outside any try/catch: redirect() works by throwing.
-  redirect("/login?reset=1");
+  redirect(`/${await getLocale()}/login?reset=1`);
 }

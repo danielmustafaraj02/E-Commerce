@@ -7,6 +7,7 @@ import { db } from "@/lib/db";
 import { verifyMfaToken } from "@/lib/mfa";
 import { rateLimit } from "@/lib/rate-limit";
 import { getFeedback } from "@/lib/i18n/feedback";
+import { getLocale } from "@/lib/i18n/locale";
 
 export async function confirmMfa(_prevState: unknown, formData: FormData) {
   const t = await getFeedback();
@@ -28,7 +29,7 @@ export async function confirmMfa(_prevState: unknown, formData: FormData) {
   }
 
   await db.user.update({ where: { id: user.id }, data: { mfaEnabled: true } });
-  redirect("/account/mfa");
+  redirect(`/${await getLocale()}/account/mfa`);
 }
 
 export async function disableMfa(_prevState: unknown, formData: FormData) {
@@ -49,5 +50,5 @@ export async function disableMfa(_prevState: unknown, formData: FormData) {
   }
 
   await db.user.update({ where: { id: user.id }, data: { mfaEnabled: false, mfaSecret: null } });
-  redirect("/account/mfa");
+  redirect(`/${await getLocale()}/account/mfa`);
 }

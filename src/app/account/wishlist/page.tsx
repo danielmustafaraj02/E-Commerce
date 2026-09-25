@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { CatalogImage } from "@/components/catalog-image";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
@@ -17,7 +17,10 @@ import { localizedName } from "@/lib/product-i18n";
 
 export default async function WishlistPage() {
   const session = await auth();
-  if (!session?.user?.id) redirect("/login?callbackUrl=/account/wishlist");
+  if (!session?.user?.id) {
+    const locale = await getLocale();
+    redirect(`/${locale}/login?callbackUrl=/${locale}/account/wishlist`);
+  }
 
   const [settings, uiLocale, items] = await Promise.all([
     getStoreSettings(),

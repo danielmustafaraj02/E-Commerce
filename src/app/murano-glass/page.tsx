@@ -1,5 +1,5 @@
 import { siteBaseUrl } from "@/lib/site-url";
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import type { Metadata } from "next";
 import { db } from "@/lib/db";
 import { getStoreSettings, ogImage } from "@/lib/store-settings";
@@ -7,7 +7,7 @@ import { getLocale } from "@/lib/i18n/locale";
 import { getMuranoGuideContent } from "@/lib/murano-guide-content";
 import { localizedName } from "@/lib/product-i18n";
 import { absoluteUrl, toSafeJsonLd } from "@/lib/json-ld";
-import { hreflangAlternates } from "@/lib/hreflang";
+import { hreflangAlternates, localizedCanonical } from "@/lib/hreflang";
 import { AnimatedHeading } from "@/components/animated-heading";
 import { Reveal } from "@/components/reveal";
 import { ShelfMain } from "@/components/shelf-main";
@@ -24,7 +24,10 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: content.metaTitle,
     description: content.metaDescription,
-    alternates: { canonical: "/murano-glass", languages: hreflangAlternates("/murano-glass") },
+    alternates: {
+      canonical: localizedCanonical(locale, "/murano-glass"),
+      languages: hreflangAlternates("/murano-glass"),
+    },
     openGraph: {
       title: content.metaTitle,
       description: content.metaDescription,

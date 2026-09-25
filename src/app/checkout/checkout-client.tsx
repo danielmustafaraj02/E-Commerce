@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
-import Link from "next/link";
+import { Link, useLocalizedRouter } from "@/components/localized-link";
 import { useCartStore } from "@/lib/cart-store";
 import { formatMoney } from "@/lib/format";
 import { CatalogImage } from "@/components/catalog-image";
@@ -12,7 +11,7 @@ import { FormAlert } from "@/components/form-alert";
 import { AddressCheck } from "@/components/address-check";
 import { applyTemplate } from "@/lib/i18n/format";
 import { isValidPostalCode } from "@/lib/postal-code";
-import { isEuCountry } from "@/lib/countries";
+import { isEuCountry, countryFlagEmoji } from "@/lib/countries";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
 // Loaded on demand (adds the Stripe SDK to the bundle) so a shopper who ends
@@ -72,7 +71,7 @@ export function CheckoutClient({
   // The personalised gift card add-on, while the store offers it.
   giftCardOffer: { productName: string; printedNote: string } | null;
 }) {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const storedGiftCard = useCartStore((state) => state.giftCard);
   const giftCard = giftCardOffer ? storedGiftCard : null;
   const items = useCartStore((state) => state.items);
@@ -391,7 +390,7 @@ export function CheckoutClient({
           >
             {countries.map((c) => (
               <option key={c} value={c}>
-                {regionNames?.of(c) ?? c}
+                {countryFlagEmoji(c)} {regionNames?.of(c) ?? c}
               </option>
             ))}
           </select>

@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { SocialLinks, type SocialUrls } from "@/components/social-links";
 import { BrandSignature } from "@/components/brand-signature";
 import "./mobile-nav-menu.css";

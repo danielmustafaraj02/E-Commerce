@@ -1,5 +1,5 @@
 import { DAY_MS, msAgo } from "@/lib/time";
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
 import { formatMoney } from "@/lib/format";

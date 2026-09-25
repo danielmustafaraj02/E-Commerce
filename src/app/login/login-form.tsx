@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { signIn } from "next-auth/react";
 import { login } from "./actions";
 import { TurnstileWidget } from "@/components/turnstile-widget";

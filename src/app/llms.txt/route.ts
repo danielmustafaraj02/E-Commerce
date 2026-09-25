@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
 import { localizedName, localizedDescription } from "@/lib/product-i18n";
 import { truncateAtWord } from "@/lib/text";
+import { defaultLocale } from "@/lib/i18n/locale-constants";
 
 // /llms.txt — a plain-Markdown map of the site for AI assistants and answer
 // engines (the llms.txt convention: an H1, a one-line summary, then linked
@@ -13,7 +14,12 @@ export const revalidate = 3600;
 
 export async function GET() {
   const settings = await getStoreSettings();
-  const base = settings.siteUrl || process.env.NEXTAUTH_URL || "http://localhost:3000";
+  // Every link below is written in English (localizedName/localizedDescription
+  // are called with "en" throughout this file), so links point at the /en/
+  // URLs explicitly rather than bare paths — a bare path would 308-redirect
+  // to whichever locale the crawler's own Accept-Language resolves to, which
+  // may not be English, mismatching the language of the content described.
+  const base = `${settings.siteUrl || process.env.NEXTAUTH_URL || "http://localhost:3000"}/${defaultLocale}`;
 
   const [categories, products, legalPages] = await Promise.all([
     db.category.findMany({ orderBy: { name: "asc" } }),
@@ -34,7 +40,7 @@ export async function GET() {
     "",
     `> ${summary}`,
     "",
-    "The storefront is available in English, Italian, French, German, Arabic, Chinese, Russian, Spanish, Portuguese, Hindi and Japanese; language follows the visitor's browser settings. " +
+    "The storefront is available in English, Italian, French, German, Arabic, Chinese, Russian, Spanish, Portuguese, Hindi and Japanese, each at its own /xx/ URL prefix (this page links to the English ones). " +
       `Prices are shown in ${settings.defaultCurrency}${settings.pricesIncludeTax ? " and include VAT" : ""}.`,
     "",
     "## Shop",

@@ -1,10 +1,10 @@
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import Image from "next/image";
 import type { Metadata } from "next";
 import { getStoreSettings, ogImage } from "@/lib/store-settings";
 import { getLocale, type Locale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-import { hreflangAlternates } from "@/lib/hreflang";
+import { hreflangAlternates, localizedCanonical } from "@/lib/hreflang";
 import { AnimatedHeading } from "@/components/animated-heading";
 import { Reveal } from "@/components/reveal";
 import { ShelfMain } from "@/components/shelf-main";
@@ -36,7 +36,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: dict.about.title,
     description,
-    alternates: { canonical: "/about", languages: hreflangAlternates("/about") },
+    alternates: { canonical: localizedCanonical(locale, "/about"), languages: hreflangAlternates("/about") },
     openGraph: {
       title: dict.about.title,
       description,

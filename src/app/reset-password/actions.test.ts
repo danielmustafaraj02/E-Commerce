@@ -6,7 +6,10 @@ const mocks = vi.hoisted(() => ({
   redirect: vi.fn(),
 }));
 
-vi.mock("next/headers", () => ({ headers: async () => new Headers() }));
+vi.mock("next/headers", () => ({
+  headers: async () => new Headers(),
+  cookies: async () => ({ get: () => undefined }),
+}));
 vi.mock("next/navigation", () => ({
   redirect: (url: string) => {
     mocks.redirect(url);
@@ -44,7 +47,7 @@ describe("submitNewPassword", () => {
     ).rejects.toThrow("NEXT_REDIRECT");
 
     expect(mocks.resetPassword).toHaveBeenCalledWith("t", "a-new-password");
-    expect(mocks.redirect).toHaveBeenCalledWith("/login?reset=1");
+    expect(mocks.redirect).toHaveBeenCalledWith("/en/login?reset=1");
   });
 
   it("reports a dead link", async () => {

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { CatalogImage } from "@/components/catalog-image";
 import { QuickAddButton } from "@/components/quick-add-button";
 import { formatMoney, formatDiscountPercent } from "@/lib/format";

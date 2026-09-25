@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { CartLink } from "@/components/cart-link";

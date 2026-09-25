@@ -1,7 +1,7 @@
 "use client";
 
 import { EmptyShelf } from "@/components/empty-shelf";
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { CatalogImage } from "@/components/catalog-image";
 import { useWishlistStore } from "@/lib/wishlist-store";
 import { QuickAddButton } from "@/components/quick-add-button";

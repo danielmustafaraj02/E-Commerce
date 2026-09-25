@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import type { FaqItem } from "@/lib/faq";
 
 // One answer open at a time, the first `initial` questions shown and the rest

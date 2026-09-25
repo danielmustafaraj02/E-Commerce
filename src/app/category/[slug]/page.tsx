@@ -10,7 +10,7 @@ import { getDictionary } from "@/lib/i18n/dictionaries";
 import { localizedName, localizedDescription, localizedCardProduct } from "@/lib/product-i18n";
 import { firstParagraph, paragraphs, truncateAtWord } from "@/lib/text";
 import { toSafeJsonLd } from "@/lib/json-ld";
-import { hreflangAlternates } from "@/lib/hreflang";
+import { hreflangAlternates, localizedCanonical } from "@/lib/hreflang";
 import { ShelfItem } from "@/components/shelf-item";
 import { homeFontClasses } from "@/app/home-fonts";
 import "../../home.css";
@@ -102,7 +102,10 @@ export async function generateMetadata({
   return {
     title,
     description,
-    alternates: { canonical, languages: hreflangAlternates(canonical) },
+    alternates: {
+      canonical: localizedCanonical(locale, canonical),
+      languages: hreflangAlternates(canonical),
+    },
     openGraph: {
       title,
       description,

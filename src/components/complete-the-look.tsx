@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { CatalogImage } from "@/components/catalog-image";
 import { useCartStore } from "@/lib/cart-store";
 import { formatMoney } from "@/lib/format";

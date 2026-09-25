@@ -11,13 +11,13 @@ import "../shop.css";
 export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   const params = await searchParams;
   const raw = params.callbackUrl;
-  const callbackUrl = (Array.isArray(raw) ? raw[0] : raw) ?? "/account";
   const [nonce, locale, siteKey, settings] = await Promise.all([
     headers().then((h) => h.get("x-nonce") ?? undefined),
     getLocale(),
     turnstileSiteKey(),
     getStoreSettings(),
   ]);
+  const callbackUrl = (Array.isArray(raw) ? raw[0] : raw) ?? `/${locale}/account`;
   const dict = getDictionary(locale);
   // Set by the signIn callback in auth.ts when Google sign-in is refused for
   // an account that has to use password + authenticator code.

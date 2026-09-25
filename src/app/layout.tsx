@@ -41,7 +41,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: settings.storeName,
       description,
-      url: base,
+      url: `${base}/${locale}`,
       siteName: settings.storeName,
       images: ogImage ? [{ url: ogImage }] : undefined,
       type: "website",
@@ -177,7 +177,10 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
               url: siteUrl(settings),
               potentialAction: {
                 "@type": "SearchAction",
-                target: `${siteUrl(settings)}/products?q={search_term_string}`,
+                // Locale-prefixed directly (rather than a bare /products
+                // that would 308 through proxy.ts) since Google's sitelinks
+                // search box submits this template as-is.
+                target: `${siteUrl(settings)}/${locale}/products?q={search_term_string}`,
                 "query-input": "required name=search_term_string",
               },
             }),

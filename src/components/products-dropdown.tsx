@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { useRef, useState, useEffect, useCallback } from "react";
 import "./products-dropdown.css";
 

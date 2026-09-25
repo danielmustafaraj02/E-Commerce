@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getStoreSettings } from "@/lib/store-settings";
@@ -7,7 +7,7 @@ import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { applyTemplate } from "@/lib/i18n/format";
 import { toSafeJsonLd, absoluteUrl } from "@/lib/json-ld";
-import { hreflangAlternates } from "@/lib/hreflang";
+import { hreflangAlternates, localizedCanonical } from "@/lib/hreflang";
 import {
   ARTICLES,
   articleProductSlugs,
@@ -34,10 +34,11 @@ export async function generateMetadata({ params }: PageProps<"/blog/[slug]">): P
   const products = await getJournalProducts(articleProductSlugs(article));
   const image = journalImageSrc(article.hero, products);
   const canonical = `/blog/${article.slug}`;
+  const locale = await getLocale();
   return {
     title: article.seoTitle,
     description: article.description,
-    alternates: { canonical, languages: hreflangAlternates(canonical) },
+    alternates: { canonical: localizedCanonical(locale, canonical), languages: hreflangAlternates(canonical) },
     openGraph: {
       title: article.seoTitle,
       description: article.description,

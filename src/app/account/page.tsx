@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { CatalogImage } from "@/components/catalog-image";
 import { redirect } from "next/navigation";
 import { auth, signOut } from "@/auth";
@@ -22,7 +22,7 @@ export default async function AccountPage({
   searchParams: Promise<{ verified?: string; welcome?: string }>;
 }) {
   const session = await auth();
-  if (!session?.user) redirect("/login");
+  if (!session?.user) redirect(`/${await getLocale()}/login`);
 
   const [settings, uiLocale, user, wishlistPreview, { verified, welcome }] = await Promise.all([
     getStoreSettings(),
@@ -45,7 +45,7 @@ export default async function AccountPage({
     }),
     searchParams,
   ]);
-  if (!user) redirect("/login");
+  if (!user) redirect(`/${uiLocale}/login`);
   const dict = getDictionary(uiLocale);
 
   return (

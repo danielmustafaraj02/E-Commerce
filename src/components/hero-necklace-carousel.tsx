@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 
 export type HeroSlide = { src: string; alt: string; href: string | null; accent: string };
 

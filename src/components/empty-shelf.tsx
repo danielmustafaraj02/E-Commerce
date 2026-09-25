@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 
 // Empty cart / wishlist: an animated line icon (a beating heart, a cart
 // rolling in place), one line in the display serif, one sentence, one CTA.

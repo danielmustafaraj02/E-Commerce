@@ -218,7 +218,7 @@ export async function sendOrderStatusEmail(order: {
   }
 
   const base = siteBaseUrl(settings);
-  const orderUrl = `${base}/order-confirmation/${order.orderNumber}`;
+  const orderUrl = `${base}/${lang}/order-confirmation/${order.orderNumber}`;
 
   const element = React.createElement(OrderStatusEmail, {
     t,

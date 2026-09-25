@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { GiftCard3D } from "@/components/gift-card-3d";
 import { giftCardLines, type GiftCardSticker } from "@/lib/gift-card";
 import { applyTemplate } from "@/lib/i18n/format";

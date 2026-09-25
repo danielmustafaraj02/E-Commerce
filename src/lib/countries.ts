@@ -33,3 +33,14 @@ export const ALL_COUNTRIES = [
   "TZ", "UA", "UG", "UM", "US", "UY", "UZ", "VA", "VC", "VE", "VG", "VI", "VN", "VU", "WF",
   "WS", "YE", "YT", "ZA", "ZM", "ZW",
 ] as const; // prettier-ignore
+
+// Every ISO 3166-1 alpha-2 code maps directly to its flag emoji: each letter
+// becomes a "regional indicator symbol" (U+1F1E6 = 🇦 sits exactly 0x41
+// codepoints after "A", so the same offset from any letter's codepoint lands
+// on its regional indicator letter). No per-country lookup table to maintain.
+export function countryFlagEmoji(isoCode: string): string {
+  const code = isoCode.toUpperCase();
+  if (!/^[A-Z]{2}$/.test(code)) return "";
+  const REGIONAL_INDICATOR_OFFSET = 0x1f1e6 - 0x41;
+  return [...code].map((letter) => String.fromCodePoint(letter.codePointAt(0)! + REGIONAL_INDICATOR_OFFSET)).join("");
+}

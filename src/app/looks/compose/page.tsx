@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { getStoreSettings } from "@/lib/store-settings";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { applyTemplate } from "@/lib/i18n/format";
-import { hreflangAlternates } from "@/lib/hreflang";
+import { hreflangAlternates, localizedCanonical } from "@/lib/hreflang";
 import { getComposerPieces } from "@/lib/look-data";
 import { COMPOSED_LOOK_DISCOUNT_PERCENT } from "@/lib/looks";
 import { ShelfMain } from "@/components/shelf-main";
@@ -12,11 +12,15 @@ import { ShelfHead, ShelfBody } from "@/components/shelf-page";
 import { LookComposer } from "@/components/look-composer";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const dict = getDictionary(await getLocale()).looks;
+  const locale = await getLocale();
+  const dict = getDictionary(locale).looks;
   return {
     title: dict.composeTitle,
     description: dict.composeMeta,
-    alternates: { canonical: "/looks/compose", languages: hreflangAlternates("/looks/compose") },
+    alternates: {
+      canonical: localizedCanonical(locale, "/looks/compose"),
+      languages: hreflangAlternates("/looks/compose"),
+    },
   };
 }
 

@@ -11,7 +11,7 @@ import { GuestWishlistClient } from "./guest-wishlist-client";
 // just hands them off rather than maintaining two versions of the same page.
 export default async function GuestWishlistPage() {
   const session = await auth();
-  if (session?.user?.id) redirect("/account/wishlist");
+  if (session?.user?.id) redirect(`/${await getLocale()}/account/wishlist`);
 
   const [settings, uiLocale] = await Promise.all([getStoreSettings(), getLocale()]);
   const dict = getDictionary(uiLocale);

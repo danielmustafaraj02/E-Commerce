@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { useCartStore } from "@/lib/cart-store";
 
 export function CartLink({ label }: { label: string }) {

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { applyTemplate } from "@/lib/i18n/format";
 import { COMPOSED_LOOK_DISCOUNT_PERCENT } from "@/lib/looks";
 

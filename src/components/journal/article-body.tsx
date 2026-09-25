@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { ShelfItem } from "@/components/shelf-item";
 import { JournalImage } from "@/components/journal/journal-image";
 import { parseInline } from "@/lib/journal";

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { ERROR_MESSAGES, useClientLocale } from "@/lib/i18n/error-messages";
 import "./home.css";
 import "./shop.css";

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { FAQ_INITIAL, faqJsonLd, type FaqItem } from "@/lib/faq";
 import { toSafeJsonLd } from "@/lib/json-ld";

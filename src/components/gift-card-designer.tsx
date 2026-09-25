@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useSyncExternalStore, type KeyboardEvent, type PointerEvent } from "react";
-import { useRouter } from "next/navigation";
+import { useLocalizedRouter } from "@/components/localized-link";
 import { GiftCardBackFace, GiftCardPreview, StickerArt } from "@/components/gift-card-preview";
 import { GiftCardFlip } from "@/components/gift-card-3d";
 import { useCartStore } from "@/lib/cart-store";
@@ -65,7 +65,7 @@ function nextSpot(stickers: GiftCardSticker[]): [number, number] {
 // Every field redraws the preview as it changes; "Add" stores the card with
 // the cart (checkout charges it).
 function DesignerForm({ dict, price, brand, initial }: DesignerProps & { initial: GiftCard | null }) {
-  const router = useRouter();
+  const router = useLocalizedRouter();
   const setGiftCard = useCartStore((state) => state.setGiftCard);
   const saved = initial;
 

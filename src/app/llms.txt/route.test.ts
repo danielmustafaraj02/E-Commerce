@@ -51,15 +51,15 @@ describe("GET /llms.txt", () => {
     expect(res.headers.get("content-type")).toContain("text/plain");
     expect(body.startsWith("# Perla Murano\n\n> Handmade Murano glass jewelry.")).toBe(true);
     expect(body).toContain("## Shop");
-    expect(body).toContain("- [Bracelets](https://shop.test/category/bracelets)");
-    expect(body).toContain("- [Returns](https://shop.test/legal/returns)");
+    expect(body).toContain("- [Bracelets](https://shop.test/en/category/bracelets)");
+    expect(body).toContain("- [Returns](https://shop.test/en/legal/returns)");
   });
 
   it("lists products with English names, absolute URLs and a short description", async () => {
     const body = await (await GET()).text();
 
     expect(body).toContain(
-      "- [Azure Lagoon Bracelet](https://shop.test/products/azure-lagoon): Round aquamarine beads"
+      "- [Azure Lagoon Bracelet](https://shop.test/en/products/azure-lagoon): Round aquamarine beads"
     );
     expect(body).not.toContain("Italiano");
   });

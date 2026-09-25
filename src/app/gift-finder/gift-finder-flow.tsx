@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { CatalogImage } from "@/components/catalog-image";
 import { CompleteTheLook } from "@/components/complete-the-look";
 import { GIFT_FINDER_ATTRIBUTION_KEY } from "@/components/gift-finder-purchase-tracker";

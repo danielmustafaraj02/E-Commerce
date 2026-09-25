@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 import { CatalogImage } from "@/components/catalog-image";
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";

@@ -114,7 +114,9 @@ describe("Google Merchant feed", () => {
     vi.stubEnv("NEXTAUTH_URL", "https://env.test");
     mocks.settings.mockResolvedValue({ storeName: "S", siteUrl: null });
 
-    expect(await feed()).toContain("<link>https://env.test/products/sage-gold-wrap-fec6dc</link>");
+    expect(await feed()).toContain(
+      "<link>https://env.test/en/products/sage-gold-wrap-fec6dc</link>"
+    );
     vi.unstubAllEnvs();
   });
 });

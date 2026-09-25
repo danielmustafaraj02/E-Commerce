@@ -3,18 +3,22 @@ import { headers } from "next/headers";
 import { getStoreSettings } from "@/lib/store-settings";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-import { hreflangAlternates } from "@/lib/hreflang";
+import { hreflangAlternates, localizedCanonical } from "@/lib/hreflang";
 import { turnstileSiteKey } from "@/lib/turnstile";
 import { ShelfMain } from "@/components/shelf-main";
 import { ShelfHead, ShelfBody } from "@/components/shelf-page";
 import { ContactForm } from "./contact-form";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const dict = getDictionary(await getLocale());
+  const locale = await getLocale();
+  const dict = getDictionary(locale);
   return {
     title: dict.contact.title,
     description: dict.contact.intro,
-    alternates: { canonical: "/contact", languages: hreflangAlternates("/contact") },
+    alternates: {
+      canonical: localizedCanonical(locale, "/contact"),
+      languages: hreflangAlternates("/contact"),
+    },
   };
 }
 

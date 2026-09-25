@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { notFound } from "next/navigation";
 import { getStoreSettings } from "@/lib/store-settings";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-import { hreflangAlternates } from "@/lib/hreflang";
+import { hreflangAlternates, localizedCanonical } from "@/lib/hreflang";
 import { getLookById } from "@/lib/look-data";
 import { ShelfMain } from "@/components/shelf-main";
 import { ShelfHead } from "@/components/shelf-page";
@@ -21,7 +21,10 @@ export async function generateMetadata({ params }: PageProps<"/looks/[id]">): Pr
   return {
     title: look.name,
     description,
-    alternates: { canonical, languages: hreflangAlternates(canonical) },
+    alternates: {
+      canonical: localizedCanonical(locale, canonical),
+      languages: hreflangAlternates(canonical),
+    },
     openGraph: {
       title: look.name,
       description,

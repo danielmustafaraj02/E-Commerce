@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useState, useSyncExternalStore } from "react";
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { CatalogImage } from "@/components/catalog-image";
 import { Reveal } from "@/components/reveal";
 import { useRecentlyViewedProducts } from "@/lib/use-recently-viewed";

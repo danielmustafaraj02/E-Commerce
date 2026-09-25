@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { notFound } from "next/navigation";
 import { getStoreSettings } from "@/lib/store-settings";
 import { siteBaseUrl } from "@/lib/site-url";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { applyTemplate } from "@/lib/i18n/format";
-import { hreflangAlternates } from "@/lib/hreflang";
+import { hreflangAlternates, localizedCanonical } from "@/lib/hreflang";
 import { formatMoney } from "@/lib/format";
 import { absoluteUrl, toSafeJsonLd } from "@/lib/json-ld";
 import { giftCardFontClasses } from "@/lib/gift-card-fonts";
@@ -31,14 +31,17 @@ async function load() {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { settings, content, fill } = await load();
+  const [{ settings, content, fill }, locale] = await Promise.all([load(), getLocale()]);
   if (!settings.giftCardEnabled) return {};
   const description = fill(content.metaDescription);
   const image = GIFT_CARD_IMAGE;
   return {
     title: content.metaTitle,
     description,
-    alternates: { canonical: PATH, languages: hreflangAlternates(PATH) },
+    alternates: {
+      canonical: localizedCanonical(locale, PATH),
+      languages: hreflangAlternates(PATH),
+    },
     openGraph: {
       title: content.metaTitle,
       description,

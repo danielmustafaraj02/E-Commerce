@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { db } from "@/lib/db";
 import { formatMoney } from "@/lib/format";
 import { LOOK_SIZE, lookPricing } from "@/lib/looks";

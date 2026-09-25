@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { useActionState } from "react";
 import { submitNewPassword, type ResetPasswordState } from "./actions";
 import { FormAlert } from "@/components/form-alert";

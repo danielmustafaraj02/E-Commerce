@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useTransition } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import { setLocale } from "@/lib/i18n/actions";
 import { locales, type Locale } from "@/lib/i18n/locale-constants";
 
@@ -52,6 +53,8 @@ export function LocaleSwitcher({ current }: { current: Locale }) {
   const [pending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!open) return;
@@ -71,9 +74,14 @@ export function LocaleSwitcher({ current }: { current: Locale }) {
 
   function change(locale: Locale) {
     setOpen(false);
+    // Persist as a preference for the *next* bare (unprefixed) URL proxy.ts
+    // has to redirect — the navigation below is what actually changes this
+    // page's language, since locale now lives in the URL itself.
     startTransition(() => {
       setLocale(locale);
     });
+    const rest = pathname.replace(new RegExp(`^/${current}(?=/|$)`), "") || "/";
+    router.push(`/${locale}${rest === "/" ? "" : rest}`);
   }
 
   return (

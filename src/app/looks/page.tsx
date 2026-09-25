@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getStoreSettings, ogImage } from "@/lib/store-settings";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-import { hreflangAlternates } from "@/lib/hreflang";
+import { hreflangAlternates, localizedCanonical } from "@/lib/hreflang";
 import { getAllLooks } from "@/lib/look-data";
 import { ShelfMain } from "@/components/shelf-main";
 import { ShelfHead, ShelfBody } from "@/components/shelf-page";
@@ -16,7 +16,10 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: dict.title,
     description: dict.metaDescription,
-    alternates: { canonical: "/looks", languages: hreflangAlternates("/looks") },
+    alternates: {
+      canonical: localizedCanonical(locale, "/looks"),
+      languages: hreflangAlternates("/looks"),
+    },
     openGraph: {
       title: dict.title,
       description: dict.metaDescription,

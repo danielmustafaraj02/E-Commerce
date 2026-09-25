@@ -27,7 +27,7 @@ export default async function RegisterPage() {
         <AuthCard
           initialMode="register"
           storeName={settings.storeName}
-          callbackUrl="/account"
+          callbackUrl={`/${locale}/account`}
           siteKey={siteKey}
           nonce={nonce}
           dict={dict.auth}
