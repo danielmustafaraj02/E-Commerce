@@ -44,16 +44,35 @@ export function ProductsDropdown({
     return () => document.removeEventListener("keydown", onKey);
   }, [open]);
 
+  // Real mouse hover opens/closes on enter/leave; touch has no hover, so it
+  // must rely on the button's own onClick below. Gating on pointerType
+  // matters because touch synthesizes mouseenter+mouseleave right around a
+  // tap for legacy-compatibility reasons — without this guard, a tap opens
+  // the panel and a phantom mouseleave closes it again almost immediately,
+  // which reads as the button "not working" on a phone.
+  const onPointerEnter = useCallback(
+    (e: React.PointerEvent) => {
+      if (e.pointerType === "mouse") show();
+    },
+    [show]
+  );
+  const onPointerLeave = useCallback(
+    (e: React.PointerEvent) => {
+      if (e.pointerType === "mouse") hide();
+    },
+    [hide]
+  );
+
   return (
     <div
       ref={containerRef}
       className="pd-root"
-      onMouseEnter={show}
-      onMouseLeave={hide}
+      onPointerEnter={onPointerEnter}
+      onPointerLeave={onPointerLeave}
     >
       <button
         type="button"
-        className="nav-link link-underline pd-trigger"
+        className="nav-link link-underline pd-trigger text-foreground/80"
         aria-expanded={open}
         aria-haspopup="true"
         onClick={() => setOpen((v) => !v)}

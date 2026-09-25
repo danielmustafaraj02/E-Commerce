@@ -2,11 +2,15 @@
   position: relative;
 }
 
+/* Color comes from the text-foreground/80 utility in the JSX (same class
+   every sibling nav link uses via navChipClass), not a hand-rolled
+   color-mix here — that duplicate had drifted to a visibly different
+   (lighter) result since Tailwind's opacity utilities mix in a different
+   color space than a plain `color-mix(in srgb, ...)` does. */
 .pd-trigger {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  color: color-mix(in srgb, var(--foreground) 80%, transparent);
   transition: color 0.2s ease, transform 0.15s ease;
   font-size: inherit;
   background: none;
