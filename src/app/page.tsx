@@ -12,6 +12,7 @@ import { hreflangAlternates } from "@/lib/hreflang";
 import { fitTitle } from "@/lib/seo-text";
 import { truncateAtWord } from "@/lib/text";
 import { CatalogImage } from "@/components/catalog-image";
+import { AnimatedHeading } from "@/components/animated-heading";
 import { ShelfItem } from "@/components/shelf-item";
 import { CategoryStrip } from "@/components/category-strip";
 import { Reveal } from "@/components/reveal";
@@ -221,10 +222,12 @@ export default async function Home() {
         <div className="shelf-wrap">
           <div className="shelf-hero-grid">
             <div className="shelf-hero-copy">
-              <p className="shelf-eyebrow">{dict.home.heroTagline}</p>
-              <h1 className="shelf-title" translate="no">
-                {settings.storeName}
-              </h1>
+              <AnimatedHeading
+                as="h1"
+                text={settings.storeName}
+                className="shelf-title"
+                translate="no"
+              />
               <p className="shelf-lede">{dict.home.heroSubtitle}</p>
               <Link href="/products" className="shelf-button">
                 {dict.home.shopCollection}

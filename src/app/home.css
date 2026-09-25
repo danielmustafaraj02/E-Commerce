@@ -222,7 +222,7 @@
   max-width: 31rem;
 }
 .shelf-title {
-  font-size: clamp(2.75rem, 8vw, 4.75rem);
+  font-size: clamp(2.75rem, 8vw, 5.5rem);
 }
 .shelf-lede {
   font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
@@ -253,22 +253,25 @@
     transform: translateY(0) scale(1);
   }
 }
-.shelf-hero-copy > * {
+/* The h1 is excluded here — it plays its own word-by-word .word-in entrance
+   (see AnimatedHeading) instead of the whole-line rise every other child
+   gets, so the store name doesn't get two competing entrance motions. */
+.shelf-hero-copy > *:not(h1) {
   animation: hero-rise 0.7s cubic-bezier(0.22, 1.12, 0.36, 1) both;
 }
-.shelf-hero-copy > *:nth-child(1) {
+.shelf-hero-copy > *:not(h1):nth-child(1) {
   animation-delay: 0ms;
 }
-.shelf-hero-copy > *:nth-child(2) {
+.shelf-hero-copy > *:not(h1):nth-child(2) {
   animation-delay: 90ms;
 }
-.shelf-hero-copy > *:nth-child(3) {
+.shelf-hero-copy > *:not(h1):nth-child(3) {
   animation-delay: 180ms;
 }
-.shelf-hero-copy > *:nth-child(4) {
+.shelf-hero-copy > *:not(h1):nth-child(4) {
   animation-delay: 260ms;
 }
-.shelf-hero-copy > *:nth-child(5) {
+.shelf-hero-copy > *:not(h1):nth-child(5) {
   animation-delay: 340ms;
 }
 
@@ -454,7 +457,10 @@
   .shelf-hero-grid {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
     gap: 2rem;
-    padding-block: 3.5rem 1.5rem;
+    /* The flagship section gets the top of the system's own documented
+       rhythm (DESIGN.md: "up to 5rem on wide listing pages") rather than
+       the 2.5-3.5rem "at rest" default every ordinary section uses. */
+    padding-block: 5rem 2.5rem;
   }
   .shelf-bead-carousel {
     justify-self: end;
