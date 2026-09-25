@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
     // An allowlist, not `**`: see src/lib/image-hosts.ts for why, and for how
     // to add another host.
     remotePatterns: imageRemotePatterns(),
+    // WebP is Next's default; AVIF is opt-in (costs more CPU to encode) but
+    // is smaller at equivalent quality. Next tries formats in this order and
+    // serves whichever the requesting browser's Accept header supports.
+    formats: ["image/avif", "image/webp"],
   },
   // Renamed images keep working at their old addresses (search engines may
   // have indexed them).

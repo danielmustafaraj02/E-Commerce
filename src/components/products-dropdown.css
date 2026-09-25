@@ -50,9 +50,13 @@
   border-radius: 0.75rem;
   padding: 0.5rem;
   min-width: 14rem;
-  box-shadow:
-    0 4px 24px color-mix(in srgb, var(--foreground) 8%, transparent),
-    0 1px 4px color-mix(in srgb, var(--foreground) 4%, transparent);
+  /* DESIGN.md's No-Lift Rule: no visible drop shadow to signal "raised
+     surface" — the hairline border above does that job, same as every
+     other panel on the site. This is the documented ambient-hairline
+     value (0 1px 2px, 4%), the faintest possible seam, kept only because
+     this one panel floats above arbitrary page content rather than
+     sitting inline in the flow like a static card does. */
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--foreground) 4%, transparent);
   opacity: 0;
   transform: translateY(-6px);
   transition:
