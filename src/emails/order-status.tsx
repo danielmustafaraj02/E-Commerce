@@ -225,7 +225,7 @@ OrderStatusEmail.PreviewProps = {
   orderDate: "17 September 2026",
   status: "shipped",
   trackingNumber: "IT123456789IT",
-  orderUrl: "https://perlamuranoglass.com/order-confirmation/ORD-20260917-AB12CD34",
+  orderUrl: "https://perlamuranoglass.com/it/order-confirmation/ORD-20260917-AB12CD34",
   items: [
     {
       name: "Orecchini Sassolino di Onice",

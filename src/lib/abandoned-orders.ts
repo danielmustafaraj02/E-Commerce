@@ -56,15 +56,17 @@ async function sendReminders(now: Date, siteUrl: string) {
     const to = order.user?.email ?? order.guestEmail;
     if (!to) continue;
 
-    const resumeUrl = `${siteUrl}/order-confirmation/${order.orderNumber}`;
+    // The language the order was placed in. Orders from before it was stored
+    // get English — never a request's own locale, since this runs from a
+    // cron trigger with no meaningful visitor request behind it at all.
+    const orderLocale = order.locale ?? "en";
+    const resumeUrl = `${siteUrl}/${orderLocale}/order-confirmation/${order.orderNumber}`;
     const itemLines = order.items
       .map((item) => `- ${item.productName} x${item.quantity}`)
       .join("\n");
 
     try {
-      // The language the order was placed in. Orders from before it was stored
-      // get English, never the language of whoever's request happens to be running.
-      const { t } = await emailStrings(order.locale ?? "en");
+      const { t } = await emailStrings(orderLocale);
       await sendEmail({
         to,
         subject: t.abandonedSubject,

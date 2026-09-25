@@ -53,7 +53,7 @@ describe("POST /api/gift-finder/email", () => {
     const call = mocks.sendEmail.mock.calls[0][0];
     expect(call.to).toBe("shopper@example.com");
     expect(call.text).toContain("Flower Necklace");
-    expect(call.text).toContain("https://example.com/products/collana-fiore");
+    expect(call.text).toContain("https://example.com/en/products/collana-fiore");
     expect(call.html).toContain("Flower Necklace");
   });
 

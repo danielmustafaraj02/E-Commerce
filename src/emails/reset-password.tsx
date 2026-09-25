@@ -96,7 +96,7 @@ ResetPasswordEmail.PreviewProps = {
   storeName: "Perla Murano Glass",
   logoUrl: null,
   primaryColor: "#0f6e5e",
-  resetUrl: "https://perlamuranoglass.com/reset-password?token=abc123",
+  resetUrl: "https://perlamuranoglass.com/it/reset-password?token=abc123",
   expiresInMinutes: 60,
   t: getDictionary("en").emails,
   locale: "en",

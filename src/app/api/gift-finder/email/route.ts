@@ -69,7 +69,7 @@ export async function POST(request: Request) {
 
   const picks = products.map((product) => ({
     name: localizedName(product, locale),
-    url: `${base}/products/${product.slug}`,
+    url: `${base}/${locale}/products/${product.slug}`,
     price: formatMoney(product.price, product.currency, locale),
   }));
 

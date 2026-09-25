@@ -183,7 +183,7 @@ describe("processAbandonedOrders", () => {
     await processAbandonedOrders();
 
     expect(mocks.sendEmail.mock.calls[0][0].text).toContain(
-      "https://shop.test/order-confirmation/ORD-r"
+      "https://shop.test/en/order-confirmation/ORD-r"
     );
     vi.unstubAllEnvs();
   });

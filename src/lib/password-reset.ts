@@ -4,6 +4,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
 import { sendPasswordResetEmailMessage, sendPasswordChangedEmail } from "@/lib/email";
+import { getLocale } from "@/lib/i18n/locale";
 
 export const RESET_TOKEN_TTL_MS = 60 * 60 * 1000;
 
@@ -44,11 +45,11 @@ export async function requestPasswordReset(email: string) {
     },
   });
 
-  const settings = await getStoreSettings();
+  const [settings, locale] = await Promise.all([getStoreSettings(), getLocale()]);
   const base = settings.siteUrl || process.env.NEXTAUTH_URL || "http://localhost:3000";
   await sendPasswordResetEmailMessage({
     to: user.email,
-    resetUrl: `${base}/reset-password?token=${token}`,
+    resetUrl: `${base}/${locale}/reset-password?token=${token}`,
     expiresInMinutes: RESET_TOKEN_TTL_MS / 60_000,
   });
 }

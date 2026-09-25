@@ -13,6 +13,10 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock("bcryptjs", () => ({ default: { hash: async () => "HASHED_PASSWORD" } }));
+vi.mock("next/headers", () => ({
+  headers: async () => new Headers(),
+  cookies: async () => ({ get: () => undefined }),
+}));
 vi.mock("@/lib/db", () => {
   const tx = {
     verificationToken: { findUnique: mocks.txFindToken, deleteMany: mocks.txDeleteManyTokens },
@@ -78,7 +82,7 @@ describe("requestPasswordReset", () => {
 
     const emailed = mocks.sendResetEmail.mock.calls[0][0];
     const rawToken = new URL(emailed.resetUrl).searchParams.get("token")!;
-    expect(emailed.resetUrl.startsWith("https://shop.test/reset-password?token=")).toBe(true);
+    expect(emailed.resetUrl.startsWith("https://shop.test/en/reset-password?token=")).toBe(true);
     expect(emailed.to).toBe("a@example.com");
     expect(emailed.expiresInMinutes).toBe(60);
 
