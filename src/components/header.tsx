@@ -5,6 +5,7 @@ import { CartLink } from "@/components/cart-link";
 import { GuestWishlistLink } from "@/components/guest-wishlist-link";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { MobileNavMenu } from "@/components/mobile-nav-menu";
+import { ProductsDropdown } from "@/components/products-dropdown";
 import type { Locale } from "@/lib/i18n/locale";
 import { localizedName } from "@/lib/product-i18n";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
@@ -88,17 +89,20 @@ export async function Header({
         </Link>
 
         {/* ── Category nav (desktop, right of logo) ─────────────────────────
-            overflow-x-auto + scrollbar-hide + edge-fade-x: at the narrow end
-            of this row's range (just past 1024px) a full category list plus
-            Looks/About/Guide can outgrow the available width before the
+            overflow-x-auto + scrollbar-hide + edge-fade-x: the dropdown trigger
+            below keeps this row narrow, but Looks/About/Guide alongside it can
+            still outgrow the available width just past 1024px before the
             spacer/search/icon-cluster claim theirs; this scrolls instead of
             wrapping or squeezing, with the mask signaling more content. ── */}
         <nav className="hidden min-w-0 items-center gap-6 overflow-x-auto text-[0.95rem] whitespace-nowrap scrollbar-hide edge-fade-x lg:flex">
-          {categories.map((category) => (
-            <Link key={category.id} href={`/category/${category.slug}`} className={navChipClass}>
-              {localizedName(category, locale)}
-            </Link>
-          ))}
+          <ProductsDropdown
+            categories={categories.map((category) => ({
+              href: `/category/${category.slug}`,
+              label: localizedName(category, locale),
+            }))}
+            label={dict.nav.products}
+            viewAllLabel={dict.nav.viewAll}
+          />
           <Link href="/looks" className={navChipClass}>
             {dict.looks.navLabel}
           </Link>

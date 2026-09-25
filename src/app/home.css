@@ -307,6 +307,11 @@
   background: var(--hero-accent, var(--accent));
   transition: background-color 0.9s ease;
 }
+/* The name takes the same colour; the italic line under it stays ink. */
+.shelf-hero-copy .shelf-title {
+  color: var(--hero-accent, var(--ink));
+  transition: color 0.9s ease;
+}
 .shelf-hero-copy .shelf-button:hover {
   background: color-mix(in srgb, var(--hero-accent, var(--accent)) 78%, black);
 }
@@ -1249,9 +1254,8 @@
 .gc-ad-card {
   padding: 1rem;
 }
-.gc-ad-card .gc-card {
+.gc-ad-card .gc3d-stage {
   max-width: 19rem;
-  transform: rotate(-2deg);
 }
 .gc-ad-text {
   display: flex;

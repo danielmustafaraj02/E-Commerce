@@ -2,10 +2,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   claim: vi.fn(),
+  rateLimit: vi.fn(),
 }));
 
 vi.mock("@/lib/roadmap-claude", () => ({ claimNextClaudeTask: mocks.claim }));
 vi.mock("@/lib/monitoring", () => ({ captureError: vi.fn() }));
+vi.mock("@/lib/rate-limit", () => ({ rateLimit: mocks.rateLimit, clientIp: () => "203.0.113.7" }));
 
 import { POST } from "./route";
 
@@ -19,6 +21,7 @@ const post = (token = "test-secret") =>
 
 beforeEach(() => {
   mocks.claim.mockReset();
+  mocks.rateLimit.mockReset().mockResolvedValue({ success: true, remaining: 19 });
   process.env.AUTOMATION_ROADMAP_TOKEN = "test-secret";
 });
 
@@ -55,5 +58,14 @@ describe("POST /api/automation/roadmap/claim", () => {
     mocks.claim.mockRejectedValue(new Error("db down"));
 
     expect((await post()).status).toBe(500);
+  });
+
+  it("stops a caller that posts too often, before checking the token", async () => {
+    mocks.rateLimit.mockResolvedValue({ success: false, remaining: 0 });
+
+    const response = await post("wrong");
+
+    expect(response.status).toBe(429);
+    expect(mocks.claim).not.toHaveBeenCalled();
   });
 });

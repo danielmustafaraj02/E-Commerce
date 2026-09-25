@@ -563,6 +563,8 @@ model Order {
   giftCardRecipient   String?
   giftCardSender      String?
   giftCardFont        String?
+  giftCardStickers    Json? // [{ icon, x, y }] as % of the card, at most 3
+  giftCardBack        String? // ivory | lagoon | ruby | blush
   total          Int // cents
   currency       String @default("EUR")
   // The storefront language the customer checked out in. Emails about the order

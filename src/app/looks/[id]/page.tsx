@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getStoreSettings } from "@/lib/store-settings";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
+import { hreflangAlternates } from "@/lib/hreflang";
 import { getLookById } from "@/lib/look-data";
 import { ShelfMain } from "@/components/shelf-main";
 import { ShelfHead } from "@/components/shelf-page";
@@ -16,10 +17,11 @@ export async function generateMetadata({ params }: PageProps<"/looks/[id]">): Pr
   const dict = getDictionary(locale).looks;
   const image = look.imageUrl ?? look.pieces.find((p) => p.imageUrl)?.imageUrl;
   const description = `${look.pieces.map((p) => p.name).join(", ")}. ${dict.metaDescription}`;
+  const canonical = `/looks/${look.id}`;
   return {
     title: look.name,
     description,
-    alternates: { canonical: `/looks/${look.id}` },
+    alternates: { canonical, languages: hreflangAlternates(canonical) },
     openGraph: {
       title: look.name,
       description,

@@ -29,6 +29,7 @@ import { hreflangAlternates, ogLocale } from "@/lib/hreflang";
 import { ProductPurchasePanel } from "@/components/product-purchase-panel";
 import { ShareButtons } from "@/components/share-buttons";
 import { ShelfItem } from "@/components/shelf-item";
+import { GiftCardAd } from "@/components/gift-card-ad";
 import { homeFontClasses } from "@/app/home-fonts";
 import "../../home.css";
 import "../../shop.css";
@@ -686,6 +687,18 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
           locale={settings.defaultLocale}
           dict={dict.look}
           outOfStockLabel={dict.product.outOfStock}
+        />
+      )}
+
+      {settings.giftCardEnabled && (
+        <GiftCardAd
+          dict={dict.giftCard}
+          brand={settings.storeName}
+          price={formatMoney(
+            settings.giftCardPrice,
+            settings.defaultCurrency,
+            settings.defaultLocale
+          )}
         />
       )}
 

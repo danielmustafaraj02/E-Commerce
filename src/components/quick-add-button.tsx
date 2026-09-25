@@ -3,13 +3,6 @@
 import { useState } from "react";
 import { useCartStore } from "@/lib/cart-store";
 
-// Sits on top of the product card's image. It's a sibling of the card's link
-// (not inside it), stacked above the link's stretched click area with z-10, so
-// clicking it adds to the cart without navigating to the product page.
-//
-// Hidden until the card is hovered on devices that hover; but it must also be
-// reachable without a mouse, so it shows on keyboard focus (of it or anything
-// in the card) and is always visible on touch screens.
 export function QuickAddButton({
   product,
   label,
@@ -35,6 +28,7 @@ export function QuickAddButton({
         type="button"
         aria-label={label}
         title={label}
+        disabled={added}
         onClick={() => {
           addItem({
             productId: product.id,
@@ -47,7 +41,7 @@ export function QuickAddButton({
           setAdded(true);
           setTimeout(() => setAdded(false), 1200);
         }}
-        className="bg-background/95 text-foreground absolute right-2 bottom-2 z-10 flex h-9 w-9 translate-y-2 items-center justify-center rounded-full opacity-0 shadow-md transition-[opacity,transform] duration-200 group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:translate-y-0 group-hover:opacity-100 hover:scale-110 focus-visible:translate-y-0 focus-visible:opacity-100 active:scale-95 motion-reduce:transition-none [@media(hover:none)]:translate-y-0 [@media(hover:none)]:opacity-100"
+        className="bg-background/95 text-foreground absolute right-2 bottom-2 z-10 flex h-9 w-9 translate-y-2 items-center justify-center rounded-full opacity-0 shadow-md transition-[opacity,transform] duration-200 group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:translate-y-0 group-hover:opacity-100 hover:scale-110 focus-visible:translate-y-0 focus-visible:opacity-100 active:scale-95 disabled:pointer-events-none motion-reduce:transition-none [@media(hover:none)]:translate-y-0 [@media(hover:none)]:opacity-100"
       >
         {added ? (
           <svg
@@ -83,8 +77,6 @@ export function QuickAddButton({
           </svg>
         )}
       </button>
-      {/* Announces the result to screen readers; the visible cue is only the
-          icon swap. */}
       <span role="status" className="sr-only">
         {added ? addedLabel : ""}
       </span>

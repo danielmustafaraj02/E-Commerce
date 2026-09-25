@@ -29,7 +29,7 @@ export function AddToCartButton({
   return (
     <button
       type="button"
-      disabled={product.outOfStock}
+      disabled={product.outOfStock || added}
       onClick={() => {
         addItem(
           {
