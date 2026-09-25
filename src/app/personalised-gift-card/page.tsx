@@ -232,6 +232,12 @@ export default async function PersonalisedGiftCardPage() {
             <Link href="/products" className="shelf-link">
               {content.shopLink} <span aria-hidden="true">→</span>
             </Link>
+            <Link href="/gift-finder" className="shelf-link">
+              {getDictionary(locale).giftFinder.metaTitle} <span aria-hidden="true">→</span>
+            </Link>
+            <Link href="/murano-glass" className="shelf-link">
+              {getDictionary(locale).footer.muranoGuide} <span aria-hidden="true">→</span>
+            </Link>
           </div>
         </div>
       </section>

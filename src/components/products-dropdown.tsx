@@ -77,7 +77,7 @@ export function ProductsDropdown({
         aria-haspopup="true"
         onClick={() => setOpen((v) => !v)}
       >
-        <span>{label}</span>
+        <span className="pd-label">{label}</span>
         <svg
           className={`pd-chevron${open ? " pd-chevron-open" : ""}`}
           width="10"

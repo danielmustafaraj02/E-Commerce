@@ -216,6 +216,8 @@ export default async function Home() {
           alt=""
           fill
           loading="eager"
+          priority
+          quality={90}
           sizes="100vw"
           className="shelf-hero-backdrop"
         />

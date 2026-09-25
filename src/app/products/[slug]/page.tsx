@@ -161,13 +161,12 @@ export async function generateMetadata({
   if (!product || !product.active) return {};
 
   const name = localizedName(product, locale);
-  // "Murano glass" in the locale's own words is worth having in the title (a
-  // high-intent search term), but only when it still fits: search results show
-  // ~60 characters and the layout appends " | {store name}". fitTitle() takes
-  // the keyword form when it fits and otherwise the plain product name.
+  // Include a gift-intent phrase for the two main storefront languages when it
+  // fits; otherwise preserve the product name and the core Murano-glass term.
+  // fitTitle() accounts for the store name appended by the root title template.
   const keywordByLocale: Record<Locale, string> = {
-    en: "Murano Glass",
-    it: "Vetro di Murano",
+    en: "Murano Glass Gift",
+    it: "Regalo in vetro di Murano",
     fr: "Verre de Murano",
     de: "Muranoglas",
     ar: "زجاج مورانو",
@@ -178,7 +177,15 @@ export async function generateMetadata({
     hi: "मुरानो ग्लास",
     ja: "ムラノガラス",
   };
-  const title = fitTitle([`${name} · ${keywordByLocale[locale]}`, name], settings.storeName);
+  const fallbackKeywordByLocale: Record<Locale, string> = {
+    ...keywordByLocale,
+    en: "Murano Glass",
+    it: "Vetro di Murano",
+  };
+  const title = fitTitle(
+    [`${name} · ${keywordByLocale[locale]}`, `${name} · ${fallbackKeywordByLocale[locale]}`, name],
+    settings.storeName
+  );
   const fallbackDescriptionByLocale: Record<Locale, string> = {
     en: `${name}, handmade Murano glass, from ${settings.storeName}.`,
     it: `${name}, vetro di Murano fatto a mano, da ${settings.storeName}.`,

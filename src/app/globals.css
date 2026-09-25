@@ -308,8 +308,8 @@ button:not(:disabled),
      links sat immediately visible with zero entrance, unlike the rest of
      the page's staggered fade-ups. Fade-up, staggered per item via
      nth-child since this list renders server-side with no per-item delay
-     prop. The hover feedback itself (lift + pill) lives outside this guard,
-     next to .link-underline below — same reasoning: entrance/auto-play
+     prop. Underline feedback lives outside this guard, next to .link-underline
+     below — same reasoning: entrance/auto-play
      motion respects reduced-motion, interaction-triggered feedback doesn't. */
   .nav-link {
     animation: fade-up 0.45s ease both;
@@ -361,12 +361,12 @@ button:not(:disabled),
   width: 100%;
   background: currentColor;
   transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.25s ease;
+  transform-origin: center;
+  transition: transform 0.65s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 .link-underline:hover::after {
   transform: scaleX(1);
-  transform-origin: left;
+  transform-origin: center;
 }
 
 /* Header links use only a slow underline draw; keep the labels still and
@@ -375,7 +375,9 @@ button:not(:disabled),
   position: relative;
 }
 .nav-link.link-underline::after {
-  transition: transform 0.5s ease;
+  background: var(--gold);
+  transform-origin: center;
+  transition: transform 1.2s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 .nav-link:hover,
 .nav-link:focus-visible {

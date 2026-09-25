@@ -211,6 +211,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           shippingBanner={shippingBanner}
           dict={dict}
           locale={locale}
+          giftCardEnabled={settings.giftCardEnabled}
           social={social}
           payments={{
             cards: cardsEnabled,

@@ -57,6 +57,7 @@ export async function Footer({
   payments,
   dict,
   locale,
+  giftCardEnabled,
 }: {
   storeName: string;
   contactEmail: string;
@@ -65,6 +66,7 @@ export async function Footer({
   payments: PaymentMethods;
   dict: Dictionary;
   locale: Locale;
+  giftCardEnabled: boolean;
 }) {
   const [categories, featured] = await Promise.all([
     db.category.findMany({
@@ -84,6 +86,7 @@ export async function Footer({
     dict,
     categories: categories.map((c) => ({ slug: c.slug, label: localizedName(c, locale) })),
     contactEmail,
+    giftCardEnabled,
   });
   const trust = [
     { key: "handcrafted", label: f.trustHandcrafted },

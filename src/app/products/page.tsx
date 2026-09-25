@@ -1,6 +1,7 @@
 import { siteBaseUrl } from "@/lib/site-url";
 import { z } from "zod";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { db } from "@/lib/db";
 import { getStoreSettings, ogImage } from "@/lib/store-settings";
 import { getLocale, type Locale } from "@/lib/i18n/locale";
@@ -253,6 +254,30 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
           </h1>
         </div>
       </header>
+
+      {!filters.q && !filters.category?.length && !filters.sale && filters.page === 1 && (
+        <nav
+          className="shelf-wrap shelf-wrap--wide shop-chips shop-catalog-paths"
+          aria-label={dict.footer.shopHeading}
+        >
+          {categories.map((category) => (
+            <Link key={category.id} href={`/category/${category.slug}`} className="shop-chip">
+              {localizedName(category, uiLocale)}
+            </Link>
+          ))}
+          <Link href="/gift-finder" className="shop-chip">
+            {dict.giftFinder.metaTitle}
+          </Link>
+          {settings.giftCardEnabled && (
+            <Link href="/personalised-gift-card" className="shop-chip">
+              {dict.giftCard.productName}
+            </Link>
+          )}
+          <Link href="/murano-glass" className="shop-chip">
+            {dict.footer.muranoGuide}
+          </Link>
+        </nav>
+      )}
 
       <div className="shelf-wrap shelf-wrap--wide shop-layout">
         <ProductFilterPanel

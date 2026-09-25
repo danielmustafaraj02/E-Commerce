@@ -781,11 +781,16 @@
   font-size: 1.15rem;
   line-height: 1.25;
   overflow-wrap: anywhere;
+  background-image: linear-gradient(var(--gold), var(--gold));
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: 0 1px;
+  padding-bottom: 0.08em;
+  transition: background-size 0.65s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
-.shop-line-name:hover {
-  text-decoration: underline;
-  text-decoration-color: var(--accent);
-  text-underline-offset: 0.2em;
+a.shop-line-name:hover,
+a.shop-line-name:focus-visible {
+  background-size: 100% 1px;
 }
 .shop-track {
   height: 0.5rem;
@@ -1383,9 +1388,16 @@ body:has(.shop-sticky-cta) footer {
 .look-piece-name {
   color: var(--ink);
   text-decoration: none;
+  background-image: linear-gradient(var(--gold), var(--gold));
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: 0 1px;
+  padding-bottom: 0.08em;
+  transition: background-size 0.65s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
-a.look-piece-name:hover {
-  text-decoration: underline;
+a.look-piece-name:hover,
+a.look-piece-name:focus-visible {
+  background-size: 100% 1px;
 }
 .look-piece-tag {
   display: inline-block;
@@ -1586,7 +1598,10 @@ a.look-piece-name:hover {
 .compose-promo + .look-cards {
   margin-top: 4rem;
 }
-.shop-body > .compose-promo:first-child {
+.compose-promo-reveal + .look-cards {
+  margin-top: 4rem;
+}
+.shop-body > .compose-promo-reveal:first-child {
   margin-top: 0;
 }
 @media (min-width: 40rem) {
@@ -1659,11 +1674,21 @@ a.look-piece-name:hover {
 .look-card-name a {
   color: inherit;
   text-decoration: none;
+  background-image: linear-gradient(var(--gold), var(--gold));
+  background-repeat: no-repeat;
+  background-position: center calc(100% - 0.04em);
+  background-size: 0 1px;
+  padding-bottom: 0.08em;
+  transition: background-size 0.65s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 .look-card-name a::after {
   content: "";
   position: absolute;
   inset: 0;
+}
+.look-card:hover .look-card-name a,
+.look-card-name a:focus-visible {
+  background-size: 100% 1px;
 }
 .look-card:has(a:focus-visible) .look-card-visual {
   outline: 1px solid var(--ink);
@@ -1709,8 +1734,8 @@ a.look-piece-name:hover {
   height: 1px;
   background: var(--gold);
   transform: scaleX(0.25);
-  transform-origin: left;
-  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transform-origin: center;
+  transition: transform 0.65s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 .look-card-arrow {
   color: var(--gold);
@@ -1753,25 +1778,65 @@ a.look-piece-name:hover {
 /* -- Compose your own look: the promo (components/compose-promo.tsx) ------- */
 
 .compose-promo {
+  --compose-promo-inner-rule: color-mix(in srgb, var(--gold) 45%, transparent);
   position: relative;
   display: grid;
   gap: 1.25rem;
   align-items: center;
-  margin-top: 3.5rem;
+  margin-top: 0;
   padding: 2.25rem 1.75rem;
-  border: 1px solid var(--rule);
+  border: 1px solid transparent;
   border-radius: 4px;
   background: #fff;
   text-align: center;
   justify-items: center;
 }
+.compose-promo-reveal {
+  margin-top: 3.5rem;
+}
+.compose-promo::before,
 .compose-promo::after {
   content: "";
   position: absolute;
-  inset: 0.65rem;
-  border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
-  border-radius: 2px;
   pointer-events: none;
+  background-repeat: no-repeat;
+}
+.compose-promo::before {
+  inset: 0;
+  background-image:
+    linear-gradient(var(--rule), var(--rule)),
+    linear-gradient(var(--rule), var(--rule)),
+    linear-gradient(var(--rule), var(--rule)),
+    linear-gradient(var(--rule), var(--rule));
+  background-position: left top, left top, left bottom, right top;
+  background-size: 100% 2px, 2px 100%, 100% 2px, 2px 100%;
+}
+.compose-promo::after {
+  inset: 0.65rem;
+  background-image:
+    linear-gradient(var(--compose-promo-inner-rule), var(--compose-promo-inner-rule)),
+    linear-gradient(var(--compose-promo-inner-rule), var(--compose-promo-inner-rule)),
+    linear-gradient(var(--compose-promo-inner-rule), var(--compose-promo-inner-rule)),
+    linear-gradient(var(--compose-promo-inner-rule), var(--compose-promo-inner-rule));
+  background-position: right bottom, right bottom, right top, left bottom;
+  background-size: 100% 2px, 2px 100%, 100% 2px, 2px 100%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .compose-promo-reveal[data-reveal="false"] .compose-promo::before,
+  .compose-promo-reveal[data-reveal="false"] .compose-promo::after {
+    background-size: 0 2px, 2px 0, 0 2px, 2px 0;
+  }
+  .compose-promo-reveal[data-reveal="true"] .compose-promo::before,
+  .compose-promo-reveal[data-reveal="true"] .compose-promo::after {
+    background-size: 100% 2px, 2px 100%, 100% 2px, 2px 100%;
+    /* The last inner edge starts after 0.48s, so 3.5s gives the full frame
+       draw a slow, deliberate four-second finish. */
+    transition: background-size 3.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+    transition-delay: 0s, 0s, 0.24s, 0.24s;
+  }
+  .compose-promo-reveal[data-reveal="true"] .compose-promo::after {
+    transition-delay: 0.24s, 0.24s, 0.48s, 0.48s;
+  }
 }
 .compose-promo-figure {
   margin: 0;

@@ -73,6 +73,7 @@ export function HeroNecklaceCarousel({
             aria-hidden={i === index ? undefined : true}
             fill
             sizes={sizes}
+            quality={90}
             className={i === index ? "is-active" : undefined}
             {...(i === 0 ? { loading: "eager", fetchPriority: "high" } : {})}
           />

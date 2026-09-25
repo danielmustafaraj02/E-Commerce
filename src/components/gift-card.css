@@ -11,34 +11,24 @@
   margin: 0;
   aspect-ratio: 4 / 5;
   width: 100%;
-  max-width: 24rem;
+  max-width: 26rem;
   margin-inline: auto;
   padding: 2.25rem 1.75rem 1.75rem;
   color: #123d43;
   text-align: center;
-  /* Ivory stock with the faintest grain, lifted off the page by a soft shadow. */
-  background:
-    repeating-linear-gradient(
-      0deg,
-      rgb(18 61 67 / 0.006) 0 1px,
-      transparent 1px 3px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      rgb(18 61 67 / 0.004) 0 1px,
-      transparent 1px 4px
-    ),
-    #fdfbf6;
+  /* Clean ivory stock keeps the printed text crisp in the 3D preview. */
+  background: #fdfbf6;
+  border: 1px solid color-mix(in srgb, #b89a62 24%, #fff);
   border-radius: 3px;
   box-shadow:
     0 1px 2px rgb(18 61 67 / 0.08),
-    0 18px 40px -22px rgb(18 61 67 / 0.35);
+    0 22px 34px -22px rgb(18 61 67 / 0.32);
 }
 .gc-card::after {
   content: "";
   position: absolute;
-  inset: 0.7rem;
-  border: 1px solid color-mix(in srgb, #b89a62 55%, transparent);
+  inset: 0.75rem;
+  border: 1px solid color-mix(in srgb, #b89a62 68%, transparent);
   pointer-events: none;
 }
 .gc-card-brand {
@@ -166,10 +156,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  padding: 2rem 1rem 2.5rem;
+  gap: 0.85rem;
+  padding: 1.5rem 1rem 1.75rem;
   background: #f7f3ec;
-  border-radius: 4px;
+  border: 1px solid color-mix(in srgb, #d9cdbb 72%, #fff);
+  border-radius: 2px;
 }
 .gc-step-kicker {
   margin: 0;
@@ -587,7 +578,7 @@
   .gc-stage {
     position: sticky;
     top: 7rem;
-    padding: 3rem 2rem 3.5rem;
+    padding: 2rem 1.25rem 2.25rem;
   }
 }
 

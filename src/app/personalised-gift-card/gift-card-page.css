@@ -9,7 +9,7 @@
 }
 .gcp-intro {
   max-width: 38rem;
-  margin: -1rem 0 2.25rem;
+  margin: 0 0 2.25rem;
   color: color-mix(in srgb, var(--ink) 85%, white);
   line-height: 1.7;
 }

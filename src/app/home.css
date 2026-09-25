@@ -123,6 +123,21 @@
   color: var(--accent-deep);
   text-decoration: underline;
 }
+.shelf-heading-row .shelf-link {
+  background-image: linear-gradient(var(--gold), var(--gold));
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: 0 1px;
+  padding-bottom: 0.08em;
+  text-decoration: none;
+  transition:
+    color 0.3s ease,
+    background-size 0.65s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.shelf-heading-row .shelf-link:hover,
+.shelf-heading-row .shelf-link:focus-visible {
+  background-size: 100% 1px;
+}
 
 /* -- Gift Finder entry band -------------------------------------------------
    A single quiet line, not a full marketing block — the flow itself is the
@@ -530,16 +545,21 @@
 .shelf-item-name a {
   color: inherit;
   text-decoration: none;
+  background-image: linear-gradient(var(--gold), var(--gold));
+  background-repeat: no-repeat;
+  background-position: center calc(100% - 0.04em);
+  background-size: 0 1px;
+  padding-bottom: 0.12em;
+  transition: background-size 1.2s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 .shelf-item-name a::after {
   content: "";
   position: absolute;
   inset: 0;
 }
-.shelf-item-name a:hover {
-  text-decoration: underline;
-  text-decoration-color: var(--accent);
-  text-underline-offset: 0.2em;
+.shelf-item:hover .shelf-item-name a,
+.shelf-item-name a:focus-visible {
+  background-size: 100% 1px;
 }
 .shelf-item-price {
   font-family: var(--font-display), Georgia, serif;
@@ -619,6 +639,11 @@
 
 /* -- Categories: the pieces themselves, deliberately uneven ---------------- */
 
+.shelf-section--categories {
+  background: #f8f6f1;
+  border-block: 1px solid color-mix(in srgb, var(--champagne) 58%, #fff);
+}
+
 .shelf-categories {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -633,43 +658,46 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
+  padding: 0.8rem 0.8rem 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--champagne) 72%, #fff);
+  background: #fff;
+  box-shadow: 0 2px 12px color-mix(in srgb, var(--foreground) 4%, transparent);
+  transition:
+    transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
+    box-shadow 0.45s ease;
 }
-/* Each piece sits in a Venetian-window niche: white, with a gold inner
-   arch drawn a few millimetres inside the edge, the photo's white multiplied
-   into the ivory. */
+@media (hover: hover) and (pointer: fine) {
+  .shelf-category:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 9px 24px color-mix(in srgb, var(--foreground) 8%, transparent);
+  }
+}
+/* The product sits free on the paper-white card, without a frame around it. */
 .shelf-category-photo {
   position: relative;
   width: 100%;
-  aspect-ratio: 3 / 4;
-  overflow: hidden;
-  border: 1px solid var(--rule);
-  border-radius: 999px 999px 4px 4px;
-  background: #fff;
+  aspect-ratio: 1 / 1;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 .shelf-category-photo::after {
-  content: "";
-  position: absolute;
-  inset: 0.65rem;
-  border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
-  border-radius: 999px 999px 2px 2px;
-  pointer-events: none;
-  transition: border-color 0.5s ease;
+  display: none;
 }
 .shelf-home .shelf-category-photo img,
 .shelf-category-photo img {
   object-fit: contain;
-  object-position: 50% 58%;
-  padding: 9% 6% 5%;
+  object-position: center;
+  padding: 2%;
   -webkit-mask-image: none;
   mask-image: none;
-  transform: scale(1.1);
-  transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-.shelf-category:hover .shelf-category-photo::after {
-  border-color: var(--gold);
+  mix-blend-mode: multiply;
+  transform: scale(1.04);
+  transition: transform 0.65s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 .shelf-category:hover .shelf-category-photo img {
-  transform: scale(1.15);
+  transform: scale(1.08);
 }
 .shelf-category-index {
   margin-top: 1.5rem;
@@ -726,7 +754,8 @@
   height: 1px;
   background: var(--gold);
   transform: scaleX(0.25);
-  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transform-origin: center;
+  transition: transform 0.65s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 .shelf-category-arrow {
   color: var(--gold);
@@ -1115,6 +1144,12 @@
    first/last card off-screen and silently re-centers on the real one once a
    swipe — or autoplay — lands on a clone, so it never visibly "runs out"). */
 @media (max-width: 47.99rem) {
+  .shelf-home .shelf-section--categories {
+    padding-block: 3.25rem;
+  }
+  .shelf-home .shelf-section--categories .shelf-heading-row {
+    margin-bottom: 1.75rem;
+  }
   .shelf-categories {
     display: flex;
     /* Without this, a card's offsetLeft (which CategoryStrip.tsx reads to
@@ -1134,28 +1169,57 @@
     display: none;
   }
   .shelf-category {
+    display: grid;
     flex: 0 0 100%;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    grid-template-rows: auto 1fr auto;
+    align-items: center;
+    gap: 0.2rem 1rem;
+    padding: 0.8rem;
+    text-align: start;
     scroll-snap-align: center;
     /* Without this, a fast flick can coast straight past a card instead of
        stopping on it — "always" forces every swipe to land on one card. */
     scroll-snap-stop: always;
   }
-  /* A light press-down on tap, the same interaction-triggered feedback
-     already used elsewhere (see .nav-link's hover in globals.css) — kept
-     outside any reduced-motion guard for the same reason: it's triggered by
-     touch, not autoplay. No shadow/border/background added, so the "pieces
-     dissolve into the page, no boxes" treatment above is untouched. */
+  /* A restrained press response keeps the image tactile on touch screens. */
   .shelf-category-photo img {
-    transition: transform 0.2s ease;
+    transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .shelf-category-photo {
+    grid-column: 1;
+    grid-row: 1 / 4;
+    width: 100%;
+    max-width: none;
+    aspect-ratio: 1 / 1;
+  }
+  .shelf-category-index {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: start;
+    margin: 0;
+    font-size: 0.9rem;
+  }
+  .shelf-category-name {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: start;
+    margin: 0 !important;
+    font-size: clamp(1.35rem, 6vw, 1.85rem);
+  }
+  .shelf-category-cta {
+    grid-column: 2;
+    grid-row: 3;
+    justify-self: start;
+    margin-top: 0.65rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
   }
   .shelf-category:active .shelf-category-photo img {
-    transform: scale(0.96);
+    transform: scale(1.06);
   }
   .category-dots {
     display: flex;
-  }
-  .shelf-category-photo {
-    max-width: 19rem;
   }
 }
 

@@ -10,5 +10,5 @@ export function CatalogImage(props: ImageProps) {
   const unoptimized =
     props.unoptimized ?? (typeof props.src === "string" ? !isOptimizableSrc(props.src) : false);
   // eslint-disable-next-line jsx-a11y/alt-text -- alt is required by ImageProps and forwarded.
-  return <Image {...props} unoptimized={unoptimized} />;
+  return <Image {...props} quality={90} unoptimized={unoptimized} />;
 }

@@ -6,6 +6,7 @@ export function BrandWave({ className = "" }: { className?: string }) {
       width="56"
       height="10"
       viewBox="0 0 56 10"
+      preserveAspectRatio="none"
       fill="none"
       stroke="currentColor"
       strokeWidth="1.4"
