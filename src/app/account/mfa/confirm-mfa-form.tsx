@@ -4,13 +4,15 @@ import { useActionState } from "react";
 import { confirmMfa } from "./actions";
 import { FormAlert } from "@/components/form-alert";
 
-export function ConfirmMfaForm() {
+type ConfirmMfaDict = { codeLabel: string; verifying: string; enableButton: string };
+
+export function ConfirmMfaForm({ dict }: { dict: ConfirmMfaDict }) {
   const [state, formAction, pending] = useActionState(confirmMfa, { error: null as string | null });
 
   return (
     <form action={formAction} className="form-card flex flex-col gap-3">
       <label className="flex flex-col gap-1.5 text-sm">
-        <span className="font-medium">6-digit code</span>
+        <span className="font-medium">{dict.codeLabel}</span>
         <input
           type="text"
           name="code"
@@ -24,7 +26,7 @@ export function ConfirmMfaForm() {
       </label>
       {state?.error && <FormAlert type="error">{state.error}</FormAlert>}
       <button type="submit" disabled={pending} className="btn-primary text-sm">
-        {pending ? "Verifying..." : "Enable MFA"}
+        {pending ? dict.verifying : dict.enableButton}
       </button>
     </form>
   );

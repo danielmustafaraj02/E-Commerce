@@ -23,6 +23,17 @@ vi.mock("@/lib/db", () => ({
 }));
 vi.mock("@/lib/mfa", () => ({ verifyMfaToken: mocks.verifyMfaToken }));
 vi.mock("bcryptjs", () => ({ default: { compare: mocks.compare } }));
+vi.mock("@/lib/i18n/feedback", () => ({
+  getFeedback: async () => ({
+    notSignedIn: "not-signed-in",
+    tooManyAttempts: "too-many-attempts",
+    accountNotFound: "account-not-found",
+    incorrectPassword: "incorrect-password",
+    mfaSetupNotFound: "mfa-setup-not-found",
+    invalidMfaCode: "invalid-mfa-code",
+    oauthNoMfaPassword: "oauth-no-mfa-password",
+  }),
+}));
 
 import { confirmMfa, disableMfa } from "./actions";
 
@@ -58,7 +69,7 @@ describe("confirmMfa", () => {
 
     const result = await confirmMfa({ error: undefined }, form({ code: "123456" }));
 
-    expect(result).toEqual({ error: "Too many attempts — wait a minute and try again" });
+    expect(result).toEqual({ error: "too-many-attempts" });
     expect(mocks.findUnique).not.toHaveBeenCalled();
     expect(mocks.verifyMfaToken).not.toHaveBeenCalled();
   });
@@ -69,7 +80,7 @@ describe("confirmMfa", () => {
 
     const result = await confirmMfa({ error: undefined }, form({ code: "000000" }));
 
-    expect(result).toEqual({ error: "Invalid code" });
+    expect(result).toEqual({ error: "invalid-mfa-code" });
     expect(mocks.update).not.toHaveBeenCalled();
   });
 
@@ -78,7 +89,7 @@ describe("confirmMfa", () => {
 
     const result = await confirmMfa({ error: undefined }, form({ code: "123456" }));
 
-    expect(result).toEqual({ error: "Not signed in" });
+    expect(result).toEqual({ error: "not-signed-in" });
     expect(mocks.rateLimit).not.toHaveBeenCalled();
   });
 });
@@ -103,7 +114,7 @@ describe("disableMfa", () => {
 
     const result = await disableMfa({ error: undefined }, form({ password: "guess" }));
 
-    expect(result).toEqual({ error: "Too many attempts — wait a minute and try again" });
+    expect(result).toEqual({ error: "too-many-attempts" });
     expect(mocks.findUnique).not.toHaveBeenCalled();
     expect(mocks.compare).not.toHaveBeenCalled();
   });
@@ -114,7 +125,7 @@ describe("disableMfa", () => {
 
     const result = await disableMfa({ error: undefined }, form({ password: "wrong" }));
 
-    expect(result).toEqual({ error: "Incorrect password" });
+    expect(result).toEqual({ error: "incorrect-password" });
     expect(mocks.update).not.toHaveBeenCalled();
   });
 });

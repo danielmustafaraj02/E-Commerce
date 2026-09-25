@@ -2,12 +2,20 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { captureError } from "@/lib/monitoring";
 import { isValidBearerToken } from "@/lib/bearer-auth";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { CLAUDE_REPORT_MAX } from "@/lib/roadmap-claude";
 
 // Where a nightly run posts what it changed and what the owner should check
 // (shown on the Bacheca in Admin > Roadmap). The task stays open: the owner
 // marks it done after checking the PR, or asks Claude to try again.
 export async function POST(request: Request) {
+  // Same per-IP cap as the sibling roadmap routes — bounds the damage if the
+  // service token ever leaked (each hit does a DB write).
+  const { success } = await rateLimit(`automation-roadmap-report:${clientIp(request)}`, 20, 60_000);
+  if (!success) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
+
   if (!isValidBearerToken(request, process.env.AUTOMATION_ROADMAP_TOKEN)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
