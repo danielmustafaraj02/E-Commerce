@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { captureError } from "@/lib/monitoring";
 import { isValidBearerToken } from "@/lib/bearer-auth";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { TASK_DETAILS_MAX } from "@/lib/roadmap-claude";
 
 const PRIORITIES = new Set(["low", "medium", "high"]);
@@ -13,6 +14,14 @@ const PRIORITIES = new Set(["low", "medium", "high"]);
 // gated the same way api/cron/abandoned-orders is — this is a service
 // credential, not a user session, and proxy.ts does not run for /api.
 export async function POST(request: Request) {
+  // Same per-IP cap as the site's other DB-writing public routes — cheap
+  // insurance if this long-lived token ever leaked, since a valid bearer
+  // alone would otherwise let it write unlimited rows.
+  const { success } = await rateLimit(`automation-roadmap:${clientIp(request)}`, 20, 60_000);
+  if (!success) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
+
   if (!isValidBearerToken(request, process.env.AUTOMATION_ROADMAP_TOKEN)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
