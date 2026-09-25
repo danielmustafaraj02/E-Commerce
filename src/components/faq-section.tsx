@@ -4,6 +4,7 @@ import { FAQ_INITIAL, faqJsonLd, type FaqItem } from "@/lib/faq";
 import { toSafeJsonLd } from "@/lib/json-ld";
 import { FaqAccordion } from "@/components/faq-accordion";
 import { BrandWave } from "@/components/brand-signature";
+import { Reveal } from "@/components/reveal";
 import "./faq.css";
 
 // "Common questions": heading and a short intro beside the accordion
@@ -18,28 +19,28 @@ export function FaqSection({
   dict: Dictionary;
   variant?: "editorial" | "compact";
 }) {
-  return (
+  const content = (
     <div className={`faq faq--${variant}`}>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: toSafeJsonLd(faqJsonLd(items)) }}
-      />
       <div className="faq-intro">
         <h2 className="shelf-heading">{dict.home.faqTitle}</h2>
         {variant === "editorial" && (
           <>
             <p>{dict.faq.intro}</p>
-            <BrandWave className="faq-wave" />
+            <Reveal className="faq-wave-reveal" repeatOnView>
+              <BrandWave className="faq-wave" />
+            </Reveal>
           </>
         )}
       </div>
       <div>
-        <FaqAccordion
-          items={items}
-          initial={FAQ_INITIAL}
-          moreLabel={dict.faq.more}
-          fewerLabel={dict.faq.fewer}
-        />
+        <Reveal className="faq-list-reveal" repeatOnView>
+          <FaqAccordion
+            items={items}
+            initial={FAQ_INITIAL}
+            moreLabel={dict.faq.more}
+            fewerLabel={dict.faq.fewer}
+          />
+        </Reveal>
         <p className="faq-contact">
           {dict.faq.stillQuestion}{" "}
           <Link href="/contact">
@@ -48,5 +49,21 @@ export function FaqSection({
         </p>
       </div>
     </div>
+  );
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toSafeJsonLd(faqJsonLd(items)) }}
+      />
+      {variant === "compact" ? (
+        <Reveal className="faq-compact-reveal" delayMs={1050}>
+          {content}
+        </Reveal>
+      ) : (
+        content
+      )}
+    </>
   );
 }

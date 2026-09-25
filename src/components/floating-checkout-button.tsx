@@ -6,11 +6,9 @@ import { useCartStore } from "@/lib/cart-store";
 
 // A persistent nudge toward checkout once there's something in the cart —
 // the same pattern most stores use so a shopper never has to hunt for the
-// cart icon in the header after adding something. Hidden on /cart and
-// /checkout themselves, since the shopper is already there, and on product
-// pages, which have their own bottom-fixed sticky Add to Cart bar
-// (components/product-purchase-panel.tsx) — showing both would be two
-// competing fixed elements fighting for the same corner of the screen.
+// cart icon in the header after adding something. Hidden on cart and checkout,
+// product pages with their own sticky purchase bar, and account access forms
+// where a checkout prompt would distract from the task.
 export function FloatingCheckoutButton({ label }: { label: string }) {
   const count = useCartStore((state) => state.items.reduce((sum, item) => sum + item.quantity, 0));
   const pathname = usePathname();
@@ -18,6 +16,9 @@ export function FloatingCheckoutButton({ label }: { label: string }) {
   if (count === 0) return null;
   if (pathname === "/cart" || pathname === "/checkout") return null;
   if (pathname.startsWith("/products/")) return null;
+  if (["/login", "/register", "/forgot-password", "/reset-password"].includes(pathname)) {
+    return null;
+  }
 
   return (
     <Link

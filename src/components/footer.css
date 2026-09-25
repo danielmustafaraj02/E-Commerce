@@ -1,7 +1,6 @@
 /* Site footer (components/footer.tsx), plus the shared social icons and brand
-   signature the mobile menu reuses. Loaded from the root layout's footer, so
-   it's on every page. Ivory ground, dark ink, hairline rules, one teal accent:
-   the last page of an editorial site rather than a block of links. */
+   signature the mobile menu reuses. Warm ivory, lagoon petrol and champagne
+   gold make the final page feel like part of the Murano shop. */
 
 .site-footer {
   --footer-ground: #faf8f4;
@@ -9,6 +8,7 @@
   --footer-soft: color-mix(in srgb, var(--footer-ink) 72%, transparent);
   --footer-rule: color-mix(in srgb, var(--footer-ink) 14%, transparent);
   --footer-teal: #1f7a85;
+  position: relative;
   background: var(--footer-ground);
   color: var(--footer-ink);
   font-family: var(--font-ui), system-ui, sans-serif;
@@ -16,6 +16,17 @@
   /* Room under the last line for the floating checkout button and the
      iPhone home indicator, so neither ever covers footer content. */
   padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+}
+body:has(.auth-flow-page) .site-footer {
+  display: none;
+}
+.site-footer::before {
+  position: absolute;
+  z-index: 2;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, var(--footer-ink), var(--footer-teal) 44%, #b89a62 100%);
+  content: "";
 }
 .site-footer a {
   color: inherit;
@@ -41,9 +52,9 @@
 .site-footer-top,
 .site-footer-body,
 .site-footer-bottom {
-  max-width: 72rem;
+  max-width: 88rem;
   margin-inline: auto;
-  padding-inline: 1.25rem;
+  padding-inline: clamp(1.25rem, 3vw, 2.25rem);
 }
 
 /* -- Editorial band ------------------------------------------------------- */
@@ -55,6 +66,10 @@
   margin-inline: -1.25rem;
   padding: 2.25rem 0 2.25rem 1.25rem;
   border-bottom: 1px solid var(--footer-rule);
+  background:
+    radial-gradient(ellipse at 82% 52%, color-mix(in srgb, #b89a62 11%, transparent), transparent 48%),
+    linear-gradient(115deg, #f8f4ed, #faf8f4 68%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, #b89a62 22%, transparent);
   overflow: hidden;
 }
 .footer-editorial-text {
@@ -88,17 +103,32 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
   transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+    background-color 0.45s ease,
+    color 0.45s ease,
+    transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 0.45s ease;
 }
 .site-footer .footer-outline-button:hover {
   background: var(--footer-ink);
   color: var(--footer-ground);
+  transform: translateY(-2px);
+  box-shadow: 0 0.7rem 1.4rem color-mix(in srgb, var(--footer-ink) 14%, transparent);
+}
+.footer-outline-button span {
+  transition: transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.footer-outline-button:hover span {
+  transform: translateX(0.2rem);
 }
 .footer-editorial-image {
   position: relative;
   align-self: stretch;
   min-height: 11rem;
+}
+.footer-editorial-image-reveal[data-reveal] {
+  opacity: 1;
+  transform: none;
+  transition: none;
 }
 .footer-editorial-image img {
   object-fit: cover;
@@ -108,17 +138,64 @@
   -webkit-mask-image: linear-gradient(to right, transparent, #000 45%);
   mask-image: linear-gradient(to right, transparent, #000 45%);
 }
+@media (prefers-reduced-motion: no-preference) {
+  .footer-editorial-image-reveal[data-reveal="false"] img {
+    opacity: 0;
+    transform: perspective(900px) translateY(1.75rem) rotateX(10deg) scale(0.93);
+  }
+  .footer-editorial-image-reveal[data-reveal="true"] img {
+    animation: footer-necklace-lift 2.15s cubic-bezier(0.2, 0.65, 0.3, 1) both;
+    transform-origin: 50% 85%;
+  }
+  @keyframes footer-necklace-lift {
+    0% {
+      opacity: 0;
+      transform: perspective(900px) translateY(1.75rem) rotateX(10deg) scale(0.93);
+    }
+    66% {
+      opacity: 1;
+      transform: perspective(900px) translateY(-0.3rem) rotateX(-1deg) scale(1.025);
+    }
+    100% {
+      opacity: 1;
+      transform: perspective(900px) translateY(0) rotateX(0) scale(1);
+    }
+  }
+}
 
 /* -- Newsletter ----------------------------------------------------------- */
 .footer-newsletter {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  padding-block: 2.25rem;
+  padding: 1.5rem;
+  border: 1px solid color-mix(in srgb, #b89a62 62%, transparent);
+  background:
+    radial-gradient(ellipse at 100% 0%, color-mix(in srgb, #1f7a85 22%, transparent), transparent 52%),
+    linear-gradient(145deg, #123d43, #0b3035);
+  color: #fff;
+  box-shadow: 0 1rem 2.5rem rgb(18 61 67 / 0.1);
+}
+.footer-newsletter::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0.55rem;
+  border: 1px solid rgb(217 199 160 / 0.24);
+  pointer-events: none;
+  content: "";
+}
+.footer-newsletter > * {
+  position: relative;
+  z-index: 1;
+}
+.footer-newsletter .footer-display {
+  color: #fff;
 }
 .footer-newsletter > p {
   margin: 0;
-  color: var(--footer-soft);
+  color: rgb(255 255 255 / 0.82);
   line-height: 1.5;
 }
 .footer-newsletter .field {
@@ -126,16 +203,55 @@
   min-width: 0;
   flex: 1;
   background: #fff;
-  border-color: var(--footer-rule);
+  border-color: rgb(217 199 160 / 0.72);
   border-radius: 3px;
+}
+.footer-newsletter .newsletter-email--invalid {
+  border-color: #b89a62;
+  box-shadow: 0 0 0 2px rgb(217 199 160 / 18%);
+}
+.newsletter-validation {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0.35rem 0 0;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid rgb(217 199 160 / 42%);
+  border-inline-start: 2px solid #d9c7a0;
+  background: rgb(255 255 255 / 7%);
+  color: rgb(255 255 255 / 92%);
+  font-size: 0.84rem;
+  line-height: 1.4;
+}
+.newsletter-validation-mark {
+  display: grid;
+  width: 1.2rem;
+  height: 1.2rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgb(217 199 160 / 75%);
+  border-radius: 50%;
+  color: #eadab9;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 0.85rem;
 }
 .footer-newsletter .btn-primary {
   min-height: 3rem;
-  background: var(--footer-ink);
+  background: #faf8f4;
+  color: var(--footer-ink);
+  border-color: #b89a62;
   border-radius: 3px;
   font-size: 0.72rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+  transition: background-color 0.35s ease, transform 0.35s ease;
+}
+.footer-newsletter .btn-primary:hover {
+  background: #e9dfcc;
+  color: var(--footer-ink);
+  transform: translateY(-1px);
 }
 .footer-fineprint {
   display: flex;
@@ -220,11 +336,27 @@
   padding-bottom: 0.75rem;
 }
 .footer-group-panel a {
+  position: relative;
   display: flex;
   align-items: center;
   min-height: 2.75rem;
   color: var(--footer-soft);
   overflow-wrap: anywhere;
+  transition: color 0.35s ease, transform 0.35s ease;
+}
+.footer-group-panel a::after {
+  position: absolute;
+  inset: auto 0 0;
+  height: 1px;
+  background: color-mix(in srgb, #b89a62 70%, transparent);
+  content: "";
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.footer-group-panel a:hover::after,
+.footer-group-panel a:focus-visible::after {
+  transform: scaleX(1);
 }
 
 /* -- Trust strip --------------------------------------------------------- */
@@ -246,9 +378,22 @@
   font-size: 0.78rem;
   line-height: 1.3;
   color: var(--footer-soft);
+  transition: transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1), color 0.35s ease;
 }
 .footer-trust svg {
+  box-sizing: content-box;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0.55rem;
+  border: 1px solid color-mix(in srgb, #b89a62 42%, transparent);
+  border-radius: 50%;
   color: var(--footer-ink);
+}
+@media (hover: hover) and (pointer: fine) {
+  .footer-trust li:hover {
+    color: var(--footer-ink);
+    transform: translateY(-3px);
+  }
 }
 @media (min-width: 23rem) {
   .footer-trust {
@@ -267,11 +412,14 @@
 
 /* -- Bottom: social, payments, legal, signature ------------------------- */
 .site-footer-bottom {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.1rem;
-  padding-top: 1.75rem;
+  gap: 0.85rem;
+  padding-top: 1.5rem;
+  margin-top: 1.25rem;
+  border-top: 1px solid var(--footer-rule);
   text-align: center;
 }
 .social-links {
@@ -289,6 +437,17 @@
   justify-content: center;
   width: 2.75rem;
   height: 2.75rem;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  transition:
+    color 0.35s ease,
+    border-color 0.45s ease,
+    transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.social-links a:hover,
+.social-links a:focus-visible {
+  border-color: color-mix(in srgb, #b89a62 62%, transparent);
+  transform: translateY(-2px);
 }
 .footer-payments {
   display: flex;
@@ -296,7 +455,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
-  font-size: 0.68rem;
+  font-size: 0.74rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--footer-soft);
@@ -314,7 +473,7 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  font-size: 0.8rem;
+  font-size: 0.86rem;
   color: var(--footer-soft);
 }
 .footer-legal a {
@@ -323,22 +482,31 @@
 }
 .footer-copyright {
   margin: -0.5rem 0 0;
-  font-size: 0.78rem;
+  font-size: 0.84rem;
   color: var(--footer-soft);
 }
 .brand-signature {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.35rem;
-  margin: 0.75rem 0 0;
-  font-size: 0.78rem;
+  gap: 0.3rem;
+  width: min(100%, 17rem);
+  margin: 0.35rem 0 0;
+  padding-top: 0.75rem;
+  border-top: 1px solid color-mix(in srgb, #b89a62 48%, transparent);
+  font-size: 0.84rem;
   letter-spacing: 0.32em;
   text-transform: uppercase;
   color: var(--footer-ink, #0e3a46);
 }
 .brand-signature svg {
   color: var(--footer-teal, #1f7a85);
+  width: 4.5rem;
+  height: 1.125rem;
+  transition: transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.brand-signature:hover svg {
+  transform: scaleX(1.16);
 }
 
 /* -- Desktop: an editorial, multi-column layout -------------------------- */
@@ -348,8 +516,8 @@
   }
   .site-footer-top {
     display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-    gap: 3.5rem;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.75rem;
     padding-block: 3.5rem;
     border-bottom: 1px solid var(--footer-rule);
   }
@@ -357,13 +525,13 @@
     margin: 0;
     padding: 0;
     border: 0;
-    grid-template-columns: minmax(0, 1fr) 20rem;
+    grid-template-columns: minmax(0, 1.1fr) minmax(15rem, 0.9fr);
   }
   .footer-editorial-image {
     min-height: 14rem;
   }
   .footer-newsletter {
-    padding: 0;
+    padding: 2rem;
     justify-content: center;
   }
   .site-footer-body {
@@ -414,7 +582,14 @@
     margin: 0;
   }
   .site-footer-bottom {
-    padding-top: 2rem;
+    padding-top: 1.5rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .site-footer-top {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 3.5rem;
   }
 }
 

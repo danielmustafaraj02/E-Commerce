@@ -254,3 +254,110 @@
 #design {
   scroll-margin-top: 6rem;
 }
+
+/* Below the designer, let the story, reasons, tips and questions arrive as
+   small editorial groups instead of one long, static page. */
+@media (prefers-reduced-motion: no-preference) {
+  .gcp-reveal[data-reveal="false"] :is(
+    .shelf-heading,
+    .gcp-prose p,
+    .gcp-intro,
+    .gcp-loved li,
+    .gcp-people li,
+    .gcp-occasions-title,
+    .gcp-occasions li,
+    .gcp-steps li,
+    .gcp-tips,
+    .gcp-tips li,
+    .faq-item,
+    .gcp-cta p,
+    .gcp-cta-actions a
+  ) {
+    opacity: 0;
+    transform: translateY(0.9rem);
+  }
+
+  .gcp-reveal[data-reveal="true"] .shelf-heading,
+  .gcp-reveal[data-reveal="true"] .gcp-tips h2 {
+    animation: gcp-content-arrive 0.82s cubic-bezier(0.2, 0.65, 0.3, 1) both;
+  }
+  .gcp-reveal--why[data-reveal="true"] .gcp-prose p {
+    animation: gcp-content-arrive 0.9s cubic-bezier(0.2, 0.65, 0.3, 1) both;
+  }
+  .gcp-reveal--why[data-reveal="true"] .gcp-prose p:nth-child(2) { animation-delay: 0.14s; }
+  .gcp-reveal--why[data-reveal="true"] .gcp-prose p:nth-child(3) { animation-delay: 0.28s; }
+  .gcp-reveal--why[data-reveal="true"] .gcp-prose p:nth-child(4) { animation-delay: 0.42s; }
+  .gcp-reveal--people[data-reveal="true"] .gcp-intro {
+    animation: gcp-content-arrive 0.9s cubic-bezier(0.2, 0.65, 0.3, 1) 0.12s both;
+  }
+  .gcp-reveal--loved[data-reveal="true"] .gcp-loved li,
+  .gcp-reveal--people[data-reveal="true"] .gcp-people li {
+    animation: gcp-card-arrive 0.9s cubic-bezier(0.2, 0.65, 0.3, 1) both;
+  }
+  .gcp-reveal--loved[data-reveal="true"] .gcp-loved li:nth-child(2),
+  .gcp-reveal--people[data-reveal="true"] .gcp-people li:nth-child(2) { animation-delay: 0.14s; }
+  .gcp-reveal--loved[data-reveal="true"] .gcp-loved li:nth-child(3),
+  .gcp-reveal--people[data-reveal="true"] .gcp-people li:nth-child(3) { animation-delay: 0.28s; }
+  .gcp-reveal--loved[data-reveal="true"] .gcp-loved li:nth-child(4),
+  .gcp-reveal--people[data-reveal="true"] .gcp-people li:nth-child(4) { animation-delay: 0.42s; }
+  .gcp-reveal--people[data-reveal="true"] .gcp-occasions-title {
+    animation: gcp-content-arrive 0.82s cubic-bezier(0.2, 0.65, 0.3, 1) 0.35s both;
+  }
+  .gcp-reveal--people[data-reveal="true"] .gcp-occasions li {
+    animation: gcp-chip-arrive 0.7s cubic-bezier(0.2, 0.65, 0.3, 1) both;
+  }
+  .gcp-reveal--people[data-reveal="true"] .gcp-occasions li:nth-child(2) { animation-delay: 0.08s; }
+  .gcp-reveal--people[data-reveal="true"] .gcp-occasions li:nth-child(3) { animation-delay: 0.16s; }
+  .gcp-reveal--people[data-reveal="true"] .gcp-occasions li:nth-child(4) { animation-delay: 0.24s; }
+  .gcp-reveal--people[data-reveal="true"] .gcp-occasions li:nth-child(5) { animation-delay: 0.32s; }
+  .gcp-reveal--people[data-reveal="true"] .gcp-occasions li:nth-child(6) { animation-delay: 0.4s; }
+  .gcp-reveal--how[data-reveal="true"] .gcp-steps li {
+    animation: gcp-content-arrive 0.86s cubic-bezier(0.2, 0.65, 0.3, 1) both;
+  }
+  .gcp-reveal--how[data-reveal="true"] .gcp-steps li:nth-child(2) { animation-delay: 0.16s; }
+  .gcp-reveal--how[data-reveal="true"] .gcp-steps li:nth-child(3) { animation-delay: 0.32s; }
+  .gcp-reveal--how[data-reveal="true"] .gcp-steps li:nth-child(4) { animation-delay: 0.48s; }
+  .gcp-reveal--how[data-reveal="true"] .gcp-tips {
+    animation: gcp-card-arrive 1s cubic-bezier(0.2, 0.65, 0.3, 1) 0.35s both;
+  }
+  .gcp-reveal--how[data-reveal="true"] .gcp-tips li {
+    animation: gcp-content-arrive 0.82s cubic-bezier(0.2, 0.65, 0.3, 1) both;
+  }
+  .gcp-reveal--how[data-reveal="true"] .gcp-tips li:nth-child(2) { animation-delay: 0.12s; }
+  .gcp-reveal--how[data-reveal="true"] .gcp-tips li:nth-child(3) { animation-delay: 0.24s; }
+  .gcp-reveal--how[data-reveal="true"] .gcp-tips li:nth-child(4) { animation-delay: 0.36s; }
+  .gcp-reveal--faq[data-reveal="true"] .faq-item {
+    animation: gcp-faq-arrive 0.95s cubic-bezier(0.2, 0.65, 0.3, 1) both;
+  }
+  .gcp-reveal--faq[data-reveal="true"] .faq-item:nth-child(2) { animation-delay: 0.12s; }
+  .gcp-reveal--faq[data-reveal="true"] .faq-item:nth-child(3) { animation-delay: 0.24s; }
+  .gcp-reveal--faq[data-reveal="true"] .faq-item:nth-child(4) { animation-delay: 0.36s; }
+  .gcp-reveal--faq[data-reveal="true"] .faq-item:nth-child(5) { animation-delay: 0.48s; }
+  .gcp-reveal--faq[data-reveal="true"] .faq-item:nth-child(6) { animation-delay: 0.6s; }
+  .gcp-reveal--cta[data-reveal="true"] > p {
+    animation: gcp-content-arrive 0.9s cubic-bezier(0.2, 0.65, 0.3, 1) 0.15s both;
+  }
+  .gcp-reveal--cta[data-reveal="true"] .gcp-cta-actions a {
+    animation: gcp-content-arrive 0.9s cubic-bezier(0.2, 0.65, 0.3, 1) both;
+  }
+  .gcp-reveal--cta[data-reveal="true"] .gcp-cta-actions a:nth-child(2) { animation-delay: 0.12s; }
+  .gcp-reveal--cta[data-reveal="true"] .gcp-cta-actions a:nth-child(3) { animation-delay: 0.24s; }
+  .gcp-reveal--cta[data-reveal="true"] .gcp-cta-actions a:nth-child(4) { animation-delay: 0.36s; }
+
+  @keyframes gcp-content-arrive {
+    from { opacity: 0; transform: translateY(0.9rem); filter: blur(1px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+  }
+  @keyframes gcp-card-arrive {
+    from { opacity: 0; transform: translateY(1.1rem) scale(0.99); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes gcp-chip-arrive {
+    from { opacity: 0; transform: translateY(0.55rem) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes gcp-faq-arrive {
+    from { opacity: 0; transform: translateX(1.15rem); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+}

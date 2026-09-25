@@ -31,7 +31,7 @@ export default async function WishlistPage() {
   const dict = getDictionary(uiLocale);
 
   return (
-    <ShelfMain>
+    <ShelfMain className="shelf--footer-space">
       <ShelfHead
         width="full"
         icon={

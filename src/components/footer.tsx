@@ -10,6 +10,7 @@ import { NewsletterSignupForm } from "@/components/newsletter-signup-form";
 import { FooterAccordion } from "@/components/footer-accordion";
 import { SocialLinks, type SocialUrls } from "@/components/social-links";
 import { BrandSignature, BrandWave } from "@/components/brand-signature";
+import { Reveal } from "@/components/reveal";
 import { homeFontClasses } from "@/app/home-fonts";
 import "./footer.css";
 
@@ -108,9 +109,12 @@ export async function Footer({
               {f.editorialCta} <span aria-hidden="true">→</span>
             </Link>
           </div>
-          <div className="footer-editorial-image" aria-hidden="true">
+          <Reveal
+            className="footer-editorial-image footer-editorial-image-reveal"
+            repeatOnView
+          >
             <CatalogImage src={featuredImage} alt="" fill sizes="(min-width: 48rem) 20rem, 40vw" />
-          </div>
+          </Reveal>
         </section>
 
         <section className="footer-newsletter">

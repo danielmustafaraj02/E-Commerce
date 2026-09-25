@@ -15,6 +15,7 @@ import { GIFT_CARD_IMAGE } from "@/lib/gift-card-art";
 import { ShelfMain } from "@/components/shelf-main";
 import { ShelfHead, ShelfBody } from "@/components/shelf-page";
 import { GiftCardDesigner } from "@/components/gift-card-designer";
+import { Reveal } from "@/components/reveal";
 import { FaqAccordion } from "@/components/faq-accordion";
 import "@/components/faq.css";
 import "./gift-card-page.css";
@@ -126,7 +127,7 @@ export default async function PersonalisedGiftCardPage() {
       </div>
 
       <section className="shelf-section shelf-section--sand" aria-labelledby="gcp-why">
-        <div className="shelf-wrap gcp-why">
+        <Reveal className="shelf-wrap gcp-reveal gcp-reveal--why gcp-why">
           <h2 id="gcp-why" className="shelf-heading">
             {content.whyTitle}
           </h2>
@@ -135,11 +136,11 @@ export default async function PersonalisedGiftCardPage() {
               <p key={index}>{paragraph}</p>
             ))}
           </div>
-        </div>
+        </Reveal>
       </section>
 
       <section className="shelf-section" aria-labelledby="gcp-loved">
-        <div className="shelf-wrap">
+        <Reveal className="shelf-wrap gcp-reveal gcp-reveal--loved">
           <h2 id="gcp-loved" className="shelf-heading gcp-section-title">
             {content.lovedTitle}
           </h2>
@@ -151,11 +152,11 @@ export default async function PersonalisedGiftCardPage() {
               </li>
             ))}
           </ul>
-        </div>
+        </Reveal>
       </section>
 
       <section className="shelf-section shelf-section--sand" aria-labelledby="gcp-for-whom">
-        <div className="shelf-wrap">
+        <Reveal className="shelf-wrap gcp-reveal gcp-reveal--people">
           <h2 id="gcp-for-whom" className="shelf-heading gcp-section-title">
             {content.forWhomTitle}
           </h2>
@@ -178,11 +179,11 @@ export default async function PersonalisedGiftCardPage() {
               <li key={occasion}>{occasion}</li>
             ))}
           </ul>
-        </div>
+        </Reveal>
       </section>
 
       <section className="shelf-section" aria-labelledby="gcp-how">
-        <div className="shelf-wrap gcp-how-grid">
+        <Reveal className="shelf-wrap gcp-reveal gcp-reveal--how gcp-how-grid">
           <div>
             <h2 id="gcp-how" className="shelf-heading gcp-section-title">
               {content.howTitle}
@@ -204,22 +205,24 @@ export default async function PersonalisedGiftCardPage() {
               ))}
             </ul>
           </aside>
-        </div>
+        </Reveal>
       </section>
 
       <section className="shelf-section shelf-section--sand" aria-labelledby="gcp-faq">
-        <div className="shelf-wrap faq faq--editorial">
-          <div className="faq-intro">
-            <h2 id="gcp-faq" className="shelf-heading">
-              {content.faqTitle}
-            </h2>
+        <Reveal className="shelf-wrap gcp-reveal gcp-reveal--faq">
+          <div className="faq faq--editorial">
+            <div className="faq-intro">
+              <h2 id="gcp-faq" className="shelf-heading">
+                {content.faqTitle}
+              </h2>
+            </div>
+            <FaqAccordion items={faq} initial={faq.length} moreLabel="" fewerLabel="" />
           </div>
-          <FaqAccordion items={faq} initial={faq.length} moreLabel="" fewerLabel="" />
-        </div>
+        </Reveal>
       </section>
 
       <section className="shelf-section gcp-cta">
-        <div className="shelf-wrap">
+        <Reveal className="shelf-wrap gcp-reveal gcp-reveal--cta">
           <h2 className="shelf-heading">{content.ctaTitle}</h2>
           <p>{content.ctaBody}</p>
           <div className="gcp-cta-actions">
@@ -239,7 +242,7 @@ export default async function PersonalisedGiftCardPage() {
               {getDictionary(locale).footer.muranoGuide} <span aria-hidden="true">→</span>
             </Link>
           </div>
-        </div>
+        </Reveal>
       </section>
     </ShelfMain>
   );

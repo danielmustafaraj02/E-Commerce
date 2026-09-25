@@ -308,6 +308,8 @@ const en = {
   // entry points on the homepage and product page.
   giftFinder: {
     homeCtaLine: "Not sure what to choose? Find the perfect Murano gift",
+    homeCtaTime: "5 questions · about 5 minutes",
+    homeCtaDetails: "Tell us who it’s for, the occasion, their style, your budget and the kind of jewellery. We’ll match you with real Murano pieces in stock.",
     productCtaLine: "Not sure this is the one? Try our Gift Finder",
     metaTitle: "Gift Finder: Find the Perfect Murano Glass Gift",
     metaDescription:
@@ -1165,6 +1167,8 @@ const it: Dictionary = {
   },
   giftFinder: {
     homeCtaLine: "Non sai cosa scegliere? Trova il regalo di Murano perfetto",
+    homeCtaTime: "5 domande · circa 5 minuti",
+    homeCtaDetails: "Dicci per chi è, l’occasione, lo stile, il budget e il tipo di gioiello: ti abbineremo pezzi in vetro di Murano davvero disponibili.",
     productCtaLine: "Non sei sicuro che sia quello giusto? Prova il nostro Trova Regalo",
     metaTitle: "Trova Regalo: il regalo perfetto in vetro di Murano",
     metaDescription:
@@ -2029,6 +2033,8 @@ const fr: Dictionary = {
   },
   giftFinder: {
     homeCtaLine: "Vous hésitez ? Trouvez le cadeau Murano parfait",
+    homeCtaTime: "5 questions · environ 5 minutes",
+    homeCtaDetails: "Indiquez la personne, l’occasion, le style, le budget et le type de bijou. Nous vous proposerons des pièces en verre de Murano réellement disponibles.",
     productCtaLine: "Pas sûr que ce soit le bon ? Essayez notre Cadeau Idéal",
     metaTitle: "Cadeau Idéal, Le cadeau parfait en verre de Murano",
     metaDescription:
@@ -2897,6 +2903,8 @@ const de: Dictionary = {
   },
   giftFinder: {
     homeCtaLine: "Unentschlossen? Finden Sie das perfekte Murano-Geschenk",
+    homeCtaTime: "5 Fragen · etwa 5 Minuten",
+    homeCtaDetails: "Nennen Sie die beschenkte Person, den Anlass, den Stil, das Budget und die Schmuckart. Wir finden passende Murano-Glasstücke, die tatsächlich verfügbar sind.",
     productCtaLine: "Nicht sicher, ob das das Richtige ist? Testen Sie unseren Geschenkfinder",
     metaTitle: "Geschenkfinder, Das perfekte Geschenk aus Muranoglas",
     metaDescription:
@@ -3762,6 +3770,8 @@ const ar: Dictionary = {
   },
   giftFinder: {
     homeCtaLine: "لست متأكدًا مما تختار؟ اعثر على هدية مورانو المثالية",
+    homeCtaTime: "5 أسئلة · نحو 5 دقائق",
+    homeCtaDetails: "أخبرنا لمن الهدية والمناسبة والأسلوب والميزانية ونوع المجوهرات، لنقترح عليك قطعًا من زجاج مورانو متوفرة فعلًا.",
     productCtaLine: "غير متأكد أن هذا هو الخيار الأنسب؟ جرّب أداة اختيار الهدية لدينا",
     metaTitle: "أداة اختيار الهدية، الهدية المثالية من زجاج مورانو",
     metaDescription:
@@ -4600,6 +4610,8 @@ const zh: Dictionary = {
   },
   giftFinder: {
     homeCtaLine: "不确定选什么？找到完美的穆拉诺礼物",
+    homeCtaTime: "5个问题 · 约5分钟",
+    homeCtaDetails: "告诉我们赠送对象、场合、风格、预算和首饰类型，即可查看当前有货的穆拉诺玻璃作品。",
     productCtaLine: "不确定这是不是合适的礼物？试试我们的礼物查找器",
     metaTitle: "礼物查找器，完美的穆拉诺玻璃礼物",
     metaDescription: "回答五个简单问题，我们将为您推荐完美的手工穆拉诺玻璃礼物，均从真实现货中挑选。",
@@ -5428,6 +5440,8 @@ const ru: Dictionary = {
   },
   giftFinder: {
     homeCtaLine: "Не знаете, что выбрать? Найдите идеальный подарок из муранского стекла",
+    homeCtaTime: "5 вопросов · около 5 минут",
+    homeCtaDetails: "Укажите получателя, повод, стиль, бюджет и тип украшения. Мы подберём изделия из муранского стекла, которые действительно есть в наличии.",
     productCtaLine: "Не уверены, что это то самое? Попробуйте наш Подборщик подарков",
     metaTitle: "Подборщик подарков, идеальный подарок из муранского стекла",
     metaDescription:
@@ -6291,6 +6305,8 @@ const es: Dictionary = {
   },
   giftFinder: {
     homeCtaLine: "¿No sabes qué elegir? Encuentra el regalo perfecto de Murano",
+    homeCtaTime: "5 preguntas · unos 5 minutos",
+    homeCtaDetails: "Cuéntanos para quién es, la ocasión, el estilo, tu presupuesto y el tipo de joya. Te mostraremos piezas de vidrio de Murano realmente disponibles.",
     productCtaLine: "¿No estás seguro de que sea el indicado? Prueba nuestro Buscador de Regalos",
     metaTitle: "Buscador de Regalos, El regalo perfecto de vidrio de Murano",
     metaDescription:
@@ -7151,6 +7167,8 @@ const pt: Dictionary = {
   },
   giftFinder: {
     homeCtaLine: "Não sabe o que escolher? Encontre o presente de Murano perfeito",
+    homeCtaTime: "5 perguntas · cerca de 5 minutos",
+    homeCtaDetails: "Indique para quem é, a ocasião, o estilo, o orçamento e o tipo de joia. Vamos sugerir peças de vidro de Murano realmente disponíveis.",
     productCtaLine: "Não tem a certeza se é a peça certa? Experimente o nosso Localizador de Presentes",
     metaTitle: "Localizador de Presentes, O presente perfeito em vidro de Murano",
     metaDescription:
@@ -8010,6 +8028,8 @@ const hi: Dictionary = {
   },
   giftFinder: {
     homeCtaLine: "समझ नहीं आ रहा क्या चुनें? परफेक्ट मुरानो गिफ्ट खोजें",
+    homeCtaTime: "5 सवाल · लगभग 5 मिनट",
+    homeCtaDetails: "बताइए यह किसके लिए है, अवसर, पसंदीदा शैली, बजट और गहने का प्रकार क्या है। हम उपलब्ध मुरानो ग्लास के असली गहने सुझाएँगे।",
     productCtaLine: "पक्का नहीं कि यही सही है? हमारा गिफ्ट फाइंडर आज़माएं",
     metaTitle: "गिफ्ट फाइंडर, मुरानो ग्लास का परफेक्ट गिफ्ट",
     metaDescription:
@@ -8867,6 +8887,8 @@ const ja: Dictionary = {
   },
   giftFinder: {
     homeCtaLine: "何を選べばいいかお悩みですか？ぴったりのムラーノギフトを見つけましょう",
+    homeCtaTime: "5つの質問・約5分",
+    homeCtaDetails: "贈る相手、贈る場面、好み、予算、ジュエリーの種類を教えてください。在庫のあるムラーノガラス作品からご提案します。",
     productCtaLine: "これで決まりか迷ったら？ギフトファインダーをお試しください",
     metaTitle: "ギフトファインダー、ムラーノガラスのぴったりの贈り物",
     metaDescription:

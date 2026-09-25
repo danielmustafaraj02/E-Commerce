@@ -29,6 +29,7 @@ import { hreflangAlternates, ogLocale } from "@/lib/hreflang";
 import { ProductPurchasePanel } from "@/components/product-purchase-panel";
 import { ShareButtons } from "@/components/share-buttons";
 import { ShelfItem } from "@/components/shelf-item";
+import { Reveal } from "@/components/reveal";
 import { GiftCardAd } from "@/components/gift-card-ad";
 import { homeFontClasses } from "@/app/home-fonts";
 import "../../home.css";
@@ -598,7 +599,10 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
           catalog's galleries (see ProductGallery), not this product's own
           photography — deliberately, since every piece ships in the same box. */}
       <section className="shelf-section shelf-section--blush">
-        <div className="shelf-wrap shop-gift-section">
+        <Reveal
+          className="shelf-wrap shop-gift-section shop-gift-reveal"
+          repeatOnView
+        >
           <div className="shop-gift-photo">
             <CatalogImage
               src="/products/orecchini-in-vetro-di-murano/orecchini-goccia-di-rubino-3.png"
@@ -607,7 +611,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
               sizes="(min-width: 40rem) 45vw, 100vw"
             />
           </div>
-          <div>
+          <div className="shop-gift-copy">
             <p className="shop-gift-eyebrow">{dict.product.giftSectionEyebrow}</p>
             <h2 className="shop-gift-headline">{dict.product.giftSectionHeadline}</h2>
             <p className="shop-gift-body">{dict.product.giftSectionBody}</p>
@@ -630,7 +634,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
               </li>
             </ul>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       {product.reviews.length > 0 && (
@@ -674,13 +678,16 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
         <div className="shelf-wrap">
           <div className={story ? "shop-story-faq-grid" : undefined}>
             {story && (
-              <div className="shop-story">
-                <h2 className="shelf-heading">{dict.product.storyTitle}</h2>
+              <Reveal className="shop-story shop-story-reveal">
+                <h2 className="shelf-heading shop-story-heading">{dict.product.storyTitle}</h2>
                 <p className="shop-story-prose">{story}</p>
-                <Link href="/blog/history-of-murano-glass" className="shelf-link">
+                <Link
+                  href="/blog/history-of-murano-glass"
+                  className="shelf-link shop-story-link"
+                >
                   {dict.journal.storyLink} <span aria-hidden="true">→</span>
                 </Link>
-              </div>
+              </Reveal>
             )}
             <FaqSection items={faq} dict={dict} variant="compact" />
           </div>

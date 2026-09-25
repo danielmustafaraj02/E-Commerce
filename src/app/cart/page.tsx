@@ -22,7 +22,7 @@ export default async function CartPage() {
   );
 
   return (
-    <ShelfMain>
+    <ShelfMain className="shelf--footer-space">
       <ShelfHead title={dict.cart.title} width="lg">
         <p className="shop-lede">{dict.cart.subtitle}</p>
       </ShelfHead>
