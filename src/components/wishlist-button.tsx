@@ -5,7 +5,7 @@ import { toggleWishlist } from "@/app/products/[slug]/wishlist-actions";
 import { useWishlistStore } from "@/lib/wishlist-store";
 import { ConfettiBurst } from "@/components/confetti-burst";
 
-const CONFETTI_DURATION_MS = 850;
+const CONFETTI_DURATION_MS = 1800;
 
 function HeartIcon({ filled }: { filled: boolean }) {
   return (
@@ -96,7 +96,7 @@ export function WishlistButton({
               {guestSaved ? removeLabel : addLabel}
             </span>
           </button>
-          {celebrate && <ConfettiBurst />}
+          {celebrate && <ConfettiBurst size="large" />}
         </div>
       </div>
     );
@@ -131,7 +131,7 @@ export function WishlistButton({
             {saved ? removeLabel : addLabel}
           </span>
         </button>
-        {celebrate && <ConfettiBurst />}
+        {celebrate && <ConfettiBurst size="large" />}
       </div>
       {error && <p className="text-danger mt-1 text-xs">{error}</p>}
     </div>

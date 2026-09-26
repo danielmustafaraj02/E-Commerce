@@ -1003,19 +1003,67 @@
   }
   @media (min-width: 48rem) {
     @supports (animation-timeline: view()) {
+      /* One scroll timeline for the whole section, so the heading and the
+         first row of cards play as a single ordered sequence: eyebrow,
+         heading, gold rule, then cards left to right. Scrolling back up
+         runs the exact reverse: cards leave right to left, then the text
+         folds away. Percentages are of the section's full pass through
+         the viewport (the heading enters at ~5%, the first row at ~13%). */
+      .shelf-section--categories {
+        view-timeline: --cat-scroll block;
+      }
+      .home-category-reveal[data-reveal] .shelf-eyebrow,
+      .home-category-reveal[data-reveal] .shelf-heading,
+      .home-category-reveal[data-reveal] .shelf-eyebrow::before,
+      .home-category-reveal[data-reveal] .shelf-eyebrow::after,
+      .home-category-reveal[data-reveal] .shelf-heading::after,
       .shelf-categories .shelf-category {
-        animation-name: home-category-scroll-in;
         animation-duration: auto;
+        animation-delay: 0s;
         animation-timing-function: linear;
         animation-fill-mode: both;
+        animation-iteration-count: 1;
+        animation-direction: normal;
+        animation-timeline: --cat-scroll;
+      }
+      .home-category-reveal[data-reveal] .shelf-eyebrow {
+        animation-name: home-look-copy-in;
+        animation-range: cover 5.5% cover 10%;
+      }
+      .home-category-reveal[data-reveal] .shelf-eyebrow::before,
+      .home-category-reveal[data-reveal] .shelf-eyebrow::after {
+        animation-name: home-look-rule-in;
+        animation-range: cover 6% cover 11%;
+      }
+      .home-category-reveal[data-reveal] .shelf-heading {
+        animation-name: home-look-copy-in;
+        animation-range: cover 7% cover 12%;
+      }
+      .home-category-reveal[data-reveal] .shelf-heading::after {
+        animation-name: home-look-rule-in;
+        animation-range: cover 10% cover 13.5%;
+      }
+      .shelf-categories .shelf-category {
+        animation-name: home-category-scroll-in;
+        animation-range: cover 13.5% cover 23%;
+      }
+      .shelf-categories .shelf-category:nth-child(2) {
+        animation-range: cover 16.5% cover 26%;
+      }
+      .shelf-categories .shelf-category:nth-child(3) {
+        animation-range: cover 19.5% cover 29%;
+      }
+      /* Further rows sit well below the heading, so each card follows its
+         own position instead, still staggered left to right. */
+      .shelf-categories .shelf-category:nth-child(n + 4) {
         animation-timeline: view();
-        animation-range: entry 10% cover 40%;
+        animation-range: entry 10% cover 30%;
       }
-      .shelf-categories .shelf-category:nth-child(3n + 2) {
-        animation-range: entry 25% cover 46%;
+      .shelf-categories .shelf-category:nth-child(3n + 2):nth-child(n + 4) {
+        animation-range: entry 30% cover 35%;
       }
-      .shelf-categories .shelf-category:nth-child(3n + 3) {
-        animation-range: entry 40% cover 52%;
+      .shelf-categories .shelf-category:nth-child(3n + 3):nth-child(n + 4) {
+        animation-range: entry 50% cover 40%;
       }
     }
 
@@ -1686,5 +1734,21 @@
   .gc-ad-grid {
     grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
     gap: 5rem;
+  }
+}
+
+/* Phones: every band that carries a photo sits on pure white, the photos' own
+   studio background, so no cream/ivory tint shows around or behind a picture.
+   The hero drops its marble backdrop for the same reason. Desktop keeps the
+   tinted bands and the marble. */
+@media (max-width: 47.99rem) {
+  .shelf-hero {
+    background: #fff;
+  }
+  .shelf-hero-backdrop {
+    display: none;
+  }
+  .shelf-section[class*="--"]:has(img) {
+    background: #fff;
   }
 }

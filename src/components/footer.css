@@ -60,7 +60,7 @@ body:has(.auth-flow-page) .site-footer {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  padding-block: 2rem 1.75rem;
+  padding-block: 1.25rem 1.5rem;
 }
 
 /* -- Editorial band ------------------------------------------------------- */
@@ -76,30 +76,33 @@ body:has(.auth-flow-page) .site-footer {
   box-shadow: inset 0 0 0 1px color-mix(in srgb, #b89a62 16%, transparent);
   overflow: hidden;
 }
+/* Phones: plain white behind the photo, the image's own background. */
+@media (max-width: 47.99rem) {
+  .footer-editorial {
+    background: #fff;
+  }
+}
 .footer-editorial-text {
   position: relative;
   z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.75rem;
-  padding: 1.75rem 1.5rem 2rem;
+  gap: 0.55rem;
+  padding: 1.25rem 1.5rem 1.4rem;
 }
 .footer-editorial-text p {
   margin: 0;
   color: var(--footer-soft);
   line-height: 1.5;
 }
-.footer-wave {
-  color: var(--footer-teal);
-}
 .footer-outline-button {
   display: inline-flex;
   text-align: start;
   align-items: center;
   gap: 0.5rem;
-  min-height: 2.9rem;
-  margin-top: 0.4rem;
+  min-height: 2.6rem;
+  margin-top: 0.2rem;
   padding: 0 1.1rem;
   border: 1px solid var(--footer-ink);
   border-radius: 6px;
@@ -128,7 +131,7 @@ body:has(.auth-flow-page) .site-footer {
 .footer-editorial-image {
   position: relative;
   order: -1;
-  min-height: 13rem;
+  min-height: 10rem;
 }
 .footer-editorial-image-reveal[data-reveal] {
   opacity: 1;
@@ -174,8 +177,8 @@ body:has(.auth-flow-page) .site-footer {
   isolation: isolate;
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
-  padding: 1.75rem;
+  gap: 0.7rem;
+  padding: 1.4rem;
   border-radius: 14px;
   border: 1px solid color-mix(in srgb, #b89a62 62%, transparent);
   background:
@@ -539,7 +542,7 @@ body:has(.auth-flow-page) .site-footer {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 2.75rem;
-    padding-block: 3.5rem;
+    padding-block: 2rem;
     border-bottom: 1px solid var(--footer-rule);
   }
   .footer-editorial {
@@ -548,12 +551,12 @@ body:has(.auth-flow-page) .site-footer {
     align-items: stretch;
   }
   .footer-editorial-text {
-    padding: 2.5rem 2.75rem;
+    padding: 1.5rem 1.75rem;
     justify-content: center;
   }
   .footer-editorial-image {
     order: 0;
-    min-height: 14rem;
+    min-height: 11rem;
   }
   .footer-editorial-image img {
     object-position: 30% 80%;
@@ -562,7 +565,7 @@ body:has(.auth-flow-page) .site-footer {
     mask-image: linear-gradient(to right, transparent, #000 45%);
   }
   .footer-newsletter {
-    padding: 2.5rem;
+    padding: 1.75rem;
     justify-content: center;
   }
   .site-footer-body {

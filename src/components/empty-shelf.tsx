@@ -1,7 +1,8 @@
+import type { CSSProperties } from "react";
 import { Link } from "@/components/localized-link";
 
 // Empty cart / wishlist: an animated line icon (a beating heart, a cart
-// rolling in place), one line in the display serif, one sentence, one CTA.
+// skidding into its circle), one line in the display serif, one sentence, one CTA.
 export function EmptyShelf({
   icon,
   title,
@@ -15,8 +16,46 @@ export function EmptyShelf({
   cta: string;
   href?: string;
 }) {
+  const confettiColors = ["#b89a62", "#17464a", "#d6b5a1", "#8da9a5"];
+
   return (
     <div className="shop-empty-atelier">
+      {icon === "heart" && (
+        <div className="shop-empty-confetti" aria-hidden="true">
+          {Array.from({ length: 48 }, (_, index) => {
+            const angle = (index / 48) * Math.PI * 2;
+            const burst = 5 + (index % 5) * 2;
+
+            return (
+              <span
+                key={index}
+                className={`shop-empty-confetti-piece shop-empty-confetti-piece--${["ribbon", "dot", "diamond"][index % 3]}`}
+                style={
+                  {
+                    left: `${50 + Math.cos(angle) * 1.5}%`,
+                    top: `${70 + Math.sin(angle) * 1.5}vh`,
+                    backgroundColor: confettiColors[index % confettiColors.length],
+                    animationDelay: `${(index % 8) * 35}ms`,
+                    animationDuration: `${2300 + (index % 7) * 170}ms`,
+                    "--confetti-burst-x": `${Math.cos(angle) * burst}vw`,
+                    "--confetti-burst-y": `${Math.sin(angle) * burst}vh`,
+                    "--confetti-drift-x": `${Math.cos(angle) * (18 + (index % 6) * 5)}vw`,
+                    "--confetti-fall-y": `${25 + (index % 5) * 7}vh`,
+                    "--confetti-spin": `${(index % 2 === 0 ? 1 : -1) * (540 + (index % 7) * 180)}deg`,
+                  } as CSSProperties
+                }
+              />
+            );
+          })}
+        </div>
+      )}
+      {icon === "cart" && (
+        <span className="shop-empty-cart-trail" aria-hidden="true">
+          <i />
+          <i />
+          <i />
+        </span>
+      )}
       <span className={`shop-empty-icon shop-empty-icon--${icon}`} aria-hidden="true">
         {icon === "heart" ? (
           <svg viewBox="0 0 24 24" width="50" height="50" fill="none">

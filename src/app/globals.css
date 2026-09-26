@@ -28,6 +28,57 @@
   --store-secondary: #4f46e5;
 }
 
+/* A custom Murano scrollbar: dark lagoon glass with a fine champagne highlight
+   on a warm porcelain track. Keep it on the document scrollbar so native
+   scrolling and keyboard behavior stay intact. */
+html,
+body {
+  scrollbar-color: #123d43 #e8dfd0;
+  scrollbar-width: auto;
+  scrollbar-gutter: stable;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 18px;
+  height: 18px;
+}
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+  border-inline-start: 1px solid #d1c2a9;
+  background: linear-gradient(180deg, #eee8dc 0%, #ddd1bc 100%);
+}
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+  min-height: 3.5rem;
+  border: 2px solid #e8dfd0;
+  border-radius: 0;
+  background-color: #123d43;
+  background-image:
+    linear-gradient(90deg, transparent 34%, #d9c08c 50%, transparent 66%),
+    linear-gradient(180deg, #1f6870 0%, #0b3035 100%);
+  background-clip: padding-box;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease;
+}
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover {
+  border-color: #e1d3b9;
+  background-color: #b89a62;
+  background-image:
+    linear-gradient(90deg, transparent 34%, #fff3d2 50%, transparent 66%),
+    linear-gradient(180deg, #b89a62 0%, #8b6c3f 100%);
+}
+html::-webkit-scrollbar-thumb:active,
+body::-webkit-scrollbar-thumb:active {
+  background-color: #9c7b47;
+  background-image: linear-gradient(180deg, #c4a66d 0%, #8b6c3f 100%);
+}
+html::-webkit-scrollbar-corner,
+body::-webkit-scrollbar-corner {
+  background: #e8dfd0;
+}
+
 /* @theme inline values that are plain literals get inlined directly into the
    generated utility (e.g. `.text-danger{color:#dc2626}`), which would make a
    dark-mode override below a dead rule nobody reads. Routing every token
@@ -697,26 +748,6 @@ button:not(:disabled),
 .locale-transition-flag--to {
   animation: locale-flag-land-cute 1.05s cubic-bezier(0.15, 0.85, 0.35, 1) 0.15s both;
 }
-.locale-transition-arrow {
-  position: absolute;
-  z-index: 1;
-  top: 50%;
-  left: 50%;
-  display: grid;
-  width: 2.6rem;
-  aspect-ratio: 1;
-  place-items: center;
-  border: 1.5px solid rgb(217 199 160 / 50%);
-  border-radius: 50%;
-  background: linear-gradient(135deg, #fef9f0 0%, #f9f0e6 100%);
-  box-shadow: 0 0.6rem 1.5rem rgb(102 91 80 / 15%);
-  color: rgb(217 199 160 / 85%);
-  font-family: Georgia, serif;
-  font-size: 1.4rem;
-  font-weight: 300;
-  transform: translate(-50%, -50%);
-  animation: locale-arrow-sweep-cute 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.28s both;
-}
 @keyframes locale-overlay-in {
   from { opacity: 0; backdrop-filter: blur(0); }
   to { opacity: 1; backdrop-filter: blur(8px); }
@@ -731,10 +762,6 @@ button:not(:disabled),
   55% { opacity: 1; transform: translate(calc(-50% - 0.4rem), -50%) rotateY(15deg) rotateZ(-3deg) scale(1.1); }
   78% { opacity: 1; transform: translate(calc(-50% + 0.2rem), -50%) rotateY(-4deg) rotateZ(1deg) scale(0.99); }
   100% { opacity: 1; transform: translate(-50%, -50%) rotateY(0) rotateZ(0) scale(1); }
-}
-@keyframes locale-arrow-sweep-cute {
-  from { opacity: 0; transform: translate(calc(-50% - 0.6rem), -50%) scale(0.4) rotate(-90deg); }
-  to { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0); }
 }
 @keyframes locale-label-arrive-cute {
   from { opacity: 0; transform: translateY(0.6rem) scale(0.92); }

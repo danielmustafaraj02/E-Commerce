@@ -1,8 +1,15 @@
 import { db } from "@/lib/db";
 import type { Locale } from "@/lib/i18n/locale";
-import { localizedName, productImageAlt } from "@/lib/product-i18n";
+import {
+  localizedDescription,
+  localizedName,
+  localizedStory,
+  productImageAlt,
+} from "@/lib/product-i18n";
 import { LOOK_SIZE, lookPricing } from "@/lib/looks";
 import { deriveProductType, type ProductType } from "@/lib/gift-finder";
+import { productSizeDictKey, type SizeDictKey } from "@/lib/product-sizing";
+import { isProductColorKey, type ProductColorKey } from "@/lib/product-colors";
 
 export type LookPieceView = {
   productId: string;
@@ -106,6 +113,56 @@ export async function getAllLooks(locale: Locale, take?: number): Promise<LookVi
 export async function getLookById(id: string, locale: Locale): Promise<LookView | null> {
   const look = await db.look.findFirst({ where: { id, active: true }, include: LOOK_INCLUDE });
   return look ? (toLookViews([look], locale)[0] ?? null) : null;
+}
+
+// The long-form copy the look page shows under each piece. Kept out of
+// LookPieceView so the product page, home page and gift finder (which ship
+// that view to the client) don't carry every description along.
+export type LookPieceDetails = {
+  description: string;
+  story: string;
+  sizeKey: SizeDictKey | null;
+  color: ProductColorKey | null;
+};
+
+export async function getLookPieceDetails(
+  productIds: string[],
+  locale: Locale
+): Promise<Record<string, LookPieceDetails>> {
+  if (productIds.length === 0) return {};
+  const products = await db.product.findMany({
+    where: { id: { in: productIds } },
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      descriptionEn: true,
+      descriptionFr: true,
+      descriptionDe: true,
+      descriptionAr: true,
+      descriptionZh: true,
+      descriptionRu: true,
+      descriptionEs: true,
+      descriptionPt: true,
+      descriptionHi: true,
+      descriptionJa: true,
+      story: true,
+      storyEn: true,
+      color: true,
+      category: { select: { name: true, nameEn: true } },
+    },
+  });
+  return Object.fromEntries(
+    products.map((p) => [
+      p.id,
+      {
+        description: localizedDescription(p, locale),
+        story: localizedStory(p, locale),
+        sizeKey: productSizeDictKey(p.category ?? null),
+        color: isProductColorKey(p.color) ? p.color : null,
+      },
+    ])
+  );
 }
 
 // What each product is (necklace, bracelet, earrings or none of those), from

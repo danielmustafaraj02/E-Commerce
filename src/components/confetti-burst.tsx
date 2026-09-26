@@ -5,7 +5,7 @@ import type { CSSProperties } from "react";
 // (or just leave it; it's invisible and inert once the animation ends).
 // Used by the wishlist heart (wishlist-button.tsx) and the post-registration
 // welcome moment (account/page.tsx).
-const PIECES: {
+type ConfettiPiece = {
   tx: number;
   ty: number;
   rot: number;
@@ -14,7 +14,9 @@ const PIECES: {
   rounded: string;
   className: string;
   delay: number;
-}[] = [
+};
+
+const PIECES: ConfettiPiece[] = [
   {
     tx: -38,
     ty: -46,
@@ -117,10 +119,35 @@ const PIECES: {
   },
 ];
 
-export function ConfettiBurst() {
+const LARGE_PIECES: ConfettiPiece[] = Array.from({ length: 44 }, (_, index) => {
+  const angle = (index / 44) * Math.PI * 2;
+  const distance = 145 + (index % 8) * 28;
+  const palette = [
+    "bg-accent",
+    "bg-[color:var(--glass-teal)]",
+    "bg-[#f5c451]",
+    "bg-[color:var(--glass-rose)]",
+  ];
+  const shapes = ["rounded-sm", "rounded-full"];
+
+  return {
+    tx: Math.round(Math.cos(angle) * distance),
+    ty: Math.round(Math.sin(angle) * distance),
+    rot: (index % 2 === 0 ? 1 : -1) * (360 + (index % 7) * 120),
+    w: index % 3 === 0 ? 6 : 9,
+    h: index % 3 === 0 ? 12 : 7,
+    rounded: shapes[index % shapes.length],
+    className: palette[index % palette.length],
+    delay: (index % 11) * 0.025,
+  };
+});
+
+export function ConfettiBurst({ size = "small" }: { size?: "small" | "large" }) {
+  const pieces = size === "large" ? LARGE_PIECES : PIECES;
+
   return (
     <span className="pointer-events-none absolute inset-0" aria-hidden="true">
-      {PIECES.map((piece, i) => (
+      {pieces.map((piece, i) => (
         <span
           key={i}
           className={`confetti-piece absolute top-1/2 left-1/2 ${piece.rounded} ${piece.className}`}
@@ -132,6 +159,7 @@ export function ConfettiBurst() {
               "--ty": `${piece.ty}px`,
               "--rot": `${piece.rot}deg`,
               animationDelay: `${piece.delay}s`,
+              ...(size === "large" ? { animationDuration: "1.55s" } : {}),
             } as CSSProperties
           }
         />

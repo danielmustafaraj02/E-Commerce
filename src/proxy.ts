@@ -41,6 +41,13 @@ const ADMIN_SESSION_MAX_AGE_SECONDS = Number(process.env.ADMIN_SESSION_MAX_AGE_M
 const UNLOCALIZED_PATH_RE =
   /^\/(admin|robots\.txt|sitemap\.xml|manifest\.webmanifest|llms\.txt|icon\.png|apple-icon\.png|favicon\.ico)(\/|$)/;
 
+// A file from public/ (/products/x.png, /hero/x.jpg): no page URL here ends
+// in an extension, and the ones the app itself serves are listed above. Such
+// a request is served as it is; redirecting it to a /xx/ prefix broke
+// next/image, whose optimizer fetches the source path and rejects the
+// redirect ("isn't a valid image").
+const STATIC_FILE_RE = /\/[^/]+\.[a-z0-9]+$/i;
+
 export default async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const unlocalized = UNLOCALIZED_PATH_RE.test(pathname);
@@ -59,6 +66,7 @@ export default async function proxy(request: NextRequest) {
   if (!unlocalized) {
     const split = splitLocalePrefix(pathname);
     if (!split.locale) {
+      if (STATIC_FILE_RE.test(pathname)) return withSecurityHeaders(NextResponse.next());
       const preferred = detectLocale(
         request.cookies.get(LOCALE_COOKIE)?.value,
         request.headers.get("accept-language") ?? undefined

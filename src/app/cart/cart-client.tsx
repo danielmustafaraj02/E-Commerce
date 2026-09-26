@@ -166,7 +166,12 @@ export function CartClient({
           <li key={item.productId} className="shop-cart-line">
             {item.imageUrl ? (
               <Link href={`/products/${item.slug}`} className="shop-thumb shop-thumb--cart">
-                <CatalogImage src={item.imageUrl} alt={item.name} fill sizes="64px" />
+                <CatalogImage
+                  src={item.imageUrl}
+                  alt={item.name}
+                  fill
+                  sizes="(min-width: 48rem) 112px, 84px"
+                />
               </Link>
             ) : (
               <span className="shop-thumb shop-thumb--cart" aria-hidden="true" />
@@ -279,14 +284,24 @@ export function CartClient({
 
       {giftCardOffer && !giftCard && (
         <Link href="/personalised-gift-card" className="shop-panel shop-panel-pad cart-gift-invite">
-          <span className="cart-gift-invite-title">{giftCardOffer.dict.pdpTitle}</span>
-          <span className="cart-gift-invite-body">
-            {applyTemplate(giftCardOffer.dict.pdpLine, {
-              price: formatMoney(giftCardOffer.price, items[0].currency, locale),
-            })}
+          <span className="cart-gift-invite-art" aria-hidden="true">
+            <GiftCardPreview
+              size="small"
+              font="serif"
+              brand={giftCardOffer.brand}
+              lines={[giftCardOffer.dict.adHeadline]}
+            />
           </span>
-          <span className="cart-gift-invite-cta">
-            {giftCardOffer.dict.pdpCta} <span aria-hidden="true">→</span>
+          <span className="cart-gift-invite-copy">
+            <span className="cart-gift-invite-title">{giftCardOffer.dict.pdpTitle}</span>
+            <span className="cart-gift-invite-body">
+              {applyTemplate(giftCardOffer.dict.pdpLine, {
+                price: formatMoney(giftCardOffer.price, items[0].currency, locale),
+              })}
+            </span>
+            <span className="cart-gift-invite-cta">
+              {giftCardOffer.dict.pdpCta} <span aria-hidden="true">→</span>
+            </span>
           </span>
         </Link>
       )}

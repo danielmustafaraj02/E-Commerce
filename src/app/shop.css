@@ -207,7 +207,22 @@
   }
 }
 .shop-product-info {
+  position: relative;
   max-width: 32rem;
+  padding: clamp(1.25rem, 2.2vw, 2rem);
+  border: 1px solid color-mix(in srgb, var(--gold) 38%, var(--rule));
+  border-radius: 4px;
+  background: #fbf9f5;
+  box-shadow: 0 1.5rem 3rem -2rem rgb(18 61 67 / 24%);
+}
+.shop-product-info::before {
+  position: absolute;
+  top: -1px;
+  left: 1.5rem;
+  width: 3.25rem;
+  height: 1px;
+  background: var(--gold);
+  content: "";
 }
 
 .shop-product-photo,
@@ -768,11 +783,59 @@
 /* Empty cart / wishlist (components/empty-shelf.tsx): no box, just the bead
    strand, a serif line and the CTA, centred with plenty of air. */
 .shop-empty-atelier {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 3rem 1rem 3.5rem;
   text-align: center;
+}
+.shop-empty-confetti {
+  position: fixed;
+  z-index: 80;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.shop-empty-confetti-piece {
+  position: absolute;
+  width: 6px;
+  height: 12px;
+  border-radius: 1px;
+  opacity: 0;
+  animation: wishlist-confetti-fall 2.8s cubic-bezier(0.18, 0.7, 0.22, 1) both;
+  will-change: transform, opacity;
+}
+.shop-empty-confetti-piece--dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.shop-empty-confetti-piece--diamond {
+  width: 8px;
+  height: 8px;
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+@keyframes wishlist-confetti-fall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(0) scale(0.35);
+  }
+  14% {
+    opacity: 1;
+    transform: translate3d(var(--confetti-burst-x), var(--confetti-burst-y), 0) rotate(160deg) scale(1);
+    animation-timing-function: cubic-bezier(0.2, 0.55, 0.3, 1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--confetti-drift-x), var(--confetti-fall-y), 0) rotate(var(--confetti-spin)) scale(0.7);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shop-empty-confetti {
+    display: none;
+  }
 }
 .shop-empty-icon {
   display: grid;
@@ -812,25 +875,121 @@
     transform: scale(1.12);
   }
 }
-/* The cart rolls a little way out and back, with a small tilt at each end. */
-.shop-empty-cart-body {
-  transform-box: fill-box;
-  transform-origin: 50% 100%;
-  animation: empty-cart-roll 2.8s ease-in-out infinite;
+/* The empty cart makes one long approach, then skids gently into its bead. */
+.shop-empty-icon--cart svg {
+  transform-box: border-box;
+  transform-origin: center;
+  animation: empty-cart-arrive 1.9s cubic-bezier(0.62, 0, 0.82, 1) both;
 }
-@keyframes empty-cart-roll {
-  0%,
+.shop-empty-cart-trail {
+  position: absolute;
+  z-index: -1;
+  top: 6.25rem;
+  left: 0;
+  width: calc(50% - 3.25rem);
+  height: 1px;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(90deg, transparent, rgb(184 154 98 / 36%));
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: empty-cart-trail 1.9s ease-out both;
+}
+.shop-empty-cart-trail i {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--gold);
+  opacity: 0;
+  transform: translateY(-50%) scale(0.25);
+  animation: empty-cart-dust 650ms cubic-bezier(0.16, 0.8, 0.3, 1) both;
+}
+.shop-empty-cart-trail i:nth-child(1) {
+  animation-delay: 1.15s;
+}
+.shop-empty-cart-trail i:nth-child(2) {
+  top: 0;
+  right: 0.5rem;
+  width: 3px;
+  height: 3px;
+  animation-delay: 1.22s;
+}
+.shop-empty-cart-trail i:nth-child(3) {
+  top: 100%;
+  right: 0.8rem;
+  width: 2px;
+  height: 2px;
+  animation-delay: 1.28s;
+}
+@keyframes empty-cart-arrive {
+  0% {
+    opacity: 0;
+    transform: translateX(-100vw) rotate(-8deg) scale(0.92);
+  }
+  7% {
+    opacity: 1;
+  }
+  68% {
+    opacity: 1;
+    transform: translateX(0) rotate(0) scale(1);
+    animation-timing-function: cubic-bezier(0.15, 0.8, 0.2, 1);
+  }
+  76% {
+    transform: translateX(13px) rotate(4deg) scaleX(1.08) scaleY(0.92);
+    animation-timing-function: cubic-bezier(0.3, 0, 0.6, 1);
+  }
+  90% {
+    transform: translateX(-4px) rotate(-1.5deg) scaleX(0.99) scaleY(1.02);
+    animation-timing-function: ease-out;
+  }
   100% {
-    transform: translateX(-3px) rotate(0deg);
+    opacity: 1;
+    transform: translateX(0) rotate(0) scale(1);
+  }
+}
+@keyframes empty-cart-trail {
+  0% {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  58% {
+    opacity: 0.42;
+    transform: scaleX(0.78);
+  }
+  76% {
+    opacity: 0.56;
+    transform: scaleX(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(1);
+  }
+}
+@keyframes empty-cart-dust {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.25);
   }
   25% {
-    transform: translateX(3px) rotate(-4deg);
+    opacity: 0.58;
   }
-  50% {
-    transform: translateX(3px) rotate(0deg);
+  100% {
+    opacity: 0;
+    transform: translate(-1.1rem, -0.7rem) scale(1);
   }
-  75% {
-    transform: translateX(-3px) rotate(3deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .shop-empty-icon--cart svg,
+  .shop-empty-cart-trail,
+  .shop-empty-cart-trail i {
+    animation: none;
+  }
+  .shop-empty-icon--cart svg {
+    opacity: 1;
+    transform: none;
   }
 }
 .shop-empty-title {
@@ -926,8 +1085,9 @@
 /* -- Cart and order lines ------------------------------------------------------ */
 
 .shop-thumb--cart {
-  width: 4rem;
+  width: 5.25rem;
   flex-shrink: 0;
+  border-radius: 10px;
 }
 .shop-thumb--fill {
   width: 100%;
@@ -994,7 +1154,7 @@ a.shop-line-name:focus-visible {
   position: relative;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  min-height: 560px;
+  min-height: 569px;
   overflow: hidden;
   border: 1px solid color-mix(in srgb, #b89a62 34%, transparent);
   border-radius: 5px;
@@ -1009,7 +1169,19 @@ a.shop-line-name:focus-visible {
   flex-direction: column;
   justify-content: center;
   padding: clamp(2rem, 6vw, 5.25rem);
-  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 520ms cubic-bezier(0.62, 0, 0.82, 1);
+}
+.auth-form-content {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 200ms ease,
+    transform 200ms ease;
+}
+.auth-panel[data-transition-phase="fade-out"] .auth-form-content,
+.auth-panel[data-transition-phase="slide"] .auth-form-content {
+  opacity: 0;
+  transform: translateY(6px);
 }
 .auth-eyebrow {
   margin: 0;
@@ -1027,7 +1199,7 @@ a.shop-line-name:focus-visible {
   min-height: 100%;
   overflow: hidden;
   background: #77736d;
-  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 520ms cubic-bezier(0.62, 0, 0.82, 1);
 }
 .auth-panel[data-mode="register"] .auth-form-side {
   transform: translateX(100%);
@@ -1114,6 +1286,29 @@ a.shop-line-name:focus-visible {
   }
 }
 
+@media (min-width: 768px) and (max-height: 960px) {
+  .auth-flow-page > div {
+    padding-block: clamp(1rem, 3vh, 2rem);
+  }
+  .auth-panel {
+    min-height: 569px;
+  }
+  .auth-form-side {
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+  }
+  .shop-auth-title {
+    margin: 0.85rem 0 0.75rem;
+    font-size: clamp(1.85rem, 3vw, 2.35rem);
+  }
+  .auth-form-side .form-card,
+  .auth-form-side form {
+    gap: 0.8rem;
+  }
+  .auth-form-side .field {
+    padding-block: 0.4rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .auth-form-side,
   .auth-image-side {
@@ -1168,6 +1363,214 @@ a.shop-line-name:focus-visible {
   height: 100%;
 }
 
+/* About page: lead with Burano, framed like a moving editorial photograph. */
+.about-hero {
+  position: relative;
+  isolation: isolate;
+  min-height: clamp(33rem, 70svh, 49rem);
+  overflow: hidden;
+  border-bottom: 2px solid var(--gold);
+  background: #344a49;
+}
+.about-hero-image {
+  object-fit: cover;
+  object-position: 50% 36%;
+}
+/* Darkest where the copy sits (lower left), so the text reads against the
+   busy pink and yellow facades; the right-hand houses stay vivid. */
+.about-hero-shade {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 80% at 20% 85%, rgb(7 27 29 / 72%) 0%, rgb(7 27 29 / 48%) 45%, rgb(7 27 29 / 0%) 78%),
+    linear-gradient(90deg, rgb(9 31 33 / 42%) 0%, rgb(9 31 33 / 12%) 60%, transparent 100%),
+    linear-gradient(0deg, rgb(8 31 33 / 90%) 0%, rgb(8 31 33 / 68%) 22%, rgb(8 31 33 / 22%) 62%, transparent 100%);
+  pointer-events: none;
+}
+.about-hero::before {
+  position: absolute;
+  z-index: 2;
+  inset: 1rem;
+  border: 1px solid rgb(255 250 240 / 30%);
+  content: "";
+  pointer-events: none;
+}
+.about-hero-copy {
+  position: absolute;
+  z-index: 3;
+  right: clamp(2rem, 8vw, 8rem);
+  bottom: clamp(2.75rem, 7vh, 5rem);
+  left: clamp(2rem, 8vw, 8rem);
+  max-width: 78rem;
+  margin-inline: auto;
+  color: #fffaf0;
+}
+.about-hero-kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin: 0 0 1rem;
+  color: #e4c98e;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 3px rgb(0 0 0 / 55%);
+}
+.about-hero-kicker::before {
+  width: 2.5rem;
+  height: 1px;
+  background: #d2b474;
+  content: "";
+}
+.about-hero-title {
+  max-width: 16ch;
+  color: #fffaf0;
+  font-size: clamp(3.2rem, 7vw, 6.5rem);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  text-shadow:
+    0 2px 4px rgb(0 0 0 / 30%),
+    0 4px 32px rgb(0 0 0 / 38%);
+}
+.about-hero-title::after {
+  display: block;
+  width: 3.2rem;
+  height: 1px;
+  margin-top: 1.25rem;
+  background: #d2b474;
+  content: "";
+}
+/* Weight 500 and a tight shadow: Cormorant's hairlines at 400 break up
+   against the detailed facades behind. */
+.about-hero-intro {
+  max-width: 49rem;
+  margin: 1.1rem 0 0;
+  color: #fffaf0;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+  font-weight: 500;
+  line-height: 1.62;
+  text-shadow:
+    0 1px 2px rgb(0 0 0 / 55%),
+    0 2px 18px rgb(0 0 0 / 45%);
+}
+.about-page .shop-editorial {
+  padding-top: 2.5rem;
+}
+.about-page .shop-body {
+  padding-bottom: 0;
+}
+.about-gondola-scene {
+  position: relative;
+  width: 100%;
+  height: clamp(8rem, 15vw, 12.5rem);
+  margin-top: clamp(1.5rem, 4vw, 3rem);
+  overflow: hidden;
+  pointer-events: none;
+}
+.about-lagoon-svg {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.about-gondola-voyage {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: clamp(14rem, 28vw, 26rem);
+  transform: translateX(-100%);
+  animation: about-gondola-cross 42s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+.about-gondola-art {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.about-lagoon-water {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: about-lagoon-swell 9s ease-in-out infinite alternate;
+}
+.about-lagoon-ripple {
+  transform-box: fill-box;
+  animation: about-lagoon-drift 16s ease-in-out infinite alternate;
+}
+.about-lagoon-ripple--two {
+  animation-duration: 19s;
+  animation-direction: alternate-reverse;
+}
+.about-gondola-boat {
+  transform-box: fill-box;
+  transform-origin: 50% 78%;
+  animation: about-gondola-bob 7.5s ease-in-out infinite;
+}
+.about-gondolier {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: about-gondolier-balance 6s ease-in-out infinite;
+}
+.about-gondolier-oar {
+  transform-box: fill-box;
+  transform-origin: 0% 50%;
+  animation: about-gondola-row 5.2s ease-in-out infinite;
+}
+@keyframes about-lagoon-swell {
+  from { transform: scaleY(0.96) translateY(1px); }
+  to { transform: scaleY(1.05) translateY(-1px); }
+}
+@keyframes about-lagoon-drift {
+  from { transform: translateX(-14px); opacity: 0.45; }
+  to { transform: translateX(14px); opacity: 0.78; }
+}
+@keyframes about-gondola-cross {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100vw); }
+}
+@keyframes about-gondola-bob {
+  0%, 100% { transform: translateY(1px) rotate(-0.45deg); }
+  50% { transform: translateY(-2px) rotate(0.5deg); }
+}
+@keyframes about-gondolier-balance {
+  0%, 100% { transform: rotate(-1deg); }
+  50% { transform: rotate(1.1deg); }
+}
+@keyframes about-gondola-row {
+  0%, 100% { transform: rotate(-1.5deg); }
+  55% { transform: rotate(2.5deg); }
+}
+@media (max-width: 42rem) {
+  .about-hero {
+    min-height: clamp(36rem, 82svh, 46rem);
+  }
+  .about-hero-copy {
+    right: 1.75rem;
+    bottom: 2.5rem;
+    left: 1.75rem;
+  }
+  .about-hero-title {
+    font-size: clamp(3rem, 13vw, 4.5rem);
+  }
+  .about-hero-intro {
+    font-size: 1.08rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .about-lagoon-water,
+  .about-lagoon-ripple,
+  .about-gondola-boat,
+  .about-gondolier,
+  .about-gondolier-oar {
+    animation: none;
+  }
+}
+
 /* -- Loading, 404 and error screens ------------------------------------------- */
 
 .shop-skeleton {
@@ -1209,10 +1612,10 @@ a.shop-line-name:focus-visible {
    under it, so the name keeps a readable width. From 34rem it is one row. */
 .shop-cart-line {
   display: grid;
-  grid-template-columns: 4rem minmax(0, 1fr);
-  gap: 0.75rem 1rem;
+  grid-template-columns: 5.25rem minmax(0, 1fr);
+  gap: 0.75rem 1.1rem;
   align-items: start;
-  padding: 1rem;
+  padding: 1.15rem;
 }
 .shop-cart-controls {
   display: flex;
@@ -1230,11 +1633,19 @@ a.shop-line-name:focus-visible {
 }
 @media (min-width: 34rem) {
   .shop-cart-line {
-    grid-template-columns: 4rem minmax(0, 1fr) auto 5rem;
+    grid-template-columns: 5.25rem minmax(0, 1fr) auto 5rem;
     align-items: center;
   }
   .shop-cart-controls {
     display: contents;
+  }
+}
+@media (min-width: 48rem) {
+  .shop-cart-line {
+    grid-template-columns: 7rem minmax(0, 1fr) auto 5rem;
+  }
+  .shop-thumb--cart {
+    width: 7rem;
   }
 }
 
@@ -1365,6 +1776,464 @@ a.shop-line-name:focus-visible {
 }
 .shop-editorial--airy details {
   padding-block: 1.15rem;
+}
+
+/* -- Murano guide: lagoon editorial ------------------------------------------- */
+
+.murano-guide-head {
+  position: relative;
+  overflow: hidden;
+  padding-block: clamp(2.5rem, 6vw, 5.5rem);
+  border-bottom: 0;
+  background:
+    radial-gradient(ellipse at 16% 14%, rgb(217 205 187 / 18%), transparent 36%),
+    linear-gradient(112deg, #fff 0%, #faf8f5 62%, #f4f0e8 100%);
+}
+.murano-guide-head::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--teal), var(--gold) 54%, #c65b8a);
+  content: "";
+}
+.murano-guide-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(19rem, 0.82fr);
+  align-items: center;
+  gap: clamp(2.5rem, 7vw, 7rem);
+}
+.murano-guide-hero-copy {
+  max-width: 47rem;
+  padding-block: 1rem;
+}
+.murano-guide-kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 0 0 1.35rem;
+  color: var(--aventurine-deep);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.murano-guide-kicker::before {
+  width: 2.4rem;
+  height: 1px;
+  background: var(--gold);
+  content: "";
+}
+.murano-guide-title {
+  max-width: 14.5ch;
+  font-size: clamp(2.6rem, 4.3vw, 4.5rem);
+  line-height: 0.99;
+  letter-spacing: -0.025em;
+  text-wrap: pretty;
+}
+.murano-guide-intro {
+  max-width: 43rem;
+  margin: 1.6rem 0 0;
+  color: color-mix(in srgb, var(--ink) 88%, white);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.08rem, 1.4vw, 1.3rem);
+  line-height: 1.7;
+}
+.murano-gondola-scene {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: min(100%, 31rem);
+  justify-self: end;
+  aspect-ratio: 0.93;
+  border: 1px solid color-mix(in srgb, var(--gold) 52%, transparent);
+  border-radius: 48% 48% 3px 3px;
+  background: #d7c5a4;
+  box-shadow: 0 1.5rem 4rem rgb(27 53 53 / 12%);
+}
+.murano-gondola-scene::before {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  border: 1px solid rgb(255 255 255 / 52%);
+  border-radius: inherit;
+  content: "";
+  pointer-events: none;
+}
+.murano-gondola-scene svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.gondola-boat {
+  transform-origin: 50% 74%;
+  animation: gondola-glide 7s ease-in-out infinite;
+}
+/* The gondolier leans from the feet (on the stern) and the oar swings
+   between the hands, so the grip never leaves the oar. SVG user units. */
+.gondolier-body {
+  transform-origin: 161px 398px;
+  animation: gondolier-sway 4.2s ease-in-out infinite;
+}
+.gondolier-oar {
+  transform-origin: 182px 336px;
+  animation: gondola-row 3.4s ease-in-out infinite;
+}
+.gondola-ripple {
+  animation: lagoon-drift 12s linear infinite;
+}
+.gondola-ripple--two {
+  animation-duration: 16s;
+  animation-direction: reverse;
+}
+.venetian-gull {
+  fill: none;
+  stroke: #53645e;
+  stroke-linecap: round;
+  stroke-width: 2.1;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: venetian-flight 10s ease-in-out infinite;
+}
+.venetian-gull--two {
+  animation-delay: -4s;
+  animation-duration: 13s;
+  stroke-width: 1.7;
+}
+.venetian-gull--three {
+  animation-delay: -7s;
+  animation-duration: 15s;
+  stroke-width: 1.5;
+}
+.murano-guide-art-reveal {
+  width: min(100%, 52rem);
+  margin: 0 auto 1rem;
+}
+.murano-guide-art-reveal--seagull {
+  width: min(100%, 29rem);
+  margin-block: 0.5rem 1rem;
+}
+.murano-art-scene {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin: 0;
+  aspect-ratio: 2.4;
+  border: 1px solid color-mix(in srgb, var(--gold) 48%, var(--rule));
+  border-radius: 3px;
+  box-shadow: 0 1.2rem 2.6rem -2rem rgb(18 61 67 / 24%);
+}
+.murano-art-scene svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.murano-art-scene figcaption {
+  position: absolute;
+  right: 1rem;
+  bottom: 0.8rem;
+  padding: 0.34rem 0.65rem;
+  border: 1px solid rgb(255 255 255 / 42%);
+  background: rgb(18 61 67 / 82%);
+  color: #fffaf0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+.murano-art-scene--seagull {
+  overflow: visible;
+  aspect-ratio: 545 / 385;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.furnace-flame {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: furnace-blaze 1.8s ease-in-out infinite alternate;
+}
+.furnace-worker {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: furnace-worker-breathe 4.6s ease-in-out infinite;
+}
+.furnace-spark {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: furnace-sparkle 2.2s ease-in-out infinite;
+}
+.furnace-spark--two {
+  animation-delay: -0.8s;
+}
+.furnace-spark--three {
+  animation-delay: -1.4s;
+}
+.seagull-body {
+  transform-box: fill-box;
+  transform-origin: 52% 86%;
+  animation: seagull-breathe 4.4s ease-in-out infinite;
+  filter: drop-shadow(0 2px 2px rgb(31 48 50 / 12%));
+}
+.seagull-head {
+  transform-box: fill-box;
+  transform-origin: 12% 88%;
+  animation: seagull-head-turn 7s ease-in-out infinite;
+}
+.seagull-tail {
+  transform-box: fill-box;
+  transform-origin: 100% 50%;
+  animation: seagull-tail-sway 5.2s ease-in-out infinite;
+}
+.seagull-eye {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: seagull-blink 7.4s ease-in-out infinite;
+}
+.seagull-feather-glint {
+  animation: seagull-feather-shine 5.5s ease-in-out infinite;
+}
+.murano-guide-body {
+  width: min(100%, 82rem);
+  max-width: 82rem;
+  margin-inline: auto;
+  padding: clamp(0.75rem, 3vw, 2.5rem) clamp(1.25rem, 5vw, 5rem) 6rem;
+  counter-reset: guide-chapter;
+}
+.murano-guide-section {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(4.5rem, 0.22fr) minmax(0, 1fr);
+  column-gap: clamp(1.5rem, 5vw, 5.5rem);
+  padding-block: clamp(2.5rem, 5vw, 4.6rem);
+  border-top: 1px solid color-mix(in srgb, var(--gold) 42%, transparent);
+  counter-increment: guide-chapter;
+}
+.murano-guide-section::before {
+  grid-column: 1;
+  grid-row: 1 / span 8;
+  align-self: start;
+  padding-top: 0.45rem;
+  color: var(--gold);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.7rem, 2.5vw, 2.25rem);
+  font-variant-numeric: oldstyle-nums;
+  content: "0" counter(guide-chapter);
+}
+.murano-guide-section > :is(h2, p, div, ul, ol) {
+  grid-column: 2;
+  min-width: 0;
+}
+.murano-guide-section .shop-h2-plain {
+  margin: 0 0 1.25rem;
+  color: var(--ink);
+  font-size: clamp(1.9rem, 3.4vw, 2.75rem);
+  line-height: 1.1;
+  text-wrap: pretty;
+}
+.murano-guide-section > p,
+.murano-guide-section > div,
+.murano-guide-section > ul,
+.murano-guide-section > ol {
+  margin-top: 0;
+}
+.murano-guide-section > div.flex-col {
+  gap: 1.3rem;
+}
+.murano-guide-section h3 {
+  color: var(--aventurine-deep);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.015em;
+}
+.murano-guide-section ul {
+  padding: 0;
+  list-style: none;
+}
+.murano-guide-section ul li {
+  align-items: baseline;
+  gap: 0.85rem;
+}
+.murano-guide-section ul li > span:first-child {
+  color: var(--gold);
+  font-size: 1.2rem;
+}
+.murano-guide-section ol {
+  padding: 0;
+  list-style: none;
+}
+.murano-guide-section ol li > span:first-child {
+  border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
+  background: #fbf8f1;
+  color: var(--aventurine-deep);
+}
+.murano-guide-section details {
+  border-bottom: 1px solid color-mix(in srgb, var(--gold) 27%, transparent);
+}
+.murano-guide-section details summary {
+  color: var(--ink);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.28rem;
+  font-weight: 500;
+}
+.murano-guide-section details summary span {
+  color: var(--gold);
+  font-family: var(--font-ui), system-ui, sans-serif;
+}
+.murano-guide-section details p {
+  max-width: 48rem;
+}
+.murano-guide-cta-wrap {
+  margin-block: 1rem 4rem;
+}
+.murano-guide-cta-wrap .shop-cta {
+  height: auto;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
+  background:
+    radial-gradient(ellipse at 100% 0%, rgb(184 154 98 / 12%), transparent 42%),
+    #faf8f5;
+}
+.murano-guide-cta-wrap .shop-cta-title {
+  color: var(--ink);
+  font-size: clamp(1.75rem, 3vw, 2.3rem);
+}
+.murano-guide-cta-wrap .shop-cta p {
+  max-width: 42rem;
+}
+.murano-guide-cta-wrap .shop-chip {
+  border-radius: 2px;
+  background: #fff;
+}
+@keyframes gondola-glide {
+  0%, 100% { transform: translate3d(-1px, 0, 0) rotate(-0.4deg); }
+  50% { transform: translate3d(5px, -3px, 0) rotate(0.5deg); }
+}
+@keyframes gondolier-sway {
+  0%, 100% { transform: rotate(-1.2deg); }
+  50% { transform: rotate(1.4deg); }
+}
+@keyframes gondola-row {
+  0%, 100% { transform: rotate(-1.5deg); }
+  55% { transform: rotate(2.5deg); }
+}
+@keyframes lagoon-drift {
+  from { transform: translateX(-18px); }
+  to { transform: translateX(18px); }
+}
+@keyframes venetian-flight {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 17px -8px; }
+}
+@keyframes furnace-blaze {
+  from { transform: scaleY(0.94) skewX(-1deg); opacity: 0.92; }
+  to { transform: scaleY(1.06) skewX(1deg); opacity: 1; }
+}
+@keyframes furnace-worker-breathe {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -1.5px; }
+}
+@keyframes furnace-sparkle {
+  0%, 100% { opacity: 0.15; transform: scale(0.65) translateY(3px); }
+  48% { opacity: 0.95; transform: scale(1.2) translateY(-5px); }
+}
+@keyframes seagull-breathe {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -1.5px; }
+}
+@keyframes seagull-head-turn {
+  0%, 22%, 100% { rotate: 0deg; }
+  50%, 72% { rotate: 1.3deg; }
+}
+@keyframes seagull-tail-sway {
+  0%, 100% { rotate: 0deg; }
+  50% { rotate: -0.7deg; }
+}
+@keyframes seagull-blink {
+  0%, 90%, 94%, 100% { transform: scaleY(1); }
+  92% { transform: scaleY(0.12); }
+}
+@keyframes seagull-feather-shine {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 0.8; }
+}
+@media (max-width: 56rem) {
+  .murano-guide-hero {
+    grid-template-columns: minmax(0, 1fr) minmax(15rem, 0.75fr);
+    gap: 2rem;
+  }
+  .murano-guide-title {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+  }
+}
+@media (max-width: 42rem) {
+  .murano-guide-head {
+    padding-block: 2rem 2.5rem;
+  }
+  .murano-guide-hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.75rem;
+  }
+  .murano-guide-hero-copy {
+    padding-block: 0;
+  }
+  .murano-guide-kicker {
+    margin-bottom: 1rem;
+  }
+  .murano-guide-title {
+    max-width: 15ch;
+    font-size: clamp(2.55rem, 12vw, 3.7rem);
+  }
+  .murano-guide-intro {
+    margin-top: 1.15rem;
+    font-size: 1.12rem;
+  }
+  .murano-gondola-scene {
+    width: min(100%, 24rem);
+    justify-self: center;
+    aspect-ratio: 1.08;
+    border-radius: 42% 42% 3px 3px;
+  }
+  .murano-guide-body {
+    padding-inline: 1.25rem;
+    padding-bottom: 4rem;
+  }
+  .murano-guide-section {
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    column-gap: 0.8rem;
+    padding-block: 2.5rem;
+  }
+  .murano-guide-section::before {
+    font-size: 1.25rem;
+  }
+  .murano-guide-section .shop-h2-plain {
+    font-size: clamp(1.65rem, 8vw, 2.2rem);
+  }
+  .murano-guide-section details summary {
+    font-size: 1.12rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gondola-boat,
+  .gondolier-body,
+  .gondolier-oar,
+  .gondola-ripple,
+  .venetian-gull,
+  .furnace-flame,
+  .furnace-worker,
+  .furnace-spark,
+  .seagull-body,
+  .seagull-head,
+  .seagull-tail,
+  .seagull-eye,
+  .seagull-feather-glint {
+    animation: none;
+  }
 }
 
 /* -- Category copy ------------------------------------------------------------------- */
@@ -2555,12 +3424,33 @@ a.look-piece-name:focus-visible {
   cursor: pointer;
 }
 .cart-gift-invite {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  align-items: center;
+  gap: 1.5rem;
   color: inherit;
   text-decoration: none;
   transition: border-color 0.2s ease;
+}
+.cart-gift-invite-art {
+  display: block;
+  width: 7.5rem;
+  perspective: 900px;
+}
+.cart-gift-invite-art .gc-card--small {
+  max-width: 7.5rem;
+  padding: 1rem 0.75rem 0.75rem;
+  transform: rotate(-4deg);
+  transition: transform 350ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.cart-gift-invite:hover .cart-gift-invite-art .gc-card--small {
+  transform: rotate(0) translateY(-3px);
+}
+.cart-gift-invite-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
 }
 .cart-gift-invite:hover {
   border-color: var(--gold);
@@ -2581,6 +3471,17 @@ a.look-piece-name:focus-visible {
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
+}
+@media (max-width: 34rem) {
+  .cart-gift-invite {
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    gap: 1rem;
+  }
+  .cart-gift-invite-art,
+  .cart-gift-invite-art .gc-card--small {
+    width: 5.5rem;
+    max-width: 5.5rem;
+  }
 }
 .checkout-gift-note {
   margin: 0.75rem 0 0;

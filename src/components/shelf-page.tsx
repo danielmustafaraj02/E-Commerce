@@ -55,16 +55,22 @@ export function ShelfBody({
   width = "md",
   editorial = false,
   airy = false,
+  className = "",
 }: {
   children: ReactNode;
   width?: ShelfWidth;
   editorial?: boolean;
   airy?: boolean;
+  className?: string;
 }) {
   const modifiers = [editorial && "shop-editorial", airy && "shop-editorial--airy"]
     .filter(Boolean)
     .join(" ");
-  return <div className={`shelf-wrap shop-body ${widthClass(width)} ${modifiers}`}>{children}</div>;
+  return (
+    <div className={`shelf-wrap shop-body ${widthClass(width)} ${modifiers} ${className}`}>
+      {children}
+    </div>
+  );
 }
 
 // sm ≈ 30rem (a single form), md ≈ 42rem (checkout, account), lg ≈ 48rem (cart),

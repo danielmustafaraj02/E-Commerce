@@ -8,7 +8,8 @@ import { hreflangAlternates, localizedCanonical } from "@/lib/hreflang";
 import { AnimatedHeading } from "@/components/animated-heading";
 import { Reveal } from "@/components/reveal";
 import { ShelfMain } from "@/components/shelf-main";
-import { ShelfHead, ShelfBody } from "@/components/shelf-page";
+import { ShelfBody } from "@/components/shelf-page";
+import { AboutGondolaArt } from "@/components/about-gondola-art";
 
 export async function generateMetadata(): Promise<Metadata> {
   const [settings, locale] = await Promise.all([getStoreSettings(), getLocale()]);
@@ -63,28 +64,26 @@ export default async function AboutPage() {
   ];
 
   return (
-    <ShelfMain>
-      <ShelfHead
-        width="lg"
-        heading={<AnimatedHeading text={dict.about.title} className="shop-title" />}
-      >
-        <Reveal delayMs={150}>
-          <p className="shop-lede max-w-2xl">{dict.about.intro(settings.storeName)}</p>
-        </Reveal>
-      </ShelfHead>
+    <ShelfMain className="about-page">
+      <section className="about-hero">
+        <Image
+          src="/blog/burano-colorful-houses-canal.jpg"
+          alt={dict.about.heritageImageAlt}
+          fill
+          preload
+          sizes="100vw"
+          className="about-hero-image"
+        />
+        <div className="about-hero-shade" aria-hidden="true" />
+        <div className="about-hero-copy">
+          <p className="about-hero-kicker">Murano · Venezia</p>
+          <AnimatedHeading text={dict.about.title} className="about-hero-title" />
+          <Reveal delayMs={180}>
+            <p className="about-hero-intro">{dict.about.intro(settings.storeName)}</p>
+          </Reveal>
+        </div>
+      </section>
       <ShelfBody width="lg" editorial airy>
-        <Reveal delayMs={250}>
-          <div className="relative aspect-video w-full overflow-hidden rounded-md">
-            <Image
-              src="/blog/burano-colorful-houses-canal.jpg"
-              alt={dict.about.heritageImageAlt}
-              fill
-              sizes="(min-width: 768px) 768px, 100vw"
-              className="object-cover"
-            />
-          </div>
-        </Reveal>
-
         <Reveal>
           <AnimatedHeading as="h2" text={dict.about.heritageTitle} className="shop-h2-plain" />
           <div className="text-foreground/80 flex flex-col gap-4 text-sm leading-relaxed">
@@ -100,16 +99,18 @@ export default async function AboutPage() {
         </Reveal>
 
         <Reveal>
-          <AnimatedHeading as="h2" text={dict.about.valuesTitle} className="shop-h2-plain" />
-          <div className="grid gap-6 sm:grid-cols-3">
-            {values.map((value, index) => (
-              <Reveal key={value.title} delayMs={index * 80}>
-                <div className="shop-panel shop-panel-pad">
-                  <h3 className="shop-ui mb-2 font-medium">{value.title}</h3>
-                  <p className="text-foreground/70 text-sm">{value.body}</p>
-                </div>
-              </Reveal>
-            ))}
+          <div className="about-values-section">
+            <AnimatedHeading as="h2" text={dict.about.valuesTitle} className="shop-h2-plain" />
+            <div className="grid gap-6 sm:grid-cols-3">
+              {values.map((value, index) => (
+                <Reveal key={value.title} delayMs={index * 80}>
+                  <div className="shop-panel shop-panel-pad">
+                    <h3 className="shop-ui mb-2 font-medium">{value.title}</h3>
+                    <p className="text-foreground/70 text-sm">{value.body}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
           </div>
         </Reveal>
 
@@ -133,6 +134,7 @@ export default async function AboutPage() {
           {dict.about.friendsOutro}
         </p>
       </ShelfBody>
+      <AboutGondolaArt />
     </ShelfMain>
   );
 }

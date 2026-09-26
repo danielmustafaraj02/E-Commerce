@@ -153,7 +153,12 @@ export default async function Home() {
   const dict = getDictionary(locale);
   const looks = await getAllLooks(locale, 3);
   const heroSlides: HeroSlide[] = [
-    { src: HERO_SRC, alt: dict.home.heroImageAlt, href: null, accent: HERO_ACCENT },
+    {
+      src: HERO_SRC,
+      alt: dict.home.heroImageAlt,
+      href: null,
+      accent: HERO_ACCENT,
+    },
     ...HERO_NECKLACES.flatMap(({ slug, accent }) => {
       const product = heroNecklaces.find((p) => p.slug === slug);
       return product

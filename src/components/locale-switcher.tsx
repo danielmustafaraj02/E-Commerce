@@ -177,7 +177,6 @@ export function LocaleSwitcher({ current }: { current: Locale }) {
                   <span className="locale-transition-flag locale-transition-flag--from">
                     <span className="locale-transition-emoji">{FLAGS[switchFrom]}</span>
                   </span>
-                  <span className="locale-transition-arrow">→</span>
                   <span className="locale-transition-flag locale-transition-flag--to">
                     <span className="locale-transition-emoji">{FLAGS[switchTo]}</span>
                     <span className="locale-transition-word">{LABELS[switchTo]}</span>

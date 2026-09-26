@@ -1,0 +1,125 @@
+/* The small gull that flies from under its father on the Murano guide down to
+   the footer (components/seagull-flight.tsx). Positioned from script each
+   frame; this file only draws it and moves its wings. */
+
+.gull-flight {
+  position: fixed;
+  z-index: 45;
+  top: 0;
+  left: 0;
+  width: 3.5rem;
+  aspect-ratio: 64 / 40;
+  pointer-events: none;
+  visibility: hidden;
+  will-change: transform;
+}
+@media (max-width: 40rem) {
+  .gull-flight {
+    width: 2.75rem;
+  }
+}
+
+.gull-pose {
+  width: 100%;
+  height: 100%;
+  transform: rotate(var(--gull-pitch, 0deg)) scaleX(var(--gull-face, 1));
+  transition: transform 0.18s ease-out;
+}
+.gull-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  /* White on ivory needs a soft edge to read. */
+  filter: drop-shadow(0 2px 2.5px rgb(18 61 67 / 22%));
+}
+
+/* Wings hinge at the shoulder (SVG user units). */
+.gull-wing {
+  transform-box: view-box;
+  transition: transform 0.3s ease-out;
+}
+.gull-wing--near {
+  transform-origin: 33px 20.5px;
+}
+.gull-wing--far {
+  transform-origin: 29px 19.5px;
+}
+
+.gull-legs--down {
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+}
+.gull-legs--tucked {
+  transition: opacity 0.2s ease-out;
+}
+
+/* Scrolling: quick wingbeats with a small lift on each downstroke. */
+.gull-pose[data-state="flapping"] .gull-wing--near {
+  animation: gull-flap 0.42s ease-in-out infinite;
+}
+.gull-pose[data-state="flapping"] .gull-wing--far {
+  animation: gull-flap-far 0.42s ease-in-out -0.05s infinite;
+}
+.gull-pose[data-state="flapping"] .gull-svg {
+  animation: gull-lift 0.42s ease-in-out infinite;
+}
+
+/* Still: wings spread almost flat, riding the air. */
+.gull-pose[data-state="gliding"] .gull-wing--near {
+  animation: gull-glide 2.4s ease-in-out infinite;
+}
+.gull-pose[data-state="gliding"] .gull-wing--far {
+  animation: gull-glide 2.4s ease-in-out -0.2s infinite;
+}
+
+/* On the wave: wings folded along the back, feet down. */
+.gull-pose[data-state="landed"] .gull-wing--near {
+  transform: scaleY(0.3) rotate(-4deg);
+}
+.gull-pose[data-state="landed"] .gull-wing--far {
+  transform: scaleY(0.24);
+}
+.gull-pose[data-state="landed"] .gull-legs--down {
+  opacity: 1;
+}
+.gull-pose[data-state="landed"] .gull-legs--tucked {
+  opacity: 0;
+}
+
+@keyframes gull-flap {
+  0%,
+  100% {
+    transform: scaleY(1) rotate(0deg);
+  }
+  50% {
+    transform: scaleY(-0.62) rotate(8deg);
+  }
+}
+@keyframes gull-flap-far {
+  0%,
+  100% {
+    transform: scaleY(0.9);
+  }
+  50% {
+    transform: scaleY(-0.45);
+  }
+}
+@keyframes gull-lift {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -1.5px;
+  }
+}
+@keyframes gull-glide {
+  0%,
+  100% {
+    transform: scaleY(0.42) rotate(-2deg);
+  }
+  50% {
+    transform: scaleY(0.55) rotate(1deg);
+  }
+}

@@ -114,6 +114,12 @@
   object-fit: cover;
   mix-blend-mode: multiply;
 }
+/* Phones: plain white behind every photo, the images' own background. */
+@media (max-width: 47.99rem) {
+  .journal-figure-frame {
+    background: #fff;
+  }
+}
 .journal-figure figcaption {
   margin-top: 0.5rem;
   font-size: 0.85rem;

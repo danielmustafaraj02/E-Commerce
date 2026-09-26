@@ -9,7 +9,7 @@ import { CatalogImage } from "@/components/catalog-image";
 import { NewsletterSignupForm } from "@/components/newsletter-signup-form";
 import { FooterAccordion } from "@/components/footer-accordion";
 import { SocialLinks, type SocialUrls } from "@/components/social-links";
-import { BrandSignature, BrandWave } from "@/components/brand-signature";
+import { BrandSignature } from "@/components/brand-signature";
 import { Reveal } from "@/components/reveal";
 import { homeFontClasses } from "@/app/home-fonts";
 import "./footer.css";
@@ -102,7 +102,6 @@ export async function Footer({
       <div className="site-footer-top">
         <section className="footer-editorial">
           <div className="footer-editorial-text">
-            <BrandWave className="footer-wave" />
             <h2 className="footer-display">{f.editorialTitle}</h2>
             <p>{f.editorialText}</p>
             <Link href="/blog" className="footer-outline-button">

@@ -1,5 +1,6 @@
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { applyTemplate } from "@/lib/i18n/format";
+import type { LookPageCopy } from "@/lib/i18n/look-page-copy";
 
 // The FAQ shown on the homepage and product pages (components/faq-section).
 // Answers restate the site's own pages and settings — shipping figures come
@@ -73,6 +74,34 @@ export function buildFaq(dict: Dictionary, facts: ShippingFacts, contactEmail: s
       answer: applyTemplate(f.contactA, { email: contactEmail }),
       link: { href: "/contact", label: dict.footer.contact },
     },
+  ];
+}
+
+// A look's page: the questions about buying a set first, then the store-wide
+// answers that matter most before ordering jewelry.
+export function buildLookFaq(
+  dict: Dictionary,
+  copy: LookPageCopy,
+  facts: ShippingFacts,
+  contactEmail: string,
+  percents: { set: number; pair: number; composed: number }
+): FaqItem[] {
+  const general = buildFaq(dict, facts, contactEmail);
+  const storeWide = ["authentic", "shipping-cost", "shipping-time", "returns", "gift-packaging", "care"]
+    .map((id) => general.find((item) => item.id === id))
+    .filter((item): item is FaqItem => Boolean(item));
+
+  return [
+    { id: "look-some", question: copy.someQ, answer: applyTemplate(copy.someA, percents) },
+    { id: "look-code", question: copy.codeQ, answer: copy.codeA },
+    {
+      id: "look-mix",
+      question: copy.mixQ,
+      answer: applyTemplate(copy.mixA, percents),
+      link: { href: "/looks/compose", label: dict.looks.composeCta },
+    },
+    { id: "look-varies", question: copy.variesQ, answer: copy.variesA },
+    ...storeWide,
   ];
 }
 
