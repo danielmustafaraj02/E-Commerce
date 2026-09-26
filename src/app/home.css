@@ -797,20 +797,19 @@
   align-items: center;
   text-align: center;
   padding: 0.8rem 0.8rem 1.25rem;
-  border: 1px solid color-mix(in srgb, var(--champagne) 72%, #fff);
-  background: #fff;
-  box-shadow: 0 2px 12px color-mix(in srgb, var(--foreground) 4%, transparent);
-  transition:
-    transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
-    box-shadow 0.45s ease;
+  /* No card frame (border/background/shadow) — the photo and copy sit
+     straight on the section's own backdrop instead of a separate white
+     tile stacked on top of it, which read as a hard-edged cutout. */
+  border: 0;
+  background: transparent;
+  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 @media (hover: hover) and (pointer: fine) {
   .shelf-category:hover {
     transform: translateY(-3px);
-    box-shadow: 0 9px 24px color-mix(in srgb, var(--foreground) 8%, transparent);
   }
 }
-/* The product sits free on the paper-white card, without a frame around it. */
+/* The product sits free on the section backdrop, without a frame around it. */
 .shelf-category-photo {
   position: relative;
   width: 100%;
@@ -848,7 +847,7 @@
 .shelf-category-name {
   margin-top: 0.25rem !important;
   font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
-  font-size: 1.85rem;
+  font-size: 2.1rem;
   font-weight: 500;
   line-height: 1.15;
 }
@@ -1529,10 +1528,10 @@
    swipe — or autoplay — lands on a clone, so it never visibly "runs out"). */
 @media (max-width: 47.99rem) {
   .shelf-home .shelf-section--categories {
-    padding-block: 3.25rem;
+    padding-block: 4.25rem;
   }
   .shelf-home .shelf-section--categories .shelf-heading-row {
-    margin-bottom: 1.75rem;
+    margin-bottom: 2.25rem;
   }
   .shelf-categories {
     display: flex;
@@ -1582,21 +1581,21 @@
     grid-row: 1;
     justify-self: start;
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
   .shelf-category-name {
     grid-column: 2;
     grid-row: 2;
     justify-self: start;
     margin: 0 !important;
-    font-size: clamp(1.35rem, 6vw, 1.85rem);
+    font-size: clamp(1.5rem, 7vw, 2.1rem);
   }
   .shelf-category-cta {
     grid-column: 2;
     grid-row: 3;
     justify-self: start;
     margin-top: 0.65rem;
-    font-size: 0.62rem;
+    font-size: 0.68rem;
     letter-spacing: 0.14em;
   }
   .shelf-category:active .shelf-category-photo img {
