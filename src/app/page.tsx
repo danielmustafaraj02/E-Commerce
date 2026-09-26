@@ -144,10 +144,17 @@ export default async function Home() {
 
         {categoriesWithImage.length > 0 && (
           <Reveal>
-            <section>
-              <h2 className="mb-4 text-lg font-medium">{dict.home.shopByCategory}</h2>
+            <section className="flex flex-col items-center gap-3 py-4 text-center sm:py-8">
+              <p className="text-foreground/60 flex items-center gap-3 text-xs font-medium tracking-[0.2em] uppercase">
+                <span className="bg-foreground/25 h-px w-8" aria-hidden="true" />
+                {dict.home.categoryEyebrow}
+                <span className="bg-foreground/25 h-px w-8" aria-hidden="true" />
+              </p>
+              <h2 className="text-3xl font-semibold sm:text-4xl">{dict.home.shopByCategory}</h2>
+              <span className="bg-primary mb-6 h-0.5 w-10 rounded-full" aria-hidden="true" />
               <CategoryCarousel
                 categories={categoriesWithImage.map((c) => ({ ...c, name: localizedName(c, locale) }))}
+                discoverLabel={dict.home.discoverCollection}
                 prevLabel={dict.home.previousSlide}
                 nextLabel={dict.home.nextSlide}
               />

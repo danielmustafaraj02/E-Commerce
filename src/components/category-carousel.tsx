@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
+import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import "swiper/css/pagination";
 import Image from "next/image";
 import Link from "next/link";
 import { CarouselNavButton } from "@/components/carousel-nav-button";
@@ -27,12 +28,32 @@ const ACCENT_COLORS = ["#f5c451", "#7cc7c0", "#e8607f"];
 const CARD_STAGGER_MS = 70;
 const MAX_STAGGER_MS = 560;
 
+const ROMAN_NUMERALS: [number, string][] = [
+  [1000, "M"], [900, "CM"], [500, "D"], [400, "CD"],
+  [100, "C"], [90, "XC"], [50, "L"], [40, "XL"],
+  [10, "X"], [9, "IX"], [5, "V"], [4, "IV"], [1, "I"],
+];
+
+function toRoman(num: number): string {
+  let n = num;
+  let result = "";
+  for (const [value, symbol] of ROMAN_NUMERALS) {
+    while (n >= value) {
+      result += symbol;
+      n -= value;
+    }
+  }
+  return result;
+}
+
 export function CategoryCarousel({
   categories,
+  discoverLabel,
   prevLabel,
   nextLabel,
 }: {
   categories: Category[];
+  discoverLabel: string;
   prevLabel: string;
   nextLabel: string;
 }) {
@@ -40,23 +61,16 @@ export function CategoryCarousel({
   const [nextEl, setNextEl] = useState<HTMLButtonElement | null>(null);
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex w-full items-center gap-3">
       <CarouselNavButton direction="prev" refCallback={setPrevEl} label={prevLabel} />
       <Swiper
-        modules={[Navigation]}
+        modules={[Navigation, Pagination]}
         navigation={{ prevEl, nextEl }}
-        spaceBetween={28}
-        // One full-width card at a time on mobile — swiped/paged through
-        // with the prev/next buttons rather than peeking at a sliver of
-        // the next card. Loops on every breakpoint so "next" past the
-        // last category wraps back to the first instead of dead-ending.
+        pagination={{ clickable: true }}
+        spaceBetween={24}
         slidesPerView={1}
         loop
-        breakpoints={{
-          640: { slidesPerView: 3.2 },
-          1024: { slidesPerView: categories.length > 4 ? 4.2 : categories.length },
-        }}
-        className="min-w-0 flex-1 px-2 py-10"
+        className="category-showcase min-w-0 flex-1 pb-10"
       >
         {categories.map((category, index) => {
           const accent = ACCENT_COLORS[index % ACCENT_COLORS.length];
@@ -70,37 +84,54 @@ export function CategoryCarousel({
                     "--card-delay": `${Math.min(index * CARD_STAGGER_MS, MAX_STAGGER_MS)}ms`,
                   } as React.CSSProperties
                 }
-                className="category-card border-foreground/10 group relative flex flex-col gap-4 rounded-xl border p-5 shadow-sm transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_6px_16px_-6px_var(--accent),0_22px_40px_-24px_var(--accent)] active:translate-y-0 active:scale-[0.97] active:bg-[color-mix(in_srgb,var(--accent)_14%,var(--background))] active:shadow-[0_2px_10px_-4px_var(--accent)] active:duration-100"
+                className="category-card border-foreground/10 group flex flex-row items-center gap-6 rounded-2xl border p-6 transition-all duration-300 ease-out hover:shadow-[0_6px_16px_-6px_var(--accent),0_22px_40px_-24px_var(--accent)] sm:gap-10 sm:p-10"
               >
-                <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-white">
+                <div className="relative aspect-square w-2/5 shrink-0 overflow-hidden rounded-lg sm:w-1/2">
                   {category.image ? (
                     <Image
                       src={category.image.url}
                       alt={category.image.altText || category.name}
                       fill
-                      sizes="(min-width: 1024px) 23vw, (min-width: 640px) 31vw, 45vw"
+                      sizes="(min-width: 640px) 40vw, 45vw"
                       className="object-contain transition-transform duration-500 ease-out group-hover:scale-110"
                     />
                   ) : (
                     <Image
-                      src={`https://loremflickr.com/480/360/${encodeURIComponent(category.slug)}`}
+                      src={`https://loremflickr.com/480/480/${encodeURIComponent(category.slug)}`}
                       alt={category.name}
                       fill
-                      sizes="(min-width: 1024px) 23vw, (min-width: 640px) 31vw, 45vw"
+                      sizes="(min-width: 640px) 40vw, 45vw"
                       className="object-contain transition-transform duration-500 ease-out group-hover:scale-110"
                     />
                   )}
-                  {/* Accent-tinted wash that fades in on hover, echoing the card's
-                      own accent color instead of a generic dark overlay. */}
-                  <div
-                    aria-hidden
-                    className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                    style={{ background: `linear-gradient(0deg, ${accent}40, transparent 60%)` }}
-                  />
                 </div>
-                <span className="group-hover:text-primary px-0.5 text-[0.95rem] font-semibold transition-colors">
-                  {category.name}
-                </span>
+                <div className="flex min-w-0 flex-col gap-2 sm:gap-3">
+                  <span
+                    style={{ color: accent }}
+                    className="font-serif text-lg italic"
+                    aria-hidden="true"
+                  >
+                    {toRoman(index + 1)}
+                  </span>
+                  <span className="truncate text-xl font-semibold sm:text-3xl">
+                    {category.name}
+                  </span>
+                  <span className="group-hover:text-primary text-foreground/70 mt-1 flex items-center gap-2 text-xs font-medium tracking-wide uppercase transition-colors sm:text-sm">
+                    {discoverLabel}
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      className="shrink-0 transition-transform duration-200 ease-out group-hover:translate-x-1"
+                      aria-hidden="true"
+                    >
+                      <path d="M4 10h12M11 5l5 5-5 5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                </div>
               </Link>
             </SwiperSlide>
           );
