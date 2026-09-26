@@ -166,6 +166,7 @@ export default async function Home() {
             {
               src: `/products/collane-in-vetro-di-murano/${slug}.png`,
               alt: localizedName(product, locale),
+              label: localizedName(product, locale),
               href: `/products/${slug}`,
               accent,
             },

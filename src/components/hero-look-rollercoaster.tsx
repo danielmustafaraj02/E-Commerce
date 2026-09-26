@@ -54,7 +54,9 @@ export function HeroLookRollercoaster({
     return () => window.clearInterval(id);
   }, [count, desktop, paused]);
 
-  if (count === 0) return null;
+  // The home page also has a necklace carousel. Use that when there aren't
+  // enough curated looks to make this carousel navigable.
+  if (count < 2) return null;
 
   const go = (step: number) => setIndex((i) => (i + step + count) % count);
 

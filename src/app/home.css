@@ -600,6 +600,9 @@
   text-align: center;
   font-variant-numeric: tabular-nums;
 }
+.shelf-bead-caption {
+  display: none;
+}
 @media (min-width: 52rem) {
   .shelf-hero-grid {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
@@ -796,45 +799,52 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 0.8rem 0.8rem 1.25rem;
-  /* No card frame (border/background/shadow) — the photo and copy sit
-     straight on the section's own backdrop instead of a separate white
-     tile stacked on top of it, which read as a hard-edged cutout. */
-  border: 0;
-  background: transparent;
-  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+  padding: 1rem 1rem 1.5rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 30%, white);
+  background: #fffefa;
+  box-shadow: 0 0.75rem 2rem rgb(37 34 27 / 4%);
+  transition:
+    transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
+    border-color 0.45s ease,
+    box-shadow 0.45s ease;
 }
 @media (hover: hover) and (pointer: fine) {
   .shelf-category:hover {
     transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--gold) 60%, white);
+    box-shadow: 0 1.25rem 2.5rem rgb(37 34 27 / 8%);
   }
 }
-/* The product sits free on the section backdrop, without a frame around it. */
+/* Give each category image a quiet gallery mat, with the jewelry inset from
+   the edge so its original white photo background reads as part of the card. */
 .shelf-category-photo {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1;
-  overflow: visible;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--gold) 42%, white);
+  background: #fff;
 }
 .shelf-category-photo::after {
-  display: none;
+  position: absolute;
+  inset: 0.55rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 24%, transparent);
+  content: "";
+  pointer-events: none;
 }
 .shelf-home .shelf-category-photo img,
 .shelf-category-photo img {
   object-fit: contain;
   object-position: center;
-  padding: 2%;
+  padding: 9%;
   -webkit-mask-image: none;
   mask-image: none;
   mix-blend-mode: multiply;
-  transform: scale(1.04);
+  transform: scale(1);
   transition: transform 1.2s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 .shelf-category:hover .shelf-category-photo img {
-  transform: scale(1.08);
+  transform: scale(1.035);
 }
 .shelf-category-index {
   margin-top: 1.5rem;
@@ -1755,6 +1765,10 @@
 /* Desktop home: a clean studio field, with the curated looks riding a
    hand-drawn Murano rollercoaster in place of the necklace backdrop. */
 @media (min-width: 52rem) {
+  .shelf-home .shelf-hero > .shelf-wrap {
+    max-width: 88rem;
+    padding-inline: clamp(2rem, 6vw, 6rem);
+  }
   .shelf-home .shelf-hero {
     background:
       radial-gradient(ellipse at 76% 46%, rgb(236 229 214 / 42%), transparent 46%),
@@ -1765,9 +1779,9 @@
     display: none;
   }
   .shelf-home .shelf-hero-grid {
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
     align-items: center;
-    gap: clamp(3rem, 7vw, 7rem);
+    gap: clamp(3.5rem, 6vw, 6.5rem);
     padding-block: clamp(5.5rem, 9vw, 8.5rem) clamp(4.5rem, 7vw, 6.5rem);
   }
   .shelf-home .shelf-hero-copy {
@@ -1791,8 +1805,8 @@
   .shelf-home .shelf-hero .hero-look-rollercoaster {
     position: relative;
     display: block;
-    width: min(100%, 40rem);
-    height: clamp(30rem, 41vw, 36rem);
+    width: min(100%, 42rem);
+    height: clamp(31rem, 46vw, 38rem);
     justify-self: end;
     isolation: isolate;
   }
@@ -1865,13 +1879,13 @@
     transform: translate3d(0, 1.5rem, 0) scale(0.94);
     filter: drop-shadow(0 1rem 1.4rem rgb(37 34 27 / 10%));
     transition:
-      left 1.05s cubic-bezier(0.22, 0.61, 0.36, 1),
-      right 1.05s cubic-bezier(0.22, 0.61, 0.36, 1),
-      top 1.05s cubic-bezier(0.22, 0.61, 0.36, 1),
-      width 1.05s cubic-bezier(0.22, 0.61, 0.36, 1),
-      transform 1.05s cubic-bezier(0.22, 0.61, 0.36, 1),
-      opacity 0.65s ease,
-      filter 0.65s ease;
+      left 1.35s cubic-bezier(0.2, 0.7, 0.15, 1),
+      right 1.35s cubic-bezier(0.2, 0.7, 0.15, 1),
+      top 1.35s cubic-bezier(0.2, 0.7, 0.15, 1),
+      width 1.35s cubic-bezier(0.2, 0.7, 0.15, 1),
+      transform 1.35s cubic-bezier(0.2, 0.7, 0.15, 1),
+      opacity 0.9s ease,
+      filter 0.9s ease;
   }
   .hero-look-carriage:focus-visible {
     outline: 0;
@@ -1884,29 +1898,34 @@
     z-index: 3;
     top: 0;
     left: 50%;
-    width: min(17rem, 46%);
+    width: min(18.5rem, 47%);
     transform: translateX(-50%) scale(1);
   }
   .hero-look-carriage--previous {
     z-index: 2;
     top: 16%;
-    left: 1%;
-    width: min(11rem, 30%);
-    transform: scale(0.9);
+    left: 0;
+    width: min(11.5rem, 24%);
+    transform: scale(0.86);
   }
   .hero-look-carriage--next {
     z-index: 2;
     top: 16%;
     left: 74%;
     right: auto;
-    width: min(11rem, 30%);
-    transform: scale(0.9);
+    width: min(11.5rem, 24%);
+    transform: scale(0.86);
   }
   .hero-look-rollercoaster[data-ready="true"] .hero-look-carriage--active,
   .hero-look-rollercoaster[data-ready="true"] .hero-look-carriage--previous,
   .hero-look-rollercoaster[data-ready="true"] .hero-look-carriage--next {
     opacity: 1;
     pointer-events: auto;
+  }
+  .hero-look-rollercoaster[data-ready="true"] .hero-look-carriage--previous,
+  .hero-look-rollercoaster[data-ready="true"] .hero-look-carriage--next {
+    opacity: 0.68;
+    filter: drop-shadow(0 0.5rem 1rem rgb(37 34 27 / 6%));
   }
   .hero-look-carriage--offstage {
     z-index: 0;
@@ -1924,11 +1943,29 @@
     position: relative;
     display: block;
     width: 100%;
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 3 / 4;
     overflow: hidden;
     border: 1px solid color-mix(in srgb, var(--gold) 72%, white);
     background: #fffefa;
     box-shadow: 0 1.25rem 3rem rgb(37 34 27 / 12%);
+    transition:
+      box-shadow 0.9s ease,
+      border-color 0.9s ease;
+  }
+  .hero-look-carriage--active .hero-look-frame {
+    animation: hero-look-focus 1.35s cubic-bezier(0.2, 0.7, 0.15, 1) both;
+    border-color: color-mix(in srgb, var(--gold) 82%, white);
+    box-shadow: 0 1.5rem 3.5rem rgb(37 34 27 / 15%);
+  }
+  @keyframes hero-look-focus {
+    from {
+      opacity: 0.72;
+      transform: translateY(0.65rem) scale(0.985);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
   }
   .hero-look-frame::after {
     position: absolute;
@@ -1938,7 +1975,8 @@
     pointer-events: none;
   }
   .hero-look-photo {
-    object-fit: cover;
+    object-fit: contain;
+    padding: 5%;
   }
   .hero-look-piece {
     position: absolute;
@@ -1964,7 +2002,19 @@
     transition: color 0.45s ease;
   }
   .hero-look-carriage--active .hero-look-name {
+    animation: hero-look-caption 1.05s cubic-bezier(0.2, 0.7, 0.15, 1) both;
     font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+    letter-spacing: 0.035em;
+  }
+  @keyframes hero-look-caption {
+    from {
+      opacity: 0;
+      transform: translateY(0.45rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   .hero-look-carriage:hover .hero-look-name {
     color: var(--aventurine-deep);
@@ -1972,23 +2022,24 @@
   .hero-look-controls {
     position: absolute;
     z-index: 5;
-    right: 16%;
-    bottom: 0.35rem;
+    right: 50%;
+    bottom: clamp(6rem, 9vw, 7rem);
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 1rem;
     color: var(--ink-soft);
+    transform: translateX(50%);
   }
   .hero-look-controls button {
     display: grid;
-    width: 2.75rem;
-    height: 2.75rem;
+    width: 2.5rem;
+    height: 2.5rem;
     place-items: center;
-    border: 1px solid color-mix(in srgb, var(--gold) 42%, transparent);
+    border: 1px solid color-mix(in srgb, var(--gold) 55%, white);
     border-radius: 50%;
-    background: rgb(255 255 255 / 82%);
+    background: rgb(255 254 250 / 92%);
     color: var(--ink);
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     cursor: pointer;
     transition:
       background-color 0.25s ease,
@@ -1996,9 +2047,13 @@
       transform 0.25s ease;
   }
   .hero-look-controls button:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
     background: var(--ink);
     color: white;
+  }
+  .hero-look-controls button:focus-visible {
+    outline: 1px solid var(--ink);
+    outline-offset: 4px;
   }
   .hero-look-count {
     display: inline-flex;
@@ -2016,14 +2071,72 @@
     height: 1px;
     background: var(--gold);
   }
+  .shelf-home .shelf-hero:not(:has(.hero-look-rollercoaster)) .shelf-bead-carousel {
+    width: min(100%, 24rem);
+    max-width: 24rem;
+    justify-self: center;
+    margin-inline-end: 0;
+  }
+  .shelf-home .shelf-hero:not(:has(.hero-look-rollercoaster)) .shelf-bead {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--gold) 72%, white);
+    background: #fffefa;
+    box-shadow: 0 1.25rem 3rem rgb(37 34 27 / 12%);
+  }
+  .shelf-home .shelf-hero:not(:has(.hero-look-rollercoaster)) .shelf-bead::after {
+    position: absolute;
+    z-index: 2;
+    inset: 0.65rem;
+    border: 1px solid color-mix(in srgb, var(--gold) 48%, transparent);
+    content: "";
+    pointer-events: none;
+  }
+  .shelf-home .shelf-hero:not(:has(.hero-look-rollercoaster)) .shelf-bead img {
+    --hero-bead-scale: 1.04;
+    transform: scale(1.04);
+  }
+  .shelf-home .shelf-hero:not(:has(.hero-look-rollercoaster)) .shelf-bead-caption {
+    display: block;
+    margin-top: 1.1rem;
+    color: var(--ink);
+    font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+    font-size: clamp(1.15rem, 1.7vw, 1.4rem);
+    letter-spacing: 0.035em;
+    line-height: 1.2;
+    text-align: center;
+    animation: hero-look-caption 0.8s ease both;
+  }
+  .shelf-home .shelf-hero:not(:has(.hero-look-rollercoaster)) .shelf-bead-controls {
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .shelf-home .shelf-hero:not(:has(.hero-look-rollercoaster)) .shelf-bead-controls button {
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid color-mix(in srgb, var(--gold) 55%, white);
+    border-radius: 50%;
+    background: rgb(255 254 250 / 92%);
+    opacity: 0.9;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-look-track-rail,
   .hero-look-track circle,
   .hero-look-carriage,
+  .hero-look-carriage--active .hero-look-frame,
   .hero-look-name,
   .hero-look-controls button {
     transition: none !important;
+  }
+  .hero-look-carriage--active .hero-look-frame {
+    animation: none !important;
+  }
+  .hero-look-carriage--active .hero-look-name {
+    animation: none !important;
+  }
+  .shelf-bead-caption {
+    animation: none !important;
   }
 }

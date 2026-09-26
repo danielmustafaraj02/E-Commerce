@@ -2203,7 +2203,7 @@ a.shop-line-name:focus-visible {
     font-size: clamp(2.5rem, 6vw, 4rem);
   }
 }
-@media (max-width: 42rem) {
+@media (max-width: 52rem) {
   .murano-guide-head {
     padding-block: 2rem 2.5rem;
   }
@@ -2236,25 +2236,70 @@ a.shop-line-name:focus-visible {
     padding-bottom: 4rem;
   }
   .murano-guide-section {
-    grid-template-columns: minmax(3.5rem, 4.25rem) minmax(0, 1fr);
-    column-gap: 0.85rem;
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 0.8rem;
     padding-block: 2.75rem;
   }
+  .murano-guide-section > :is(h2, p, div, ul, ol) {
+    grid-column: 1;
+    width: calc(100% - 4rem);
+    max-width: 34rem;
+    margin-inline: auto;
+  }
+  .murano-guide-section--faq {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .murano-guide-section--faq::before {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .murano-guide-section--faq > h2 {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .murano-guide-section--faq > div {
+    grid-column: 1;
+    grid-row: 3;
+    width: calc(100% - 4rem);
+    max-width: 34rem;
+    margin-inline: auto;
+  }
   .murano-guide-section::before {
-    padding-top: 0.2rem;
-    font-size: clamp(2.8rem, 12vw, 3.65rem);
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: stretch;
+    padding-top: 0;
+    color: color-mix(in srgb, var(--gold) 85%, var(--ink));
+    font-size: clamp(2.8rem, 13vw, 3.5rem);
+    letter-spacing: -0.045em;
+    line-height: 1;
+    text-align: center;
   }
   .murano-guide-section .shop-h2-plain {
+    margin-bottom: 0;
     font-size: clamp(1.95rem, 8vw, 2.55rem);
+    text-align: center;
+    text-wrap: balance;
+  }
+  .murano-guide-section > p,
+  .murano-guide-section > div,
+  .murano-guide-section > ul,
+  .murano-guide-section > ol {
+    text-align: start;
+  }
+  .murano-guide-section--history > div.flex-col {
+    gap: 1rem;
   }
   .murano-guide-section--history > div.flex-col p {
     font-size: 1.15rem;
     line-height: 1.72;
     text-align: start;
-    text-indent: 0.8em;
+    text-indent: 0;
   }
   .murano-guide-section--history > div.flex-col p:first-child::first-letter {
-    font-size: 3.2em;
+    margin: 0.08em 0.12em 0 0;
+    font-size: 2.8em;
+    line-height: 0.85;
   }
   .murano-guide-section details summary {
     font-size: 1.12rem;
@@ -3666,6 +3711,119 @@ a.look-piece-name:focus-visible {
     max-width: 5.5rem;
   }
 }
+
+@media (max-width: 42rem) {
+  .cart-flow {
+    gap: 1.5rem;
+  }
+  .cart-flow > .cart-shipping-progress {
+    padding: 0.35rem 0 1rem;
+    border: 0;
+    border-bottom: 1px solid var(--rule);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  .cart-flow > .cart-items {
+    overflow: visible;
+    border: 0;
+    border-block: 1px solid var(--rule);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  .cart-flow .cart-items > li {
+    padding: 1.2rem 0;
+  }
+  .cart-flow .cart-items > li + li {
+    border-top-color: color-mix(in srgb, var(--gold) 30%, white);
+  }
+  .cart-flow .cart-items .shop-thumb--cart {
+    border-color: color-mix(in srgb, var(--gold) 38%, white);
+    border-radius: 0.65rem;
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 76%);
+  }
+  .cart-flow .cart-items .shop-line-name {
+    font-size: 1.12rem;
+    line-height: 1.35;
+  }
+  .cart-flow .shop-cart-controls > div {
+    height: 2.75rem;
+    border: 0;
+    border-radius: 0;
+  }
+  .cart-flow .shop-cart-controls > div > button {
+    width: 2.5rem;
+    border: 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--gold) 45%, white);
+    color: var(--ink-soft);
+  }
+  .cart-flow .shop-cart-controls > div > span {
+    width: 1.5rem;
+    color: var(--ink);
+    font-family: var(--font-display), Georgia, serif;
+  }
+  .cart-flow .shop-cart-total {
+    color: var(--ink);
+    font-family: var(--font-display), Georgia, serif;
+    font-size: 1rem;
+  }
+  .cart-flow > .cart-look-upsell {
+    align-items: flex-start;
+    padding: 1.2rem 0;
+    border: 0;
+    border-block: 1px solid var(--rule);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  .cart-flow .cart-look-upsell-title {
+    letter-spacing: 0.16em;
+  }
+  .cart-flow .cart-look-upsell .btn-secondary {
+    min-height: 2.75rem;
+    padding-inline: 0;
+    border: 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--gold) 70%, white);
+    border-radius: 0;
+    background: transparent;
+    color: var(--ink);
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    box-shadow: none;
+  }
+  .cart-flow > .cart-gift-invite {
+    padding: 1.35rem 0;
+    border: 0;
+    border-top: 1px solid var(--rule);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  .cart-flow > .cart-gift {
+    padding: 1.2rem 0;
+    border: 0;
+    border-block: 1px solid var(--rule);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  .cart-flow > .cart-total-panel {
+    padding: 1.1rem 0;
+    border: 0;
+    border-block: 1px solid var(--rule);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  .cart-flow .cart-total-panel .shop-total {
+    color: var(--ink);
+    font-family: var(--font-display), Georgia, serif;
+    font-size: 1.55rem;
+    font-weight: 500;
+  }
+}
+
 .checkout-gift-note {
   margin: 0.75rem 0 0;
   color: var(--ink-soft);
@@ -3673,6 +3831,117 @@ a.look-piece-name:focus-visible {
   font-style: italic;
   font-size: 1.05rem;
   line-height: 1.45;
+}
+
+@media (max-width: 42rem) {
+  .checkout-flow {
+    gap: 1.25rem;
+  }
+  .checkout-form {
+    gap: 1.25rem;
+  }
+  .checkout-flow .checkout-summary,
+  .checkout-flow .form-card {
+    border: 1px solid color-mix(in srgb, var(--gold) 42%, white);
+    border-radius: 1rem;
+    background: #fffefa;
+    box-shadow: 0 0.55rem 1.5rem rgb(37 34 27 / 4%);
+  }
+  .checkout-flow .checkout-summary::before {
+    display: block;
+    height: 1px;
+    margin-inline: 1rem;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    content: "";
+    opacity: 0.7;
+  }
+  .checkout-flow .checkout-summary > summary {
+    padding: 1rem 1.1rem;
+    list-style: none;
+    color: var(--ink);
+  }
+  .checkout-flow .checkout-summary > summary::-webkit-details-marker {
+    display: none;
+  }
+  .checkout-flow .checkout-summary > summary::marker {
+    content: "";
+  }
+  .checkout-flow .checkout-summary > summary::after {
+    color: var(--gold);
+    content: "+";
+    font-family: var(--font-display), Georgia, serif;
+    font-size: 1.35rem;
+    line-height: 1;
+  }
+  .checkout-flow .checkout-summary[open] > summary::after {
+    content: "−";
+  }
+  .checkout-flow .checkout-summary > summary > span:first-child {
+    font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+    font-size: 1.22rem;
+    letter-spacing: 0.01em;
+  }
+  .checkout-flow .checkout-summary > summary > span:last-child {
+    margin-inline-start: auto;
+    color: var(--ink-soft);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+  }
+  .checkout-flow .checkout-summary .shop-list > li {
+    gap: 0.9rem;
+    padding: 1rem 1.1rem 1.1rem;
+  }
+  .checkout-flow .checkout-summary .shop-thumb--cart {
+    padding: 0.2rem;
+    border: 1px solid color-mix(in srgb, var(--gold) 35%, white);
+    border-radius: 0.65rem;
+  }
+  .checkout-flow .checkout-summary .shop-line-name {
+    font-size: 1.08rem;
+    line-height: 1.35;
+  }
+  .checkout-flow .checkout-summary .shop-cart-total {
+    min-width: auto;
+    color: var(--ink);
+    font-family: var(--font-display), Georgia, serif;
+    font-size: 1rem;
+  }
+  .checkout-flow .checkout-free-shipping {
+    padding: 1rem 1.1rem;
+    border-color: color-mix(in srgb, var(--gold) 42%, white);
+    border-radius: 0.9rem;
+    background: linear-gradient(115deg, #fffefa, color-mix(in srgb, var(--accent) 6%, white));
+  }
+  .checkout-flow .checkout-free-shipping p {
+    gap: 0.15rem;
+    line-height: 1.45;
+  }
+  .checkout-flow .form-card {
+    padding: 1.15rem;
+  }
+  .checkout-flow .checkout-field-label {
+    color: var(--ink-soft);
+    font-size: 0.82rem;
+    letter-spacing: 0.015em;
+  }
+  .checkout-flow .checkout-address-legend {
+    color: var(--ink);
+    font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+    font-size: 1.2rem;
+    line-height: 1.25;
+  }
+  .shelf .checkout-flow .field {
+    min-height: 3.2rem;
+    padding-inline: 0.95rem;
+    border: 1px solid color-mix(in srgb, var(--gold) 34%, #d7d0c4);
+    border-radius: 0.55rem;
+    background: #fff;
+    box-shadow: inset 0 1px 2px rgb(37 34 27 / 2%);
+  }
+  .shelf .checkout-flow .field:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);
+  }
 }
 
 /* -- Product page: the gift card offer --------------------------------------- */

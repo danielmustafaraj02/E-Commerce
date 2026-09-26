@@ -4,7 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Link } from "@/components/localized-link";
 
-export type HeroSlide = { src: string; alt: string; href: string | null; accent: string };
+export type HeroSlide = {
+  src: string;
+  alt: string;
+  label?: string;
+  href: string | null;
+  accent: string;
+};
 
 const INTERVAL_MS = 5000;
 
@@ -81,6 +87,11 @@ export function HeroNecklaceCarousel({
           <Link href={active.href} className="shelf-bead-link" aria-label={active.alt} />
         )}
       </div>
+      {active.label && (
+        <span key={active.src} className="shelf-bead-caption" aria-hidden="true">
+          {active.label}
+        </span>
+      )}
       {count > 1 && (
         <div className="shelf-bead-controls">
           <button

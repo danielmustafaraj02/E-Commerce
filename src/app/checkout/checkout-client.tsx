@@ -238,7 +238,7 @@ export function CheckoutClient({
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="checkout-flow flex flex-col gap-6">
       {/* The wallet sheet can't carry a gift card's details. */}
       {!giftCard && (
         <ExpressCheckoutButton
@@ -248,8 +248,8 @@ export function CheckoutClient({
         />
       )}
 
-      <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-6">
-        <details open className="shop-panel">
+      <form ref={formRef} onSubmit={handleSubmit} className="checkout-form flex flex-col gap-6">
+        <details open className="shop-panel checkout-summary">
           <summary className="shop-ui flex cursor-pointer items-center justify-between p-4 font-medium">
             <span>{dict.orderSummary}</span>
             <span className="text-foreground/60 text-sm font-normal">({items.length})</span>
@@ -279,7 +279,7 @@ export function CheckoutClient({
         </details>
 
         {quote?.shippingAmount === 0 && (
-          <div className="shop-panel shop-panel-pad">
+          <div className="shop-panel shop-panel-pad checkout-free-shipping">
             <p className="text-accent-deep flex items-center text-sm font-medium">
               <span className="shop-check shop-settle" aria-hidden="true">
                 <svg
@@ -301,9 +301,9 @@ export function CheckoutClient({
         )}
 
         {!isLoggedIn && (
-          <div className="form-card">
+          <div className="form-card checkout-email-card">
             <label className="flex flex-col gap-1.5 text-sm">
-              <span className="font-medium">{dict.emailForUpdates}</span>
+              <span className="checkout-field-label font-medium">{dict.emailForUpdates}</span>
               <input
                 type="email"
                 name="email"
@@ -323,8 +323,10 @@ export function CheckoutClient({
           </p>
         )}
 
-        <fieldset className="form-card flex flex-col gap-4">
-          <legend className="mb-1 px-1 font-medium">{dict.shippingAddress}</legend>
+        <fieldset className="form-card checkout-address-card flex flex-col gap-4">
+          <legend className="checkout-address-legend mb-1 px-1 font-medium">
+            {dict.shippingAddress}
+          </legend>
           <input
             required
             name="name"

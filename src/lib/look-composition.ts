@@ -12,14 +12,14 @@ type Kind = "necklace" | "bracelet" | "earrings" | null;
 
 const CENTRE: Slot = { x: 0.5, y: 0.5, s: 0.86 };
 
-// Desktop (landscape): the necklace large in the middle, bracelet on one
-// side, earrings on the other and lower. Phones (portrait): the necklace on
-// top, the others side by side below.
+// Desktop: the necklace leads in the middle, with smaller pieces held apart
+// at the upper-left and lower-right. Phones (portrait): the necklace on top,
+// the others side by side below.
 const THREE = {
   desktop: {
-    necklace: { x: 0.5, y: 0.5, s: 0.9 },
-    bracelet: { x: 0.14, y: 0.34, s: 0.46 },
-    earrings: { x: 0.86, y: 0.68, s: 0.46 },
+    necklace: { x: 0.5, y: 0.5, s: 0.78 },
+    bracelet: { x: 0.2, y: 0.28, s: 0.34 },
+    earrings: { x: 0.8, y: 0.72, s: 0.34 },
   },
   mobile: {
     necklace: { x: 0.5, y: 0.34, s: 0.62 },
@@ -33,8 +33,8 @@ function pairSlots(hasNecklace: boolean) {
     ? {
         // The necklace keeps the lead; the other piece beside / below it.
         desktop: [
-          { x: 0.4, y: 0.5, s: 0.92 },
-          { x: 0.8, y: 0.6, s: 0.52 },
+          { x: 0.42, y: 0.5, s: 0.82 },
+          { x: 0.82, y: 0.68, s: 0.4 },
         ],
         mobile: [
           { x: 0.5, y: 0.36, s: 0.66 },
@@ -44,8 +44,8 @@ function pairSlots(hasNecklace: boolean) {
     : {
         // Two equals, side by side (one above the other on phones).
         desktop: [
-          { x: 0.3, y: 0.5, s: 0.7 },
-          { x: 0.7, y: 0.5, s: 0.7 },
+          { x: 0.3, y: 0.5, s: 0.62 },
+          { x: 0.7, y: 0.5, s: 0.62 },
         ],
         mobile: [
           { x: 0.5, y: 0.28, s: 0.46 },

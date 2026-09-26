@@ -338,7 +338,7 @@ export default async function MuranoGlassGuidePage() {
           </Reveal>
         )}
 
-        <Reveal className="murano-guide-section">
+        <Reveal className="murano-guide-section murano-guide-section--faq">
           <AnimatedHeading
             as="h2"
             id="faq"

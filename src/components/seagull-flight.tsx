@@ -121,13 +121,22 @@ export function SeagullFlight({
         left && right ? (left[1] - left[0] >= right[1] - right[0] ? left : right) : null;
       const gutterWidth = gutter ? gutter[1] - gutter[0] : 0;
       const hasLane = gutter !== null && gutterWidth >= w + 24;
+      const compactScreen = vw <= 832;
       const path: Path = {
         x0: startX,
         x1: endX,
-        lane: hasLane && gutter ? (gutter[0] + gutter[1]) / 2 - w / 2 : null,
-        amp: hasLane ? Math.max(0, Math.min(gutterWidth / 2 - w / 2 - 8, 70)) : Math.min(vw * 0.16, 150),
+        lane: compactScreen
+          ? EDGE
+          : hasLane && gutter
+            ? (gutter[0] + gutter[1]) / 2 - w / 2
+            : null,
+        amp: compactScreen
+          ? 0
+          : hasLane
+            ? Math.max(0, Math.min(gutterWidth / 2 - w / 2 - 8, 70))
+            : Math.min(vw * 0.16, 150),
         swoops: Math.max(2, Math.round(span / 650)),
-        edge: clamp(420 / Math.max(span, 1), 0.05, 0.3),
+        edge: compactScreen ? 0.02 : clamp(420 / Math.max(span, 1), 0.05, 0.3),
       };
 
       const x = clamp(pathX(p, path), EDGE, vw - w - EDGE);

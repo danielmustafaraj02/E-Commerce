@@ -116,9 +116,9 @@ export function CartClient({
   const lookSummary = cartLookSummary(items, looks, kinds);
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="cart-flow flex flex-col gap-6">
       {freeShippingThreshold !== null && (
-        <div className="shop-panel shop-panel-pad">
+        <div className="shop-panel shop-panel-pad cart-shipping-progress">
           {estimatedSubtotal >= freeShippingThreshold ? (
             <p className="text-accent-deep flex items-center text-sm font-medium">
               <span className="shop-check shop-settle" aria-hidden="true">
@@ -161,7 +161,7 @@ export function CartClient({
         </div>
       )}
 
-      <ul className="shop-panel shop-list">
+      <ul className="shop-panel shop-list cart-items">
         {items.map((item) => (
           <li key={item.productId} className="shop-cart-line">
             {item.imageUrl ? (
@@ -306,7 +306,7 @@ export function CartClient({
         </Link>
       )}
 
-      <div className="shop-panel shop-panel-pad flex flex-col gap-2">
+      <div className="shop-panel shop-panel-pad cart-total-panel flex flex-col gap-2">
         {lookSummary.saving > 0 && (
           <div className="text-success flex items-center justify-between text-sm">
             <span>{dict.bundleSaving}</span>
