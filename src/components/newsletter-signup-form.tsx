@@ -42,7 +42,7 @@ export function NewsletterSignupForm({ dict }: { dict: Dictionary["footer"] }) {
       onSubmit={validateEmail}
       className="flex flex-col gap-2"
     >
-      <div className="flex gap-2">
+      <div className="footer-newsletter-row flex gap-2">
         <input
           ref={emailRef}
           type="email"

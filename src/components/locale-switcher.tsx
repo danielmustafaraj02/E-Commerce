@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { createPortal } from "react-dom";
 import { setLocale } from "@/lib/i18n/actions";
-import { locales, type Locale } from "@/lib/i18n/locale-constants";
+import { locales, splitLocalePrefix, type Locale } from "@/lib/i18n/locale-constants";
 
 const LABELS: Record<Locale, string> = {
   en: "English",
@@ -85,12 +85,17 @@ export function LocaleSwitcher({ current }: { current: Locale }) {
     // page's language now that locale lives in the URL itself. The overlay
     // stays up for a minimum stretch (below) so a fast switch still reads as
     // a deliberate transition rather than a flash.
-    const rest = pathname.replace(new RegExp(`^/${current}(?=/|$)`), "") || "/";
+    const { rest } = splitLocalePrefix(pathname);
+    const targetPath = `/${locale}${rest === "/" ? "" : rest}`;
+    const targetUrl = `${targetPath}${window.location.search}${window.location.hash}`;
     startTransition(async () => {
       const startedAt = Date.now();
       try {
-        await setLocale(locale);
-        router.push(`/${locale}${rest === "/" ? "" : rest}`);
+        // The URL prefix controls the page language. Saving the cookie only
+        // remembers the preference for a later visit to an unprefixed URL, so
+        // a transient cookie-write failure should not block this navigation.
+        await setLocale(locale).catch(() => undefined);
+        router.push(targetUrl, { scroll: false });
       } finally {
         const remaining = Math.max(0, 1250 - (Date.now() - startedAt));
         window.setTimeout(() => {
@@ -114,7 +119,7 @@ export function LocaleSwitcher({ current }: { current: Locale }) {
         <span key={current} className="locale-switcher-current-flag" aria-hidden="true">
           {FLAGS[current]}
         </span>
-        {CODES[current]}
+        {LABELS[current]}
         <svg
           width="12"
           height="12"
@@ -124,7 +129,7 @@ export function LocaleSwitcher({ current }: { current: Locale }) {
           strokeWidth="2.5"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          className={`locale-switcher-chevron ${open ? "rotate-180" : ""}`}
           aria-hidden="true"
         >
           <path d="m6 9 6 6 6-6" />
@@ -167,18 +172,17 @@ export function LocaleSwitcher({ current }: { current: Locale }) {
             <div className="locale-transition-overlay" role="status" aria-live="polite">
               <div className="locale-transition-content">
                 <p className="locale-transition-kicker">LANGUAGE · LINGUA</p>
+                <span className="sr-only">{LABELS[switchTo]}</span>
                 <div className="locale-transition-stage" aria-hidden="true">
                   <span className="locale-transition-flag locale-transition-flag--from">
-                    {FLAGS[switchFrom]}
+                    <span className="locale-transition-emoji">{FLAGS[switchFrom]}</span>
                   </span>
                   <span className="locale-transition-arrow">→</span>
                   <span className="locale-transition-flag locale-transition-flag--to">
-                    {FLAGS[switchTo]}
+                    <span className="locale-transition-emoji">{FLAGS[switchTo]}</span>
+                    <span className="locale-transition-word">{LABELS[switchTo]}</span>
                   </span>
                 </div>
-                <p className="locale-transition-label">
-                  {LABELS[switchTo]} <span>{CODES[switchTo]}</span>
-                </p>
               </div>
             </div>,
             document.body

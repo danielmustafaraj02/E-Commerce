@@ -543,8 +543,17 @@ button:not(:disabled),
 .locale-switcher-trigger:focus-visible .locale-switcher-current-flag {
   animation: locale-flag-wave 0.62s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
+.locale-switcher-chevron {
+  transition: transform 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.locale-switcher-trigger[aria-expanded="true"] .locale-switcher-chevron {
+  animation: locale-chevron-open 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.locale-switcher-trigger[aria-expanded="true"] {
+  animation: locale-trigger-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
 .locale-switcher-menu .locale-switcher-option {
-  animation: locale-option-arrive 0.34s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  animation: locale-option-arrive 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 .locale-switcher-menu li:nth-child(2) .locale-switcher-option { animation-delay: 25ms; }
 .locale-switcher-menu li:nth-child(3) .locale-switcher-option { animation-delay: 50ms; }
@@ -574,8 +583,20 @@ button:not(:disabled),
   100% { opacity: 1; transform: perspective(80px) rotateY(0) scale(1); }
 }
 @keyframes locale-option-arrive {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
+  0% { opacity: 0; transform: translateY(-7px) scale(0.9); }
+  60% { opacity: 1; transform: translateY(1px) scale(1.03); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes locale-chevron-open {
+  0% { transform: rotate(0deg); }
+  65% { transform: rotate(205deg); }
+  100% { transform: rotate(180deg); }
+}
+@keyframes locale-trigger-pop {
+  0% { transform: scale(1); }
+  35% { transform: scale(0.93); }
+  70% { transform: scale(1.05); }
+  100% { transform: scale(1); }
 }
 .locale-transition-overlay {
   position: fixed;
@@ -637,13 +658,16 @@ button:not(:disabled),
   animation: locale-orbit 20s linear infinite reverse;
 }
 .locale-transition-flag {
-  display: grid;
+  display: flex;
   position: absolute;
   top: 50%;
   left: 50%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
   width: clamp(8rem, 27vw, 10.5rem);
   aspect-ratio: 1;
-  place-items: center;
   border: 1.5px solid rgb(217 199 160 / 55%);
   border-radius: 50%;
   background: radial-gradient(circle at 30% 30%, #fffbf5 0%, #fef8f2 35%, #f5ebe0 100%);
@@ -652,9 +676,20 @@ button:not(:disabled),
     0 2rem 5rem rgb(102 91 80 / 12%),
     inset 0 1px 2px rgb(255 255 255 / 60%),
     inset 0 -1px 2px rgb(102 91 80 / 8%);
-  font-size: clamp(4.5rem, 16vw, 6.7rem);
   line-height: 1;
   will-change: transform, opacity;
+}
+.locale-transition-emoji {
+  font-size: clamp(3.5rem, 12vw, 5.25rem);
+}
+.locale-transition-word {
+  color: rgb(60 55 50 / 85%);
+  font-family: var(--font-display, Georgia), Georgia, serif;
+  font-size: clamp(0.85rem, 3vw, 1.05rem);
+  font-weight: 600;
+  line-height: 1.15;
+  white-space: nowrap;
+  animation: locale-label-arrive-cute 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.35s both;
 }
 .locale-transition-flag--from {
   animation: locale-flag-leave-cute 0.95s cubic-bezier(0.4, 0, 0.2, 1) both;
@@ -681,25 +716,6 @@ button:not(:disabled),
   font-weight: 300;
   transform: translate(-50%, -50%);
   animation: locale-arrow-sweep-cute 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.28s both;
-}
-.locale-transition-label {
-  display: flex;
-  align-items: baseline;
-  gap: 0.65rem;
-  margin: 1.2rem 0 0;
-  color: rgb(60 55 50 / 85%);
-  font-family: var(--font-display, Georgia), Georgia, serif;
-  font-size: clamp(1.4rem, 4vw, 1.85rem);
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  animation: locale-label-arrive-cute 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.35s both;
-}
-.locale-transition-label span {
-  color: rgb(217 199 160 / 75%);
-  font-size: 0.75rem;
-  font-family: var(--font-ui, system-ui), system-ui, sans-serif;
-  font-weight: 700;
-  letter-spacing: 0.25em;
 }
 @keyframes locale-overlay-in {
   from { opacity: 0; backdrop-filter: blur(0); }

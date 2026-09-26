@@ -3,7 +3,6 @@ import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { FAQ_INITIAL, faqJsonLd, type FaqItem } from "@/lib/faq";
 import { toSafeJsonLd } from "@/lib/json-ld";
 import { FaqAccordion } from "@/components/faq-accordion";
-import { BrandWave } from "@/components/brand-signature";
 import { Reveal } from "@/components/reveal";
 import "./faq.css";
 
@@ -26,9 +25,7 @@ export function FaqSection({
         {variant === "editorial" && (
           <>
             <p>{dict.faq.intro}</p>
-            <Reveal className="faq-wave-reveal" repeatOnView>
-              <BrandWave className="faq-wave" />
-            </Reveal>
+            <div className="faq-wave-flow" aria-hidden="true" />
           </>
         )}
       </div>

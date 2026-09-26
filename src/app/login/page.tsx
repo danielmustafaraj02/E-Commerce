@@ -34,7 +34,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
     <main
       className={`auth-flow-page shelf relative flex flex-1 flex-col overflow-hidden ${homeFontClasses}`}
     >
-      <div className="relative z-10 mx-auto flex w-full max-w-sm flex-1 flex-col justify-center px-4 py-16">
+      <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center px-4 py-10 sm:px-6 lg:py-14">
         <AuthCard
           initialMode="login"
           storeName={settings.storeName}

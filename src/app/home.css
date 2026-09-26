@@ -664,6 +664,12 @@
 .shelf-item-photo {
   position: relative;
   aspect-ratio: 2 / 3;
+  overflow: hidden;
+  isolation: isolate;
+  /* Pure white, the photos' own background, so no browser can show a seam
+     around them (iOS Safari doesn't always honour the multiply blend) —
+     same fallback as .shop-product-photo/.shop-thumb on the product page. */
+  background: #fff;
 }
 .shelf-item-name {
   font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
@@ -976,31 +982,70 @@
       translate: 0 0;
     }
   }
-  @media (min-width: 48rem) {
-    .home-category-reveal[data-reveal="false"] .shelf-category {
+  /* Cards scrub in with the page scroll itself: each rises into focus as it
+     crosses into view and drifts back out of focus if you scroll up again,
+     rather than firing once on a timer. Later columns take a later slice of
+     the scroll, so a row arrives as a left-to-right wave. `translate` (not
+     `transform`) so the hover lift above still works. Desktop only: on
+     phones the list is a horizontal scroll container, which would become
+     the view timeline's scroller and strand the cards mid-animation. */
+  @keyframes home-category-scroll-in {
+    from {
       opacity: 0;
-      translate: 1.25rem 0;
+      translate: 0 2.25rem;
+      filter: blur(8px);
     }
-    .home-category-reveal[data-reveal="true"] .shelf-category {
-      animation: home-category-card-in 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    to {
+      opacity: 1;
+      translate: 0 0;
+      filter: none;
     }
-    .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(1) {
-      animation-delay: 1.2s;
+  }
+  @media (min-width: 48rem) {
+    @supports (animation-timeline: view()) {
+      .shelf-categories .shelf-category {
+        animation-name: home-category-scroll-in;
+        animation-duration: auto;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: view();
+        animation-range: entry 10% cover 40%;
+      }
+      .shelf-categories .shelf-category:nth-child(3n + 2) {
+        animation-range: entry 25% cover 46%;
+      }
+      .shelf-categories .shelf-category:nth-child(3n + 3) {
+        animation-range: entry 40% cover 52%;
+      }
     }
-    .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(2) {
-      animation-delay: 1.5s;
-    }
-    .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(3) {
-      animation-delay: 1.8s;
-    }
-    .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(4) {
-      animation-delay: 2.1s;
-    }
-    .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(5) {
-      animation-delay: 2.4s;
-    }
-    .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(6) {
-      animation-delay: 2.7s;
+
+    /* Browsers without scroll timelines keep the original one-shot stagger. */
+    @supports not (animation-timeline: view()) {
+      .home-category-reveal[data-reveal="false"] .shelf-category {
+        opacity: 0;
+        translate: 1.25rem 0;
+      }
+      .home-category-reveal[data-reveal="true"] .shelf-category {
+        animation: home-category-card-in 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+      }
+      .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(1) {
+        animation-delay: 1.2s;
+      }
+      .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(2) {
+        animation-delay: 1.5s;
+      }
+      .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(3) {
+        animation-delay: 1.8s;
+      }
+      .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(4) {
+        animation-delay: 2.1s;
+      }
+      .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(5) {
+        animation-delay: 2.4s;
+      }
+      .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(6) {
+        animation-delay: 2.7s;
+      }
     }
   }
 }

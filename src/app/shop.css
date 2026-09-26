@@ -969,8 +969,156 @@ a.shop-line-name:focus-visible {
 
 /* -- Sign in / register ------------------------------------------------------- */
 
+.auth-flow-page {
+  background: linear-gradient(135deg, #f1efeb, #faf8f5 55%, #e9e5df);
+}
+
 .shop-auth-title {
-  font-size: clamp(2rem, 6vw, 2.6rem);
+  margin: 1.5rem 0 1.25rem;
+  color: #20201e;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 500;
+  line-height: 1.08;
+}
+.auth-wave {
+  display: block;
+  width: 4rem;
+  height: 1rem;
+  margin-top: 0.35rem;
+  color: var(--gold);
+}
+
+/* The auth flow pairs a quiet ivory form with the Burano image used on Chi siamo. */
+.auth-panel {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  min-height: 560px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, #b89a62 34%, transparent);
+  border-radius: 5px;
+  background: #fbf9f5;
+  box-shadow: 0 1.5rem 4rem -1.5rem rgb(25 32 32 / 28%);
+}
+.auth-form-side {
+  z-index: 1;
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(2rem, 6vw, 5.25rem);
+  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.auth-eyebrow {
+  margin: 0;
+  color: #766748;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.auth-image-side {
+  position: relative;
+  z-index: 0;
+  grid-column: 2;
+  grid-row: 1;
+  min-height: 100%;
+  overflow: hidden;
+  background: #77736d;
+  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.auth-panel[data-mode="register"] .auth-form-side {
+  transform: translateX(100%);
+}
+.auth-panel[data-mode="register"] .auth-image-side {
+  transform: translateX(-100%);
+}
+.auth-image-side img {
+  object-position: center;
+}
+.auth-image-wash {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(18 28 27 / 4%) 45%, rgb(13 23 22 / 68%) 100%);
+}
+.auth-image-caption {
+  position: absolute;
+  right: 2rem;
+  bottom: 2rem;
+  left: 2rem;
+  margin: 0;
+  color: white;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.7rem;
+  letter-spacing: 0.02em;
+}
+.auth-image-caption span {
+  display: block;
+  margin-top: 0.45rem;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.auth-panel .form-card {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+}
+.auth-form-side .field {
+  border: 0;
+  border-bottom: 1px solid #cfc6b7;
+  border-radius: 0;
+  background: transparent;
+  padding: 0.55rem 0.15rem;
+  box-shadow: none;
+  transition: border-color 180ms ease;
+}
+.auth-form-side .field:hover:not(:disabled):not(:focus) {
+  border-color: #9e8965;
+  background: transparent;
+}
+.auth-form-side .field:focus {
+  border-color: #9e8965;
+  box-shadow: none;
+}
+.auth-form-side .field[aria-invalid="true"] {
+  border-color: var(--color-danger);
+}
+
+@media (max-width: 767px) {
+  .auth-panel {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: auto;
+  }
+  .auth-image-side {
+    min-height: 190px;
+    grid-column: 1;
+    grid-row: 1;
+    transform: none !important;
+  }
+  .auth-form-side {
+    grid-column: 1;
+    grid-row: 2;
+    padding: 2rem 1.5rem 1.75rem;
+    transform: none !important;
+  }
+  .auth-image-caption {
+    right: 1.25rem;
+    bottom: 1rem;
+    left: 1.25rem;
+    font-size: 1.3rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-form-side,
+  .auth-image-side {
+    transition: none;
+  }
 }
 
 /* Legal text: plain running copy, kept in the UI face for long documents. */

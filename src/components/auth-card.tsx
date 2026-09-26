@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import LoginForm from "@/app/login/login-form";
 import RegisterForm from "@/app/register/register-form";
+import { BrandWave } from "@/components/brand-signature";
+import Image from "next/image";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
 type Mode = "login" | "register";
@@ -55,70 +57,85 @@ export function AuthCard({
   }
 
   return (
-    <div className="flex flex-col">
-      <h1
-        key={mode}
-        ref={headingRef}
-        tabIndex={-1}
-        className="animate-fade-up shop-auth-title mb-1 text-center outline-none"
-      >
-        {mode === "login" ? dict.signInTitle : dict.createAccountTitle}
-      </h1>
-      <p className="text-foreground/60 mb-6 text-center text-sm">{storeName}</p>
-
-      {/* Clips the slide-in animation. The 4px of bottom padding (cancelled by the
-            negative margin, so the layout doesn't move) keep the clip edge below the
-            card's bottom border: on a card with a fractional height the edge landed
-            one pixel too high and cut that border off. */}
-      <div className="relative -mb-1 overflow-hidden pb-1">
-        <div key={mode} data-mode={mode} className="auth-swap-panel">
-          {mode === "login" ? (
-            <LoginForm
-              callbackUrl={callbackUrl}
-              siteKey={siteKey}
-              nonce={nonce}
-              dict={dict}
-              googleEnabled={googleEnabled}
-              initialError={initialError}
-              initialNotice={initialNotice}
-            />
-          ) : (
-            <RegisterForm siteKey={siteKey} nonce={nonce} dict={dict} />
-          )}
+    <div className="auth-panel" data-mode={mode}>
+      <div className="auth-form-side">
+        <p className="auth-eyebrow">{storeName}</p>
+        <BrandWave className="auth-wave" />
+        <h1
+          key={mode}
+          ref={headingRef}
+          tabIndex={-1}
+          className="animate-fade-up shop-auth-title outline-none"
+        >
+          {mode === "login" ? dict.signInTitle : dict.createAccountTitle}
+        </h1>
+        {/* Clips the slide-in animation. The 4px of bottom padding (cancelled by the
+              negative margin, so the layout doesn't move) keep the clip edge below the
+              card's bottom border: on a card with a fractional height the edge landed
+              one pixel too high and cut that border off. */}
+        <div className="relative -mb-1 overflow-hidden pb-1">
+          <div key={mode} data-mode={mode} className="auth-swap-panel">
+            {mode === "login" ? (
+              <LoginForm
+                callbackUrl={callbackUrl}
+                siteKey={siteKey}
+                nonce={nonce}
+                dict={dict}
+                googleEnabled={googleEnabled}
+                initialError={initialError}
+                initialNotice={initialNotice}
+              />
+            ) : (
+              <RegisterForm siteKey={siteKey} nonce={nonce} dict={dict} />
+            )}
+          </div>
         </div>
-      </div>
 
-      <p className="text-foreground/70 mt-4 text-center text-sm">
-        {mode === "login" ? (
-          <>
-            {dict.noAccount}{" "}
-            <a
-              href="/register"
-              onClick={(e) => {
-                e.preventDefault();
-                switchTo("register");
-              }}
-              className="text-accent-deep font-medium underline"
-            >
-              {dict.createOne}
-            </a>
-          </>
-        ) : (
-          <>
-            {dict.haveAccount}{" "}
-            <a
-              href="/login"
-              onClick={(e) => {
-                e.preventDefault();
-                switchTo("login");
-              }}
-              className="text-accent-deep font-medium underline"
-            >
-              {dict.signIn}
-            </a>
-          </>
-        )}
-      </p>
+        <p className="text-foreground/70 mt-5 text-center text-sm">
+          {mode === "login" ? (
+            <>
+              {dict.noAccount}{" "}
+              <a
+                href="/register"
+                onClick={(e) => {
+                  e.preventDefault();
+                  switchTo("register");
+                }}
+                className="text-accent-deep font-medium underline"
+              >
+                {dict.createOne}
+              </a>
+            </>
+          ) : (
+            <>
+              {dict.haveAccount}{" "}
+              <a
+                href="/login"
+                onClick={(e) => {
+                  e.preventDefault();
+                  switchTo("login");
+                }}
+                className="text-accent-deep font-medium underline"
+              >
+                {dict.signIn}
+              </a>
+            </>
+          )}
+        </p>
+      </div>
+      <div className="auth-image-side">
+        <Image
+          src="/blog/burano-colorful-houses-canal.jpg"
+          alt="Colourful houses reflected in a Venetian canal"
+          fill
+          priority
+          unoptimized
+          sizes="(min-width: 768px) 44vw, 100vw"
+          className="object-cover"
+        />
+        <div className="auth-image-wash" />
+        <p className="auth-image-caption">{storeName}</p>
+      </div>
     </div>
   );
 }
