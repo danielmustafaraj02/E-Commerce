@@ -1756,7 +1756,7 @@
    hand-drawn Murano rollercoaster in place of the necklace backdrop. */
 @media (min-width: 52rem) {
   .shelf-home .shelf-hero {
-    background: #fff;
+    background: #fdfcf9;
   }
   .shelf-home .shelf-hero-backdrop,
   .shelf-home .shelf-hero:has(.hero-look-rollercoaster) .shelf-bead-carousel {
@@ -1765,8 +1765,8 @@
   .shelf-home .shelf-hero-grid {
     grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
     align-items: center;
-    gap: clamp(1.5rem, 4vw, 4rem);
-    padding-block: clamp(3.5rem, 6vw, 5.5rem) 3.5rem;
+    gap: clamp(2.5rem, 6vw, 6rem);
+    padding-block: clamp(5rem, 8vw, 8rem) clamp(4rem, 6vw, 6rem);
   }
   .shelf-home .shelf-hero-copy {
     max-width: 34rem;
@@ -1789,8 +1789,8 @@
   .shelf-home .shelf-hero .hero-look-rollercoaster {
     position: relative;
     display: block;
-    width: min(100%, 39rem);
-    height: clamp(28rem, 40vw, 36rem);
+    width: min(100%, 42rem);
+    height: clamp(30rem, 43vw, 38rem);
     justify-self: end;
     isolation: isolate;
   }
@@ -1887,22 +1887,22 @@
     z-index: 3;
     top: 3%;
     left: 50%;
-    width: min(16rem, 48%);
+    width: min(17rem, 44%);
     transform: translateX(-50%) rotate(0) scale(1);
   }
   .hero-look-carriage--previous {
     z-index: 2;
     top: 57%;
-    left: 1%;
-    width: min(12rem, 36%);
+    left: 0;
+    width: min(10.5rem, 29%);
     transform: translateY(-50%) rotate(-9deg) scale(0.86);
   }
   .hero-look-carriage--next {
     z-index: 2;
     top: 41%;
-    left: 68%;
+    left: 74%;
     right: auto;
-    width: min(12.5rem, 37%);
+    width: min(11rem, 30%);
     transform: translateY(-50%) rotate(9deg) scale(0.85);
   }
   .hero-look-rollercoaster[data-ready="true"] .hero-look-carriage--active,
@@ -1929,9 +1929,9 @@
     width: 100%;
     aspect-ratio: 4 / 5;
     overflow: hidden;
-    border: 1px solid color-mix(in srgb, var(--gold) 58%, white);
-    background: #faf8f5;
-    box-shadow: 0 0.75rem 2rem rgb(18 61 67 / 7%);
+    border: 1px solid color-mix(in srgb, var(--gold) 68%, white);
+    background: #fbfaf7;
+    box-shadow: 0 1rem 2.5rem rgb(18 61 67 / 8%);
   }
   .hero-look-frame::after {
     position: absolute;
