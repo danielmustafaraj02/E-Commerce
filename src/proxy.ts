@@ -197,12 +197,10 @@ function withSecurityHeaders(response: NextResponse) {
 
 export const config = {
   matcher: [
-    {
-      source: "/((?!api|_next/static|_next/image|favicon.ico).*)",
-      missing: [
-        { type: "header", key: "next-router-prefetch" },
-        { type: "header", key: "purpose", value: "prefetch" },
-      ],
-    },
+    // Locale-prefixed URLs must be rewritten even for RSC prefetches from
+    // next/link. Skipping prefetch headers makes /en/cart and similar paths
+    // fall through to the filesystem router (which only has /cart), producing
+    // noisy 404s and preventing Next from warming the route correctly.
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
   ],
 };
