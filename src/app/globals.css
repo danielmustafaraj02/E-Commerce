@@ -500,6 +500,21 @@ button:not(:disabled),
     animation-delay: var(--card-delay, 0s);
   }
 
+  /* Swiper's own pagination dots for the "Shop by category" showcase
+     (category-carousel.tsx) — restyled to match the site's rounded, muted
+     look instead of Swiper's default small blue dots. */
+  .category-showcase .swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+    background: var(--foreground);
+    opacity: 0.2;
+    transition: opacity 0.2s ease, background 0.2s ease;
+  }
+  .category-showcase .swiper-pagination-bullet-active {
+    background: var(--color-primary);
+    opacity: 1;
+  }
+
   /* Header category nav (header.tsx) — the row of category/About/guide
      links sat immediately visible with zero entrance, unlike the rest of
      the page's staggered fade-ups. Fade-up, staggered per item via
