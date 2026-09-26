@@ -18,13 +18,13 @@ const CENTRE: Slot = { x: 0.5, y: 0.5, s: 0.86 };
 const THREE = {
   desktop: {
     necklace: { x: 0.5, y: 0.5, s: 0.78 },
-    bracelet: { x: 0.2, y: 0.28, s: 0.34 },
-    earrings: { x: 0.8, y: 0.72, s: 0.34 },
+    bracelet: { x: 0.18, y: 0.26, s: 0.32 },
+    earrings: { x: 0.82, y: 0.74, s: 0.32 },
   },
   mobile: {
-    necklace: { x: 0.5, y: 0.34, s: 0.62 },
-    bracelet: { x: 0.26, y: 0.8, s: 0.36 },
-    earrings: { x: 0.74, y: 0.8, s: 0.36 },
+    necklace: { x: 0.5, y: 0.32, s: 0.6 },
+    bracelet: { x: 0.23, y: 0.83, s: 0.34 },
+    earrings: { x: 0.77, y: 0.83, s: 0.34 },
   },
 };
 
