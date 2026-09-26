@@ -529,8 +529,23 @@ body:has(.auth-flow-page) .site-footer {
   height: 1.125rem;
   transition: transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
+.brand-signature-nest {
+  display: none;
+}
+.site-footer .brand-signature {
+  gap: 0.5rem;
+}
 .brand-signature:hover svg {
   transform: scaleX(1.16);
+}
+
+/* Keep the little lagoon nest as the shared closing mark across the storefront. */
+.site-footer .brand-signature-wave {
+  display: none;
+}
+.site-footer .brand-signature-nest {
+  display: inline;
+  height: 1.5rem;
 }
 
 /* -- Desktop: an editorial, multi-column layout -------------------------- */

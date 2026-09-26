@@ -1063,13 +1063,18 @@ button:not(:disabled),
     background: var(--color-primary);
     color: #fbf9f5;
     padding: 0.7rem 1.35rem;
-    transition: background-color 0.2s ease;
+    min-height: 2.75rem;
+    transition:
+      background-color 0.2s ease,
+      box-shadow 0.2s ease;
   }
   .btn-primary:hover:not(:disabled) {
     background: color-mix(in srgb, var(--color-primary) 72%, black);
+    box-shadow: 0 0.45rem 1rem -0.6rem rgb(18 61 67 / 42%);
   }
   .btn-primary:active:not(:disabled) {
     background: color-mix(in srgb, var(--color-primary) 60%, black);
+    box-shadow: none;
   }
   .btn-primary:disabled {
     opacity: 0.55;

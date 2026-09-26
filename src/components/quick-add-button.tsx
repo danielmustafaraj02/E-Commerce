@@ -21,13 +21,14 @@ export function QuickAddButton({
 }) {
   const addItem = useCartStore((state) => state.addItem);
   const [added, setAdded] = useState(false);
+  const actionLabel = `${label}: ${product.name}`;
 
   return (
     <>
       <button
         type="button"
-        aria-label={label}
-        title={label}
+        aria-label={actionLabel}
+        title={actionLabel}
         disabled={added}
         onClick={() => {
           addItem({

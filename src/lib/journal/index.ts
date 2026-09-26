@@ -19,6 +19,16 @@ export function getArticle(slug: string) {
   return ARTICLES.find((a) => a.slug === slug) ?? null;
 }
 
+// Articles are written in English only: /it/blog/x, /fr/blog/x… carry the
+// same English text inside translated menus. So every copy names the English
+// URL as its canonical and English is the article's only language version,
+// rather than 11 URLs each claiming to be a translation (duplicate content).
+// The article page's metadata and the sitemap both use this.
+export const ARTICLE_LOCALE = "en" as const;
+export function articlePath(slug: string) {
+  return `/${ARTICLE_LOCALE}/blog/${slug}`;
+}
+
 export function relatedArticles(article: Article) {
   return article.related.map(getArticle).filter((a): a is Article => a !== null);
 }

@@ -4,7 +4,13 @@ import { useActionState, useRef, useState, type FormEvent } from "react";
 import { subscribeToNewsletter } from "@/app/newsletter/actions";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
-export function NewsletterSignupForm({ dict }: { dict: Dictionary["footer"] }) {
+export function NewsletterSignupForm({
+  dict,
+  submitLabel,
+}: {
+  dict: Dictionary["footer"];
+  submitLabel?: string;
+}) {
   const emailRef = useRef<HTMLInputElement>(null);
   const [clientError, setClientError] = useState(false);
   const [emailEdited, setEmailEdited] = useState(false);
@@ -61,7 +67,7 @@ export function NewsletterSignupForm({ dict }: { dict: Dictionary["footer"] }) {
           className={`field text-sm${hasError ? " newsletter-email--invalid" : ""}`}
         />
         <button type="submit" disabled={pending} className="btn-primary shrink-0 text-sm">
-          {pending ? dict.newsletterSubmitting : dict.newsletterSubmit}
+          {pending ? dict.newsletterSubmitting : (submitLabel ?? dict.newsletterSubmit)}
         </button>
       </div>
       {hasError && (

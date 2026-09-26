@@ -42,7 +42,7 @@ export async function generateMetadata({
   const dict = getDictionary(locale);
   const descriptionByLocale: Record<Locale, string> = {
     en: `Browse the full ${settings.storeName} catalog: handmade Murano glass jewelry, from bracelets to necklaces and earrings.`,
-    it: `Sfoglia il catalogo completo di ${settings.storeName}.`,
+    it: `Collane, bracciali e orecchini in vetro di Murano, con perle lavorate a mano. Pezzi unici spediti dall'Italia: scopri il catalogo ${settings.storeName}.`,
     fr: `Parcourez le catalogue complet de ${settings.storeName}.`,
     de: `Durchstöbern Sie den vollständigen Katalog von ${settings.storeName}.`,
     ar: `تصفح كتالوج ${settings.storeName} الكامل.`,

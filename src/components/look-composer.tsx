@@ -152,30 +152,40 @@ export function LookComposer({
               previousLabel={labels.previous}
               nextLabel={labels.next}
             >
-                {pieces[kind].map((piece) => {
-                  const isChosen = chosen[kind] === piece.productId;
-                  return (
-                    <li key={piece.productId}>
-                      <button
-                        type="button"
-                        className="composer-option"
-                        aria-pressed={isChosen}
-                        disabled={!piece.available}
-                        onClick={() => toggle(kind, piece.productId)}
-                      >
-                        <span className="composer-option-photo">
-                          {piece.imageUrl && (
-                            <CatalogImage src={piece.imageUrl} alt="" fill sizes="7rem" />
-                          )}
+              {pieces[kind].map((piece) => {
+                const isChosen = chosen[kind] === piece.productId;
+                return (
+                  <li key={piece.productId}>
+                    <button
+                      type="button"
+                      className="composer-option"
+                      aria-pressed={isChosen}
+                      disabled={!piece.available}
+                      onClick={() => toggle(kind, piece.productId)}
+                    >
+                      <span className="composer-option-photo">
+                        {piece.imageUrl && (
+                          <CatalogImage
+                            src={piece.imageUrl}
+                            alt=""
+                            fill
+                            sizes="(min-width: 52rem) 12rem, 10.5rem"
+                          />
+                        )}
+                      </span>
+                      <span className="composer-option-name">{piece.name}</span>
+                      {piece.description && (
+                        <span className="composer-option-description">
+                          {piece.description}
                         </span>
-                        <span className="composer-option-name">{piece.name}</span>
-                        <span className="composer-option-price">
-                          {piece.available ? money(piece.price) : labels.outOfStock}
-                        </span>
-                      </button>
-                    </li>
-                  );
-                })}
+                      )}
+                      <span className="composer-option-price">
+                        {piece.available ? money(piece.price) : labels.outOfStock}
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
             </ComposerRow>
           ) : null
         )}

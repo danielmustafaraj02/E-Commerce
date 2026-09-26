@@ -67,8 +67,9 @@ export async function generateMetadata({
   };
   const title = titleByLocale[locale];
   const descriptionByLocale: Record<Locale, string> = {
-    en: `Shop handmade Murano glass ${name.toLowerCase()} at ${settings.storeName}, filterable by price and availability.`,
-    it: `Scopri i ${name.toLowerCase()} in vetro di Murano fatto a mano di ${settings.storeName}, filtrabili per prezzo e disponibilità.`,
+    en: `Murano glass ${name.toLowerCase()} with beads shaped by hand, one at a time. Shipped from Italy in a gift-ready box: explore the ${settings.storeName} collection.`,
+    // No article before the name: "i/le/gli" depends on the category's gender.
+    it: `${name} in vetro di Murano, con perle lavorate a mano una per una. Spedizione dall'Italia in una scatola regalo: scopri la collezione ${settings.storeName}.`,
     fr: `Découvrez les ${name.toLowerCase()} en verre de Murano fait main de ${settings.storeName}, filtrables par prix et disponibilité.`,
     de: `Entdecken Sie handgefertigte ${name.toLowerCase()} aus Muranoglas von ${settings.storeName}, filterbar nach Preis und Verfügbarkeit.`,
     ar: `تسوق ${name} يدوية الصنع من زجاج مورانو في ${settings.storeName}، قابلة للتصفية حسب السعر والتوفر.`,

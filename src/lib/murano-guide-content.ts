@@ -170,9 +170,9 @@ const en: MuranoGuideContent = {
 };
 
 const it: MuranoGuideContent = {
-  metaTitle: "Vetro di Murano: Storia, Tecniche e Come Riconoscere l'Originale",
+  metaTitle: "Vetro di Murano: storia, tecniche e autenticità",
   metaDescription:
-    "Una guida completa al vetro di Murano, la sua storia di 700 anni, le tecniche di lavorazione a lume, murrine e sommerso, come distinguere il vetro autentico soffiato a mano dalle imitazioni, e come prendersene cura.",
+    "Da dove viene il vetro di Murano, come si lavora a lume e con le murrine, come riconoscere l'originale dalle imitazioni e come curarlo: la guida completa.",
   title: "La Guida Completa al Vetro di Murano",
   intro:
     "Il vetro di Murano è il vetro lavorato a Murano, una piccola isola della laguna veneziana che da oltre 700 anni è il centro della lavorazione del vetro veneziana. Il nome è tutelato da un marchio italiano per un motivo preciso: descrive un luogo specifico, un insieme specifico di tecniche manuali e un livello di abilità che la bigiotteria in vetro prodotta in serie e venduta con lo stesso nome, di solito, non ha. Questa guida racconta da dove viene, come viene davvero realizzato e come riconoscere il pezzo autentico da un'imitazione.",

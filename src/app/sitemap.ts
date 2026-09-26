@@ -1,4 +1,5 @@
-import { ARTICLES } from "@/lib/journal";
+import { ARTICLE_LOCALE, ARTICLES, articlePath } from "@/lib/journal";
+import { MURANO_FAQ_LOCALE, MURANO_FAQ_PATH } from "@/lib/murano-faq";
 import type { MetadataRoute } from "next";
 import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
@@ -41,10 +42,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: "/murano-glass" },
     { path: "/contact" },
     { path: "/blog", lastModified: new Date(ARTICLES[0].updated ?? ARTICLES[0].published) },
-    ...ARTICLES.map((article) => ({
-      path: `/blog/${article.slug}`,
-      lastModified: new Date(article.updated ?? article.published),
-    })),
     ...categories.map((category) => ({
       path: `/category/${category.slug}`,
       lastModified: catalogUpdatedAt,
@@ -56,7 +53,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...legalPages.map((page) => ({ path: `/legal/${page.slug}`, lastModified: page.lastUpdated })),
   ];
 
-  return resources.flatMap(({ path, lastModified }) => {
+  const localized = resources.flatMap(({ path, lastModified }) => {
     const alternates = hreflangAlternates(path);
     const languages = Object.fromEntries(
       Object.entries(alternates).map(([code, altPath]) => [code, `${base}${altPath}`])
@@ -67,4 +64,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       alternates: { languages },
     }));
   });
+
+  // Articles exist in English only, so each has one URL (lib/journal: the
+  // other locales' copies name it as canonical), not an 11-language cluster.
+  const articles = ARTICLES.map((article) => {
+    const url = `${base}${articlePath(article.slug)}`;
+    return {
+      url,
+      lastModified: new Date(article.updated ?? article.published),
+      alternates: { languages: { [ARTICLE_LOCALE]: url, "x-default": url } },
+    };
+  });
+
+  // The Murano questions page is Italian only, the same way.
+  const muranoFaqUrl = `${base}/${MURANO_FAQ_LOCALE}${MURANO_FAQ_PATH}`;
+  const muranoFaq = {
+    url: muranoFaqUrl,
+    lastModified: catalogUpdatedAt,
+    alternates: { languages: { [MURANO_FAQ_LOCALE]: muranoFaqUrl, "x-default": muranoFaqUrl } },
+  };
+
+  return [...localized, ...articles, muranoFaq];
 }

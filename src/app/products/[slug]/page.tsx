@@ -689,7 +689,8 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                 </Link>
               </Reveal>
             )}
-            <FaqSection items={faq} dict={dict} variant="compact" />
+            {/* Same questions as the homepage FAQ, which carries the markup. */}
+            <FaqSection items={faq} dict={dict} variant="compact" structuredItems={[]} />
           </div>
         </div>
       </section>

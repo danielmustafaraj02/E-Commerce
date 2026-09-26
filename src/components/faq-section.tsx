@@ -8,15 +8,19 @@ import "./faq.css";
 
 // "Common questions": heading and a short intro beside the accordion
 // ("editorial", homepage) or above it ("compact", beside the product story),
-// then a contact line. The FAQPage data is built from the same items.
+// then a contact line. The FAQPage data is built from the same items, unless
+// `structuredItems` narrows it: Google asks that a question repeated on
+// several pages be marked up on one of them only.
 export function FaqSection({
   items,
   dict,
   variant = "editorial",
+  structuredItems = items,
 }: {
   items: FaqItem[];
   dict: Dictionary;
   variant?: "editorial" | "compact";
+  structuredItems?: FaqItem[];
 }) {
   const content = (
     <div className={`faq faq--${variant}`}>
@@ -50,10 +54,12 @@ export function FaqSection({
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: toSafeJsonLd(faqJsonLd(items)) }}
-      />
+      {structuredItems.length > 0 && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: toSafeJsonLd(faqJsonLd(structuredItems)) }}
+        />
+      )}
       {variant === "compact" ? (
         <Reveal className="faq-compact-reveal" delayMs={1050}>
           {content}

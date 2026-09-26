@@ -7,9 +7,10 @@ import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { applyTemplate } from "@/lib/i18n/format";
 import { toSafeJsonLd, absoluteUrl } from "@/lib/json-ld";
-import { hreflangAlternates, localizedCanonical } from "@/lib/hreflang";
 import {
+  ARTICLE_LOCALE,
   ARTICLES,
+  articlePath,
   articleProductSlugs,
   getArticle,
   readingMinutes,
@@ -33,12 +34,14 @@ export async function generateMetadata({ params }: PageProps<"/blog/[slug]">): P
   if (!article) return {};
   const products = await getJournalProducts(articleProductSlugs(article));
   const image = journalImageSrc(article.hero, products);
-  const canonical = `/blog/${article.slug}`;
-  const locale = await getLocale();
+  const canonical = articlePath(article.slug);
   return {
     title: article.seoTitle,
     description: article.description,
-    alternates: { canonical: localizedCanonical(locale, canonical), languages: hreflangAlternates(canonical) },
+    alternates: {
+      canonical,
+      languages: { [ARTICLE_LOCALE]: canonical, "x-default": canonical },
+    },
     openGraph: {
       title: article.seoTitle,
       description: article.description,
@@ -70,7 +73,8 @@ export default async function JournalArticlePage({ params }: PageProps<"/blog/[s
     ...related.flatMap((r) => (r.hero.kind === "product" ? [r.hero.productSlug] : [])),
   ]);
   const base = siteBaseUrl(settings);
-  const url = `${base}/blog/${article.slug}`;
+  // Structured data names the canonical URLs (bare /blog/… paths redirect).
+  const url = `${base}${articlePath(article.slug)}`;
   const heroSrc = journalImageSrc(article.hero, products);
   const credit = (c: string) => applyTemplate(j.photoCredit, { credit: c });
 
@@ -93,8 +97,8 @@ export default async function JournalArticlePage({ params }: PageProps<"/blog/[s
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: settings.storeName, item: base },
-        { "@type": "ListItem", position: 2, name: j.title, item: `${base}/blog` },
+        { "@type": "ListItem", position: 1, name: settings.storeName, item: `${base}/${ARTICLE_LOCALE}` },
+        { "@type": "ListItem", position: 2, name: j.title, item: `${base}/${ARTICLE_LOCALE}/blog` },
         { "@type": "ListItem", position: 3, name: article.title, item: url },
       ],
     },

@@ -1,13 +1,54 @@
 import type { Locale } from "./locale";
 
-// Copy for the sections under a look (app/looks/[id]): the pieces one by one,
-// why to choose them, the look questions and the "learn more" links. Italian
-// and English only for now; every other locale reads the English text, the
-// same way product stories fall back (lib/product-i18n.ts). Every claim here
-// restates something the site already says or does — the discounts are the
-// ones lib/looks.ts applies at checkout, the returns and packaging lines
-// repeat dictionaries.ts — so keep it that way when editing.
+// Copy for the looks listing and the sections under one look: the reasons,
+// questions, piece details and "learn more" links. Italian and English only
+// for now; every other locale reads the English text, the same way product
+// stories fall back (lib/product-i18n.ts). Discount claims restate the rules
+// in lib/looks.ts, so keep them aligned when editing.
 const en = {
+  listingWhyTitle: "A look, already in harmony",
+  listingWhyIntro:
+    "Each combination is chosen to make Murano glass easy to wear, give or collect.",
+  listingWhy: [
+    {
+      title: "Colours that belong together",
+      body: "Necklace, bracelet and earrings are paired for their colours and shapes, so the whole look feels considered while every piece still works on its own.",
+    },
+    {
+      title: "Made by hand in Murano",
+      body: "Each piece is crafted in Murano glass. Small differences in colour and form are part of the character of handmade work.",
+    },
+    {
+      title: "A better price as a set",
+      body: "Buy all the pieces in a look together and its displayed saving is applied automatically in your cart. No code needed.",
+    },
+  ],
+  listingFaq: [
+    {
+      id: "look-list-pieces",
+      question: "What comes in a look?",
+      answer:
+        "Each look brings together three pieces chosen to complement one another. Open a look to see exactly what is included.",
+    },
+    {
+      id: "look-list-discount",
+      question: "How does the look discount work?",
+      answer:
+        "The saving shown on each look is for that complete set. Add all its pieces to the same order and the discount is calculated automatically in your cart and applied at checkout. No code is needed; the percentage can vary by look.",
+    },
+    {
+      id: "look-list-single",
+      question: "Can I buy the pieces separately?",
+      answer:
+        "Yes. Every piece can be purchased on its own. The displayed set saving applies when you buy all the pieces in that look together.",
+    },
+    {
+      id: "look-list-mix",
+      question: "Can I create a look with pieces from different sets?",
+      answer:
+        "Yes. Choose any necklace, bracelet and pair of earrings with Compose your own look, add all three to one order, and save {composed}%.",
+    },
+  ],
   piecesTitle: "The pieces, one by one",
   piecesIntro:
     "Every piece in this look is handmade in Murano glass. Wear them together, or each on its own.",
@@ -68,6 +109,49 @@ const en = {
 export type LookPageCopy = typeof en;
 
 const it: LookPageCopy = {
+  listingWhyTitle: "Un look già in armonia",
+  listingWhyIntro:
+    "Ogni abbinamento è pensato per rendere il vetro di Murano facile da indossare, regalare e collezionare.",
+  listingWhy: [
+    {
+      title: "Colori che stanno bene insieme",
+      body: "Collana, bracciale e orecchini sono abbinati per colori e forme: il look è curato nel suo insieme, ma ogni pezzo si porta bene anche da solo.",
+    },
+    {
+      title: "Lavorati a mano a Murano",
+      body: "Ogni gioiello è realizzato in vetro di Murano. Le piccole differenze di colore e forma fanno parte del carattere del lavoro artigianale.",
+    },
+    {
+      title: "Un prezzo migliore insieme",
+      body: "Acquistando tutti i pezzi di un look, il risparmio indicato si applica automaticamente nel carrello. Non serve alcun codice.",
+    },
+  ],
+  listingFaq: [
+    {
+      id: "look-list-pieces",
+      question: "Quali pezzi comprende un look?",
+      answer:
+        "Ogni look abbina tre pezzi scelti per stare bene insieme. Apri il look per vedere nel dettaglio cosa comprende.",
+    },
+    {
+      id: "look-list-discount",
+      question: "Come funziona lo sconto sul look?",
+      answer:
+        "Il risparmio indicato su ogni look vale per il set completo. Aggiungi tutti i suoi pezzi allo stesso ordine: lo sconto viene calcolato automaticamente nel carrello e applicato al checkout. Non serve un codice; la percentuale può variare da un look all'altro.",
+    },
+    {
+      id: "look-list-single",
+      question: "Posso acquistare i pezzi separatamente?",
+      answer:
+        "Sì. Ogni pezzo si può acquistare da solo. Il risparmio indicato per il set si applica quando acquisti insieme tutti i pezzi di quel look.",
+    },
+    {
+      id: "look-list-mix",
+      question: "Posso creare un look con pezzi di set diversi?",
+      answer:
+        "Sì. Scegli una collana, un bracciale e un paio di orecchini qualsiasi con Crea il tuo look, aggiungili allo stesso ordine e risparmia il {composed}%.",
+    },
+  ],
   piecesTitle: "I pezzi, uno per uno",
   piecesIntro:
     "Ogni pezzo di questo look è lavorato a mano in vetro di Murano. Indossali insieme, oppure uno alla volta.",

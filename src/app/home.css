@@ -1,14 +1,12 @@
 /* ---------------------------------------------------------------------------
    Home page — "the shelf".
 
-   Scoped to `.shelf` so nothing elsewhere on the site changes. The idea: the
-   glass supplies all the colour. Each section is a band tinted from the
-   piece's own palette (lilac, aqua, sand, blush), the hero sits on soft washes
-   of the same colours behind the bead, and product photographs are blended
-   into the band with `mix-blend-mode: multiply` so their white backgrounds
-   dissolve and the pieces sit directly on the page instead of in boxes. That
-   blend needs photos on a pure white background — every catalog photo is; if
-   one isn't, its white edge will show as a faint tint.
+   Scoped to `.shelf` so nothing elsewhere on the site changes. Warm white
+   space keeps the glass and curated looks in focus; product photographs are
+   blended into the page with `mix-blend-mode: multiply` so their white
+   backgrounds dissolve and the pieces sit directly on the page. That blend
+   needs photos on a pure white background — every catalog photo is; if one
+   isn't, its white edge will show as a faint tint.
 
    Palette (from the glass itself):
      ink         #0e3a46  deep lagoon (text — a dark teal, not tinted black)
@@ -313,6 +311,9 @@
   object-fit: cover;
   object-position: 100% 0%;
   z-index: -1;
+}
+.hero-look-rollercoaster {
+  display: none;
 }
 .shelf-hero > .shelf-wrap {
   position: relative;
@@ -1739,8 +1740,7 @@
 
 /* Phones: every band that carries a photo sits on pure white, the photos' own
    studio background, so no cream/ivory tint shows around or behind a picture.
-   The hero drops its marble backdrop for the same reason. Desktop keeps the
-   tinted bands and the marble. */
+   The mobile hero drops its marble backdrop; desktop uses the look rail. */
 @media (max-width: 47.99rem) {
   .shelf-hero {
     background: #fff;
@@ -1750,5 +1750,282 @@
   }
   .shelf-section[class*="--"]:has(img) {
     background: #fff;
+  }
+}
+
+/* Desktop home: a clean studio field, with the curated looks riding a
+   hand-drawn Murano rollercoaster in place of the necklace backdrop. */
+@media (min-width: 52rem) {
+  .shelf-home .shelf-hero {
+    background: #fff;
+  }
+  .shelf-home .shelf-hero-backdrop,
+  .shelf-home .shelf-hero:has(.hero-look-rollercoaster) .shelf-bead-carousel {
+    display: none;
+  }
+  .shelf-home .shelf-hero-grid {
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+    align-items: center;
+    gap: clamp(1.5rem, 4vw, 4rem);
+    padding-block: clamp(3.5rem, 6vw, 5.5rem) 3.5rem;
+  }
+  .shelf-home .shelf-hero-copy {
+    max-width: 34rem;
+  }
+  .shelf-home .shelf-hero--looks .shelf-hero-copy .shelf-title {
+    max-width: 8ch;
+    color: var(--ink);
+    font-size: clamp(3.5rem, 7vw, 6.4rem);
+    line-height: 0.99;
+  }
+  .shelf-home .shelf-hero--looks .shelf-hero-copy .shelf-button {
+    background: var(--accent);
+  }
+  .shelf-home .shelf-hero--looks .shelf-hero-copy .shelf-button:hover {
+    background: var(--accent-deep);
+  }
+  .shelf-home .shelf-hero--looks .shelf-hero-copy .shelf-lede {
+    max-width: 30rem;
+  }
+  .shelf-home .shelf-hero .hero-look-rollercoaster {
+    position: relative;
+    display: block;
+    width: min(100%, 39rem);
+    height: clamp(28rem, 40vw, 36rem);
+    justify-self: end;
+    isolation: isolate;
+  }
+  .hero-look-track {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .hero-look-track-shadow,
+  .hero-look-track-rail {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .hero-look-track-shadow {
+    stroke: color-mix(in srgb, #b89a62 12%, transparent);
+    stroke-width: 19;
+  }
+  .hero-look-track-rail {
+    stroke: url(#hero-look-track-gradient);
+    stroke-width: 2.1;
+    stroke-dasharray: 1800;
+    stroke-dashoffset: 1800;
+    transition: stroke-dashoffset 1.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .hero-look-track-rail--inner {
+    stroke: color-mix(in srgb, #1f7a85 44%, transparent);
+    stroke-width: 1;
+    transition-delay: 0.18s;
+  }
+  .hero-look-rollercoaster[data-ready="true"] .hero-look-track-rail {
+    stroke-dashoffset: 0;
+  }
+  .hero-look-track circle {
+    transform-box: fill-box;
+    transform-origin: center;
+    opacity: 0;
+    transform: scale(0.2);
+    transition:
+      opacity 0.5s ease,
+      transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .hero-look-rollercoaster[data-ready="true"] .hero-look-track circle {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .hero-look-track circle:nth-of-type(1) {
+    transition-delay: 0.4s;
+  }
+  .hero-look-track circle:nth-of-type(2) {
+    transition-delay: 0.65s;
+  }
+  .hero-look-track circle:nth-of-type(3) {
+    transition-delay: 0.9s;
+  }
+  .hero-look-carriages {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  .hero-look-carriage {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--ink);
+    text-align: center;
+    text-decoration: none;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate3d(0, 4rem, 0) scale(0.7) rotate(-5deg);
+    filter: drop-shadow(0 0.5rem 1rem rgb(18 61 67 / 10%));
+    transition:
+      left 1.05s cubic-bezier(0.22, 0.61, 0.36, 1),
+      right 1.05s cubic-bezier(0.22, 0.61, 0.36, 1),
+      top 1.05s cubic-bezier(0.22, 0.61, 0.36, 1),
+      width 1.05s cubic-bezier(0.22, 0.61, 0.36, 1),
+      transform 1.05s cubic-bezier(0.22, 0.61, 0.36, 1),
+      opacity 0.65s ease,
+      filter 0.65s ease;
+  }
+  .hero-look-carriage:focus-visible {
+    outline: 0;
+  }
+  .hero-look-carriage:focus-visible .hero-look-frame {
+    outline: 2px solid var(--ink);
+    outline-offset: 5px;
+  }
+  .hero-look-carriage--active {
+    z-index: 3;
+    top: 3%;
+    left: 50%;
+    width: min(16rem, 48%);
+    transform: translateX(-50%) rotate(0) scale(1);
+  }
+  .hero-look-carriage--previous {
+    z-index: 2;
+    top: 57%;
+    left: 1%;
+    width: min(12rem, 36%);
+    transform: translateY(-50%) rotate(-9deg) scale(0.86);
+  }
+  .hero-look-carriage--next {
+    z-index: 2;
+    top: 41%;
+    left: 68%;
+    right: auto;
+    width: min(12.5rem, 37%);
+    transform: translateY(-50%) rotate(9deg) scale(0.85);
+  }
+  .hero-look-rollercoaster[data-ready="true"] .hero-look-carriage--active,
+  .hero-look-rollercoaster[data-ready="true"] .hero-look-carriage--previous,
+  .hero-look-rollercoaster[data-ready="true"] .hero-look-carriage--next {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .hero-look-carriage--offstage {
+    z-index: 0;
+    top: 10%;
+    left: 108%;
+    width: min(12rem, 35%);
+    transform: translateY(3rem) rotate(16deg) scale(0.72);
+  }
+  .hero-look-rollercoaster[data-ready="false"] .hero-look-carriage--active,
+  .hero-look-rollercoaster[data-ready="false"] .hero-look-carriage--previous,
+  .hero-look-rollercoaster[data-ready="false"] .hero-look-carriage--next {
+    transform: translate3d(0, 4rem, 0) scale(0.7) rotate(-5deg);
+  }
+  .hero-look-frame {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--gold) 58%, white);
+    background: #faf8f5;
+    box-shadow: 0 0.75rem 2rem rgb(18 61 67 / 7%);
+  }
+  .hero-look-frame::after {
+    position: absolute;
+    inset: 0.55rem;
+    border: 1px solid color-mix(in srgb, var(--gold) 42%, transparent);
+    content: "";
+    pointer-events: none;
+  }
+  .hero-look-photo {
+    object-fit: cover;
+  }
+  .hero-look-piece {
+    position: absolute;
+    inset: 0;
+    display: block;
+    transform:
+      translate(calc((var(--look-x) - 0.5) * 100%), calc((var(--look-y) - 0.5) * 100%))
+      scale(var(--look-scale));
+    mix-blend-mode: multiply;
+  }
+  .hero-look-piece img {
+    object-fit: contain;
+    filter: brightness(1.05) contrast(1.03);
+  }
+  .hero-look-name {
+    max-width: 100%;
+    font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+    font-size: clamp(0.9rem, 1.25vw, 1.08rem);
+    line-height: 1.2;
+    text-wrap: balance;
+    transition: color 0.45s ease;
+  }
+  .hero-look-carriage--active .hero-look-name {
+    font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  }
+  .hero-look-carriage:hover .hero-look-name {
+    color: var(--aventurine-deep);
+  }
+  .hero-look-controls {
+    position: absolute;
+    z-index: 5;
+    right: 16%;
+    bottom: 0.35rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--ink-soft);
+  }
+  .hero-look-controls button {
+    display: grid;
+    width: 2.75rem;
+    height: 2.75rem;
+    place-items: center;
+    border: 1px solid color-mix(in srgb, var(--gold) 42%, transparent);
+    border-radius: 50%;
+    background: rgb(255 255 255 / 82%);
+    color: var(--ink);
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition:
+      background-color 0.25s ease,
+      color 0.25s ease,
+      transform 0.25s ease;
+  }
+  .hero-look-controls button:hover {
+    transform: translateY(-2px);
+    background: var(--ink);
+    color: white;
+  }
+  .hero-look-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-width: 4.25rem;
+    justify-content: center;
+    font-size: 0.72rem;
+    letter-spacing: 0.17em;
+    font-variant-numeric: tabular-nums;
+  }
+  .hero-look-count i {
+    display: block;
+    width: 1.2rem;
+    height: 1px;
+    background: var(--gold);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-look-track-rail,
+  .hero-look-track circle,
+  .hero-look-carriage,
+  .hero-look-name,
+  .hero-look-controls button {
+    transition: none !important;
   }
 }

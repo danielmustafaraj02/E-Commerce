@@ -2,23 +2,43 @@
 
 import { useEffect, useState } from "react";
 import { Link } from "@/components/localized-link";
-import type { FaqItem } from "@/lib/faq";
+import type { FaqItem, FaqLink } from "@/lib/faq";
+
+function AnswerLink({ link }: { link: FaqLink }) {
+  const content = (
+    <>
+      {link.label} <span aria-hidden="true">{link.external ? "↗" : "→"}</span>
+    </>
+  );
+  return link.external ? (
+    <a href={link.href} className="faq-link" target="_blank" rel="noopener noreferrer">
+      {content}
+    </a>
+  ) : (
+    <Link href={link.href} className="faq-link">
+      {content}
+    </Link>
+  );
+}
 
 // One answer open at a time, the first `initial` questions shown and the rest
 // behind "More questions". A link to #<question id> (e.g. the product page's
-// "#gift-packaging") reveals and opens that answer.
+// "#gift-packaging") reveals and opens that answer. `defaultOpen` starts one
+// answer open (rendered open on the server too, so nothing shifts).
 export function FaqAccordion({
   items,
   initial,
   moreLabel,
   fewerLabel,
+  defaultOpen,
 }: {
   items: FaqItem[];
   initial: number;
   moreLabel: string;
   fewerLabel: string;
+  defaultOpen?: string;
 }) {
-  const [open, setOpen] = useState<string | null>(null);
+  const [open, setOpen] = useState<string | null>(defaultOpen ?? null);
   const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
@@ -62,10 +82,15 @@ export function FaqAccordion({
             >
               <div>
                 <p>{item.answer}</p>
-                {item.link && (
-                  <Link href={item.link.href} className="faq-link">
-                    {item.link.label} <span aria-hidden="true">→</span>
-                  </Link>
+                {item.link && <AnswerLink link={item.link} />}
+                {item.links && item.links.length > 0 && (
+                  <ul className="faq-links">
+                    {item.links.map((link) => (
+                      <li key={link.href}>
+                        <AnswerLink link={link} />
+                      </li>
+                    ))}
+                  </ul>
                 )}
               </div>
             </div>

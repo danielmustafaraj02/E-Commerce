@@ -2008,8 +2008,8 @@ a.shop-line-name:focus-visible {
   position: relative;
   display: grid;
   grid-template-columns: minmax(4.5rem, 0.22fr) minmax(0, 1fr);
-  column-gap: clamp(1.5rem, 5vw, 5.5rem);
-  padding-block: clamp(2.5rem, 5vw, 4.6rem);
+  column-gap: clamp(1.5rem, 4vw, 4.5rem);
+  padding-block: clamp(3rem, 5.5vw, 5.25rem);
   border-top: 1px solid color-mix(in srgb, var(--gold) 42%, transparent);
   counter-increment: guide-chapter;
 }
@@ -2017,11 +2017,14 @@ a.shop-line-name:focus-visible {
   grid-column: 1;
   grid-row: 1 / span 8;
   align-self: start;
-  padding-top: 0.45rem;
+  padding-top: 0.12rem;
   color: var(--gold);
   font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(1.7rem, 2.5vw, 2.25rem);
+  font-size: clamp(3.8rem, 7.2vw, 6.5rem);
   font-variant-numeric: oldstyle-nums;
+  font-weight: 400;
+  letter-spacing: -0.075em;
+  line-height: 0.8;
   content: "0" counter(guide-chapter);
 }
 .murano-guide-section > :is(h2, p, div, ul, ol) {
@@ -2031,9 +2034,38 @@ a.shop-line-name:focus-visible {
 .murano-guide-section .shop-h2-plain {
   margin: 0 0 1.25rem;
   color: var(--ink);
-  font-size: clamp(1.9rem, 3.4vw, 2.75rem);
-  line-height: 1.1;
+  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+  font-size: clamp(2.25rem, 4vw, 3.25rem);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
   text-wrap: pretty;
+}
+.murano-guide-section--history > div.flex-col {
+  max-width: 54rem;
+  gap: 1.15rem;
+}
+.murano-guide-section--history > div.flex-col p {
+  max-width: 62ch;
+  color: color-mix(in srgb, var(--ink) 90%, white);
+  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+  font-size: clamp(1.18rem, 1.5vw, 1.42rem);
+  line-height: 1.78;
+  text-align: justify;
+  text-indent: 1.2em;
+  hyphens: auto;
+}
+.murano-guide-section--history > div.flex-col p:first-child {
+  text-indent: 0;
+}
+.murano-guide-section--history > div.flex-col p:first-child::first-letter {
+  float: left;
+  margin: 0.08em 0.12em 0 0;
+  color: var(--aventurine-deep);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 3.8em;
+  font-weight: 500;
+  line-height: 0.72;
 }
 .murano-guide-section > p,
 .murano-guide-section > div,
@@ -2204,15 +2236,25 @@ a.shop-line-name:focus-visible {
     padding-bottom: 4rem;
   }
   .murano-guide-section {
-    grid-template-columns: 2.5rem minmax(0, 1fr);
-    column-gap: 0.8rem;
-    padding-block: 2.5rem;
+    grid-template-columns: minmax(3.5rem, 4.25rem) minmax(0, 1fr);
+    column-gap: 0.85rem;
+    padding-block: 2.75rem;
   }
   .murano-guide-section::before {
-    font-size: 1.25rem;
+    padding-top: 0.2rem;
+    font-size: clamp(2.8rem, 12vw, 3.65rem);
   }
   .murano-guide-section .shop-h2-plain {
-    font-size: clamp(1.65rem, 8vw, 2.2rem);
+    font-size: clamp(1.95rem, 8vw, 2.55rem);
+  }
+  .murano-guide-section--history > div.flex-col p {
+    font-size: 1.15rem;
+    line-height: 1.72;
+    text-align: start;
+    text-indent: 0.8em;
+  }
+  .murano-guide-section--history > div.flex-col p:first-child::first-letter {
+    font-size: 3.2em;
   }
   .murano-guide-section details summary {
     font-size: 1.12rem;
@@ -2758,10 +2800,65 @@ a.look-piece-name:focus-visible {
 }
 
 .shop-product-info .shop-gift-reassurance {
-  margin-top: 1.5rem;
+  position: relative;
+  align-items: flex-start;
+  gap: 0.8rem;
+  margin-top: 1.2rem;
+  padding: 0.95rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 40%, var(--rule));
+  border-radius: 5px;
+  background: linear-gradient(135deg, #fffdf9 0%, #f7f3ec 100%);
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  box-shadow: 0 0.7rem 1.4rem -1.3rem rgb(18 61 67 / 32%);
+}
+.shop-product-info .shop-gift-reassurance > svg {
+  box-sizing: content-box;
+  width: 17px;
+  height: 17px;
+  flex: 0 0 auto;
+  margin-top: 0;
+  padding: 0.48rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 38%, var(--rule));
+  border-radius: 50%;
+  background: rgb(255 255 255 / 72%);
+  color: var(--gold);
+}
+.shop-product-info .shop-gift-reassurance > span {
+  min-width: 0;
+}
+.shop-product-info .shop-gift-reassurance strong {
+  margin-bottom: 0.2rem;
+  color: var(--ink);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.04rem;
+  font-weight: 400;
+  line-height: 1.25;
 }
 .shop-product-info .shop-giftfinder-link {
-  margin-top: 0.4rem;
+  align-items: flex-start;
+  gap: 0.38rem;
+  max-width: 100%;
+  margin-top: 0.55rem;
+  color: var(--ink);
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.45;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--gold) 65%, transparent);
+  text-underline-offset: 0.18em;
+}
+.shop-product-info .shop-giftfinder-link svg {
+  flex: 0 0 14px;
+  width: 14px;
+  height: 14px;
+  margin-top: 0.05rem;
+  color: var(--gold);
+}
+.shop-product-info .shop-giftfinder-link:hover {
+  color: var(--accent-deep);
+  text-decoration-color: currentColor;
 }
 
 .shop-info-details {
@@ -2983,6 +3080,79 @@ a.look-piece-name:focus-visible {
   font-style: italic;
   font-size: 1.3rem;
   text-align: center;
+}
+.looks-page-reasons {
+  margin-top: clamp(4.5rem, 8vw, 7rem);
+  padding-block: clamp(2.5rem, 5vw, 4rem);
+  border-top: 1px solid var(--rule);
+}
+.looks-page-reasons-intro {
+  max-width: 46rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+.looks-page-reasons-intro .look-kicker {
+  margin-bottom: 0.75rem;
+}
+.looks-page-reasons-intro h2 {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 400;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+.looks-page-reasons-intro > p:last-child {
+  max-width: 36rem;
+  margin: 0.9rem 0 0;
+  color: var(--ink-soft);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+.looks-page-reasons-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.75rem 2.5rem;
+}
+.looks-page-reason {
+  padding-top: 1rem;
+  border-top: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
+}
+.looks-page-reason-number {
+  color: var(--gold);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.05rem;
+  font-variant-numeric: oldstyle-nums;
+}
+.looks-page-reason h3 {
+  margin: 0.65rem 0 0;
+  color: var(--ink);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+.looks-page-reason p {
+  max-width: 36ch;
+  margin: 0.6rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+.looks-page-faq {
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding-top: clamp(2.5rem, 5vw, 4rem);
+  border-top: 1px solid var(--rule);
+}
+@media (min-width: 40rem) {
+  .looks-page-reasons-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 64rem) {
+  .looks-page-reasons-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 .look-back {
   display: inline-flex;
@@ -3282,7 +3452,7 @@ a.look-piece-name:focus-visible {
   display: none;
 }
 .composer-options li {
-  flex: 0 0 8.5rem;
+  flex: 0 0 10.5rem;
   scroll-snap-align: start;
 }
 .composer-option {
@@ -3337,6 +3507,16 @@ a.look-piece-name:focus-visible {
   font-weight: 500;
   line-height: 1.2;
 }
+.composer-option-description {
+  display: -webkit-box;
+  min-height: 3.8em;
+  overflow: hidden;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
 .composer-option-price {
   color: var(--ink-soft);
   font-size: 0.85rem;
@@ -3350,6 +3530,9 @@ a.look-piece-name:focus-visible {
   .composer-stage {
     position: sticky;
     top: 7rem;
+  }
+  .composer-options li {
+    flex-basis: 12rem;
   }
 }
 

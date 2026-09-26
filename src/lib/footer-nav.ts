@@ -11,11 +11,14 @@ export function buildFooterNav({
   categories,
   contactEmail,
   giftCardEnabled = false,
+  extraAboutLinks = [],
 }: {
   dict: Dictionary;
   categories: { slug: string; label: string }[];
   contactEmail: string;
   giftCardEnabled?: boolean;
+  // Pages that exist in one language only (e.g. the Italian Murano questions).
+  extraAboutLinks?: FooterLink[];
 }): { sections: FooterSection[]; legal: FooterLink[] } {
   const f = dict.footer;
   return {
@@ -38,6 +41,7 @@ export function buildFooterNav({
         links: [
           { href: "/about", label: f.about },
           { href: "/murano-glass", label: f.muranoGuide },
+          ...extraAboutLinks,
           { href: "/blog", label: dict.journal.title },
         ],
       },

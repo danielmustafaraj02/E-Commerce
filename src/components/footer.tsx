@@ -12,6 +12,7 @@ import { SocialLinks, type SocialUrls } from "@/components/social-links";
 import { BrandSignature } from "@/components/brand-signature";
 import { Reveal } from "@/components/reveal";
 import { homeFontClasses } from "@/app/home-fonts";
+import { MURANO_FAQ_LOCALE, MURANO_FAQ_NAV_LABEL, MURANO_FAQ_PATH } from "@/lib/murano-faq";
 import "./footer.css";
 
 type PaymentMethods = {
@@ -88,6 +89,8 @@ export async function Footer({
     categories: categories.map((c) => ({ slug: c.slug, label: localizedName(c, locale) })),
     contactEmail,
     giftCardEnabled,
+    extraAboutLinks:
+      locale === MURANO_FAQ_LOCALE ? [{ href: MURANO_FAQ_PATH, label: MURANO_FAQ_NAV_LABEL }] : [],
   });
   const trust = [
     { key: "handcrafted", label: f.trustHandcrafted },

@@ -10,6 +10,7 @@ import { LOOK_SIZE, lookPricing } from "@/lib/looks";
 import { deriveProductType, type ProductType } from "@/lib/gift-finder";
 import { productSizeDictKey, type SizeDictKey } from "@/lib/product-sizing";
 import { isProductColorKey, type ProductColorKey } from "@/lib/product-colors";
+import { truncateAtWord } from "@/lib/text";
 
 export type LookPieceView = {
   productId: string;
@@ -178,7 +179,10 @@ export async function getPieceKinds(
   return Object.fromEntries(products.map((p) => [p.id, deriveProductType(p.category)]));
 }
 
-export type ComposerPiece = Omit<LookPieceView, "kind"> & { kind: ProductType };
+export type ComposerPiece = Omit<LookPieceView, "kind"> & {
+  kind: ProductType;
+  description: string;
+};
 
 // Everything the look composer (/looks/compose) can offer, grouped by kind:
 // active pieces with a photo whose category makes them a necklace, bracelet
@@ -203,6 +207,7 @@ export async function getComposerPieces(
     const kind = deriveProductType(product.category ?? null);
     if (!kind) continue;
     const name = localizedName(product, locale);
+    const description = localizedDescription(product, locale) || localizedStory(product, locale);
     groups[kind].push({
       productId: product.id,
       slug: product.slug,
@@ -213,6 +218,7 @@ export async function getComposerPieces(
       imageAlt: productImageAlt(name, locale),
       available: !product.trackInventory || product.stockQty > 0,
       kind,
+      description: truncateAtWord(description, 240),
     });
   }
   for (const kind of Object.keys(groups) as ProductType[]) {

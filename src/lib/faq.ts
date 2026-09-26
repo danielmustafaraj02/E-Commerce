@@ -6,11 +6,15 @@ import type { LookPageCopy } from "@/lib/i18n/look-page-copy";
 // Answers restate the site's own pages and settings — shipping figures come
 // from the shipping zones, the returns answer from the returns policy — and
 // link to the full page rather than repeating it.
+export type FaqLink = { href: string; label: string; external?: boolean };
+
 export type FaqItem = {
   id: string;
   question: string;
   answer: string;
-  link?: { href: string; label: string };
+  link?: FaqLink;
+  // Further reading after the answer; `external` links open the source site.
+  links?: FaqLink[];
 };
 
 export type ShippingFacts = {

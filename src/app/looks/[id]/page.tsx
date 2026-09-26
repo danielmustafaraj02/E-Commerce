@@ -87,7 +87,13 @@ export default async function LookPage({ params }: PageProps<"/looks/[id]">) {
       <LookWhy copy={copy} percents={percents} />
       <section className="shelf-section">
         <div className="shelf-wrap">
-          <FaqSection items={faq} dict={dict} />
+          {/* Only the look's own questions are marked up; the store-wide ones
+              already are, on the homepage. */}
+          <FaqSection
+            items={faq}
+            dict={dict}
+            structuredItems={faq.filter((item) => item.id.startsWith("look-"))}
+          />
         </div>
       </section>
       <LookLearnMore copy={copy} dict={dict} composedPercent={percents.composed} />

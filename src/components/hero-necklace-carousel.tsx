@@ -75,7 +75,6 @@ export function HeroNecklaceCarousel({
             sizes={sizes}
             quality={90}
             className={i === index ? "is-active" : undefined}
-            {...(i === 0 ? { loading: "eager", fetchPriority: "high" } : {})}
           />
         ))}
         {active.href && (

@@ -22,6 +22,7 @@ import { buildFaq } from "@/lib/faq";
 import { getShippingFacts } from "@/lib/shipping-banner";
 import { GiftFinderArrow } from "@/components/gift-finder-arrow";
 import { HeroNecklaceCarousel, type HeroSlide } from "@/components/hero-necklace-carousel";
+import { HeroLookRollercoaster } from "@/components/hero-look-rollercoaster";
 import { db } from "@/lib/db";
 import { getAllLooks } from "@/lib/look-data";
 import { LookCard } from "@/components/look-card";
@@ -111,16 +112,15 @@ const HERO_BACKGROUND_SRC = "/hero/ivory-marble-background.jpg";
 const ROMAN = ["I", "II", "III", "IV", "V", "VI"];
 
 export default async function Home() {
-  // The hero photo is the LCP element: announce it in <head> with high
-  // priority so it's requested alongside the fonts instead of after the
-  // whole HTML has streamed in. Same srcSet/sizes as the <Image> below, so
-  // the browser picks the same file and downloads it once.
+  // The phone hero photo is preloaded only at its matching breakpoint; desktop
+  // now starts with the look carousel instead of the marble and necklace.
   const hero = getImageProps({ src: HERO_SRC, alt: "", fill: true, sizes: HERO_SIZES }).props;
   preload(hero.src, {
     as: "image",
     imageSrcSet: hero.srcSet,
     imageSizes: hero.sizes,
     fetchPriority: "high",
+    media: "(max-width: 51.99rem)",
   });
 
   const [
@@ -216,15 +216,14 @@ export default async function Home() {
   return (
     <main className={`shelf shelf-home flex flex-1 flex-col ${homeFontClasses}`}>
       <section
-        className="shelf-hero"
+        className="shelf-hero shelf-hero--looks"
         style={{ "--hero-accent": HERO_ACCENT } as CSSProperties}
       >
         <Image
           src={HERO_BACKGROUND_SRC}
           alt=""
           fill
-          loading="eager"
-          priority
+          loading="lazy"
           quality={90}
           sizes="100vw"
           className="shelf-hero-backdrop"
@@ -240,7 +239,7 @@ export default async function Home() {
               />
               <p className="shelf-lede">{dict.home.heroSubtitle}</p>
               <Link href="/products" className="shelf-button">
-                {dict.home.shopCollection}
+                {dict.home.heroCta}
                 <span aria-hidden="true" className="shelf-button-arrow">
                   →
                 </span>
@@ -249,6 +248,12 @@ export default async function Home() {
                 <p className="shelf-note">{dict.home.pricesIncludeTax}</p>
               )}
             </div>
+            <HeroLookRollercoaster
+              looks={looks}
+              previousLabel={dict.home.previousSlide}
+              nextLabel={dict.home.nextSlide}
+              carouselLabel={dict.looks.title}
+            />
             <HeroNecklaceCarousel
               slides={heroSlides}
               sizes={HERO_SIZES}
@@ -503,7 +508,7 @@ export default async function Home() {
           <div className="shelf-newsletter-inner">
             <h2 className="shelf-heading">{dict.home.newsletterCtaTitle}</h2>
             <p>{dict.home.newsletterCtaBody}</p>
-            <NewsletterSignupForm dict={dict.footer} />
+            <NewsletterSignupForm dict={dict.footer} submitLabel={dict.home.newsletterSubmit} />
           </div>
           <span className="shelf-newsletter-discount" aria-hidden="true">
             −10%

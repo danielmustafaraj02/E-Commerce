@@ -14,6 +14,7 @@ import { ShelfMain } from "@/components/shelf-main";
 import { ShelfBody } from "@/components/shelf-page";
 import { MuranoFurnaceArt, MuranoSeagullArt } from "@/components/murano-guide-art";
 import { SeagullFlight } from "@/components/seagull-flight";
+import { MURANO_FAQ_LOCALE, MURANO_FAQ_PATH } from "@/lib/murano-faq";
 
 const GUIDE_ART_CAPTIONS: Record<Locale, { furnace: string }> = {
   en: { furnace: "Inside a Murano furnace" },
@@ -233,7 +234,7 @@ export default async function MuranoGlassGuidePage() {
         </div>
       </header>
       <ShelfBody width="full" editorial airy className="murano-guide-body">
-        <Reveal className="murano-guide-section">
+        <Reveal className="murano-guide-section murano-guide-section--history">
           <AnimatedHeading as="h2" text={content.historyTitle} className="shop-h2-plain" />
           <div className="text-foreground/80 flex flex-col gap-4 text-sm leading-relaxed">
             {content.historyParagraphs.map((paragraph, index) => (
@@ -359,6 +360,13 @@ export default async function MuranoGlassGuidePage() {
               </details>
             ))}
           </div>
+          {locale === MURANO_FAQ_LOCALE && (
+            <p className="mt-6 text-sm">
+              <Link href={MURANO_FAQ_PATH} className="shelf-link underline">
+                Altre domande su Murano: la visita all&apos;isola, i prezzi dei gioielli e le idee regalo
+              </Link>
+            </p>
+          )}
         </Reveal>
       </ShelfBody>
     </ShelfMain>
