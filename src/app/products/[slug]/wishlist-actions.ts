@@ -4,13 +4,15 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { rateLimit } from "@/lib/rate-limit";
+import { getFeedback } from "@/lib/i18n/feedback";
 
 export async function toggleWishlist(productId: string, slug: string) {
+  const t = await getFeedback();
   const session = await auth();
-  if (!session?.user?.id) return { error: "Sign in to save items to your wishlist", saved: false };
+  if (!session?.user?.id) return { error: t.signInToWishlist, saved: false };
 
   const { success: withinLimit } = await rateLimit(`wishlist:${session.user.id}`, 30, 60_000);
-  if (!withinLimit) return { error: "Too many requests. Try again shortly.", saved: false };
+  if (!withinLimit) return { error: t.tooManyRequests, saved: false };
 
   const userId = session.user.id;
 
@@ -19,7 +21,7 @@ export async function toggleWishlist(productId: string, slug: string) {
   // anti-abuse boundary for an otherwise-free, DB-writing action.
   const account = await db.user.findUnique({ where: { id: userId }, select: { emailVerified: true } });
   if (!account?.emailVerified) {
-    return { error: "Confirm your email address to use your wishlist", saved: false };
+    return { error: t.confirmEmailToWishlist, saved: false };
   }
   const existing = await db.wishlistItem.findUnique({
     where: { productId_userId: { productId, userId } },

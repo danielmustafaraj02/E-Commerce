@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState, useTransition } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { createPortal } from "react-dom";
 import { setLocale } from "@/lib/i18n/actions";
-import { locales, type Locale } from "@/lib/i18n/locale-constants";
+import { locales, splitLocalePrefix, type Locale } from "@/lib/i18n/locale-constants";
 
 const LABELS: Record<Locale, string> = {
   en: "English",
@@ -30,11 +32,32 @@ const CODES: Record<Locale, string> = {
   hi: "HI",
   ja: "JA",
 };
+// A language switcher, not a country switcher — these are the conventional
+// flag-per-language pairing most sites use where the two don't line up 1:1
+// (Arabic, Chinese, Hindi have no single "the" country). Portuguese uses
+// Portugal, not Brazil, matching this site's pt-PT copy (see dictionaries.ts).
+const FLAGS: Record<Locale, string> = {
+  en: "🇬🇧",
+  it: "🇮🇹",
+  fr: "🇫🇷",
+  de: "🇩🇪",
+  ar: "🇸🇦",
+  zh: "🇨🇳",
+  ru: "🇷🇺",
+  es: "🇪🇸",
+  pt: "🇵🇹",
+  hi: "🇮🇳",
+  ja: "🇯🇵",
+};
 
 export function LocaleSwitcher({ current }: { current: Locale }) {
   const [pending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
+  const [switchFrom, setSwitchFrom] = useState<Locale | null>(null);
+  const [switchTo, setSwitchTo] = useState<Locale | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!open) return;
@@ -54,8 +77,32 @@ export function LocaleSwitcher({ current }: { current: Locale }) {
 
   function change(locale: Locale) {
     setOpen(false);
-    startTransition(() => {
-      setLocale(locale);
+    if (locale === current) return;
+    setSwitchFrom(current);
+    setSwitchTo(locale);
+    // Persist as a preference for the *next* bare (unprefixed) URL proxy.ts
+    // has to redirect, then navigate — that's what actually changes this
+    // page's language now that locale lives in the URL itself. The overlay
+    // stays up for a minimum stretch (below) so a fast switch still reads as
+    // a deliberate transition rather than a flash.
+    const { rest } = splitLocalePrefix(pathname);
+    const targetPath = `/${locale}${rest === "/" ? "" : rest}`;
+    const targetUrl = `${targetPath}${window.location.search}${window.location.hash}`;
+    startTransition(async () => {
+      const startedAt = Date.now();
+      try {
+        // The URL prefix controls the page language. Saving the cookie only
+        // remembers the preference for a later visit to an unprefixed URL, so
+        // a transient cookie-write failure should not block this navigation.
+        await setLocale(locale).catch(() => undefined);
+        router.push(targetUrl, { scroll: false });
+      } finally {
+        const remaining = Math.max(0, 1250 - (Date.now() - startedAt));
+        window.setTimeout(() => {
+          setSwitchFrom(null);
+          setSwitchTo(null);
+        }, remaining);
+      }
     });
   }
 
@@ -67,9 +114,12 @@ export function LocaleSwitcher({ current }: { current: Locale }) {
         disabled={pending}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className="border-foreground/15 hover:border-primary/40 hover:text-primary flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-sm font-medium transition-colors disabled:opacity-50"
+        className="locale-switcher-trigger border-foreground/15 hover:border-primary/40 hover:text-primary flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-sm font-medium transition-colors disabled:opacity-50"
       >
-        {CODES[current]}
+        <span key={current} className="locale-switcher-current-flag" aria-hidden="true">
+          {FLAGS[current]}
+        </span>
+        {LABELS[current]}
         <svg
           width="12"
           height="12"
@@ -79,7 +129,7 @@ export function LocaleSwitcher({ current }: { current: Locale }) {
           strokeWidth="2.5"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          className={`locale-switcher-chevron ${open ? "rotate-180" : ""}`}
           aria-hidden="true"
         >
           <path d="m6 9 6 6 6-6" />
@@ -89,7 +139,7 @@ export function LocaleSwitcher({ current }: { current: Locale }) {
       {open && (
         <ul
           role="listbox"
-          className="border-foreground/10 bg-background animate-pop-in absolute top-full right-0 z-50 mt-1.5 min-w-36 overflow-hidden rounded-lg border py-1 text-sm shadow-lg"
+          className="locale-switcher-menu border-foreground/10 bg-background animate-pop-in absolute top-full z-50 mt-1.5 min-w-36 overflow-hidden rounded-lg border py-1 text-sm shadow-lg max-sm:start-0 sm:end-0"
         >
           {locales.map((locale) => (
             <li key={locale}>
@@ -98,19 +148,45 @@ export function LocaleSwitcher({ current }: { current: Locale }) {
                 role="option"
                 aria-selected={current === locale}
                 onClick={() => change(locale)}
-                className={`flex w-full items-center justify-between gap-3 px-3 py-2 text-left transition-colors ${
+                className={`locale-switcher-option flex w-full items-center justify-between gap-3 px-3 py-2 text-left transition-colors ${
                   current === locale
                     ? "text-primary bg-primary/5 font-semibold"
                     : "hover:bg-surface text-foreground/80"
                 }`}
               >
-                {LABELS[locale]}
+                <span className="flex items-center gap-2">
+                  <span className="locale-switcher-option-flag" aria-hidden="true">
+                    {FLAGS[locale]}
+                  </span>
+                  {LABELS[locale]}
+                </span>
                 <span className="text-foreground/40 text-xs">{CODES[locale]}</span>
               </button>
             </li>
           ))}
         </ul>
       )}
+
+      {switchFrom && switchTo && typeof document !== "undefined"
+        ? createPortal(
+            <div className="locale-transition-overlay" role="status" aria-live="polite">
+              <div className="locale-transition-content">
+                <p className="locale-transition-kicker">LANGUAGE · LINGUA</p>
+                <span className="sr-only">{LABELS[switchTo]}</span>
+                <div className="locale-transition-stage" aria-hidden="true">
+                  <span className="locale-transition-flag locale-transition-flag--from">
+                    <span className="locale-transition-emoji">{FLAGS[switchFrom]}</span>
+                  </span>
+                  <span className="locale-transition-flag locale-transition-flag--to">
+                    <span className="locale-transition-emoji">{FLAGS[switchTo]}</span>
+                    <span className="locale-transition-word">{LABELS[switchTo]}</span>
+                  </span>
+                </div>
+              </div>
+            </div>,
+            document.body
+          )
+        : null}
     </div>
   );
 }

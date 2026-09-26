@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { requireStaff } from "@/lib/require-admin";
 import { writeAuditLog } from "@/lib/audit-log";
+import { DESCRIPTION_FIELDS, DESCRIPTION_MAX, type DescriptionKey } from "./description-fields";
 
 const categorySchema = z.object({
   name: z.string().min(1).max(200),
@@ -18,6 +19,17 @@ const categorySchema = z.object({
   namePt: z.string().max(200).optional(),
   nameHi: z.string().max(200).optional(),
   nameJa: z.string().max(200).optional(),
+  description: z.string().max(DESCRIPTION_MAX).optional(),
+  descriptionEn: z.string().max(DESCRIPTION_MAX).optional(),
+  descriptionFr: z.string().max(DESCRIPTION_MAX).optional(),
+  descriptionDe: z.string().max(DESCRIPTION_MAX).optional(),
+  descriptionAr: z.string().max(DESCRIPTION_MAX).optional(),
+  descriptionZh: z.string().max(DESCRIPTION_MAX).optional(),
+  descriptionRu: z.string().max(DESCRIPTION_MAX).optional(),
+  descriptionEs: z.string().max(DESCRIPTION_MAX).optional(),
+  descriptionPt: z.string().max(DESCRIPTION_MAX).optional(),
+  descriptionHi: z.string().max(DESCRIPTION_MAX).optional(),
+  descriptionJa: z.string().max(DESCRIPTION_MAX).optional(),
   slug: z
     .string()
     .min(1)
@@ -26,8 +38,19 @@ const categorySchema = z.object({
   parentId: z.string().min(1).optional(),
 });
 
+// A blank description is stored as null, so the storefront falls back to the
+// next language (or hides the section) instead of rendering an empty block.
+function descriptionData(data: z.infer<typeof categorySchema>) {
+  return Object.fromEntries(
+    DESCRIPTION_FIELDS.map(({ key }) => [key, data[key as DescriptionKey]?.trim() || null])
+  ) as Record<DescriptionKey, string | null>;
+}
+
 function parseForm(formData: FormData) {
   return categorySchema.safeParse({
+    ...Object.fromEntries(
+      DESCRIPTION_FIELDS.map(({ key }) => [key, formData.get(key) || undefined])
+    ),
     name: formData.get("name"),
     nameEn: formData.get("nameEn") || undefined,
     nameFr: formData.get("nameFr") || undefined,
@@ -65,6 +88,7 @@ export async function createCategory(_prevState: unknown, formData: FormData) {
       namePt: parsed.data.namePt || null,
       nameHi: parsed.data.nameHi || null,
       nameJa: parsed.data.nameJa || null,
+      ...descriptionData(parsed.data),
       slug: parsed.data.slug,
       parentId: parsed.data.parentId || null,
     },
@@ -112,6 +136,7 @@ export async function updateCategory(categoryId: string, _prevState: unknown, fo
       namePt: parsed.data.namePt || null,
       nameHi: parsed.data.nameHi || null,
       nameJa: parsed.data.nameJa || null,
+      ...descriptionData(parsed.data),
       slug: parsed.data.slug,
       parentId: parsed.data.parentId || null,
     },

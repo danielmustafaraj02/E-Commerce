@@ -50,17 +50,25 @@ export default async function EditProductPage({ params }: PageProps<"/admin/prod
           descriptionPt: product.descriptionPt,
           descriptionHi: product.descriptionHi,
           descriptionJa: product.descriptionJa,
+          story: product.story,
+          storyEn: product.storyEn,
           price: product.price,
+          compareAtPrice: product.compareAtPrice,
           sku: product.sku,
           stockQty: product.stockQty,
           lowStockThreshold: product.lowStockThreshold,
           categoryId: product.categoryId,
           active: product.active,
-          imageUrls: product.images.map((image) => image.url).join("\n"),
+          imageUrls: product.images
+            .map((image) => (image.isLifestyle ? `${image.url} lifestyle` : image.url))
+            .join("\n"),
           trackInventory: product.trackInventory,
           supplierId: product.supplierId,
           supplierSku: product.supplierSku,
           costPrice: product.costPrice,
+          giftStyles: product.giftStyles,
+          giftOccasions: product.giftOccasions,
+          giftRecipients: product.giftRecipients,
         }}
       />
 

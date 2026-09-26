@@ -1,5 +1,6 @@
 import { requireAdmin } from "@/lib/require-admin";
 import { getStoreSettings } from "@/lib/store-settings";
+import { siteBaseUrl } from "@/lib/site-url";
 import { PaymentsForm } from "./payments-form";
 import { OfflinePaymentsForm } from "./offline-payments-form";
 
@@ -28,7 +29,11 @@ export default async function AdminPaymentsSettingsPage() {
         checkout creates orders normally but attempting to pay shows a clear &quot;not
         configured&quot; message instead of failing silently.
       </p>
-      <PaymentsForm configured={configured} klarnaEnabled={settings.klarnaEnabled} />
+      <PaymentsForm
+        configured={configured}
+        klarnaEnabled={settings.klarnaEnabled}
+        siteUrl={siteBaseUrl(settings)}
+      />
 
       <h2 className="mt-12 mb-4 text-xl font-semibold">Other payment methods</h2>
       <OfflinePaymentsForm
@@ -37,8 +42,6 @@ export default async function AdminPaymentsSettingsPage() {
           bankAccountHolder: settings.bankAccountHolder ?? "",
           bankIban: settings.bankIban ?? "",
           bankBic: settings.bankBic ?? "",
-          codEnabled: settings.codEnabled,
-          codFee: settings.codFee,
         }}
       />
     </div>

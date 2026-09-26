@@ -2,7 +2,16 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
 import { localizedName, localizedDescription } from "@/lib/product-i18n";
+import { absoluteUrl } from "@/lib/json-ld";
+import { siteBaseUrl } from "@/lib/site-url";
+import {
+  MAX_ADDITIONAL_IMAGES,
+  feedTitle,
+  googleProductCategory,
+  productMaterial,
+} from "@/lib/merchant-feed";
 import type { Locale } from "@/lib/i18n/locale";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 // Google Merchant Center product feed (RSS 2.0 + the `g:` namespace Google
 // defines) — https://support.google.com/merchants/answer/7052112. Point a
@@ -20,15 +29,21 @@ function xmlEscape(value: string): string {
 }
 
 export async function GET(request: Request) {
+  const { success } = await rateLimit(`google-merchant-feed:${clientIp(request)}`, 20, 60_000);
+  if (!success) return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+
   const { searchParams } = new URL(request.url);
   const locale: Locale = searchParams.get("locale") === "en" ? "en" : "it";
 
   const settings = await getStoreSettings();
-  const base = settings.siteUrl || process.env.NEXTAUTH_URL || "http://localhost:3000";
+  const base = siteBaseUrl(settings);
 
   const products = await db.product.findMany({
     where: { active: true },
-    include: { images: { orderBy: { position: "asc" }, take: 1 }, category: true },
+    include: {
+      images: { orderBy: { position: "asc" }, take: 1 + MAX_ADDITIONAL_IMAGES },
+      category: true,
+    },
   });
 
   const items = products
@@ -38,26 +53,30 @@ export async function GET(request: Request) {
       const description = localizedDescription(product, locale) || name;
       const price = (product.price / 100).toFixed(2);
       const availability = product.stockQty > 0 ? "in stock" : "out of stock";
-      // Product images can be a relative path (self-hosted under /public)
-      // or an admin-pasted absolute URL — Google requires image_link to
-      // always be fully-qualified.
-      const imageUrl = product.images[0].url.startsWith("http")
-        ? product.images[0].url
-        : `${base}${product.images[0].url.startsWith("/") ? "" : "/"}${product.images[0].url}`;
+      // Product images can be a relative path (self-hosted under /public) or
+      // an admin-pasted absolute URL — Google requires fully-qualified links.
+      const [mainImage, ...extraImages] = product.images.map((image) =>
+        absoluteUrl(image.url, base)
+      );
+      const googleCategory = googleProductCategory(product.category);
+      const material = productMaterial(product.category);
 
       return `
     <item>
       <g:id>${xmlEscape(product.sku)}</g:id>
-      <title>${xmlEscape(name)}</title>
+      <title>${xmlEscape(feedTitle(name, locale))}</title>
       <description>${xmlEscape(description)}</description>
-      <link>${xmlEscape(`${base}/products/${product.slug}`)}</link>
-      <g:image_link>${xmlEscape(imageUrl)}</g:image_link>
+      <link>${xmlEscape(`${base}/${locale}/products/${product.slug}`)}</link>
+      <g:image_link>${xmlEscape(mainImage)}</g:image_link>
+      ${extraImages.map((url) => `<g:additional_image_link>${xmlEscape(url)}</g:additional_image_link>`).join("\n      ")}
       <g:availability>${availability}</g:availability>
       <g:price>${price} ${xmlEscape(product.currency)}</g:price>
       <g:condition>new</g:condition>
       <g:brand>${xmlEscape(settings.storeName)}</g:brand>
       <g:identifier_exists>no</g:identifier_exists>
-      ${product.category ? `<g:product_type>${xmlEscape(product.category.name)}</g:product_type>` : ""}
+      ${material ? `<g:material>${xmlEscape(material)}</g:material>` : ""}
+      ${googleCategory ? `<g:google_product_category>${xmlEscape(googleCategory)}</g:google_product_category>` : ""}
+      ${product.category ? `<g:product_type>${xmlEscape(localizedName(product.category, locale))}</g:product_type>` : ""}
     </item>`;
     })
     .join("");

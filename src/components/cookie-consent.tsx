@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
-
-const STORAGE_KEY = "cookie-consent";
+import { CONSENT_CHANGED_EVENT, CONSENT_STORAGE_KEY } from "@/lib/consent";
 
 export function CookieConsent({ dict }: { dict: Dictionary["cookieConsent"] }) {
   const [visible, setVisible] = useState(false);
@@ -18,7 +17,7 @@ export function CookieConsent({ dict }: { dict: Dictionary["cookieConsent"] }) {
     // synchronously in an effect" advice doesn't apply to this pattern.
     try {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      if (!localStorage.getItem(STORAGE_KEY)) setVisible(true);
+      if (!localStorage.getItem(CONSENT_STORAGE_KEY)) setVisible(true);
     } catch {
       // If storage is unavailable, skip the banner rather than show it forever.
     }
@@ -26,10 +25,13 @@ export function CookieConsent({ dict }: { dict: Dictionary["cookieConsent"] }) {
 
   async function save(choice: { analytics: boolean; marketing: boolean }) {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(choice));
+      localStorage.setItem(CONSENT_STORAGE_KEY, JSON.stringify(choice));
     } catch {
       // Non-fatal — the choice still gets logged server-side.
     }
+    // Lets ConsentGatedAnalytics react right away (storage events don't fire
+    // in the tab that made the change).
+    window.dispatchEvent(new Event(CONSENT_CHANGED_EVENT));
     setVisible(false);
     try {
       await fetch("/api/consent", {
@@ -45,7 +47,10 @@ export function CookieConsent({ dict }: { dict: Dictionary["cookieConsent"] }) {
   if (!visible) return null;
 
   return (
-    <div className="border-foreground/10 bg-background animate-fade-up fixed inset-x-0 bottom-0 z-50 border-t p-4 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+    <div
+      className="border-foreground/10 bg-background animate-fade-up fixed inset-x-0 bottom-0 z-50 max-h-[85vh] overflow-y-auto border-t p-4 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]"
+      style={{ paddingBottom: "calc(1rem + env(safe-area-inset-bottom, 0px))" }}
+    >
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-3 text-sm">
         <p className="text-foreground/80">
           {dict.message}{" "}
@@ -86,14 +91,14 @@ export function CookieConsent({ dict }: { dict: Dictionary["cookieConsent"] }) {
           <button
             type="button"
             onClick={() => save({ analytics: true, marketing: true })}
-            className="btn-primary text-sm"
+            className="btn-primary text-sm max-sm:flex-1"
           >
             {dict.acceptAll}
           </button>
           <button
             type="button"
             onClick={() => save({ analytics: false, marketing: false })}
-            className="btn-secondary text-sm"
+            className="btn-secondary text-sm max-sm:flex-1"
           >
             {dict.rejectNonEssential}
           </button>
@@ -101,12 +106,16 @@ export function CookieConsent({ dict }: { dict: Dictionary["cookieConsent"] }) {
             <button
               type="button"
               onClick={() => save({ analytics, marketing })}
-              className="btn-secondary text-sm"
+              className="btn-secondary text-sm max-sm:flex-1"
             >
               {dict.savePreferences}
             </button>
           ) : (
-            <button type="button" onClick={() => setCustomizing(true)} className="btn-secondary text-sm">
+            <button
+              type="button"
+              onClick={() => setCustomizing(true)}
+              className="btn-secondary text-sm max-sm:flex-1"
+            >
               {dict.customize}
             </button>
           )}

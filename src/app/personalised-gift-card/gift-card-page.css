@@ -1,0 +1,363 @@
+/* /personalised-gift-card: the story below the designer. Uses the shelf
+   tokens (app/home.css). */
+
+.gcp-lede {
+  max-width: 42rem;
+}
+.gcp-section-title {
+  margin-bottom: 2rem;
+}
+.gcp-intro {
+  max-width: 38rem;
+  margin: 0 0 2.25rem;
+  color: color-mix(in srgb, var(--ink) 85%, white);
+  line-height: 1.7;
+}
+
+/* Why a few words: heading beside the prose on wide screens. */
+.gcp-why {
+  display: grid;
+  gap: 1.5rem;
+}
+.gcp-prose {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  max-width: 38rem;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.3rem;
+  line-height: 1.55;
+}
+.gcp-prose p {
+  margin: 0;
+}
+.gcp-prose p:first-child::first-letter {
+  float: left;
+  margin: 0.08em 0.1em 0 0;
+  color: var(--gold);
+  font-size: 3.4em;
+  line-height: 0.8;
+}
+@media (min-width: 52rem) {
+  .gcp-why {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    gap: 4rem;
+    align-items: start;
+  }
+}
+
+/* Why people love it: four short points. */
+.gcp-loved {
+  display: grid;
+  gap: 2rem 3rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: loved;
+}
+.gcp-loved li {
+  counter-increment: loved;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--rule);
+}
+.gcp-loved li::before {
+  content: counter(loved, upper-roman);
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--gold);
+  font-family: var(--font-display), Georgia, serif;
+  font-style: italic;
+}
+.gcp-loved h3,
+.gcp-people h3,
+.gcp-steps h3 {
+  font-size: 1.5rem;
+}
+.gcp-loved p,
+.gcp-people p,
+.gcp-steps p {
+  margin: 0.6rem 0 0;
+  color: color-mix(in srgb, var(--ink) 85%, white);
+  line-height: 1.7;
+}
+@media (min-width: 40rem) {
+  .gcp-loved {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Who it's for: cards with a line to borrow. */
+.gcp-people {
+  display: grid;
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.gcp-people li {
+  display: flex;
+  flex-direction: column;
+  padding: 1.75rem 1.5rem 1.5rem;
+  background: #fff;
+  border: 1px solid color-mix(in srgb, var(--rule) 70%, transparent);
+  border-radius: 4px;
+}
+.gcp-idea {
+  margin: auto 0 0;
+  padding-top: 1.25rem;
+}
+.gcp-idea figcaption {
+  color: var(--gold);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.gcp-idea blockquote {
+  margin: 0.4rem 0 0;
+  padding-left: 0.9rem;
+  border-left: 1px solid var(--gold);
+  font-family: var(--font-display), Georgia, serif;
+  font-style: italic;
+  font-size: 1.2rem;
+  line-height: 1.4;
+}
+@media (min-width: 40rem) {
+  .gcp-people {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (min-width: 64rem) {
+  .gcp-people {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.gcp-occasions-title {
+  margin-top: 3rem;
+  font-size: 1.5rem;
+}
+.gcp-occasions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 1.1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.gcp-occasions li {
+  padding: 0.45rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
+  border-radius: 999px;
+  background: #fff;
+  font-size: 0.95rem;
+}
+
+/* How it works, with the writing tips beside it. */
+.gcp-how-grid {
+  display: grid;
+  gap: 3rem;
+}
+.gcp-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+.gcp-steps li {
+  position: relative;
+  padding-left: 3.25rem;
+  counter-increment: step;
+}
+.gcp-steps li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  color: var(--ink);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.1rem;
+}
+.gcp-tips {
+  align-self: start;
+  padding: 2rem 1.75rem;
+  background: #123d43;
+  border-radius: 4px;
+  color: #f5efe4;
+}
+.gcp-tips h2 {
+  color: #fff;
+  font-size: 1.6rem;
+}
+.gcp-tips ul {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.gcp-tips li {
+  position: relative;
+  padding-left: 1.5rem;
+  line-height: 1.6;
+}
+.gcp-tips li::before {
+  content: "✦";
+  position: absolute;
+  left: 0;
+  color: var(--gold-soft);
+  font-size: 0.8rem;
+  line-height: 1.9;
+}
+@media (min-width: 52rem) {
+  .gcp-how-grid {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 4rem;
+  }
+  .gcp-tips {
+    position: sticky;
+    top: 7rem;
+  }
+}
+
+.gcp-cta {
+  text-align: center;
+}
+.gcp-cta p {
+  margin: 0.75rem auto 0;
+  max-width: 30rem;
+  color: var(--gold);
+  font-family: var(--font-display), Georgia, serif;
+  font-style: italic;
+  font-size: 1.4rem;
+}
+.gcp-cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem 2rem;
+  margin-top: 1.75rem;
+}
+
+/* Scrolling to the designer from the page's CTA lands below the header. */
+#design {
+  scroll-margin-top: 6rem;
+}
+
+/* Below the designer, let the story, reasons, tips and questions arrive as
+   small editorial groups instead of one long, static page. */
+@media (prefers-reduced-motion: no-preference) {
+  .gcp-reveal[data-reveal="false"] :is(
+    .shelf-heading,
+    .gcp-prose p,
+    .gcp-intro,
+    .gcp-loved li,
+    .gcp-people li,
+    .gcp-occasions-title,
+    .gcp-occasions li,
+    .gcp-steps li,
+    .gcp-tips,
+    .gcp-tips li,
+    .faq-item,
+    .gcp-cta p,
+    .gcp-cta-actions a
+  ) {
+    opacity: 0;
+    transform: translateY(0.9rem);
+  }
+
+  .gcp-reveal[data-reveal="true"] .shelf-heading,
+  .gcp-reveal[data-reveal="true"] .gcp-tips h2 {
+    animation: gcp-content-arrive 0.82s cubic-bezier(0.2, 0.65, 0.3, 1) both;
+  }
+  .gcp-reveal--why[data-reveal="true"] .gcp-prose p {
+    animation: gcp-content-arrive 0.9s cubic-bezier(0.2, 0.65, 0.3, 1) both;
+  }
+  .gcp-reveal--why[data-reveal="true"] .gcp-prose p:nth-child(2) { animation-delay: 0.14s; }
+  .gcp-reveal--why[data-reveal="true"] .gcp-prose p:nth-child(3) { animation-delay: 0.28s; }
+  .gcp-reveal--why[data-reveal="true"] .gcp-prose p:nth-child(4) { animation-delay: 0.42s; }
+  .gcp-reveal--people[data-reveal="true"] .gcp-intro {
+    animation: gcp-content-arrive 0.9s cubic-bezier(0.2, 0.65, 0.3, 1) 0.12s both;
+  }
+  .gcp-reveal--loved[data-reveal="true"] .gcp-loved li,
+  .gcp-reveal--people[data-reveal="true"] .gcp-people li {
+    animation: gcp-card-arrive 0.9s cubic-bezier(0.2, 0.65, 0.3, 1) both;
+  }
+  .gcp-reveal--loved[data-reveal="true"] .gcp-loved li:nth-child(2),
+  .gcp-reveal--people[data-reveal="true"] .gcp-people li:nth-child(2) { animation-delay: 0.14s; }
+  .gcp-reveal--loved[data-reveal="true"] .gcp-loved li:nth-child(3),
+  .gcp-reveal--people[data-reveal="true"] .gcp-people li:nth-child(3) { animation-delay: 0.28s; }
+  .gcp-reveal--loved[data-reveal="true"] .gcp-loved li:nth-child(4),
+  .gcp-reveal--people[data-reveal="true"] .gcp-people li:nth-child(4) { animation-delay: 0.42s; }
+  .gcp-reveal--people[data-reveal="true"] .gcp-occasions-title {
+    animation: gcp-content-arrive 0.82s cubic-bezier(0.2, 0.65, 0.3, 1) 0.35s both;
+  }
+  .gcp-reveal--people[data-reveal="true"] .gcp-occasions li {
+    animation: gcp-chip-arrive 0.7s cubic-bezier(0.2, 0.65, 0.3, 1) both;
+  }
+  .gcp-reveal--people[data-reveal="true"] .gcp-occasions li:nth-child(2) { animation-delay: 0.08s; }
+  .gcp-reveal--people[data-reveal="true"] .gcp-occasions li:nth-child(3) { animation-delay: 0.16s; }
+  .gcp-reveal--people[data-reveal="true"] .gcp-occasions li:nth-child(4) { animation-delay: 0.24s; }
+  .gcp-reveal--people[data-reveal="true"] .gcp-occasions li:nth-child(5) { animation-delay: 0.32s; }
+  .gcp-reveal--people[data-reveal="true"] .gcp-occasions li:nth-child(6) { animation-delay: 0.4s; }
+  .gcp-reveal--how[data-reveal="true"] .gcp-steps li {
+    animation: gcp-content-arrive 0.86s cubic-bezier(0.2, 0.65, 0.3, 1) both;
+  }
+  .gcp-reveal--how[data-reveal="true"] .gcp-steps li:nth-child(2) { animation-delay: 0.16s; }
+  .gcp-reveal--how[data-reveal="true"] .gcp-steps li:nth-child(3) { animation-delay: 0.32s; }
+  .gcp-reveal--how[data-reveal="true"] .gcp-steps li:nth-child(4) { animation-delay: 0.48s; }
+  .gcp-reveal--how[data-reveal="true"] .gcp-tips {
+    animation: gcp-card-arrive 1s cubic-bezier(0.2, 0.65, 0.3, 1) 0.35s both;
+  }
+  .gcp-reveal--how[data-reveal="true"] .gcp-tips li {
+    animation: gcp-content-arrive 0.82s cubic-bezier(0.2, 0.65, 0.3, 1) both;
+  }
+  .gcp-reveal--how[data-reveal="true"] .gcp-tips li:nth-child(2) { animation-delay: 0.12s; }
+  .gcp-reveal--how[data-reveal="true"] .gcp-tips li:nth-child(3) { animation-delay: 0.24s; }
+  .gcp-reveal--how[data-reveal="true"] .gcp-tips li:nth-child(4) { animation-delay: 0.36s; }
+  .gcp-reveal--faq[data-reveal="true"] .faq-item {
+    animation: gcp-faq-arrive 0.95s cubic-bezier(0.2, 0.65, 0.3, 1) both;
+  }
+  .gcp-reveal--faq[data-reveal="true"] .faq-item:nth-child(2) { animation-delay: 0.12s; }
+  .gcp-reveal--faq[data-reveal="true"] .faq-item:nth-child(3) { animation-delay: 0.24s; }
+  .gcp-reveal--faq[data-reveal="true"] .faq-item:nth-child(4) { animation-delay: 0.36s; }
+  .gcp-reveal--faq[data-reveal="true"] .faq-item:nth-child(5) { animation-delay: 0.48s; }
+  .gcp-reveal--faq[data-reveal="true"] .faq-item:nth-child(6) { animation-delay: 0.6s; }
+  .gcp-reveal--cta[data-reveal="true"] > p {
+    animation: gcp-content-arrive 0.9s cubic-bezier(0.2, 0.65, 0.3, 1) 0.15s both;
+  }
+  .gcp-reveal--cta[data-reveal="true"] .gcp-cta-actions a {
+    animation: gcp-content-arrive 0.9s cubic-bezier(0.2, 0.65, 0.3, 1) both;
+  }
+  .gcp-reveal--cta[data-reveal="true"] .gcp-cta-actions a:nth-child(2) { animation-delay: 0.12s; }
+  .gcp-reveal--cta[data-reveal="true"] .gcp-cta-actions a:nth-child(3) { animation-delay: 0.24s; }
+  .gcp-reveal--cta[data-reveal="true"] .gcp-cta-actions a:nth-child(4) { animation-delay: 0.36s; }
+
+  @keyframes gcp-content-arrive {
+    from { opacity: 0; transform: translateY(0.9rem); filter: blur(1px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+  }
+  @keyframes gcp-card-arrive {
+    from { opacity: 0; transform: translateY(1.1rem) scale(0.99); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes gcp-chip-arrive {
+    from { opacity: 0; transform: translateY(0.55rem) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes gcp-faq-arrive {
+    from { opacity: 0; transform: translateX(1.15rem); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+}

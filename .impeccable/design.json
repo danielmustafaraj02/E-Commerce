@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-25T00:00:00Z",
+  "title": "Design System: Perla Murano Glass",
+  "extensions": {
+    "colorMeta": {
+      "petrol": {
+        "role": "primary",
+        "displayName": "Deep Lagoon Petrol",
+        "canonical": "#123d43",
+        "tonalRamp": ["#071b1e", "#0b3035", "#123d43", "#1c565e", "#2f747d", "#6fa3a8", "#b3d1d3", "#e6f2f3"]
+      },
+      "gold": {
+        "role": "secondary",
+        "displayName": "Champagne Gold",
+        "canonical": "#b89a62",
+        "tonalRamp": ["#3d3120", "#5c4a30", "#7d6437", "#9c8049", "#b89a62", "#d9c7a0", "#ead9bb", "#f7f0e1"]
+      },
+      "champagne-hairline": {
+        "role": "neutral",
+        "displayName": "Champagne Hairline",
+        "canonical": "#d9cdbb",
+        "tonalRamp": ["#2b2620", "#4a4235", "#6b6151", "#948870", "#b8ac95", "#d9cdbb", "#ece5da", "#faf7f2"]
+      },
+      "glass-teal": { "role": "decorative", "displayName": "Glass Teal", "canonical": "#1f7a85" },
+      "glass-rose": { "role": "decorative", "displayName": "Glass Rose", "canonical": "#c65b8a" },
+      "glass-gold": { "role": "decorative", "displayName": "Glass Gold", "canonical": "#f5c451" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Page-level h1 titles (shop/category headers)." },
+      "headline": { "displayName": "Headline", "purpose": "Homepage section headings." },
+      "title": { "displayName": "Title", "purpose": "Page ledes/intros directly under a Display heading." },
+      "body": { "displayName": "Body", "purpose": "Running copy, product descriptions." },
+      "label": { "displayName": "Label", "purpose": "Button text and small uppercase UI labels." }
+    },
+    "shadows": [
+      { "name": "ambient-hairline", "value": "0 1px 2px rgba(18, 61, 67, 0.04)", "purpose": "Faintest possible seam under panels, cards and form fields — a texture, not a lift." },
+      { "name": "focus-ring", "value": "0 0 0 3.5px rgba(18, 61, 67, 0.2)", "purpose": "Focus-visible / selection glow — the only shadow use that is ever clearly visible." }
+    ],
+    "motion": [
+      { "name": "ease-entrance", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Default easing for scroll-reveal and card entrance animations." },
+      { "name": "ease-overshoot", "value": "cubic-bezier(0.34, 1.56, 0.64, 1)", "purpose": "Playful pop-in for checkbox/radio confirmation and cart-count bump." },
+      { "name": "duration-interaction", "value": "0.15s", "purpose": "Hover/focus color and border transitions." },
+      { "name": "duration-entrance", "value": "0.35s-0.6s", "purpose": "Scroll-reveal and page-transition entrance animations." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "40rem" },
+      { "name": "md", "value": "48rem" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The site's main call-to-action — petrol fill, hairline gold border, uppercase spaced label.",
+      "html": "<button class=\"ds-btn-primary\">Add to Cart</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; background: #123d43; color: #fbf9f5; border: 1px solid #b89a62; border-radius: 6px; padding: 0.7rem 1.35rem; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; line-height: 1.25; cursor: pointer; transition: background-color 0.2s ease; } .ds-btn-primary:hover { background: #0e2e33; } .ds-btn-primary:active { background: #0b262a; } .ds-btn-primary:focus-visible { outline: 2px solid #123d43; outline-offset: 2px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Lower-emphasis action — hairline border, deepens on hover.",
+      "html": "<button class=\"ds-btn-secondary\">Continue Shopping</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; background: #ffffff; color: #123d43; border: 1px solid #d9cdbb; border-radius: 6px; padding: 0.6rem 1.15rem; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; transition: border-color 0.15s ease, color 0.15s ease; } .ds-btn-secondary:hover { border-color: #123d43; } .ds-btn-secondary:focus-visible { outline: 2px solid #123d43; outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Shared look for every text/email/password input, select, and textarea.",
+      "html": "<input class=\"ds-field\" type=\"text\" placeholder=\"Email address\" />",
+      "css": ".ds-field { width: 100%; border-radius: 0.75rem; border: 1.5px solid rgba(18, 61, 67, 0.16); background: #ffffff; padding: 0.65rem 0.95rem; color: #123d43; font-family: 'DM Sans', system-ui, sans-serif; font-size: 1rem; box-shadow: 0 1px 1px rgba(18, 61, 67, 0.04); transition: border-color 0.15s ease, box-shadow 0.15s ease; } .ds-field::placeholder { color: rgba(18, 61, 67, 0.48); } .ds-field:hover:not(:disabled):not(:focus) { border-color: rgba(18, 61, 67, 0.5); } .ds-field:focus { outline: none; border-color: #123d43; box-shadow: 0 0 0 3.5px rgba(18, 61, 67, 0.2); }"
+    },
+    {
+      "name": "Checkbox",
+      "kind": "input",
+      "refersTo": "field-checkbox",
+      "description": "Custom checkbox with an overshoot pop-in checkmark.",
+      "html": "<input class=\"ds-checkbox\" type=\"checkbox\" checked />",
+      "css": ".ds-checkbox { appearance: none; -webkit-appearance: none; display: inline-grid; place-content: center; width: 1.3rem; height: 1.3rem; border-radius: 0.4rem; border: 1.5px solid rgba(18, 61, 67, 0.32); background: rgba(18, 61, 67, 0.03); cursor: pointer; transition: background-color 0.2s ease, border-color 0.2s ease; } .ds-checkbox::after { content: ''; width: 0.72rem; height: 0.72rem; background-color: white; clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%); transform: scale(0); transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); } .ds-checkbox:checked { border-color: #123d43; background: #123d43; } .ds-checkbox:checked::after { transform: scale(1); } .ds-checkbox:focus-visible { outline: none; box-shadow: 0 0 0 4px rgba(18, 61, 67, 0.2); }"
+    },
+    {
+      "name": "Panel Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Standard translucent-ivory wrapper for forms and grouped content.",
+      "html": "<div class=\"ds-card\"><p class=\"ds-card-title\">Shipping address</p><p class=\"ds-card-body\">123 Calle del Vetro, Venezia</p></div>",
+      "css": ".ds-card { border: 1px solid #d9cdbb; border-radius: 14px; background: #fbf9f5; padding: 1.25rem; } .ds-card-title { margin: 0 0 0.4rem; font-family: 'DM Sans', system-ui, sans-serif; font-weight: 500; color: #123d43; } .ds-card-body { margin: 0; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.9rem; color: #527176; }"
+    },
+    {
+      "name": "Filter Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Pill-shaped filter/category tag; fills solid petrol on hover.",
+      "html": "<span class=\"ds-chip\">Necklaces</span>",
+      "css": ".ds-chip { display: inline-block; padding: 0.3rem 1rem; border: 1px solid #d9cdbb; border-radius: 999px; background: rgba(255,255,255,0.6); color: #123d43; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.92rem; text-decoration: none; cursor: pointer; transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease; } .ds-chip:hover { background: #123d43; border-color: #123d43; color: #fff; }"
+    },
+    {
+      "name": "Product Tile",
+      "kind": "custom",
+      "refersTo": "shelf-item",
+      "description": "Signature component: the product photo dissolves into the ivory page (multiply blend), name and price sit directly below with no card border.",
+      "html": "<a class=\"ds-tile\" href=\"#\"><div class=\"ds-tile-photo\"><img src=\"https://placehold.co/400x600/ffffff/123d43?text=Necklace\" alt=\"\" /></div><span class=\"ds-tile-name\">Rubino Necklace</span><span class=\"ds-tile-price\">&euro;128</span></a>",
+      "css": ".ds-tile { display: flex; flex-direction: column; gap: 0.3rem; text-decoration: none; color: inherit; } .ds-tile-photo { position: relative; aspect-ratio: 2 / 3; overflow: hidden; } .ds-tile-photo img { width: 100%; height: 100%; object-fit: cover; mix-blend-mode: multiply; filter: brightness(1.05) contrast(1.03); } .ds-tile-name { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.15rem; line-height: 1.25; color: #123d43; } .ds-tile-name:hover { text-decoration: underline; text-decoration-color: #123d43; text-underline-offset: 0.2em; } .ds-tile-price { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.15rem; font-weight: 500; color: #123d43; }"
+    },
+    {
+      "name": "Nav Link",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Header/footer text link with a scale-drawing underline and a soft pill hover background.",
+      "html": "<a class=\"ds-nav-link\" href=\"#\">Necklaces</a>",
+      "css": ".ds-nav-link { position: relative; display: inline-block; padding: 0.3rem 0.1rem; color: #123d43; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.95rem; text-decoration: none; transition: transform 0.15s ease; } .ds-nav-link::before { content: ''; position: absolute; inset: -0.2rem -0.55rem; z-index: -1; border-radius: 999px; background-color: rgba(18, 61, 67, 0.1); opacity: 0; transition: opacity 0.2s ease; } .ds-nav-link::after { content: ''; position: absolute; left: 0; bottom: -2px; height: 1px; width: 100%; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform 0.25s ease; } .ds-nav-link:hover { transform: translateY(-2px); } .ds-nav-link:hover::before { opacity: 1; } .ds-nav-link:hover::after { transform: scaleX(1); transform-origin: left; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Murano Journal",
+    "overview": "The site reads as a hand-bound ledger documenting each piece rather than a typical retail shelf: near-white ivory pages, a single deep petrol ink for type and interaction, and a hairline of champagne gold as the only ornament. The glass itself — teal, rose, gold — supplies the sole bursts of saturated color, in photographs and in one decorative rule at the header/footer edge; everything else stays deliberately quiet so those pieces read as precious.\n\nThe overall philosophy is luxe, gallery-cool, and minimal: flat surfaces separated by hairline borders rather than shadows, a serif display face (Cormorant Garamond) for headings, prices and product names against a plain sans (DM Sans) for every interactive and body surface, and motion kept to a handful of small, purposeful moments (a settling hero bead, a cart bounce, a confetti burst) rather than pervasive hover choreography.",
+    "keyCharacteristics": [
+      "Ivory paper + Deep Lagoon Petrol ink, with Champagne Gold as the only ornamental accent",
+      "Flat by default — hairline borders and tonal panels carry separation, not shadows",
+      "Cormorant Garamond (display/serif) paired with DM Sans (UI/sans), strict role separation",
+      "The product photograph is the only saturated color on most screens",
+      "Motion is sparse and purposeful, never ambient or decorative-only"
+    ],
+    "rules": [
+      { "name": "The One Ornament Rule", "body": "Champagne Gold appears only as a hairline, rule, or border — never as a fill, a large shape, or body text. Its rarity is what makes it read as precious rather than decorative.", "section": "colors" },
+      { "name": "The Glass Supplies the Color Rule", "body": "Glass Teal/Rose/Gold exist to echo the product photography, not to color UI chrome. If a control needs an accent color, it's petrol or gold — never a glass tone.", "section": "colors" },
+      { "name": "The Role-Locked Face Rule", "body": "Cormorant Garamond is reserved for headings, product names, prices, and the empty-state signature line. DM Sans owns every button, nav item, form field, and label. A component never borrows the other face for emphasis.", "section": "typography" },
+      { "name": "The No-Lift Rule", "body": "Nothing gets a visible drop shadow to signal \"this is a card.\" Borders and fill contrast do that job; shadow is reserved for focus rings and the faintest ambient seam.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep Champagne Gold to hairlines, rules, and borders — treat any gold fill or large gold shape as a violation of the One Ornament Rule.",
+      "Do let product photography be the only saturated color on a page; keep UI chrome to petrol, gold, and ivory/white.",
+      "Do separate panels from background with a hairline border and a one-shade fill shift, not a shadow.",
+      "Do keep Cormorant Garamond strictly to headings/names/prices and DM Sans to every interactive/UI surface.",
+      "Do respect prefers-reduced-motion: all auto-playing entrance/ambient animation must collapse to instant; interaction-triggered feedback (hover lifts, underline draws) may remain."
+    ],
+    "donts": [
+      "Don't add a visible drop shadow to signal elevation — this system uses borders and fill contrast, never a \"lifted card\" look.",
+      "Don't use Glass Teal/Rose/Gold on buttons, links, or any interactive control — those three exist only to echo the product photo in decorative, non-interactive contexts.",
+      "Don't imply the protected \"Vetro Artistico® Murano\" certification mark in copy or badges unless the specific product actually holds it (durable product constraint, not a visual one — see PRODUCT.md).",
+      "Don't mix Cormorant Garamond into body copy or DM Sans into headings — the two faces are role-locked, not interchangeable for emphasis."
+    ]
+  }
+}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { useCartStore } from "@/lib/cart-store";
 
 export function CartLink({ label }: { label: string }) {
@@ -24,18 +24,18 @@ export function CartLink({ label }: { label: string }) {
       href="/cart"
       aria-label={label}
       title={label}
-      className="group link-underline text-foreground/80 hover:text-primary flex items-center gap-1"
+      className="group link-underline text-foreground/80 hover:text-primary flex items-center gap-1 max-sm:-m-1.5 max-sm:p-1.5"
     >
       <svg
-        width="18"
-        height="18"
+        width="25"
+        height="25"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="transition-transform duration-200 ease-out group-hover:-rotate-6 group-hover:scale-110"
+        className="transition-transform duration-200 ease-out group-hover:scale-110 group-hover:-rotate-6"
         aria-hidden="true"
       >
         <circle cx="9" cy="21" r="1" />

@@ -2,6 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { FormAlert } from "@/components/form-alert";
+import { GIFT_STYLES, GIFT_OCCASIONS, GIFT_RECIPIENTS } from "@/lib/gift-finder";
 
 type Category = { id: string; name: string };
 type Supplier = { id: string; name: string };
@@ -30,7 +31,10 @@ export type ProductFormValues = {
   descriptionPt: string | null;
   descriptionHi: string | null;
   descriptionJa: string | null;
+  story: string;
+  storyEn: string | null;
   price: number; // cents
+  compareAtPrice: number | null; // cents
   sku: string;
   stockQty: number;
   lowStockThreshold: number;
@@ -41,6 +45,33 @@ export type ProductFormValues = {
   supplierId: string | null;
   supplierSku: string | null;
   costPrice: number | null; // cents
+  giftStyles: string[];
+  giftOccasions: string[];
+  giftRecipients: string[];
+};
+
+// Readable admin labels for the fixed Gift Finder value sets (lib/gift-finder.ts).
+const GIFT_STYLE_LABELS: Record<(typeof GIFT_STYLES)[number], string> = {
+  elegant: "Elegant",
+  colorful: "Colorful",
+  minimal: "Minimal",
+  romantic: "Romantic",
+  bold: "Bold",
+};
+const GIFT_OCCASION_LABELS: Record<(typeof GIFT_OCCASIONS)[number], string> = {
+  birthday: "Birthday",
+  anniversary: "Anniversary",
+  christmas: "Christmas",
+  valentines: "Valentine's Day",
+  thankyou: "Thank you",
+  justbecause: "Just because",
+};
+const GIFT_RECIPIENT_LABELS: Record<(typeof GIFT_RECIPIENTS)[number], string> = {
+  partner: "Partner",
+  mother: "Mother",
+  friend: "Friend",
+  daughter: "Daughter",
+  myself: "Myself",
 };
 
 export function ProductForm({
@@ -124,8 +155,8 @@ export function ProductForm({
         <span className="font-medium">Name (Portuguese)</span>
         <input name="namePt" defaultValue={initial?.namePt ?? ""} className="field" />
         <span className="text-foreground/60 text-xs">
-          Shown to visitors browsing in Portuguese. Falls back to the English name, then the
-          Italian name, if left blank.
+          Shown to visitors browsing in Portuguese. Falls back to the English name, then the Italian
+          name, if left blank.
         </span>
       </label>
       <label className="flex flex-col gap-1.5 text-sm">
@@ -173,9 +204,9 @@ export function ProductForm({
           className="field"
         />
         <span className="text-foreground/60 text-xs">
-          Shown to visitors browsing in English. Falls back to the Italian description if left
-          blank — but an English visitor reading untranslated Italian copy is a worse experience
-          than a shorter English one, so it&apos;s worth filling in.
+          Shown to visitors browsing in English. Falls back to the Italian description if left blank
+          — but an English visitor reading untranslated Italian copy is a worse experience than a
+          shorter English one, so it&apos;s worth filling in.
         </span>
       </label>
       <label className="flex flex-col gap-1.5 text-sm">
@@ -266,8 +297,8 @@ export function ProductForm({
           className="field"
         />
         <span className="text-foreground/60 text-xs">
-          Shown to visitors browsing in Portuguese. Falls back to the English description, then
-          the Italian one, if left blank.
+          Shown to visitors browsing in Portuguese. Falls back to the English description, then the
+          Italian one, if left blank.
         </span>
       </label>
       <label className="flex flex-col gap-1.5 text-sm">
@@ -296,6 +327,22 @@ export function ProductForm({
           Italian one, if left blank.
         </span>
       </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Why this piece is special (Italian)</span>
+        <textarea name="story" rows={4} defaultValue={initial?.story} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown as its own section on the product page, before the FAQ — uniqueness, gift framing,
+          and the handmade-in-Murano story, separate from the plain description above.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Why this piece is special (English)</span>
+        <textarea name="storyEn" rows={4} defaultValue={initial?.storyEn ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in English. Falls back to the Italian text above if left blank.
+          Other languages aren&apos;t translated yet, so they also fall back to this.
+        </span>
+      </label>
       <div className="flex gap-3">
         <label className="flex flex-1 flex-col gap-1.5 text-sm">
           <span className="font-medium">Price</span>
@@ -314,6 +361,27 @@ export function ProductForm({
           <input name="sku" required defaultValue={initial?.sku} className="field" />
         </label>
       </div>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Compare-at price (optional)</span>
+        <input
+          name="compareAtPrice"
+          type="number"
+          min={0}
+          step="0.01"
+          defaultValue={
+            initial?.compareAtPrice !== null && initial?.compareAtPrice !== undefined
+              ? initial.compareAtPrice / 100
+              : undefined
+          }
+          className="field"
+        />
+        <span className="text-foreground/60 text-xs">
+          The earlier price, shown crossed out with a discount badge and in the homepage
+          &quot;Special Selection&quot;. Leave blank normally. EU rules allow at most the lowest
+          price this product had in the 30 days before the current price, so lower the price first
+          (or in the same save). Price changes made by scripts clear it.
+        </span>
+      </label>
       <label className="flex cursor-pointer items-center gap-2 text-sm">
         <input
           type="checkbox"
@@ -408,6 +476,66 @@ export function ProductForm({
           ))}
         </select>
       </label>
+      <fieldset className="border-foreground/10 bg-background/50 flex flex-col gap-3 rounded-lg border p-4">
+        <legend className="px-1 text-sm font-medium">Gift Finder tags (optional)</legend>
+        <span className="text-foreground/60 text-xs">
+          Powers /gift-finder&apos;s matching — style is worth the most, then occasion, budget and
+          piece type. An untagged product still shows up (scored on price and piece type alone),
+          but tagging it makes the match better.
+        </span>
+        <div className="flex flex-col gap-1.5">
+          <span className="text-sm font-medium">Style</span>
+          <div className="flex flex-wrap gap-x-4 gap-y-1.5">
+            {GIFT_STYLES.map((style) => (
+              <label key={style} className="flex cursor-pointer items-center gap-1.5 text-sm">
+                <input
+                  type="checkbox"
+                  name="giftStyles"
+                  value={style}
+                  defaultChecked={initial?.giftStyles?.includes(style) ?? false}
+                  className="field-checkbox"
+                />
+                {GIFT_STYLE_LABELS[style]}
+              </label>
+            ))}
+          </div>
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <span className="text-sm font-medium">Occasion</span>
+          <div className="flex flex-wrap gap-x-4 gap-y-1.5">
+            {GIFT_OCCASIONS.map((occasion) => (
+              <label key={occasion} className="flex cursor-pointer items-center gap-1.5 text-sm">
+                <input
+                  type="checkbox"
+                  name="giftOccasions"
+                  value={occasion}
+                  defaultChecked={initial?.giftOccasions?.includes(occasion) ?? false}
+                  className="field-checkbox"
+                />
+                {GIFT_OCCASION_LABELS[occasion]}
+              </label>
+            ))}
+          </div>
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <span className="text-sm font-medium">Recipient</span>
+          <div className="flex flex-wrap gap-x-4 gap-y-1.5">
+            {GIFT_RECIPIENTS.map((recipient) => (
+              <label key={recipient} className="flex cursor-pointer items-center gap-1.5 text-sm">
+                <input
+                  type="checkbox"
+                  name="giftRecipients"
+                  value={recipient}
+                  defaultChecked={initial?.giftRecipients?.includes(recipient) ?? false}
+                  className="field-checkbox"
+                />
+                {GIFT_RECIPIENT_LABELS[recipient]}
+              </label>
+            ))}
+          </div>
+        </div>
+      </fieldset>
+
       <label className="flex flex-col gap-1.5 text-sm">
         <span className="font-medium">Image URLs (one per line)</span>
         <textarea
@@ -417,6 +545,11 @@ export function ProductForm({
           placeholder="https://..."
           className="field font-mono text-xs"
         />
+        <span className="text-foreground/60 text-xs">
+          Add <code>lifestyle</code> after a URL (e.g. <code>https://... lifestyle</code>) for
+          on-model/lifestyle photos — it skips the white-background blend that otherwise shows as a
+          white halo around them.
+        </span>
       </label>
       <label className="flex cursor-pointer items-center gap-2 text-sm">
         <input

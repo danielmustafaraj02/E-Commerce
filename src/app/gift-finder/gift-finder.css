@@ -1,0 +1,306 @@
+/* Gift Finder (/gift-finder) — a 5-step stylist quiz on top of the shelf
+   design (home.css): warm white ground, ink type, thin hairline borders,
+   generous whitespace. One question per screen, full-width selectable
+   cards with large touch targets. Each answer step enters from the direction
+   the visitor moved; motion collapses under prefers-reduced-motion. */
+
+.giftfinder {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  min-height: clamp(42rem, calc(100svh - 6.25rem), 58rem);
+  padding-block: clamp(3rem, 8vh, 6rem) 5rem;
+  background: var(--tint-sand);
+}
+.giftfinder-wrap {
+  max-width: 38rem;
+}
+
+/* -- Progress ---------------------------------------------------------- */
+.giftfinder-progress {
+  height: 3px;
+  border-radius: 2px;
+  background: var(--rule);
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+.giftfinder-progress-bar {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.55s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* -- Step ---------------------------------------------------------------- */
+.giftfinder-step[data-direction="forward"],
+.giftfinder-results[data-direction="forward"] {
+  animation: giftfinder-step-from-right 0.62s cubic-bezier(0.2, 0.72, 0.25, 1) both;
+}
+.giftfinder-step[data-direction="backward"],
+.giftfinder-results[data-direction="backward"] {
+  animation: giftfinder-step-from-left 0.62s cubic-bezier(0.2, 0.72, 0.25, 1) both;
+}
+.giftfinder-step[data-direction="forward"] .giftfinder-option {
+  animation: giftfinder-option-from-right 0.58s cubic-bezier(0.2, 0.72, 0.25, 1) both;
+}
+.giftfinder-step[data-direction="backward"] .giftfinder-option {
+  animation: giftfinder-option-from-left 0.58s cubic-bezier(0.2, 0.72, 0.25, 1) both;
+}
+.giftfinder-step .giftfinder-option:nth-child(2) { animation-delay: 45ms; }
+.giftfinder-step .giftfinder-option:nth-child(3) { animation-delay: 90ms; }
+.giftfinder-step .giftfinder-option:nth-child(4) { animation-delay: 135ms; }
+.giftfinder-step .giftfinder-option:nth-child(5) { animation-delay: 180ms; }
+.giftfinder-step .giftfinder-option:nth-child(6) { animation-delay: 225ms; }
+
+@keyframes giftfinder-step-from-right {
+  from { opacity: 0; transform: translateX(2.2rem); filter: blur(3px); }
+  to { opacity: 1; transform: translateX(0); filter: blur(0); }
+}
+@keyframes giftfinder-step-from-left {
+  from { opacity: 0; transform: translateX(-2.2rem); filter: blur(3px); }
+  to { opacity: 1; transform: translateX(0); filter: blur(0); }
+}
+@keyframes giftfinder-option-from-right {
+  from { opacity: 0; transform: translateX(1.1rem) scale(0.985); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes giftfinder-option-from-left {
+  from { opacity: 0; transform: translateX(-1.1rem) scale(0.985); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+.giftfinder-counter {
+  margin: 0 0 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.giftfinder-title {
+  margin: 0 0 1.5rem;
+  font-size: 1.7rem;
+}
+.giftfinder-subtitle {
+  margin: 0 0 1.75rem;
+  padding-top: 0.5rem;
+  color: var(--ink-soft);
+}
+
+.giftfinder-options {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+@media (min-width: 30rem) {
+  .giftfinder-options {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.giftfinder-option {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  width: 100%;
+  min-height: 3.75rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  background: var(--ground);
+  color: var(--ink);
+  font-size: 1rem;
+  text-align: start;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    transform 0.15s ease;
+}
+.giftfinder-option svg {
+  flex-shrink: 0;
+  color: var(--accent);
+}
+.giftfinder-option:hover {
+  border-color: var(--accent);
+}
+.giftfinder-option--selected {
+  border-color: var(--accent);
+  background: var(--wash-violet);
+  font-weight: 600;
+}
+
+.giftfinder-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.giftfinder-back {
+  color: var(--ink-soft);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.6rem 0;
+}
+.giftfinder-back:hover:not(:disabled) {
+  color: var(--ink);
+}
+.giftfinder-back:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+.giftfinder-next {
+  min-width: 10rem;
+}
+
+/* -- Results --------------------------------------------------------------- */
+.giftfinder-results .giftfinder-back {
+  margin-bottom: 1.25rem;
+}
+
+.giftfinder-empty {
+  padding-block: 2rem;
+}
+
+.giftfinder-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin: 0 0 2.5rem;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 40rem) {
+  .giftfinder-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  }
+}
+
+.giftfinder-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--ground);
+}
+.giftfinder-card-photo {
+  position: relative;
+  aspect-ratio: 1;
+  background: var(--tint-lilac);
+}
+.giftfinder-card-photo img {
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+.giftfinder-card-body {
+  padding: 1.1rem 1.2rem 1.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.giftfinder-card-reason {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--accent-deep);
+}
+.giftfinder-card-name {
+  margin: 0.15rem 0 0;
+  font-size: 1.2rem;
+}
+.giftfinder-card-price {
+  margin: 0.1rem 0 0.8rem;
+  font-weight: 600;
+}
+.giftfinder-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+}
+.giftfinder-quickadd {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--accent-deep);
+  text-underline-offset: 0.2em;
+}
+.giftfinder-quickadd:hover {
+  text-decoration: underline;
+}
+
+/* -- Bundle (Complete the look, embedded) ----------------------------------- */
+.giftfinder-bundle {
+  margin: 0 0 2.5rem;
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.giftfinder-bundle-intro {
+  margin: 0;
+  padding: 1.1rem 1.2rem 0;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+}
+/* CompleteTheLook renders its own full-bleed section styles (shop.css);
+   strip its outer section padding/background so it reads as content inside
+   this card rather than a second page section. */
+.giftfinder-bundle .look-section {
+  padding: 0;
+  background: none;
+}
+.giftfinder-bundle .look-grid {
+  padding: 0.75rem 1.2rem 1.2rem;
+}
+
+/* -- Email my picks ----------------------------------------------------- */
+.giftfinder-email {
+  margin: 0 0 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+}
+.giftfinder-email-label {
+  display: block;
+  margin-bottom: 0.6rem;
+  font-weight: 600;
+}
+.giftfinder-email-row {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.giftfinder-email-row .field {
+  flex: 1 1 14rem;
+}
+.giftfinder-email-status {
+  margin: 0.6rem 0 0;
+  font-size: 0.88rem;
+}
+.giftfinder-email-status--ok {
+  color: var(--teal);
+}
+.giftfinder-email-status--error {
+  color: var(--rose);
+}
+
+.giftfinder-startover {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  text-underline-offset: 0.2em;
+}
+.giftfinder-startover:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .giftfinder-step,
+  .giftfinder-results,
+  .giftfinder-option {
+    animation: none !important;
+  }
+  .giftfinder-progress-bar,
+  .giftfinder-option {
+    transition: none;
+  }
+}

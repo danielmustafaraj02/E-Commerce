@@ -4,13 +4,15 @@ import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
 import { canAccessOrder } from "@/lib/orders";
+import { getFeedback } from "@/lib/i18n/feedback";
 
 const schema = z.object({ orderNumber: z.string().min(1) });
 
 export async function POST(request: Request) {
+  const t = await getFeedback();
   const body = await request.json().catch(() => null);
   const parsed = schema.safeParse(body);
-  if (!parsed.success) return NextResponse.json({ error: "Invalid input" }, { status: 400 });
+  if (!parsed.success) return NextResponse.json({ error: t.invalidInput }, { status: 400 });
 
   const [session, order, settings] = await Promise.all([
     auth(),
@@ -18,13 +20,13 @@ export async function POST(request: Request) {
     getStoreSettings(),
   ]);
   if (!order || !canAccessOrder(order, session)) {
-    return NextResponse.json({ error: "Order not found" }, { status: 404 });
+    return NextResponse.json({ error: t.orderNotFound }, { status: 404 });
   }
   if (order.status !== "pending") {
-    return NextResponse.json({ error: "Order is not awaiting payment" }, { status: 400 });
+    return NextResponse.json({ error: t.orderNotAwaitingPayment }, { status: 400 });
   }
   if (!settings.bankTransferEnabled || !settings.bankIban) {
-    return NextResponse.json({ error: "Bank transfer is not available" }, { status: 503 });
+    return NextResponse.json({ error: t.paymentMethodUnavailable }, { status: 503 });
   }
 
   await db.payment.create({

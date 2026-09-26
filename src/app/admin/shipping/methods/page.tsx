@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { db } from "@/lib/db";
 import { toggleShippingMethod } from "./actions";
 import { StatusBadge } from "@/components/status-badge";

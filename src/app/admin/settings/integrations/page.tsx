@@ -1,5 +1,6 @@
 import { requireAdmin } from "@/lib/require-admin";
 import { getStoreSettings } from "@/lib/store-settings";
+import { siteBaseUrl } from "@/lib/site-url";
 import { IntegrationsForm } from "./integrations-form";
 
 export default async function AdminIntegrationsPage() {
@@ -27,6 +28,7 @@ export default async function AdminIntegrationsPage() {
         (emails log instead of send, CAPTCHA doesn&apos;t render, rate limiting stays in-memory).
       </p>
       <IntegrationsForm
+        siteUrl={siteBaseUrl(settings)}
         configured={configured}
         current={{
           emailFrom: settings.emailFrom ?? process.env.EMAIL_FROM ?? "",

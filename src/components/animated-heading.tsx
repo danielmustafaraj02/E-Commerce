@@ -14,11 +14,14 @@ export function AnimatedHeading({
   as: Tag = "h1",
   className,
   id,
+  translate,
 }: {
   text: string;
   as?: "h1" | "h2";
   className?: string;
   id?: string;
+  // "no": brand/proper names the browser's auto-translate should leave alone.
+  translate?: "no" | "yes";
 }) {
   const parts = text.split(/(\s+)/);
   const indexed = parts.reduce<{ part: string; wordIndex: number }[]>((acc, part) => {
@@ -28,7 +31,7 @@ export function AnimatedHeading({
   }, []);
 
   return (
-    <Tag id={id} className={className}>
+    <Tag id={id} className={className} translate={translate}>
       {indexed.map(({ part, wordIndex }, i) => {
         if (wordIndex === -1) return part;
         const delay = Math.min(wordIndex * STEP_MS, MAX_DELAY_MS);

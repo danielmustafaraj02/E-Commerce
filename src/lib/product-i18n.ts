@@ -31,6 +31,8 @@ type LocalizableProduct = LocalizableName & {
   descriptionPt?: string | null;
   descriptionHi?: string | null;
   descriptionJa?: string | null;
+  story?: string | null;
+  storyEn?: string | null;
 };
 
 // Every non-English, non-Italian locale falls back to the English field,
@@ -60,15 +62,27 @@ const DESCRIPTION_FIELD: Partial<Record<Locale, keyof LocalizableProduct>> = {
 };
 
 export function localizedName(item: LocalizableName, locale: Locale): string {
+  // Italian is the source language and lives in the plain `name` column, so it
+  // must not go through the English fallback below.
+  if (locale === "it") return item.name;
   if (locale === "en") return item.nameEn || item.name;
   const field = NAME_FIELD[locale];
   return (field && item[field]) || item.nameEn || item.name;
 }
 
 export function localizedDescription(product: LocalizableProduct, locale: Locale): string {
+  if (locale === "it") return product.description || product.descriptionEn || "";
   if (locale === "en") return product.descriptionEn || product.description || "";
   const field = DESCRIPTION_FIELD[locale];
   return (field && product[field]) || product.descriptionEn || product.description || "";
+}
+
+// Only Italian + English exist so far (see prisma/schema.prisma) — every
+// other locale falls back to English, then Italian, same philosophy as
+// localizedDescription above but without a per-locale field map yet.
+export function localizedStory(product: LocalizableProduct, locale: Locale): string {
+  if (locale === "it") return product.story || product.storyEn || "";
+  return product.storyEn || product.story || "";
 }
 
 // Image search (Google Images, and AI engines that read alt text as a

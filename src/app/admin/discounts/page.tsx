@@ -2,9 +2,14 @@ import { db } from "@/lib/db";
 import { DiscountForm } from "./discount-form";
 import { toggleDiscountCode } from "./actions";
 import { StatusBadge } from "@/components/status-badge";
+import { getStoreSettings } from "@/lib/store-settings";
+import { formatMoney } from "@/lib/format";
 
 export default async function AdminDiscountsPage() {
-  const discounts = await db.discountCode.findMany({ orderBy: { createdAt: "desc" } });
+  const [discounts, settings] = await Promise.all([
+    db.discountCode.findMany({ orderBy: { createdAt: "desc" } }),
+    getStoreSettings(),
+  ]);
 
   return (
     <div>
@@ -39,7 +44,7 @@ export default async function AdminDiscountsPage() {
                     <td className="py-3 pr-4">
                       {discount.percentOff
                         ? `${discount.percentOff}%`
-                        : `${(discount.amountOff ?? 0) / 100}`}
+                        : formatMoney(discount.amountOff ?? 0, settings.defaultCurrency, settings.defaultLocale)}
                     </td>
                     <td className="py-3 pr-4">
                       {discount.usedCount}

@@ -3,14 +3,20 @@ import { z } from "zod";
 import { randomUUID } from "node:crypto";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 const schema = z.object({
   analytics: z.boolean(),
   marketing: z.boolean(),
-  anonymousId: z.string().optional(),
+  anonymousId: z.string().trim().max(100).optional(),
 });
 
+// Public, unauthenticated, and writes 3 rows per call — same abuse shape as
+// geocode/client-error, so it gets the same per-visitor throttle.
 export async function POST(request: Request) {
+  const { success } = await rateLimit(`consent:${clientIp(request)}`, 20, 60_000);
+  if (!success) return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+
   const body = await request.json().catch(() => null);
   const parsed = schema.safeParse(body);
   if (!parsed.success) {

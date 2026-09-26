@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
 import { requireAdmin } from "@/lib/require-admin";
 import { writeAuditLog } from "@/lib/audit-log";
+import { isValidBic, isValidIban, normalizeIban } from "@/lib/iban";
 
 const schema = z.object({
   stripeSecretKey: z.string().optional(),
@@ -67,8 +68,6 @@ const offlineSchema = z.object({
   bankAccountHolder: z.string().optional(),
   bankIban: z.string().optional(),
   bankBic: z.string().optional(),
-  codEnabled: z.coerce.boolean(),
-  codFee: z.coerce.number().nonnegative().optional(),
 });
 
 // Separate from updatePaymentSettings — these are plain settings (booleans,
@@ -82,10 +81,30 @@ export async function updateOfflinePaymentSettings(_prevState: unknown, formData
     bankAccountHolder: formData.get("bankAccountHolder") || undefined,
     bankIban: formData.get("bankIban") || undefined,
     bankBic: formData.get("bankBic") || undefined,
-    codEnabled: formData.get("codEnabled") === "on",
-    codFee: formData.get("codFee") || undefined,
   });
   if (!parsed.success) return { error: "Invalid input", success: false };
+
+  // This account number is shown to customers to send money to, so a typo
+  // isn't a cosmetic problem: refuse anything that can't be a real IBAN/BIC.
+  const { bankTransferEnabled, bankAccountHolder, bankIban, bankBic } = parsed.data;
+  if (bankIban && !isValidIban(bankIban)) {
+    return {
+      error: "That IBAN doesn't look right. Check the country code, the length and every digit.",
+      success: false,
+    };
+  }
+  if (bankBic && !isValidBic(bankBic)) {
+    return {
+      error: "That BIC/SWIFT doesn't look right. It has 8 or 11 letters and digits.",
+      success: false,
+    };
+  }
+  if (bankTransferEnabled && (!bankIban || !bankAccountHolder)) {
+    return {
+      error: "To offer bank transfer, enter the account holder and the IBAN.",
+      success: false,
+    };
+  }
 
   const before = await getStoreSettings();
   const updated = await db.storeSettings.upsert({
@@ -93,19 +112,15 @@ export async function updateOfflinePaymentSettings(_prevState: unknown, formData
     update: {
       bankTransferEnabled: parsed.data.bankTransferEnabled,
       bankAccountHolder: parsed.data.bankAccountHolder || null,
-      bankIban: parsed.data.bankIban || null,
-      bankBic: parsed.data.bankBic || null,
-      codEnabled: parsed.data.codEnabled,
-      codFee: parsed.data.codFee !== undefined ? Math.round(parsed.data.codFee * 100) : null,
+      bankIban: bankIban ? normalizeIban(bankIban) : null,
+      bankBic: bankBic ? bankBic.replace(/\s+/g, "").toUpperCase() : null,
     },
     create: {
       id: before.id,
       bankTransferEnabled: parsed.data.bankTransferEnabled,
       bankAccountHolder: parsed.data.bankAccountHolder || null,
-      bankIban: parsed.data.bankIban || null,
-      bankBic: parsed.data.bankBic || null,
-      codEnabled: parsed.data.codEnabled,
-      codFee: parsed.data.codFee !== undefined ? Math.round(parsed.data.codFee * 100) : null,
+      bankIban: bankIban ? normalizeIban(bankIban) : null,
+      bankBic: bankBic ? bankBic.replace(/\s+/g, "").toUpperCase() : null,
     },
   });
 
@@ -116,7 +131,6 @@ export async function updateOfflinePaymentSettings(_prevState: unknown, formData
     entityId: updated.id,
     after: {
       bankTransferEnabled: updated.bankTransferEnabled,
-      codEnabled: updated.codEnabled,
     },
   });
 

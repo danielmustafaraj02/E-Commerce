@@ -4,8 +4,14 @@ import * as React from "react";
 import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
 import { rateLimit } from "@/lib/rate-limit";
+import { captureError } from "@/lib/monitoring";
 import { VerifyEmail } from "@/emails/verify-email";
+import { ResetPasswordEmail } from "@/emails/reset-password";
 import { OrderStatusEmail, type OrderStatus } from "@/emails/order-status";
+import { emailStrings } from "@/lib/i18n/email-locale";
+import { applyTemplate } from "@/lib/i18n/format";
+import { siteBaseUrl } from "@/lib/site-url";
+import { emailAbsoluteUrl, emailThumbnailUrl } from "@/lib/email-image";
 
 // Resend's free plan caps out at 100/day — this stops just short of that
 // account-wide ceiling so a traffic spike (or a bug looping order-status
@@ -49,14 +55,27 @@ export async function sendEmail(input: {
   }
 
   const resend = new Resend(apiKey);
-  await resend.emails.send({
+  const { error } = (await resend.emails.send({
     from,
     to: input.to,
     subject: input.subject,
     text: input.text,
     ...(input.html ? { html: input.html } : {}),
     ...(replyTo ? { replyTo } : {}),
-  });
+  })) ?? {};
+  // Resend's SDK returns { data, error } rather than throwing on an API-level
+  // rejection (bad key, unverified sending domain, etc.), so this was
+  // previously silent — every caller believed the send succeeded. Reported,
+  // not thrown: callers already treat email as best-effort (see registerUser,
+  // sendPasswordChangedEmail) and a webhook handler shouldn't 500 just
+  // because a receipt email failed to send.
+  if (error) {
+    captureError(new Error(`Resend rejected an email: ${error.message}`), {
+      to: input.to,
+      subject: input.subject,
+      resendErrorName: error.name,
+    });
+  }
 }
 
 const KNOWN_ORDER_STATUSES = new Set<OrderStatus>([
@@ -76,11 +95,15 @@ export async function sendVerificationEmailMessage(input: {
   to: string;
   verifyUrl: string;
   expiresInHours: number;
+  locale?: string | null;
 }) {
   const settings = await getStoreSettings();
+  const { locale, t } = await emailStrings(input.locale);
   const element = React.createElement(VerifyEmail, {
+    t,
+    locale,
     storeName: settings.storeName,
-    logoUrl: settings.logoUrl,
+    logoUrl: emailAbsoluteUrl(settings.logoUrl, siteBaseUrl(settings)),
     primaryColor: settings.primaryColor,
     verifyUrl: input.verifyUrl,
     expiresInHours: input.expiresInHours,
@@ -89,9 +112,51 @@ export async function sendVerificationEmailMessage(input: {
 
   await sendEmail({
     to: input.to,
-    subject: `Confirm your email — ${settings.storeName}`,
+    subject: applyTemplate(t.verifySubject, { storeName: settings.storeName }),
     html,
     text,
+  });
+}
+
+export async function sendPasswordResetEmailMessage(input: {
+  to: string;
+  resetUrl: string;
+  expiresInMinutes: number;
+  locale?: string | null;
+}) {
+  const settings = await getStoreSettings();
+  const { locale, t } = await emailStrings(input.locale);
+  const element = React.createElement(ResetPasswordEmail, {
+    t,
+    locale,
+    storeName: settings.storeName,
+    logoUrl: emailAbsoluteUrl(settings.logoUrl, siteBaseUrl(settings)),
+    primaryColor: settings.primaryColor,
+    resetUrl: input.resetUrl,
+    expiresInMinutes: input.expiresInMinutes,
+  });
+  const [html, text] = await Promise.all([render(element), render(element, { plainText: true })]);
+
+  await sendEmail({
+    to: input.to,
+    subject: applyTemplate(t.resetSubject, { storeName: settings.storeName }),
+    html,
+    text,
+  });
+}
+
+// Plain text on purpose: a security notice should be unmistakable and
+// impossible to mistake for marketing.
+export async function sendPasswordChangedEmail(to: string, locale?: string | null) {
+  const settings = await getStoreSettings();
+  const { t } = await emailStrings(locale);
+  const contact = settings.contactEmail
+    ? applyTemplate(t.pwChangedContact, { email: settings.contactEmail })
+    : "";
+  await sendEmail({
+    to,
+    subject: applyTemplate(t.pwChangedSubject, { storeName: settings.storeName }),
+    text: applyTemplate(t.pwChangedBody, { storeName: settings.storeName, contact }),
   });
 }
 
@@ -107,30 +172,17 @@ export async function sendOrderStatusEmail(order: {
 
   const settings = await getStoreSettings();
 
-  // Unknown/custom status values (anything outside the fixed set the
-  // template covers) fall back to a plain-text email rather than a
-  // half-populated branded one.
-  if (!isKnownOrderStatus(order.status)) {
-    await sendEmail({
-      to,
-      subject: `Order ${order.orderNumber}: ${order.status}`,
-      text: `Your order status changed to ${order.status}.\n\nOrder number: ${order.orderNumber}`,
-    });
-    return;
-  }
-
-  const base = settings.siteUrl || process.env.NEXTAUTH_URL || "http://localhost:3000";
-  const orderUrl = `${base}/order-confirmation/${order.orderNumber}`;
-
-  // Line items + currency/total aren't on the slice of the order the callers
-  // already have in hand (webhooks, admin actions, the abandoned-order
-  // cron) — fetched fresh here so every call site gets the full receipt
-  // without having to know what this email needs.
+  // Line items + currency/total + the order's language aren't on the slice of
+  // the order the callers already have in hand (webhooks, admin actions, the
+  // abandoned-order cron) — fetched fresh here so every call site gets the full
+  // receipt, in the customer's language, without having to know what this
+  // email needs.
   const fullOrder = await db.order.findUnique({
     where: { orderNumber: order.orderNumber },
     select: {
       total: true,
       currency: true,
+      locale: true,
       createdAt: true,
       items: {
         select: {
@@ -142,13 +194,40 @@ export async function sendOrderStatusEmail(order: {
       },
     },
   });
+  // Orders placed before the language was stored have none: English, formatted
+  // the way the store already formatted them.
+  const { locale: lang, t } = await emailStrings(fullOrder?.locale ?? "en");
+  const formatLocale = fullOrder?.locale ?? settings.defaultLocale;
+
+  // Unknown/custom status values (anything outside the fixed set the
+  // template covers) fall back to a plain-text email rather than a
+  // half-populated branded one.
+  if (!isKnownOrderStatus(order.status)) {
+    await sendEmail({
+      to,
+      subject: applyTemplate(t.orderSubject, {
+        orderNumber: order.orderNumber,
+        heading: order.status,
+      }),
+      text: applyTemplate(t.unknownStatusBody, {
+        status: order.status,
+        orderNumber: order.orderNumber,
+      }),
+    });
+    return;
+  }
+
+  const base = siteBaseUrl(settings);
+  const orderUrl = `${base}/${lang}/order-confirmation/${order.orderNumber}`;
 
   const element = React.createElement(OrderStatusEmail, {
+    t,
+    lang,
     storeName: settings.storeName,
-    logoUrl: settings.logoUrl,
+    logoUrl: emailAbsoluteUrl(settings.logoUrl, siteBaseUrl(settings)),
     primaryColor: settings.primaryColor,
     orderNumber: order.orderNumber,
-    orderDate: new Intl.DateTimeFormat(settings.defaultLocale, { dateStyle: "long" }).format(
+    orderDate: new Intl.DateTimeFormat(formatLocale, { dateStyle: "long" }).format(
       fullOrder?.createdAt ?? new Date()
     ),
     status: order.status,
@@ -158,10 +237,10 @@ export async function sendOrderStatusEmail(order: {
       name: item.productName,
       quantity: item.quantity,
       unitPrice: item.unitPrice,
-      imageUrl: item.product.images[0]?.url ?? null,
+      imageUrl: emailThumbnailUrl(item.product.images[0]?.url, base),
     })),
     currency: fullOrder?.currency ?? "EUR",
-    locale: settings.defaultLocale,
+    locale: formatLocale,
     total: fullOrder?.total ?? 0,
     companyLegalName: settings.companyLegalName,
     companyAddress: settings.companyAddress,
@@ -171,7 +250,10 @@ export async function sendOrderStatusEmail(order: {
 
   await sendEmail({
     to,
-    subject: `Order ${order.orderNumber}: ${order.status}`,
+    subject: applyTemplate(t.orderSubject, {
+      orderNumber: order.orderNumber,
+      heading: t.status[order.status].heading,
+    }),
     html,
     text,
   });

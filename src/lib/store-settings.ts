@@ -7,7 +7,7 @@ const defaults = {
   id: "default",
   storeName: "My Store",
   logoUrl: null as string | null,
-  primaryColor: "#111827",
+  primaryColor: "#123D43",
   secondaryColor: "#4F46E5",
   fontFamily: "Inter",
   defaultCurrency: "EUR",
@@ -20,6 +20,8 @@ const defaults = {
   freeShippingThreshold: null as number | null,
   trustBadgeText: null as string | null,
   showTestimonials: true,
+  giftCardEnabled: false,
+  giftCardPrice: 500,
   siteUrl: null as string | null,
   metaDescription: null as string | null,
   ogImageUrl: null as string | null,
@@ -72,4 +74,18 @@ export const getStoreSettings = cache(async () => {
 // the same social image the root layout uses.
 export function ogImage(settings: Pick<StoreSettings, "ogImageUrl" | "logoUrl">) {
   return settings.ogImageUrl || settings.logoUrl || undefined;
+}
+
+// The header falls back to the bundled /public/logo.png whenever no admin
+// logo has been uploaded yet (e.g. before first setup, or if it's cleared).
+export function logoSrc(logoUrl: string | null) {
+  return logoUrl || "/logo.png";
+}
+
+// The bundled logo is a 1808px PNG (~200 KB) — right for emails and social
+// previews, far too heavy for a ~50px-tall header slot on every page. The
+// header uses a 3x-resolution WebP copy instead; an admin-uploaded logo is
+// used as-is.
+export function headerLogoSrc(logoUrl: string | null) {
+  return !logoUrl || logoUrl === "/logo.png" ? "/logo-header.webp" : logoUrl;
 }

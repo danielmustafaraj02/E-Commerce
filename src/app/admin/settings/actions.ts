@@ -1,13 +1,21 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/require-admin";
 import { writeAuditLog } from "@/lib/audit-log";
 
+// A full https:// address, or a file on this site ("/og-image.png"):
+// metadataBase in the root layout turns the latter into a full URL.
+const imageUrl = z.union([
+  z.string().url(),
+  z.string().regex(/^\/[^\s]*$/, "Use a full https:// address or a path starting with /"),
+]);
+
 const settingsSchema = z.object({
   storeName: z.string().min(1).max(200),
-  logoUrl: z.string().url().optional().or(z.literal("")),
+  logoUrl: imageUrl.optional().or(z.literal("")),
   primaryColor: z.string().regex(/^#[0-9a-fA-F]{6}$/, "Use a hex color like #111827"),
   secondaryColor: z.string().regex(/^#[0-9a-fA-F]{6}$/, "Use a hex color like #4F46E5"),
   fontFamily: z.string().min(1).max(100),
@@ -21,9 +29,12 @@ const settingsSchema = z.object({
   freeShippingThreshold: z.coerce.number().nonnegative().optional(),
   trustBadgeText: z.string().max(200).optional().or(z.literal("")),
   showTestimonials: z.coerce.boolean(),
+  giftCardEnabled: z.coerce.boolean(),
+  // Euros in the form, cents in the database.
+  giftCardPrice: z.coerce.number().min(0).max(1000).optional(),
   siteUrl: z.string().url().optional().or(z.literal("")),
   metaDescription: z.string().max(300).optional().or(z.literal("")),
-  ogImageUrl: z.string().url().optional().or(z.literal("")),
+  ogImageUrl: imageUrl.optional().or(z.literal("")),
   googleSiteVerification: z.string().max(200).optional().or(z.literal("")),
   facebookUrl: z.string().url().optional().or(z.literal("")),
   instagramUrl: z.string().url().optional().or(z.literal("")),
@@ -52,6 +63,8 @@ export async function updateStoreSettings(_prevState: unknown, formData: FormDat
     freeShippingThreshold: formData.get("freeShippingThreshold") || undefined,
     trustBadgeText: formData.get("trustBadgeText") || "",
     showTestimonials: formData.get("showTestimonials") === "on",
+    giftCardEnabled: formData.get("giftCardEnabled") === "on",
+    giftCardPrice: formData.get("giftCardPrice") || undefined,
     siteUrl: formData.get("siteUrl") || "",
     metaDescription: formData.get("metaDescription") || "",
     ogImageUrl: formData.get("ogImageUrl") || "",
@@ -77,6 +90,10 @@ export async function updateStoreSettings(_prevState: unknown, formData: FormDat
     companyLegalName: data.companyLegalName || null,
     companyAddress: data.companyAddress || null,
     trustBadgeText: data.trustBadgeText || null,
+    giftCardPrice:
+      data.giftCardPrice !== undefined
+        ? Math.round(data.giftCardPrice * 100)
+        : (before?.giftCardPrice ?? 500),
     freeShippingThreshold:
       data.freeShippingThreshold !== undefined
         ? Math.round(data.freeShippingThreshold * 100)
@@ -107,6 +124,10 @@ export async function updateStoreSettings(_prevState: unknown, formData: FormDat
     before,
     after: updated,
   });
+
+  // Settings shape every page (and this form's own defaults): without this the
+  // form resets to the old values after saving, as if nothing had been saved.
+  revalidatePath("/", "layout");
 
   return { error: null, success: true };
 }

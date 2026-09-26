@@ -1,0 +1,701 @@
+/* Personalised gift card: the card itself (components/gift-card-preview.tsx)
+   and its designer (components/gift-card-designer.tsx). */
+
+/* -- The card ---------------------------------------------------------------- */
+
+.gc-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  aspect-ratio: 4 / 5;
+  width: 100%;
+  max-width: 26rem;
+  margin-inline: auto;
+  padding: 2.25rem 1.75rem 1.75rem;
+  color: #123d43;
+  text-align: center;
+  /* Clean ivory stock keeps the printed text crisp in the 3D preview. */
+  background: #fdfbf6;
+  border: 1px solid color-mix(in srgb, #b89a62 24%, #fff);
+  border-radius: 3px;
+  box-shadow:
+    0 1px 2px rgb(18 61 67 / 0.08),
+    0 22px 34px -22px rgb(18 61 67 / 0.32);
+}
+.gc-card::after {
+  content: "";
+  position: absolute;
+  inset: 0.75rem;
+  border: 1px solid color-mix(in srgb, #b89a62 68%, transparent);
+  pointer-events: none;
+}
+.gc-card-brand {
+  margin: 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+}
+.gc-card-rule {
+  display: block;
+  width: 2rem;
+  height: 1px;
+  margin: 0.75rem auto 0;
+  background: #b89a62;
+}
+.gc-card-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.1rem;
+  width: 100%;
+  overflow-wrap: anywhere;
+}
+.gc-card-text p {
+  margin: 0;
+  font-size: 1.35rem;
+  line-height: 1.35;
+  white-space: pre-line;
+}
+.gc-card-text p:first-child:not(:only-child),
+.gc-card-text p:last-child:not(:only-child) {
+  font-size: 1.1rem;
+}
+.gc-card-text--script p {
+  font-size: 1.75rem;
+  line-height: 1.25;
+}
+.gc-card-text--script p:first-child:not(:only-child),
+.gc-card-text--script p:last-child:not(:only-child) {
+  font-size: 1.4rem;
+}
+.gc-card-text--handwritten p {
+  font-size: 1.5rem;
+}
+.gc-card-text--modern p {
+  font-size: 1.1rem;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+}
+.gc-card-foot {
+  margin: 0;
+  color: #b89a62;
+  font-family: var(--font-display), Georgia, serif;
+  font-style: italic;
+  font-size: 0.85rem;
+}
+/* Motifs sit centred on their point, sized to the card (STICKER_SIZE). */
+.gc-sticker {
+  position: absolute;
+  width: 12%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.gc-sticker-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 1px 0.5px rgb(18 61 67 / 0.18));
+}
+
+/* The back: the chosen stock with the logo printed through a mask. */
+.gc-card--back {
+  justify-content: center;
+  padding: 0;
+  background: var(--gc-back-stock, #fdfbf6);
+}
+.gc-card--back::after {
+  border-color: color-mix(in srgb, var(--gc-back-ink, #b89a62) 55%, transparent);
+}
+.gc-back-logo {
+  display: block;
+  width: 58%;
+  aspect-ratio: 1150 / 668;
+  background: var(--gc-back-ink, #123d43);
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+}
+
+.gc-card--small {
+  max-width: 13rem;
+  padding: 1.25rem 1rem 1rem;
+}
+.gc-card--small::after {
+  inset: 0.4rem;
+}
+.gc-card--small .gc-card-text {
+  gap: 0.5rem;
+}
+.gc-card--small .gc-card-text p {
+  font-size: 0.85rem;
+}
+.gc-card--small .gc-card-text--script p {
+  font-size: 1.05rem;
+}
+.gc-card--small .gc-card-foot,
+.gc-card--small .gc-card-brand {
+  font-size: 0.5rem;
+}
+
+/* -- The designer -------------------------------------------------------------- */
+
+.gc-designer {
+  display: grid;
+  gap: 2.5rem;
+}
+.gc-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1.5rem 1rem 1.75rem;
+  background: #f7f3ec;
+  border: 1px solid color-mix(in srgb, #d9cdbb 72%, #fff);
+  border-radius: 2px;
+}
+.gc-step-kicker {
+  margin: 0;
+  color: #b89a62;
+  font-family: var(--font-display), Georgia, serif;
+  font-style: italic;
+  font-size: 1.15rem;
+}
+.gc-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  min-width: 0;
+}
+.gc-step {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+.gc-step + .gc-step {
+  padding-top: 2.25rem;
+  border-top: 1px solid var(--rule, #d9cdbb);
+}
+.gc-step-title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 500;
+}
+.gc-step-number {
+  color: #b89a62;
+  font-style: italic;
+  font-size: 1.1rem;
+}
+.gc-names {
+  display: grid;
+  gap: 1rem;
+}
+@media (min-width: 30rem) {
+  .gc-names {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.gc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.gc-field > span:first-child {
+  color: var(--ink-soft, #527176);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.gc-field input,
+.gc-field textarea {
+  width: 100%;
+  padding: 0.7rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--rule, #d9cdbb);
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 1.05rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+.gc-field textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+.gc-field input:focus,
+.gc-field textarea:focus {
+  border-bottom-color: #123d43;
+}
+.gc-field textarea[aria-invalid="true"] {
+  border-bottom-color: var(--danger, #dc2626);
+}
+.gc-counter {
+  align-self: flex-end;
+  color: var(--ink-soft, #527176);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+.gc-tabs {
+  display: flex;
+  gap: 1.75rem;
+  border-bottom: 1px solid var(--rule, #d9cdbb);
+}
+.gc-tab {
+  position: relative;
+  padding: 0.6rem 0;
+  border: 0;
+  background: none;
+  color: var(--ink-soft, #527176);
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.gc-tab[aria-selected="true"] {
+  color: #123d43;
+}
+.gc-tab[aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: #b89a62;
+}
+.gc-presets {
+  display: flex;
+  flex-direction: column;
+}
+.gc-preset {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  min-height: 3.25rem;
+  padding: 0.6rem 0.25rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--rule, #d9cdbb) 60%, transparent);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.gc-preset input,
+.gc-font input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.gc-preset::before {
+  content: "";
+  flex: none;
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 1px solid #b89a62;
+  border-radius: 999px;
+  transition: box-shadow 0.2s ease;
+}
+.gc-preset:has(input:checked)::before {
+  box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 10px #123d43;
+}
+.gc-preset:has(input:focus-visible),
+.gc-font:has(input:focus-visible) {
+  outline: 1px solid #123d43;
+  outline-offset: 2px;
+}
+.gc-fonts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+  gap: 0.75rem;
+}
+.gc-font {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 1rem 0.5rem 0.85rem;
+  border: 1px solid var(--rule, #d9cdbb);
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.2s ease;
+}
+.gc-font:has(input:checked) {
+  border-color: #b89a62;
+  box-shadow: inset 0 0 0 1px #b89a62;
+}
+.gc-font-sample {
+  font-size: 1.9rem;
+  line-height: 1.1;
+}
+.gc-font-name {
+  color: var(--ink-soft, #527176);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+}
+.gc-add {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--rule, #d9cdbb);
+}
+.gc-add-button {
+  min-height: 3.25rem;
+}
+.gc-error {
+  margin: 0;
+  color: var(--danger, #dc2626);
+  font-size: 0.9rem;
+}
+.gc-note {
+  margin: 0;
+  color: var(--ink-soft, #527176);
+  font-family: var(--font-display), Georgia, serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.45;
+}
+.gc-final-preview {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  padding: 1.5rem 1rem;
+  background: #f7f3ec;
+  border-radius: 4px;
+}
+
+/* Front / back switch above the live preview. */
+.gc-side-switch {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--rule, #d9cdbb);
+  border-radius: 999px;
+  background: #fff;
+}
+.gc-side-switch button {
+  min-width: 5.5rem;
+  min-height: 2.25rem;
+  padding: 0 1rem;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--ink-soft, #527176);
+  font: inherit;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.gc-side-switch button[aria-pressed="true"] {
+  background: #123d43;
+  color: #fff;
+}
+.gc-stage-hint {
+  margin: 0;
+  color: var(--ink-soft, #527176);
+  font-size: 0.85rem;
+  text-align: center;
+}
+.gc-step-help {
+  margin: -0.35rem 0 0;
+  color: color-mix(in srgb, var(--ink, #123d43) 80%, white);
+  line-height: 1.6;
+}
+.gc-step-count {
+  color: #b89a62;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Motifs: the live, draggable ones on the preview... */
+.gc-sticker-layer {
+  position: absolute;
+  inset: 0;
+}
+.gc-sticker--live {
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  cursor: grab;
+  pointer-events: auto;
+  touch-action: none;
+  transition: transform 0.15s ease;
+}
+.gc-sticker--live:active {
+  cursor: grabbing;
+  transform: translate(-50%, -50%) scale(1.12);
+}
+.gc-sticker--live[data-selected="true"],
+.gc-sticker--live:focus-visible {
+  outline: 1px dashed #b89a62;
+  outline-offset: 4px;
+}
+/* ...the palette they're picked from... */
+.gc-sticker-palette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.gc-sticker-pick {
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  padding: 0.7rem;
+  border: 1px solid var(--rule, #d9cdbb);
+  border-radius: 999px;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.gc-sticker-pick:hover:not(:disabled) {
+  border-color: #b89a62;
+  transform: translateY(-2px);
+}
+.gc-sticker-pick:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.gc-sticker-pick .gc-sticker-art,
+.gc-sticker-chip-art .gc-sticker-art {
+  width: 100%;
+  height: 100%;
+}
+/* ...and the list of the ones placed, to remove them. */
+.gc-sticker-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.gc-sticker-chips li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.2rem 0.2rem 0.65rem;
+  border: 1px solid var(--rule, #d9cdbb);
+  border-radius: 999px;
+  background: #fbf9f5;
+  font-size: 0.85rem;
+}
+.gc-sticker-chip-art {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+.gc-sticker-remove {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--ink-soft, #527176);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.gc-sticker-remove:hover {
+  background: #efe8dc;
+  color: #123d43;
+}
+
+/* The back's stock colours. */
+.gc-backs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr));
+  gap: 0.75rem;
+}
+.gc-back-option {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.85rem 0.5rem 0.75rem;
+  border: 1px solid var(--rule, #d9cdbb);
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.2s ease;
+}
+.gc-back-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.gc-back-option:has(input:checked) {
+  border-color: #b89a62;
+  box-shadow: inset 0 0 0 1px #b89a62;
+}
+.gc-back-option:has(input:focus-visible) {
+  outline: 1px solid #123d43;
+  outline-offset: 2px;
+}
+.gc-back-swatch {
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  aspect-ratio: 4 / 5;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgb(18 61 67 / 0.12), 0 4px 10px -6px rgb(18 61 67 / 0.4);
+  font-family: var(--gc-script, var(--font-display)), Georgia, serif;
+  font-size: 1.35rem;
+}
+@media (min-width: 52rem) {
+  .gc-final-preview {
+    display: none;
+  }
+  .gc-designer {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: 4rem;
+    align-items: start;
+  }
+  .gc-stage {
+    position: sticky;
+    top: 7rem;
+    padding: 2rem 1.25rem 2.25rem;
+  }
+}
+
+/* -- Two-sided card (components/gift-card-3d.tsx) ------------------------------ */
+
+.gc-flip {
+  width: 100%;
+  perspective: 1400px;
+}
+.gc-flip-inner {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.9s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.gc-flip[data-back="true"] .gc-flip-inner {
+  transform: rotateY(180deg);
+}
+.gc-flip-face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.gc-flip-face--back {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  transform: rotateY(180deg);
+}
+.gc-flip-face--back .gc-card {
+  height: 100%;
+}
+@media (prefers-reduced-motion: reduce) {
+  .gc-flip-inner {
+    transition: none;
+  }
+}
+
+/* -- The 3D card ------------------------------------------------------------ */
+
+.gc3d {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+.gc3d-stage {
+  position: relative;
+  width: 100%;
+  max-width: 24rem;
+}
+/* A soft contact shadow under the card. */
+.gc3d-stage::before {
+  content: "";
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: -1.4rem;
+  height: 1.6rem;
+  background: radial-gradient(closest-side, rgb(18 61 67 / 0.22), transparent);
+  filter: blur(2px);
+  transform: scaleX(0.58);
+  opacity: 0;
+  transition:
+    opacity 0.8s ease,
+    transform 2.3s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.gc3d-stage[data-ready="true"]::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+/* The canvas is larger than the card so it has room to turn (the scene
+   frames the card at 1/1.16 of the view). */
+.gc3d-canvas {
+  position: absolute;
+  inset: -8%;
+  width: 116% !important;
+  height: 116% !important;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.gc3d-stage[data-ready="true"] .gc3d-canvas {
+  opacity: 1;
+}
+.gc3d-stage[data-ready="true"] .gc3d-fallback {
+  visibility: hidden;
+}
+.gc3d-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem 1.25rem;
+  margin-top: 0.75rem;
+}
+.gc3d-flip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.75rem;
+  padding: 0 0.25rem;
+  border: 0;
+  background: none;
+  color: #123d43;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: #b89a62;
+  text-underline-offset: 0.4em;
+}
+.gc3d-flip svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  color: #b89a62;
+}

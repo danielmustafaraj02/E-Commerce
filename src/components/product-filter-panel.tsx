@@ -1,6 +1,10 @@
-import Link from "next/link";
+import type { CSSProperties } from "react";
+import { Link } from "@/components/localized-link";
 import { PriceRangeSlider } from "@/components/price-range-slider";
+import { PRODUCT_COLOR_KEYS, PRODUCT_COLOR_SWATCH } from "@/lib/product-colors";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
+import "./product-filter-panel.css";
+
 
 type Category = { id: string; slug: string; name: string };
 
@@ -31,99 +35,119 @@ export function ProductFilterPanel({
   currency,
   locale,
   clearHref,
+  priceLabels,
 }: {
   dict: Dictionary["products"];
   categories?: Category[];
   showCategory?: boolean;
-  filters: { q?: string; category?: string; minPrice?: number; maxPrice?: number; inStock?: "1" };
+  filters: {
+    q?: string;
+    category?: string[];
+    minPrice?: number;
+    maxPrice?: number;
+    inStock?: "1";
+    sale?: "1";
+    color?: string[];
+  };
   priceMin: number;
   priceMax: number;
   currency: string;
   locale: string;
   clearHref: string;
+  // Accessible names for the two ends of the price slider.
+  priceLabels: { min: string; max: string };
 }) {
   const hasActiveFilters = Boolean(
-    (showCategory && filters.category) ||
+    (showCategory && filters.category?.length) ||
     filters.minPrice !== undefined ||
     filters.maxPrice !== undefined ||
-    filters.inStock
+    filters.inStock ||
+    filters.color?.length
   );
 
   return (
-    <aside className="w-full shrink-0 sm:sticky sm:top-24 sm:w-64 sm:self-start">
-      <div className="rounded-2xl p-5 text-sm">
+    <aside
+      className="pf w-full shrink-0 sm:sticky sm:top-24 sm:w-72 sm:self-start"
+    >
+      <div className="pf-card">
         <input
           type="checkbox"
           id="mobile-filters-toggle"
           defaultChecked={hasActiveFilters}
           className="peer sr-only"
         />
-        <label
-          htmlFor="mobile-filters-toggle"
-          className="flex cursor-pointer items-center gap-2 text-base font-semibold sm:pointer-events-none sm:cursor-default"
-        >
+        <label htmlFor="mobile-filters-toggle" className="pf-head">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="pf-head-icon"
+            aria-hidden="true"
+          >
+            <path d="M4 6h16M7 12h10M10 18h4" />
+          </svg>
+          <span className="pf-title">{dict.filtersTitle}</span>
+          {hasActiveFilters && <span className="pf-active-dot" aria-hidden="true" />}
+          {/* Phones only: the panel collapses there, so the header toggles it. */}
           <svg
             width="18"
             height="18"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="#f5c451"
-            strokeWidth="2.25"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <polygon points="4 4 20 4 14 12.5 14 19 10 21 10 12.5 4 4" />
-          </svg>
-          {dict.filtersTitle}
-          {hasActiveFilters && (
-            <span className="bg-primary inline-block h-1.5 w-1.5 rounded-full" aria-hidden="true" />
-          )}
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
             stroke="currentColor"
-            strokeWidth="2.25"
+            strokeWidth="1.3"
             strokeLinecap="round"
-            strokeLinejoin="round"
-            className="text-foreground/40 ml-auto shrink-0 transition-transform duration-200 peer-checked:rotate-180 sm:hidden"
+            className="pf-toggle pf-toggle--closed"
             aria-hidden="true"
           >
             <path d="M6 9l6 6 6-6" />
           </svg>
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.3"
+            strokeLinecap="round"
+            className="pf-toggle pf-toggle--open"
+            aria-hidden="true"
+          >
+            <path d="M6 6l12 12M18 6 6 18" />
+          </svg>
         </label>
 
-        <form
-          method="GET"
-          className="mt-5 hidden flex-col gap-5 peer-checked:flex sm:!flex sm:flex-col"
-        >
+        <form method="GET" className="pf-form">
           {filters.q && <input type="hidden" name="q" value={filters.q} />}
+          {filters.sale && <input type="hidden" name="sale" value={filters.sale} />}
 
           {showCategory && categories && (
-            <div className="flex flex-col gap-1.5">
-              <label htmlFor="category" className="font-medium">
-                {dict.category}
-              </label>
-              <select
-                id="category"
-                name="category"
-                defaultValue={filters.category ?? ""}
-                className="field"
-              >
-                <option value="">{dict.all}</option>
+            <fieldset className="pf-section">
+              <legend className="pf-label">{dict.category}</legend>
+              <div className="pf-options">
                 {categories.map((category) => (
-                  <option key={category.id} value={category.slug}>
+                  <label key={category.id} className="pf-option">
+                    <input
+                      type="checkbox"
+                      name="category"
+                      value={category.slug}
+                      defaultChecked={filters.category?.includes(category.slug)}
+                      className="pf-check"
+                    />
                     {category.name}
-                  </option>
+                  </label>
                 ))}
-              </select>
-            </div>
+              </div>
+            </fieldset>
           )}
 
-          <div className="border-foreground/10 flex flex-col gap-3 border-t pt-5">
-            <span className="font-medium">{dict.priceRange}</span>
+          <div className="pf-section">
+            <span className="pf-label">{dict.priceRange}</span>
             <PriceRangeSlider
               min={priceMin}
               max={priceMax}
@@ -132,33 +156,60 @@ export function ProductFilterPanel({
               currency={currency}
               locale={locale}
               separatorLabel={dict.priceRangeSeparator}
+              minLabel={priceLabels.min}
+              maxLabel={priceLabels.max}
             />
           </div>
 
-          <label className="border-foreground/10 flex cursor-pointer items-center gap-2 border-t pt-5">
+          <fieldset className="pf-section">
+            <legend className="pf-label">{dict.colorLabel}</legend>
+            <div className="pf-beads">
+              {PRODUCT_COLOR_KEYS.map((key) => (
+                <label
+                  key={key}
+                  className="pf-bead"
+                  title={dict.colors[key]}
+                  style={{ "--bead": PRODUCT_COLOR_SWATCH[key] } as CSSProperties}
+                >
+                  <input
+                    type="checkbox"
+                    name="color"
+                    value={key}
+                    defaultChecked={filters.color?.includes(key)}
+                  />
+                  <span className="sr-only">{dict.colors[key]}</span>
+                  <span className="pf-bead-glass" aria-hidden="true" />
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <label className="pf-section pf-stock">
             <input
               type="checkbox"
               name="inStock"
               value="1"
               defaultChecked={filters.inStock === "1"}
-              className="field-checkbox"
+              className="pf-check"
             />
             {dict.inStockOnly}
           </label>
 
-          <div className="flex items-center gap-3">
-            <button type="submit" className="btn-primary flex-1">
+          <div className="pf-actions">
+            <button type="submit" className="pf-submit">
               {dict.applyFilters}
+              <span aria-hidden="true">→</span>
             </button>
             {hasActiveFilters && (
-              <Link
-                href={clearHref}
-                className="text-foreground/60 hover:text-primary shrink-0 text-xs transition-colors"
-              >
+              <Link href={clearHref} className="pf-clear">
                 {dict.clearFilters}
               </Link>
             )}
           </div>
+
+          <p className="pf-signature" aria-hidden="true" translate="no">
+            Vetri di Murano
+          </p>
         </form>
       </div>
     </aside>

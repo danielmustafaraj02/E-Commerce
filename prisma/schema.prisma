@@ -44,6 +44,10 @@ model StoreSettings {
   // fabricated), but some stores launch before they have enough of them to
   // look credible, so admins can hide the section entirely until then.
   showTestimonials       Boolean  @default(true)
+  // Personalised gift card add-on (/personalised-gift-card): offered only
+  // while enabled; the price is charged per order, in cents.
+  giftCardEnabled        Boolean  @default(false)
+  giftCardPrice          Int      @default(500)
 
   // SEO — Admin > Settings > SEO. All optional with fallbacks applied in
   // src/lib/store-settings.ts and consumed by src/app/layout.tsx,
@@ -120,6 +124,9 @@ model User {
   mfaEnabled      Boolean @default(false)
   failedLoginCount Int    @default(0)
   lockedUntil     DateTime?
+  // Set whenever the password changes (reset flow). Sessions issued before this
+  // moment are rejected — see src/lib/session-refresh.ts.
+  passwordChangedAt DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -152,6 +159,7 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -160,6 +168,8 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model VerificationToken {
@@ -168,6 +178,7 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+  @@index([identifier])
 }
 
 // ---------------------------------------------------------------------------
@@ -190,6 +201,20 @@ model Category {
   namePt   String?
   nameHi   String?
   nameJa   String?
+  // Optional page copy shown below the product grid on /category/[slug]: Italian
+  // in `description`, then one column per locale, with the same fallback as
+  // products (locale -> English -> Italian). See src/lib/product-i18n.ts.
+  description   String?
+  descriptionEn String?
+  descriptionFr String?
+  descriptionDe String?
+  descriptionAr String?
+  descriptionZh String?
+  descriptionRu String?
+  descriptionEs String?
+  descriptionPt String?
+  descriptionHi String?
+  descriptionJa String?
   slug     String  @unique
   parentId String?
   parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -197,6 +222,8 @@ model Category {
 
   products Product[]
   taxRules TaxRule[]
+
+  @@index([parentId])
 }
 
 model Product {
@@ -228,12 +255,30 @@ model Product {
   descriptionPt     String?
   descriptionHi     String?
   descriptionJa     String?
+  // Persuasive "why this piece" copy shown as its own section on the product
+  // page (uniqueness, gift framing, handmade-in-Murano heritage) — separate
+  // from `description` above. English-only translation for now, same
+  // one-locale-at-a-time rollout as name/description originally had.
+  story             String   @default("")
+  storyEn           String?
   price             Int // cents, tax-inclusive display price (see StoreSettings.pricesIncludeTax)
+  // Display-only "was" price (cents), shown crossed out with a discount badge
+  // — never charged. Staff can only set it to at most the lowest price in the
+  // 30 days before the current price took effect (EU Omnibus rule, checked
+  // against ProductPriceChange in lib/price-history.ts). Shown only while
+  // higher than `price`.
+  compareAtPrice    Int?
   currency          String   @default("EUR")
   sku               String   @unique
   stockQty          Int      @default(0)
   lowStockThreshold Int      @default(5)
   active            Boolean  @default(true)
+  // One canonical color per piece, for the filter swatches on /products and
+  // /category/[slug] — a fixed small palette (see PRODUCT_COLORS in
+  // src/lib/product-colors.ts), not free text, so the filter UI can render
+  // real swatches instead of a text dropdown. Optional: an unset color just
+  // doesn't match any color filter, it isn't excluded from browsing.
+  color             String?
 
   // Dropshipping: a product sourced from a supplier who ships directly to
   // the customer. trackInventory=false skips the stock check/decrement at
@@ -249,13 +294,64 @@ model Product {
   categoryId String?
   category   Category? @relation(fields: [categoryId], references: [id])
 
+  // The styled set this piece belongs to ("Complete the look" on the product
+  // page, bundle discount at checkout — see lib/looks.ts).
+  lookId String?
+  look   Look?   @relation(fields: [lookId], references: [id], onDelete: SetNull)
+
+  // Gift Finder tagging (Admin > Products), scored by lib/gift-finder.ts —
+  // free-form Postgres string arrays rather than a join table since the value
+  // sets are small and fixed (see the *_STYLES/OCCASIONS/RECIPIENTS constants
+  // there). Untagged products (the default, []) simply score 0 on that
+  // criterion instead of being excluded.
+  giftStyles     String[] @default([])
+  giftOccasions  String[] @default([])
+  giftRecipients String[] @default([])
+
   images        ProductImage[]
   orderItems    OrderItem[]
   reviews       Review[]
   wishlistItems WishlistItem[]
+  priceChanges  ProductPriceChange[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([categoryId])
+  @@index([supplierId])
+  @@index([active, createdAt])
+  @@index([lookId])
+}
+
+// A matching set (necklace + bracelet + earrings) grouped by staff in
+// Admin > Looks. Buying all its pieces together takes discountPercent off
+// each one, applied server-side in lib/pricing.ts.
+model Look {
+  id              String   @id @default(cuid())
+  name            String
+  // Optional styled photo of the pieces together; without it the product
+  // page composes the pieces' own photos.
+  imageUrl        String?
+  discountPercent Int      @default(15)
+  active          Boolean  @default(true)
+  products        Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Every price a product has had. Written by a database trigger on Product
+// (see migration 20260924120000_add_product_price_history), not by app code,
+// so admin edits, scripts and raw SQL are all recorded. Backs the Omnibus
+// check on compareAtPrice.
+model ProductPriceChange {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  price     Int // cents
+  changedAt DateTime @default(now())
+
+  @@index([productId, changedAt])
 }
 
 // ---------------------------------------------------------------------------
@@ -296,15 +392,24 @@ model Fulfillment {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([orderId])
+  @@index([supplierId])
 }
 
 model ProductImage {
-  id        String  @id @default(cuid())
-  productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  url       String
-  altText   String  @default("")
-  position  Int     @default(0)
+  id          String  @id @default(cuid())
+  productId   String
+  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url         String
+  altText     String  @default("")
+  position    Int     @default(0)
+  // On-model/lifestyle photos aren't shot on a plain white background, so the
+  // catalog's multiply-blend + edge-feather treatment (src/app/shop.css) reads
+  // as a white halo on them. This opts a single image out of that treatment.
+  isLifestyle Boolean @default(false)
+
+  @@index([productId, position])
 }
 
 model Review {
@@ -318,6 +423,7 @@ model Review {
   createdAt DateTime @default(now())
 
   @@unique([productId, userId])
+  @@index([userId])
 }
 
 model WishlistItem {
@@ -329,6 +435,7 @@ model WishlistItem {
   createdAt DateTime @default(now())
 
   @@unique([productId, userId])
+  @@index([userId])
 }
 
 // ---------------------------------------------------------------------------
@@ -347,7 +454,18 @@ model Address {
   phone      String?
   isDefault  Boolean @default(false)
 
+  // Where the address is on the map, found with OpenStreetMap's geocoder
+  // (src/lib/geocode.ts). Filled in shortly after an order is placed, or from the
+  // admin order page. geocodedAt is set once a lookup was answered, even with no
+  // match (lat/lng stay null then); a lookup that failed leaves it null to retry.
+  lat          Float?
+  lng          Float?
+  geocodedAt   DateTime?
+  geocodeLabel String?
+
   orders Order[]
+
+  @@index([userId])
 }
 
 // ---------------------------------------------------------------------------
@@ -382,6 +500,7 @@ model ShippingZoneCountry {
   country String // ISO 3166-1 alpha-2
 
   @@unique([zoneId, country])
+  @@index([country])
 }
 
 model ShippingZoneMethod {
@@ -392,6 +511,7 @@ model ShippingZoneMethod {
   method   ShippingMethod @relation(fields: [methodId], references: [id], onDelete: Cascade)
 
   @@unique([zoneId, methodId])
+  @@index([methodId])
 }
 
 // ---------------------------------------------------------------------------
@@ -406,6 +526,9 @@ model TaxRule {
   name        String // e.g. "IVA standard", "IVA ridotta"
   categoryId  String? // null = applies store-wide for this country/region
   category    Category? @relation(fields: [categoryId], references: [id])
+
+  @@index([country])
+  @@index([categoryId])
 }
 
 // ---------------------------------------------------------------------------
@@ -429,9 +552,26 @@ model Order {
   taxAmount      Int // cents
   taxRatePercent Float?
   shippingAmount Int // cents
-  discountAmount Int    @default(0) // cents
+  discountAmount Int    @default(0) // cents, discount code + complete-the-look saving
+  // The complete-the-look part of discountAmount (see lib/looks.ts).
+  bundleDiscountAmount Int @default(0) // cents
+  // Personalised gift card printed and packed with the order (lib/gift-card.ts):
+  // its price (part of subtotal) and exactly what to print.
+  giftCardAmount      Int     @default(0) // cents
+  giftCardMessageType String? // preset | custom
+  giftCardMessage     String?
+  giftCardRecipient   String?
+  giftCardSender      String?
+  giftCardFont        String?
+  giftCardStickers    Json? // [{ icon, x, y }] as % of the card, at most 3
+  giftCardBack        String? // ivory | lagoon | ruby | blush
   total          Int // cents
   currency       String @default("EUR")
+  // The storefront language the customer checked out in. Emails about the order
+  // (status updates, abandoned-cart reminder) are sent from webhooks and cron,
+  // with no request to read a language from, so they use this. Null on orders
+  // placed before it existed: those get English.
+  locale String?
 
   addressId String?
   address   Address? @relation(fields: [addressId], references: [id])
@@ -458,6 +598,13 @@ model Order {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status, createdAt])
+  @@index([createdAt])
+  @@index([addressId])
+  @@index([shippingMethodId])
+  @@index([discountCodeId])
 }
 
 model OrderItem {
@@ -477,6 +624,10 @@ model OrderItem {
 
   fulfillmentId String?
   fulfillment   Fulfillment? @relation(fields: [fulfillmentId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+  @@index([fulfillmentId])
 }
 
 model Payment {
@@ -489,6 +640,8 @@ model Payment {
   amount                Int // cents
   currency              String  @default("EUR")
   createdAt             DateTime @default(now())
+
+  @@index([orderId])
 }
 
 model DiscountCode {
@@ -516,6 +669,9 @@ model ReturnRequest {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([orderId])
+  @@index([userId])
 }
 
 // ---------------------------------------------------------------------------
@@ -538,6 +694,8 @@ model ConsentLog {
   consentType String // functional | analytics | marketing
   granted     Boolean
   createdAt   DateTime @default(now())
+
+  @@index([userId])
 }
 
 // Marketing email list — deliberately separate from ConsentLog (which is
@@ -563,6 +721,9 @@ model AuditLog {
   afterData  String? // JSON snapshot
   ipAddress  String?
   createdAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
 }
 
 // Internal "what still needs doing" backlog for Admin > Roadmap — staff jot
@@ -579,4 +740,11 @@ model ImprovementTask {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   completedAt DateTime?
+  // Picked up by the nightly "Roadmap tasks for Claude" routine through
+  // api/automation/roadmap/claim; the run writes what it changed and what to
+  // check into claudeReport (the "Bacheca" on Admin > Roadmap).
+  forClaude       Boolean   @default(false)
+  claudeClaimedAt DateTime?
+  claudeReport    String?
+  claudeReportAt  DateTime?
 }

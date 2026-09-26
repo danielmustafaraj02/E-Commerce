@@ -2,6 +2,11 @@
 
 import { useActionState } from "react";
 import { FormAlert } from "@/components/form-alert";
+import {
+  DESCRIPTION_FIELDS,
+  DESCRIPTION_MAX,
+  type CategoryDescriptions,
+} from "./description-fields";
 
 export function CategoryForm({
   action,
@@ -24,7 +29,7 @@ export function CategoryForm({
     nameJa: string | null;
     slug: string;
     parentId: string | null;
-  };
+  } & Partial<CategoryDescriptions>;
   categories: { id: string; name: string }[];
   submitLabel: string;
 }) {
@@ -95,8 +100,8 @@ export function CategoryForm({
         <span className="font-medium">Name (Portuguese)</span>
         <input name="namePt" defaultValue={initial?.namePt ?? ""} className="field" />
         <span className="text-foreground/60 text-xs">
-          Shown to visitors browsing in Portuguese. Falls back to the English name, then the
-          Italian name, if left blank.
+          Shown to visitors browsing in Portuguese. Falls back to the English name, then the Italian
+          name, if left blank.
         </span>
       </label>
       <label className="flex flex-col gap-1.5 text-sm">
@@ -115,6 +120,25 @@ export function CategoryForm({
           name, if left blank.
         </span>
       </label>
+      <fieldset className="border-foreground/15 flex flex-col gap-3 rounded-lg border p-4">
+        <legend className="px-1 text-sm font-medium">Page description</legend>
+        <p className="text-foreground/60 -mt-1 text-xs">
+          Copy shown below the product grid on the category page (first page only) and used for its
+          search-result snippet. Separate paragraphs with a blank line. Other languages fall back to
+          English, then Italian, if left blank; leave all blank to show nothing.
+        </p>
+        {DESCRIPTION_FIELDS.slice(0, 2).map((field) => (
+          <DescriptionField key={field.key} field={field} initial={initial} rows={5} />
+        ))}
+        <details className="text-sm">
+          <summary className="cursor-pointer font-medium">Other languages</summary>
+          <div className="mt-3 flex flex-col gap-3">
+            {DESCRIPTION_FIELDS.slice(2).map((field) => (
+              <DescriptionField key={field.key} field={field} initial={initial} rows={4} />
+            ))}
+          </div>
+        </details>
+      </fieldset>
       <label className="flex flex-col gap-1.5 text-sm">
         <span className="font-medium">Slug</span>
         <input
@@ -144,5 +168,30 @@ export function CategoryForm({
         {pending ? "Saving..." : submitLabel}
       </button>
     </form>
+  );
+}
+
+// One language's description textarea (Arabic is right-to-left).
+function DescriptionField({
+  field,
+  initial,
+  rows,
+}: {
+  field: (typeof DESCRIPTION_FIELDS)[number];
+  initial?: Partial<CategoryDescriptions>;
+  rows: number;
+}) {
+  return (
+    <label className="flex flex-col gap-1.5 text-sm">
+      <span className="font-medium">{field.label}</span>
+      <textarea
+        name={field.key}
+        rows={rows}
+        maxLength={DESCRIPTION_MAX}
+        dir={"rtl" in field && field.rtl ? "rtl" : undefined}
+        defaultValue={initial?.[field.key] ?? ""}
+        className="field"
+      />
+    </label>
   );
 }

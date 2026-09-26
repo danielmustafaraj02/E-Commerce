@@ -4,11 +4,17 @@
 // buyer approves payment on PayPal's own hosted page, so card/bank details
 // never touch this server.
 import { getStoreSettings } from "@/lib/store-settings";
+import type { PaypalCapture } from "@/lib/paypal-amount";
 
+// Live PayPal in production, the sandbox everywhere else — unless PAYPAL_ENV says
+// otherwise. Sandbox and live credentials only work against their own API, and a
+// Vercel preview build also has NODE_ENV=production, so set PAYPAL_ENV=sandbox
+// to test with sandbox credentials on a deployed site before going live.
 const PAYPAL_API_BASE =
-  process.env.NODE_ENV === "production"
-    ? "https://api-m.paypal.com"
-    : "https://api-m.sandbox.paypal.com";
+  (process.env.PAYPAL_ENV ?? (process.env.NODE_ENV === "production" ? "live" : "sandbox")) ===
+  "sandbox"
+    ? "https://api-m.sandbox.paypal.com"
+    : "https://api-m.paypal.com";
 
 // Checks the DB (Admin > Settings > Payments) first, falling back to env
 // vars of the same name — either configuration path works.
@@ -109,7 +115,7 @@ export async function capturePaypalOrder(paypalOrderId: string) {
     headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
   });
   if (!res.ok) throw new Error(`PayPal capture failed: ${await res.text()}`);
-  return res.json() as Promise<{ status: string }>;
+  return res.json() as Promise<PaypalCapture>;
 }
 
 // Verifies the webhook actually came from PayPal — never trust an

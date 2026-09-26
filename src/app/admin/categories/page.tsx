@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { db } from "@/lib/db";
 import { deleteCategory } from "./actions";
 import { FormAlert } from "@/components/form-alert";

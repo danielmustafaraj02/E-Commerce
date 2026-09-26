@@ -10,18 +10,26 @@ export function PasswordField({
   name,
   autoComplete,
   minLength,
+  showLabel,
 }: {
   label: string;
   name: string;
   autoComplete: "current-password" | "new-password";
   minLength?: number;
+  // Accessible name of the show/hide toggle ("Show password"); the pressed
+  // state, not a changing label, tells assistive tech which way it is.
+  showLabel: string;
 }) {
   const [visible, setVisible] = useState(false);
   const id = useId();
 
+  // The toggle is deliberately a sibling of the <label>, not inside it: a button
+  // inside a label makes the input's accessible name "Password Show password".
   return (
-    <label htmlFor={id} className="flex flex-col gap-1.5 text-sm">
-      <span className="font-medium">{label}</span>
+    <div className="flex flex-col gap-1.5 text-sm">
+      <label htmlFor={id} className="font-medium">
+        {label}
+      </label>
       <div className="relative">
         <input
           id={id}
@@ -35,9 +43,9 @@ export function PasswordField({
         <button
           type="button"
           onClick={() => setVisible((v) => !v)}
-          aria-label={visible ? "Hide password" : "Show password"}
+          aria-label={showLabel}
           aria-pressed={visible}
-          className="text-foreground/40 hover:text-foreground/70 absolute inset-y-0 right-0 flex w-9 items-center justify-center transition-colors"
+          className="text-foreground/60 hover:text-foreground absolute inset-y-0 right-0 flex w-9 items-center justify-center transition-colors"
         >
           {visible ? (
             <svg
@@ -73,6 +81,6 @@ export function PasswordField({
           )}
         </button>
       </div>
-    </label>
+    </div>
   );
 }

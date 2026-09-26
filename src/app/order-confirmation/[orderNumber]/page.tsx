@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
-import Image from "next/image";
-import Link from "next/link";
+import { CatalogImage } from "@/components/catalog-image";
+import { Link } from "@/components/localized-link";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
@@ -11,7 +11,13 @@ import { rateLimit } from "@/lib/rate-limit";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { PaymentButtons } from "@/components/payment-buttons";
+import { ShelfMain } from "@/components/shelf-main";
+import { ShelfHead, ShelfBody } from "@/components/shelf-page";
 import { ReturnRequestForm } from "./return-request-form";
+import { localizedName } from "@/lib/product-i18n";
+import { isPaypalConfigured } from "@/lib/paypal";
+import { LookPurchaseTracker } from "@/components/look-purchase-tracker";
+import { GiftFinderPurchaseTracker } from "@/components/gift-finder-purchase-tracker";
 
 const RETURNABLE_STATUSES = ["paid", "processing", "shipped", "delivered"];
 
@@ -46,150 +52,191 @@ export default async function OrderConfirmationPage({
     }),
   ]);
   const dict = getDictionary(uiLocale);
+  const paypalEnabled = await isPaypalConfigured();
 
   if (!order) notFound();
   if (!canAccessOrder(order, session)) notFound();
 
   return (
-    <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-16">
-      <h1 className="mb-2 text-2xl font-semibold">
-        {order.status === "pending"
-          ? dict.orderConfirmation.almostThere
-          : dict.orderConfirmation.thankYou}
-      </h1>
-      <p className="text-foreground/70 text-sm">
-        {order.status === "pending"
-          ? dict.orderConfirmation.awaitingPayment(order.orderNumber)
-          : dict.orderConfirmation.paymentReceived(order.orderNumber)}
-      </p>
-      <p className="text-foreground/50 mt-1 text-xs">
-        {dict.orderConfirmation.orderDate}:{" "}
-        {new Intl.DateTimeFormat(settings.defaultLocale, {
-          dateStyle: "long",
-        }).format(order.createdAt)}
-      </p>
-      {cancelled && <p className="text-warning mt-2 text-sm">{dict.orderConfirmation.cancelled}</p>}
-
-      {order.status === "pending" && (
-        <section className="mt-6">
-          <PaymentButtons
-            orderNumber={order.orderNumber}
-            bankTransferEnabled={settings.bankTransferEnabled && Boolean(settings.bankIban)}
-            codEnabled={settings.codEnabled}
-            locale={settings.defaultLocale}
-          />
-        </section>
+    <ShelfMain>
+      {order.bundleDiscountAmount > 0 && (
+        <LookPurchaseTracker orderNumber={order.orderNumber} saving={order.bundleDiscountAmount} />
       )}
-
-      <section className="mt-8">
-        <h2 className="mb-3 text-lg font-medium">{dict.orderConfirmation.items}</h2>
-        <ul className="divide-foreground/10 flex flex-col divide-y">
-          {order.items.map((item) => {
-            const image = item.product?.images[0];
-            return (
-              <li key={item.id} className="flex items-center gap-4 py-3">
-                <div className="bg-surface border-foreground/10 relative size-16 shrink-0 overflow-hidden rounded-md border">
-                  {image ? (
-                    <Image
-                      src={image.url}
-                      alt={image.altText || item.productName}
-                      fill
-                      sizes="64px"
-                      className="object-cover"
-                    />
-                  ) : null}
-                </div>
-                <div className="flex flex-1 items-center justify-between gap-3 text-sm">
-                  <span>
-                    {item.productName} &times; {item.quantity}
-                  </span>
-                  <span className="shrink-0 font-medium">
-                    {formatMoney(
-                      item.unitPrice * item.quantity,
-                      order.currency,
-                      settings.defaultLocale
-                    )}
-                  </span>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-      </section>
-
-      <section className="border-foreground/10 mt-6 flex flex-col gap-1 border-t pt-4 text-sm">
-        <div className="flex justify-between">
-          <span>{dict.checkout.subtotal}</span>
-          <span>{formatMoney(order.subtotal, order.currency, settings.defaultLocale)}</span>
-        </div>
-        {order.discountAmount > 0 && (
-          <div className="text-success flex justify-between">
-            <span>{dict.checkout.discount}</span>
-            <span>
-              -{formatMoney(order.discountAmount, order.currency, settings.defaultLocale)}
-            </span>
-          </div>
+      <GiftFinderPurchaseTracker orderNumber={order.orderNumber} />
+      <ShelfHead
+        settle
+        icon={
+          RETURNABLE_STATUSES.includes(order.status) ? (
+            <svg
+              width="26"
+              height="26"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+          ) : undefined
+        }
+        title={
+          order.status === "pending"
+            ? dict.orderConfirmation.almostThere
+            : dict.orderConfirmation.thankYou
+        }
+      >
+        <p className="shop-lede">
+          {order.status === "pending"
+            ? dict.orderConfirmation.awaitingPayment(order.orderNumber)
+            : dict.orderConfirmation.paymentReceived(order.orderNumber)}
+        </p>
+        <p className="text-foreground/60 mt-1 text-xs">
+          {dict.orderConfirmation.orderDate}:{" "}
+          {new Intl.DateTimeFormat(settings.defaultLocale, {
+            dateStyle: "long",
+          }).format(order.createdAt)}
+        </p>
+        {cancelled && (
+          <p className="text-warning mt-2 text-sm">{dict.orderConfirmation.cancelled}</p>
         )}
-        <div className="flex justify-between">
-          <span>
-            {dict.checkout.shipping} ({order.shippingMethod?.name})
-          </span>
-          <span>{formatMoney(order.shippingAmount, order.currency, settings.defaultLocale)}</span>
-        </div>
-        <div className="text-foreground/70 flex justify-between">
-          <span>
-            {dict.checkout.vat}
-            {order.taxRatePercent !== null ? ` (${order.taxRatePercent}%)` : ""}
-          </span>
-          <span>{formatMoney(order.taxAmount, order.currency, settings.defaultLocale)}</span>
-        </div>
-        <div className="mt-2 flex justify-between text-base font-semibold">
-          <span>{dict.checkout.total}</span>
-          <span>{formatMoney(order.total, order.currency, settings.defaultLocale)}</span>
-        </div>
-      </section>
+      </ShelfHead>
+      <ShelfBody>
+        {order.status === "pending" && (
+          <section className="mt-6">
+            <PaymentButtons
+              orderNumber={order.orderNumber}
+              bankTransferEnabled={settings.bankTransferEnabled && Boolean(settings.bankIban)}
+              paypalEnabled={paypalEnabled}
+              locale={settings.defaultLocale}
+              dict={dict.payment}
+            />
+          </section>
+        )}
 
-      {order.address && (
-        <section className="text-foreground/70 mt-8 text-sm">
-          <h2 className="text-foreground mb-2 text-lg font-medium">
-            {dict.orderConfirmation.shippingTo}
-          </h2>
-          <p>{order.address.fullName}</p>
-          <p>{order.address.street}</p>
-          <p>
-            {order.address.city}, {order.address.postalCode} {order.address.country}
-          </p>
+        <section className="mt-8">
+          <h2 className="shop-h2">{dict.orderConfirmation.items}</h2>
+          <ul className="divide-foreground/10 flex flex-col divide-y">
+            {order.items.map((item) => {
+              const image = item.product?.images[0];
+              // The name stored on the order is the Italian source; show the
+              // visitor's language when the product still exists.
+              const itemName = item.product
+                ? localizedName(item.product, uiLocale)
+                : item.productName;
+              return (
+                <li key={item.id} className="flex items-center gap-4 py-3">
+                  <div className="shop-thumb shop-thumb--cart">
+                    {image ? (
+                      <CatalogImage
+                        src={image.url}
+                        alt={image.altText || itemName}
+                        fill
+                        sizes="64px"
+                      />
+                    ) : null}
+                  </div>
+                  <div className="flex flex-1 items-center justify-between gap-3 text-sm">
+                    <span>
+                      {itemName} &times; {item.quantity}
+                    </span>
+                    <span className="shrink-0 font-medium">
+                      {formatMoney(
+                        item.unitPrice * item.quantity,
+                        order.currency,
+                        settings.defaultLocale
+                      )}
+                    </span>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
         </section>
-      )}
 
-      {settings.companyLegalName && (
-        <section className="text-foreground/60 border-foreground/10 mt-8 border-t pt-4 text-xs">
-          <p className="text-foreground/70 mb-1 font-medium">{dict.orderConfirmation.soldBy}</p>
-          <p>{settings.companyLegalName}</p>
-          {settings.companyAddress && <p>{settings.companyAddress}</p>}
-          {settings.vatNumber && <p>VAT/P.IVA: {settings.vatNumber}</p>}
-        </section>
-      )}
-
-      <p className="text-foreground/60 mt-4 text-xs">
-        {dict.checkout.withdrawalNotice}{" "}
-        <Link href="/legal/returns" className="underline">
-          {dict.checkout.returnPolicy}
-        </Link>
-        .
-      </p>
-
-      {RETURNABLE_STATUSES.includes(order.status) && (
-        <section className="mt-6">
-          {order.returnRequests.length > 0 && order.returnRequests[0].status !== "rejected" ? (
-            <p className="text-foreground/70 text-sm">
-              Return status: {order.returnRequests[0].status}
-            </p>
-          ) : (
-            <ReturnRequestForm orderNumber={order.orderNumber} />
+        <section className="border-foreground/10 mt-6 flex flex-col gap-1 border-t pt-4 text-sm">
+          <div className="flex justify-between">
+            <span>{dict.checkout.subtotal}</span>
+            <span>{formatMoney(order.subtotal, order.currency, settings.defaultLocale)}</span>
+          </div>
+          {order.discountAmount > 0 && (
+            <div className="text-success flex justify-between">
+              <span>{dict.checkout.discount}</span>
+              <span>
+                -{formatMoney(order.discountAmount, order.currency, settings.defaultLocale)}
+              </span>
+            </div>
           )}
+          <div className="flex justify-between">
+            <span>
+              {dict.checkout.shipping} ({order.shippingMethod?.name})
+            </span>
+            <span>{formatMoney(order.shippingAmount, order.currency, settings.defaultLocale)}</span>
+          </div>
+          <div className="text-foreground/70 flex justify-between">
+            <span>
+              {dict.checkout.vat}
+              {order.taxRatePercent !== null ? ` (${order.taxRatePercent}%)` : ""}
+            </span>
+            <span>{formatMoney(order.taxAmount, order.currency, settings.defaultLocale)}</span>
+          </div>
+          <div className="mt-2 flex justify-between text-base font-semibold">
+            <span>{dict.checkout.total}</span>
+            <span>{formatMoney(order.total, order.currency, settings.defaultLocale)}</span>
+          </div>
         </section>
-      )}
-    </main>
+
+        {order.address && (
+          <section className="text-foreground/70 mt-8 text-sm">
+            <h2 className="shop-h2 text-foreground">{dict.orderConfirmation.shippingTo}</h2>
+            <p>{order.address.fullName}</p>
+            <p>{order.address.street}</p>
+            <p>
+              {order.address.city}, {order.address.postalCode} {order.address.country}
+            </p>
+          </section>
+        )}
+
+        {settings.companyLegalName && (
+          <section className="text-foreground/60 border-foreground/10 mt-8 border-t pt-4 text-xs">
+            <p className="text-foreground/70 mb-1 font-medium">{dict.orderConfirmation.soldBy}</p>
+            <p>{settings.companyLegalName}</p>
+            {settings.companyAddress && <p>{settings.companyAddress}</p>}
+            {settings.vatNumber && <p>VAT/P.IVA: {settings.vatNumber}</p>}
+          </section>
+        )}
+
+        <p className="text-foreground/60 mt-4 text-xs">
+          {dict.checkout.withdrawalNotice}{" "}
+          <Link href="/legal/returns" className="underline">
+            {dict.checkout.returnPolicy}
+          </Link>
+          .
+        </p>
+
+        {RETURNABLE_STATUSES.includes(order.status) && (
+          <section className="mt-6">
+            {order.returnRequests.length > 0 && order.returnRequests[0].status !== "rejected" ? (
+              <p className="text-foreground/70 text-sm">
+                {dict.feedback.returnStatusLabel}: {order.returnRequests[0].status}
+              </p>
+            ) : (
+              <ReturnRequestForm
+                orderNumber={order.orderNumber}
+                labels={{
+                  submitted: dict.feedback.returnSubmitted,
+                  reason: dict.feedback.returnReasonLabel,
+                  request: dict.feedback.requestReturn,
+                  submit: dict.feedback.submitRequest,
+                  sending: dict.feedback.sending,
+                  cancel: dict.account.cancel,
+                }}
+              />
+            )}
+          </section>
+        )}
+      </ShelfBody>
+    </ShelfMain>
   );
 }

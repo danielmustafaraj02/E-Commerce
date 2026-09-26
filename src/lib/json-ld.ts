@@ -17,3 +17,17 @@ export function toSafeJsonLd(data: unknown): string {
     .split(PARAGRAPH_SEPARATOR)
     .join("\\u2029");
 }
+
+// schema.org (and Google) want absolute URLs; admin-entered logo/image paths are
+// often site-relative ("/logo.png"). Leaves already-absolute URLs alone, and
+// returns the input unchanged when the site URL isn't known.
+export function absoluteUrl(url: string, base: string): string {
+  if (!base || /^[a-z][a-z0-9+.-]*:/i.test(url) || url.startsWith("//")) return url;
+  return `${base.replace(/\/+$/, "")}/${url.replace(/^\/+/, "")}`;
+}
+
+// The seed's placeholder company details must never be published as real
+// structured data.
+export function isPlaceholderCompany(name: string | null | undefined): boolean {
+  return !name || /^demo store\b/i.test(name.trim());
+}

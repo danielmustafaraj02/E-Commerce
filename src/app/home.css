@@ -1,0 +1,2031 @@
+/* ---------------------------------------------------------------------------
+   Home page — "the shelf".
+
+   Scoped to `.shelf` so nothing elsewhere on the site changes. Warm white
+   space keeps the glass and curated looks in focus; product photographs are
+   blended into the page with `mix-blend-mode: multiply` so their white
+   backgrounds dissolve and the pieces sit directly on the page. That blend
+   needs photos on a pure white background — every catalog photo is; if one
+   isn't, its white edge will show as a faint tint.
+
+   Palette (from the glass itself):
+     ink         #0e3a46  deep lagoon (text — a dark teal, not tinted black)
+     accent      #7b4b94  bead violet (links, buttons, focus)
+     teal/rose   #1f7a85 / #c65b8a  the other two glass colours (rules, accents)
+     tints       lilac #f5f2f7, aqua #edf2f1, sand #f6f2ea, blush #f6eff1 (kept barely tinted)
+     violet-night #3f2154  the newsletter band, with the gold of the flecks
+   Every text/background pair used here is at least 4.5:1.
+
+   Type: Cardo (Venetian old-style roman, Aldine lineage) for headings, product
+   names and running copy; Hanken Grotesk for UI (buttons, prices, forms). Both
+   are loaded only on this route (see home-fonts.ts).
+
+   Motion: a restrained hero entrance, slow underlines and a few sequenced
+   section reveals. The global prefers-reduced-motion rule in globals.css
+   collapses these for visitors who ask for that.
+   ------------------------------------------------------------------------- */
+
+.shelf {
+  /* White pages with barely-warm bands instead of coloured tints: the glass
+     in the photographs is the only saturated thing on the page. */
+  --ground: #fff;
+  --tint-lilac: #faf8f5;
+  --tint-aqua: #fff;
+  --tint-sand: #faf8f5;
+  --tint-blush: #faf8f5;
+  --teal: #1f7a85;
+  --rose: #c65b8a;
+  --ink: #123d43;
+  --ink-soft: #527176;
+  --rule: #d9cdbb;
+  --accent: #123d43;
+  --accent-deep: #0b3035;
+  --violet-night: #123d43;
+  --aventurine: #b89a62;
+  --gold: #b89a62;
+  --gold-soft: #d9c7a0;
+  --aventurine-deep: #7d6437;
+  --wash-violet: #faf8f5;
+  --wash-aqua: #faf8f5;
+  --wash-rose: #faf8f5;
+  --on-dark-error: #ffc9c9;
+  --on-dark-ok: #b8f0c8;
+
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.shelf :where(h1, h2, h3) {
+  text-wrap: balance;
+  font-family: var(--font-display), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: 0;
+  margin: 0;
+}
+
+.shelf-wrap {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 64rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+.shelf-section {
+  padding-block: 3.5rem;
+}
+/* Color-blocked bands: each section sits on its own tint of the glass palette. */
+.shelf-section--lilac {
+  background: var(--tint-lilac);
+}
+.shelf-section--aqua {
+  background: var(--tint-aqua);
+}
+.shelf-section--sand {
+  background: var(--tint-sand);
+}
+.shelf-section--blush {
+  background: var(--tint-blush);
+}
+
+/* Plain sections are white; a hairline, not a colour, tells them apart. Only the
+   tinted (sand) band and the newsletter block carry colour. */
+.shelf-section + .shelf-section:not([class*="--"]):not(.shelf-newsletter) {
+  border-top: 1px solid var(--rule);
+}
+
+.shelf-heading {
+  font-size: clamp(2rem, 3.8vw, 2.8rem);
+}
+
+.shelf-heading-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.shelf-link {
+  color: var(--accent);
+  font-weight: 500;
+  font-size: 0.95rem;
+  text-underline-offset: 0.25em;
+}
+.shelf-link:hover {
+  color: var(--accent-deep);
+  text-decoration: underline;
+}
+.shelf-heading-row .shelf-link {
+  background-image: linear-gradient(var(--gold), var(--gold));
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: 0 1px;
+  padding-bottom: 0.08em;
+  text-decoration: none;
+  transition:
+    color 0.3s ease,
+    background-size 1.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.shelf-heading-row .shelf-link:hover,
+.shelf-heading-row .shelf-link:focus-visible {
+  background-size: 100% 1px;
+}
+
+/* -- Gift Finder entry band -------------------------------------------------
+   Give the five-minute tool a clear invitation and enough context to earn a
+   click, while keeping the frame and motion restrained and editorial. */
+.shelf-giftfinder-band {
+  padding-block: clamp(3.25rem, 7vw, 5.5rem);
+  background: var(--tint-lilac);
+}
+.shelf-giftfinder-content {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  justify-items: center;
+  gap: 0.75rem;
+  max-width: 54rem;
+  margin-inline: auto;
+  padding: clamp(1.5rem, 4vw, 2.75rem) clamp(1.1rem, 4vw, 3rem);
+  text-align: center;
+}
+.shelf-giftfinder-content::before,
+.shelf-giftfinder-content::after {
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  content: "";
+}
+.shelf-giftfinder-content::before {
+  inset: 0;
+  border-block: 1px solid color-mix(in srgb, var(--gold) 52%, transparent);
+  transform: scaleX(0.06);
+}
+.shelf-giftfinder-content::after {
+  inset: 0.45rem 0.55rem;
+  border-inline: 1px solid color-mix(in srgb, var(--gold) 42%, transparent);
+  transform: scaleY(0.06);
+}
+.shelf-giftfinder-time,
+.shelf-giftfinder-details {
+  margin: 0;
+  color: var(--ink-soft);
+}
+.shelf-giftfinder-time {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.19em;
+  text-transform: uppercase;
+}
+.shelf-giftfinder-link {
+  position: relative;
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  text-align: center;
+  font-family: var(--font-display), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: clamp(1.35rem, 2.8vw, 2rem);
+  line-height: 1.25;
+  color: var(--accent-deep);
+  transition: color 0.45s ease;
+}
+.shelf-giftfinder-link::after {
+  position: absolute;
+  right: 0;
+  bottom: -0.3rem;
+  left: 0;
+  height: 1px;
+  background: var(--gold);
+  content: "";
+  transform: scaleX(0.16);
+  transform-origin: center;
+  transition: transform 1.2s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.shelf-giftfinder-link:hover,
+.shelf-giftfinder-link:focus-visible {
+  color: var(--accent);
+}
+.shelf-giftfinder-link:hover::after,
+.shelf-giftfinder-link:focus-visible::after {
+  transform: scaleX(1);
+}
+.shelf-giftfinder-details {
+  max-width: 42rem;
+  font-size: 0.98rem;
+  line-height: 1.75;
+}
+@media (max-width: 35rem) {
+  .shelf-giftfinder-band {
+    padding-block: 2.75rem;
+  }
+  .shelf-giftfinder-content {
+    gap: 0.65rem;
+    padding-inline: 0.9rem;
+  }
+  .shelf-giftfinder-link {
+    gap: 0.5rem;
+    font-size: clamp(1.3rem, 6vw, 1.65rem);
+  }
+  .shelf-giftfinder-details {
+    font-size: 0.92rem;
+  }
+}
+.shelf-giftfinder-link .giftfinder-arrow {
+  flex-shrink: 0;
+  transition: transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.shelf-giftfinder-link:hover .giftfinder-arrow {
+  transform: translateX(0.35em);
+}
+[dir="rtl"] .shelf-giftfinder-link .giftfinder-arrow {
+  transform: scaleX(-1);
+}
+[dir="rtl"] .shelf-giftfinder-link:hover .giftfinder-arrow {
+  transform: scaleX(-1) translateX(0.35em);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .shelf-giftfinder-reveal[data-reveal="true"] .shelf-giftfinder-content::before {
+    animation: giftfinder-rule-open 1.35s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s both;
+  }
+  .shelf-giftfinder-reveal[data-reveal="true"] .shelf-giftfinder-content::after {
+    animation: giftfinder-frame-open 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) 0.72s both;
+  }
+  .shelf-giftfinder-reveal[data-reveal="true"] .shelf-giftfinder-time,
+  .shelf-giftfinder-reveal[data-reveal="true"] .shelf-giftfinder-link,
+  .shelf-giftfinder-reveal[data-reveal="true"] .shelf-giftfinder-details {
+    animation: giftfinder-copy-in 1.05s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  }
+  .shelf-giftfinder-reveal[data-reveal="true"] .shelf-giftfinder-time { animation-delay: 0.18s; }
+  .shelf-giftfinder-reveal[data-reveal="true"] .shelf-giftfinder-link { animation-delay: 0.42s; }
+  .shelf-giftfinder-reveal[data-reveal="true"] .shelf-giftfinder-details { animation-delay: 0.68s; }
+}
+@keyframes giftfinder-rule-open {
+  from { transform: scaleX(0.06); opacity: 0.35; }
+  to { transform: scaleX(1); opacity: 1; }
+}
+@keyframes giftfinder-frame-open {
+  from { transform: scaleY(0.06); opacity: 0.25; }
+  to { transform: scaleY(1); opacity: 1; }
+}
+@keyframes giftfinder-copy-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shelf-giftfinder-link,
+  .shelf-giftfinder-link .giftfinder-arrow,
+  .shelf-giftfinder-link::after {
+    transition: none;
+  }
+  .shelf-giftfinder-content::before,
+  .shelf-giftfinder-content::after {
+    transform: none;
+  }
+  .shelf-giftfinder-link:hover .giftfinder-arrow {
+    transform: none;
+  }
+  [dir="rtl"] .shelf-giftfinder-link .giftfinder-arrow {
+    transform: scaleX(-1);
+  }
+}
+
+/* -- Hero ------------------------------------------------------------------ */
+
+.shelf-hero {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: #f7f2ea;
+}
+/* Ivory marble photo behind the whole hero. .shelf-wrap stays position:relative
+   with no z-index so the necklace's multiply blend still reaches the marble. */
+.shelf-hero-backdrop {
+  object-fit: cover;
+  object-position: 100% 0%;
+  z-index: -1;
+}
+.hero-look-rollercoaster {
+  display: none;
+}
+.shelf-hero > .shelf-wrap {
+  position: relative;
+}
+.shelf-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.shelf-eyebrow::before {
+  content: "";
+  flex: 0 0 2.5rem;
+  height: 1px;
+  background: currentColor;
+}
+.shelf-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+  padding-block: 2.5rem 0.5rem;
+}
+.shelf-hero-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+  max-width: 31rem;
+}
+.shelf-title {
+  font-size: clamp(2.75rem, 8vw, 5.5rem);
+}
+.shelf-lede {
+  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.2rem, 2.4vw, 1.5rem);
+  line-height: 1.4;
+  margin: 0;
+}
+.shelf-note {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+}
+
+/* The hero arrives in one quick, coordinated beat: the copy rises, while the
+   necklace lifts and turns slightly into place. Reduced motion is handled by
+   the global preference rule. */
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes hero-necklace-settle {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.92) rotate(-3deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(var(--hero-bead-scale, 1.24)) rotate(0);
+  }
+}
+/* The h1 is excluded here — it plays its own word-by-word .word-in entrance
+   (see AnimatedHeading) instead of the whole-line rise every other child
+   gets, so the store name doesn't get two competing entrance motions. */
+.shelf-hero-copy > *:not(h1) {
+  animation: hero-rise 0.78s cubic-bezier(0.2, 0.75, 0.3, 1) both;
+}
+.shelf-hero-copy .shelf-title .word-in {
+  animation-duration: 0.42s;
+  animation-timing-function: cubic-bezier(0.2, 0.75, 0.3, 1);
+}
+.shelf-hero-copy .shelf-title .word-in:nth-of-type(2) {
+  animation-delay: 90ms;
+}
+.shelf-hero-copy .shelf-title .word-in:nth-of-type(3) {
+  animation-delay: 180ms;
+}
+.shelf-hero-copy .shelf-lede {
+  animation-delay: 320ms;
+}
+.shelf-hero-copy .shelf-button {
+  animation-delay: 560ms;
+}
+.shelf-hero-copy .shelf-note {
+  animation-delay: 680ms;
+}
+
+.shelf-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+  /* Petrol, a hairline of Venetian gold, spaced capitals. */
+  background: var(--accent);
+  color: #fbf9f5;
+  border: 1px solid var(--gold);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  min-height: 3.25rem;
+  padding: 0.95rem 1.9rem;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+.shelf-button:hover {
+  background: var(--accent-deep);
+}
+@media (max-width: 30rem) {
+  .shelf-button {
+    letter-spacing: 0.14em;
+    padding-inline: 1.4rem;
+  }
+}
+/* The hero's button takes the colour of the necklace on show (--hero-accent,
+   set by components/hero-necklace-carousel.tsx), fading between them. */
+.shelf-hero-copy .shelf-button {
+  background: var(--hero-accent, var(--accent));
+  transition: background-color 0.9s ease;
+}
+/* The name takes the same colour; the italic line under it stays ink. */
+.shelf-hero-copy .shelf-title {
+  color: var(--hero-accent, var(--ink));
+  transition: color 0.9s ease;
+}
+.shelf-hero-copy .shelf-button:hover {
+  background: color-mix(in srgb, var(--hero-accent, var(--accent)) 78%, black);
+}
+.shelf-hero-copy .shelf-button {
+  position: relative;
+  animation-name: hero-rise;
+  animation-duration: 0.78s;
+  animation-timing-function: cubic-bezier(0.2, 0.75, 0.3, 1);
+}
+.shelf-button-arrow {
+  font-size: 1.05rem;
+  letter-spacing: 0;
+  transition: transform 0.2s ease;
+}
+.shelf-button:hover .shelf-button-arrow {
+  transform: translateX(4px);
+}
+.shelf-facts {
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  margin: 0;
+  padding: 1.5rem 0 2rem;
+  list-style: none;
+  font-size: 0.92rem;
+  line-height: 1.35;
+  color: var(--ink);
+}
+.shelf-facts li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding-inline: 0.75rem;
+}
+.shelf-facts li + li {
+  border-inline-start: 1px solid var(--rule);
+}
+.shelf-facts svg {
+  flex: none;
+  color: var(--ink);
+}
+
+/* The hero photo is a macro of one bead on white. Multiply drops the white into
+   the ground; the whole piece is kept in frame (object-fit: contain) rather
+   than cropped, since a full necklace reads as broken if any of its loop is
+   cut off. */
+.shelf-bead-carousel {
+  width: 100%;
+  max-width: 34rem;
+  justify-self: center;
+}
+.shelf-bead {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+}
+.shelf-bead img {
+  --hero-bead-scale: 1.24;
+  object-fit: contain;
+  object-position: 50% 50%;
+  mix-blend-mode: multiply;
+  transform: scale(1.24);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.55s ease;
+}
+.shelf-bead img:first-child {
+  animation: hero-necklace-settle 1.15s cubic-bezier(0.2, 0.75, 0.3, 1) 100ms both;
+}
+.shelf-bead img.is-active {
+  opacity: 1;
+  visibility: visible;
+}
+.shelf-bead-link {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.shelf-bead-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  margin-top: 2.75rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  color: var(--ink-soft);
+}
+.shelf-bead-controls button {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  opacity: 0.55;
+  cursor: pointer;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+.shelf-bead-controls button:hover {
+  opacity: 1;
+}
+.shelf-bead-controls button:first-child:hover {
+  transform: translateX(-3px);
+}
+.shelf-bead-controls button:last-child:hover {
+  transform: translateX(3px);
+}
+.shelf-bead-controls button:focus-visible {
+  opacity: 1;
+  outline: 1px solid var(--ink);
+  outline-offset: 2px;
+  border-radius: 999px;
+}
+.shelf-bead-dots {
+  display: none;
+  justify-content: center;
+  gap: 0.15rem;
+  margin-top: 0.75rem;
+}
+.shelf-bead-dots button {
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0.5rem;
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ink) 25%, transparent);
+  background-clip: content-box;
+  cursor: pointer;
+  transition:
+    width 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background-color 0.25s ease;
+}
+.shelf-bead-dots button.is-active {
+  width: 2.5rem;
+  background-color: var(--ink);
+}
+.shelf-bead-count {
+  min-width: 3.5em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+@media (min-width: 52rem) {
+  .shelf-hero-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: 2rem;
+    /* The flagship section gets the top of the system's own documented
+       rhythm (DESIGN.md: "up to 5rem on wide listing pages") rather than
+       the 2.5-3.5rem "at rest" default every ordinary section uses. */
+    padding-block: 5rem 2.5rem;
+  }
+  .shelf-bead-carousel {
+    justify-self: end;
+    margin-inline-end: -6%;
+  }
+}
+
+/* -- Photos: dissolve into the ground --------------------------------------- */
+
+/* Catalog photos are on white, but not perfectly: about 40% have a corner
+   darker than 250/255 (down to ~207 — a corner shadow), which multiply alone
+   shows as a faint grey box. So: lift near-white a little before blending, and
+   feather the photo's outer edge with a mask so any corner shadow fades into the
+   ground. The image box must therefore match the photo's own edges, which is why
+   the frames below use the photos' 2:3 ratio (or crop symmetrically) with
+   object-fit: cover. Feather is small (5% x 3%) so the pieces, which sit well
+   inside the frame, are untouched. */
+.shelf-item-photo img,
+.shelf-category-photo img {
+  object-fit: cover;
+  mix-blend-mode: multiply;
+  filter: brightness(1.05) contrast(1.03);
+  -webkit-mask-image:
+    linear-gradient(to right, transparent, #000 5%, #000 95%, transparent),
+    linear-gradient(to bottom, transparent, #000 3%, #000 97%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent, #000 5%, #000 95%, transparent),
+    linear-gradient(to bottom, transparent, #000 3%, #000 97%, transparent);
+  mask-composite: intersect;
+}
+
+/* -- The shelf: rows of pieces ---------------------------------------------- */
+
+.shelf-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2.25rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 48rem) {
+  .shelf-row {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 3rem 1.75rem;
+  }
+}
+.shelf-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.shelf-item-photo {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  isolation: isolate;
+  /* Pure white, the photos' own background, so no browser can show a seam
+     around them (iOS Safari doesn't always honour the multiply blend) —
+     same fallback as .shop-product-photo/.shop-thumb on the product page. */
+  background: #fff;
+}
+.shelf-item-name {
+  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+  font-size: 1.15rem;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+/* Stretched link: the whole item is clickable, while the quick-add button (a
+   sibling, stacked above with z-index) stays a separate control. */
+.shelf-item-name a {
+  color: inherit;
+  text-decoration: none;
+  background-image: linear-gradient(var(--gold), var(--gold));
+  background-repeat: no-repeat;
+  background-position: center calc(100% - 0.04em);
+  background-size: 0 1px;
+  padding-bottom: 0.12em;
+  transition: background-size 1.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.shelf-item-name a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.shelf-item:hover .shelf-item-name a,
+.shelf-item-name a:focus-visible {
+  background-size: 100% 1px;
+}
+.shelf-item-price {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--ink);
+  font-variant-numeric: lining-nums;
+}
+.shelf-badge {
+  position: absolute;
+  top: 0.25rem;
+  inset-inline-start: 0;
+  z-index: 1;
+  background: var(--ink);
+  color: var(--ground);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  padding: 0.1rem 0.55rem;
+  border-radius: 2px;
+}
+
+/* -- Special Selection: a handful of pieces with a genuine "was" price ------ */
+
+/* A quiet corner tag, not a shouting red sticker — the same restrained
+   ink/ground pairing as .shelf-badge, just on the opposite corner so it never
+   collides with an out-of-stock badge (the two never render together). */
+.shelf-discount-badge {
+  position: absolute;
+  top: 0.25rem;
+  inset-inline-end: 0;
+  z-index: 1;
+  background: var(--ground);
+  color: var(--accent-deep);
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.4;
+  padding: 0.1rem 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--accent-deep) 30%, transparent);
+  border-radius: 2px;
+}
+.shelf-item-price-compare {
+  color: var(--ink-soft);
+  font-weight: 400;
+  text-decoration: line-through;
+  margin-inline-end: 0.5rem;
+}
+.shelf-special-subtitle {
+  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+  font-style: italic;
+  color: var(--ink-soft);
+  font-size: 1.05rem;
+  max-width: 34rem;
+  margin: 0.5rem 0 0;
+}
+.shelf-special-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+}
+.shelf-special-cta .shelf-button {
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  font-size: 0.9rem;
+  padding: 0.9rem 2.5rem;
+}
+/* Subtle zoom on the photo, scoped to this one section — the rest of the
+   shelf deliberately has no hover motion (see the file banner comment). */
+.shelf-row--special .shelf-item-photo {
+  overflow: hidden;
+}
+.shelf-row--special .shelf-item-photo img {
+  transition: transform 0.5s ease;
+}
+.shelf-row--special .shelf-item:hover .shelf-item-photo img {
+  transform: scale(1.02);
+}
+
+/* -- Categories: the pieces themselves, deliberately uneven ---------------- */
+
+.shelf-section--categories {
+  background: #f8f6f1;
+  border-block: 1px solid color-mix(in srgb, var(--champagne) 58%, #fff);
+}
+
+.shelf-categories {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2.5rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.shelf-category {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0.8rem 0.8rem 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--champagne) 72%, #fff);
+  background: #fff;
+  box-shadow: 0 2px 12px color-mix(in srgb, var(--foreground) 4%, transparent);
+  transition:
+    transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
+    box-shadow 0.45s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .shelf-category:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 9px 24px color-mix(in srgb, var(--foreground) 8%, transparent);
+  }
+}
+/* The product sits free on the paper-white card, without a frame around it. */
+.shelf-category-photo {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.shelf-category-photo::after {
+  display: none;
+}
+.shelf-home .shelf-category-photo img,
+.shelf-category-photo img {
+  object-fit: contain;
+  object-position: center;
+  padding: 2%;
+  -webkit-mask-image: none;
+  mask-image: none;
+  mix-blend-mode: multiply;
+  transform: scale(1.04);
+  transition: transform 1.2s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.shelf-category:hover .shelf-category-photo img {
+  transform: scale(1.08);
+}
+.shelf-category-index {
+  margin-top: 1.5rem;
+  color: var(--gold);
+  font-family: var(--font-display), Georgia, serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+}
+.shelf-category-name {
+  margin-top: 0.25rem !important;
+  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+  font-size: 1.85rem;
+  font-weight: 500;
+  line-height: 1.15;
+}
+.shelf-category-name a {
+  color: inherit;
+  text-decoration: none;
+}
+.shelf-category-name a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.shelf-category-name a:focus-visible {
+  outline: none;
+}
+.shelf-category:has(a:focus-visible) .shelf-category-photo {
+  outline: 1px solid var(--ink);
+  outline-offset: 4px;
+}
+/* Small spaced capitals with a gold underline that draws in on hover. */
+.shelf-category-cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.85rem;
+  padding-bottom: 0.4rem;
+  color: var(--ink-soft);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+}
+.shelf-category-cta::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--gold);
+  transform: scaleX(0.25);
+  transform-origin: center;
+  transition: transform 1.2s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.shelf-category-arrow {
+  color: var(--gold);
+  font-size: 0.95rem;
+  letter-spacing: 0;
+  transition: transform 0.3s ease;
+}
+.shelf-category:hover .shelf-category-cta {
+  color: var(--ink);
+}
+.shelf-category:hover .shelf-category-cta::after {
+  transform: scaleX(1);
+}
+.shelf-category:hover .shelf-category-arrow {
+  transform: translateX(3px);
+}
+@media (min-width: 48rem) {
+  .shelf-categories {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem 3.5rem;
+  }
+}
+
+/* Centred section title with an eyebrow above and a gold rule below. */
+.shelf-heading-row--center {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.9rem;
+}
+.shelf-heading-row--center .shelf-heading::after {
+  content: "";
+  display: block;
+  width: 2.5rem;
+  height: 1px;
+  margin: 1.1rem auto 0;
+  background: var(--gold);
+}
+@media (min-width: 30rem) {
+  .shelf-eyebrow {
+    white-space: nowrap;
+  }
+}
+.shelf-eyebrow--center::after {
+  content: "";
+  flex: 0 0 2.5rem;
+  height: 1px;
+  background: currentColor;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .home-category-reveal[data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .home-category-reveal[data-reveal="false"] .shelf-eyebrow,
+  .home-category-reveal[data-reveal="false"] .shelf-heading {
+    opacity: 0;
+    transform: translateY(0.65rem);
+  }
+  .home-category-reveal[data-reveal="false"] .shelf-eyebrow::before,
+  .home-category-reveal[data-reveal="false"] .shelf-eyebrow::after,
+  .home-category-reveal[data-reveal="false"] .shelf-heading::after {
+    transform: scaleX(0);
+  }
+  .home-category-reveal[data-reveal="true"] .shelf-eyebrow {
+    animation: home-look-copy-in 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  }
+  .home-category-reveal[data-reveal="true"] .shelf-heading {
+    animation: home-look-copy-in 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) 0.4s both;
+  }
+  .home-category-reveal[data-reveal="true"] .shelf-eyebrow::before,
+  .home-category-reveal[data-reveal="true"] .shelf-eyebrow::after {
+    animation: home-look-rule-in 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s both;
+  }
+  .home-category-reveal[data-reveal="true"] .shelf-heading::after {
+    animation: home-look-rule-in 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) 0.95s both;
+  }
+  @keyframes home-category-card-in {
+    from {
+      opacity: 0;
+      translate: 1.25rem 0;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+  /* Cards scrub in with the page scroll itself: each rises into focus as it
+     crosses into view and drifts back out of focus if you scroll up again,
+     rather than firing once on a timer. Later columns take a later slice of
+     the scroll, so a row arrives as a left-to-right wave. `translate` (not
+     `transform`) so the hover lift above still works. Desktop only: on
+     phones the list is a horizontal scroll container, which would become
+     the view timeline's scroller and strand the cards mid-animation. */
+  @keyframes home-category-scroll-in {
+    from {
+      opacity: 0;
+      translate: 0 2.25rem;
+      filter: blur(8px);
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+      filter: none;
+    }
+  }
+  @media (min-width: 48rem) {
+    @supports (animation-timeline: view()) {
+      /* One scroll timeline for the whole section, so the heading and the
+         first row of cards play as a single ordered sequence: eyebrow,
+         heading, gold rule, then cards left to right. Scrolling back up
+         runs the exact reverse: cards leave right to left, then the text
+         folds away. Percentages are of the section's full pass through
+         the viewport (the heading enters at ~5%, the first row at ~13%). */
+      .shelf-section--categories {
+        view-timeline: --cat-scroll block;
+      }
+      .home-category-reveal[data-reveal] .shelf-eyebrow,
+      .home-category-reveal[data-reveal] .shelf-heading,
+      .home-category-reveal[data-reveal] .shelf-eyebrow::before,
+      .home-category-reveal[data-reveal] .shelf-eyebrow::after,
+      .home-category-reveal[data-reveal] .shelf-heading::after,
+      .shelf-categories .shelf-category {
+        animation-duration: auto;
+        animation-delay: 0s;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-iteration-count: 1;
+        animation-direction: normal;
+        animation-timeline: --cat-scroll;
+      }
+      .home-category-reveal[data-reveal] .shelf-eyebrow {
+        animation-name: home-look-copy-in;
+        animation-range: cover 5.5% cover 10%;
+      }
+      .home-category-reveal[data-reveal] .shelf-eyebrow::before,
+      .home-category-reveal[data-reveal] .shelf-eyebrow::after {
+        animation-name: home-look-rule-in;
+        animation-range: cover 6% cover 11%;
+      }
+      .home-category-reveal[data-reveal] .shelf-heading {
+        animation-name: home-look-copy-in;
+        animation-range: cover 7% cover 12%;
+      }
+      .home-category-reveal[data-reveal] .shelf-heading::after {
+        animation-name: home-look-rule-in;
+        animation-range: cover 10% cover 13.5%;
+      }
+      .shelf-categories .shelf-category {
+        animation-name: home-category-scroll-in;
+        animation-range: cover 13.5% cover 23%;
+      }
+      .shelf-categories .shelf-category:nth-child(2) {
+        animation-range: cover 16.5% cover 26%;
+      }
+      .shelf-categories .shelf-category:nth-child(3) {
+        animation-range: cover 19.5% cover 29%;
+      }
+      /* Further rows sit well below the heading, so each card follows its
+         own position instead, still staggered left to right. */
+      .shelf-categories .shelf-category:nth-child(n + 4) {
+        animation-timeline: view();
+        animation-range: entry 10% cover 30%;
+      }
+      .shelf-categories .shelf-category:nth-child(3n + 2):nth-child(n + 4) {
+        animation-range: entry 30% cover 35%;
+      }
+      .shelf-categories .shelf-category:nth-child(3n + 3):nth-child(n + 4) {
+        animation-range: entry 50% cover 40%;
+      }
+    }
+
+    /* Browsers without scroll timelines keep the original one-shot stagger. */
+    @supports not (animation-timeline: view()) {
+      .home-category-reveal[data-reveal="false"] .shelf-category {
+        opacity: 0;
+        translate: 1.25rem 0;
+      }
+      .home-category-reveal[data-reveal="true"] .shelf-category {
+        animation: home-category-card-in 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+      }
+      .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(1) {
+        animation-delay: 1.2s;
+      }
+      .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(2) {
+        animation-delay: 1.5s;
+      }
+      .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(3) {
+        animation-delay: 1.8s;
+      }
+      .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(4) {
+        animation-delay: 2.1s;
+      }
+      .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(5) {
+        animation-delay: 2.4s;
+      }
+      .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(6) {
+        animation-delay: 2.7s;
+      }
+    }
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .home-looks-heading-reveal[data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .home-looks-heading-reveal[data-reveal="false"] .shelf-eyebrow,
+  .home-looks-heading-reveal[data-reveal="false"] .shelf-heading {
+    opacity: 0;
+    transform: translateY(0.65rem);
+  }
+  .home-looks-heading-reveal[data-reveal="false"] .shelf-eyebrow::before,
+  .home-looks-heading-reveal[data-reveal="false"] .shelf-eyebrow::after,
+  .home-looks-heading-reveal[data-reveal="false"] .shelf-heading::after {
+    transform: scaleX(0);
+  }
+  .home-looks-heading-reveal[data-reveal="true"] .shelf-eyebrow {
+    animation: home-look-copy-in 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  }
+  .home-looks-heading-reveal[data-reveal="true"] .shelf-heading {
+    animation: home-look-copy-in 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) 0.4s both;
+  }
+  .home-looks-heading-reveal[data-reveal="true"] .shelf-eyebrow::before,
+  .home-looks-heading-reveal[data-reveal="true"] .shelf-eyebrow::after {
+    animation: home-look-rule-in 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s both;
+  }
+  .home-looks-heading-reveal[data-reveal="true"] .shelf-heading::after {
+    animation: home-look-rule-in 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) 0.95s both;
+  }
+  @keyframes home-look-copy-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.65rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes home-look-rule-in {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+}
+
+/* -- Why buy here: three short paragraphs, no cards ------------------------ */
+
+.shelf-points {
+  display: grid;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 48rem) {
+  .shelf-points {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 3rem;
+  }
+}
+/* A champagne hairline with a short gold rule over it, like a jewellery box. */
+.shelf-point {
+  position: relative;
+  border-top: 1px solid var(--rule);
+  padding-top: 1.25rem;
+}
+@media (hover: hover) and (pointer: fine) {
+  .shelf-point {
+    transition: transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .shelf-point:hover {
+    transform: translateY(-6px);
+  }
+}
+.shelf-point::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  inset-inline-start: 0;
+  width: 2.5rem;
+  height: 1px;
+  background: var(--gold);
+}
+.shelf-point h3 {
+  font-size: 1.35rem;
+  margin-bottom: 0.5rem;
+}
+.shelf-point p {
+  margin: 0;
+  max-width: 34ch;
+  color: var(--ink-soft);
+  font-size: 0.98rem;
+}
+
+/* -- FAQ ------------------------------------------------------------------- */
+
+.shelf-faq details {
+  border-top: 1px solid var(--rule);
+  padding-block: 1rem;
+}
+.shelf-faq details:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+.shelf-faq summary {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+  font-size: 1.2rem;
+  line-height: 1.3;
+}
+.shelf-faq summary::-webkit-details-marker {
+  display: none;
+}
+/* The chevron is drawn in CSS: purely decorative, so nothing for a screen
+   reader to read out. */
+.shelf-faq summary::before {
+  content: "";
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid var(--accent);
+  border-bottom: 2px solid var(--accent);
+  transform: translateY(-0.12em) rotate(-45deg);
+  transition: transform 0.15s ease;
+}
+/* Closed chevron points toward the reading direction. */
+[dir="rtl"] .shelf-faq summary::before {
+  transform: translateY(-0.12em) rotate(135deg);
+}
+.shelf-faq details[open] summary::before {
+  transform: translateY(-0.2em) rotate(45deg);
+}
+.shelf-faq p {
+  margin: 0.75rem 0 0;
+  margin-inline-start: 1.25rem;
+  max-width: 62ch;
+  color: var(--ink-soft);
+}
+
+/* -- Reviews: quotes set as text ------------------------------------------- */
+
+.shelf-quotes {
+  display: grid;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 48rem) {
+  .shelf-quotes {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.5rem;
+  }
+}
+.shelf-quote {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.shelf-quote blockquote {
+  margin: 0;
+  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+  font-size: 1.2rem;
+  line-height: 1.5;
+}
+.shelf-quote figcaption {
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+}
+.shelf-stars {
+  color: var(--aventurine-deep); /* 4.9:1 on the blush band */
+  letter-spacing: 0.15em;
+}
+
+/* -- Newsletter band ------------------------------------------------------- */
+
+.shelf-newsletter {
+  background: var(--violet-night);
+  color: #fff;
+}
+.shelf-newsletter :where(h2) {
+  color: #fff;
+}
+.shelf-newsletter-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(1.5rem, 5vw, 4rem);
+  min-height: 20rem;
+}
+.shelf-newsletter-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  max-width: 30rem;
+}
+.shelf-newsletter-discount {
+  justify-self: center;
+  color: var(--gold-soft);
+  font-family: var(--font-display), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: clamp(10rem, 23vw, 19rem);
+  font-weight: 400;
+  letter-spacing: -0.09em;
+  line-height: 0.8;
+  white-space: nowrap;
+  opacity: 0.92;
+}
+.shelf-newsletter p {
+  margin: 0;
+  color: color-mix(in srgb, #fff 82%, transparent);
+}
+@media (max-width: 47.99rem) {
+  .shelf-newsletter-wrap {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
+    min-height: 0;
+  }
+  .shelf-newsletter-inner {
+    max-width: 34rem;
+  }
+  .shelf-newsletter-discount {
+    justify-self: end;
+    font-size: clamp(6rem, 25vw, 10rem);
+  }
+}
+/* On the petrol band the button turns ivory, keeping its gold hairline. */
+.shelf .shelf-newsletter .btn-primary {
+  background: #fbf9f5;
+  color: var(--ink);
+  border-color: var(--gold);
+}
+.shelf .shelf-newsletter .btn-primary:hover {
+  background: #fff;
+  color: var(--ink);
+}
+.shelf-newsletter a,
+.shelf-newsletter label {
+  color: inherit;
+}
+/* The form's error/success colours (red/green) are for light backgrounds;
+   these lighter tints keep the same meaning at 8:1+ on the violet band. */
+.shelf .shelf-newsletter [role="alert"] {
+  color: var(--on-dark-error);
+}
+.shelf .shelf-newsletter [role="status"] {
+  color: var(--on-dark-ok);
+}
+.shelf-newsletter a:focus-visible,
+.shelf-newsletter button:focus-visible {
+  outline-color: var(--gold);
+}
+
+/* Shared form controls (defined globally in globals.css) take this page's
+   accent instead of the site-wide warm-gold glow. Unlayered, so they win over
+   the @layer components rules regardless of order. */
+/* Storefront buttons all speak the same way: petrol (or ivory, for the
+   secondary action), a hairline border, small spaced capitals. */
+.shelf .btn-secondary {
+  border-color: var(--ink);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.shelf .btn-secondary:hover:not(:disabled) {
+  background: #fbf9f5;
+  border-color: var(--ink);
+  color: var(--ink);
+}
+.shelf .btn-primary {
+  background: var(--accent);
+  color: #fbf9f5;
+  border-color: var(--gold);
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.shelf .btn-primary:hover {
+  background: var(--accent-deep);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: none;
+  transform: none;
+}
+.shelf .field {
+  border-radius: 4px;
+  border-color: color-mix(in srgb, var(--ink) 35%, transparent);
+  background: #fff;
+}
+.shelf .field:hover {
+  border-color: var(--accent);
+  box-shadow: none;
+}
+.shelf .field:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 28%, transparent);
+  transform: none;
+}
+
+/* Visible keyboard focus, in the accent. */
+.shelf a:focus-visible,
+.shelf button:focus-visible,
+.shelf summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* -- Home page: more air ------------------------------------------------------ */
+
+/* Scoped to `.shelf-home` (the home <main>) so the product pages, which share the
+   section and grid classes above, keep their tighter rhythm. */
+.shelf-home .shelf-section {
+  padding-block: 4.5rem;
+}
+.shelf-home .shelf-heading-row {
+  margin-bottom: 3rem;
+}
+.shelf-home .shelf-hero-grid {
+  padding-block: 3.5rem 1.5rem;
+}
+.shelf-home .shelf-hero-copy {
+  gap: 1.75rem;
+}
+.shelf-home .shelf-row {
+  gap: 3rem 1.25rem;
+}
+.shelf-home .shelf-categories {
+  gap: 3rem 1.25rem;
+}
+.shelf-home .shelf-points {
+  gap: 2.5rem;
+}
+.shelf-home .shelf-quotes {
+  gap: 2.5rem;
+}
+.shelf-home .shelf-faq details {
+  padding-block: 1.25rem;
+}
+.shelf-home .shelf-faq p {
+  margin-top: 1rem;
+}
+@media (min-width: 48rem) {
+  .shelf-home .shelf-section {
+    padding-block: 6.5rem;
+  }
+  .shelf-home .shelf-row {
+    gap: 4.25rem 2.25rem;
+  }
+  .shelf-home .shelf-categories {
+    gap: 3rem 4rem;
+  }
+  .shelf-home .shelf-points {
+    gap: 3.5rem;
+  }
+  .shelf-home .shelf-quotes {
+    gap: 3.5rem;
+  }
+}
+@media (min-width: 52rem) {
+  .shelf-home .shelf-hero-grid {
+    gap: 3rem;
+    padding-block: 5.5rem 3.5rem;
+  }
+}
+
+/* New arrivals: two rows at every width — eight pieces in four columns, four in two. */
+@media (max-width: 47.99rem) {
+  .shelf-row--two-rows > :nth-child(n + 5) {
+    display: none;
+  }
+}
+
+/* -- Phones ----------------------------------------------------------------------- */
+
+/* Dot indicators under the mobile carousel (category-strip.tsx) — with only
+   one card visible at a time, there was nothing left on screen signalling
+   "there are more of these, swipe" the way the old peeking-neighbour layout
+   did. display:none by default; the phones media query below overrides it
+   to flex — that override has to come AFTER this block in the file, since
+   two rules of equal specificity resolve by source order, and a later plain
+   rule beats an earlier one regardless of which media query is active.
+   (NOT a Tailwind sm:hidden on the element (JSX): this file's plain,
+   unlayered CSS always beats a Tailwind utility class too, regardless of
+   media query, since cascade layers rank below unlayered rules no matter
+   their specificity or source order.) */
+.category-dots {
+  display: none;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+.category-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--foreground) 22%, transparent);
+  transition:
+    background-color 0.25s ease,
+    width 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+/* Stretches into a pill rather than just swapping color — reads as "the
+   indicator moved to here" instead of a flat on/off swap between two dots. */
+.category-dot.is-active {
+  width: 1.5rem;
+  background: var(--color-primary);
+}
+
+/* Categories become a one-at-a-time carousel: a single full-width card,
+   swipeable, and looping in both directions (CategoryStrip.tsx clones the
+   first/last card off-screen and silently re-centers on the real one once a
+   swipe — or autoplay — lands on a clone, so it never visibly "runs out"). */
+@media (max-width: 47.99rem) {
+  .shelf-home .shelf-section--categories {
+    padding-block: 3.25rem;
+  }
+  .shelf-home .shelf-section--categories .shelf-heading-row {
+    margin-bottom: 1.75rem;
+  }
+  .shelf-categories {
+    display: flex;
+    /* Without this, a card's offsetLeft (which CategoryStrip.tsx reads to
+       scroll to it) is measured against whatever ancestor happens to be
+       positioned further up the tree, not against this scroll container —
+       silently wrong math instead of a visible error. */
+    position: relative;
+    gap: 1.25rem;
+    padding-inline: 1.25rem;
+    padding-bottom: 0.5rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .shelf-categories::-webkit-scrollbar {
+    display: none;
+  }
+  .shelf-category {
+    display: grid;
+    flex: 0 0 100%;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    grid-template-rows: auto 1fr auto;
+    align-items: center;
+    gap: 0.2rem 1rem;
+    padding: 0.8rem;
+    text-align: start;
+    scroll-snap-align: center;
+    /* Without this, a fast flick can coast straight past a card instead of
+       stopping on it — "always" forces every swipe to land on one card. */
+    scroll-snap-stop: always;
+  }
+  /* A restrained press response keeps the image tactile on touch screens. */
+  .shelf-category-photo img {
+    transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .shelf-category-photo {
+    grid-column: 1;
+    grid-row: 1 / 4;
+    width: 100%;
+    max-width: none;
+    aspect-ratio: 1 / 1;
+  }
+  .shelf-category-index {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: start;
+    margin: 0;
+    font-size: 0.9rem;
+  }
+  .shelf-category-name {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: start;
+    margin: 0 !important;
+    font-size: clamp(1.35rem, 6vw, 1.85rem);
+  }
+  .shelf-category-cta {
+    grid-column: 2;
+    grid-row: 3;
+    justify-self: start;
+    margin-top: 0.65rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+  }
+  .shelf-category:active .shelf-category-photo img {
+    transform: scale(1.06);
+  }
+  .category-dots {
+    display: flex;
+  }
+}
+
+/* -- Mobile hero (below the 52rem two-column breakpoint) -------------------------- */
+
+/* Copy on the left, the necklace to its right and slightly behind it, on the
+   marble; the trust row sits underneath as three short columns. */
+@media (max-width: 51.99rem) {
+  .shelf-hero-backdrop {
+    object-position: 78% 0%;
+  }
+  /* Copy, then the necklace, then the CTA: the copy wrapper steps aside
+     (display: contents) so the button can be ordered after the carousel. */
+  .shelf-home .shelf-hero-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.1rem;
+    padding-block: 2.25rem 1.5rem;
+  }
+  .shelf-home .shelf-hero-copy {
+    display: contents;
+  }
+  .shelf-home .shelf-hero-copy > * {
+    max-width: 30rem;
+  }
+  .shelf-hero .shelf-bead-carousel {
+    order: 1;
+  }
+  .shelf-hero-copy .shelf-button {
+    order: 2;
+    align-self: center;
+  }
+  .shelf-bead-controls {
+    display: none;
+  }
+  .shelf-bead-dots {
+    display: flex;
+  }
+  .shelf-eyebrow {
+    font-size: 0.66rem;
+    letter-spacing: 0.22em;
+    gap: 0.6rem;
+  }
+  .shelf-eyebrow::before {
+    flex-basis: 1.5rem;
+  }
+  .shelf-hero .shelf-title {
+    font-size: clamp(2.3rem, 11vw, 3.2rem);
+    line-height: 1.05;
+  }
+  .shelf-hero .shelf-lede {
+    font-size: clamp(1rem, 4.3vw, 1.2rem);
+  }
+  .shelf-hero-copy > .shelf-note {
+    display: none;
+  }
+  .shelf-hero-copy .shelf-button {
+    white-space: nowrap;
+  }
+  .shelf-hero .shelf-bead-carousel {
+    align-self: center;
+    width: 82%;
+    max-width: 21rem;
+    margin-top: 0.25rem;
+  }
+  .shelf-hero .shelf-bead img {
+    --hero-bead-scale: 1.12;
+    transform: scale(1.12);
+  }
+  .shelf-facts {
+    padding: 1.25rem 0 1.5rem;
+    font-size: 0.8rem;
+  }
+  .shelf-facts li {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+    padding-inline: 0.5rem;
+  }
+  .shelf-home .shelf-hero + .shelf-section {
+    padding-top: 2.5rem;
+  }
+}
+
+/* Looks on the home page: the cards come from shop.css (.look-cards). */
+.shelf-looks-more {
+  display: flex;
+  justify-content: center;
+  margin: 2.5rem 0 0;
+}
+
+/* -- Home: the personalised gift card ad (components/gift-card-ad.tsx) ------- */
+
+.gc-ad {
+  background: #faf8f5;
+}
+.gc-ad-grid {
+  display: grid;
+  gap: 3rem;
+  align-items: center;
+}
+.gc-ad-card {
+  padding: 1rem;
+}
+.gc-ad-card .gc3d-stage {
+  max-width: 19rem;
+}
+.gc-ad-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.9rem;
+}
+.gc-ad-sub {
+  margin: 0;
+  color: var(--gold);
+  font-family: var(--font-display), Georgia, serif;
+  font-style: italic;
+  font-size: 1.6rem;
+}
+.gc-ad-body {
+  max-width: 30rem;
+  margin: 0 0 0.75rem;
+  color: color-mix(in srgb, var(--ink) 85%, white);
+  line-height: 1.7;
+}
+@media (min-width: 52rem) {
+  .gc-ad-grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: 5rem;
+  }
+}
+
+/* Phones: every band that carries a photo sits on pure white, the photos' own
+   studio background, so no cream/ivory tint shows around or behind a picture.
+   The mobile hero drops its marble backdrop; desktop uses the look rail. */
+@media (max-width: 47.99rem) {
+  .shelf-hero {
+    background: #fff;
+  }
+  .shelf-hero-backdrop {
+    display: none;
+  }
+  .shelf-section[class*="--"]:has(img) {
+    background: #fff;
+  }
+}
+
+/* Desktop home: a clean studio field, with the curated looks riding a
+   hand-drawn Murano rollercoaster in place of the necklace backdrop. */
+@media (min-width: 52rem) {
+  .shelf-home .shelf-hero {
+    background: #fff;
+  }
+  .shelf-home .shelf-hero-backdrop,
+  .shelf-home .shelf-hero:has(.hero-look-rollercoaster) .shelf-bead-carousel {
+    display: none;
+  }
+  .shelf-home .shelf-hero-grid {
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+    align-items: center;
+    gap: clamp(1.5rem, 4vw, 4rem);
+    padding-block: clamp(3.5rem, 6vw, 5.5rem) 3.5rem;
+  }
+  .shelf-home .shelf-hero-copy {
+    max-width: 34rem;
+  }
+  .shelf-home .shelf-hero--looks .shelf-hero-copy .shelf-title {
+    max-width: 8ch;
+    color: var(--ink);
+    font-size: clamp(3.5rem, 7vw, 6.4rem);
+    line-height: 0.99;
+  }
+  .shelf-home .shelf-hero--looks .shelf-hero-copy .shelf-button {
+    background: var(--accent);
+  }
+  .shelf-home .shelf-hero--looks .shelf-hero-copy .shelf-button:hover {
+    background: var(--accent-deep);
+  }
+  .shelf-home .shelf-hero--looks .shelf-hero-copy .shelf-lede {
+    max-width: 30rem;
+  }
+  .shelf-home .shelf-hero .hero-look-rollercoaster {
+    position: relative;
+    display: block;
+    width: min(100%, 39rem);
+    height: clamp(28rem, 40vw, 36rem);
+    justify-self: end;
+    isolation: isolate;
+  }
+  .hero-look-track {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .hero-look-track-shadow,
+  .hero-look-track-rail {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .hero-look-track-shadow {
+    stroke: color-mix(in srgb, #b89a62 12%, transparent);
+    stroke-width: 19;
+  }
+  .hero-look-track-rail {
+    stroke: url(#hero-look-track-gradient);
+    stroke-width: 2.1;
+    stroke-dasharray: 1800;
+    stroke-dashoffset: 1800;
+    transition: stroke-dashoffset 1.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .hero-look-track-rail--inner {
+    stroke: color-mix(in srgb, #1f7a85 44%, transparent);
+    stroke-width: 1;
+    transition-delay: 0.18s;
+  }
+  .hero-look-rollercoaster[data-ready="true"] .hero-look-track-rail {
+    stroke-dashoffset: 0;
+  }
+  .hero-look-track circle {
+    transform-box: fill-box;
+    transform-origin: center;
+    opacity: 0;
+    transform: scale(0.2);
+    transition:
+      opacity 0.5s ease,
+      transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .hero-look-rollercoaster[data-ready="true"] .hero-look-track circle {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .hero-look-track circle:nth-of-type(1) {
+    transition-delay: 0.4s;
+  }
+  .hero-look-track circle:nth-of-type(2) {
+    transition-delay: 0.65s;
+  }
+  .hero-look-track circle:nth-of-type(3) {
+    transition-delay: 0.9s;
+  }
+  .hero-look-carriages {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  .hero-look-carriage {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--ink);
+    text-align: center;
+    text-decoration: none;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate3d(0, 4rem, 0) scale(0.7) rotate(-5deg);
+    filter: drop-shadow(0 0.5rem 1rem rgb(18 61 67 / 10%));
+    transition:
+      left 1.05s cubic-bezier(0.22, 0.61, 0.36, 1),
+      right 1.05s cubic-bezier(0.22, 0.61, 0.36, 1),
+      top 1.05s cubic-bezier(0.22, 0.61, 0.36, 1),
+      width 1.05s cubic-bezier(0.22, 0.61, 0.36, 1),
+      transform 1.05s cubic-bezier(0.22, 0.61, 0.36, 1),
+      opacity 0.65s ease,
+      filter 0.65s ease;
+  }
+  .hero-look-carriage:focus-visible {
+    outline: 0;
+  }
+  .hero-look-carriage:focus-visible .hero-look-frame {
+    outline: 2px solid var(--ink);
+    outline-offset: 5px;
+  }
+  .hero-look-carriage--active {
+    z-index: 3;
+    top: 3%;
+    left: 50%;
+    width: min(16rem, 48%);
+    transform: translateX(-50%) rotate(0) scale(1);
+  }
+  .hero-look-carriage--previous {
+    z-index: 2;
+    top: 57%;
+    left: 1%;
+    width: min(12rem, 36%);
+    transform: translateY(-50%) rotate(-9deg) scale(0.86);
+  }
+  .hero-look-carriage--next {
+    z-index: 2;
+    top: 41%;
+    left: 68%;
+    right: auto;
+    width: min(12.5rem, 37%);
+    transform: translateY(-50%) rotate(9deg) scale(0.85);
+  }
+  .hero-look-rollercoaster[data-ready="true"] .hero-look-carriage--active,
+  .hero-look-rollercoaster[data-ready="true"] .hero-look-carriage--previous,
+  .hero-look-rollercoaster[data-ready="true"] .hero-look-carriage--next {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .hero-look-carriage--offstage {
+    z-index: 0;
+    top: 10%;
+    left: 108%;
+    width: min(12rem, 35%);
+    transform: translateY(3rem) rotate(16deg) scale(0.72);
+  }
+  .hero-look-rollercoaster[data-ready="false"] .hero-look-carriage--active,
+  .hero-look-rollercoaster[data-ready="false"] .hero-look-carriage--previous,
+  .hero-look-rollercoaster[data-ready="false"] .hero-look-carriage--next {
+    transform: translate3d(0, 4rem, 0) scale(0.7) rotate(-5deg);
+  }
+  .hero-look-frame {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--gold) 58%, white);
+    background: #faf8f5;
+    box-shadow: 0 0.75rem 2rem rgb(18 61 67 / 7%);
+  }
+  .hero-look-frame::after {
+    position: absolute;
+    inset: 0.55rem;
+    border: 1px solid color-mix(in srgb, var(--gold) 42%, transparent);
+    content: "";
+    pointer-events: none;
+  }
+  .hero-look-photo {
+    object-fit: cover;
+  }
+  .hero-look-piece {
+    position: absolute;
+    inset: 0;
+    display: block;
+    transform:
+      translate(calc((var(--look-x) - 0.5) * 100%), calc((var(--look-y) - 0.5) * 100%))
+      scale(var(--look-scale));
+    mix-blend-mode: multiply;
+  }
+  .hero-look-piece img {
+    object-fit: contain;
+    filter: brightness(1.05) contrast(1.03);
+  }
+  .hero-look-name {
+    max-width: 100%;
+    font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+    font-size: clamp(0.9rem, 1.25vw, 1.08rem);
+    line-height: 1.2;
+    text-wrap: balance;
+    transition: color 0.45s ease;
+  }
+  .hero-look-carriage--active .hero-look-name {
+    font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  }
+  .hero-look-carriage:hover .hero-look-name {
+    color: var(--aventurine-deep);
+  }
+  .hero-look-controls {
+    position: absolute;
+    z-index: 5;
+    right: 16%;
+    bottom: 0.35rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--ink-soft);
+  }
+  .hero-look-controls button {
+    display: grid;
+    width: 2.75rem;
+    height: 2.75rem;
+    place-items: center;
+    border: 1px solid color-mix(in srgb, var(--gold) 42%, transparent);
+    border-radius: 50%;
+    background: rgb(255 255 255 / 82%);
+    color: var(--ink);
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition:
+      background-color 0.25s ease,
+      color 0.25s ease,
+      transform 0.25s ease;
+  }
+  .hero-look-controls button:hover {
+    transform: translateY(-2px);
+    background: var(--ink);
+    color: white;
+  }
+  .hero-look-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-width: 4.25rem;
+    justify-content: center;
+    font-size: 0.72rem;
+    letter-spacing: 0.17em;
+    font-variant-numeric: tabular-nums;
+  }
+  .hero-look-count i {
+    display: block;
+    width: 1.2rem;
+    height: 1px;
+    background: var(--gold);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-look-track-rail,
+  .hero-look-track circle,
+  .hero-look-carriage,
+  .hero-look-name,
+  .hero-look-controls button {
+    transition: none !important;
+  }
+}

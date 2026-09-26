@@ -11,6 +11,7 @@ const { mockDb, mockSettings } = vi.hoisted(() => ({
     taxRule: { findMany: vi.fn() },
     shippingZone: { findFirst: vi.fn() },
     discountCode: { findUnique: vi.fn() },
+    look: { findMany: vi.fn() },
   },
   mockSettings: vi.fn(),
 }));
@@ -57,6 +58,7 @@ beforeEach(() => {
     methods: [{ methodId: "m1", method: shippingMethod() }],
   });
   mockDb.taxRule.findMany.mockResolvedValue([{ categoryId: null, ratePercent: 22 }]);
+  mockDb.look.findMany.mockResolvedValue([]);
 });
 
 describe("quoteOrder", () => {
@@ -213,5 +215,276 @@ describe("quoteOrder", () => {
         shippingMethodId: "m1",
       })
     ).rejects.toThrow(PricingError);
+  });
+
+  it("rejects a zero or negative quantity instead of quoting it", async () => {
+    mockDb.product.findMany.mockResolvedValue([product()]);
+
+    await expect(
+      quoteOrder({
+        items: [{ productId: "p1", quantity: 0 }],
+        country: "IT",
+        shippingMethodId: "m1",
+      })
+    ).rejects.toMatchObject({ code: "invalid-quantity" });
+  });
+
+  it("rejects a discount code that has reached its usage limit", async () => {
+    mockDb.product.findMany.mockResolvedValue([product()]);
+    mockDb.discountCode.findUnique.mockResolvedValue({
+      id: "d1",
+      code: "USEDUP",
+      percentOff: 10,
+      amountOff: null,
+      expiresAt: null,
+      maxUses: 5,
+      usedCount: 5,
+      active: true,
+    });
+
+    await expect(
+      quoteOrder({
+        items: [{ productId: "p1", quantity: 1 }],
+        country: "IT",
+        shippingMethodId: "m1",
+        discountCode: "USEDUP",
+      })
+    ).rejects.toMatchObject({ code: "discount-limit" });
+  });
+
+  it("rejects a discount code that doesn't exist or was deactivated", async () => {
+    mockDb.product.findMany.mockResolvedValue([product()]);
+    mockDb.discountCode.findUnique.mockResolvedValue(null);
+
+    await expect(
+      quoteOrder({
+        items: [{ productId: "p1", quantity: 1 }],
+        country: "IT",
+        shippingMethodId: "m1",
+        discountCode: "NOPE",
+      })
+    ).rejects.toMatchObject({ code: "discount-invalid" });
+  });
+
+  it("caps a fixed amountOff discount at the subtotal so total never goes negative", async () => {
+    mockDb.product.findMany.mockResolvedValue([product({ price: 500 })]);
+    mockDb.discountCode.findUnique.mockResolvedValue({
+      id: "d1",
+      code: "BIGSAVE",
+      percentOff: null,
+      amountOff: 5000, // far more than the 500 subtotal
+      expiresAt: null,
+      maxUses: null,
+      usedCount: 0,
+      active: true,
+    });
+
+    const quote = await quoteOrder({
+      items: [{ productId: "p1", quantity: 1 }],
+      country: "IT",
+      shippingMethodId: "m1",
+      discountCode: "BIGSAVE",
+    });
+
+    expect(quote.discountAmount).toBe(500);
+    // Tax-inclusive, fully discounted subtotal: only shipping remains.
+    expect(quote.total).toBe(500);
+  });
+
+  describe("complete-the-look bundle", () => {
+    const pieces = () => [
+      product({ id: "n", price: 12000 }),
+      product({ id: "b", price: 4500 }),
+      product({ id: "e", price: 1500 }),
+    ];
+    const look = {
+      id: "look1",
+      discountPercent: 15,
+      products: [{ id: "n" }, { id: "b" }, { id: "e" }],
+    };
+    const allThree = [
+      { productId: "n", quantity: 1 },
+      { productId: "b", quantity: 1 },
+      { productId: "e", quantity: 1 },
+    ];
+
+    it("takes 15% off every piece when the whole look is bought", async () => {
+      mockDb.product.findMany.mockResolvedValue(pieces());
+      mockDb.look.findMany.mockResolvedValue([look]);
+
+      const quote = await quoteOrder({ items: allThree, country: "IT", shippingMethodId: "m1" });
+
+      expect(quote.subtotal).toBe(18000);
+      expect(quote.bundleDiscountAmount).toBe(2700);
+      expect(quote.bundleLookIds).toEqual(["look1"]);
+      expect(quote.total).toBe(18000 - 2700 + 500);
+      // VAT is extracted from what's actually paid for the goods (15300).
+      expect(quote.taxAmount).toBe(
+        Math.round(((12000 - 1800) * 22) / 122) +
+          Math.round(((4500 - 675) * 22) / 122) +
+          Math.round(((1500 - 225) * 22) / 122)
+      );
+    });
+
+    it("takes 10% off when two pieces of the look are bought", async () => {
+      mockDb.product.findMany.mockResolvedValue(pieces().slice(0, 2));
+      mockDb.look.findMany.mockResolvedValue([look]);
+
+      const quote = await quoteOrder({
+        items: allThree.slice(0, 2),
+        country: "IT",
+        shippingMethodId: "m1",
+      });
+
+      expect(quote.bundleDiscountAmount).toBe(1200 + 450);
+      expect(quote.total).toBe(16500 - 1650 + 500);
+    });
+
+    it("takes 10% off a necklace, bracelet and earrings the shopper composed", async () => {
+      mockDb.product.findMany.mockResolvedValue([
+        product({ id: "n", price: 12000, category: { name: "Collane", slug: "collane" } }),
+        product({ id: "b", price: 4500, category: { name: "Bracciali", slug: "bracciali" } }),
+        product({ id: "e", price: 1500, category: { name: "Orecchini", slug: "orecchini" } }),
+      ]);
+      mockDb.look.findMany.mockResolvedValue([]);
+
+      const quote = await quoteOrder({ items: allThree, country: "IT", shippingMethodId: "m1" });
+
+      expect(quote.bundleDiscountAmount).toBe(1200 + 450 + 150);
+      expect(quote.total).toBe(18000 - 1800 + 500);
+    });
+
+    it("gives no bundle discount for a single piece", async () => {
+      mockDb.product.findMany.mockResolvedValue(pieces().slice(0, 1));
+      mockDb.look.findMany.mockResolvedValue([look]);
+
+      const quote = await quoteOrder({
+        items: allThree.slice(0, 1),
+        country: "IT",
+        shippingMethodId: "m1",
+      });
+
+      expect(quote.bundleDiscountAmount).toBe(0);
+    });
+
+    it("applies a percent discount code to the price after the bundle saving", async () => {
+      mockDb.product.findMany.mockResolvedValue(pieces());
+      mockDb.look.findMany.mockResolvedValue([look]);
+      mockDb.discountCode.findUnique.mockResolvedValue({
+        id: "d1",
+        code: "SAVE10",
+        percentOff: 10,
+        amountOff: null,
+        expiresAt: null,
+        maxUses: null,
+        usedCount: 0,
+        active: true,
+      });
+
+      const quote = await quoteOrder({
+        items: allThree,
+        country: "IT",
+        shippingMethodId: "m1",
+        discountCode: "SAVE10",
+      });
+
+      expect(quote.discountAmount).toBe(1530);
+      expect(quote.total).toBe(18000 - 2700 - 1530 + 500);
+    });
+
+    it("only asks for active looks containing the cart's products", async () => {
+      mockDb.product.findMany.mockResolvedValue(pieces());
+
+      await quoteOrder({ items: allThree, country: "IT", shippingMethodId: "m1" });
+
+      expect(mockDb.look.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { active: true, products: { some: { id: { in: ["n", "b", "e"] } } } },
+        })
+      );
+    });
+  });
+});
+
+describe("quoteOrder: personalised gift card", () => {
+  const oneItem = [{ productId: "p1", quantity: 1 }];
+
+  it("adds the card's price to the subtotal, VAT and total while it is offered", async () => {
+    mockSettings.mockResolvedValue({
+      pricesIncludeTax: true,
+      freeShippingThreshold: null,
+      giftCardEnabled: true,
+      giftCardPrice: 500,
+    });
+    mockDb.product.findMany.mockResolvedValue([product()]);
+
+    const quote = await quoteOrder({
+      items: oneItem,
+      country: "IT",
+      shippingMethodId: "m1",
+      giftCard: true,
+    });
+
+    expect(quote.giftCardAmount).toBe(500);
+    expect(quote.subtotal).toBe(1100 + 500);
+    expect(quote.taxAmount).toBe(Math.round((1100 * 22) / 122) + Math.round((500 * 22) / 122));
+    expect(quote.total).toBe(1100 + 500 + 500);
+    // Receipts rely on subtotal - discount + shipping = total.
+    expect(quote.subtotal - quote.discountAmount - quote.bundleDiscountAmount + quote.shippingAmount).toBe(
+      quote.total
+    );
+  });
+
+  it("charges nothing for a card while the store does not offer it", async () => {
+    mockSettings.mockResolvedValue({
+      pricesIncludeTax: true,
+      freeShippingThreshold: null,
+      giftCardEnabled: false,
+      giftCardPrice: 500,
+    });
+    mockDb.product.findMany.mockResolvedValue([product()]);
+
+    const quote = await quoteOrder({
+      items: oneItem,
+      country: "IT",
+      shippingMethodId: "m1",
+      giftCard: true,
+    });
+
+    expect(quote.giftCardAmount).toBe(0);
+    expect(quote.total).toBe(1100 + 500);
+  });
+
+  it("keeps discount codes off the card and counts it towards free shipping", async () => {
+    mockSettings.mockResolvedValue({
+      pricesIncludeTax: true,
+      freeShippingThreshold: 1500,
+      giftCardEnabled: true,
+      giftCardPrice: 500,
+    });
+    mockDb.product.findMany.mockResolvedValue([product()]);
+    mockDb.discountCode.findUnique.mockResolvedValue({
+      id: "d1",
+      code: "SAVE10",
+      percentOff: 10,
+      amountOff: null,
+      active: true,
+      expiresAt: null,
+      maxUses: null,
+      usedCount: 0,
+    });
+
+    const quote = await quoteOrder({
+      items: oneItem,
+      country: "IT",
+      shippingMethodId: "m1",
+      discountCode: "SAVE10",
+      giftCard: true,
+    });
+
+    expect(quote.discountAmount).toBe(110);
+    // 1100 - 110 + 500 = 1490: just under the 1500 threshold.
+    expect(quote.freeShipping).toBe(false);
+    expect(quote.total).toBe(1100 - 110 + 500 + 500);
   });
 });

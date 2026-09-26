@@ -8,7 +8,7 @@ vi.mock("@/lib/store-settings", () => ({
   getStoreSettings: vi.fn().mockResolvedValue({ upstashRedisUrl: null, upstashRedisToken: null }),
 }));
 
-const { rateLimit, clientIp } = await import("./rate-limit");
+const { rateLimit, clientIp, _memoryTableSizeForTesting } = await import("./rate-limit");
 
 beforeEach(() => {
   vi.useFakeTimers();
@@ -50,6 +50,23 @@ describe("rateLimit (in-memory fallback)", () => {
 
     const afterReset = await rateLimit(key, 1, 60_000);
     expect(afterReset.success).toBe(true);
+  });
+
+  it("sweeps out expired entries once the table grows large, instead of keeping them forever", async () => {
+    const before = _memoryTableSizeForTesting();
+    // Every one of these is a distinct key with a short window, standing in
+    // for the many unique IPs/emails a long-lived process sees over time.
+    for (let i = 0; i < 5000; i++) {
+      await rateLimit(`sweep-test:${i}`, 1, 1_000);
+    }
+    expect(_memoryTableSizeForTesting()).toBe(before + 5000);
+    vi.advanceTimersByTime(1_001);
+
+    // Crossing the sweep threshold on this next call should clear out all
+    // 5000 now-expired entries above, not just replace the one it touches.
+    await rateLimit("sweep-trigger", 1, 60_000);
+
+    expect(_memoryTableSizeForTesting()).toBeLessThan(before + 10);
   });
 });
 

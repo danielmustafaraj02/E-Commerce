@@ -40,13 +40,19 @@ export function MastercardIcon() {
 }
 
 export function PayPalIcon() {
+  // Not the generic Badge (h-7 w-11): "PayPal" is wider than the other
+  // wordmarks at that box width and was wrapping/clipping inside it.
   return (
-    <Badge label="PayPal">
-      <span className="text-[12px] font-bold italic">
+    <div
+      aria-label="PayPal"
+      title="PayPal"
+      className="border-foreground/10 bg-background flex h-7 w-14 shrink-0 items-center justify-center rounded border shadow-sm"
+    >
+      <span className="text-[11px] font-bold whitespace-nowrap">
         <span className="text-[#003087]">Pay</span>
         <span className="text-[#0070ba]">Pal</span>
       </span>
-    </Badge>
+    </div>
   );
 }
 
@@ -62,9 +68,9 @@ export function KlarnaIcon() {
   );
 }
 
-export function BankTransferIcon() {
+export function BankTransferIcon({ label }: { label: string }) {
   return (
-    <Badge label="Bank transfer">
+    <Badge label={label}>
       <svg
         width="18"
         height="18"
@@ -85,42 +91,21 @@ export function BankTransferIcon() {
   );
 }
 
-export function CashIcon() {
-  return (
-    <Badge label="Cash on delivery">
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="text-foreground/70"
-        aria-hidden="true"
-      >
-        <rect x="2.5" y="6.5" width="19" height="11" rx="1.5" />
-        <circle cx="12" cy="12" r="2.5" />
-      </svg>
-    </Badge>
-  );
-}
-
 export function PaymentIcons({
   cards,
   paypal,
   klarna,
   bankTransfer,
-  cashOnDelivery,
+  labels,
 }: {
   cards: boolean;
   paypal: boolean;
   klarna?: boolean;
   bankTransfer: boolean;
-  cashOnDelivery: boolean;
+  // Accessible name for the icon that isn't a brand mark.
+  labels: { bankTransfer: string };
 }) {
-  if (!cards && !paypal && !klarna && !bankTransfer && !cashOnDelivery) return null;
+  if (!cards && !paypal && !klarna && !bankTransfer) return null;
 
   return (
     <div className="flex flex-wrap items-center gap-2">
@@ -132,8 +117,7 @@ export function PaymentIcons({
       )}
       {paypal && <PayPalIcon />}
       {klarna && <KlarnaIcon />}
-      {bankTransfer && <BankTransferIcon />}
-      {cashOnDelivery && <CashIcon />}
+      {bankTransfer && <BankTransferIcon label={labels.bankTransfer} />}
     </div>
   );
 }

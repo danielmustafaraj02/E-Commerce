@@ -1,0 +1,207 @@
+/* Full-screen mobile menu (components/mobile-nav-menu.tsx). Same ivory, ink
+   and hairline language as the footer (components/footer.css, which also
+   styles the shared social icons, legal row and brand signature). */
+.mobile-menu {
+  --footer-ground: #fff;
+  --footer-ink: #123d43;
+  --footer-soft: color-mix(in srgb, var(--footer-ink) 72%, transparent);
+  --footer-rule: color-mix(in srgb, var(--footer-ink) 14%, transparent);
+  --footer-teal: #1f7a85;
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background: var(--footer-ground);
+  color: var(--footer-ink);
+  padding: env(safe-area-inset-top, 0px) 1.25rem env(safe-area-inset-bottom, 0px);
+}
+.mobile-menu a {
+  color: inherit;
+  text-decoration: none;
+}
+.mobile-menu-top {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding-block: 1rem 1.25rem;
+}
+.mobile-menu-top .brand-signature {
+  margin: 0;
+  font-size: 0.8rem;
+}
+.mobile-menu-top .brand-signature svg {
+  display: none;
+}
+.mobile-menu-top .brand-signature::after {
+  content: "";
+  display: block;
+  width: 2rem;
+  height: 1px;
+  margin: 0.7rem auto 0;
+  background: var(--gold, #b89a62);
+}
+.mobile-menu-close {
+  position: absolute;
+  inset-inline-end: -0.5rem;
+  top: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  border-radius: 50%;
+}
+.mobile-menu-close:hover,
+.mobile-menu-close:focus-visible {
+  background: color-mix(in srgb, var(--gold, #b89a62) 12%, #fff);
+  color: var(--accent, #123d43);
+  transform: rotate(90deg);
+}
+
+/* Search: one hairline to write on, no box, no button colour. */
+.mobile-menu-search {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 3.25rem;
+  margin-top: 0.5rem;
+  border-bottom: 1px solid var(--footer-ink);
+}
+.mobile-menu-search svg {
+  flex-shrink: 0;
+  color: var(--footer-soft);
+}
+.mobile-menu-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: none;
+  font-size: 1rem;
+  color: inherit;
+  outline: none;
+}
+.mobile-menu-search input::placeholder {
+  color: var(--footer-soft);
+}
+.mobile-menu-search button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-inline-end: -0.75rem;
+  border: 0;
+  background: none;
+  color: var(--footer-ink);
+  cursor: pointer;
+}
+
+/* The collections: names in the display serif, hairlines between, a thin gold
+   arrow that steps forward on press. */
+.mobile-menu-links {
+  list-style: none;
+  margin: 2rem 0 0;
+  padding: 0;
+}
+.mobile-menu-links li + li {
+  border-top: 1px solid var(--footer-rule);
+}
+.mobile-menu-links a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 4.25rem;
+  transition:
+    color 0.2s ease,
+    padding-inline 0.25s ease;
+}
+.mobile-menu-label {
+  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+  font-size: 2rem;
+  font-weight: 500;
+  line-height: 1.1;
+}
+.mobile-menu-arrow {
+  color: var(--gold, #b89a62);
+  font-size: 1.1rem;
+  transition:
+    transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+    color 0.2s ease;
+}
+.mobile-menu-links a:active .mobile-menu-arrow,
+.mobile-menu-links a:hover .mobile-menu-arrow,
+.mobile-menu-links a:focus-visible .mobile-menu-arrow {
+  transform: translateX(6px);
+  color: var(--footer-teal);
+}
+.mobile-menu-links a:hover,
+.mobile-menu-links a:focus-visible {
+  color: var(--footer-teal);
+  padding-inline-start: 0.25rem;
+}
+.mobile-menu-links a:active {
+  color: var(--footer-ink);
+}
+
+/* About and the guide: a quieter row of small capitals. */
+.mobile-menu-secondary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.75rem;
+  list-style: none;
+  margin: 1.75rem 0 0;
+  padding: 1.5rem 0 0;
+  border-top: 1px solid var(--footer-rule);
+}
+.mobile-menu-secondary a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--footer-soft);
+}
+
+/* Account/wishlist/sign-in: same quiet small-caps row as .mobile-menu-secondary,
+   but it sits directly under the search field, which already supplies its own
+   hairline — a second border-top here would double up that one boundary. */
+.mobile-menu-account {
+  margin-top: 0.5rem;
+  padding-top: 0;
+  border-top: none;
+}
+
+.mobile-menu-closing {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  margin: 0 -1.25rem;
+  padding: 2.5rem 1.25rem 2rem;
+  text-align: center;
+}
+.mobile-menu-tagline {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--footer-soft);
+}
+.mobile-menu-closing nav {
+  position: relative;
+}

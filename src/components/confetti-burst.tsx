@@ -5,7 +5,7 @@ import type { CSSProperties } from "react";
 // (or just leave it; it's invisible and inert once the animation ends).
 // Used by the wishlist heart (wishlist-button.tsx) and the post-registration
 // welcome moment (account/page.tsx).
-const PIECES: {
+type ConfettiPiece = {
   tx: number;
   ty: number;
   rot: number;
@@ -14,8 +14,19 @@ const PIECES: {
   rounded: string;
   className: string;
   delay: number;
-}[] = [
-  { tx: -38, ty: -46, rot: -40, w: 8, h: 8, rounded: "rounded-sm", className: "bg-primary", delay: 0 },
+};
+
+const PIECES: ConfettiPiece[] = [
+  {
+    tx: -38,
+    ty: -46,
+    rot: -40,
+    w: 8,
+    h: 8,
+    rounded: "rounded-sm",
+    className: "bg-accent",
+    delay: 0,
+  },
   {
     tx: 30,
     ty: -52,
@@ -23,7 +34,7 @@ const PIECES: {
     w: 10,
     h: 6,
     rounded: "rounded-sm",
-    className: "bg-secondary",
+    className: "bg-[color:var(--glass-teal)]",
     delay: 0.02,
   },
   {
@@ -36,7 +47,16 @@ const PIECES: {
     className: "bg-[#f5c451]",
     delay: 0.04,
   },
-  { tx: 48, ty: -14, rot: 65, w: 6, h: 10, rounded: "rounded-sm", className: "bg-danger", delay: 0.06 },
+  {
+    tx: 48,
+    ty: -14,
+    rot: 65,
+    w: 6,
+    h: 10,
+    rounded: "rounded-sm",
+    className: "bg-[color:var(--glass-rose)]",
+    delay: 0.06,
+  },
   {
     tx: -18,
     ty: -58,
@@ -44,7 +64,7 @@ const PIECES: {
     w: 8,
     h: 8,
     rounded: "rounded-full",
-    className: "bg-success",
+    className: "bg-[color:var(--glass-gold)]",
     delay: 0.08,
   },
   {
@@ -54,10 +74,19 @@ const PIECES: {
     w: 10,
     h: 8,
     rounded: "rounded-sm",
-    className: "bg-secondary",
+    className: "bg-[color:var(--glass-teal)]",
     delay: 0.03,
   },
-  { tx: -44, ty: 20, rot: 50, w: 8, h: 6, rounded: "rounded-sm", className: "bg-primary", delay: 0.05 },
+  {
+    tx: -44,
+    ty: 20,
+    rot: 50,
+    w: 8,
+    h: 6,
+    rounded: "rounded-sm",
+    className: "bg-accent",
+    delay: 0.05,
+  },
   {
     tx: 44,
     ty: 24,
@@ -68,7 +97,16 @@ const PIECES: {
     className: "bg-[#f5c451]",
     delay: 0.07,
   },
-  { tx: -10, ty: 36, rot: 80, w: 6, h: 10, rounded: "rounded-sm", className: "bg-danger", delay: 0.09 },
+  {
+    tx: -10,
+    ty: 36,
+    rot: 80,
+    w: 6,
+    h: 10,
+    rounded: "rounded-sm",
+    className: "bg-[color:var(--glass-rose)]",
+    delay: 0.09,
+  },
   {
     tx: 16,
     ty: 42,
@@ -76,15 +114,40 @@ const PIECES: {
     w: 8,
     h: 8,
     rounded: "rounded-full",
-    className: "bg-success",
+    className: "bg-[color:var(--glass-gold)]",
     delay: 0.1,
   },
 ];
 
-export function ConfettiBurst() {
+const LARGE_PIECES: ConfettiPiece[] = Array.from({ length: 44 }, (_, index) => {
+  const angle = (index / 44) * Math.PI * 2;
+  const distance = 145 + (index % 8) * 28;
+  const palette = [
+    "bg-accent",
+    "bg-[color:var(--glass-teal)]",
+    "bg-[#f5c451]",
+    "bg-[color:var(--glass-rose)]",
+  ];
+  const shapes = ["rounded-sm", "rounded-full"];
+
+  return {
+    tx: Math.round(Math.cos(angle) * distance),
+    ty: Math.round(Math.sin(angle) * distance),
+    rot: (index % 2 === 0 ? 1 : -1) * (360 + (index % 7) * 120),
+    w: index % 3 === 0 ? 6 : 9,
+    h: index % 3 === 0 ? 12 : 7,
+    rounded: shapes[index % shapes.length],
+    className: palette[index % palette.length],
+    delay: (index % 11) * 0.025,
+  };
+});
+
+export function ConfettiBurst({ size = "small" }: { size?: "small" | "large" }) {
+  const pieces = size === "large" ? LARGE_PIECES : PIECES;
+
   return (
     <span className="pointer-events-none absolute inset-0" aria-hidden="true">
-      {PIECES.map((piece, i) => (
+      {pieces.map((piece, i) => (
         <span
           key={i}
           className={`confetti-piece absolute top-1/2 left-1/2 ${piece.rounded} ${piece.className}`}
@@ -96,6 +159,7 @@ export function ConfettiBurst() {
               "--ty": `${piece.ty}px`,
               "--rot": `${piece.rot}deg`,
               animationDelay: `${piece.delay}s`,
+              ...(size === "large" ? { animationDuration: "1.55s" } : {}),
             } as CSSProperties
           }
         />

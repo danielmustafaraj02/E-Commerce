@@ -6,6 +6,8 @@ import { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
 import { requireStaff, requireAdmin } from "@/lib/require-admin";
 import { writeAuditLog } from "@/lib/audit-log";
+import { compareAtPriceError } from "@/lib/price-history";
+import { GIFT_STYLES, GIFT_OCCASIONS, GIFT_RECIPIENTS } from "@/lib/gift-finder";
 
 const productSchema = z.object({
   name: z.string().min(1).max(200),
@@ -35,7 +37,12 @@ const productSchema = z.object({
   descriptionPt: z.string().max(5000).optional(),
   descriptionHi: z.string().max(5000).optional(),
   descriptionJa: z.string().max(5000).optional(),
+  story: z.string().max(2000).optional(),
+  storyEn: z.string().max(2000).optional(),
   price: z.coerce.number().nonnegative(),
+  // Display-only "was" price, shown crossed out — never charged. Checked
+  // against the price history (EU Omnibus rule) before saving.
+  compareAtPrice: z.coerce.number().nonnegative().optional(),
   sku: z.string().min(1).max(100),
   stockQty: z.coerce.number().int().nonnegative(),
   lowStockThreshold: z.coerce.number().int().nonnegative(),
@@ -47,13 +54,25 @@ const productSchema = z.object({
   supplierId: z.string().min(1).optional(),
   supplierSku: z.string().max(100).optional(),
   costPrice: z.coerce.number().nonnegative().optional(),
+  // Gift Finder tagging (see lib/gift-finder.ts) — checkbox groups, so
+  // "nothing checked" must parse as [] rather than fail validation.
+  giftStyles: z.array(z.enum(GIFT_STYLES)).default([]),
+  giftOccasions: z.array(z.enum(GIFT_OCCASIONS)).default([]),
+  giftRecipients: z.array(z.enum(GIFT_RECIPIENTS)).default([]),
 });
 
+// Each line is a URL, optionally followed by whitespace and the literal
+// marker "lifestyle" for on-model photos that should skip the catalog's
+// white-background blend treatment (see ProductImage.isLifestyle).
 function parseImageUrls(raw: string | undefined) {
   return (raw ?? "")
     .split("\n")
     .map((line) => line.trim())
-    .filter(Boolean);
+    .filter(Boolean)
+    .map((line) => {
+      const [url, marker] = line.split(/\s+/);
+      return { url, isLifestyle: marker?.toLowerCase() === "lifestyle" };
+    });
 }
 
 function parseProductForm(formData: FormData) {
@@ -81,7 +100,10 @@ function parseProductForm(formData: FormData) {
     descriptionPt: formData.get("descriptionPt") || undefined,
     descriptionHi: formData.get("descriptionHi") || undefined,
     descriptionJa: formData.get("descriptionJa") || undefined,
+    story: formData.get("story") || undefined,
+    storyEn: formData.get("storyEn") || undefined,
     price: formData.get("price"),
+    compareAtPrice: formData.get("compareAtPrice") || undefined,
     sku: formData.get("sku"),
     stockQty: formData.get("stockQty"),
     lowStockThreshold: formData.get("lowStockThreshold"),
@@ -92,6 +114,9 @@ function parseProductForm(formData: FormData) {
     supplierId: formData.get("supplierId") || undefined,
     supplierSku: formData.get("supplierSku") || undefined,
     costPrice: formData.get("costPrice") || undefined,
+    giftStyles: formData.getAll("giftStyles"),
+    giftOccasions: formData.getAll("giftOccasions"),
+    giftRecipients: formData.getAll("giftRecipients"),
   });
 }
 
@@ -101,8 +126,20 @@ export async function createProduct(_prevState: unknown, formData: FormData) {
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
-  const { imageUrls, price, costPrice, ...fields } = parsed.data;
+  const { imageUrls, price, compareAtPrice, costPrice, ...fields } = parsed.data;
   const images = parseImageUrls(imageUrls);
+
+  if (compareAtPrice !== undefined) {
+    // A new product has no earlier price, so this always explains why.
+    const error = compareAtPriceError({
+      price: Math.round(price * 100),
+      compareAtPrice: Math.round(compareAtPrice * 100),
+      currency: "EUR",
+      history: [],
+      now: new Date(),
+    });
+    if (error) return { error };
+  }
 
   let product;
   try {
@@ -110,9 +147,15 @@ export async function createProduct(_prevState: unknown, formData: FormData) {
       data: {
         ...fields,
         price: Math.round(price * 100),
+        compareAtPrice: compareAtPrice !== undefined ? Math.round(compareAtPrice * 100) : undefined,
         costPrice: costPrice !== undefined ? Math.round(costPrice * 100) : undefined,
         images: {
-          create: images.map((url, position) => ({ url, altText: fields.name, position })),
+          create: images.map((img, position) => ({
+            url: img.url,
+            altText: fields.name,
+            position,
+            isLifestyle: img.isLifestyle,
+          })),
         },
       },
     });
@@ -143,6 +186,7 @@ export async function updateProduct(productId: string, _prevState: unknown, form
   const {
     imageUrls,
     price,
+    compareAtPrice,
     costPrice,
     supplierId,
     supplierSku,
@@ -166,12 +210,29 @@ export async function updateProduct(productId: string, _prevState: unknown, form
     descriptionPt,
     descriptionHi,
     descriptionJa,
+    story,
+    storyEn,
     ...fields
   } = parsed.data;
   const images = parseImageUrls(imageUrls);
 
   const before = await db.product.findUnique({ where: { id: productId } });
   if (!before) return { error: "Product not found" };
+
+  if (compareAtPrice !== undefined) {
+    const history = await db.productPriceChange.findMany({
+      where: { productId },
+      select: { price: true, changedAt: true },
+    });
+    const error = compareAtPriceError({
+      price: Math.round(price * 100),
+      compareAtPrice: Math.round(compareAtPrice * 100),
+      currency: before.currency,
+      history,
+      now: new Date(),
+    });
+    if (error) return { error };
+  }
 
   let product;
   try {
@@ -182,6 +243,7 @@ export async function updateProduct(productId: string, _prevState: unknown, form
         price: Math.round(price * 100),
         // Explicit null (not undefined) so clearing these in the edit form
         // actually clears them — Prisma's `update` skips undefined fields.
+        compareAtPrice: compareAtPrice !== undefined ? Math.round(compareAtPrice * 100) : null,
         costPrice: costPrice !== undefined ? Math.round(costPrice * 100) : null,
         supplierId: supplierId ?? null,
         supplierSku: supplierSku ?? null,
@@ -205,9 +267,16 @@ export async function updateProduct(productId: string, _prevState: unknown, form
         descriptionPt: descriptionPt ?? null,
         descriptionHi: descriptionHi ?? null,
         descriptionJa: descriptionJa ?? null,
+        story: story ?? "",
+        storyEn: storyEn ?? null,
         images: {
           deleteMany: {},
-          create: images.map((url, position) => ({ url, altText: fields.name, position })),
+          create: images.map((img, position) => ({
+            url: img.url,
+            altText: fields.name,
+            position,
+            isLifestyle: img.isLifestyle,
+          })),
         },
       },
     });

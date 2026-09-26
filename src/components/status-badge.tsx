@@ -14,6 +14,7 @@ const STATUS_STYLES: Record<string, string> = {
   low: "bg-success/10 text-success",
   open: "bg-primary/10 text-primary",
   done: "bg-foreground/10 text-foreground/60",
+  claude: "bg-primary/10 text-primary",
 };
 
 export function StatusBadge({ status }: { status: string }) {

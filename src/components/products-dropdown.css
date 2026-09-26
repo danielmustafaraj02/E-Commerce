@@ -1,0 +1,153 @@
+.pd-root {
+  position: relative;
+  pointer-events: auto;
+}
+
+/* Color comes from the text-foreground/80 utility in the JSX (same class
+   every sibling nav link uses via navChipClass), not a hand-rolled
+   color-mix here — that duplicate had drifted to a visibly different
+   (lighter) result since Tailwind's opacity utilities mix in a different
+   color space than a plain `color-mix(in srgb, ...)` does. */
+.pd-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: none;
+  font-size: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  line-height: inherit;
+  cursor: pointer;
+  position: relative;
+}
+
+/* The nav gets only a slow underline draw: no pill, lift, or text highlight. */
+.pd-trigger.nav-link::before {
+  display: none;
+}
+
+.pd-trigger.nav-link:hover,
+.pd-trigger.nav-link:focus-visible {
+  transform: none;
+}
+
+.pd-trigger.link-underline::after {
+  display: none;
+}
+
+.pd-label {
+  position: relative;
+  display: inline-block;
+}
+
+.pd-label::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -0.24rem;
+  height: 1px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 1.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.pd-trigger:hover .pd-label::after,
+.pd-trigger:focus-visible .pd-label::after,
+.pd-trigger[aria-expanded="true"] .pd-label::after {
+  transform: scaleX(1);
+}
+
+.pd-chevron {
+  transition: none;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.pd-chevron-open {
+  transform: rotate(180deg);
+}
+
+.pd-panel {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding-top: 0.65rem;
+  z-index: 50;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pd-panel-open {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.pd-inner {
+  background: var(--background);
+  border: 1px solid color-mix(in srgb, var(--champagne) 68%, var(--background));
+  border-radius: 0.75rem;
+  padding: 0.45rem;
+  min-width: 14rem;
+  /* A real shadow here (not the site's usual hairline-only language) is a
+     deliberate exception for this one floating overlay — visibility/opacity
+     on .pd-panel above handles the actual show/hide transition, so this
+     only needs to carry depth, not motion. */
+  box-shadow:
+    0 12px 32px color-mix(in srgb, var(--foreground) 12%, transparent),
+    0 2px 6px color-mix(in srgb, var(--foreground) 5%, transparent);
+}
+
+.pd-item,
+.pd-view-all {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--foreground);
+  text-decoration: none;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease;
+  white-space: nowrap;
+}
+
+.pd-item:hover,
+.pd-item:focus-visible {
+  background: color-mix(in srgb, var(--accent) 5%, var(--background));
+  color: var(--accent);
+}
+
+.pd-divider {
+  height: 1px;
+  margin: 0.3rem 0.75rem;
+  background: var(--champagne);
+  opacity: 0.5;
+}
+
+.pd-view-all {
+  padding-top: 0.7rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--accent);
+  gap: 0.35rem;
+}
+
+.pd-view-all svg {
+  transition: transform 0.2s ease;
+}
+
+.pd-view-all:hover,
+.pd-view-all:focus-visible {
+  background: color-mix(in srgb, var(--accent) 7%, var(--background));
+}
+
+.pd-view-all:hover svg {
+  transform: translateX(3px);
+}

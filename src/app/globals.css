@@ -2,15 +2,81 @@
 
 :root {
   color-scheme: light;
+  /* Brand palette: white paper, deep petrol ink, champagne rules and a
+     sparing Venetian gold. The glass itself supplies any other colour. */
   --background: #ffffff;
-  --foreground: #171717;
-  --surface: #f7f7f8;
+  --foreground: #123d43;
+  --surface: #faf8f5;
+  --ink-soft: #527176;
+  --champagne: #d9cdbb;
+  --gold: #b89a62;
+  --petrol: #123d43;
+  --petrol-deep: #0b3035;
   --danger: #dc2626;
   --success: #15803d;
   --warning: #b45309;
+  /* Fixed brand palette taken from the glass itself. Unlike --store-primary
+     these are not admin-editable: they are what makes hover/focus/checked
+     states and the decorative bands colorful whatever primary color is set. */
+  --accent: var(--petrol);
+  --accent-deep: var(--petrol-deep);
+  --glass-teal: #1f7a85;
+  --glass-rose: #c65b8a;
+  --glass-gold: #f5c451;
   /* Raw admin-picked brand colors, set inline on <html> from StoreSettings. */
-  --store-primary: #111827;
+  --store-primary: #123d43;
   --store-secondary: #4f46e5;
+}
+
+/* A custom Murano scrollbar: dark lagoon glass with a fine champagne highlight
+   on a warm porcelain track. Keep it on the document scrollbar so native
+   scrolling and keyboard behavior stay intact. */
+html,
+body {
+  scrollbar-color: #123d43 #e8dfd0;
+  scrollbar-width: auto;
+  scrollbar-gutter: stable;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 18px;
+  height: 18px;
+}
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+  border-inline-start: 1px solid #d1c2a9;
+  background: linear-gradient(180deg, #eee8dc 0%, #ddd1bc 100%);
+}
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+  min-height: 3.5rem;
+  border: 2px solid #e8dfd0;
+  border-radius: 0;
+  background-color: #123d43;
+  background-image:
+    linear-gradient(90deg, transparent 34%, #d9c08c 50%, transparent 66%),
+    linear-gradient(180deg, #1f6870 0%, #0b3035 100%);
+  background-clip: padding-box;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease;
+}
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover {
+  border-color: #e1d3b9;
+  background-color: #b89a62;
+  background-image:
+    linear-gradient(90deg, transparent 34%, #fff3d2 50%, transparent 66%),
+    linear-gradient(180deg, #b89a62 0%, #8b6c3f 100%);
+}
+html::-webkit-scrollbar-thumb:active,
+body::-webkit-scrollbar-thumb:active {
+  background-color: #9c7b47;
+  background-image: linear-gradient(180deg, #c4a66d 0%, #8b6c3f 100%);
+}
+html::-webkit-scrollbar-corner,
+body::-webkit-scrollbar-corner {
+  background: #e8dfd0;
 }
 
 /* @theme inline values that are plain literals get inlined directly into the
@@ -27,14 +93,46 @@
   --color-danger: var(--danger);
   --color-success: var(--success);
   --color-warning: var(--warning);
-  --font-sans: var(--font-geist-sans);
+  --color-accent: var(--accent);
+  --color-accent-deep: var(--accent-deep);
+  --font-sans: var(--font-ui);
   --font-mono: var(--font-geist-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-ui), system-ui, sans-serif;
+}
+
+/* A thin band of the glass palette (violet, teal, rose, gold) on the edge of
+   the header and footer — the one colorful thread that runs through every page. */
+/* The header is already positioned (sticky) and would lose that to a
+   `position: relative` here, since unlayered CSS beats Tailwind's utilities;
+   only the footer needs a positioning context. */
+.glass-rule-top {
+  position: relative;
+}
+.glass-rule::after,
+.glass-rule-top::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--accent),
+    var(--glass-teal),
+    var(--glass-rose),
+    var(--glass-gold)
+  );
+}
+.glass-rule::after {
+  bottom: 0;
+}
+.glass-rule-top::before {
+  top: 0;
 }
 
 /* Tailwind v4 preflight matches the native UA default of `cursor: default`
@@ -140,6 +238,151 @@ button:not(:disabled),
   }
 }
 
+@keyframes cart-celebration-drive {
+  0% {
+    opacity: 0;
+    transform: translate3d(-72vw, 17vh, 0) scale(0.42) rotate(-10deg);
+  }
+  12% {
+    opacity: 1;
+  }
+  52% {
+    opacity: 1;
+    transform: translate3d(-5vw, 0, 0) scale(1.16) rotate(0deg);
+  }
+  72% {
+    transform: translate3d(21vw, -5vh, 0) scale(1.38) rotate(2deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(72vw, -18vh, 0) scale(1.72) rotate(5deg);
+  }
+}
+
+@keyframes cart-celebration-confetti {
+  0% {
+    opacity: 0;
+    transform: translate3d(-50%, -50%, 0) scale(0.2) rotate(0deg);
+  }
+  12% {
+    opacity: 1;
+  }
+  72% {
+    opacity: 1;
+    transform: translate3d(
+        calc(-50% + var(--confetti-x)),
+        calc(-50% + var(--confetti-y)),
+        0
+      )
+      rotate(var(--confetti-rotation)) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(
+        calc(-50% + var(--confetti-x)),
+        calc(-50% + var(--confetti-y) + 18vh),
+        0
+      )
+      rotate(calc(var(--confetti-rotation) + 120deg)) scale(0.55);
+  }
+}
+
+@keyframes cart-celebration-wheel-roll {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.cart-celebration {
+  --cart-celebration-petrol: #123d43;
+  --cart-celebration-gold: #b89a62;
+  --cart-celebration-ground: #fffaf4;
+  position: fixed;
+  z-index: 80;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.cart-celebration__confetti {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  opacity: 0;
+  animation: cart-celebration-confetti 2.35s cubic-bezier(0.18, 0.62, 0.28, 1)
+    var(--confetti-delay) both;
+}
+.cart-celebration__confetti--square {
+  border-radius: 1px;
+}
+.cart-celebration__confetti--round {
+  border-radius: 50%;
+}
+.cart-celebration__confetti--petrol {
+  background: var(--cart-celebration-petrol);
+}
+.cart-celebration__confetti--gold {
+  background: var(--cart-celebration-gold);
+}
+.cart-celebration__confetti--rose {
+  background: #c65b8a;
+}
+.cart-celebration__confetti--teal {
+  background: #1f7a85;
+}
+.cart-celebration__vehicle {
+  position: absolute;
+  top: 54%;
+  left: 50%;
+  width: clamp(6rem, 11vw, 9rem);
+  color: var(--cart-celebration-petrol);
+  filter: drop-shadow(0 10px 18px rgb(18 61 67 / 20%));
+  animation: cart-celebration-drive 1.9s cubic-bezier(0.2, 0.7, 0.25, 1) both;
+}
+.cart-celebration__vehicle svg {
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+.cart-celebration__speed-line {
+  position: absolute;
+  right: 83%;
+  width: 38%;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, var(--cart-celebration-gold));
+  transform-origin: right center;
+  animation: cart-speed-trail 0.42s ease-out infinite alternate;
+}
+.cart-celebration__speed-line--one {
+  top: 36%;
+}
+.cart-celebration__speed-line--two {
+  top: 56%;
+  width: 27%;
+  animation-delay: 0.16s;
+}
+.cart-celebration__wheel-spokes {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cart-celebration-wheel-roll 0.42s linear infinite;
+}
+@keyframes cart-speed-trail {
+  from {
+    opacity: 0.25;
+    transform: scaleX(0.45);
+  }
+  to {
+    opacity: 0.9;
+    transform: scaleX(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cart-celebration {
+    display: none;
+  }
+}
+
 @keyframes word-in {
   from {
     opacity: 0;
@@ -166,8 +409,8 @@ button:not(:disabled),
     opacity: 0;
     transform: translateY(12px);
     transition:
-      opacity 0.6s ease,
-      transform 0.6s ease;
+      opacity 0.9s ease,
+      transform 0.9s ease;
     transition-delay: var(--reveal-delay, 0s);
   }
   [data-reveal="true"] {
@@ -176,7 +419,7 @@ button:not(:disabled),
   }
 
   .animate-fade-up {
-    animation: fade-up 0.6s ease both;
+    animation: fade-up 0.9s ease both;
     animation-delay: var(--reveal-delay, 0s);
   }
   .animate-pop-in {
@@ -253,7 +496,7 @@ button:not(:disabled),
     transform: translateY(16px) scale(0.94);
   }
   [data-reveal="true"] .category-card {
-    animation: card-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: card-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
     animation-delay: var(--card-delay, 0s);
   }
 
@@ -276,11 +519,11 @@ button:not(:disabled),
      links sat immediately visible with zero entrance, unlike the rest of
      the page's staggered fade-ups. Fade-up, staggered per item via
      nth-child since this list renders server-side with no per-item delay
-     prop. The hover feedback itself (lift + pill) lives outside this guard,
-     next to .link-underline below — same reasoning: entrance/auto-play
+     prop. Underline feedback lives outside this guard, next to .link-underline
+     below — same reasoning: entrance/auto-play
      motion respects reduced-motion, interaction-triggered feedback doesn't. */
   .nav-link {
-    animation: fade-up 0.45s ease both;
+    animation: fade-up 0.7s ease both;
   }
   .nav-link:nth-child(1) {
     animation-delay: 0ms;
@@ -329,45 +572,219 @@ button:not(:disabled),
   width: 100%;
   background: currentColor;
   transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.25s ease;
+  transform-origin: center;
+  transition: transform 1.5s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 .link-underline:hover::after {
   transform: scaleX(1);
-  transform-origin: left;
+  transform-origin: center;
 }
 
-/* Header nav-link (header.tsx) hover feedback — a lift plus a soft pill
-   background fading in behind the text, on top of the underline-draw above.
-   Kept outside the reduced-motion guard (see .nav-link's entrance animation
-   further up) since it's interaction-triggered, not auto-playing. The pill
-   is a ::before, not padding/background on the element itself — .nav-link
-   is also .link-underline, whose ::after bar sizes itself to 100% of this
-   same box, so touching this element's own box model would stretch that
-   bar along with it. An absolutely-positioned, negative-z-index ::before
-   sidesteps that entirely: it can't affect layout, sizing, or the
-   underline, only paint a shape behind the text. */
+/* Header links use only a slow underline draw; keep the labels still and
+   unhighlighted so the navigation stays quiet. */
 .nav-link {
   position: relative;
-  transition: transform 0.15s ease;
 }
-.nav-link::before {
-  content: "";
-  position: absolute;
-  inset: -0.2rem -0.55rem;
-  z-index: -1;
-  border-radius: 999px;
-  background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
-  opacity: 0;
-  transition: opacity 0.2s ease;
+.nav-link.link-underline::after {
+  background: var(--gold);
+  transform-origin: center;
+  transition: transform 1.5s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 .nav-link:hover,
 .nav-link:focus-visible {
-  transform: translateY(-2px);
+  transform: none;
 }
-.nav-link:hover::before,
-.nav-link:focus-visible::before {
-  opacity: 1;
+
+/* Language flags give the locale control a small, tactile response: a soft
+   wave on hover, then a quick turn when the newly selected locale arrives. */
+.locale-switcher-current-flag,
+.locale-switcher-option-flag {
+  display: inline-block;
+  transform-origin: 50% 65%;
+}
+.locale-switcher-current-flag {
+  animation: locale-flag-arrive 0.68s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+.locale-switcher-trigger:hover .locale-switcher-current-flag,
+.locale-switcher-trigger:focus-visible .locale-switcher-current-flag {
+  animation: locale-flag-wave 0.62s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.locale-switcher-chevron {
+  transition: transform 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.locale-switcher-trigger[aria-expanded="true"] .locale-switcher-chevron {
+  animation: locale-chevron-open 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.locale-switcher-trigger[aria-expanded="true"] {
+  animation: locale-trigger-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.locale-switcher-menu .locale-switcher-option {
+  animation: locale-option-arrive 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.locale-switcher-menu li:nth-child(2) .locale-switcher-option { animation-delay: 25ms; }
+.locale-switcher-menu li:nth-child(3) .locale-switcher-option { animation-delay: 50ms; }
+.locale-switcher-menu li:nth-child(4) .locale-switcher-option { animation-delay: 75ms; }
+.locale-switcher-menu li:nth-child(5) .locale-switcher-option { animation-delay: 100ms; }
+.locale-switcher-menu li:nth-child(6) .locale-switcher-option { animation-delay: 125ms; }
+.locale-switcher-menu li:nth-child(7) .locale-switcher-option { animation-delay: 150ms; }
+.locale-switcher-menu li:nth-child(8) .locale-switcher-option { animation-delay: 175ms; }
+.locale-switcher-menu li:nth-child(9) .locale-switcher-option { animation-delay: 200ms; }
+.locale-switcher-menu li:nth-child(10) .locale-switcher-option { animation-delay: 225ms; }
+.locale-switcher-menu li:nth-child(11) .locale-switcher-option { animation-delay: 250ms; }
+.locale-switcher-menu .locale-switcher-option-flag {
+  transition: transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.locale-switcher-menu .locale-switcher-option:hover .locale-switcher-option-flag,
+.locale-switcher-menu .locale-switcher-option:focus-visible .locale-switcher-option-flag {
+  transform: scale(1.18) rotate(-7deg);
+}
+@keyframes locale-flag-wave {
+  0%, 100% { transform: rotate(0) scale(1); }
+  35% { transform: rotate(-12deg) scale(1.16); }
+  68% { transform: rotate(8deg) scale(1.08); }
+}
+@keyframes locale-flag-arrive {
+  0% { opacity: 0; transform: perspective(80px) rotateY(-85deg) scale(0.72); }
+  68% { opacity: 1; transform: perspective(80px) rotateY(12deg) scale(1.15); }
+  100% { opacity: 1; transform: perspective(80px) rotateY(0) scale(1); }
+}
+@keyframes locale-option-arrive {
+  0% { opacity: 0; transform: translateY(-7px) scale(0.9); }
+  60% { opacity: 1; transform: translateY(1px) scale(1.03); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes locale-chevron-open {
+  0% { transform: rotate(0deg); }
+  65% { transform: rotate(205deg); }
+  100% { transform: rotate(180deg); }
+}
+@keyframes locale-trigger-pop {
+  0% { transform: scale(1); }
+  35% { transform: scale(0.93); }
+  70% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+.locale-transition-overlay {
+  position: fixed;
+  z-index: 9999;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 248, 240, 0.95) 0%, rgba(245, 235, 220, 0.92) 100%);
+  backdrop-filter: blur(8px);
+  animation: locale-overlay-in 0.42s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+.locale-transition-content {
+  display: grid;
+  justify-items: center;
+  width: min(100%, 34rem);
+  text-align: center;
+}
+.locale-transition-kicker {
+  margin: 0 0 0.6rem;
+  color: rgb(102 91 80 / 65%);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  animation: locale-label-arrive 0.6s ease-out 0.1s both;
+}
+.locale-transition-stage {
+  position: relative;
+  display: grid;
+  width: min(100%, 32rem);
+  height: clamp(13rem, 34vh, 18rem);
+  place-items: center;
+  perspective: 1000px;
+}
+.locale-transition-stage::before,
+.locale-transition-stage::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: clamp(9.5rem, 35vw, 13rem);
+  aspect-ratio: 1;
+  border: 2px solid rgb(217 199 160 / 18%);
+  border-radius: 50%;
+  content: "";
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0.4;
+}
+.locale-transition-stage::before {
+  box-shadow: 0 0 0 0.8rem rgb(217 199 160 / 4%);
+  animation: locale-orbit 6s linear infinite;
+}
+.locale-transition-stage::after {
+  width: clamp(12rem, 48vw, 18rem);
+  border-color: rgb(217 199 160 / 8%);
+  border-style: dashed;
+  animation: locale-orbit 20s linear infinite reverse;
+}
+.locale-transition-flag {
+  display: flex;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  width: clamp(8rem, 27vw, 10.5rem);
+  aspect-ratio: 1;
+  border: 1.5px solid rgb(217 199 160 / 55%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fffbf5 0%, #fef8f2 35%, #f5ebe0 100%);
+  box-shadow:
+    0 0 0 1rem rgb(217 199 160 / 3%),
+    0 2rem 5rem rgb(102 91 80 / 12%),
+    inset 0 1px 2px rgb(255 255 255 / 60%),
+    inset 0 -1px 2px rgb(102 91 80 / 8%);
+  line-height: 1;
+  will-change: transform, opacity;
+}
+.locale-transition-emoji {
+  font-size: clamp(3.5rem, 12vw, 5.25rem);
+}
+.locale-transition-word {
+  color: rgb(60 55 50 / 85%);
+  font-family: var(--font-display, Georgia), Georgia, serif;
+  font-size: clamp(0.85rem, 3vw, 1.05rem);
+  font-weight: 600;
+  line-height: 1.15;
+  white-space: nowrap;
+  animation: locale-label-arrive-cute 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.35s both;
+}
+.locale-transition-flag--from {
+  animation: locale-flag-leave-cute 0.95s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+.locale-transition-flag--to {
+  animation: locale-flag-land-cute 1.05s cubic-bezier(0.15, 0.85, 0.35, 1) 0.15s both;
+}
+@keyframes locale-overlay-in {
+  from { opacity: 0; backdrop-filter: blur(0); }
+  to { opacity: 1; backdrop-filter: blur(8px); }
+}
+@keyframes locale-flag-leave-cute {
+  0% { opacity: 1; transform: translate(-50%, -50%) rotateY(0) rotateZ(0) scale(1); }
+  40% { opacity: 1; transform: translate(-50%, -50%) rotateY(100deg) rotateZ(8deg) scale(1.08); }
+  100% { opacity: 0; transform: translate(calc(-50% - clamp(3rem, 11vw, 6rem)), -50%) rotateY(180deg) rotateZ(-12deg) scale(0.55); }
+}
+@keyframes locale-flag-land-cute {
+  0% { opacity: 0; transform: translate(calc(-50% + clamp(3rem, 11vw, 6rem)), -50%) rotateY(-100deg) rotateZ(12deg) scale(0.55); }
+  55% { opacity: 1; transform: translate(calc(-50% - 0.4rem), -50%) rotateY(15deg) rotateZ(-3deg) scale(1.1); }
+  78% { opacity: 1; transform: translate(calc(-50% + 0.2rem), -50%) rotateY(-4deg) rotateZ(1deg) scale(0.99); }
+  100% { opacity: 1; transform: translate(-50%, -50%) rotateY(0) rotateZ(0) scale(1); }
+}
+@keyframes locale-label-arrive-cute {
+  from { opacity: 0; transform: translateY(0.6rem) scale(0.92); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes locale-orbit {
+  from { rotate: 0deg; }
+  to { rotate: 360deg; }
 }
 
 /* Header category row (header.tsx) can overflow horizontally on narrow
@@ -436,46 +853,74 @@ button:not(:disabled),
 @layer components {
   .field {
     width: 100%;
-    border-radius: 0.6rem;
-    border: 1.5px solid color-mix(in srgb, var(--foreground) 18%, transparent);
-    /* Plain white fill — the warm-gold accent (same one used across the
-     site's decorative bits: hero blobs, newsletter, category cards,
-     .btn-primary hover) shows up in the border/glow only, not the fill,
-     so the input stays white with just a colored shadow. */
+    border-radius: 0.75rem;
+    border: 1.5px solid color-mix(in srgb, var(--foreground) 16%, transparent);
+    /* Plain white fill: the brand accent (violet) shows in the border and focus
+       ring only, so text always sits on white. */
     background: var(--background);
-    padding: 0.55rem 0.85rem;
+    padding: 0.65rem 0.95rem;
     color: var(--foreground);
+    box-shadow: 0 1px 1px color-mix(in srgb, var(--foreground) 4%, transparent);
     transition:
-      border-color 0.2s ease,
-      box-shadow 0.2s ease,
-      background-color 0.2s ease,
-      transform 0.15s ease;
+      border-color 0.15s ease,
+      box-shadow 0.15s ease,
+      background-color 0.15s ease;
   }
   .field::placeholder {
-    color: color-mix(in srgb, var(--foreground) 42%, transparent);
+    color: color-mix(in srgb, var(--foreground) 48%, transparent);
   }
-  .field:hover {
-    border-color: color-mix(in srgb, #f5c451 55%, transparent);
-    box-shadow: 0 4px 14px -6px color-mix(in srgb, #f5c451 45%, transparent);
+  /* A <select>'s dropdown popup is drawn by the OS/browser, not this
+     stylesheet — some browsers (notably Android Chrome's "force dark" web
+     content rendering) repaint that popup's background independently of the
+     page's own colors, without touching text inherited via a CSS custom
+     property (.field's `color: var(--foreground)`). That mismatch makes the
+     option text invisible even though it's still fully clickable. Literal
+     (non-variable) colors on <option> survive that repaint correctly. */
+  select.field option {
+    color: #171717;
+    background-color: #ffffff;
+  }
+  .field:hover:not(:disabled):not(:focus) {
+    border-color: color-mix(in srgb, var(--accent) 50%, transparent);
   }
   .field:focus {
     outline: none;
-    border-color: #f5c451;
-    background: var(--background);
-    box-shadow: 0 0 0 4px color-mix(in srgb, #f5c451 22%, transparent);
-    transform: translateY(-1px);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3.5px color-mix(in srgb, var(--accent) 20%, transparent);
   }
   .field:disabled {
     cursor: not-allowed;
     opacity: 0.55;
-    transform: none;
+    background: color-mix(in srgb, var(--foreground) 4%, var(--background));
+  }
+  /* Flag an invalid field with aria-invalid (set it from the form) — colour is
+     not the only cue, the message beside it carries the meaning. */
+  .field[aria-invalid="true"] {
+    border-color: var(--color-danger);
+  }
+  .field[aria-invalid="true"]:focus {
+    box-shadow: 0 0 0 3.5px color-mix(in srgb, var(--color-danger) 20%, transparent);
   }
   textarea.field {
     resize: vertical;
     min-height: 5.5rem;
+    line-height: 1.5;
   }
+  /* A styled select: the native arrow looks different in every browser and
+     ignores the field's padding. The chevron is an inline SVG (data: is allowed
+     by the CSP's img-src). */
   select.field {
     cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    padding-inline-end: 2.6rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b6b6b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+    background-size: 1rem;
+  }
+  [dir="rtl"] select.field {
+    background-position: left 0.9rem center;
   }
 
   /* Checkbox — a real checkmark that pops in with a small overshoot, rather
@@ -507,18 +952,18 @@ button:not(:disabled),
     transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
   .field-checkbox:hover {
-    border-color: var(--color-primary);
+    border-color: var(--accent);
   }
   .field-checkbox:checked {
-    border-color: var(--color-primary);
-    background: var(--color-primary);
+    border-color: var(--accent);
+    background: var(--accent);
   }
   .field-checkbox:checked::after {
     transform: scale(1);
   }
   .field-checkbox:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 20%, transparent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 20%, transparent);
   }
   .field-checkbox:active {
     transform: scale(0.88);
@@ -555,17 +1000,17 @@ button:not(:disabled),
     transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
   .field-radio:hover {
-    border-color: var(--color-primary);
+    border-color: var(--accent);
   }
   .field-radio:checked {
-    border-color: var(--color-primary);
+    border-color: var(--accent);
   }
   .field-radio:checked::after {
     transform: scale(1);
   }
   .field-radio:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 20%, transparent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 20%, transparent);
   }
   .field-radio:active {
     transform: scale(0.88);
@@ -601,65 +1046,74 @@ button:not(:disabled),
    admin) routes its buttons and status messages through these instead of
    hand-rolling slightly different button/border/color combinations per file.
    ------------------------------------------------------------------------- */
-  .btn-primary {
+  /* Shared button behaviour. Every state changes something you can see on a
+     white page: hover darkens (it never turns white, which made buttons vanish),
+     press settles back down, keyboard focus gets its own ring. */
+  .btn-primary,
+  .btn-secondary,
+  .btn-danger,
+  .btn-danger-outline {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    border-radius: 0.6rem;
-    border: 1.5px solid transparent;
-    background: var(--color-primary);
-    color: white;
+    gap: 0.6rem;
+    border-radius: 6px;
     font-weight: 500;
-    padding: 0.6rem 1.1rem;
+    letter-spacing: 0.02em;
+    line-height: 1.25;
+    text-align: center;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-primary:focus-visible,
+  .btn-secondary:focus-visible,
+  .btn-danger:focus-visible,
+  .btn-danger-outline:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* Petrol with a hairline of Venetian gold; hover only deepens the colour. */
+  .btn-primary {
+    border: 1px solid var(--gold);
+    background: var(--color-primary);
+    color: #fbf9f5;
+    padding: 0.7rem 1.35rem;
+    min-height: 2.75rem;
     transition:
-      transform 0.15s ease,
-      color 0.15s ease,
-      background-color 0.15s ease,
-      border-color 0.15s ease,
-      box-shadow 0.15s ease;
+      background-color 0.2s ease,
+      box-shadow 0.2s ease;
   }
-  .btn-primary:hover {
-    transform: translateY(-1px);
-    /* Flips to white with black text and a warm gold border/glow (same
-     accent used across the site's decorative bits — hero blobs,
-     newsletter, category cards) instead of just dimming the whole button. */
-    background: white;
-    color: black;
-    border-color: #f5c451;
-    box-shadow: 0 10px 24px -8px color-mix(in srgb, #f5c451 70%, transparent);
+  .btn-primary:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--color-primary) 72%, black);
+    box-shadow: 0 0.45rem 1rem -0.6rem rgb(18 61 67 / 42%);
   }
-  .btn-primary:active {
-    transform: translateY(0);
-    background: color-mix(in srgb, #f5c451 14%, white);
-    box-shadow: 0 4px 10px -4px color-mix(in srgb, #f5c451 70%, transparent);
+  .btn-primary:active:not(:disabled) {
+    background: color-mix(in srgb, var(--color-primary) 60%, black);
+    box-shadow: none;
   }
   .btn-primary:disabled {
     opacity: 0.55;
     pointer-events: none;
-    transform: none;
     box-shadow: none;
   }
 
   .btn-secondary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    border-radius: 0.6rem;
-    border: 1.5px solid color-mix(in srgb, var(--foreground) 18%, transparent);
-    background: transparent;
-    font-weight: 500;
-    padding: 0.55rem 1.05rem;
+    border: 1px solid var(--champagne);
+    background: var(--background);
+    color: var(--foreground);
+    padding: 0.6rem 1.15rem;
     transition:
-      border-color 0.2s ease,
-      color 0.2s ease,
-      background-color 0.2s ease;
+      border-color 0.15s ease,
+      color 0.15s ease,
+      background-color 0.15s ease;
   }
-  .btn-secondary:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-    background: color-mix(in srgb, var(--color-primary) 6%, transparent);
+  .btn-secondary:hover:not(:disabled) {
+    border-color: var(--foreground);
+    color: var(--foreground);
+    background: var(--background);
+  }
+  .btn-secondary:active:not(:disabled) {
+    background: color-mix(in srgb, var(--accent) 16%, var(--background));
   }
   .btn-secondary:disabled {
     opacity: 0.55;
@@ -667,50 +1121,65 @@ button:not(:disabled),
   }
 
   .btn-danger {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    border-radius: 0.6rem;
+    border: 1.5px solid transparent;
     background: var(--color-danger);
     color: white;
-    font-weight: 500;
-    padding: 0.6rem 1.1rem;
+    padding: 0.65rem 1.25rem;
     transition:
-      opacity 0.15s ease,
+      background-color 0.15s ease,
       transform 0.15s ease;
   }
-  .btn-danger:hover {
-    opacity: 0.9;
+  .btn-danger:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--color-danger) 86%, black);
     transform: translateY(-1px);
+  }
+  .btn-danger:active:not(:disabled) {
+    transform: translateY(0);
+    background: color-mix(in srgb, var(--color-danger) 74%, black);
   }
   .btn-danger:disabled {
     opacity: 0.55;
     pointer-events: none;
-    transform: none;
   }
 
   .btn-danger-outline {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    border-radius: 0.6rem;
-    border: 1.5px solid color-mix(in srgb, var(--color-danger) 40%, transparent);
+    border: 1.5px solid color-mix(in srgb, var(--color-danger) 45%, transparent);
+    background: var(--background);
     color: var(--color-danger);
-    font-weight: 500;
-    padding: 0.55rem 1.05rem;
+    padding: 0.6rem 1.15rem;
     transition:
-      background-color 0.2s ease,
-      border-color 0.2s ease;
+      background-color 0.15s ease,
+      border-color 0.15s ease;
   }
-  .btn-danger-outline:hover {
-    background: color-mix(in srgb, var(--color-danger) 8%, transparent);
+  .btn-danger-outline:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--color-danger) 9%, var(--background));
     border-color: var(--color-danger);
   }
   .btn-danger-outline:disabled {
     opacity: 0.55;
     pointer-events: none;
+  }
+
+  /* Touch screens: a finger needs a bigger target than a mouse. */
+  @media (pointer: coarse) {
+    .btn-primary,
+    .btn-secondary,
+    .btn-danger,
+    .btn-danger-outline {
+      min-height: 2.9rem;
+    }
+    .field:not(textarea) {
+      min-height: 2.9rem;
+    }
+    /* Admin status-filter pills and sidebar nav links: dense by design for
+       mouse+keyboard (admin is Operate-mode), but staff do open it on a
+       tablet — bump to the same touch-target floor as every other control
+       only when the input is actually coarse, so desktop density is
+       untouched. */
+    .admin-pill,
+    .admin-sidebar-link {
+      min-height: 2.75rem;
+    }
   }
 
   /* Alerts — small icon + message chip used for every inline form error and
@@ -770,6 +1239,58 @@ button:not(:disabled),
   .option-card:has(:checked) {
     border-color: var(--color-primary);
     background: color-mix(in srgb, var(--color-primary) 6%, transparent);
+  }
+
+  /* Color filter swatches (product-filter-panel.tsx) — a real circle of the
+     actual color rather than a text dropdown. 2.75rem (44px) meets the
+     minimum touch-target size, important since this is opened at least as
+     often on a phone as a desktop. The checkmark uses mix-blend-mode so it
+     stays visible on every swatch color, from white to black, without
+     needing a per-color text-color rule. */
+  .color-swatch {
+    position: relative;
+    display: inline-flex;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 999px;
+    cursor: pointer;
+    border: 2px solid color-mix(in srgb, var(--foreground) 14%, transparent);
+    box-shadow: 0 1px 2px color-mix(in srgb, var(--foreground) 10%, transparent);
+    transition:
+      transform 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+  .color-swatch:hover {
+    transform: scale(1.1);
+  }
+  .color-swatch:has(:focus-visible) {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+  .color-swatch:has(:checked) {
+    box-shadow:
+      0 0 0 2px var(--background),
+      0 0 0 4px var(--color-primary);
+  }
+  .color-swatch input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .color-swatch-check {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    mix-blend-mode: difference;
+    pointer-events: none;
+  }
+  .color-swatch:has(:checked) .color-swatch-check {
+    display: flex;
   }
 } /* end @layer components */
 
@@ -881,50 +1402,67 @@ button:not(:disabled),
   }
 }
 
-/* Newsletter section background — same colors and blob shape as
-   .hero-glass-bg, now drifting too (previously kept static to save a
-   second continuous compositor animation this far down the page, but
-   the motion reads better than the GPU cost it saves). Reuses
-   hero-drift at its own durations so the two sections don't sync up. */
-.section-glass-bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
+.testimonials-swiper .swiper-slide {
+  height: auto;
 }
-.section-glass-bg::before,
-.section-glass-bg::after {
-  content: "";
-  position: absolute;
-  border-radius: 999px;
-  filter: blur(56px);
-  opacity: 0.8;
-  will-change: transform;
-}
-.section-glass-bg::before {
-  width: 22rem;
-  height: 22rem;
-  top: -6rem;
-  left: -4rem;
-  background: radial-gradient(circle, #f5c451 0%, #f5c451 25%, transparent 78%);
-}
-.section-glass-bg::after {
-  width: 24rem;
-  height: 24rem;
-  bottom: -7rem;
-  right: -5rem;
-  background: radial-gradient(circle, #7cc7c0 0%, #7cc7c0 25%, transparent 78%);
-}
-@media (prefers-reduced-motion: no-preference) {
-  .section-glass-bg::before {
-    animation: hero-drift 17s ease-in-out infinite alternate;
-  }
-  .section-glass-bg::after {
-    animation: hero-drift 21s ease-in-out infinite alternate;
+
+/* ---------------------------------------------------------------------------
+   Global interaction and motion defaults.
+   ------------------------------------------------------------------------- */
+
+/* Visitors who ask the OS to reduce motion get none: the entrance animations
+   above are already opt-in, but shared component styles (alerts, hover lifts,
+   Tailwind transition utilities, Swiper's slide transitions) run regardless, so
+   this collapses every remaining animation and transition to ~instant. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
-.testimonials-swiper .swiper-slide {
-  height: auto;
+/* No 300ms double-tap-to-zoom delay on tappable controls (pinch zoom still
+   works), and a deliberate, on-brand tap flash instead of the browser default. */
+a,
+button,
+summary,
+label,
+input,
+select,
+textarea,
+[role="button"] {
+  touch-action: manipulation;
+}
+/* iOS Safari zooms the whole page when a text field with a font size under 16px
+   is focused. On phones, keep every field at 16px, whatever text-sm class it has. */
+@media (max-width: 39.99rem) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
+  select,
+  textarea {
+    font-size: 1rem;
+  }
+}
+/* The header is sticky: keep it from covering whatever receives keyboard focus
+   or an in-page anchor (WCAG 2.2 "Focus Not Obscured"). */
+html {
+  scroll-padding-top: 1rem;
+}
+@media (min-width: 40rem) {
+  html {
+    scroll-padding-top: 8rem;
+  }
+}
+html {
+  -webkit-tap-highlight-color: color-mix(in srgb, var(--color-primary) 14%, transparent);
+}
+
+/* Avoid one-word last lines in headings. */
+h1,
+h2,
+h3 {
+  text-wrap: balance;
 }

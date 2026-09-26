@@ -4,6 +4,9 @@ import { getStoreSettings } from "@/lib/store-settings";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { AuthCard } from "@/components/auth-card";
+import { homeFontClasses } from "@/app/home-fonts";
+import "../home.css";
+import "../shop.css";
 
 export default async function RegisterPage() {
   const [nonce, locale, siteKey, settings] = await Promise.all([
@@ -19,13 +22,14 @@ export default async function RegisterPage() {
   );
 
   return (
-    <main className="bg-surface relative flex flex-1 flex-col overflow-hidden">
-      <div className="section-glass-bg" aria-hidden="true" />
-      <div className="relative z-10 mx-auto flex w-full max-w-sm flex-1 flex-col justify-center px-4 py-16">
+    <main
+      className={`auth-flow-page shelf relative flex flex-1 flex-col ${homeFontClasses}`}
+    >
+      <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center px-4 py-10 sm:px-6 lg:py-14">
         <AuthCard
           initialMode="register"
           storeName={settings.storeName}
-          callbackUrl="/account"
+          callbackUrl={`/${locale}/account`}
           siteKey={siteKey}
           nonce={nonce}
           dict={dict.auth}

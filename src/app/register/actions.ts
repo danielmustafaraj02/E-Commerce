@@ -5,12 +5,15 @@ import { registerSchema, registerUser, RegistrationError } from "@/lib/register-
 import { rateLimit } from "@/lib/rate-limit";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { signIn } from "@/auth";
+import { getFeedback } from "@/lib/i18n/feedback";
+import { getLocale } from "@/lib/i18n/locale";
 
 export async function register(_prevState: unknown, formData: FormData) {
+  const t = await getFeedback();
   const ip = (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
   const { success } = await rateLimit(`register:${ip}`, 5, 60_000);
   if (!success) {
-    return { error: "Too many attempts. Try again in a minute." };
+    return { error: t.tooManyAttempts };
   }
 
   const captchaOk = await verifyTurnstile(
@@ -18,7 +21,7 @@ export async function register(_prevState: unknown, formData: FormData) {
     ip
   );
   if (!captchaOk) {
-    return { error: "Verification failed. Please try again." };
+    return { error: t.verificationFailed };
   }
 
   const parsed = registerSchema.safeParse({
@@ -42,7 +45,7 @@ export async function register(_prevState: unknown, formData: FormData) {
   await signIn("credentials", {
     email: parsed.data.email,
     password: parsed.data.password,
-    redirectTo: "/account?welcome=1",
+    redirectTo: `/${await getLocale()}/account?welcome=1`,
   });
   return { error: null };
 }
