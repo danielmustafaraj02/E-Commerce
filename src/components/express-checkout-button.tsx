@@ -31,7 +31,13 @@ function toStripeLocale(locale: string): StripeElementLocale {
 // desktop browsers, non-Safari without Google Pay set up) rather than
 // showing a broken or empty button — see onReady below.
 
-function ExpressCheckoutInner({ dividerLabel }: { dividerLabel: string }) {
+function ExpressCheckoutInner({
+  dividerLabel,
+  failureLabel,
+}: {
+  dividerLabel: string;
+  failureLabel: string;
+}) {
   const stripe = useStripe();
   const elements = useElements();
   const items = useCartStore((state) => state.items);
@@ -44,9 +50,16 @@ function ExpressCheckoutInner({ dividerLabel }: { dividerLabel: string }) {
     setBusy(true);
     setError(null);
 
-    const { error: submitError } = await elements.submit();
+    let submitError: { message?: string } | undefined;
+    try {
+      ({ error: submitError } = await elements.submit());
+    } catch {
+      setError(failureLabel);
+      setBusy(false);
+      return;
+    }
     if (submitError) {
-      setError(submitError.message ?? null);
+      setError(submitError.message ?? failureLabel);
       setBusy(false);
       return;
     }
@@ -54,7 +67,7 @@ function ExpressCheckoutInner({ dividerLabel }: { dividerLabel: string }) {
     const shipping = event.shippingAddress;
     const billing = event.billingDetails;
     if (!shipping) {
-      setError(null);
+      setError(failureLabel);
       setBusy(false);
       return;
     }
@@ -78,7 +91,7 @@ function ExpressCheckoutInner({ dividerLabel }: { dividerLabel: string }) {
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? null);
+        setError(data.error ?? failureLabel);
         setBusy(false);
         return;
       }
@@ -97,7 +110,7 @@ function ExpressCheckoutInner({ dividerLabel }: { dividerLabel: string }) {
       // On success Stripe redirects to return_url itself — no further
       // action here.
     } catch {
-      setError(null);
+      setError(failureLabel);
       setBusy(false);
     }
   }
@@ -105,7 +118,7 @@ function ExpressCheckoutInner({ dividerLabel }: { dividerLabel: string }) {
   if (items.length === 0) return null;
 
   return (
-    <div className="flex flex-col gap-2" hidden={!visible}>
+    <div className="flex flex-col gap-2" hidden={!visible} aria-busy={busy}>
       <p className="text-foreground/60 text-center text-xs">{dividerLabel}</p>
       <ExpressCheckoutElement
         onReady={({ availablePaymentMethods }) => setVisible(Boolean(availablePaymentMethods))}
@@ -130,11 +143,13 @@ export function ExpressCheckoutButton({
   publishableKey,
   locale,
   dividerLabel,
+  failureLabel,
   discount = 0,
 }: {
   publishableKey: string | null;
   locale: string;
   dividerLabel: string;
+  failureLabel: string;
   // Estimated complete-the-look saving, so the wallet sheet's estimate matches.
   discount?: number;
 }) {
@@ -153,7 +168,7 @@ export function ExpressCheckoutButton({
       stripe={stripePromise}
       options={{ mode: "payment", amount, currency, locale: toStripeLocale(locale) }}
     >
-      <ExpressCheckoutInner dividerLabel={dividerLabel} />
+      <ExpressCheckoutInner dividerLabel={dividerLabel} failureLabel={failureLabel} />
     </Elements>
   );
 }

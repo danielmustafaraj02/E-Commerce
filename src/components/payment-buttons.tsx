@@ -125,12 +125,24 @@ export function PaymentButtons({
 
   return (
     <div className="flex flex-col gap-3">
+      {/* Prefer the configured one-step wallet when it is available. The
+          card button remains the primary option when PayPal isn't configured. */}
+      {paypalEnabled && (
+        <button
+          type="button"
+          onClick={() => payRedirect("paypal")}
+          disabled={loading !== null}
+          className="btn-primary w-full py-3 disabled:opacity-60"
+        >
+          {loading === "paypal" ? dict.redirecting : dict.payWithPayPal}
+        </button>
+      )}
       <div className="flex flex-col gap-1">
         <button
           type="button"
           onClick={() => payRedirect("stripe")}
           disabled={loading !== null}
-          className="btn-primary w-full py-3 disabled:opacity-60"
+          className={`${paypalEnabled ? "btn-secondary" : "btn-primary"} w-full py-3 disabled:opacity-60`}
         >
           {loading === "stripe" ? dict.redirecting : dict.payWithCard}
         </button>
@@ -140,18 +152,6 @@ export function PaymentButtons({
             knowable from here, so this stays deliberately non-specific. */}
         <p className="text-foreground/60 text-xs">{dict.cardHelp}</p>
       </div>
-      {/* Only offered once PayPal credentials are set (Admin > Settings > Payments),
-          so a customer is never shown a button that can only fail. */}
-      {paypalEnabled && (
-        <button
-          type="button"
-          onClick={() => payRedirect("paypal")}
-          disabled={loading !== null}
-          className={SECONDARY_BUTTON}
-        >
-          {loading === "paypal" ? dict.redirecting : dict.payWithPayPal}
-        </button>
-      )}
       {bankTransferEnabled && (
         <button
           type="button"

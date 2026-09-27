@@ -3,22 +3,30 @@
 import { useState } from "react";
 import { CatalogImage } from "@/components/catalog-image";
 import { ProductImageZoom } from "@/components/product-image-zoom";
+import { ImageLightbox } from "@/components/image-lightbox";
 
-// Two independent presentations of the same image set rather than one
-// JS-synced carousel: a thumb rail + zoomable active image on desktop
-// (mouse hover makes zoom meaningful), and a native scroll-snap swipe strip
-// on mobile (no JS, so nothing to keep in sync with a "selected" index that
-// touch scrolling would otherwise fight with). Which one shows is decided
-// entirely by shop.css's .shop-gallery-desktop/.shop-gallery-swipe media
-// query, not Tailwind's hidden/sm:* utilities — see the comment there.
+export type GalleryZoomLabels = {
+  open: string;
+  close: string;
+  previous: string;
+  next: string;
+  hint: string;
+};
+
+// Desktop uses a thumb rail + zoom photo; mobile stacks every photo vertically.
+// Either presentation opens the same full-screen viewer. Which one shows is
+// decided by shop.css's .shop-gallery-desktop/.shop-gallery-mobile rules.
 export function ProductGallery({
   images,
   alt,
+  zoomLabels,
 }: {
   images: { id: string; url: string; isLifestyle?: boolean }[];
   alt: string;
+  zoomLabels: GalleryZoomLabels;
 }) {
   const [selected, setSelected] = useState(0);
+  const [zoomAt, setZoomAt] = useState<number | null>(null);
   const active = images[selected] ?? images[0];
 
   return (
@@ -46,22 +54,51 @@ export function ProductGallery({
             ))}
           </div>
         )}
-        {active && <ProductImageZoom src={active.url} alt={alt} isLifestyle={active.isLifestyle} />}
+        {active && (
+          <ProductImageZoom
+            src={active.url}
+            alt={alt}
+            isLifestyle={active.isLifestyle}
+            onOpen={() => setZoomAt(selected)}
+            openLabel={zoomLabels.open}
+          />
+        )}
       </div>
 
-      <div className="shop-gallery-swipe">
-        {images.map((image) => (
-          <div key={image.id} className="shop-product-photo shop-gallery-swipe-item">
-            <CatalogImage
-              src={image.url}
-              alt={alt}
-              fill
-              sizes="100vw"
-              className={image.isLifestyle ? "shop-photo--lifestyle" : undefined}
-            />
-          </div>
-        ))}
+      <div className="shop-gallery-mobile">
+        <div className="shop-gallery-swipe">
+          {images.map((image, index) => (
+            <button
+              key={image.id}
+              type="button"
+              className="shop-product-photo shop-gallery-swipe-item"
+              aria-label={`${zoomLabels.open}: ${alt} ${index + 1}`}
+              onClick={() => setZoomAt(index)}
+            >
+              <CatalogImage
+                src={image.url}
+                alt={alt}
+                fill
+                sizes="100vw"
+                className={image.isLifestyle ? "shop-photo--lifestyle" : undefined}
+              />
+            </button>
+          ))}
+        </div>
       </div>
+
+      {zoomAt !== null && (
+        <ImageLightbox
+          images={images.map((image) => ({ src: image.url, alt, isLifestyle: image.isLifestyle }))}
+          index={zoomAt}
+          onIndexChange={(index) => {
+            setZoomAt(index);
+            setSelected(index);
+          }}
+          onClose={() => setZoomAt(null)}
+          labels={zoomLabels}
+        />
+      )}
     </div>
   );
 }

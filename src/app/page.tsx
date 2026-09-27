@@ -22,7 +22,6 @@ import { buildFaq } from "@/lib/faq";
 import { getShippingFacts } from "@/lib/shipping-banner";
 import { GiftFinderArrow } from "@/components/gift-finder-arrow";
 import { HeroNecklaceCarousel, type HeroSlide } from "@/components/hero-necklace-carousel";
-import { HeroLookRollercoaster } from "@/components/hero-look-rollercoaster";
 import { db } from "@/lib/db";
 import { getAllLooks } from "@/lib/look-data";
 import { LookCard } from "@/components/look-card";
@@ -94,7 +93,7 @@ const SHELF_SIZE = 4;
 const NEW_ARRIVALS_SIZE = 8;
 
 const HERO_SRC = "/hero/handmade-red-murano-glass-necklace.jpg";
-const HERO_SIZES = "(min-width: 52rem) 36vw, 100vw";
+const HERO_SIZES = "(min-width: 52rem) 24rem, 70vw";
 // Necklaces photographed in the same oval drape as the hero, so the rotation
 // reads as one frame changing colour. Slugs match the catalog photos' names.
 // Each carries the deep tone of its glass: the hero's button takes it on
@@ -112,15 +111,13 @@ const HERO_BACKGROUND_SRC = "/hero/ivory-marble-background.jpg";
 const ROMAN = ["I", "II", "III", "IV", "V", "VI"];
 
 export default async function Home() {
-  // The phone hero photo is preloaded only at its matching breakpoint; desktop
-  // now starts with the look carousel instead of the marble and necklace.
+  // The hero necklace is the lead image at every viewport size.
   const hero = getImageProps({ src: HERO_SRC, alt: "", fill: true, sizes: HERO_SIZES }).props;
   preload(hero.src, {
     as: "image",
     imageSrcSet: hero.srcSet,
     imageSizes: hero.sizes,
     fetchPriority: "high",
-    media: "(max-width: 51.99rem)",
   });
 
   const [
@@ -217,7 +214,7 @@ export default async function Home() {
   return (
     <main className={`shelf shelf-home flex flex-1 flex-col ${homeFontClasses}`}>
       <section
-        className="shelf-hero shelf-hero--looks"
+        className="shelf-hero"
         style={{ "--hero-accent": HERO_ACCENT } as CSSProperties}
       >
         <Image
@@ -249,17 +246,17 @@ export default async function Home() {
                 <p className="shelf-note">{dict.home.pricesIncludeTax}</p>
               )}
             </div>
-            <HeroLookRollercoaster
-              looks={looks}
-              previousLabel={dict.home.previousSlide}
-              nextLabel={dict.home.nextSlide}
-              carouselLabel={dict.looks.title}
-            />
             <HeroNecklaceCarousel
               slides={heroSlides}
               sizes={HERO_SIZES}
               previousLabel={dict.home.previousSlide}
               nextLabel={dict.home.nextSlide}
+              zoomLabels={{
+                open: dict.nav.zoomImage,
+                close: dict.nav.closeZoom,
+                hint: dict.nav.zoomHint,
+                viewPiece: dict.nav.viewPiece,
+              }}
             />
           </div>
           {facts.length > 0 && (

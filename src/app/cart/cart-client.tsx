@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { CatalogImage } from "@/components/catalog-image";
 import { Link } from "@/components/localized-link";
 import { useCartStore, MAX_CART_QUANTITY } from "@/lib/cart-store";
@@ -21,6 +21,7 @@ export function CartClient({
   locale,
   uiLocale,
   dict,
+  checkoutErrorLabel,
   shippingBanner,
   freeShippingThreshold,
   stripePublishableKey,
@@ -29,6 +30,7 @@ export function CartClient({
   locale: string;
   uiLocale: string;
   dict: Dictionary["cart"];
+  checkoutErrorLabel: string;
   shippingBanner: string | null;
   freeShippingThreshold: number | null;
   stripePublishableKey: string | null;
@@ -46,6 +48,7 @@ export function CartClient({
   const [kinds, setKinds] = useState<Record<string, PieceKind | null>>({});
   const [pendingRemoval, setPendingRemoval] = useState<PendingRemoval | null>(null);
   const [upsellBusy, setUpsellBusy] = useState(false);
+  const [recommendedProductIds, setRecommendedProductIds] = useState<string[]>([]);
 
   const handleRemove = useCallback(
     (item: (typeof items)[number]) => {
@@ -163,7 +166,12 @@ export function CartClient({
 
       <ul className="shop-panel shop-list cart-items">
         {items.map((item) => (
-          <li key={item.productId} className="shop-cart-line">
+          <li
+            key={item.productId}
+            className={`shop-cart-line ${
+              recommendedProductIds.includes(item.productId) ? "cart-line-recommended" : ""
+            }`}
+          >
             {item.imageUrl ? (
               <Link href={`/products/${item.slug}`} className="shop-thumb shop-thumb--cart">
                 <CatalogImage
@@ -207,7 +215,7 @@ export function CartClient({
         ))}
       </ul>
 
-      {lookSummary.upsells.map(({ look, missing }) => (
+      {lookSummary.upsells.slice(0, 1).map(({ look, missing }) => (
         <div key={look.id} className="shop-panel shop-panel-pad cart-look-upsell">
           <div>
             <p className="cart-look-upsell-title">{dict.lookUpsellTitle}</p>
@@ -224,6 +232,7 @@ export function CartClient({
             disabled={upsellBusy}
             onClick={() => {
               setUpsellBusy(true);
+              setRecommendedProductIds(missing.map((piece) => piece.productId));
               for (const piece of missing) {
                 addItem({
                   productId: piece.productId,
@@ -239,7 +248,10 @@ export function CartClient({
                 pieces: missing.length,
                 source: "cart",
               });
-              setTimeout(() => setUpsellBusy(false), 1500);
+              setTimeout(() => {
+                setUpsellBusy(false);
+                setRecommendedProductIds([]);
+              }, 1500);
             }}
           >
             {dict.lookUpsellCta}
@@ -335,6 +347,7 @@ export function CartClient({
           discount={lookSummary.saving}
           locale={uiLocale}
           dividerLabel={dict.expressCheckoutOr}
+          failureLabel={checkoutErrorLabel}
         />
       )}
 

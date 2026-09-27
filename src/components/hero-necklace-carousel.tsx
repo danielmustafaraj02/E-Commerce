@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Link } from "@/components/localized-link";
+import { ImageLightbox } from "@/components/image-lightbox";
 
 export type HeroSlide = {
   src: string;
@@ -19,24 +20,27 @@ export function HeroNecklaceCarousel({
   sizes,
   previousLabel,
   nextLabel,
+  zoomLabels,
 }: {
   slides: HeroSlide[];
   sizes: string;
   previousLabel: string;
   nextLabel: string;
+  zoomLabels: { open: string; close: string; hint: string; viewPiece: string };
 }) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [zoomed, setZoomed] = useState(false);
   const count = slides.length;
 
   useEffect(() => {
-    if (count < 2 || paused) return;
+    if (count < 2 || paused || zoomed) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const id = window.setInterval(() => {
       if (document.visibilityState === "visible") setIndex((i) => (i + 1) % count);
     }, INTERVAL_MS);
     return () => window.clearInterval(id);
-  }, [count, paused, index]);
+  }, [count, paused, zoomed, index]);
 
   const active = slides[index];
   const rootRef = useRef<HTMLDivElement>(null);
@@ -86,6 +90,29 @@ export function HeroNecklaceCarousel({
         {active.href && (
           <Link href={active.href} className="shelf-bead-link" aria-label={active.alt} />
         )}
+        {/* Phones only (home.css): the photo opens full screen instead of
+            linking straight away, since a thumb-sized necklace can't show
+            its beads. The viewer carries the link on to the piece. */}
+        <button
+          type="button"
+          className="shelf-bead-zoom"
+          aria-label={`${zoomLabels.open}: ${active.alt}`}
+          onClick={() => setZoomed(true)}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            width="18"
+            height="18"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.3"
+            strokeLinecap="round"
+            aria-hidden="true"
+          >
+            <circle cx="10.5" cy="10.5" r="6.5" />
+            <path d="m20 20-4.9-4.9M10.5 7.5v6M7.5 10.5h6" />
+          </svg>
+        </button>
       </div>
       {active.label && (
         <span key={active.src} className="shelf-bead-caption" aria-hidden="true">
@@ -138,18 +165,40 @@ export function HeroNecklaceCarousel({
         </div>
       )}
       {count > 1 && (
-        <div className="shelf-bead-dots">
+        <div className="shelf-bead-thumbs">
           {slides.map((slide, i) => (
             <button
               key={slide.src}
               type="button"
-              className={i === index ? "is-active" : undefined}
-              aria-label={`${i + 1} / ${count}`}
+              className="shelf-bead-thumb"
+              aria-label={slide.label ?? `${i + 1} / ${count}`}
               aria-current={i === index ? "true" : undefined}
               onClick={() => setIndex(i)}
-            />
+            >
+              <Image src={slide.src} alt="" fill sizes="64px" quality={70} />
+            </button>
           ))}
         </div>
+      )}
+      {zoomed && (
+        <ImageLightbox
+          images={slides.map((slide) => ({
+            src: slide.src,
+            alt: slide.alt,
+            caption: slide.label,
+            href: slide.href,
+          }))}
+          index={index}
+          onIndexChange={setIndex}
+          onClose={() => setZoomed(false)}
+          labels={{
+            close: zoomLabels.close,
+            previous: previousLabel,
+            next: nextLabel,
+            hint: zoomLabels.hint,
+            viewPiece: zoomLabels.viewPiece,
+          }}
+        />
       )}
     </div>
   );

@@ -117,23 +117,23 @@ describe("PayPal return route", () => {
 
     expect(mocks.updateOrder).not.toHaveBeenCalled();
     expect(mocks.captureError).toHaveBeenCalledOnce();
-    expect(locationOf(res)).toBe("/order-confirmation/ORD-CHEAP");
+    expect(locationOf(res)).toBe("/order-confirmation/ORD-CHEAP?paymentError=1");
   });
 
-  it("does not mark the order paid when the capture is not COMPLETED", async () => {
+  it("shows a payment error when the capture is not COMPLETED", async () => {
     mocks.capturePaypalOrder.mockResolvedValue({ status: "PENDING" });
     const res = await call({ token: "PAYPAL-1", orderNumber: "ORD-CHEAP" });
 
     expect(mocks.updateOrder).not.toHaveBeenCalled();
-    expect(locationOf(res)).toBe("/order-confirmation/ORD-CHEAP?cancelled=1");
+    expect(locationOf(res)).toBe("/order-confirmation/ORD-CHEAP?paymentError=1");
   });
 
-  it("falls back to the cancelled page when the capture call fails", async () => {
+  it("shows a payment error when the capture call fails", async () => {
     mocks.capturePaypalOrder.mockRejectedValue(new Error("PayPal down"));
     const res = await call({ token: "PAYPAL-1", orderNumber: "ORD-CHEAP" });
 
     expect(mocks.updateOrder).not.toHaveBeenCalled();
-    expect(locationOf(res)).toBe("/order-confirmation/ORD-CHEAP?cancelled=1");
+    expect(locationOf(res)).toBe("/order-confirmation/ORD-CHEAP?paymentError=1");
   });
 
   it("treats an already-paid order (webhook won the race) as success without rewriting it", async () => {
@@ -150,6 +150,6 @@ describe("PayPal return route", () => {
 
     expect(mocks.updateOrder).not.toHaveBeenCalled();
     expect(mocks.captureError).toHaveBeenCalledOnce();
-    expect(locationOf(res)).toBe("/order-confirmation/ORD-CHEAP");
+    expect(locationOf(res)).toBe("/order-confirmation/ORD-CHEAP?paymentError=1");
   });
 });

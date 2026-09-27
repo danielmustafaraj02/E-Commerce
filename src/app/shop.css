@@ -101,6 +101,14 @@
   padding: 0;
   list-style: none;
 }
+.shop-grid .shelf-item-photo {
+  background: #fff;
+  box-shadow: none;
+  transition: none;
+}
+.shop-grid .shelf-item-photo::after {
+  display: none;
+}
 @media (min-width: 40rem) {
   .shop-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -281,7 +289,7 @@
 
 /* -- Gallery (components/product-gallery.tsx) --------------------------------- */
 
-/* Two variants — desktop thumb rail + zoom, mobile swipe strip — toggled
+/* Two variants — desktop thumb rail + zoom, mobile stacked photos — toggled
    entirely by this file's own media query rather than Tailwind's
    hidden/sm:flex/sm:hidden utilities: this page's CSS loads in a route-level
    chunk that can land after the shared Tailwind stylesheet in the cascade,
@@ -298,31 +306,17 @@
   overflow-x: auto;
 }
 
-/* Mobile-only: a native (no-JS) swipeable strip — each photo is a full
-   viewport-width snap point, so it behaves like a carousel with nothing to
-   keep in sync. Desktop uses the thumb rail + zoom above instead. This base
-   rule MUST come before the `@media (min-width: 40rem)` block below: it has
-   the same specificity as that block's `.shop-gallery-swipe { display: none }`
-   override, and for tied specificity, source order decides the winner —
-   putting the unconditional rule after the media query previously made
-   `display: flex` win at every width, override or not. This exact bug
-   already shipped once; if you touch this file, keep this one first. */
+/* Mobile shows every product photo in a vertical stack below the first.
+   Keep this base rule before the desktop media query below. */
 .shop-gallery-swipe {
-  display: flex;
+  display: grid;
   gap: 0.75rem;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  margin-inline: -1.25rem;
-  padding-inline: 1.25rem;
-  scrollbar-width: none;
-}
-.shop-gallery-swipe::-webkit-scrollbar {
-  display: none;
 }
 .shop-gallery-swipe-item {
-  flex: none;
   width: 100%;
-  scroll-snap-align: center;
+  padding: 0;
+  border: 0;
+  cursor: zoom-in;
 }
 
 @media (min-width: 40rem) {
@@ -330,7 +324,7 @@
     display: flex;
     gap: 1rem;
   }
-  .shop-gallery-swipe {
+  .shop-gallery-mobile {
     display: none;
   }
   .shop-gallery-thumbs {
@@ -340,9 +334,7 @@
     overflow-y: auto;
     max-height: 40rem;
   }
-  /* More presence for the main photo now that it isn't sharing the row with
-     a thumb strip underneath it — the grid column itself (.shop-product-grid)
-     already gives it the space; this just lets it use all of it. */
+  /* Let the desktop main photo use the full gallery column. */
   .shop-gallery .shop-product-photo {
     aspect-ratio: 4 / 5;
     max-height: calc(100svh - 8rem);
@@ -369,6 +361,30 @@
 .shop-thumb:hover,
 .shop-thumb--active {
   opacity: 1;
+}
+
+/* Product detail gallery: a clean white mount with one quiet, neutral edge. */
+.shop-gallery .shop-product-photo {
+  background: #fff;
+  box-shadow: inset 0 0 0 1px #efefec;
+}
+.shop-gallery .shop-product-photo::after {
+  display: none;
+}
+.shop-gallery .shop-product-photo img:not(.shop-photo--lifestyle) {
+  transition: transform 0.45s ease;
+}
+.shop-thumb {
+  background: #fff;
+  border-color: #efefec;
+}
+.shop-thumb--active {
+  border-color: var(--accent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .shop-gallery .shop-product-photo img {
+    transition: none;
+  }
 }
 
 /* -- Value row / gift reassurance strip ----------------------------------------- */
@@ -2725,6 +2741,24 @@ a.look-piece-name:focus-visible {
   text-transform: uppercase;
   color: var(--ink);
 }
+@media (prefers-reduced-motion: no-preference) {
+  .cart-look-upsell {
+    animation: cart-look-arrive 240ms ease-out both;
+  }
+  .cart-line-recommended {
+    animation: cart-look-arrive 280ms ease-out both;
+  }
+}
+@keyframes cart-look-arrive {
+  from {
+    opacity: 0.65;
+    translate: 0 0.25rem;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
 
 /* -- Product hero: description, purchase, reassurance, details -------------- */
 
@@ -2844,40 +2878,70 @@ a.look-piece-name:focus-visible {
   100% { transform: scale(1) rotate(0); }
 }
 
+/* Accepted payment marks, right where the buy decision happens. A hairline
+   rule and a lettered label instead of a panel — the info column is already
+   a card, and a second one inside it reads as an advert. */
+.shop-pdp-payments {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin-top: 1.15rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid var(--rule);
+}
+.shop-pdp-payments-label {
+  color: var(--ink-soft);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+/* Only the framing is touched — each mark keeps its own brand colour. */
+.shop-pdp-payments [role="img"] {
+  border-radius: 3px;
+  border-color: color-mix(in srgb, var(--gold) 30%, var(--rule));
+  box-shadow: none;
+}
+
+/* Not a tinted box: a hairline rule, a gold glyph and air. Same reason as
+   above — nested cards inside the info panel cheapen it. */
 .shop-product-info .shop-gift-reassurance {
   position: relative;
   align-items: flex-start;
-  gap: 0.8rem;
-  margin-top: 1.2rem;
-  padding: 0.95rem 1rem;
-  border: 1px solid color-mix(in srgb, var(--gold) 40%, var(--rule));
-  border-radius: 5px;
-  background: linear-gradient(135deg, #fffdf9 0%, #f7f3ec 100%);
+  gap: 0.85rem;
+  margin-top: 1.35rem;
+  padding: 1.35rem 0 0;
+  border: 0;
+  border-top: 1px solid var(--rule);
+  border-radius: 0;
+  background: none;
   color: var(--ink-soft);
   font-size: 0.78rem;
-  line-height: 1.5;
-  box-shadow: 0 0.7rem 1.4rem -1.3rem rgb(18 61 67 / 32%);
+  line-height: 1.55;
+  box-shadow: none;
 }
 .shop-product-info .shop-gift-reassurance > svg {
   box-sizing: content-box;
-  width: 17px;
-  height: 17px;
+  width: 19px;
+  height: 19px;
   flex: 0 0 auto;
-  margin-top: 0;
-  padding: 0.48rem;
-  border: 1px solid color-mix(in srgb, var(--gold) 38%, var(--rule));
-  border-radius: 50%;
-  background: rgb(255 255 255 / 72%);
+  margin-top: 0.15rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
   color: var(--gold);
+  stroke-width: 1.2;
 }
 .shop-product-info .shop-gift-reassurance > span {
   min-width: 0;
 }
 .shop-product-info .shop-gift-reassurance strong {
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.35rem;
   color: var(--ink);
   font-family: var(--font-display), Georgia, serif;
-  font-size: 1.04rem;
+  font-size: 1.08rem;
   font-weight: 400;
   line-height: 1.25;
 }
@@ -2885,7 +2949,7 @@ a.look-piece-name:focus-visible {
   align-items: flex-start;
   gap: 0.38rem;
   max-width: 100%;
-  margin-top: 0.55rem;
+  margin-top: 0.7rem;
   color: var(--ink);
   font-size: 0.72rem;
   font-weight: 600;
@@ -2995,6 +3059,7 @@ a.look-piece-name:focus-visible {
   border: 1px solid var(--rule);
   border-radius: 4px;
   background: #fff;
+  transition: border-color 0.55s ease;
 }
 .look-card-visual::after {
   content: "";
@@ -3002,21 +3067,43 @@ a.look-piece-name:focus-visible {
   inset: 0.65rem;
   border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
   border-radius: 2px;
+  background:
+    linear-gradient(var(--gold) 0 0) top left / 0 1.5px no-repeat,
+    linear-gradient(var(--gold) 0 0) top right / 1.5px 0 no-repeat,
+    linear-gradient(var(--gold) 0 0) bottom right / 0 1.5px no-repeat,
+    linear-gradient(var(--gold) 0 0) bottom left / 1.5px 0 no-repeat;
   pointer-events: none;
-  transition: border-color 0.5s ease;
+  transition:
+    inset 0.75s cubic-bezier(0.22, 0.61, 0.36, 1),
+    border-color 0.55s ease,
+    background-size 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity 0.4s ease;
 }
 .look-card-visual .look-visual-layer {
   transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 .look-card-photo {
   object-fit: cover;
-  transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 .look-card:hover .look-card-visual::after {
+  inset: 0.4rem;
   border-color: var(--gold);
+  background-size: 100% 1.5px, 1.5px 100%, 100% 1.5px, 1.5px 100%;
 }
-.look-card:hover .look-card-photo {
-  transform: scale(1.04);
+.look-card:has(a:focus-visible) .look-card-visual::after {
+  inset: 0.4rem;
+  border-color: var(--gold);
+  background-size: 100% 1.5px, 1.5px 100%, 100% 1.5px, 1.5px 100%;
+}
+.look-card:hover .look-card-visual,
+.look-card:has(a:focus-visible) .look-card-visual {
+  border-color: color-mix(in srgb, var(--gold) 62%, var(--rule));
+}
+@media (prefers-reduced-motion: reduce) {
+  .look-card-visual,
+  .look-card-visual::after {
+    transition: none;
+  }
 }
 .look-card-body {
   display: flex;
@@ -3833,114 +3920,285 @@ a.look-piece-name:focus-visible {
   line-height: 1.45;
 }
 
-@media (max-width: 42rem) {
-  .checkout-flow {
-    gap: 1.25rem;
-  }
+/* -- Checkout (app/checkout/checkout-client.tsx) ------------------------------
+   No cards: each section is only drawn by the product tiles' frame — a square
+   gold hairline with a second one set just inside it — on the page's own
+   ground. Numbered serif headings, underlined fields, the total in the display
+   face, and one petrol button with spaced capitals. */
+.checkout-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+.checkout-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  counter-reset: checkout-step;
+}
+/* Phones: one column, the order leading and the total closing. */
+.checkout-main,
+.checkout-aside {
+  display: contents;
+}
+.checkout-summary {
+  order: -2;
+}
+.checkout-free-shipping {
+  order: -1;
+}
+
+.checkout-section {
+  position: relative;
+  margin: 0;
+  padding: 1.6rem 1.35rem 1.5rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 45%, white);
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+.checkout-section::after {
+  position: absolute;
+  inset: 0.4rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 28%, transparent);
+  content: "";
+  pointer-events: none;
+}
+.checkout-section > * {
+  position: relative;
+  z-index: 1;
+}
+
+.checkout-step {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  float: none;
+  width: 100%;
+  margin: 0 0 0.6rem;
+  padding: 0;
+  color: var(--ink);
+  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+.checkout-step::before {
+  counter-increment: checkout-step;
+  content: counter(checkout-step, decimal-leading-zero);
+  color: var(--gold);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+}
+/* A <legend> sits on the border by default; this one belongs inside it. */
+.checkout-address > legend.checkout-step {
+  float: left;
+}
+.checkout-address > legend + * {
+  clear: both;
+}
+.checkout-signed-in {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+/* Fields: a single hairline to write on. */
+.shelf .checkout-flow .field {
+  min-height: 3rem;
+  padding: 0.75rem 0.1rem 0.5rem;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 22%, var(--rule));
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-size: 1rem;
+  transition: border-color 0.25s ease;
+}
+.shelf .checkout-flow .field:hover:not(:focus) {
+  border-bottom-color: var(--gold);
+}
+.shelf .checkout-flow .field:focus {
+  border-bottom-color: var(--ink);
+  outline: none;
+  box-shadow: 0 1px 0 0 var(--ink);
+}
+.shelf .checkout-flow .field[aria-invalid="true"] {
+  border-bottom-color: var(--danger);
+  box-shadow: 0 1px 0 0 var(--danger);
+}
+.shelf .checkout-flow select.field {
+  padding-inline-end: 1.5rem;
+}
+
+/* The order, set aside. */
+.checkout-summary > summary {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  list-style: none;
+  color: var(--ink);
+  cursor: pointer;
+}
+.checkout-summary > summary::-webkit-details-marker {
+  display: none;
+}
+.checkout-summary > summary::marker {
+  content: "";
+}
+.checkout-summary > summary > span:first-child {
+  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 500;
+}
+.checkout-summary > summary > span:last-child {
+  margin-inline-start: auto;
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+}
+.checkout-summary > summary::after {
+  color: var(--gold);
+  content: "+";
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.35rem;
+  line-height: 1;
+}
+.checkout-summary[open] > summary::after {
+  content: "\2212";
+}
+.checkout-summary .shop-list {
+  margin-top: 1rem;
+  border-top: 1px solid var(--rule);
+}
+.checkout-summary .shop-list > li {
+  gap: 1rem;
+  padding: 1rem 0;
+}
+.checkout-summary .shop-list > li + li {
+  border-top: 1px solid var(--rule);
+}
+.checkout-summary .shop-thumb--cart {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  opacity: 1;
+}
+.checkout-summary .shop-line-name {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.12rem;
+  line-height: 1.3;
+}
+.checkout-summary .shop-cart-total {
+  min-width: auto;
+  color: var(--ink);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.05rem;
+}
+
+.checkout-free-shipping {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-display), Georgia, serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  line-height: 1.4;
+}
+
+.shelf .checkout-discount .btn-secondary {
+  border-radius: 0;
+}
+.checkout-lines {
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+  color: var(--ink);
+}
+.checkout-grand-total {
+  align-items: baseline;
+  margin-top: 0.6rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid color-mix(in srgb, var(--gold) 55%, white);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+.checkout-grand-total > span:last-child {
+  font-size: 1.7rem;
+}
+
+.checkout-notice {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+.checkout-reassurance {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 1rem;
+  border-top: 1px solid var(--rule);
+  padding-top: 0.25rem;
+}
+.checkout-reassurance > ul {
+  flex: 1 1 100%;
+  gap: 0.4rem 1rem;
+  margin: 0;
+  font-size: 0.75rem;
+}
+.checkout-payment-marks {
+  min-height: 1.75rem;
+}
+.checkout-support-link {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.shelf .checkout-submit {
+  width: 100%;
+  min-height: 3.5rem;
+  border-radius: 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+.checkout-payment-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+.shelf .checkout-other-payment {
+  font-size: 0.72rem;
+}
+
+@media (min-width: 60rem) {
   .checkout-form {
-    gap: 1.25rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 3rem;
   }
-  .checkout-flow .checkout-summary,
-  .checkout-flow .form-card {
-    border: 1px solid color-mix(in srgb, var(--gold) 42%, white);
-    border-radius: 1rem;
-    background: #fffefa;
-    box-shadow: 0 0.55rem 1.5rem rgb(37 34 27 / 4%);
+  .checkout-main,
+  .checkout-aside {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
   }
-  .checkout-flow .checkout-summary::before {
-    display: block;
-    height: 1px;
-    margin-inline: 1rem;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    content: "";
-    opacity: 0.7;
+  .checkout-aside {
+    position: sticky;
+    top: 6.5rem;
   }
-  .checkout-flow .checkout-summary > summary {
-    padding: 1rem 1.1rem;
-    list-style: none;
-    color: var(--ink);
-  }
-  .checkout-flow .checkout-summary > summary::-webkit-details-marker {
-    display: none;
-  }
-  .checkout-flow .checkout-summary > summary::marker {
-    content: "";
-  }
-  .checkout-flow .checkout-summary > summary::after {
-    color: var(--gold);
-    content: "+";
-    font-family: var(--font-display), Georgia, serif;
-    font-size: 1.35rem;
-    line-height: 1;
-  }
-  .checkout-flow .checkout-summary[open] > summary::after {
-    content: "−";
-  }
-  .checkout-flow .checkout-summary > summary > span:first-child {
-    font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
-    font-size: 1.22rem;
-    letter-spacing: 0.01em;
-  }
-  .checkout-flow .checkout-summary > summary > span:last-child {
-    margin-inline-start: auto;
-    color: var(--ink-soft);
-    font-size: 0.72rem;
-    letter-spacing: 0.1em;
-  }
-  .checkout-flow .checkout-summary .shop-list > li {
-    gap: 0.9rem;
-    padding: 1rem 1.1rem 1.1rem;
-  }
-  .checkout-flow .checkout-summary .shop-thumb--cart {
-    padding: 0.2rem;
-    border: 1px solid color-mix(in srgb, var(--gold) 35%, white);
-    border-radius: 0.65rem;
-  }
-  .checkout-flow .checkout-summary .shop-line-name {
-    font-size: 1.08rem;
-    line-height: 1.35;
-  }
-  .checkout-flow .checkout-summary .shop-cart-total {
-    min-width: auto;
-    color: var(--ink);
-    font-family: var(--font-display), Georgia, serif;
-    font-size: 1rem;
-  }
-  .checkout-flow .checkout-free-shipping {
-    padding: 1rem 1.1rem;
-    border-color: color-mix(in srgb, var(--gold) 42%, white);
-    border-radius: 0.9rem;
-    background: linear-gradient(115deg, #fffefa, color-mix(in srgb, var(--accent) 6%, white));
-  }
-  .checkout-flow .checkout-free-shipping p {
-    gap: 0.15rem;
-    line-height: 1.45;
-  }
-  .checkout-flow .form-card {
-    padding: 1.15rem;
-  }
-  .checkout-flow .checkout-field-label {
-    color: var(--ink-soft);
-    font-size: 0.82rem;
-    letter-spacing: 0.015em;
-  }
-  .checkout-flow .checkout-address-legend {
-    color: var(--ink);
-    font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
-    font-size: 1.2rem;
-    line-height: 1.25;
-  }
-  .shelf .checkout-flow .field {
-    min-height: 3.2rem;
-    padding-inline: 0.95rem;
-    border: 1px solid color-mix(in srgb, var(--gold) 34%, #d7d0c4);
-    border-radius: 0.55rem;
-    background: #fff;
-    box-shadow: inset 0 1px 2px rgb(37 34 27 / 2%);
-  }
-  .shelf .checkout-flow .field:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);
+  .checkout-section {
+    padding: 2rem 2rem 1.9rem;
   }
 }
 

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Link } from "@/components/localized-link";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
@@ -77,12 +78,13 @@ export async function Header({
 
         {/* ── Logo (far left, desktop only — mobile has its own centered logo below) ── */}
         <Link href="/" className="hidden shrink-0 self-stretch items-center lg:flex">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={headerLogoSrc(logoUrl)}
             alt={storeName}
             width={284}
             height={168}
+            sizes="108px"
+            fetchPriority="high"
             className="h-16 w-auto object-contain mix-blend-multiply"
           />
         </Link>
@@ -248,12 +250,13 @@ export async function Header({
             />
           </div>
           <Link href="/" className="flex items-center justify-center">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={headerLogoSrc(logoUrl)}
               alt={storeName}
               width={284}
               height={168}
+              sizes="101px"
+              fetchPriority="high"
               className="h-15 w-auto object-contain mix-blend-multiply"
             />
           </Link>

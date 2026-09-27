@@ -12,10 +12,15 @@ export function ProductImageZoom({
   src,
   alt,
   isLifestyle,
+  onOpen,
+  openLabel,
 }: {
   src: string;
   alt: string;
   isLifestyle?: boolean;
+  // A click opens the full-screen viewer, for detail the hover can't reach.
+  onOpen?: () => void;
+  openLabel?: string;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [zooming, setZooming] = useState(false);
@@ -35,6 +40,16 @@ export function ProductImageZoom({
       onMouseEnter={() => setZooming(true)}
       onMouseMove={handleMouseMove}
       onMouseLeave={() => setZooming(false)}
+      onClick={onOpen}
+      onKeyDown={(e) => {
+        if (onOpen && (e.key === "Enter" || e.key === " ")) {
+          e.preventDefault();
+          onOpen();
+        }
+      }}
+      role={onOpen ? "button" : undefined}
+      tabIndex={onOpen ? 0 : undefined}
+      aria-label={onOpen && openLabel ? `${openLabel}: ${alt}` : undefined}
       className="shop-product-photo cursor-zoom-in"
     >
       <CatalogImage

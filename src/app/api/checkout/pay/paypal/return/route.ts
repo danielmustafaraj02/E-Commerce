@@ -45,7 +45,9 @@ export async function GET(request: Request) {
           scope: "paypal-return-amount-mismatch",
           orderNumber: order.orderNumber,
         });
-        return NextResponse.redirect(new URL(confirmationUrl, request.url));
+        return NextResponse.redirect(
+          new URL(`${confirmationUrl}?paymentError=1`, request.url)
+        );
       }
 
       const status = await db.$transaction(async (tx) => {
@@ -69,12 +71,14 @@ export async function GET(request: Request) {
         orderNumber: order.orderNumber,
         orderStatus: status,
       });
-      return NextResponse.redirect(new URL(confirmationUrl, request.url));
+      return NextResponse.redirect(
+        new URL(`${confirmationUrl}?paymentError=1`, request.url)
+      );
     }
   } catch {
-    // Fall through — the order stays pending and the webhook or a retry can
-    // still confirm it later.
+    // The order stays pending and the payment can be retried. PayPal's actual
+    // cancel URL is separate, so a capture failure must not look like a cancel.
   }
 
-  return NextResponse.redirect(new URL(`${confirmationUrl}?cancelled=1`, request.url));
+  return NextResponse.redirect(new URL(`${confirmationUrl}?paymentError=1`, request.url));
 }

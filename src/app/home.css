@@ -572,28 +572,55 @@
   outline-offset: 2px;
   border-radius: 999px;
 }
-.shelf-bead-dots {
+/* Every necklace in the set, under the photo — phones only (the arrows and
+   counter do this job on wide screens). Unframed studio shots on the ground,
+   the one on show lifted by a gold hairline beneath it. */
+.shelf-bead-thumbs {
   display: none;
   justify-content: center;
-  gap: 0.15rem;
-  margin-top: 0.75rem;
+  gap: 0.35rem;
+  margin-top: 1.1rem;
 }
-.shelf-bead-dots button {
-  width: 1.5rem;
-  height: 1.5rem;
-  padding: 0.5rem;
+.shelf-bead-thumb {
+  position: relative;
+  width: 2.9rem;
+  aspect-ratio: 4 / 5;
+  padding: 0;
   border: 0;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--ink) 25%, transparent);
-  background-clip: content-box;
+  background: none;
   cursor: pointer;
+  opacity: 0.42;
   transition:
-    width 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
-    background-color 0.25s ease;
+    opacity 0.35s ease,
+    transform 0.35s cubic-bezier(0.2, 0.75, 0.3, 1);
 }
-.shelf-bead-dots button.is-active {
-  width: 2.5rem;
-  background-color: var(--ink);
+.shelf-bead-thumb img {
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+.shelf-bead-thumb::after {
+  position: absolute;
+  inset-inline: 22%;
+  bottom: -0.45rem;
+  height: 1px;
+  background: var(--gold);
+  content: "";
+  transform: scaleX(0);
+  transition: transform 0.35s ease;
+}
+.shelf-bead-thumb[aria-current="true"] {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+.shelf-bead-thumb[aria-current="true"]::after {
+  transform: scaleX(1);
+}
+.shelf-bead-thumb:focus-visible {
+  outline: 1px solid var(--ink);
+  outline-offset: 3px;
+}
+.shelf-bead-zoom {
+  display: none;
 }
 .shelf-bead-count {
   min-width: 3.5em;
@@ -766,16 +793,55 @@
   font-size: 0.9rem;
   padding: 0.9rem 2.5rem;
 }
-/* Subtle zoom on the photo, scoped to this one section — the rest of the
-   shelf deliberately has no hover motion (see the file banner comment). */
-.shelf-row--special .shelf-item-photo {
-  overflow: hidden;
+/* A quiet gallery mount gives the white studio photos a little more warmth
+   and makes each piece feel intentional in the grid. The photo itself still
+   dissolves into the ivory ground through the existing multiply treatment. */
+.shelf-item-photo {
+  background: #f5f1e9;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gold) 24%, transparent);
+  transition: box-shadow 0.55s ease;
 }
-.shelf-row--special .shelf-item-photo img {
-  transition: transform 0.5s ease;
+.shelf-item-photo::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0.55rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 22%, transparent);
+  content: "";
+  pointer-events: none;
+  transition:
+    inset 0.75s cubic-bezier(0.22, 0.61, 0.36, 1),
+    border-color 0.55s ease;
 }
-.shelf-row--special .shelf-item:hover .shelf-item-photo img {
-  transform: scale(1.02);
+@media (hover: hover) and (pointer: fine) {
+  .shelf-item:hover .shelf-item-photo::after {
+    inset: 0.35rem;
+    border-color: color-mix(in srgb, var(--gold) 58%, transparent);
+  }
+  .shelf-item:hover .shelf-item-photo {
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gold) 48%, transparent);
+  }
+}
+.shelf-item:has(:focus-visible) .shelf-item-photo::after {
+  inset: 0.35rem;
+  border-color: color-mix(in srgb, var(--gold) 58%, transparent);
+}
+.shelf-item:has(:focus-visible) .shelf-item-photo {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gold) 48%, transparent);
+}
+.shelf-home .shelf-item-photo,
+.shelf-home .shelf-item:hover .shelf-item-photo,
+.shelf-home .shelf-item:has(:focus-visible) .shelf-item-photo {
+  background: #fff;
+  box-shadow: none;
+}
+.shelf-home .shelf-item-photo::after {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .shelf-item-photo::after,
+  .shelf-item-photo {
+    transition: none;
+  }
 }
 
 /* -- Categories: the pieces themselves, deliberately uneven ---------------- */
@@ -800,7 +866,7 @@
   align-items: center;
   text-align: center;
   padding: 1rem 1rem 1.5rem;
-  border: 1px solid color-mix(in srgb, var(--gold) 30%, white);
+  border: 1.5px solid color-mix(in srgb, var(--gold) 38%, white);
   background: #fffefa;
   box-shadow: 0 0.75rem 2rem rgb(37 34 27 / 4%);
   transition:
@@ -808,10 +874,38 @@
     border-color 0.45s ease,
     box-shadow 0.45s ease;
 }
+.shelf-category::before {
+  position: absolute;
+  z-index: 1;
+  inset: 0.65rem;
+  background:
+    linear-gradient(color-mix(in srgb, var(--gold) 78%, white) 0 0) top left / 0 1.5px no-repeat,
+    linear-gradient(color-mix(in srgb, var(--gold) 78%, white) 0 0) top right / 1.5px 0 no-repeat,
+    linear-gradient(color-mix(in srgb, var(--gold) 78%, white) 0 0) bottom right / 0 1.5px no-repeat,
+    linear-gradient(color-mix(in srgb, var(--gold) 78%, white) 0 0) bottom left / 1.5px 0 no-repeat;
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .shelf-category::before {
+    transition:
+      opacity 0.3s ease,
+      background-size 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+}
+.shelf-category:has(a:focus-visible)::before {
+  background-size: 100% 1.5px, 1.5px 100%, 100% 1.5px, 1.5px 100%;
+  opacity: 0.9;
+}
 @media (hover: hover) and (pointer: fine) {
+  .shelf-category:hover::before {
+    background-size: 100% 1.5px, 1.5px 100%, 100% 1.5px, 1.5px 100%;
+    opacity: 0.9;
+  }
   .shelf-category:hover {
     transform: translateY(-3px);
-    border-color: color-mix(in srgb, var(--gold) 60%, white);
+    border-color: color-mix(in srgb, var(--gold) 72%, white);
     box-shadow: 0 1.25rem 2.5rem rgb(37 34 27 / 8%);
   }
 }
@@ -822,15 +916,42 @@
   width: 100%;
   aspect-ratio: 2 / 3;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--gold) 42%, white);
+  border: 1.5px solid color-mix(in srgb, var(--gold) 50%, white);
   background: #fff;
 }
 .shelf-category-photo::after {
   position: absolute;
   inset: 0.55rem;
-  border: 1px solid color-mix(in srgb, var(--gold) 24%, transparent);
+  border: 1.25px solid color-mix(in srgb, var(--gold) 32%, transparent);
+  background:
+    linear-gradient(color-mix(in srgb, var(--gold) 45%, transparent) 0 0) top left / 0 0.75px no-repeat,
+    linear-gradient(color-mix(in srgb, var(--gold) 45%, transparent) 0 0) top right / 0.75px 0 no-repeat,
+    linear-gradient(color-mix(in srgb, var(--gold) 45%, transparent) 0 0) bottom right / 0 0.75px no-repeat,
+    linear-gradient(color-mix(in srgb, var(--gold) 45%, transparent) 0 0) bottom left / 0.75px 0 no-repeat;
   content: "";
   pointer-events: none;
+  transition:
+    inset 0.75s cubic-bezier(0.22, 0.61, 0.36, 1),
+    border-color 0.55s ease,
+    background-size 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity 0.4s ease;
+}
+.shelf-category:has(a:focus-visible) .shelf-category-photo::after {
+  inset: 0.35rem;
+  border-color: color-mix(in srgb, var(--gold) 30%, transparent);
+  background-size: 100% 0.75px, 0.75px 100%, 100% 0.75px, 0.75px 100%;
+}
+@media (hover: hover) and (pointer: fine) {
+  .shelf-category:hover .shelf-category-photo::after {
+    inset: 0.35rem;
+    border-color: color-mix(in srgb, var(--gold) 30%, transparent);
+    background-size: 100% 0.75px, 0.75px 100%, 100% 0.75px, 0.75px 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shelf-category-photo::after {
+    transition: none;
+  }
 }
 .shelf-home .shelf-category-photo img,
 .shelf-category-photo img {
@@ -840,11 +961,6 @@
   -webkit-mask-image: none;
   mask-image: none;
   mix-blend-mode: multiply;
-  transform: scale(1);
-  transition: transform 1.2s cubic-bezier(0.22, 0.61, 0.36, 1);
-}
-.shelf-category:hover .shelf-category-photo img {
-  transform: scale(1.035);
 }
 .shelf-category-index {
   margin-top: 1.5rem;
@@ -923,6 +1039,72 @@
   .shelf-categories {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 2rem 3.5rem;
+  }
+  /* Desktop: no card. Each category is a framed vignette — one hairline rule
+     around the piece, a second finer rule just inside it, and a caption floating
+     on the section ground beneath. Nothing is filled, nothing lifts, and the
+     photo's white background dissolves into the page, so the jewellery reads as
+     an object on a gallery wall rather than a tile in a grid. */
+  .shelf-category {
+    padding: 1.75rem 1.75rem 1.5rem;
+    border: 1px solid color-mix(in srgb, var(--gold) 26%, transparent);
+    background: none;
+    box-shadow: none;
+  }
+  /* The inner rule: the same hairline, drawn as four corner brackets that run
+     the full width only while the category is hovered or focused. */
+  .shelf-category::before {
+    inset: 0.4rem;
+  }
+  .shelf-category::after {
+    position: absolute;
+    inset: 0;
+    border: 1px solid transparent;
+    content: "";
+    pointer-events: none;
+    transition: border-color 0.45s ease;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .shelf-category::after {
+      transition: border-color 0.6s ease;
+    }
+  }
+  .shelf-category:hover::after,
+  .shelf-category:has(a:focus-visible)::after {
+    border-color: color-mix(in srgb, var(--gold) 45%, transparent);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .shelf-category:hover {
+      transform: none;
+      border-color: color-mix(in srgb, var(--gold) 45%, transparent);
+      box-shadow: none;
+    }
+  }
+  /* The piece itself: no frame, no white plate — the photo's own background
+     blends away and only a whisper of an inner mat suggests the mount. */
+  .shelf-category-photo {
+    border: none;
+    /* The section's own ground, not white: the photos are shot on white and
+       blended with `multiply`, so they dissolve only into a matching backdrop.
+       Left white, each photo would read as a pale plate laid on ivory. */
+    background: #f8f6f1;
+  }
+  .shelf-category-photo::after {
+    inset: 0.45rem;
+    border: 1px solid color-mix(in srgb, var(--gold) 16%, transparent);
+  }
+  .shelf-category-index {
+    margin-top: 1.9rem;
+    font-size: 0.9rem;
+    letter-spacing: 0.22em;
+  }
+  .shelf-category-name {
+    font-size: clamp(1.9rem, 2.2vw, 2.4rem);
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+  .shelf-category:has(a:focus-visible) .shelf-category-photo {
+    outline-offset: 6px;
   }
 }
 
@@ -1575,10 +1757,6 @@
        stopping on it — "always" forces every swipe to land on one card. */
     scroll-snap-stop: always;
   }
-  /* A restrained press response keeps the image tactile on touch screens. */
-  .shelf-category-photo img {
-    transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
-  }
   .shelf-category-photo {
     grid-column: 1;
     grid-row: 1 / 4;
@@ -1607,9 +1785,6 @@
     margin-top: 0.65rem;
     font-size: 0.68rem;
     letter-spacing: 0.14em;
-  }
-  .shelf-category:active .shelf-category-photo img {
-    transform: scale(1.06);
   }
   .category-dots {
     display: flex;
@@ -1649,8 +1824,33 @@
   .shelf-bead-controls {
     display: none;
   }
-  .shelf-bead-dots {
+  .shelf-bead-thumbs {
     display: flex;
+  }
+  /* The photo opens the zoom viewer here rather than the product page. */
+  .shelf-hero .shelf-bead-link {
+    display: none;
+  }
+  .shelf-bead-zoom {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--ink);
+    cursor: zoom-in;
+  }
+  .shelf-bead-zoom svg {
+    box-sizing: content-box;
+    padding: 0.55rem;
+    border: 1px solid color-mix(in srgb, var(--gold) 60%, transparent);
+    border-radius: 50%;
+    background: rgb(251 249 245 / 88%);
+    backdrop-filter: blur(4px);
   }
   .shelf-eyebrow {
     font-size: 0.66rem;
@@ -1762,8 +1962,8 @@
   }
 }
 
-/* Desktop home: a clean studio field, with the curated looks riding a
-   hand-drawn Murano rollercoaster in place of the necklace backdrop. */
+/* Desktop home: the necklace carousel sits beside the brand copy, like the
+   phone layout, with enough room for each piece to read clearly. */
 @media (min-width: 52rem) {
   .shelf-home .shelf-hero > .shelf-wrap {
     max-width: 88rem;
@@ -1774,8 +1974,7 @@
       radial-gradient(ellipse at 76% 46%, rgb(236 229 214 / 42%), transparent 46%),
       #fbfaf7;
   }
-  .shelf-home .shelf-hero-backdrop,
-  .shelf-home .shelf-hero:has(.hero-look-rollercoaster) .shelf-bead-carousel {
+  .shelf-home .shelf-hero-backdrop {
     display: none;
   }
   .shelf-home .shelf-hero-grid {
@@ -1787,19 +1986,13 @@
   .shelf-home .shelf-hero-copy {
     max-width: 34rem;
   }
-  .shelf-home .shelf-hero--looks .shelf-hero-copy .shelf-title {
+  .shelf-home .shelf-hero-copy .shelf-title {
     max-width: 8ch;
     color: var(--ink);
     font-size: clamp(3.5rem, 7vw, 6.4rem);
     line-height: 0.99;
   }
-  .shelf-home .shelf-hero--looks .shelf-hero-copy .shelf-button {
-    background: var(--accent);
-  }
-  .shelf-home .shelf-hero--looks .shelf-hero-copy .shelf-button:hover {
-    background: var(--accent-deep);
-  }
-  .shelf-home .shelf-hero--looks .shelf-hero-copy .shelf-lede {
+  .shelf-home .shelf-hero-copy .shelf-lede {
     max-width: 30rem;
   }
   .shelf-home .shelf-hero .hero-look-rollercoaster {
@@ -2077,24 +2270,26 @@
     justify-self: center;
     margin-inline-end: 0;
   }
+  /* No card: the necklace is the hero's only object, so the frame around it is
+     removed entirely — no border, no white plate, no drop shadow, no inner
+     rule. The photo is shot on white and blended with `multiply`, so with the
+     plate gone its background dissolves into the hero's own ivory and the
+     piece appears to hang directly on the page. The frame is kept only as
+     layout (it holds the aspect ratio and the link's hit area). */
   .shelf-home .shelf-hero:not(:has(.hero-look-rollercoaster)) .shelf-bead {
     aspect-ratio: 4 / 5;
     overflow: hidden;
-    border: 1px solid color-mix(in srgb, var(--gold) 72%, white);
-    background: #fffefa;
-    box-shadow: 0 1.25rem 3rem rgb(37 34 27 / 12%);
+    border: none;
+    background: none;
+    box-shadow: none;
   }
   .shelf-home .shelf-hero:not(:has(.hero-look-rollercoaster)) .shelf-bead::after {
-    position: absolute;
-    z-index: 2;
-    inset: 0.65rem;
-    border: 1px solid color-mix(in srgb, var(--gold) 48%, transparent);
-    content: "";
-    pointer-events: none;
+    content: none;
   }
+  /* With the plate gone the piece can fill more of the frame. */
   .shelf-home .shelf-hero:not(:has(.hero-look-rollercoaster)) .shelf-bead img {
-    --hero-bead-scale: 1.04;
-    transform: scale(1.04);
+    --hero-bead-scale: 1.12;
+    transform: scale(1.12);
   }
   .shelf-home .shelf-hero:not(:has(.hero-look-rollercoaster)) .shelf-bead-caption {
     display: block;
@@ -2138,5 +2333,253 @@
   }
   .shelf-bead-caption {
     animation: none !important;
+  }
+}
+
+/* -- Zoom viewer (components/image-lightbox.tsx) ------------------------------
+   A full-screen white room for one piece at a time — white, not ivory, because
+   the studio photos are shot on white and the zoom transform isolates the
+   image, so a multiply blend can't melt them into a tint. A spaced counter and
+   a hairline close button above, the name in the display serif and the rest
+   of the set below. Nothing framed, nothing boxed. */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  color: var(--ink);
+  overscroll-behavior: contain;
+}
+.lightbox:not([open]) {
+  display: none;
+}
+.lightbox[open] {
+  animation: lightbox-in 0.45s cubic-bezier(0.2, 0.75, 0.3, 1) both;
+}
+.lightbox::backdrop {
+  background: #fff;
+}
+@keyframes lightbox-in {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+}
+.lightbox-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(0.75rem + env(safe-area-inset-top, 0px)) 1.25rem 0.5rem;
+}
+.lightbox-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--ink-soft);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  font-variant-numeric: tabular-nums;
+}
+.lightbox-count i {
+  display: block;
+  width: 1.4rem;
+  height: 1px;
+  background: var(--gold);
+}
+.lightbox-close,
+.lightbox-arrow {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
+  border-radius: 50%;
+  background: rgb(255 255 255 / 85%);
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    opacity 0.2s ease;
+}
+.lightbox-close:hover,
+.lightbox-arrow:hover {
+  border-color: var(--gold);
+}
+.lightbox-close:focus-visible,
+.lightbox-arrow:focus-visible,
+.lightbox-thumb:focus-visible,
+.lightbox-link:focus-visible {
+  outline: 1px solid var(--ink);
+  outline-offset: 3px;
+}
+.lightbox-stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  touch-action: none;
+  cursor: zoom-in;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.lightbox-stage[data-zoomed] {
+  cursor: grab;
+}
+.lightbox-frame {
+  position: absolute;
+  inset: 0.5rem 1rem;
+  transition: transform 0.4s cubic-bezier(0.2, 0.75, 0.3, 1);
+  will-change: transform;
+}
+.lightbox-img {
+  object-fit: contain;
+  pointer-events: none;
+  animation: lightbox-img-in 0.5s ease both;
+}
+.lightbox-img--sharp {
+  opacity: 0;
+  animation: none;
+  transition: opacity 0.4s ease;
+}
+.lightbox-img--sharp[data-loaded] {
+  opacity: 1;
+}
+@keyframes lightbox-img-in {
+  from {
+    opacity: 0;
+  }
+}
+.lightbox-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  translate: 0 -50%;
+}
+.lightbox-arrow--prev {
+  left: 1rem;
+}
+.lightbox-arrow--next {
+  right: 1rem;
+}
+.lightbox-stage[data-zoomed] .lightbox-arrow {
+  opacity: 0;
+  pointer-events: none;
+}
+.lightbox-foot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  text-align: center;
+}
+.lightbox-hint {
+  margin: 0;
+  color: var(--ink-soft);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition: opacity 0.3s ease;
+}
+.lightbox:has(.lightbox-stage[data-zoomed]) .lightbox-hint {
+  opacity: 0;
+}
+.lightbox-caption {
+  margin: 0;
+  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
+  font-size: 1.45rem;
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+  animation: lightbox-img-in 0.6s ease both;
+}
+.lightbox-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid var(--gold);
+  color: var(--ink);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.lightbox-thumbs {
+  display: flex;
+  gap: 0.4rem;
+  max-width: 100%;
+  margin-top: 0.4rem;
+  padding: 0.2rem 0.2rem 0.55rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.lightbox-thumbs::-webkit-scrollbar {
+  display: none;
+}
+.lightbox-thumb {
+  position: relative;
+  flex: none;
+  width: 2.9rem;
+  aspect-ratio: 4 / 5;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  opacity: 0.42;
+  transition: opacity 0.3s ease;
+}
+.lightbox-thumb img {
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+.lightbox-thumb img.lightbox-img--lifestyle {
+  object-fit: cover;
+  mix-blend-mode: normal;
+}
+.lightbox-thumb::after {
+  position: absolute;
+  inset-inline: 22%;
+  bottom: -0.4rem;
+  height: 1px;
+  background: var(--gold);
+  content: "";
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+.lightbox-thumb[aria-current="true"] {
+  opacity: 1;
+}
+.lightbox-thumb[aria-current="true"]::after {
+  transform: scaleX(1);
+}
+@media (max-width: 39.99rem) {
+  /* Swipe does this on a phone; the arrows would sit on the necklace. */
+  .lightbox-arrow {
+    display: none;
+  }
+  .lightbox-frame {
+    inset: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lightbox[open],
+  .lightbox-img,
+  .lightbox-caption {
+    animation: none;
+  }
+  .lightbox-frame {
+    transition: none;
   }
 }

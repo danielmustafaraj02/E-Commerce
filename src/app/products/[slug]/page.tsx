@@ -45,6 +45,9 @@ import { FaqSection } from "@/components/faq-section";
 import { getLooksForProducts } from "@/lib/look-data";
 import { CompleteTheLook } from "@/components/complete-the-look";
 import { GiftFinderArrow } from "@/components/gift-finder-arrow";
+import { PaymentIcons } from "@/components/payment-icons";
+import { isStripeConfigured } from "@/lib/stripe";
+import { isPaypalConfigured } from "@/lib/paypal";
 
 // Small single-use icons for the gift sections below — same stroke
 // convention (1.8, round caps/joins, currentColor) as the existing icons in
@@ -237,11 +240,13 @@ export async function generateMetadata({
 export default async function ProductDetailPage({ params }: PageProps<"/products/[slug]">) {
   const { slug } = await params;
 
-  const [settings, uiLocale, product, session] = await Promise.all([
+  const [settings, uiLocale, product, session, cardsEnabled, paypalEnabled] = await Promise.all([
     getStoreSettings(),
     getLocale(),
     getProduct(slug),
     auth(),
+    isStripeConfigured(),
+    isPaypalConfigured(),
   ]);
 
   if (!product || !product.active) notFound();
@@ -409,7 +414,17 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
           )}
 
           <div className="shop-product-grid">
-            <ProductGallery images={product.images} alt={productImageAlt(name, uiLocale)} />
+            <ProductGallery
+              images={product.images}
+              alt={productImageAlt(name, uiLocale)}
+              zoomLabels={{
+                open: dict.nav.zoomImage,
+                close: dict.nav.closeZoom,
+                previous: dict.home.previousSlide,
+                next: dict.home.nextSlide,
+                hint: dict.nav.zoomHint,
+              }}
+            />
 
             {/* Image → product → story → purchase → reassurance, in one
                 readable column (layout in shop.css). */}
@@ -521,6 +536,19 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
               </div>
 
               <TrustBadges trustBadgeText={settings.trustBadgeText} dict={dict.product} />
+
+              {/* The same accepted-method marks as the footer and checkout,
+                  repeated where the buy decision happens. */}
+              <div className="shop-pdp-payments">
+                <span className="shop-pdp-payments-label">{dict.footer.weAccept}</span>
+                <PaymentIcons
+                  cards={cardsEnabled}
+                  paypal={paypalEnabled}
+                  klarna={cardsEnabled && settings.klarnaEnabled}
+                  bankTransfer={settings.bankTransferEnabled && Boolean(settings.bankIban)}
+                  labels={{ bankTransfer: dict.payment.bankTransfer }}
+                />
+              </div>
 
               <div className="shop-gift-reassurance">
                 <GiftIcon />

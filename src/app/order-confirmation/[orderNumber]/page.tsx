@@ -18,6 +18,7 @@ import { localizedName } from "@/lib/product-i18n";
 import { isPaypalConfigured } from "@/lib/paypal";
 import { LookPurchaseTracker } from "@/components/look-purchase-tracker";
 import { GiftFinderPurchaseTracker } from "@/components/gift-finder-purchase-tracker";
+import { ClearCartOnPaidReturn } from "@/components/clear-cart-on-paid-return";
 
 const RETURNABLE_STATUSES = ["paid", "processing", "shipped", "delivered"];
 
@@ -26,7 +27,7 @@ export default async function OrderConfirmationPage({
   searchParams,
 }: PageProps<"/order-confirmation/[orderNumber]">) {
   const { orderNumber } = await params;
-  const { cancelled } = await searchParams;
+  const { cancelled, paid, paymentError } = await searchParams;
 
   // A guest order's orderNumber is its only access token (see
   // lib/orders.ts) — rate-limit lookups per IP so it can't be brute-forced
@@ -59,6 +60,7 @@ export default async function OrderConfirmationPage({
 
   return (
     <ShelfMain>
+      <ClearCartOnPaidReturn paid={paid === "1"} />
       {order.bundleDiscountAmount > 0 && (
         <LookPurchaseTracker orderNumber={order.orderNumber} saving={order.bundleDiscountAmount} />
       )}
@@ -100,6 +102,11 @@ export default async function OrderConfirmationPage({
         </p>
         {cancelled && (
           <p className="text-warning mt-2 text-sm">{dict.orderConfirmation.cancelled}</p>
+        )}
+        {paymentError === "1" && order.status === "pending" && (
+          <p role="alert" className="text-danger mt-2 text-sm">
+            {dict.payment.errStart}
+          </p>
         )}
       </ShelfHead>
       <ShelfBody>

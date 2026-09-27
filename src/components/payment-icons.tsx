@@ -7,6 +7,7 @@
 function Badge({ children, label }: { children: React.ReactNode; label: string }) {
   return (
     <div
+      role="img"
       aria-label={label}
       title={label}
       className="border-foreground/10 bg-background flex h-7 w-11 shrink-0 items-center justify-center rounded border shadow-sm"
@@ -19,6 +20,7 @@ function Badge({ children, label }: { children: React.ReactNode; label: string }
 export function VisaIcon() {
   return (
     <div
+      role="img"
       aria-label="Visa"
       title="Visa"
       className="flex h-7 w-11 shrink-0 items-center justify-center rounded bg-[#1434cb] shadow-sm"
@@ -44,6 +46,7 @@ export function PayPalIcon() {
   // wordmarks at that box width and was wrapping/clipping inside it.
   return (
     <div
+      role="img"
       aria-label="PayPal"
       title="PayPal"
       className="border-foreground/10 bg-background flex h-7 w-14 shrink-0 items-center justify-center rounded border shadow-sm"
@@ -59,6 +62,7 @@ export function PayPalIcon() {
 export function KlarnaIcon() {
   return (
     <div
+      role="img"
       aria-label="Klarna"
       title="Klarna"
       className="flex h-7 w-11 shrink-0 items-center justify-center rounded bg-[#ffb3c7] shadow-sm"

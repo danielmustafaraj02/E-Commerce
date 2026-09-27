@@ -32,6 +32,7 @@ export default async function CartPage() {
           locale={settings.defaultLocale}
           uiLocale={uiLocale}
           dict={dict.cart}
+          checkoutErrorLabel={dict.checkout.couldNotPlaceOrder}
           shippingBanner={shippingBanner}
           freeShippingThreshold={settings.freeShippingThreshold}
           stripePublishableKey={stripePublishableKey}
