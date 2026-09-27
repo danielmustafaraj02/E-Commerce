@@ -185,52 +185,37 @@
 }
 .shop-back {
   display: inline-block;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 .shop-product-grid {
   display: grid;
-  gap: 2rem;
+  gap: 2.5rem;
 }
-@media (min-width: 40rem) {
+@media (min-width: 56rem) {
   .shop-product-grid {
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-    gap: 2.5rem;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: clamp(3rem, 6vw, 5.5rem);
     align-items: start;
   }
 }
-/* Large screens: a wider hero than the rest of the page (64rem), the
-   gallery taking ~57% and staying in view while the details scroll past. */
+/* Large screens: give the photograph and product story room to breathe. */
 @media (min-width: 64rem) {
   .shop-product > .shelf-wrap {
-    max-width: 80rem;
-    padding-inline: 2rem;
+    max-width: 90rem;
+    padding-inline: clamp(1.5rem, 3vw, 3rem);
   }
   .shop-product-grid {
-    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
-    gap: 4.5rem;
+    grid-template-columns: minmax(0, 1.3fr) minmax(25rem, 0.9fr);
+    gap: clamp(4rem, 7vw, 8rem);
   }
   .shop-product-grid > .shop-gallery {
     position: sticky;
-    top: 6rem;
+    top: 7rem;
   }
 }
 .shop-product-info {
-  position: relative;
-  max-width: 32rem;
-  padding: clamp(1.25rem, 2.2vw, 2rem);
-  border: 1px solid color-mix(in srgb, var(--gold) 38%, var(--rule));
-  border-radius: 4px;
-  background: #fbf9f5;
-  box-shadow: 0 1.5rem 3rem -2rem rgb(18 61 67 / 24%);
-}
-.shop-product-info::before {
-  position: absolute;
-  top: -1px;
-  left: 1.5rem;
-  width: 3.25rem;
-  height: 1px;
-  background: var(--gold);
-  content: "";
+  width: 100%;
+  max-width: 36rem;
 }
 
 .shop-product-photo,
@@ -390,11 +375,11 @@
 /* -- Value row / gift reassurance strip ----------------------------------------- */
 
 .shop-value-row {
-  color: var(--ink-soft);
-  margin-top: 0.75rem;
-  font-size: 0.72rem;
+  color: var(--aventurine-deep);
+  margin: 0 0 0.9rem;
+  font-size: 0.68rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
 }
 
@@ -672,15 +657,17 @@
 }
 
 .shop-product-title {
-  font-size: clamp(2.2rem, 3.6vw, 3.25rem);
-  line-height: 1.05;
+  max-width: 17ch;
+  font-size: clamp(2.35rem, 4.1vw, 4rem);
+  line-height: 1.03;
+  letter-spacing: -0.018em;
   overflow-wrap: anywhere;
 }
 .shop-price {
-  margin: 1.1rem 0 0;
+  margin: 1.55rem 0 0;
   color: var(--ink);
   font-family: var(--font-display), Georgia, serif;
-  font-size: 2.1rem;
+  font-size: clamp(2rem, 3vw, 2.5rem);
   font-weight: 500;
   font-variant-numeric: lining-nums;
 }
@@ -689,6 +676,16 @@
   font-size: 1.15rem;
   font-weight: 400;
   margin-inline-end: 0.6rem;
+}
+.shop-stock-status {
+  margin-top: 0.85rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.035em;
+}
+.shop-product-specs {
+  margin-top: 1.1rem;
+  font-size: 0.91rem;
+  line-height: 1.65;
 }
 /* Same restrained look as .shelf-discount-badge on the product cards. */
 .shop-discount-badge {
@@ -703,11 +700,11 @@
   border-radius: 2px;
 }
 .shop-prose {
-  margin: 1.75rem 0 0;
+  margin: 2rem 0 0;
   max-width: 34rem;
   font-family: var(--font-display), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
   font-size: 1.2rem;
-  line-height: 1.65;
+  line-height: 1.8;
   white-space: pre-line;
 }
 
@@ -2430,6 +2427,22 @@ a.shop-line-name:focus-visible {
   width: auto;
   margin: 0;
   flex: 1;
+  min-height: 3.25rem;
+  border-radius: 3px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.shop-sticky-cta .btn-primary::after {
+  display: inline-block;
+  width: 0.48rem;
+  height: 0.48rem;
+  flex: 0 0 auto;
+  border-top: 1.5px solid currentColor;
+  border-right: 1.5px solid currentColor;
+  content: "";
+  transform: rotate(45deg);
 }
 @media (min-width: 40rem) {
   .shop-sticky-cta,
@@ -2785,49 +2798,146 @@ a.look-piece-name:focus-visible {
   cursor: pointer;
 }
 
-/* Purchase: Add to cart is the primary action and fills the row beside the
-   quantity; Buy now is a full-width outline; wishlist is a quiet text action.
-   Scoped here (the shared components are used elsewhere too). */
+/* Purchase actions stay distinct and easy to scan: quantity beside the main
+   action, a clear checkout choice, then a framed wishlist control. */
 .shop-buy {
-  margin-top: 1.75rem;
-  padding-top: 1.5rem;
+  margin-top: 2.25rem;
+  padding-top: 1.65rem;
   border-top: 1px solid var(--rule);
 }
-.shop-buy > div:first-child {
+.shop-buy .shop-purchase-controls {
+  display: grid;
+  grid-template-columns: minmax(5.25rem, 6.5rem) minmax(0, 1fr);
+  align-items: center;
+  gap: 0.8rem;
+  width: 100%;
   margin-top: 0;
-  flex-wrap: nowrap;
 }
 .shop-buy .shop-cta-teal {
-  flex: 1;
-  min-height: 3.1rem;
-  letter-spacing: 0.02em;
+  width: 100%;
+  min-height: 3.75rem;
+  padding-inline: 0.9rem;
+  border-radius: 3px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  box-shadow: 0 0.75rem 1.5rem -1.1rem rgb(18 61 67 / 70%);
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
 }
-.shop-buy > div:first-child > div:first-child {
-  height: 3.1rem;
+.shop-buy .shop-purchase-quantity {
+  width: 6.5rem;
+  min-width: 0;
+  height: 3.75rem;
+  border-color: color-mix(in srgb, var(--gold) 46%, var(--rule));
+  border-radius: 3px;
+  background: #fff;
 }
-.shop-buy > div:first-child > div:first-child button {
-  width: 2.75rem;
+.shop-buy .shop-purchase-quantity button {
+  width: 2.35rem;
+  color: var(--ink-soft);
+}
+.shop-buy .shop-purchase-quantity button:hover:not(:disabled) {
+  color: var(--ink);
+}
+.shop-buy .shop-cta-teal::after,
+.shop-buy .btn-secondary::after {
+  width: 0.48rem;
+  height: 0.48rem;
+  flex: 0 0 auto;
+  border-top: 1.5px solid currentColor;
+  border-right: 1.5px solid currentColor;
+  content: "";
+  display: inline-block;
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+}
+.shop-buy .shop-cta-teal:hover:not(:disabled),
+.shop-buy .btn-secondary:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+.shop-buy .shop-cta-teal:hover:not(:disabled)::after,
+.shop-buy .btn-secondary:hover:not(:disabled)::after {
+  transform: translateX(3px) rotate(45deg);
+}
+.shop-buy .shop-cta-teal:active:not(:disabled),
+.shop-buy .btn-secondary:active:not(:disabled) {
+  transform: translateY(0) scale(0.985);
 }
 .shop-buy .btn-secondary {
   display: flex;
   width: 100%;
+  align-items: center;
   justify-content: center;
-  min-height: 3.1rem;
+  gap: 0.75rem;
+  min-height: 3.5rem;
+  margin-top: 0.85rem;
+  padding-inline: 1.1rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 58%, var(--rule));
+  border-radius: 3px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 0.73rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+.shop-buy .btn-secondary:hover:not(:disabled) {
+  border-color: var(--gold);
+  background: #fbf9f5;
+  color: var(--accent-deep);
 }
 .shop-buy button[aria-pressed] {
-  min-height: 2.75rem;
-  padding-inline: 0;
-  border: 0;
-  background: none;
-  font-weight: 500;
+  display: inline-flex;
+  width: 100%;
+  min-height: 3.25rem;
+  justify-content: center;
+  padding-inline: 1.1rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 45%, var(--rule));
+  border-radius: 3px;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   transform: translateY(0);
   transition:
-    color 0.3s ease,
-    transform 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    transform 0.2s ease;
 }
 .shop-buy button[aria-pressed]:hover {
-  background: none;
+  border-color: var(--gold);
+  background: #fbf9f5;
+  color: var(--ink);
   text-decoration: none;
+}
+.shop-buy button[aria-pressed]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.shop-buy button[aria-pressed]:active {
+  transform: translateY(0) scale(0.985);
+}
+.shop-buy button[aria-pressed="true"] {
+  border-color: color-mix(in srgb, var(--rose) 42%, var(--rule));
+  background: color-mix(in srgb, var(--rose) 7%, #fff);
+  color: #994668;
+}
+.shop-buy .shop-wishlist-action-row,
+.shop-buy .shop-wishlist-action-wrap {
+  display: block;
+  width: 100%;
 }
 .shop-buy .wishlist-action-label {
   position: relative;
@@ -2848,6 +2958,9 @@ a.look-piece-name:focus-visible {
 .shop-buy button[aria-pressed]:focus-visible .wishlist-action-label::after {
   transform: scaleX(1);
 }
+.shop-buy button[aria-pressed="true"] .wishlist-action-label::after {
+  transform: scaleX(1);
+}
 .shop-buy .wishlist-heart {
   transform-origin: 50% 55%;
   transition:
@@ -2856,7 +2969,7 @@ a.look-piece-name:focus-visible {
     transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 @media (hover: hover) and (pointer: fine) {
-  .shop-buy button[aria-pressed]:hover {
+  .shop-buy button[aria-pressed]:hover:not(:active) {
     transform: translateY(-2px);
   }
   .shop-buy button[aria-pressed]:hover .wishlist-heart {
@@ -2878,9 +2991,8 @@ a.look-piece-name:focus-visible {
   100% { transform: scale(1) rotate(0); }
 }
 
-/* Accepted payment marks, right where the buy decision happens. A hairline
-   rule and a lettered label instead of a panel — the info column is already
-   a card, and a second one inside it reads as an advert. */
+/* Accepted payment marks sit just below the purchase choices, grouped by a
+   light rule and a small lettered label. */
 .shop-pdp-payments {
   display: flex;
   flex-wrap: wrap;
@@ -2904,8 +3016,7 @@ a.look-piece-name:focus-visible {
   box-shadow: none;
 }
 
-/* Not a tinted box: a hairline rule, a gold glyph and air. Same reason as
-   above — nested cards inside the info panel cheapen it. */
+/* Gift reassurance stays editorial: a hairline rule, a gold glyph and air. */
 .shop-product-info .shop-gift-reassurance {
   position: relative;
   align-items: flex-start;
@@ -4171,15 +4282,6 @@ a.look-piece-name:focus-visible {
   letter-spacing: 0.24em;
   text-transform: uppercase;
 }
-.checkout-payment-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-}
-.shelf .checkout-other-payment {
-  font-size: 0.72rem;
-}
-
 @media (min-width: 60rem) {
   .checkout-form {
     display: grid;
@@ -4205,29 +4307,19 @@ a.look-piece-name:focus-visible {
 /* -- Product page: the gift card offer --------------------------------------- */
 
 .shop-gift-card-offer {
-  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
-  margin-top: 1rem;
-  padding: 1.25rem 1.35rem;
-  border: 1px solid var(--rule);
-  border-radius: 4px;
-  background: #fff;
+  gap: 0.4rem;
+  margin-top: 1.75rem;
+  padding: 1.35rem 0;
+  border-block: 1px solid var(--rule);
+  background: transparent;
   color: inherit;
   text-decoration: none;
-  transition: border-color 0.3s ease;
-}
-.shop-gift-card-offer::after {
-  content: "";
-  position: absolute;
-  inset: 0.4rem;
-  border: 1px solid color-mix(in srgb, var(--gold) 40%, transparent);
-  border-radius: 2px;
-  pointer-events: none;
+  transition: color 0.3s ease;
 }
 .shop-gift-card-offer:hover {
-  border-color: var(--gold);
+  color: var(--accent-deep);
 }
 .shop-gift-card-offer-kicker {
   color: var(--gold);
@@ -4247,9 +4339,19 @@ a.look-piece-name:focus-visible {
   line-height: 1.55;
 }
 .shop-gift-card-offer-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
   margin-top: 0.5rem;
   font-size: 0.72rem;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
+}
+.shop-gift-card-offer-cta span {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+.shop-gift-card-offer:hover .shop-gift-card-offer-cta span {
+  transform: translateX(3px);
 }

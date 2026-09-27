@@ -7,6 +7,7 @@ export function QuantityStepper({
   max,
   decreaseLabel = "Decrease quantity",
   increaseLabel = "Increase quantity",
+  className = "",
 }: {
   value: number;
   onChange: (next: number) => void;
@@ -14,11 +15,14 @@ export function QuantityStepper({
   max?: number;
   decreaseLabel?: string;
   increaseLabel?: string;
+  className?: string;
 }) {
   const atMax = max !== undefined && value >= max;
 
   return (
-    <div className="border-foreground/15 inline-flex h-11 shrink-0 items-center rounded-md border">
+    <div
+      className={`shop-quantity-stepper border-foreground/15 inline-flex h-11 shrink-0 items-center rounded-md border ${className}`}
+    >
       <button
         type="button"
         onClick={() => onChange(value - 1)}

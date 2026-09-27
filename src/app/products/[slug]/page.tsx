@@ -429,15 +429,15 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
             {/* Image → product → story → purchase → reassurance, in one
                 readable column (layout in shop.css). */}
             <div className="shop-product-info">
-              <h1 className="shop-product-title">{name}</h1>
-
               {/* Restrained value row — material, provenance, weight — read in
-                  one glance, right under the title where a shopper looks first. */}
+                  one glance, as a quiet editorial eyebrow. */}
               <p className="shop-value-row">
                 {[material, dict.product.handmadeBadge, dict.product.lightweightBadge]
                   .filter(Boolean)
                   .join(" · ")}
               </p>
+
+              <h1 className="shop-product-title">{name}</h1>
 
               <p className="shop-price">
                 {compareAtPrice !== null && (
@@ -468,7 +468,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                 </p>
               )}
 
-              <p className="mt-1.5 text-sm">
+              <p className="shop-stock-status mt-1.5 text-sm">
                 {outOfStock ? (
                   <span className="text-danger">{dict.product.outOfStock}</span>
                 ) : lowStock ? (
@@ -484,7 +484,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                   instead of two keeps the stack of facts above the
                   description from reading as a long list. */}
               {(sizeKey || isProductColorKey(product.color)) && (
-                <p className="text-foreground/70 mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+                <p className="shop-product-specs text-foreground/70 mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
                   {sizeKey && (
                     <span>
                       {dict.product.sizeLabel}: {dict.product[sizeKey]}

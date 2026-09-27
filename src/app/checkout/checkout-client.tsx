@@ -58,8 +58,6 @@ export function CheckoutClient({
   stripePublishableKey,
   expressCheckoutLabel,
   quoteLoadingLabel,
-  payWithPayPalLabel,
-  paypalEnabled,
   paymentMethods,
   trustLabels,
   supportLabel,
@@ -85,8 +83,6 @@ export function CheckoutClient({
   stripePublishableKey: string | null;
   expressCheckoutLabel: string;
   quoteLoadingLabel: string;
-  payWithPayPalLabel: string;
-  paypalEnabled: boolean;
   paymentMethods: { cards: boolean; paypal: boolean; klarna: boolean; bankTransfer: boolean };
   trustLabels: {
     handmadeInMurano: string;
@@ -242,8 +238,6 @@ export function CheckoutClient({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null;
-    const payWithPayPal = submitter?.value === "paypal";
     setPostalCodeTouched(true);
     if (!postalCodeValid) {
       setError(dict.invalidPostalCode);
@@ -275,28 +269,6 @@ export function CheckoutClient({
       if (!res.ok) {
         setError(data.error ?? dict.couldNotPlaceOrder);
         setSubmitting(false);
-        return;
-      }
-
-      if (payWithPayPal) {
-        try {
-          const paymentRes = await fetch("/api/checkout/pay/paypal", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ orderNumber: data.orderNumber }),
-          });
-          const paymentData = await paymentRes.json();
-          if (paymentRes.ok && typeof paymentData.url === "string") {
-            clearCart();
-            window.location.assign(paymentData.url);
-            return;
-          }
-        } catch {
-          // The order already exists. Keep the established retry screen as the
-          // fallback if PayPal can't be started or its response is interrupted.
-        }
-        clearCart();
-        router.push(`/order-confirmation/${data.orderNumber}?paymentError=1`);
         return;
       }
 
@@ -643,32 +615,13 @@ export function CheckoutClient({
             </Link>
           </div>
 
-          <div className="checkout-payment-actions">
-            {paypalEnabled && (
-              <button
-                type="submit"
-                name="payment-provider"
-                value="paypal"
-                disabled={submitting || quoteLoading || !quote}
-                className="btn-primary checkout-submit"
-              >
-                {submitting ? dict.placingOrder : payWithPayPalLabel}
-              </button>
-            )}
-            <button
-              type="submit"
-              name="payment-provider"
-              value="other"
-              disabled={submitting || quoteLoading || !quote}
-              className={
-                paypalEnabled
-                  ? "btn-secondary checkout-submit checkout-other-payment"
-                  : "btn-primary checkout-submit"
-              }
-            >
-              {submitting ? dict.placingOrder : dict.continueToPayment}
-            </button>
-          </div>
+          <button
+            type="submit"
+            disabled={submitting || quoteLoading || !quote}
+            className="btn-primary checkout-submit"
+          >
+            {submitting ? dict.placingOrder : dict.continueToPayment}
+          </button>
         </div>
       </form>
     </div>

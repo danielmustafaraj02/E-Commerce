@@ -79,8 +79,8 @@ export function WishlistButton({
 
   if (!isSignedIn) {
     return (
-      <div className="mt-3">
-        <div className="relative inline-block max-sm:block">
+      <div className="shop-wishlist-action-row mt-3">
+        <div className="shop-wishlist-action-wrap relative inline-block max-sm:block">
           <button
             type="button"
             aria-pressed={guestSaved}
@@ -103,8 +103,8 @@ export function WishlistButton({
   }
 
   return (
-    <div className="mt-3">
-      <div className="relative inline-block max-sm:block">
+    <div className="shop-wishlist-action-row mt-3">
+      <div className="shop-wishlist-action-wrap relative inline-block max-sm:block">
         <button
           type="button"
           disabled={isPending}

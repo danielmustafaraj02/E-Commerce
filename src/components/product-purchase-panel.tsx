@@ -75,13 +75,17 @@ export function ProductPurchasePanel({
 
   return (
     <>
-      <div ref={inlineRef} className="mt-6 flex flex-wrap items-center gap-3">
+      <div
+        ref={inlineRef}
+        className="shop-purchase-controls mt-6 flex flex-wrap items-center gap-3"
+      >
         <QuantityStepper
           value={quantity}
           onChange={(next) => setQuantity(Math.max(1, next))}
           max={MAX_CART_QUANTITY}
           decreaseLabel={cartDict.decreaseQuantity}
           increaseLabel={cartDict.increaseQuantity}
+          className="shop-purchase-quantity"
         />
         <AddToCartButton
           product={product}

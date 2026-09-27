@@ -75,8 +75,6 @@ export default async function CheckoutPage() {
           stripePublishableKey={stripePublishableKey}
           expressCheckoutLabel={dict.cart.expressCheckoutOr}
           quoteLoadingLabel={dict.payment.loading}
-          payWithPayPalLabel={dict.payment.payWithPayPal}
-          paypalEnabled={paypalEnabled}
           paymentMethods={{
             cards: cardsEnabled,
             paypal: paypalEnabled,
