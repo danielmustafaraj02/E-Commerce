@@ -54,6 +54,7 @@ export function MobileNavMenu({
     () => false
   );
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const panelId = useId();
 
@@ -67,6 +68,26 @@ export function MobileNavMenu({
     const trigger = triggerRef.current;
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpen(false);
+      if (e.key !== "Tab") return;
+
+      const focusable = panelRef.current?.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      const visible = Array.from(focusable ?? []).filter(
+        (element) => element.getClientRects().length > 0
+      );
+      const first = visible[0];
+      const last = visible.at(-1);
+
+      if (!first || !last) {
+        e.preventDefault();
+      } else if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     };
     document.addEventListener("keydown", onKeyDown);
     return () => {
@@ -111,6 +132,7 @@ export function MobileNavMenu({
           // Portaled to <body>: the header's backdrop-filter would otherwise
           // make "fixed inset-0" cover only the header's own box.
           <div
+            ref={panelRef}
             id={panelId}
             role="dialog"
             aria-modal="true"

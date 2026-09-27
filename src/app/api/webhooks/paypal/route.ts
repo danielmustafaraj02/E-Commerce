@@ -46,7 +46,10 @@ export async function POST(request: Request) {
           });
           return NextResponse.json({ received: true });
         }
-        const paid = { amount: Math.round(capturedValue * 100), currency: capturedCurrency };
+        const paid = {
+          amount: Math.round(capturedValue * 100),
+          currency: capturedCurrency,
+        };
 
         const applied = await db.$transaction(async (tx) => {
           const result = await applyPaidToOrder(tx, { id: payment.orderId }, paid);
@@ -57,7 +60,10 @@ export async function POST(request: Request) {
             result.outcome === "already_settled" ||
             result.outcome === "paid_after_cancel"
           ) {
-            await tx.payment.update({ where: { id: payment.id }, data: { status: "succeeded" } });
+            await tx.payment.update({
+              where: { id: payment.id },
+              data: { status: "succeeded" },
+            });
           }
           return result;
         });
@@ -77,13 +83,32 @@ export async function POST(request: Request) {
         // webhook for why an email failure must not fail this handler.
         if (paidOrder) {
           try {
-            await sendOrderStatusEmail({
+            const emailOrder = {
               orderNumber: paidOrder.orderNumber,
               status: "paid",
               trackingNumber: paidOrder.trackingNumber,
               guestEmail: paidOrder.guestEmail,
               user: paidOrder.user,
-            });
+            };
+            try {
+              await sendOrderStatusEmail(emailOrder);
+            } catch (error) {
+              captureError(error, {
+                scope: "paypal-webhook-order-email",
+                orderNumber: paidOrder.orderNumber,
+              });
+            }
+            if (paidOrder.giftVoucherIssue) {
+              try {
+                const { sendGiftVoucherEmail } = await import("@/lib/email");
+                await sendGiftVoucherEmail(paidOrder.giftVoucherIssue, paidOrder.locale);
+              } catch (error) {
+                captureError(error, {
+                  scope: "paypal-webhook-gift-voucher-email",
+                  orderNumber: paidOrder.orderNumber,
+                });
+              }
+            }
           } catch (error) {
             captureError(error, {
               scope: "paypal-webhook-email",

@@ -90,6 +90,7 @@ export function ArticleBody({
                 sizes="(min-width: 48rem) 42rem, 100vw"
                 className="journal-figure--inline"
                 creditLabel={labels.photoCredit}
+                locale={uiLocale}
               />
             );
           case "products": {

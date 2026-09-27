@@ -19,6 +19,7 @@ import { isPaypalConfigured } from "@/lib/paypal";
 import { LookPurchaseTracker } from "@/components/look-purchase-tracker";
 import { GiftFinderPurchaseTracker } from "@/components/gift-finder-purchase-tracker";
 import { ClearCartOnPaidReturn } from "@/components/clear-cart-on-paid-return";
+import { getGiftVoucherCopy } from "@/lib/gift-voucher-copy";
 
 const RETURNABLE_STATUSES = ["paid", "processing", "shipped", "delivered"];
 
@@ -44,15 +45,21 @@ export default async function OrderConfirmationPage({
       where: { orderNumber },
       include: {
         items: {
-          include: { product: { include: { images: { orderBy: { position: "asc" }, take: 1 } } } },
+          include: {
+            product: {
+              include: { images: { orderBy: { position: "asc" }, take: 1 } },
+            },
+          },
         },
         shippingMethod: true,
         address: true,
+        giftVoucherIssue: true,
         returnRequests: true,
       },
     }),
   ]);
   const dict = getDictionary(uiLocale);
+  const voucherCopy = getGiftVoucherCopy(uiLocale);
   const paypalEnabled = await isPaypalConfigured();
 
   if (!order) notFound();
@@ -122,45 +129,85 @@ export default async function OrderConfirmationPage({
           </section>
         )}
 
-        <section className="mt-8">
-          <h2 className="shop-h2">{dict.orderConfirmation.items}</h2>
-          <ul className="divide-foreground/10 flex flex-col divide-y">
-            {order.items.map((item) => {
-              const image = item.product?.images[0];
-              // The name stored on the order is the Italian source; show the
-              // visitor's language when the product still exists.
-              const itemName = item.product
-                ? localizedName(item.product, uiLocale)
-                : item.productName;
-              return (
-                <li key={item.id} className="flex items-center gap-4 py-3">
-                  <div className="shop-thumb shop-thumb--cart">
-                    {image ? (
-                      <CatalogImage
-                        src={image.url}
-                        alt={image.altText || itemName}
-                        fill
-                        sizes="64px"
-                      />
-                    ) : null}
-                  </div>
-                  <div className="flex flex-1 items-center justify-between gap-3 text-sm">
-                    <span>
-                      {itemName} &times; {item.quantity}
-                    </span>
-                    <span className="shrink-0 font-medium">
-                      {formatMoney(
-                        item.unitPrice * item.quantity,
-                        order.currency,
-                        settings.defaultLocale
-                      )}
-                    </span>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-        </section>
+        {order.giftVoucherPurchaseAmount > 0 && (
+          <section className="border-foreground/10 mt-8 border-y py-5">
+            <h2 className="shop-h2">
+              {order.status === "pending" && !order.giftVoucherIssue
+                ? voucherCopy.pendingTitle
+                : voucherCopy.purchaseLabel}
+            </h2>
+            <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm">
+              <dt className="text-foreground/60">{voucherCopy.amountLabel}</dt>
+              <dd>
+                {formatMoney(
+                  order.giftVoucherPurchaseAmount,
+                  order.currency,
+                  settings.defaultLocale
+                )}
+              </dd>
+              <dt className="text-foreground/60">{voucherCopy.recipientLabel}</dt>
+              <dd>{order.giftVoucherRecipientName || order.giftVoucherRecipientEmail}</dd>
+            </dl>
+            {order.giftVoucherMessage && (
+              <p className="text-foreground/70 mt-3 text-sm">“{order.giftVoucherMessage}”</p>
+            )}
+            {order.giftVoucherIssue ? (
+              <div className="mt-5 border border-[#b89a62] bg-[#fdfbf6] p-4">
+                <p className="text-foreground/60 mb-2 text-xs uppercase tracking-[0.14em]">
+                  {voucherCopy.codeLabel}
+                </p>
+                <p className="break-all font-mono text-lg tracking-[0.08em]" translate="no">
+                  {order.giftVoucherIssue.code}
+                </p>
+                <p className="text-foreground/70 mt-3 text-sm">{voucherCopy.redeemInstruction}</p>
+              </div>
+            ) : order.status === "pending" ? (
+              <p className="text-foreground/70 mt-4 text-sm">{voucherCopy.pendingText}</p>
+            ) : null}
+          </section>
+        )}
+
+        {order.items.length > 0 && (
+          <section className="mt-8">
+            <h2 className="shop-h2">{dict.orderConfirmation.items}</h2>
+            <ul className="divide-foreground/10 flex flex-col divide-y">
+              {order.items.map((item) => {
+                const image = item.product?.images[0];
+                // The name stored on the order is the Italian source; show the
+                // visitor's language when the product still exists.
+                const itemName = item.product
+                  ? localizedName(item.product, uiLocale)
+                  : item.productName;
+                return (
+                  <li key={item.id} className="flex items-center gap-4 py-3">
+                    <div className="shop-thumb shop-thumb--cart">
+                      {image ? (
+                        <CatalogImage
+                          src={image.url}
+                          alt={image.altText || itemName}
+                          fill
+                          sizes="64px"
+                        />
+                      ) : null}
+                    </div>
+                    <div className="flex flex-1 items-center justify-between gap-3 text-sm">
+                      <span>
+                        {itemName} &times; {item.quantity}
+                      </span>
+                      <span className="shrink-0 font-medium">
+                        {formatMoney(
+                          item.unitPrice * item.quantity,
+                          order.currency,
+                          settings.defaultLocale
+                        )}
+                      </span>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        )}
 
         <section className="border-foreground/10 mt-6 flex flex-col gap-1 border-t pt-4 text-sm">
           <div className="flex justify-between">
@@ -175,19 +222,39 @@ export default async function OrderConfirmationPage({
               </span>
             </div>
           )}
-          <div className="flex justify-between">
-            <span>
-              {dict.checkout.shipping} ({order.shippingMethod?.name})
-            </span>
-            <span>{formatMoney(order.shippingAmount, order.currency, settings.defaultLocale)}</span>
-          </div>
-          <div className="text-foreground/70 flex justify-between">
-            <span>
-              {dict.checkout.vat}
-              {order.taxRatePercent !== null ? ` (${order.taxRatePercent}%)` : ""}
-            </span>
-            <span>{formatMoney(order.taxAmount, order.currency, settings.defaultLocale)}</span>
-          </div>
+          {order.giftVoucherRedeemedAmount > 0 && (
+            <div className="text-success flex justify-between">
+              <span>{voucherCopy.voucherApplied}</span>
+              <span>
+                -
+                {formatMoney(
+                  order.giftVoucherRedeemedAmount,
+                  order.currency,
+                  settings.defaultLocale
+                )}
+              </span>
+            </div>
+          )}
+          {(order.shippingMethod || order.shippingAmount !== 0) && (
+            <div className="flex justify-between">
+              <span>
+                {dict.checkout.shipping}
+                {order.shippingMethod ? ` (${order.shippingMethod.name})` : ""}
+              </span>
+              <span>
+                {formatMoney(order.shippingAmount, order.currency, settings.defaultLocale)}
+              </span>
+            </div>
+          )}
+          {order.giftVoucherPurchaseAmount === 0 && (
+            <div className="text-foreground/70 flex justify-between">
+              <span>
+                {dict.checkout.vat}
+                {order.taxRatePercent !== null ? ` (${order.taxRatePercent}%)` : ""}
+              </span>
+              <span>{formatMoney(order.taxAmount, order.currency, settings.defaultLocale)}</span>
+            </div>
+          )}
           <div className="mt-2 flex justify-between text-base font-semibold">
             <span>{dict.checkout.total}</span>
             <span>{formatMoney(order.total, order.currency, settings.defaultLocale)}</span>

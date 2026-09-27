@@ -59,7 +59,11 @@ export default async function AdminOrdersPage({ searchParams }: PageProps<"/admi
       take: PAGE_SIZE,
       include: {
         user: true,
-        payments: { orderBy: { createdAt: "desc" }, take: 1, select: { provider: true } },
+        payments: {
+          orderBy: { createdAt: "desc" },
+          take: 1,
+          select: { provider: true },
+        },
         _count: { select: { items: true } },
       },
     }),
@@ -149,9 +153,15 @@ export default async function AdminOrdersPage({ searchParams }: PageProps<"/admi
                   </td>
                   <td className="py-3 pr-4">{order.user?.email ?? order.guestEmail ?? "—"}</td>
                   <td className="text-foreground/70 py-3 pr-4">
-                    {order.payments[0] ? (PAYMENT_LABELS[order.payments[0].provider] ?? order.payments[0].provider) : "—"}
+                    {order.payments[0]
+                      ? (PAYMENT_LABELS[order.payments[0].provider] ?? order.payments[0].provider)
+                      : "—"}
                   </td>
-                  <td className="text-foreground/70 py-3 pr-4">{order._count.items}</td>
+                  <td className="text-foreground/70 py-3 pr-4">
+                    {order.giftVoucherPurchaseAmount > 0
+                      ? `Digital gift voucher · ${formatMoney(order.giftVoucherPurchaseAmount, order.currency, settings.defaultLocale)}`
+                      : order._count.items}
+                  </td>
                   <td className="py-3 pr-4">
                     <StatusBadge status={order.status} />
                   </td>
@@ -171,7 +181,10 @@ export default async function AdminOrdersPage({ searchParams }: PageProps<"/admi
             {page > 1 ? (
               <>
                 Page {page} is past the last result.{" "}
-                <Link href={linkParams({ page: undefined })} className="text-primary hover:underline">
+                <Link
+                  href={linkParams({ page: undefined })}
+                  className="text-primary hover:underline"
+                >
                   Back to page 1
                 </Link>
               </>
@@ -192,7 +205,8 @@ export default async function AdminOrdersPage({ searchParams }: PageProps<"/admi
       {totalCount > 0 && (
         <div className="text-foreground/60 mt-4 flex items-center justify-between text-sm">
           <p>
-            Page {page} of {totalPages} &middot; {totalCount} order{totalCount === 1 ? "" : "s"}
+            Page {page} of {totalPages} &middot; {totalCount} order
+            {totalCount === 1 ? "" : "s"}
           </p>
           <div className="flex gap-3">
             {page > 1 && (

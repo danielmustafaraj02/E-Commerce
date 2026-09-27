@@ -36,11 +36,9 @@ export function HeroLookRollercoaster({
   }, []);
 
   useEffect(() => {
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduceMotion) {
-      setReady(true);
-      return;
-    }
+    // Defer the first ready state to the next paint so the initial render
+    // stays server/client identical without scheduling a synchronous effect
+    // update. Reduced motion collapses the reveal in CSS.
     const frame = window.requestAnimationFrame(() => setReady(true));
     return () => window.cancelAnimationFrame(frame);
   }, []);

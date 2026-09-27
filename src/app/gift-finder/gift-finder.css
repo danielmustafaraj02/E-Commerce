@@ -27,45 +27,45 @@
 .giftfinder-progress-bar {
   height: 100%;
   background: var(--accent);
-  transition: width 0.55s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition: width 280ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 /* -- Step ---------------------------------------------------------------- */
 .giftfinder-step[data-direction="forward"],
 .giftfinder-results[data-direction="forward"] {
-  animation: giftfinder-step-from-right 0.62s cubic-bezier(0.2, 0.72, 0.25, 1) both;
+  animation: giftfinder-step-from-right 280ms cubic-bezier(0.2, 0.72, 0.25, 1) both;
 }
 .giftfinder-step[data-direction="backward"],
 .giftfinder-results[data-direction="backward"] {
-  animation: giftfinder-step-from-left 0.62s cubic-bezier(0.2, 0.72, 0.25, 1) both;
+  animation: giftfinder-step-from-left 280ms cubic-bezier(0.2, 0.72, 0.25, 1) both;
 }
 .giftfinder-step[data-direction="forward"] .giftfinder-option {
-  animation: giftfinder-option-from-right 0.58s cubic-bezier(0.2, 0.72, 0.25, 1) both;
+  animation: giftfinder-option-from-right 260ms cubic-bezier(0.2, 0.72, 0.25, 1) both;
 }
 .giftfinder-step[data-direction="backward"] .giftfinder-option {
-  animation: giftfinder-option-from-left 0.58s cubic-bezier(0.2, 0.72, 0.25, 1) both;
+  animation: giftfinder-option-from-left 260ms cubic-bezier(0.2, 0.72, 0.25, 1) both;
 }
-.giftfinder-step .giftfinder-option:nth-child(2) { animation-delay: 45ms; }
-.giftfinder-step .giftfinder-option:nth-child(3) { animation-delay: 90ms; }
-.giftfinder-step .giftfinder-option:nth-child(4) { animation-delay: 135ms; }
-.giftfinder-step .giftfinder-option:nth-child(5) { animation-delay: 180ms; }
-.giftfinder-step .giftfinder-option:nth-child(6) { animation-delay: 225ms; }
+.giftfinder-step .giftfinder-option:nth-child(2) { animation-delay: 25ms; }
+.giftfinder-step .giftfinder-option:nth-child(3) { animation-delay: 50ms; }
+.giftfinder-step .giftfinder-option:nth-child(4) { animation-delay: 75ms; }
+.giftfinder-step .giftfinder-option:nth-child(5) { animation-delay: 100ms; }
+.giftfinder-step .giftfinder-option:nth-child(6) { animation-delay: 125ms; }
 
 @keyframes giftfinder-step-from-right {
-  from { opacity: 0; transform: translateX(2.2rem); filter: blur(3px); }
-  to { opacity: 1; transform: translateX(0); filter: blur(0); }
+  from { opacity: 0; transform: translateX(1rem); }
+  to { opacity: 1; transform: translateX(0); }
 }
 @keyframes giftfinder-step-from-left {
-  from { opacity: 0; transform: translateX(-2.2rem); filter: blur(3px); }
-  to { opacity: 1; transform: translateX(0); filter: blur(0); }
+  from { opacity: 0; transform: translateX(-1rem); }
+  to { opacity: 1; transform: translateX(0); }
 }
 @keyframes giftfinder-option-from-right {
-  from { opacity: 0; transform: translateX(1.1rem) scale(0.985); }
-  to { opacity: 1; transform: translateX(0) scale(1); }
+  from { opacity: 0; transform: translateX(0.5rem); }
+  to { opacity: 1; transform: translateX(0); }
 }
 @keyframes giftfinder-option-from-left {
-  from { opacity: 0; transform: translateX(-1.1rem) scale(0.985); }
-  to { opacity: 1; transform: translateX(0) scale(1); }
+  from { opacity: 0; transform: translateX(-0.5rem); }
+  to { opacity: 1; transform: translateX(0); }
 }
 .giftfinder-counter {
   margin: 0 0 0.4rem;
@@ -88,8 +88,8 @@
 .giftfinder-options {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 0.75rem;
-  margin-bottom: 2rem;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
 }
 @media (min-width: 30rem) {
   .giftfinder-options {
@@ -135,6 +135,9 @@
   gap: 1rem;
 }
 .giftfinder-back {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
   color: var(--ink-soft);
   font-weight: 600;
   font-size: 0.95rem;
@@ -179,7 +182,7 @@
   display: flex;
   flex-direction: column;
   border: 1px solid var(--rule);
-  border-radius: 12px;
+  border-radius: var(--radius-panel);
   overflow: hidden;
   background: var(--ground);
 }
@@ -220,6 +223,9 @@
   flex-wrap: wrap;
 }
 .giftfinder-quickadd {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
   font-size: 0.88rem;
   font-weight: 600;
   color: var(--accent-deep);
@@ -233,7 +239,7 @@
 .giftfinder-bundle {
   margin: 0 0 2.5rem;
   border: 1px solid var(--rule);
-  border-radius: 12px;
+  border-radius: var(--radius-panel);
   overflow: hidden;
 }
 .giftfinder-bundle-intro {
@@ -284,6 +290,9 @@
 }
 
 .giftfinder-startover {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
   color: var(--ink-soft);
   font-size: 0.9rem;
   text-underline-offset: 0.2em;

@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/auth";
 import { PricingError } from "@/lib/pricing";
@@ -10,10 +10,17 @@ import { isValidPostalCode } from "@/lib/postal-code";
 import { getFeedback } from "@/lib/i18n/feedback";
 import { getLocale } from "@/lib/i18n/locale";
 import { pricingMessage } from "@/lib/pricing-messages";
+import { sendOrderStatusEmail } from "@/lib/email";
+import { captureError } from "@/lib/monitoring";
 
 const checkoutSchema = z.object({
   items: z
-    .array(z.object({ productId: z.string().min(1), quantity: z.coerce.number().int().positive() }))
+    .array(
+      z.object({
+        productId: z.string().min(1),
+        quantity: z.coerce.number().int().positive(),
+      })
+    )
     .min(1),
   guestEmail: z.string().email().optional(),
   address: z
@@ -31,6 +38,7 @@ const checkoutSchema = z.object({
     }),
   shippingMethodId: z.string().min(1),
   discountCode: z.string().min(1).max(50).optional(),
+  giftVoucherCode: z.string().min(1).max(64).optional(),
   giftCard: giftCardSchema.optional(),
   turnstileToken: z.string().optional(),
 });
@@ -69,11 +77,31 @@ export async function POST(request: Request) {
       address: input.address,
       shippingMethodId: input.shippingMethodId,
       discountCode: input.discountCode,
+      giftVoucherCode: input.giftVoucherCode,
       giftCard: input.giftCard,
       userId: session?.user?.id,
       guestEmail: input.guestEmail,
       locale,
     });
+
+    if (order.status === "paid") {
+      after(async () => {
+        try {
+          await sendOrderStatusEmail({
+            orderNumber: order.orderNumber,
+            status: "paid",
+            trackingNumber: null,
+            guestEmail: input.guestEmail ?? null,
+            user: session?.user?.email ? { email: session.user.email } : null,
+          });
+        } catch (error) {
+          captureError(error, {
+            scope: "zero-total-checkout-email",
+            orderNumber: order.orderNumber,
+          });
+        }
+      });
+    }
 
     return NextResponse.json({ orderNumber: order.orderNumber }, { status: 201 });
   } catch (error) {

@@ -4,8 +4,8 @@ import { getStoreSettings, ogImage } from "@/lib/store-settings";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { applyTemplate } from "@/lib/i18n/format";
-import { ARTICLES, readingMinutes } from "@/lib/journal";
-import type { JournalCategory } from "@/lib/journal/types";
+import { ARTICLES, localizeArticle, readingMinutes } from "@/lib/journal";
+import type { JournalCategory, LocalizedArticle } from "@/lib/journal/types";
 import { getJournalProducts } from "@/lib/journal/products";
 import { JournalImage } from "@/components/journal/journal-image";
 import { homeFontClasses } from "@/app/home-fonts";
@@ -34,9 +34,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function JournalIndexPage({ searchParams }: PageProps<"/blog">) {
-  const [{ category }, settings, uiLocale] = await Promise.all([
+  const [{ category }, uiLocale] = await Promise.all([
     searchParams,
-    getStoreSettings(),
     getLocale(),
   ]);
   const dict = getDictionary(uiLocale);
@@ -85,10 +84,16 @@ export default async function JournalIndexPage({ searchParams }: PageProps<"/blo
                 products={products}
                 sizes="(min-width: 48rem) 55vw, 100vw"
                 priority
+                locale={localizeArticle(featured, uiLocale).contentLocale}
                 creditLabel={(credit) => applyTemplate(j.photoCredit, { credit })}
               />
             </Link>
-            <ArticleCardText article={featured} dict={dict} locale={settings.defaultLocale} />
+            <ArticleCardText
+              article={localizeArticle(featured, uiLocale)}
+              dict={dict}
+              locale={uiLocale}
+              requestedLocale={uiLocale}
+            />
           </article>
         )}
         {rest.map((article) => (
@@ -103,10 +108,16 @@ export default async function JournalIndexPage({ searchParams }: PageProps<"/blo
                 image={article.hero}
                 products={products}
                 sizes="(min-width: 48rem) 16rem, 40vw"
+                locale={localizeArticle(article, uiLocale).contentLocale}
                 creditLabel={(credit) => applyTemplate(j.photoCredit, { credit })}
               />
             </Link>
-            <ArticleCardText article={article} dict={dict} locale={settings.defaultLocale} />
+            <ArticleCardText
+              article={localizeArticle(article, uiLocale)}
+              dict={dict}
+              locale={uiLocale}
+              requestedLocale={uiLocale}
+            />
           </article>
         ))}
       </div>
@@ -118,25 +129,33 @@ function ArticleCardText({
   article,
   dict,
   locale,
+  requestedLocale,
 }: {
-  article: (typeof ARTICLES)[number];
+  article: LocalizedArticle;
   dict: ReturnType<typeof getDictionary>;
   locale: string;
+  requestedLocale: string;
 }) {
   const j = dict.journal;
   return (
     <div className="journal-card-text">
-      <p className="journal-kicker">{categoryLabel(j, article.category)}</p>
-      <h2 lang="en">
+      <p className="journal-kicker">
+        {categoryLabel(j, article.category)}
+        {article.series && <> · {article.series.episode}/{article.series.total}</>}
+      </p>
+      <h2 lang={article.contentLocale}>
         <Link href={`/blog/${article.slug}`}>{article.title}</Link>
       </h2>
       <p className="journal-card-meta">
         {applyTemplate(j.minRead, { n: readingMinutes(article) })} ·{" "}
         {formatArticleDate(article.published, locale)}
       </p>
-      <p className="journal-card-description" lang="en">
+      <p className="journal-card-description" lang={article.contentLocale}>
         {article.description}
       </p>
+      {article.contentLocale !== requestedLocale && (
+        <p className="journal-language-note">{j.englishOnly}</p>
+      )}
       <Link
         href={`/blog/${article.slug}`}
         className="journal-read-more"

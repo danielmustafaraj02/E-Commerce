@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
 import { bundleDiscounts } from "@/lib/looks";
 import { deriveProductType } from "@/lib/gift-finder";
+import { normalizeGiftVoucherCode } from "@/lib/gift-voucher";
 
 // `message` stays English (logs, tests); `code` + `params` let the route return
 // the visitor's language instead (see src/lib/pricing-messages.ts).
@@ -13,7 +14,8 @@ export type PricingErrorCode =
   | "shipping-unavailable"
   | "discount-invalid"
   | "discount-expired"
-  | "discount-limit";
+  | "discount-limit"
+  | "gift-voucher-invalid";
 
 export class PricingError extends Error {
   status: number;
@@ -37,6 +39,7 @@ export type QuoteInput = {
   country: string;
   shippingMethodId: string;
   discountCode?: string;
+  giftVoucherCode?: string;
   // A personalised gift card goes with the order (lib/gift-card.ts). Charged
   // only while the store offers it; otherwise ignored.
   giftCard?: boolean;
@@ -51,6 +54,7 @@ export async function quoteOrder({
   country,
   shippingMethodId,
   discountCode,
+  giftVoucherCode,
   giftCard,
 }: QuoteInput) {
   if (items.length === 0) throw new PricingError("Cart is empty", 400, "cart-empty");
@@ -91,7 +95,11 @@ export async function quoteOrder({
         { name: product.name, n: product.stockQty }
       );
     }
-    return { product, quantity: item.quantity, lineSubtotal: product.price * item.quantity };
+    return {
+      product,
+      quantity: item.quantity,
+      lineSubtotal: product.price * item.quantity,
+    };
   });
 
   const subtotal = lines.reduce((sum, l) => sum + l.lineSubtotal, 0);
@@ -99,7 +107,10 @@ export async function quoteOrder({
 
   // --- Looks: staff-made sets, composed looks and pairs (lib/looks.ts) ---
   const looks = await db.look.findMany({
-    where: { active: true, products: { some: { id: { in: items.map((i) => i.productId) } } } },
+    where: {
+      active: true,
+      products: { some: { id: { in: items.map((i) => i.productId) } } },
+    },
     select: {
       id: true,
       discountPercent: true,
@@ -107,7 +118,11 @@ export async function quoteOrder({
     },
   });
   const bundle = bundleDiscounts(
-    lines.map((l) => ({ productId: l.product.id, price: l.product.price, quantity: l.quantity })),
+    lines.map((l) => ({
+      productId: l.product.id,
+      price: l.product.price,
+      quantity: l.quantity,
+    })),
     looks.map((look) => ({
       id: look.id,
       discountPercent: look.discountPercent,
@@ -179,7 +194,9 @@ export async function quoteOrder({
   let discountAmount = 0;
   let discountCodeId: string | null = null;
   if (discountCode) {
-    const discount = await db.discountCode.findUnique({ where: { code: discountCode } });
+    const discount = await db.discountCode.findUnique({
+      where: { code: discountCode },
+    });
     if (!discount || !discount.active)
       throw new PricingError("Invalid discount code", 400, "discount-invalid");
     if (discount.expiresAt && discount.expiresAt < new Date()) {
@@ -207,6 +224,28 @@ export async function quoteOrder({
     ? goodsTotal - discountAmount + giftCardAmount + shippingAmount
     : goodsTotal + giftCardAmount + taxAmount - discountAmount + shippingAmount;
 
+  // A digital voucher is store credit, not a discount on taxable goods. Apply
+  // it after product VAT and shipping have been calculated, and issue VAT on
+  // the purchased goods when they are supplied at redemption.
+  let giftVoucherId: string | null = null;
+  let giftVoucherAppliedAmount = 0;
+  let giftVoucherRemainingBalance: number | null = null;
+  if (giftVoucherCode) {
+    const normalizedCode = normalizeGiftVoucherCode(giftVoucherCode);
+    const voucher = normalizedCode
+      ? await db.giftVoucher.findUnique({ where: { code: normalizedCode } })
+      : null;
+    if (!voucher || voucher.status !== "active" || voucher.balance <= 0) {
+      throw new PricingError("Gift voucher is not valid", 400, "gift-voucher-invalid");
+    }
+    if (voucher.currency.toUpperCase() !== currency.toUpperCase()) {
+      throw new PricingError("Gift voucher currency does not match", 400, "gift-voucher-invalid");
+    }
+    giftVoucherId = voucher.id;
+    giftVoucherAppliedAmount = Math.min(voucher.balance, total);
+    giftVoucherRemainingBalance = voucher.balance - giftVoucherAppliedAmount;
+  }
+
   return {
     lines,
     currency,
@@ -222,9 +261,12 @@ export async function quoteOrder({
     shippingMethod,
     discountAmount,
     discountCodeId,
+    giftVoucherId,
+    giftVoucherAppliedAmount,
+    giftVoucherRemainingBalance,
     bundleDiscountAmount,
     bundleLookIds: bundle.lookIds,
-    total,
+    total: total - giftVoucherAppliedAmount,
     pricesIncludeTax: settings.pricesIncludeTax,
   };
 }

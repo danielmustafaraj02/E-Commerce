@@ -227,15 +227,17 @@ export function CompleteTheLook({
                     {piece.available ? money(piece.price) : outOfStockLabel}
                   </label>
                 </div>
-                <input
-                  id={`look-check-${piece.productId}`}
-                  type="checkbox"
-                  className="look-piece-check"
-                  checked={selected.has(piece.productId)}
-                  disabled={!piece.available}
-                  onChange={() => toggle(piece.productId)}
-                  aria-label={applyTemplate(dict.include, { name: piece.name })}
-                />
+                <label className="look-piece-check-target">
+                  <input
+                    id={`look-check-${piece.productId}`}
+                    type="checkbox"
+                    className="look-piece-check"
+                    checked={selected.has(piece.productId)}
+                    disabled={!piece.available}
+                    onChange={() => toggle(piece.productId)}
+                    aria-label={applyTemplate(dict.include, { name: piece.name })}
+                  />
+                </label>
               </li>
             ))}
           </ul>

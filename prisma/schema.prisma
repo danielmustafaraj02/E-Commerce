@@ -565,6 +565,20 @@ model Order {
   giftCardFont        String?
   giftCardStickers    Json? // [{ icon, x, y }] as % of the card, at most 3
   giftCardBack        String? // ivory | lagoon | ruby | blush
+  // A standalone digital store voucher is issued only after payment succeeds.
+  // The tax on the underlying goods is calculated when the voucher is redeemed.
+  giftVoucherPurchaseAmount  Int      @default(0) // cents
+  giftVoucherRecipientEmail String?
+  giftVoucherRecipientName  String?
+  giftVoucherSenderName     String?
+  giftVoucherMessage        String?
+  giftVoucherIssue          GiftVoucher? @relation("GiftVoucherPurchase")
+  // Balance is reserved atomically when this order is created and restored if
+  // the unpaid order expires or a paid order is refunded.
+  appliedGiftVoucherId      String?
+  appliedGiftVoucher        GiftVoucher? @relation("GiftVoucherRedemptions", fields: [appliedGiftVoucherId], references: [id], onDelete: Restrict)
+  giftVoucherRedeemedAmount Int      @default(0) // cents
+  giftVoucherRestoredAt     DateTime?
   total          Int // cents
   currency       String @default("EUR")
   // The storefront language the customer checked out in. Emails about the order
@@ -605,6 +619,7 @@ model Order {
   @@index([addressId])
   @@index([shippingMethodId])
   @@index([discountCodeId])
+  @@index([appliedGiftVoucherId])
 }
 
 model OrderItem {
@@ -656,6 +671,30 @@ model DiscountCode {
   createdAt  DateTime  @default(now())
 
   orders Order[]
+}
+
+// A digital, redeemable store-credit voucher. Its code is a high-entropy
+// bearer secret. Balance changes happen atomically with an Order so concurrent
+// checkouts cannot spend the same credit twice.
+model GiftVoucher {
+  id              String   @id @default(cuid())
+  code            String   @unique
+  originalAmount  Int      // cents
+  balance         Int      // cents remaining
+  currency        String   @default("EUR")
+  status          String   @default("active") // active | void
+  recipientEmail  String
+  recipientName   String?
+  senderName      String?
+  message         String?
+  purchaseOrderId String   @unique
+  purchaseOrder   Order    @relation("GiftVoucherPurchase", fields: [purchaseOrderId], references: [id], onDelete: Restrict)
+  redemptions     Order[]  @relation("GiftVoucherRedemptions")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([recipientEmail])
+  @@index([status, balance])
 }
 
 model ReturnRequest {

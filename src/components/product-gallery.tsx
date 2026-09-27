@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { CatalogImage } from "@/components/catalog-image";
 import { ProductImageZoom } from "@/components/product-image-zoom";
 import { ImageLightbox } from "@/components/image-lightbox";
@@ -27,6 +27,7 @@ export function ProductGallery({
 }) {
   const [selected, setSelected] = useState(0);
   const [zoomAt, setZoomAt] = useState<number | null>(null);
+  const mobileRailRef = useRef<HTMLDivElement>(null);
   const active = images[selected] ?? images[0];
 
   return (
@@ -66,7 +67,18 @@ export function ProductGallery({
       </div>
 
       <div className="shop-gallery-mobile">
-        <div className="shop-gallery-swipe">
+        <div
+          ref={mobileRailRef}
+          className="shop-gallery-swipe"
+          role="region"
+          aria-roledescription="carousel"
+          aria-label={alt}
+          onScroll={(event) => {
+            const rail = event.currentTarget;
+            const nextIndex = Math.round(rail.scrollLeft / rail.clientWidth);
+            setSelected((current) => (current === nextIndex ? current : nextIndex));
+          }}
+        >
           {images.map((image, index) => (
             <button
               key={image.id}
@@ -85,6 +97,30 @@ export function ProductGallery({
             </button>
           ))}
         </div>
+        {images.length > 1 && (
+          <div className="shop-gallery-pagination" aria-label={alt}>
+            {images.map((image, index) => (
+              <button
+                key={image.id}
+                type="button"
+                aria-label={`${alt} ${index + 1}`}
+                aria-current={index === selected ? "true" : undefined}
+                onClick={() => {
+                  setSelected(index);
+                  const rail = mobileRailRef.current;
+                  if (!rail) return;
+                  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+                  rail.scrollTo({
+                    left: index * rail.clientWidth,
+                    behavior: reduceMotion ? "auto" : "smooth",
+                  });
+                }}
+              >
+                <span aria-hidden="true" />
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {zoomAt !== null && (

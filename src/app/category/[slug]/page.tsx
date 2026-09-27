@@ -19,6 +19,7 @@ import "../../shop.css";
 import { ProductFilterPanel } from "@/components/product-filter-panel";
 import { Pagination } from "@/components/pagination";
 import { isProductColorKey } from "@/lib/product-colors";
+import { getGiftVoucherCopy } from "@/lib/gift-voucher-copy";
 
 const PAGE_SIZE = 12;
 
@@ -279,6 +280,9 @@ export default async function CategoryPage({
             </Link>
             <Link href="/gift-finder" className="shop-chip">
               {dict.giftFinder.metaTitle}
+            </Link>
+            <Link href="/gift-card" className="shop-chip">
+              {getGiftVoucherCopy(uiLocale).purchaseLabel}
             </Link>
             {settings.giftCardEnabled && (
               <Link href="/personalised-gift-card" className="shop-chip">

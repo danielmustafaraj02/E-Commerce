@@ -5,7 +5,9 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { requireStaff, requireAdmin } from "@/lib/require-admin";
 import { writeAuditLog } from "@/lib/audit-log";
-import { sendOrderStatusEmail } from "@/lib/email";
+import { sendGiftVoucherEmail, sendOrderAndGiftVoucherEmails } from "@/lib/email";
+import { restoreGiftVoucherRedemption } from "@/lib/gift-voucher-balance";
+import { issueGiftVoucher } from "@/lib/order-payment";
 import { getStripe } from "@/lib/stripe";
 
 const STATUSES = [
@@ -41,11 +43,20 @@ export async function updateOrderStatus(
 
   const order = await db.order.findUnique({
     where: { orderNumber },
-    include: { payments: true, user: true },
+    include: { payments: true, user: true, giftVoucherIssue: true },
   });
   if (!order) return { error: "Order not found" };
 
   if (isRefund) {
+    if (order.status === "refunded") return { error: "This order has already been refunded" };
+    if (
+      order.giftVoucherIssue &&
+      order.giftVoucherIssue.balance !== order.giftVoucherIssue.originalAmount
+    ) {
+      return {
+        error: "This gift voucher has already been used and cannot be voided with a refund",
+      };
+    }
     const succeededStripePayment = order.payments.find(
       (p) => p.provider === "stripe" && p.status === "succeeded"
     );
@@ -68,12 +79,35 @@ export async function updateOrderStatus(
     // Process it manually in the PayPal dashboard when this applies.
   }
 
-  const updated = await db.order.update({
-    where: { id: order.id },
-    data: {
-      status: parsed.data.status,
-      trackingNumber: parsed.data.trackingNumber ?? order.trackingNumber,
-    },
+  let issuedVoucher: Awaited<ReturnType<typeof issueGiftVoucher>> = null;
+  const updated = await db.$transaction(async (tx) => {
+    const result = await tx.order.update({
+      where: { id: order.id },
+      data: {
+        status: parsed.data.status,
+        trackingNumber: parsed.data.trackingNumber ?? order.trackingNumber,
+      },
+    });
+
+    if (isRefund && order.giftVoucherIssue) {
+      await tx.giftVoucher.update({
+        where: { id: order.giftVoucherIssue.id },
+        data: { status: "void" },
+      });
+    }
+
+    if (isRefund || (order.status === "pending" && parsed.data.status === "cancelled")) {
+      await restoreGiftVoucherRedemption(tx, order);
+    }
+
+    if (
+      parsed.data.status === "paid" &&
+      result.giftVoucherPurchaseAmount > 0 &&
+      !order.giftVoucherIssue
+    ) {
+      issuedVoucher = await issueGiftVoucher(tx, result);
+    }
+    return result;
   });
 
   await writeAuditLog({
@@ -85,12 +119,41 @@ export async function updateOrderStatus(
     after: { status: updated.status, trackingNumber: updated.trackingNumber },
   });
 
-  await sendOrderStatusEmail({
-    orderNumber: updated.orderNumber,
-    status: updated.status,
-    trackingNumber: updated.trackingNumber,
-    guestEmail: order.guestEmail,
-    user: order.user ? { email: order.user.email } : null,
+  await sendOrderAndGiftVoucherEmails(
+    {
+      orderNumber: updated.orderNumber,
+      status: updated.status,
+      trackingNumber: updated.trackingNumber,
+      guestEmail: order.guestEmail,
+      user: order.user ? { email: order.user.email } : null,
+    },
+    issuedVoucher,
+    order.locale
+  );
+
+  redirect(`/admin/orders/${orderNumber}`);
+}
+
+export async function resendGiftVoucherEmail(orderNumber: string) {
+  const session = await requireStaff();
+  const order = await db.order.findUnique({
+    where: { orderNumber },
+    include: { giftVoucherIssue: true },
+  });
+  if (!order?.giftVoucherIssue || order.giftVoucherIssue.status !== "active") {
+    redirect(`/admin/orders/${orderNumber}`);
+  }
+
+  await sendGiftVoucherEmail(order.giftVoucherIssue, order.locale);
+  await writeAuditLog({
+    userId: session!.user.id,
+    action: "gift_voucher.email_resent",
+    entityType: "GiftVoucher",
+    entityId: order.giftVoucherIssue.id,
+    after: {
+      orderNumber: order.orderNumber,
+      recipientEmail: order.giftVoucherIssue.recipientEmail,
+    },
   });
 
   redirect(`/admin/orders/${orderNumber}`);
@@ -102,8 +165,21 @@ export async function updateOrderStatus(
 export async function deleteOrder(orderId: string) {
   const session = await requireAdmin();
 
-  const order = await db.order.findUnique({ where: { id: orderId } });
+  const order = await db.order.findUnique({
+    where: { id: orderId },
+    select: {
+      id: true,
+      orderNumber: true,
+      status: true,
+      total: true,
+      appliedGiftVoucherId: true,
+      giftVoucherIssue: { select: { id: true } },
+    },
+  });
   if (!order) redirect("/admin/orders");
+  if (order.appliedGiftVoucherId || order.giftVoucherIssue) {
+    redirect(`/admin/orders/${order.orderNumber}?deleteError=gift-voucher-record`);
+  }
 
   await db.$transaction([
     // Payment and ReturnRequest don't cascade on Order deletion (no
@@ -119,7 +195,11 @@ export async function deleteOrder(orderId: string) {
     action: "order.delete",
     entityType: "Order",
     entityId: orderId,
-    before: { orderNumber: order.orderNumber, status: order.status, total: order.total },
+    before: {
+      orderNumber: order.orderNumber,
+      status: order.status,
+      total: order.total,
+    },
   });
 
   redirect("/admin/orders");

@@ -7,11 +7,17 @@ import { pricingMessage } from "@/lib/pricing-messages";
 
 const quoteSchema = z.object({
   items: z
-    .array(z.object({ productId: z.string().min(1), quantity: z.coerce.number().int().positive() }))
+    .array(
+      z.object({
+        productId: z.string().min(1),
+        quantity: z.coerce.number().int().positive(),
+      })
+    )
     .min(1),
   country: z.string().length(2),
   shippingMethodId: z.string().min(1),
   discountCode: z.string().min(1).max(50).optional(),
+  giftVoucherCode: z.string().min(1).max(64).optional(),
   giftCard: z.boolean().optional(),
 });
 
@@ -40,6 +46,8 @@ export async function POST(request: Request) {
       discountAmount: quote.discountAmount,
       bundleDiscountAmount: quote.bundleDiscountAmount,
       giftCardAmount: quote.giftCardAmount,
+      giftVoucherAppliedAmount: quote.giftVoucherAppliedAmount,
+      giftVoucherRemainingBalance: quote.giftVoucherRemainingBalance,
       total: quote.total,
       currency: quote.currency,
       pricesIncludeTax: quote.pricesIncludeTax,

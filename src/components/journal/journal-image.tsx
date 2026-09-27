@@ -16,6 +16,7 @@ export function JournalImage({
   priority = false,
   className = "",
   creditLabel,
+  locale,
 }: {
   image: JournalImageData;
   products: JournalProductMap;
@@ -23,9 +24,11 @@ export function JournalImage({
   priority?: boolean;
   className?: string;
   creditLabel: (credit: string) => string;
+  locale?: string;
 }) {
   const src = journalImageSrc(image, products);
   if (!src) return null;
+  const alt = locale === "it" ? image.altIt ?? image.alt : image.alt;
   const showCredit = image.rights.license !== "own-photography";
   // `priority` is deprecated in Next 16; eager + high fetch priority is the
   // documented way to load an above-the-fold (LCP) image first.
@@ -35,9 +38,9 @@ export function JournalImage({
     <figure className={`journal-figure ${className}`}>
       <div className="journal-figure-frame">
         {image.kind === "file" ? (
-          <Image src={src} alt={image.alt} fill sizes={sizes} {...loadingProps} />
+          <Image src={src} alt={alt} fill sizes={sizes} {...loadingProps} />
         ) : (
-          <CatalogImage src={src} alt={image.alt} fill sizes={sizes} {...loadingProps} />
+          <CatalogImage src={src} alt={alt} fill sizes={sizes} {...loadingProps} />
         )}
       </div>
       {(image.caption || showCredit) && (

@@ -15,6 +15,8 @@ import { applyTemplate } from "@/lib/i18n/format";
 import { isValidPostalCode } from "@/lib/postal-code";
 import { isEuCountry, countryFlagEmoji } from "@/lib/countries";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
+import { getGiftVoucherCopy } from "@/lib/gift-voucher-copy";
+import type { Locale } from "@/lib/i18n/locale-constants";
 
 // Loaded on demand (adds the Stripe SDK to the bundle) so a shopper who ends
 // up paying by card/PayPal/bank transfer never pays for it — checkout must
@@ -42,6 +44,8 @@ type Quote = {
   discountAmount: number;
   bundleDiscountAmount: number;
   giftCardAmount: number;
+  giftVoucherAppliedAmount: number;
+  giftVoucherRemainingBalance: number | null;
   total: number;
   currency: string;
   pricesIncludeTax: boolean;
@@ -67,7 +71,7 @@ export function CheckoutClient({
   giftCardOffer,
 }: {
   locale: string;
-  uiLocale: string;
+  uiLocale: Locale;
   countries: string[];
   isLoggedIn: boolean;
   userEmail: string | null;
@@ -83,7 +87,12 @@ export function CheckoutClient({
   stripePublishableKey: string | null;
   expressCheckoutLabel: string;
   quoteLoadingLabel: string;
-  paymentMethods: { cards: boolean; paypal: boolean; klarna: boolean; bankTransfer: boolean };
+  paymentMethods: {
+    cards: boolean;
+    paypal: boolean;
+    klarna: boolean;
+    bankTransfer: boolean;
+  };
   trustLabels: {
     handmadeInMurano: string;
     secureBadge: string;
@@ -97,6 +106,7 @@ export function CheckoutClient({
   // The personalised gift card add-on, while the store offers it.
   giftCardOffer: { productName: string; printedNote: string } | null;
 }) {
+  const voucherCopy = getGiftVoucherCopy(uiLocale);
   const router = useLocalizedRouter();
   const storedGiftCard = useCartStore((state) => state.giftCard);
   const giftCard = giftCardOffer ? storedGiftCard : null;
@@ -119,6 +129,10 @@ export function CheckoutClient({
   const [guestEmail, setGuestEmail] = useState("");
   const [discountCodeInput, setDiscountCodeInput] = useState("");
   const [appliedDiscountCode, setAppliedDiscountCode] = useState<string | undefined>(undefined);
+  const [giftVoucherCodeInput, setGiftVoucherCodeInput] = useState("");
+  const [appliedGiftVoucherCode, setAppliedGiftVoucherCode] = useState<string | undefined>(
+    undefined
+  );
 
   const [shippingMethods, setShippingMethods] = useState<ShippingMethod[]>([]);
   const [shippingMethodId, setShippingMethodId] = useState<string>("");
@@ -126,7 +140,10 @@ export function CheckoutClient({
   // once the lookup for the *current* country has finished (not while loading).
   const [shippingLoadedFor, setShippingLoadedFor] = useState<string | null>(null);
 
-  const [quoteState, setQuoteState] = useState<{ key: string; value: Quote } | null>(null);
+  const [quoteState, setQuoteState] = useState<{
+    key: string;
+    value: Quote;
+  } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -141,23 +158,23 @@ export function CheckoutClient({
     }
   }, [uiLocale]);
 
-  const cartItems = items.map((item) => ({ productId: item.productId, quantity: item.quantity }));
+  const cartItems = items.map((item) => ({
+    productId: item.productId,
+    quantity: item.quantity,
+  }));
   const selectedShippingMethod = shippingMethods.find((m) => m.id === shippingMethodId);
   const quoteRequest = {
     items: cartItems,
     country,
     shippingMethodId,
     discountCode: appliedDiscountCode,
+    giftVoucherCode: appliedGiftVoucherCode,
     giftCard: Boolean(giftCard),
   };
   const quoteRequestKey = JSON.stringify(quoteRequest);
   const quote = quoteState?.key === quoteRequestKey ? quoteState.value : null;
   const quoteLoading = Boolean(
-    country &&
-      shippingMethodId &&
-      shippingLoadedFor === country &&
-      !quote &&
-      !error
+    country && shippingMethodId && shippingLoadedFor === country && !quote && !error
   );
 
   useEffect(() => {
@@ -188,12 +205,8 @@ export function CheckoutClient({
   }, [country]);
 
   useEffect(() => {
-    if (
-      !country ||
-      !shippingMethodId ||
-      shippingLoadedFor !== country ||
-      cartItems.length === 0
-    ) return;
+    if (!country || !shippingMethodId || shippingLoadedFor !== country || cartItems.length === 0)
+      return;
     let cancelled = false;
     fetch("/api/checkout/quote", {
       method: "POST",
@@ -258,9 +271,17 @@ export function CheckoutClient({
         body: JSON.stringify({
           items: cartItems,
           guestEmail: isLoggedIn ? undefined : guestEmail,
-          address: { fullName, street, city, postalCode, country, phone: phone || undefined },
+          address: {
+            fullName,
+            street,
+            city,
+            postalCode,
+            country,
+            phone: phone || undefined,
+          },
           shippingMethodId,
           discountCode: appliedDiscountCode,
+          giftVoucherCode: appliedGiftVoucherCode,
           giftCard: giftCard ?? undefined,
           turnstileToken,
         }),
@@ -285,6 +306,13 @@ export function CheckoutClient({
     if (nextCode === appliedDiscountCode) return;
     setError(null);
     setAppliedDiscountCode(nextCode);
+  }
+
+  function applyGiftVoucherCode() {
+    const nextCode = giftVoucherCodeInput.trim() || undefined;
+    if (nextCode === appliedGiftVoucherCode) return;
+    setError(null);
+    setAppliedGiftVoucherCode(nextCode);
   }
 
   return (
@@ -522,6 +550,32 @@ export function CheckoutClient({
               </button>
             </div>
 
+            <div className="checkout-discount flex gap-2">
+              <input
+                name="gift-voucher-code"
+                autoComplete="off"
+                spellCheck={false}
+                aria-label={voucherCopy.checkoutCode}
+                placeholder={voucherCopy.checkoutCode}
+                value={giftVoucherCodeInput}
+                onChange={(e) => setGiftVoucherCodeInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    applyGiftVoucherCode();
+                  }
+                }}
+                className="field flex-1 text-sm"
+              />
+              <button
+                type="button"
+                onClick={applyGiftVoucherCode}
+                className="btn-secondary shrink-0 text-sm"
+              >
+                {dict.apply}
+              </button>
+            </div>
+
             <div aria-live="polite" aria-busy={quoteLoading}>
               {quoteLoading && (
                 <p role="status" className="text-foreground/60 py-2 text-sm">
@@ -543,7 +597,9 @@ export function CheckoutClient({
                   {quote.bundleDiscountAmount > 0 && (
                     <div className="text-success flex justify-between">
                       <span>{dict.bundleSaving}</span>
-                      <span>-{formatMoney(quote.bundleDiscountAmount, quote.currency, locale)}</span>
+                      <span>
+                        -{formatMoney(quote.bundleDiscountAmount, quote.currency, locale)}
+                      </span>
                     </div>
                   )}
                   {quote.discountAmount > 0 && (
@@ -552,6 +608,22 @@ export function CheckoutClient({
                       <span>-{formatMoney(quote.discountAmount, quote.currency, locale)}</span>
                     </div>
                   )}
+                  {quote.giftVoucherAppliedAmount > 0 && (
+                    <div className="text-success flex justify-between">
+                      <span>{voucherCopy.voucherApplied}</span>
+                      <span>
+                        -{formatMoney(quote.giftVoucherAppliedAmount, quote.currency, locale)}
+                      </span>
+                    </div>
+                  )}
+                  {quote.giftVoucherAppliedAmount > 0 &&
+                    quote.giftVoucherRemainingBalance !== null &&
+                    quote.giftVoucherRemainingBalance > 0 && (
+                      <p className="text-foreground/60 text-xs">
+                        {voucherCopy.remainingBalance}:{" "}
+                        {formatMoney(quote.giftVoucherRemainingBalance, quote.currency, locale)}
+                      </p>
+                    )}
                   <div className="text-foreground/70 flex justify-between">
                     <span>
                       {dict.shipping}

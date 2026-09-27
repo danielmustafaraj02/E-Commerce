@@ -15,6 +15,22 @@
   --danger: #dc2626;
   --success: #15803d;
   --warning: #b45309;
+  /* Shared responsive rhythm for the storefront. */
+  --space-1: 0.5rem;
+  --space-2: 0.75rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2rem;
+  --space-6: 3rem;
+  --space-7: 4.5rem;
+  --page-gutter: clamp(1.25rem, 5vw, 1.5rem);
+  --page-section-space: clamp(3.5rem, 8vw, 5rem);
+  --home-section-space: clamp(4.5rem, 8.1vw, 6.5rem);
+  --radius-control: 3px;
+  --radius-panel: 12px;
+  --interactive-duration: 180ms;
+  --layer-sticky-action: 40;
+  --layer-modal: 60;
   /* Fixed brand palette taken from the glass itself. Unlike --store-primary
      these are not admin-editable: they are what makes hover/focus/checked
      states and the decorative bands colorful whatever primary color is set. */
@@ -1080,8 +1096,8 @@ button:not(:disabled),
     padding: 0.7rem 1.35rem;
     min-height: 2.75rem;
     transition:
-      background-color 0.2s ease,
-      box-shadow 0.2s ease;
+      background-color var(--interactive-duration) ease,
+      box-shadow var(--interactive-duration) ease;
   }
   .btn-primary:hover:not(:disabled) {
     background: color-mix(in srgb, var(--color-primary) 72%, black);
@@ -1103,9 +1119,9 @@ button:not(:disabled),
     color: var(--foreground);
     padding: 0.6rem 1.15rem;
     transition:
-      border-color 0.15s ease,
-      color 0.15s ease,
-      background-color 0.15s ease;
+      border-color var(--interactive-duration) ease,
+      color var(--interactive-duration) ease,
+      background-color var(--interactive-duration) ease;
   }
   .btn-secondary:hover:not(:disabled) {
     border-color: var(--foreground);
@@ -1419,8 +1435,10 @@ button:not(:disabled),
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
     scroll-behavior: auto !important;
   }
 }

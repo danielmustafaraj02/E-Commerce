@@ -3,7 +3,7 @@ import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
 import { formatMoney } from "@/lib/format";
-import { updateOrderStatus, deleteOrder } from "../actions";
+import { deleteOrder, resendGiftVoucherEmail, updateOrderStatus } from "../actions";
 import { sendToSupplier, updateFulfillment } from "./fulfillment-actions";
 import { StatusForm } from "./status-form";
 import { FulfillmentTrackingForm } from "./fulfillment-tracking-form";
@@ -26,7 +26,7 @@ export default async function AdminOrderDetailPage({
   params,
   searchParams,
 }: PageProps<"/admin/orders/[orderNumber]">) {
-  const [{ orderNumber }, { map }] = await Promise.all([params, searchParams]);
+  const [{ orderNumber }, { map, deleteError }] = await Promise.all([params, searchParams]);
 
   const [session, settings, order] = await Promise.all([
     auth(),
@@ -39,7 +39,12 @@ export default async function AdminOrderDetailPage({
         shippingMethod: true,
         payments: true,
         user: true,
-        fulfillments: { include: { supplier: true, items: true }, orderBy: { createdAt: "asc" } },
+        fulfillments: {
+          include: { supplier: true, items: true },
+          orderBy: { createdAt: "asc" },
+        },
+        giftVoucherIssue: true,
+        appliedGiftVoucher: true,
       },
     }),
   ]);
@@ -79,17 +84,25 @@ export default async function AdminOrderDetailPage({
       : null;
   const giftStickers = parseGiftCardStickers(order.giftCardStickers);
   const giftBack = parseGiftCardBack(order.giftCardBack);
+  const boundResendGiftVoucher = resendGiftVoucherEmail.bind(null, order.orderNumber);
 
   return (
     <div className="max-w-3xl">
       <h1 className="mb-1 text-2xl font-semibold">Order {order.orderNumber}</h1>
+      {deleteError === "gift-voucher-record" && (
+        <p role="alert" className="text-danger mb-4 text-sm">
+          This order is linked to a gift voucher and must remain in the financial history.
+        </p>
+      )}
       <p className="text-foreground/70 mb-6 text-sm">
         Placed {order.createdAt.toLocaleString()} by{" "}
         {order.user?.email ?? order.guestEmail ?? "guest"}
       </p>
 
       {giftLines && (
-        <section className={`form-card mb-8 flex flex-col gap-5 sm:flex-row ${giftCardFontClasses}`}>
+        <section
+          className={`form-card mb-8 flex flex-col gap-5 sm:flex-row ${giftCardFontClasses}`}
+        >
           <div className="flex shrink-0 gap-3">
             <GiftCardPreview
               lines={giftLines}
@@ -111,19 +124,26 @@ export default async function AdminOrderDetailPage({
               <dt className="text-foreground/60">Message</dt>
               <dd>
                 {order.giftCardMessage} (
-                {order.giftCardMessageType === "custom" ? "written by the customer" : "chosen from our messages"})
+                {order.giftCardMessageType === "custom"
+                  ? "written by the customer"
+                  : "chosen from our messages"}
+                )
               </dd>
               <dt className="text-foreground/60">For</dt>
               <dd>{order.giftCardRecipient || "—"}</dd>
               <dt className="text-foreground/60">From</dt>
               <dd>{order.giftCardSender || "—"}</dd>
               <dt className="text-foreground/60">Font</dt>
-              <dd>{giftDict.fonts[giftFont]} ({giftFont})</dd>
+              <dd>
+                {giftDict.fonts[giftFont]} ({giftFont})
+              </dd>
               <dt className="text-foreground/60">Motifs</dt>
               <dd>
                 {giftStickers.length
                   ? giftStickers
-                      .map((s) => `${s.icon} at ${Math.round(s.x)}% across, ${Math.round(s.y)}% down`)
+                      .map(
+                        (s) => `${s.icon} at ${Math.round(s.x)}% across, ${Math.round(s.y)}% down`
+                      )
                       .join("; ")
                   : "—"}
               </dd>
@@ -131,6 +151,110 @@ export default async function AdminOrderDetailPage({
               <dd>{giftBack}</dd>
             </dl>
           </div>
+        </section>
+      )}
+
+      {order.giftVoucherIssue && (
+        <section className="form-card mb-8 flex flex-col gap-4">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <h2 className="text-lg font-medium">Digital gift voucher</h2>
+              <p className="text-foreground/60 mt-1 text-sm">
+                {formatMoney(
+                  order.giftVoucherIssue.originalAmount,
+                  order.currency,
+                  settings.defaultLocale
+                )}
+                {" · "}
+                {order.giftVoucherIssue.status === "active" ? "Active" : "Voided"}
+              </p>
+            </div>
+            {order.giftVoucherIssue.status === "active" && (
+              <form action={boundResendGiftVoucher}>
+                <button type="submit" className="btn-secondary text-sm">
+                  Resend to recipient
+                </button>
+              </form>
+            )}
+          </div>
+          <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
+            <dt className="text-foreground/60">Code</dt>
+            <dd className="break-all font-mono" translate="no">
+              {order.giftVoucherIssue.code}
+            </dd>
+            <dt className="text-foreground/60">Balance</dt>
+            <dd>
+              {formatMoney(
+                order.giftVoucherIssue.balance,
+                order.giftVoucherIssue.currency,
+                settings.defaultLocale
+              )}
+            </dd>
+            <dt className="text-foreground/60">Recipient</dt>
+            <dd>{order.giftVoucherIssue.recipientEmail}</dd>
+            {order.giftVoucherIssue.message && (
+              <>
+                <dt className="text-foreground/60">Message</dt>
+                <dd className="whitespace-pre-line">{order.giftVoucherIssue.message}</dd>
+              </>
+            )}
+          </dl>
+        </section>
+      )}
+
+      {order.giftVoucherPurchaseAmount > 0 && !order.giftVoucherIssue && (
+        <section className="form-card mb-8">
+          <h2 className="text-lg font-medium">Digital gift voucher purchase</h2>
+          <p className="text-foreground/60 mt-1 text-sm">
+            {formatMoney(order.giftVoucherPurchaseAmount, order.currency, settings.defaultLocale)}
+            {order.status === "pending" ? " · Awaiting payment" : " · Not issued"}
+          </p>
+          <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
+            <dt className="text-foreground/60">Recipient</dt>
+            <dd>{order.giftVoucherRecipientName || order.giftVoucherRecipientEmail}</dd>
+            {order.giftVoucherRecipientName && (
+              <>
+                <dt className="text-foreground/60">Recipient email</dt>
+                <dd>{order.giftVoucherRecipientEmail}</dd>
+              </>
+            )}
+            {order.giftVoucherSenderName && (
+              <>
+                <dt className="text-foreground/60">From</dt>
+                <dd>{order.giftVoucherSenderName}</dd>
+              </>
+            )}
+            {order.giftVoucherMessage && (
+              <>
+                <dt className="text-foreground/60">Message</dt>
+                <dd className="whitespace-pre-line">{order.giftVoucherMessage}</dd>
+              </>
+            )}
+          </dl>
+        </section>
+      )}
+
+      {order.giftVoucherRedeemedAmount > 0 && order.appliedGiftVoucher && (
+        <section className="form-card mb-8">
+          <h2 className="mb-2 text-lg font-medium">Gift voucher redeemed</h2>
+          <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
+            <dt className="text-foreground/60">Code</dt>
+            <dd className="break-all font-mono" translate="no">
+              {order.appliedGiftVoucher.code}
+            </dd>
+            <dt className="text-foreground/60">Credit used</dt>
+            <dd>
+              {formatMoney(order.giftVoucherRedeemedAmount, order.currency, settings.defaultLocale)}
+            </dd>
+            <dt className="text-foreground/60">Balance now</dt>
+            <dd>
+              {formatMoney(
+                order.appliedGiftVoucher.balance,
+                order.appliedGiftVoucher.currency,
+                settings.defaultLocale
+              )}
+            </dd>
+          </dl>
         </section>
       )}
 
@@ -143,6 +267,18 @@ export default async function AdminOrderDetailPage({
                 <span>Personalised gift card (see below)</span>
                 <span>
                   {formatMoney(order.giftCardAmount, order.currency, settings.defaultLocale)}
+                </span>
+              </li>
+            )}
+            {order.giftVoucherPurchaseAmount > 0 && (
+              <li className="flex justify-between py-2">
+                <span>Digital gift voucher</span>
+                <span>
+                  {formatMoney(
+                    order.giftVoucherPurchaseAmount,
+                    order.currency,
+                    settings.defaultLocale
+                  )}
                 </span>
               </li>
             )}
@@ -335,14 +471,20 @@ export default async function AdminOrderDetailPage({
                 Permanently deletes this order and its payment records. Useful for cleaning up test
                 orders — cannot be undone.
               </p>
-              <ConfirmForm
-                action={deleteOrder.bind(null, order.id)}
-                confirmMessage={`Delete order ${order.orderNumber}? This cannot be undone.`}
-              >
-                <button type="submit" className="btn-danger text-sm">
-                  Delete order
-                </button>
-              </ConfirmForm>
+              {order.appliedGiftVoucherId || order.giftVoucherIssue ? (
+                <p className="text-foreground/60 text-xs">
+                  This order is linked to a gift voucher and cannot be deleted.
+                </p>
+              ) : (
+                <ConfirmForm
+                  action={deleteOrder.bind(null, order.id)}
+                  confirmMessage={`Delete order ${order.orderNumber}? This cannot be undone.`}
+                >
+                  <button type="submit" className="btn-danger text-sm">
+                    Delete order
+                  </button>
+                </ConfirmForm>
+              )}
             </div>
           )}
         </section>

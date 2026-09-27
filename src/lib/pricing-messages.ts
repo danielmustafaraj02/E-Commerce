@@ -19,6 +19,8 @@ export function pricingMessage(error: PricingError, t: Dictionary["feedback"]): 
       return t.shippingUnavailable;
     case "discount-invalid":
       return t.discountInvalid;
+    case "gift-voucher-invalid":
+      return t.giftVoucherInvalid;
     case "discount-expired":
       return t.discountExpired;
     case "discount-limit":

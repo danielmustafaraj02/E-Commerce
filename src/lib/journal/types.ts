@@ -16,8 +16,15 @@ export type ImageRights = {
 
 export type JournalImage =
   // A catalog piece's own photo, looked up by product slug when rendering.
-  | { kind: "product"; productSlug: string; alt: string; caption?: string; rights: ImageRights }
-  | { kind: "file"; src: string; alt: string; caption?: string; rights: ImageRights };
+  | {
+      kind: "product";
+      productSlug: string;
+      alt: string;
+      altIt?: string;
+      caption?: string;
+      rights: ImageRights;
+    }
+  | { kind: "file"; src: string; alt: string; altIt?: string; caption?: string; rights: ImageRights };
 
 export type Source = {
   title: string;
@@ -26,8 +33,33 @@ export type Source = {
   // What the article relies on it for.
   usedFor: string;
   accessed: string; // YYYY-MM-DD
+  kind?: "primary" | "scholarly" | "institutional" | "reference";
+  usedForIt?: string;
+  locator?: string;
   author?: string;
   published?: string;
+};
+
+export type JournalContentLocale = "en" | "it";
+
+export type ArticleCopy = {
+  title: string;
+  seoTitle: string;
+  description: string;
+  primaryKeyword: string;
+  secondaryKeywords: string[];
+  intro: string;
+  body: Block[];
+};
+
+export type ArticleTranslation = ArticleCopy;
+
+export type ArticleSeries = {
+  key: string;
+  title: string;
+  titleIt: string;
+  episode: number;
+  total: number;
 };
 
 // Inline links inside paragraphs: [label](href), internal or to a source.
@@ -41,19 +73,17 @@ export type Block =
   | { type: "products"; title: string; slugs: string[] }
   | { type: "cta"; text: string; href: string };
 
-export type Article = {
+export type Article = ArticleCopy & {
   slug: string;
-  title: string;
-  seoTitle: string;
-  description: string;
   category: JournalCategory;
   published: string; // YYYY-MM-DD
   updated?: string;
-  primaryKeyword: string;
-  secondaryKeywords: string[];
   hero: JournalImage;
-  intro: string;
-  body: Block[];
   sources: Source[];
   related: string[]; // other article slugs
+  series?: ArticleSeries;
+  translations?: Partial<Record<"it", ArticleTranslation>>;
 };
+
+export type LocalizedArticle = Omit<Article, "translations" | keyof ArticleCopy> &
+  ArticleCopy & { contentLocale: JournalContentLocale };

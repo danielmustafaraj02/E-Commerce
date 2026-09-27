@@ -4,6 +4,7 @@ import type { Dictionary } from "@/lib/i18n/dictionaries";
 import type { Locale } from "@/lib/i18n/locale";
 import { localizedName } from "@/lib/product-i18n";
 import { buildFooterNav } from "@/lib/footer-nav";
+import { getGiftVoucherCopy } from "@/lib/gift-voucher-copy";
 import { PaymentIcons } from "@/components/payment-icons";
 import { CatalogImage } from "@/components/catalog-image";
 import { NewsletterSignupForm } from "@/components/newsletter-signup-form";
@@ -79,16 +80,26 @@ export async function Footer({
     // The piece shown beside "Discover the world of Murano glass".
     db.product.findUnique({
       where: { slug: FOOTER_PRODUCT_SLUG },
-      select: { images: { take: 1, orderBy: { position: "asc" }, select: { url: true } } },
+      select: {
+        images: {
+          take: 1,
+          orderBy: { position: "asc" },
+          select: { url: true },
+        },
+      },
     }),
   ]);
   const featuredImage = featured?.images[0]?.url ?? "/hero/handmade-red-murano-glass-necklace.jpg";
   const f = dict.footer;
   const nav = buildFooterNav({
     dict,
-    categories: categories.map((c) => ({ slug: c.slug, label: localizedName(c, locale) })),
+    categories: categories.map((c) => ({
+      slug: c.slug,
+      label: localizedName(c, locale),
+    })),
     contactEmail,
     giftCardEnabled,
+    giftVoucherLabel: getGiftVoucherCopy(locale).purchaseLabel,
     extraAboutLinks:
       locale === MURANO_FAQ_LOCALE ? [{ href: MURANO_FAQ_PATH, label: MURANO_FAQ_NAV_LABEL }] : [],
   });
@@ -111,10 +122,7 @@ export async function Footer({
               {f.editorialCta} <span aria-hidden="true">→</span>
             </Link>
           </div>
-          <Reveal
-            className="footer-editorial-image footer-editorial-image-reveal"
-            repeatOnView
-          >
+          <Reveal className="footer-editorial-image footer-editorial-image-reveal" repeatOnView>
             <CatalogImage src={featuredImage} alt="" fill sizes="(min-width: 48rem) 20rem, 40vw" />
           </Reveal>
         </section>

@@ -7,6 +7,9 @@ import { canAccessOrder } from "@/lib/orders";
 import { getStoreSettings } from "@/lib/store-settings";
 import { ONLINE_HOLD_MS } from "@/lib/abandoned-orders";
 import { getFeedback } from "@/lib/i18n/feedback";
+import { getGiftVoucherCopy } from "@/lib/gift-voucher-copy";
+import { locales, type Locale } from "@/lib/i18n/locale-constants";
+import { formatMoney } from "@/lib/format";
 
 const schema = z.object({ orderNumber: z.string().min(1) });
 
@@ -38,6 +41,16 @@ export async function POST(request: Request) {
 
   const settings = await getStoreSettings();
   const origin = new URL(request.url).origin;
+  const orderLocale: Locale = (locales as readonly string[]).includes(order.locale ?? "")
+    ? (order.locale as Locale)
+    : "en";
+  const checkoutProductName = order.giftVoucherPurchaseAmount
+    ? `${getGiftVoucherCopy(orderLocale).purchaseLabel} · ${formatMoney(
+        order.giftVoucherPurchaseAmount,
+        order.currency,
+        orderLocale
+      )}`
+    : `Order ${order.orderNumber}`;
 
   // A buyer who backs out of Stripe (cancel_url) and clicks "pay" again must
   // land on a working session. If the previous one is still open, send them
@@ -58,7 +71,10 @@ export async function POST(request: Request) {
       // it. Creating a second session here could charge them twice.
       return NextResponse.json({ error: t.paymentProcessing }, { status: 409 });
     }
-    await db.payment.update({ where: { id: previous.id }, data: { status: "failed" } });
+    await db.payment.update({
+      where: { id: previous.id },
+      data: { status: "failed" },
+    });
   }
   // The Checkout Session dies when the order's stock hold does, so a buyer
   // can't pay for an order the cron has already cancelled. Stripe requires
@@ -70,7 +86,9 @@ export async function POST(request: Request) {
       nowMs + 24 * 60 * 60_000
     ) / 1000
   );
-  const attempt = await db.payment.count({ where: { orderId: order.id, provider: "stripe" } });
+  const attempt = await db.payment.count({
+    where: { orderId: order.id, provider: "stripe" },
+  });
 
   // A single line item for the already-computed total, rather than one line
   // per product — avoids Stripe re-deriving tax/discount math that diverges
@@ -103,7 +121,7 @@ export async function POST(request: Request) {
         {
           price_data: {
             currency: order.currency.toLowerCase(),
-            product_data: { name: `Order ${order.orderNumber}` },
+            product_data: { name: checkoutProductName },
             unit_amount: order.total,
           },
           quantity: 1,

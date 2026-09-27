@@ -1,4 +1,4 @@
-import { ARTICLE_LOCALE, ARTICLES, articlePath } from "@/lib/journal";
+import { ARTICLES, articleLanguages, articlePath } from "@/lib/journal";
 import { MURANO_FAQ_LOCALE, MURANO_FAQ_PATH } from "@/lib/murano-faq";
 import type { MetadataRoute } from "next";
 import { db } from "@/lib/db";
@@ -11,10 +11,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = settings.siteUrl || process.env.NEXTAUTH_URL || "http://localhost:3000";
 
   const [products, categories, legalPages, looks] = await Promise.all([
-    db.product.findMany({ where: { active: true }, select: { slug: true, updatedAt: true } }),
+    db.product.findMany({
+      where: { active: true },
+      select: { slug: true, updatedAt: true },
+    }),
     db.category.findMany({ select: { slug: true } }),
     db.legalPage.findMany({ select: { slug: true, lastUpdated: true } }),
-    db.look.findMany({ where: { active: true }, select: { id: true, updatedAt: true } }),
+    db.look.findMany({
+      where: { active: true },
+      select: { id: true, updatedAt: true },
+    }),
   ]);
 
   // The newest product edit is the best available "last changed" signal for
@@ -34,14 +40,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: "/", lastModified: catalogUpdatedAt },
     { path: "/products", lastModified: catalogUpdatedAt },
     { path: "/gift-finder", lastModified: catalogUpdatedAt },
+    { path: "/gift-card" },
     { path: "/looks" },
     { path: "/looks/compose" },
     ...(settings.giftCardEnabled ? [{ path: "/personalised-gift-card" }] : []),
-    ...looks.map((look) => ({ path: `/looks/${look.id}`, lastModified: look.updatedAt })),
+    ...looks.map((look) => ({
+      path: `/looks/${look.id}`,
+      lastModified: look.updatedAt,
+    })),
     { path: "/about" },
     { path: "/murano-glass" },
     { path: "/contact" },
-    { path: "/blog", lastModified: new Date(ARTICLES[0].updated ?? ARTICLES[0].published) },
+    {
+      path: "/blog",
+      lastModified: new Date(ARTICLES[0].updated ?? ARTICLES[0].published),
+    },
     ...categories.map((category) => ({
       path: `/category/${category.slug}`,
       lastModified: catalogUpdatedAt,
@@ -50,7 +63,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       path: `/products/${product.slug}`,
       lastModified: product.updatedAt,
     })),
-    ...legalPages.map((page) => ({ path: `/legal/${page.slug}`, lastModified: page.lastUpdated })),
+    ...legalPages.map((page) => ({
+      path: `/legal/${page.slug}`,
+      lastModified: page.lastUpdated,
+    })),
   ];
 
   const localized = resources.flatMap(({ path, lastModified }) => {
@@ -65,15 +81,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }));
   });
 
-  // Articles exist in English only, so each has one URL (lib/journal: the
-  // other locales' copies name it as canonical), not an 11-language cluster.
-  const articles = ARTICLES.map((article) => {
-    const url = `${base}${articlePath(article.slug)}`;
-    return {
-      url,
-      lastModified: new Date(article.updated ?? article.published),
-      alternates: { languages: { [ARTICLE_LOCALE]: url, "x-default": url } },
-    };
+  // Articles have English source copy and selected Italian translations. Each
+  // translated version is a separate URL with a reciprocal two-language set.
+  const articles = ARTICLES.flatMap((article) => {
+    const paths = articleLanguages(article);
+    const languages = Object.fromEntries(
+      Object.entries(paths).map(([locale, path]) => [locale, `${base}${path}`])
+    );
+    return (article.translations?.it ? (["en", "it"] as const) : (["en"] as const)).map(
+      (locale) => ({
+        url: `${base}${articlePath(article.slug, locale)}`,
+        lastModified: new Date(article.updated ?? article.published),
+        alternates: { languages },
+      })
+    );
   });
 
   // The Murano questions page is Italian only, the same way.
@@ -81,7 +102,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const muranoFaq = {
     url: muranoFaqUrl,
     lastModified: catalogUpdatedAt,
-    alternates: { languages: { [MURANO_FAQ_LOCALE]: muranoFaqUrl, "x-default": muranoFaqUrl } },
+    alternates: {
+      languages: {
+        [MURANO_FAQ_LOCALE]: muranoFaqUrl,
+        "x-default": muranoFaqUrl,
+      },
+    },
   };
 
   return [...localized, ...articles, muranoFaq];

@@ -26,6 +26,7 @@ export type PlaceOrderInput = {
   address: PlaceOrderAddress;
   shippingMethodId: string;
   discountCode?: string;
+  giftVoucherCode?: string;
   userId?: string;
   guestEmail?: string | null;
   locale: string;
@@ -64,6 +65,7 @@ async function placeOrderOnce(input: PlaceOrderInput) {
     country: input.address.country,
     shippingMethodId: input.shippingMethodId,
     discountCode: input.discountCode,
+    giftVoucherCode: input.giftVoucherCode,
     giftCard: Boolean(input.giftCard),
   });
   // Saved only when it was actually charged (the store offers it).
@@ -72,6 +74,25 @@ async function placeOrderOnce(input: PlaceOrderInput) {
   const orderNumber = generateOrderNumber();
 
   const order = await db.$transaction(async (tx) => {
+    if (quote.giftVoucherAppliedAmount > 0 && quote.giftVoucherId) {
+      const reservedVoucher = await tx.giftVoucher.updateMany({
+        where: {
+          id: quote.giftVoucherId,
+          status: "active",
+          currency: quote.currency,
+          balance: { gte: quote.giftVoucherAppliedAmount },
+        },
+        data: { balance: { decrement: quote.giftVoucherAppliedAmount } },
+      });
+      if (reservedVoucher.count !== 1) {
+        throw new PricingError(
+          "Gift voucher balance changed; please apply the code again",
+          409,
+          "gift-voucher-invalid"
+        );
+      }
+    }
+
     for (const line of quote.lines) {
       // Dropshipped items (trackInventory=false) have no stock of ours to
       // decrement — the supplier owns availability.
@@ -116,7 +137,7 @@ async function placeOrderOnce(input: PlaceOrderInput) {
         orderNumber,
         userId: input.userId ?? undefined,
         guestEmail: input.userId ? null : input.guestEmail,
-        status: "pending",
+        status: quote.total === 0 ? "paid" : "pending",
         subtotal: quote.subtotal,
         taxAmount: quote.taxAmount,
         taxRatePercent: quote.taxRatePercent,
@@ -128,6 +149,12 @@ async function placeOrderOnce(input: PlaceOrderInput) {
         total: quote.total,
         currency: quote.currency,
         locale: input.locale,
+        ...(quote.giftVoucherAppliedAmount > 0 && quote.giftVoucherId
+          ? {
+              appliedGiftVoucherId: quote.giftVoucherId,
+              giftVoucherRedeemedAmount: quote.giftVoucherAppliedAmount,
+            }
+          : {}),
         ...(giftCard && {
           giftCardAmount: quote.giftCardAmount,
           giftCardMessageType: giftCard.messageType,
@@ -135,7 +162,9 @@ async function placeOrderOnce(input: PlaceOrderInput) {
           giftCardRecipient: giftCard.recipient || null,
           giftCardSender: giftCard.sender || null,
           giftCardFont: giftCard.font,
-          ...(giftCard.stickers?.length && { giftCardStickers: giftCard.stickers }),
+          ...(giftCard.stickers?.length && {
+            giftCardStickers: giftCard.stickers,
+          }),
           giftCardBack: giftCard.back ?? null,
         }),
         addressId: address.id,

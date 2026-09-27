@@ -1,6 +1,9 @@
 import type { Prisma } from "@prisma/client";
+import { createGiftVoucherCode } from "@/lib/gift-voucher";
 
-export type PaidOrder = Prisma.OrderGetPayload<{ include: { user: { select: { email: true } } } }>;
+export type PaidOrder = Prisma.OrderGetPayload<{
+  include: { user: { select: { email: true } }; giftVoucherIssue: true };
+}>;
 
 export type ApplyPaidResult =
   | { outcome: "paid"; order: PaidOrder }
@@ -32,7 +35,10 @@ export async function applyPaidToOrder(
 ): Promise<ApplyPaidResult> {
   const order = await tx.order.findUnique({
     where,
-    include: { user: { select: { email: true } } },
+    include: {
+      user: { select: { email: true } },
+      giftVoucherIssue: true,
+    },
   });
   if (!order) return { outcome: "not_found" };
 
@@ -44,9 +50,76 @@ export async function applyPaidToOrder(
   }
 
   if (order.status === "pending") {
-    await tx.order.update({ where: { id: order.id }, data: { status: "paid" } });
-    return { outcome: "paid", order };
+    await tx.order.update({
+      where: { id: order.id },
+      data: { status: "paid" },
+    });
+    const paidOrder = { ...order, status: "paid" };
+    const giftVoucherIssue = paidOrder.giftVoucherPurchaseAmount
+      ? await issueGiftVoucher(tx, paidOrder)
+      : null;
+    return {
+      outcome: "paid",
+      order: {
+        ...paidOrder,
+        giftVoucherIssue: giftVoucherIssue ?? paidOrder.giftVoucherIssue,
+      },
+    };
   }
   if (order.status === "cancelled") return { outcome: "paid_after_cancel", order };
+  if (
+    ["paid", "processing", "shipped", "delivered"].includes(order.status) &&
+    order.giftVoucherPurchaseAmount > 0 &&
+    !order.giftVoucherIssue
+  ) {
+    const giftVoucherIssue = await issueGiftVoucher(tx, order);
+    return {
+      outcome: "already_settled",
+      order: { ...order, giftVoucherIssue },
+    };
+  }
   return { outcome: "already_settled", order };
+}
+
+export async function issueGiftVoucher(
+  tx: Prisma.TransactionClient,
+  order: Pick<
+    PaidOrder,
+    | "id"
+    | "currency"
+    | "total"
+    | "giftVoucherPurchaseAmount"
+    | "giftVoucherRecipientEmail"
+    | "giftVoucherRecipientName"
+    | "giftVoucherSenderName"
+    | "giftVoucherMessage"
+  >
+) {
+  if (order.giftVoucherPurchaseAmount <= 0) return null;
+  if (
+    order.currency !== "EUR" ||
+    order.total !== order.giftVoucherPurchaseAmount ||
+    !order.giftVoucherRecipientEmail
+  ) {
+    throw new Error("Gift voucher order is missing valid purchase details");
+  }
+
+  const existing = await tx.giftVoucher.findUnique({
+    where: { purchaseOrderId: order.id },
+  });
+  if (existing) return existing;
+
+  return tx.giftVoucher.create({
+    data: {
+      code: createGiftVoucherCode(),
+      originalAmount: order.giftVoucherPurchaseAmount,
+      balance: order.giftVoucherPurchaseAmount,
+      currency: order.currency,
+      recipientEmail: order.giftVoucherRecipientEmail,
+      recipientName: order.giftVoucherRecipientName,
+      senderName: order.giftVoucherSenderName,
+      message: order.giftVoucherMessage,
+      purchaseOrderId: order.id,
+    },
+  });
 }

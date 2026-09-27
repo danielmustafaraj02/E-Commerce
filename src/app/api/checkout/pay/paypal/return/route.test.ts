@@ -7,6 +7,7 @@ const mocks = vi.hoisted(() => ({
   updatePayment: vi.fn(),
   capturePaypalOrder: vi.fn(),
   captureError: vi.fn(),
+  sendOrderStatusEmail: vi.fn(),
 }));
 
 vi.mock("@/lib/db", () => {
@@ -23,10 +24,22 @@ vi.mock("@/lib/db", () => {
 });
 vi.mock("@/lib/paypal", () => ({ capturePaypalOrder: mocks.capturePaypalOrder }));
 vi.mock("@/lib/monitoring", () => ({ captureError: mocks.captureError }));
+vi.mock("@/lib/email", () => ({ sendOrderStatusEmail: mocks.sendOrderStatusEmail }));
 
 import { GET } from "./route";
 
-const ORDER = { id: "order-cheap", orderNumber: "ORD-CHEAP", total: 1000, currency: "EUR" };
+const ORDER = {
+  id: "order-cheap",
+  orderNumber: "ORD-CHEAP",
+  total: 1000,
+  currency: "EUR",
+  status: "pending",
+  trackingNumber: null,
+  guestEmail: null,
+  user: null,
+  giftVoucherIssue: null,
+  giftVoucherPurchaseAmount: 0,
+};
 
 function paymentFor(order = ORDER) {
   return { id: "pay-1", provider: "paypal", providerTransactionId: "PAYPAL-1", order };
@@ -59,8 +72,9 @@ function locationOf(res: Response) {
 beforeEach(() => {
   vi.resetAllMocks();
   mocks.findPayment.mockResolvedValue(paymentFor());
-  mocks.findOrder.mockResolvedValue({ id: ORDER.id, status: "pending" });
+  mocks.findOrder.mockResolvedValue(ORDER);
   mocks.capturePaypalOrder.mockResolvedValue(completedCapture());
+  mocks.sendOrderStatusEmail.mockResolvedValue(undefined);
 });
 
 describe("PayPal return route", () => {
@@ -137,7 +151,7 @@ describe("PayPal return route", () => {
   });
 
   it("treats an already-paid order (webhook won the race) as success without rewriting it", async () => {
-    mocks.findOrder.mockResolvedValue({ id: ORDER.id, status: "paid" });
+    mocks.findOrder.mockResolvedValue({ ...ORDER, status: "paid" });
     const res = await call({ token: "PAYPAL-1", orderNumber: "ORD-CHEAP" });
 
     expect(mocks.updateOrder).not.toHaveBeenCalled();
@@ -145,7 +159,7 @@ describe("PayPal return route", () => {
   });
 
   it("flags money captured against an order that was cancelled meanwhile", async () => {
-    mocks.findOrder.mockResolvedValue({ id: ORDER.id, status: "cancelled" });
+    mocks.findOrder.mockResolvedValue({ ...ORDER, status: "cancelled" });
     const res = await call({ token: "PAYPAL-1", orderNumber: "ORD-CHEAP" });
 
     expect(mocks.updateOrder).not.toHaveBeenCalled();

@@ -92,15 +92,37 @@ export async function POST(request: Request) {
     // the email anyway.
     if (paidOrder) {
       try {
-        await sendOrderStatusEmail({
+        const emailOrder = {
           orderNumber: paidOrder.orderNumber,
           status: "paid",
           trackingNumber: paidOrder.trackingNumber,
           guestEmail: paidOrder.guestEmail,
           user: paidOrder.user,
-        });
+        };
+        try {
+          await sendOrderStatusEmail(emailOrder);
+        } catch (error) {
+          captureError(error, {
+            scope: "stripe-webhook-order-email",
+            orderNumber: paidOrder.orderNumber,
+          });
+        }
+        if (paidOrder.giftVoucherIssue) {
+          try {
+            const { sendGiftVoucherEmail } = await import("@/lib/email");
+            await sendGiftVoucherEmail(paidOrder.giftVoucherIssue, paidOrder.locale);
+          } catch (error) {
+            captureError(error, {
+              scope: "stripe-webhook-gift-voucher-email",
+              orderNumber: paidOrder.orderNumber,
+            });
+          }
+        }
       } catch (error) {
-        captureError(error, { scope: "stripe-webhook-email", orderNumber: paidOrder.orderNumber });
+        captureError(error, {
+          scope: "stripe-webhook-email",
+          orderNumber: paidOrder.orderNumber,
+        });
       }
     }
   }
@@ -157,15 +179,37 @@ export async function POST(request: Request) {
 
     if (paidOrder) {
       try {
-        await sendOrderStatusEmail({
+        const emailOrder = {
           orderNumber: paidOrder.orderNumber,
           status: "paid",
           trackingNumber: paidOrder.trackingNumber,
           guestEmail: paidOrder.guestEmail,
           user: paidOrder.user,
-        });
+        };
+        try {
+          await sendOrderStatusEmail(emailOrder);
+        } catch (error) {
+          captureError(error, {
+            scope: "stripe-webhook-order-email",
+            orderNumber: paidOrder.orderNumber,
+          });
+        }
+        if (paidOrder.giftVoucherIssue) {
+          try {
+            const { sendGiftVoucherEmail } = await import("@/lib/email");
+            await sendGiftVoucherEmail(paidOrder.giftVoucherIssue, paidOrder.locale);
+          } catch (error) {
+            captureError(error, {
+              scope: "stripe-webhook-gift-voucher-email",
+              orderNumber: paidOrder.orderNumber,
+            });
+          }
+        }
       } catch (error) {
-        captureError(error, { scope: "stripe-webhook-email", orderNumber: paidOrder.orderNumber });
+        captureError(error, {
+          scope: "stripe-webhook-email",
+          orderNumber: paidOrder.orderNumber,
+        });
       }
     }
   }

@@ -11,12 +11,14 @@ export function buildFooterNav({
   categories,
   contactEmail,
   giftCardEnabled = false,
+  giftVoucherLabel = "Digital gift voucher",
   extraAboutLinks = [],
 }: {
   dict: Dictionary;
   categories: { slug: string; label: string }[];
   contactEmail: string;
   giftCardEnabled?: boolean;
+  giftVoucherLabel?: string;
   // Pages that exist in one language only (e.g. the Italian Murano questions).
   extraAboutLinks?: FooterLink[];
 }): { sections: FooterSection[]; legal: FooterLink[] } {
@@ -28,10 +30,19 @@ export function buildFooterNav({
         title: f.shopHeading,
         links: [
           { href: "/products", label: f.allProducts },
-          ...categories.map((c) => ({ href: `/category/${c.slug}`, label: c.label })),
+          ...categories.map((c) => ({
+            href: `/category/${c.slug}`,
+            label: c.label,
+          })),
           { href: "/gift-finder", label: dict.giftFinder.metaTitle },
+          { href: "/gift-card", label: giftVoucherLabel },
           ...(giftCardEnabled
-            ? [{ href: "/personalised-gift-card", label: dict.giftCard.productName }]
+            ? [
+                {
+                  href: "/personalised-gift-card",
+                  label: dict.giftCard.productName,
+                },
+              ]
             : []),
         ],
       },

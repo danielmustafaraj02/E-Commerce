@@ -5,6 +5,10 @@ import { captureError } from "@/lib/monitoring";
 import { siteBaseUrl } from "@/lib/site-url";
 import { emailStrings } from "@/lib/i18n/email-locale";
 import { applyTemplate } from "@/lib/i18n/format";
+import { restoreGiftVoucherRedemption } from "@/lib/gift-voucher-balance";
+import { getGiftVoucherCopy } from "@/lib/gift-voucher-copy";
+import { formatMoney } from "@/lib/format";
+import { locales, type Locale } from "@/lib/i18n/locale-constants";
 
 // An "abandoned cart" in this schema is just a pending order that never got
 // paid — /api/checkout already creates the Order (and reserves stock) before
@@ -59,11 +63,22 @@ async function sendReminders(now: Date, siteUrl: string) {
     // The language the order was placed in. Orders from before it was stored
     // get English — never a request's own locale, since this runs from a
     // cron trigger with no meaningful visitor request behind it at all.
-    const orderLocale = order.locale ?? "en";
+    const orderLocale: Locale = (locales as readonly string[]).includes(order.locale ?? "")
+      ? (order.locale as Locale)
+      : "en";
     const resumeUrl = `${siteUrl}/${orderLocale}/order-confirmation/${order.orderNumber}`;
-    const itemLines = order.items
-      .map((item) => `- ${item.productName} x${item.quantity}`)
-      .join("\n");
+    const itemLines = [
+      ...order.items.map((item) => `- ${item.productName} x${item.quantity}`),
+      ...(order.giftVoucherPurchaseAmount > 0
+        ? [
+            `- ${getGiftVoucherCopy(orderLocale).purchaseLabel}: ${formatMoney(
+              order.giftVoucherPurchaseAmount,
+              order.currency,
+              orderLocale
+            )}`,
+          ]
+        : []),
+    ].join("\n");
 
     try {
       const { t } = await emailStrings(orderLocale);
@@ -76,10 +91,16 @@ async function sendReminders(now: Date, siteUrl: string) {
           orderNumber: order.orderNumber,
         }),
       });
-      await db.order.update({ where: { id: order.id }, data: { abandonedEmailSentAt: now } });
+      await db.order.update({
+        where: { id: order.id },
+        data: { abandonedEmailSentAt: now },
+      });
       sent += 1;
     } catch (error) {
-      captureError(error, { scope: "abandoned-order-reminder", orderNumber: order.orderNumber });
+      captureError(error, {
+        scope: "abandoned-order-reminder",
+        orderNumber: order.orderNumber,
+      });
     }
   }
   return sent;
@@ -114,7 +135,9 @@ export async function cancelExpiredOrders(now = new Date()): Promise<CancelledOr
       ],
     },
     include: {
-      items: { include: { product: { select: { id: true, trackInventory: true } } } },
+      items: {
+        include: { product: { select: { id: true, trackInventory: true } } },
+      },
       user: { select: { email: true } },
     },
   });
@@ -142,6 +165,7 @@ export async function cancelExpiredOrders(now = new Date()): Promise<CancelledOr
             data: { usedCount: { decrement: 1 } },
           });
         }
+        await restoreGiftVoucherRedemption(tx, order);
         return true;
       });
       if (claimed) {
@@ -152,7 +176,10 @@ export async function cancelExpiredOrders(now = new Date()): Promise<CancelledOr
         });
       }
     } catch (error) {
-      captureError(error, { scope: "abandoned-order-expiry", orderNumber: order.orderNumber });
+      captureError(error, {
+        scope: "abandoned-order-expiry",
+        orderNumber: order.orderNumber,
+      });
     }
   }
   return cancelled;
