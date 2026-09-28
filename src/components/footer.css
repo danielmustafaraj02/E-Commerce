@@ -59,8 +59,8 @@ body:has(.auth-flow-page) .site-footer {
 .site-footer-top {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
-  padding-block: 1.25rem 1.5rem;
+  gap: 1.75rem;
+  padding-block: 2rem 2.5rem;
 }
 
 /* -- Editorial band ------------------------------------------------------- */
@@ -591,7 +591,6 @@ body:has(.auth-flow-page) .site-footer {
     grid-template-columns: minmax(0, 2.4fr) minmax(0, 1fr);
     gap: 3.5rem;
     padding-block: 3rem 2rem;
-    border-bottom: 1px solid var(--footer-rule);
   }
   .footer-nav {
     display: grid;

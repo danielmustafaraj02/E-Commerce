@@ -1,0 +1,176 @@
+.looks-editorial-list {
+  display: grid;
+}
+.looks-editorial-intro {
+  max-width: 44rem;
+  margin: 1.5rem auto 3.5rem;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+  line-height: 1.65;
+  text-align: center;
+  color: var(--ink-soft);
+}
+.look-editorial {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  gap: clamp(2.5rem, 6vw, 7rem);
+  align-items: center;
+  padding-block: clamp(4rem, 8vw, 7rem);
+  border-top: 1px solid var(--rule);
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal="true"] .look-editorial {
+    animation: section-fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .look-editorial:nth-child(1) { animation-delay: 0.1s; }
+  .look-editorial:nth-child(2) { animation-delay: 0.2s; }
+  .look-editorial:nth-child(3) { animation-delay: 0.3s; }
+}
+.look-editorial-visual {
+  position: relative;
+  display: block;
+  aspect-ratio: 1 / 1.12;
+  min-width: 0;
+  background: #fff;
+}
+.look-editorial-visual img {
+  object-fit: contain;
+}
+.look-editorial-piece {
+  position: absolute;
+  inset: 0;
+  transform: translate(calc((var(--piece-x) - 0.5) * 100%), calc((var(--piece-y) - 0.5) * 100%))
+    scale(var(--piece-size));
+}
+.look-editorial-copy {
+  max-width: 31rem;
+  padding-block: 1rem;
+}
+.look-editorial-kicker {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin: 0 0 1.5rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.look-editorial-kicker span {
+  color: var(--aventurine-deep);
+  border-inline-end: 1px solid var(--rule);
+  padding-inline-end: 1.2rem;
+}
+.shelf .look-editorial-title {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(2.5rem, 4vw, 4.5rem);
+  font-weight: 400;
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.look-editorial-description {
+  margin: 1.5rem 0 2rem;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.25rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+.look-editorial-label {
+  margin: 0 0 0.8rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.look-editorial-included {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.55rem;
+  font-size: 0.88rem;
+}
+.look-editorial-included a {
+  text-underline-offset: 4px;
+}
+.look-editorial-included a:hover {
+  text-decoration: underline;
+}
+.look-editorial-purchase {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+}
+.look-editorial-price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 1rem;
+  margin: 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.7rem;
+}
+.look-editorial-price s {
+  font-size: 1rem;
+  color: var(--ink-soft);
+}
+.look-editorial-saving {
+  margin: 0.3rem 0 0;
+  font-size: 0.78rem;
+  color: var(--aventurine-deep);
+}
+.look-editorial-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-top: 1.75rem;
+  padding-block: 0.75rem;
+  border-bottom: 1px solid var(--ink);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.look-editorial-cta span {
+  font-size: 1.25rem;
+}
+.look-editorial a:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 5px;
+}
+@media (min-width: 52rem) {
+  .look-editorial:nth-child(even) .look-editorial-visual {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .look-editorial:nth-child(even) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr);
+  }
+  .look-editorial:nth-child(even) .look-editorial-copy {
+    grid-column: 1;
+    grid-row: 1;
+  }
+}
+@media (max-width: 51.99rem) {
+  .look-editorial {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.75rem;
+    padding-block: 2.5rem;
+  }
+  .look-editorial-visual {
+    width: 100%;
+    max-width: 38rem;
+    justify-self: center;
+  }
+  .look-editorial-copy {
+    max-width: none;
+  }
+  .looks-editorial-intro {
+    text-align: start;
+    margin-bottom: 2rem;
+  }
+}

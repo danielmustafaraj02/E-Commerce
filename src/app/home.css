@@ -76,7 +76,7 @@
 }
 
 .shelf-section {
-  padding-block: var(--page-section-space);
+  padding-block: var(--home-section-space);
 }
 /* Color-blocked bands: each section sits on its own tint of the glass palette. */
 .shelf-section--lilac {
@@ -107,8 +107,9 @@
   flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
-  gap: var(--space-1) var(--space-4);
-  margin-bottom: 1.75rem;
+  gap: var(--space-2) var(--space-4);
+  margin-bottom: 2.5rem;
+  margin-top: 0;
 }
 
 .shelf-link {
@@ -307,8 +308,7 @@
   isolation: isolate;
   background: #f7f2ea;
 }
-/* Ivory marble photo behind the whole hero. .shelf-wrap stays position:relative
-   with no z-index so the necklace's multiply blend still reaches the marble. */
+/* Full-bleed hero photography. */
 .shelf-hero-backdrop {
   object-fit: cover;
   object-position: 100% 0%;
@@ -388,6 +388,45 @@
   to {
     opacity: 1;
     transform: translateY(0) scale(var(--hero-bead-scale, 1.24)) rotate(0);
+  }
+}
+/* Subtle entrance for product shelf items and other content */
+@keyframes shelf-item-enter {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes section-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes editorial-copy-slide {
+  from {
+    opacity: 0;
+    transform: translateX(-28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes editorial-image-slide {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 /* The h1 is excluded here — it plays its own word-by-word .word-in entrance
@@ -685,7 +724,7 @@
 .shelf-row {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 2.25rem 1rem;
+  gap: 2.75rem 1.25rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -693,7 +732,7 @@
 @media (min-width: 48rem) {
   .shelf-row {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 3rem 1.75rem;
+    gap: 3.5rem 2rem;
   }
 }
 .shelf-item {
@@ -701,6 +740,22 @@
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
+  opacity: 1;
+  transform: none;
+}
+/* Staggered entrance for shelf items when section reveals */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal="true"] .shelf-item {
+    animation: shelf-item-enter 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  [data-reveal="true"] .shelf-item:nth-child(1) { animation-delay: 0.1s; }
+  [data-reveal="true"] .shelf-item:nth-child(2) { animation-delay: 0.18s; }
+  [data-reveal="true"] .shelf-item:nth-child(3) { animation-delay: 0.26s; }
+  [data-reveal="true"] .shelf-item:nth-child(4) { animation-delay: 0.34s; }
+  [data-reveal="true"] .shelf-item:nth-child(5) { animation-delay: 0.42s; }
+  [data-reveal="true"] .shelf-item:nth-child(6) { animation-delay: 0.5s; }
+  [data-reveal="true"] .shelf-item:nth-child(7) { animation-delay: 0.58s; }
+  [data-reveal="true"] .shelf-item:nth-child(8) { animation-delay: 0.66s; }
 }
 .shelf-item-photo {
   position: relative;
@@ -1359,7 +1414,7 @@
 
 .shelf-points {
   display: grid;
-  gap: 2rem;
+  gap: 2.5rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -1367,14 +1422,14 @@
 @media (min-width: 48rem) {
   .shelf-points {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 3rem;
+    gap: 3.5rem;
   }
 }
 /* A champagne hairline with a short gold rule over it, like a jewellery box. */
 .shelf-point {
   position: relative;
   border-top: 1px solid var(--rule);
-  padding-top: 1.25rem;
+  padding-top: 2rem;
 }
 @media (hover: hover) and (pointer: fine) {
   .shelf-point {
@@ -1456,7 +1511,7 @@
 
 .shelf-quotes {
   display: grid;
-  gap: 2rem;
+  gap: 2.5rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -1464,7 +1519,7 @@
 @media (min-width: 48rem) {
   .shelf-quotes {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 2.5rem;
+    gap: 3rem;
   }
 }
 .shelf-quote {
@@ -1472,6 +1527,16 @@
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal="true"] .shelf-quote {
+    animation: section-fade-in 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .shelf-quote:nth-child(1) { animation-delay: 0.1s; }
+  .shelf-quote:nth-child(2) { animation-delay: 0.2s; }
+  .shelf-quote:nth-child(3) { animation-delay: 0.3s; }
 }
 .shelf-quote blockquote {
   margin: 0;
@@ -1966,16 +2031,9 @@
   }
 }
 
-/* Phones: every band that carries a photo sits on pure white, the photos' own
-   studio background, so no cream/ivory tint shows around or behind a picture.
-   The mobile hero drops its marble backdrop; desktop uses the look rail. */
+/* Phones: photo sections below the marble hero use the photos' white
+   studio background. */
 @media (max-width: 47.99rem) {
-  .shelf-hero {
-    background: #fff;
-  }
-  .shelf-hero-backdrop {
-    display: none;
-  }
   .shelf-section[class*="--"]:has(img) {
     background: #fff;
   }
@@ -1987,14 +2045,6 @@
   .shelf-home .shelf-hero > .shelf-wrap {
     max-width: 88rem;
     padding-inline: clamp(2rem, 6vw, 6rem);
-  }
-  .shelf-home .shelf-hero {
-    background:
-      radial-gradient(ellipse at 76% 46%, rgb(236 229 214 / 42%), transparent 46%),
-      #fbfaf7;
-  }
-  .shelf-home .shelf-hero-backdrop {
-    display: none;
   }
   .shelf-home .shelf-hero-grid {
     grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
@@ -2762,5 +2812,218 @@
 @media (prefers-reduced-motion: reduce) {
   .journal-preview-image .journal-figure-frame img {
     transition: none;
+  }
+}
+
+/* Large collection portraits: necklaces, bracelets, then earrings. */
+.home-editorial-row {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.home-editorial-row + .home-editorial-row {
+  border-top: 1px solid rgb(184 154 98 / 24%);
+}
+.home-editorial-inner {
+  max-width: 100rem;
+  margin-inline: auto;
+  padding: clamp(4rem, 8vw, 6rem) clamp(1.5rem, 5vw, 5rem);
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr);
+  align-items: center;
+  gap: clamp(2rem, 4vw, 4.5rem);
+  min-height: min(56rem, 90svh);
+}
+.home-editorial-copy {
+  padding-block: 2rem;
+}
+.home-editorial-kicker {
+  margin: 0 0 3rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.home-editorial-number {
+  display: block;
+  margin-bottom: 1.2rem;
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+}
+.shelf .home-editorial-title {
+  font-size: clamp(2.8rem, 4.5vw, 5.5rem);
+  line-height: 1.04;
+  overflow-wrap: anywhere;
+}
+.home-editorial-description {
+  max-width: 30rem;
+  margin: 1.75rem 0 2.25rem;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.05rem, 1.4vw, 1.3rem);
+  line-height: 1.65;
+}
+.home-editorial-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.75rem;
+  padding-block: 0.75rem;
+  border-bottom: 1px solid currentColor;
+  font-size: 0.72rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+.home-editorial-link span {
+  font-size: 1.4rem;
+}
+.home-editorial-image {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: clamp(32rem, 58vw, 53rem);
+  mix-blend-mode: multiply;
+}
+.home-editorial-image img {
+  object-fit: contain;
+}
+/* Content is visible until the observer prepares an off-screen entrance.
+   Text slides from the left, jewelry fades in from the right with grace and polish. */
+@media (prefers-reduced-motion: no-preference) {
+  .home-editorial-copy[data-editorial-state] {
+    transition:
+      opacity 800ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 1000ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .home-editorial-image[data-editorial-state] {
+    transition: opacity 950ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .home-editorial-copy[data-editorial-state="pending"] {
+    opacity: 0;
+    transform: translateX(-36px);
+  }
+  .home-editorial-image[data-editorial-state="pending"] {
+    opacity: 0;
+  }
+  .home-editorial-copy[data-editorial-state="visible"],
+  .home-editorial-image[data-editorial-state="visible"] {
+    opacity: 1;
+    transform: none;
+  }
+  @media (max-width: 51.99rem) {
+    .home-editorial-copy[data-editorial-state="pending"] {
+      transform: translateY(16px);
+    }
+    .home-editorial-image[data-editorial-state] {
+      transition-duration: 900ms;
+    }
+  }
+}
+.home-editorial-link:focus-visible,
+.home-editorial-image:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 6px;
+}
+@media (min-width: 52rem) {
+  .home-editorial-row:nth-child(even) .home-editorial-inner {
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.8fr);
+  }
+  .home-editorial-row:nth-child(even) .home-editorial-image {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .home-editorial-row:nth-child(even) .home-editorial-copy {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+@media (max-width: 51.99rem) {
+  .home-editorial-inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding: 2.5rem 1.25rem;
+    min-height: auto;
+  }
+  .home-editorial-copy {
+    padding: 0;
+  }
+  .home-editorial-kicker {
+    margin-bottom: 1.75rem;
+  }
+  .home-editorial-number {
+    margin-bottom: 0.75rem;
+  }
+  .home-editorial-description {
+    margin-block: 1rem;
+  }
+  .home-editorial-image {
+    height: clamp(24rem, 115vw, 44rem);
+    margin-top: 1.5rem;
+  }
+}
+
+/* The atelier photograph carries the jewelry; keep the copy in its clear area. */
+.shelf-hero--still-life .shelf-hero-scene {
+  position: absolute;
+  inset: 0;
+}
+.shelf-hero--still-life .shelf-hero-backdrop {
+  object-position: right center;
+  z-index: 0;
+}
+.shelf-hero--still-life .shelf-hero-scene::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgb(250 247 241 / 72%), rgb(250 247 241 / 28%) 40%, transparent 56%);
+  pointer-events: none;
+}
+.shelf-home .shelf-hero--still-life .shelf-hero-grid {
+  min-height: max(40rem, 50vw);
+  padding-block: 4rem;
+}
+.shelf-home .shelf-hero--still-life .shelf-title {
+  color: var(--ink);
+}
+@media (max-width: 67.99rem) {
+  .shelf-hero--still-life {
+    display: flex;
+    flex-direction: column;
+    background: #faf7f1;
+  }
+  .shelf-hero--still-life .shelf-hero-scene {
+    position: relative;
+    inset: auto;
+    order: 2;
+    width: 100%;
+    aspect-ratio: 1.05;
+    max-height: 44rem;
+  }
+  .shelf-hero--still-life .shelf-hero-scene::after {
+    display: none;
+  }
+  .shelf-hero--still-life > .shelf-wrap {
+    width: 100%;
+  }
+  .shelf-home .shelf-hero--still-life .shelf-hero-grid {
+    display: block;
+    min-height: auto;
+    padding-block: 2.75rem;
+  }
+  .shelf-home .shelf-hero--still-life .shelf-hero-copy {
+    display: flex;
+    max-width: 38rem;
+    margin-inline: auto;
+    gap: 1.5rem;
+  }
+  .shelf-home .shelf-hero--still-life .shelf-title {
+    max-width: 13ch;
+    font-size: clamp(2.75rem, 8vw, 4.5rem);
+  }
+  .shelf-hero--still-life .shelf-hero-copy .shelf-button {
+    order: initial;
+    align-self: flex-start;
+    white-space: normal;
+  }
+  .shelf-hero--still-life .shelf-hero-copy > .shelf-note {
+    display: block;
   }
 }
