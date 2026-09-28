@@ -704,13 +704,18 @@
 }
 .shelf-item-photo {
   position: relative;
+  z-index: 1;
   aspect-ratio: 2 / 3;
   overflow: hidden;
   isolation: isolate;
+  pointer-events: none;
   /* Pure white, the photos' own background, so no browser can show a seam
      around them (iOS Safari doesn't always honour the multiply blend) —
      same fallback as .shop-product-photo/.shop-thumb on the product page. */
   background: #fff;
+}
+.shelf-item-photo > button {
+  pointer-events: auto;
 }
 .shelf-item-name {
   font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
@@ -1507,6 +1512,9 @@
   align-items: flex-start;
   gap: 0.75rem;
   max-width: 30rem;
+}
+.shelf-newsletter-inner > form {
+  width: 100%;
 }
 .shelf-newsletter-discount {
   justify-self: center;
@@ -2591,6 +2599,168 @@
     animation: none;
   }
   .lightbox-frame {
+    transition: none;
+  }
+}
+
+/* -- Journal preview --------------------------------------------------------- */
+.shelf-section--journal-preview {
+  border-top: 1px solid var(--rule);
+}
+.journal-preview-heading {
+  align-items: flex-end;
+}
+.journal-preview-intro {
+  max-width: 36rem;
+  margin: 0.55rem 0 0;
+  color: var(--ink-soft);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.12rem;
+  font-style: italic;
+  line-height: 1.5;
+}
+.journal-preview-all {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+.journal-preview-grid {
+  display: grid;
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.journal-preview-card {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  align-items: start;
+  gap: 1rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--rule);
+}
+.journal-preview-image {
+  display: block;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+.journal-preview-image .journal-figure {
+  margin: 0;
+}
+.journal-preview-image .journal-figure-frame {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--tint-sand);
+}
+.journal-preview-image .journal-figure-frame img {
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  transition: transform var(--interactive-duration) ease;
+}
+.journal-preview-image .journal-figure figcaption {
+  margin-top: 0.35rem;
+  color: var(--ink-soft);
+  font-size: 0.7rem;
+  line-height: 1.35;
+}
+.journal-preview-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
+}
+.journal-preview-kicker {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.67rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.journal-preview-copy h3 {
+  font-size: 1.08rem;
+  line-height: 1.25;
+}
+.journal-preview-copy h3 a {
+  color: var(--ink);
+  text-decoration: none;
+  text-underline-offset: 0.18em;
+}
+.journal-preview-meta,
+.journal-preview-language {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+}
+.journal-preview-description {
+  display: -webkit-box;
+  margin: 0.2rem 0 0;
+  overflow: hidden;
+  color: var(--ink-soft);
+  font-size: 0.86rem;
+  line-height: 1.5;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.journal-preview-read {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--accent);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-underline-offset: 0.2em;
+}
+.journal-preview-copy h3 a:hover,
+.journal-preview-copy h3 a:focus-visible,
+.journal-preview-read:hover {
+  color: var(--accent-deep);
+  text-decoration: underline;
+}
+.journal-preview-card :focus-visible,
+.journal-preview-all:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .journal-preview-image:hover img {
+    transform: scale(1.025);
+  }
+}
+@media (min-width: 48rem) {
+  .journal-preview-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+  .journal-preview-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-top: 1.5rem;
+  }
+  .journal-preview-image,
+  .journal-preview-image .journal-figure,
+  .journal-preview-image .journal-figure-frame {
+    width: 100%;
+  }
+  .journal-preview-image .journal-figure-frame {
+    aspect-ratio: 16 / 10;
+  }
+  .journal-preview-copy h3 {
+    font-size: 1.25rem;
+  }
+  .journal-preview-description {
+    -webkit-line-clamp: 3;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .journal-preview-image .journal-figure-frame img {
     transition: none;
   }
 }

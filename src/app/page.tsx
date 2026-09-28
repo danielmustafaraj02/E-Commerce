@@ -27,6 +27,7 @@ import { getAllLooks } from "@/lib/look-data";
 import { LookCard } from "@/components/look-card";
 import { ComposePromo } from "@/components/compose-promo";
 import { GiftCardAd } from "@/components/gift-card-ad";
+import { JournalPreview } from "@/components/journal/journal-preview";
 import { formatMoney } from "@/lib/format";
 import { homeFontClasses } from "./home-fonts";
 import "./home.css";
@@ -308,7 +309,7 @@ export default async function Home() {
                         {category.image && (
                           <CatalogImage
                             src={category.image.url}
-                            alt={name}
+                            alt=""
                             fill
                             sizes="(min-width: 64rem) 19rem, (min-width: 48rem) 30vw, 50vw"
                           />
@@ -513,6 +514,8 @@ export default async function Home() {
           </span>
         </div>
       </section>
+
+      <JournalPreview locale={locale} />
     </main>
   );
 }

@@ -263,9 +263,12 @@ body:has(.auth-flow-page) .site-footer {
   color: var(--footer-ink);
   transform: translateY(-1px);
 }
-@media (max-width: 23rem) {
+@media (max-width: 30rem) {
   .footer-newsletter-row {
     flex-direction: column;
+  }
+  .footer-newsletter-row .field {
+    width: 100%;
   }
   .footer-newsletter .btn-primary {
     width: 100%;

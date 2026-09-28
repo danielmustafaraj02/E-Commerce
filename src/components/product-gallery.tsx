@@ -13,9 +13,9 @@ export type GalleryZoomLabels = {
   hint: string;
 };
 
-// Desktop uses a thumb rail + zoom photo; mobile stacks every photo vertically.
-// Either presentation opens the same full-screen viewer. Which one shows is
-// decided by shop.css's .shop-gallery-desktop/.shop-gallery-mobile rules.
+// Desktop uses a thumb rail + zoom photo; mobile uses a one-image-at-a-time
+// swipe carousel. Both presentations open the same full-screen viewer. Which
+// one shows is decided by shop.css's .shop-gallery-desktop/.shop-gallery-mobile rules.
 export function ProductGallery({
   images,
   alt,
@@ -91,7 +91,9 @@ export function ProductGallery({
                 src={image.url}
                 alt={alt}
                 fill
-                sizes="100vw"
+                sizes="(max-width: 639px) calc(100vw - 40px), 1px"
+                loading={index === 0 ? "eager" : "lazy"}
+                fetchPriority={index === 0 ? "high" : "auto"}
                 className={image.isLifestyle ? "shop-photo--lifestyle" : undefined}
               />
             </button>
@@ -109,7 +111,9 @@ export function ProductGallery({
                   setSelected(index);
                   const rail = mobileRailRef.current;
                   if (!rail) return;
-                  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+                  const reduceMotion = window.matchMedia(
+                    "(prefers-reduced-motion: reduce)"
+                  ).matches;
                   rail.scrollTo({
                     left: index * rail.clientWidth,
                     behavior: reduceMotion ? "auto" : "smooth",

@@ -61,10 +61,11 @@ export function ProductPurchasePanel({
   useEffect(() => {
     const el = inlineRef.current;
     if (!el) return;
-    // -10% bottom margin so the sticky bar appears a little before the real
-    // button is fully offscreen, not right at the exact pixel edge.
+    // IntersectionObserver reports both "not reached yet" and "scrolled past"
+    // as non-intersecting. Only show the sticky action after the inline
+    // controls have crossed the top of the viewport.
     const observer = new IntersectionObserver(
-      ([entry]) => setStickyVisible(!entry.isIntersecting),
+      ([entry]) => setStickyVisible(entry.boundingClientRect.bottom <= 0),
       {
         rootMargin: "0px 0px -10% 0px",
       }

@@ -274,7 +274,7 @@
 
 /* -- Gallery (components/product-gallery.tsx) --------------------------------- */
 
-/* Two variants — desktop thumb rail + zoom, mobile stacked photos — toggled
+/* Two variants — desktop thumb rail + zoom, mobile swipe carousel — toggled
    entirely by this file's own media query rather than Tailwind's
    hidden/sm:flex/sm:hidden utilities: this page's CSS loads in a route-level
    chunk that can land after the shared Tailwind stylesheet in the cascade,
@@ -368,6 +368,16 @@
   .shop-gallery-desktop > :last-child {
     flex: 1;
     min-width: 0;
+  }
+}
+/* Between the phone and two-column product layouts, keep the photo from
+   growing across the full tablet width and pushing all buying information
+   below the first screen. */
+@media (min-width: 40rem) and (max-width: 55.99rem) {
+  .shop-product-grid > .shop-gallery {
+    width: 100%;
+    max-width: 34rem;
+    margin-inline: auto;
   }
 }
 /* The whole piece is always visible: studio shots are contained (their white

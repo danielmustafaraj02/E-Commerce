@@ -14,6 +14,7 @@ import { ShelfMain } from "@/components/shelf-main";
 import { ShelfBody } from "@/components/shelf-page";
 import { MuranoFurnaceArt, MuranoSeagullArt } from "@/components/murano-guide-art";
 import { SeagullFlight } from "@/components/seagull-flight";
+import { JournalPreview } from "@/components/journal/journal-preview";
 import { MURANO_FAQ_LOCALE, MURANO_FAQ_PATH } from "@/lib/murano-faq";
 
 const GUIDE_ART_CAPTIONS: Record<Locale, { furnace: string }> = {
@@ -369,6 +370,7 @@ export default async function MuranoGlassGuidePage() {
           )}
         </Reveal>
       </ShelfBody>
+      <JournalPreview locale={locale} />
     </ShelfMain>
   );
 }
