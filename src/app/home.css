@@ -51,6 +51,17 @@
   --on-dark-error: #ffc9c9;
   --on-dark-ok: #b8f0c8;
 
+  /* Motion scale. Two easings only, so the whole page shares one voice: a
+     fast curve for anything the pointer is driving (it must feel attached to
+     the finger) and a slow, front-loaded curve for entrances, which arrive
+     quickly then settle rather than easing in uniformly. Durations stay long
+     by luxury standards — nothing here is bouncy, and nothing loops. */
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --motion-quick: 220ms;
+  --motion-base: 600ms;
+  --motion-slow: 900ms;
+
   background: var(--ground);
   color: var(--ink);
   font-family: var(--font-ui), system-ui, sans-serif;
@@ -100,6 +111,39 @@
 
 .shelf-heading {
   font-size: clamp(2rem, 3.8vw, 2.8rem);
+}
+
+/* A short champagne rule that draws itself out from the left as the section
+   arrives. Sized and offset so it never collides with the heading's own
+   descenders, and hidden from assistive tech (it conveys nothing). */
+.shelf-heading-row::after {
+  content: "";
+  display: block;
+  flex-basis: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  transform-origin: left center;
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal="true"] .shelf-heading-row::after {
+    animation: rule-draw var(--motion-slow) var(--ease-out-soft) both;
+  }
+}
+@keyframes rule-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+/* Sections whose heading is centred keep the rule centred and short, so it
+   reads as a mark under the title rather than a left-aligned margin rule. */
+.shelf-heading-row--center::after {
+  margin-inline: auto;
+  width: min(6rem, 40%);
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  transform-origin: center;
 }
 
 .shelf-heading-row {
@@ -312,10 +356,38 @@
    reuse .shelf-hero keep the flat `--ground` colour from above. */
 .shelf-home .shelf-hero {
   background-color: #f7f2ea;
+}
+/* The marble lives on its own layer rather than on the hero itself so it can
+   be scaled on the compositor. Animating `background-size` or
+   `background-position` instead would repaint a full-viewport image on every
+   frame, which drops frames on phones — the exact devices this is sized for.
+   z-index: -1 paints it above the hero's own background yet below the
+   in-flow copy, because the hero sets `isolation: isolate`. */
+.shelf-home .shelf-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   background-image: url("/hero/ivory-marble-background.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: no-preference) {
+  /* One slow drift, 26s, ending where it started so it never visibly jumps.
+     Barely there — the point is that the hero is not a frozen photograph. */
+  .shelf-home .shelf-hero::before {
+    animation: marble-drift 26s ease-in-out infinite alternate;
+  }
+}
+@keyframes marble-drift {
+  from {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.07) translate3d(-0.8%, -0.6%, 0);
+  }
 }
 /* Full-bleed hero photography. */
 .shelf-hero-backdrop {
@@ -509,14 +581,47 @@
 }
 .shelf-hero-copy .shelf-button {
   position: relative;
+  overflow: hidden;
+  isolation: isolate;
   animation-name: hero-rise;
   animation-duration: 0.78s;
   animation-timing-function: cubic-bezier(0.2, 0.75, 0.3, 1);
 }
+/* A single soft highlight that crosses the button once on hover, like light
+   moving over a polished lid. `both` fill modes would leave it parked on
+   screen between hovers, so the resting state is the untransformed one. */
+@media (prefers-reduced-motion: no-preference) {
+  .shelf-button::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      100deg,
+      transparent 20%,
+      rgb(255 255 255 / 22%) 50%,
+      transparent 80%
+    );
+    transform: translateX(-110%);
+    pointer-events: none;
+  }
+  .shelf-button:hover::after,
+  .shelf-button:focus-visible::after {
+    animation: button-sheen 900ms var(--ease-in-out-soft);
+  }
+}
+@keyframes button-sheen {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(110%);
+  }
+}
 .shelf-button-arrow {
   font-size: 1.05rem;
   letter-spacing: 0;
-  transition: transform 0.2s ease;
+  transition: transform var(--motion-quick) var(--ease-in-out-soft);
 }
 .shelf-button:hover .shelf-button-arrow {
   transform: translateX(4px);
@@ -545,6 +650,27 @@
 .shelf-facts svg {
   flex: none;
   color: var(--ink);
+}
+/* The three trust marks arrive in sequence, each fading up slightly behind
+   the last. The row sits above the fold on desktop, so it runs on its own
+   timer rather than waiting for a scroll observer. */
+@media (prefers-reduced-motion: no-preference) {
+  .shelf-home .shelf-facts li {
+    animation: fact-rise var(--motion-base) var(--ease-out-soft) both;
+  }
+  .shelf-home .shelf-facts li:nth-child(1) { animation-delay: 700ms; }
+  .shelf-home .shelf-facts li:nth-child(2) { animation-delay: 820ms; }
+  .shelf-home .shelf-facts li:nth-child(3) { animation-delay: 940ms; }
+}
+@keyframes fact-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* The hero photo is a macro of one bead on white. Multiply drops the white into
@@ -720,11 +846,11 @@
   mask-composite: intersect;
 }
 .shelf-item-photo img {
-  transition: transform 500ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition: transform var(--motion-slow) var(--ease-out-soft);
 }
 @media (hover: hover) and (pointer: fine) {
   .shelf-item:hover .shelf-item-photo img {
-    transform: scale(1.025);
+    transform: scale(1.035);
   }
 }
 
@@ -751,6 +877,26 @@
   gap: 0.3rem;
   opacity: 1;
   transform: none;
+}
+/* The card itself stays still: the photograph and the name carry the hover,
+   so a row of eight pieces doesn't ripple when the pointer crosses it. */
+@media (hover: hover) and (pointer: fine) {
+  .shelf-item-photo {
+    transition:
+      transform var(--motion-slow) var(--ease-out-soft),
+      box-shadow var(--motion-slow) var(--ease-out-soft);
+  }
+  .shelf-item:hover .shelf-item-photo,
+  .shelf-item:focus-within .shelf-item-photo {
+    transform: translateY(-5px);
+  }
+  .shelf-item-name {
+    transition: color var(--motion-quick) var(--ease-in-out-soft);
+  }
+  .shelf-item:hover .shelf-item-name,
+  .shelf-item:focus-within .shelf-item-name {
+    color: var(--accent-deep);
+  }
 }
 /* Staggered entrance for shelf items when section reveals */
 @media (prefers-reduced-motion: no-preference) {
@@ -1442,7 +1588,7 @@
 }
 @media (hover: hover) and (pointer: fine) {
   .shelf-point {
-    transition: transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+    transition: transform var(--motion-slow) var(--ease-in-out-soft);
   }
   .shelf-point:hover {
     transform: translateY(-6px);
@@ -1456,6 +1602,25 @@
   width: 2.5rem;
   height: 1px;
   background: var(--gold);
+  transform-origin: left center;
+}
+/* The champagne mark widens from its resting stub to a third of the column as
+   the column comes into view — a jewellery box opening, quietly. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal="true"] .shelf-point::before {
+    animation: rule-open var(--motion-slow) var(--ease-out-soft) both;
+  }
+  [data-reveal="true"] .shelf-point:nth-child(1)::before { animation-delay: 0.12s; }
+  [data-reveal="true"] .shelf-point:nth-child(2)::before { animation-delay: 0.24s; }
+  [data-reveal="true"] .shelf-point:nth-child(3)::before { animation-delay: 0.36s; }
+}
+@keyframes rule-open {
+  from {
+    transform: scaleX(0.35);
+  }
+  to {
+    transform: scaleX(1);
+  }
 }
 .shelf-point h3 {
   font-size: 1.35rem;
@@ -2880,6 +3045,16 @@
   font-size: 0.72rem;
   letter-spacing: 0.13em;
   text-transform: uppercase;
+  transition: gap var(--motion-quick) var(--ease-in-out-soft);
+}
+/* The arrow leads the eye a little further on the way out, and the rule
+   fades as it goes — pointer-only, since a gap shift on tap does nothing. */
+@media (hover: hover) and (pointer: fine) {
+  .home-editorial-link:hover,
+  .home-editorial-link:focus-visible {
+    gap: 2.25rem;
+    border-bottom-color: color-mix(in srgb, currentColor 35%, transparent);
+  }
 }
 .home-editorial-link span {
   font-size: 1.4rem;
@@ -2916,6 +3091,15 @@
   .home-editorial-image[data-editorial-state="visible"] {
     opacity: 1;
     transform: none;
+  }
+  /* The photograph settles the last 2% of its travel as it arrives: the
+     movement is what makes a still image feel placed rather than pasted.
+     Keyed off the same attribute, so it cannot run without the observer. */
+  .home-editorial-image img {
+    transition: transform 1400ms var(--ease-out-soft);
+  }
+  .home-editorial-image[data-editorial-state="pending"] img {
+    transform: scale(1.04);
   }
   @media (max-width: 51.99rem) {
     .home-editorial-copy[data-editorial-state="pending"] {
@@ -3034,5 +3218,160 @@
   }
   .shelf-hero--still-life .shelf-hero-copy > .shelf-note {
     display: block;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Phones and small tablets.
+
+   Appended last so it wins on order against the desktop rules above (equal
+   specificity), and deliberately written as overrides rather than edits to
+   the shared blocks: the desktop composition is the default here, and this
+   block only undoes the parts of it that don't survive a narrow viewport.
+
+   Three things matter on a phone, in order:
+     1. the type is big enough to read without pinching,
+     2. anything tappable is at least 44px (Apple's guidance) with the target
+        area padded out rather than the artwork grown,
+     3. nothing animates in a way that costs frames or fights the compositor.
+   ------------------------------------------------------------------------- */
+
+@media (max-width: 47.99rem) {
+  /* Slightly larger root step: the desktop ramp is tuned for a 17" display
+     and reads thin at 390px. */
+  .shelf {
+    font-size: 1.0625rem;
+    line-height: 1.65;
+  }
+
+  /* The marble sits behind a tall column of text, so bias the crop upward
+     and let it sit a touch off-centre — dead-centre on a narrow viewport
+     shows mostly empty stone either side of the copy. */
+  .shelf-home .shelf-hero::before {
+    background-position: 62% 0%;
+  }
+
+  /* Headings keep their clamp but lose a little air above, since the phone
+     has far less vertical room to spend on whitespace. */
+  .shelf-heading {
+    font-size: clamp(1.75rem, 7vw, 2.25rem);
+  }
+  .shelf-heading-row {
+    margin-bottom: 2rem;
+  }
+
+  /* The gold rule still draws itself, just faster and from a little further
+     out, so it reads as one beat with the rest of the section rather than a
+     separate event the user waits out. */
+  [data-reveal="true"] .shelf-heading-row::after {
+    animation-duration: 620ms;
+  }
+
+  /* --- Touch targets ------------------------------------------------------ */
+  /* Padding, not icon size: the glyphs stay restrained, the tappable area
+     grows to 44px. Applied to the controls the page actually ships. */
+  .shelf-bead-controls button,
+  .shelf-bead-zoom,
+  .shelf-bead-thumb {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  /* The CTA is already 3.25rem (52px) tall. Only the hero's is stretched:
+     a full-width button under a centred carousel reads as the primary action
+     of the screen, which is the intent there and not everywhere else. */
+  .shelf-home .shelf-hero-grid .shelf-button {
+    width: 100%;
+    max-width: 22rem;
+    align-self: center;
+  }
+
+  /* --- Trust row --------------------------------------------------------- */
+  /* Three side-by-side columns of icon + label get very cramped below ~360px
+     and the dividers eat the remaining space, so they stack full-width. */
+  .shelf-home .shelf-facts {
+    grid-auto-flow: row;
+    grid-auto-columns: auto;
+    gap: 0.85rem;
+    padding-block: 1.75rem 2.25rem;
+  }
+  .shelf-home .shelf-facts li {
+    justify-content: flex-start;
+    padding-inline: 0;
+  }
+  .shelf-home .shelf-facts li + li {
+    border-inline-start: 0;
+  }
+
+  /* --- Product rows ------------------------------------------------------ */
+  /* The 2-up grid is kept. An earlier draft of this block also made the row a
+     horizontal scroller with snap points, which does not work: the grid lays
+     its two columns out to fit the viewport, so there is no overflow to scroll
+     and the snap points never engage. Making the cards overflow would mean
+     fixed-basis columns, which puts a name and price on a card under ~160px
+     wide. Two readable columns beats a carousel of unreadable ones, so the
+     rows simply stay a grid and only the gap is tuned. */
+  .shelf-row {
+    gap: 2.5rem 1.5rem;
+  }
+  .shelf-row--two-rows {
+    gap: 3rem 1.5rem;
+  }
+
+  /* --- Editorial rows ---------------------------------------------------- */
+  /* The copy arrives with a shorter travel on a phone: at 390px wide a 36px
+     sideways slide reads as a mistake rather than a reveal. */
+  .home-editorial-image[data-editorial-state="pending"] img {
+    transform: scale(1.02);
+  }
+}
+
+/* Very narrow phones (iPhone SE and similar, <= 360px). */
+@media (max-width: 22.5rem) {
+  .shelf {
+    font-size: 1rem;
+  }
+  /* At two-up, a card is under 160px wide. One column is the only way the
+     product name and price both stay readable without truncating. */
+  .shelf-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.75rem;
+  }
+  .shelf-row > .shelf-item {
+    max-width: 22rem;
+  }
+  .shelf-home .shelf-hero-grid {
+    gap: 1rem;
+  }
+}
+
+/* Landscape phones: the hero has very little height to work with, so the
+   generous vertical padding just pushes the copy off the top. */
+@media (max-height: 30rem) and (orientation: landscape) {
+  .shelf-home .shelf-hero-grid {
+    padding-block: 1.5rem 1rem;
+  }
+}
+
+/* Coarse pointers get no hover lift: on touch the hover state can stick after
+   a tap, leaving a card permanently raised. The rest of the hover motion is
+   already inside `@media (hover: hover) and (pointer: fine)` blocks, so this
+   only has to neutralise the rules that are declared unconditionally. */
+@media (hover: none) {
+  .shelf-point:hover {
+    transform: none;
+  }
+  .shelf-point::before {
+    transform: none;
+  }
+}
+
+/* Print: a drifting background and a hover sheen have nowhere to go. */
+@media print {
+  .shelf-home .shelf-hero::before {
+    display: none;
+  }
+  .shelf-home .shelf-facts li {
+    opacity: 1;
+    transform: none;
   }
 }
