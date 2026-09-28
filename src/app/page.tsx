@@ -231,13 +231,13 @@ export default async function Home() {
             <HeroNecklaceCarousel
               slides={heroSlides}
               sizes={HERO_SIZES}
-              previousLabel={dict.previousSlide}
-              nextLabel={dict.nextSlide}
+              previousLabel={dict.home.previousSlide}
+              nextLabel={dict.home.nextSlide}
               zoomLabels={{
-                open: dict.zoomImage,
-                close: dict.closeZoom,
-                hint: dict.zoomHint,
-                viewPiece: dict.viewPiece,
+                open: dict.nav.zoomImage,
+                close: dict.nav.closeZoom,
+                hint: dict.nav.zoomHint,
+                viewPiece: dict.nav.viewPiece,
               }}
             />
           </div>
