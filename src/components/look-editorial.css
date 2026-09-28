@@ -28,9 +28,15 @@
   .look-editorial:nth-child(2) { animation-delay: 0.2s; }
   .look-editorial:nth-child(3) { animation-delay: 0.3s; }
 }
+.look-editorial-zoom {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+}
 .look-editorial-visual {
   position: relative;
   display: block;
+  width: 100%;
   aspect-ratio: 1 / 1.12;
   min-width: 0;
   background: #fff;
@@ -43,6 +49,30 @@
   inset: 0;
   transform: translate(calc((var(--piece-x) - 0.5) * 100%), calc((var(--piece-y) - 0.5) * 100%))
     scale(var(--piece-size));
+}
+/* -- Zoom under the pointer ----------------------------------------------------
+   A look is a composition, so the answer to "what is that?" is per accessory,
+   not per look: PointerZoom grows each layer towards the cursor and leaves the
+   others where they are. The placement transform lives on the layer wrapper,
+   the zoom on its image, so the two compose instead of overwriting each other.
+   Pointer-only — a scale that fires on tap would just make the page lurch. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .look-editorial-visual img,
+  .look-editorial-piece img {
+    transform: scale(var(--pz-scale, 1));
+    transform-origin: var(--pz-x, 50%) var(--pz-y, 50%);
+    transition: transform 900ms var(--ease-out-soft);
+  }
+  /* The zoomed piece comes to the front, but only once the pointer has
+     settled on it, so a glance across a look never makes the layers jump. */
+  .look-editorial-piece {
+    z-index: 0;
+    transition: z-index 0s 500ms;
+  }
+  .look-editorial-piece:hover {
+    z-index: 2;
+    transition-delay: 0s;
+  }
 }
 .look-editorial-copy {
   max-width: 31rem;
@@ -143,7 +173,7 @@
   outline-offset: 5px;
 }
 @media (min-width: 52rem) {
-  .look-editorial:nth-child(even) .look-editorial-visual {
+  .look-editorial:nth-child(even) .look-editorial-zoom {
     grid-column: 2;
     grid-row: 1;
   }
@@ -161,7 +191,7 @@
     gap: 1.75rem;
     padding-block: 2.5rem;
   }
-  .look-editorial-visual {
+  .look-editorial-zoom {
     width: 100%;
     max-width: 38rem;
     justify-self: center;

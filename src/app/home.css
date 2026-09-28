@@ -3029,6 +3029,17 @@
   line-height: 1.04;
   overflow-wrap: anywhere;
 }
+/* The same soft champagne bar that opens New arrivals, reused under every
+   collection title so the three rows read as one family. */
+.home-editorial-title::after {
+  content: "";
+  display: block;
+  width: min(11rem, 55%);
+  height: 1px;
+  margin-top: clamp(1.4rem, 2vw, 2rem);
+  background: linear-gradient(90deg, var(--gold), transparent);
+  transform-origin: left center;
+}
 .home-editorial-description {
   max-width: 30rem;
   margin: 1.75rem 0 2.25rem;
@@ -3100,6 +3111,50 @@
   }
   .home-editorial-image[data-editorial-state="pending"] img {
     transform: scale(1.04);
+  }
+  /* The champagne bar draws itself under the collection title, last in the
+     sequence, so the eye lands on the photograph only once the frame is set. */
+  .home-editorial-copy[data-editorial-state] .home-editorial-title::after {
+    transition: transform 1100ms var(--ease-out-soft) 380ms;
+  }
+  .home-editorial-copy[data-editorial-state="pending"] .home-editorial-title::after {
+    transform: scaleX(0);
+  }
+  .home-editorial-copy[data-editorial-state="visible"] .home-editorial-title::after {
+    transform: scaleX(1);
+  }
+  .home-editorial-image img {
+    will-change: transform;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    /* The portrait breathes in very slightly under the pointer: enough to feel
+       alive, far too little to look like a shop card lifting. */
+    .home-editorial-image {
+      transition: transform 1200ms var(--ease-out-soft);
+    }
+    .home-editorial-image:hover {
+      transform: scale(1.015);
+    }
+  }
+  /* Where scroll timelines exist, the photograph drifts a little as the row
+     crosses the viewport: the piece is never quite static, and the row gains
+     a sense of depth without any element moving out of its box. */
+  @media (min-width: 48rem) {
+    @supports (animation-timeline: view()) {
+      .home-editorial-image[data-editorial-state="visible"] img {
+        animation: home-editorial-drift linear both;
+        animation-timeline: view();
+        animation-range: cover -12% cover 12%;
+      }
+    }
+  }
+  @keyframes home-editorial-drift {
+    from {
+      transform: scale(1.05) translateY(1.2%);
+    }
+    to {
+      transform: scale(1.09) translateY(-1.2%);
+    }
   }
   @media (max-width: 51.99rem) {
     .home-editorial-copy[data-editorial-state="pending"] {

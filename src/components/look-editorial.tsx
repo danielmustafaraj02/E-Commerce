@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { Link } from "@/components/localized-link";
+import { PointerZoom } from "@/components/pointer-zoom";
 import { CatalogImage } from "@/components/catalog-image";
 import { formatMoney } from "@/lib/format";
 import { applyTemplate } from "@/lib/i18n/format";
@@ -35,44 +36,50 @@ export function LookEditorial({
   const placements = lookComposition(
     look.pieces.map((piece) => ({ kind: piece.kind, selected: true }))
   );
+  // A look is either one composed photograph or several placed pieces, and the
+  // zoom has to work either way: a single photo magnifies as a whole, a composed
+  // look magnifies whichever accessory is under the pointer, one at a time.
+  const visual = look.imageUrl ? (
+    <CatalogImage
+      src={look.imageUrl}
+      alt=""
+      fill
+      sizes="(min-width: 80rem) 44rem, (min-width: 52rem) 55vw, 100vw"
+      loading={priority ? "eager" : "lazy"}
+    />
+  ) : (
+    look.pieces.map(
+      (piece, i) =>
+        piece.imageUrl && (
+          <div
+            key={piece.productId}
+            className="look-editorial-piece"
+            style={
+              {
+                "--piece-x": placements[i].mobile.x,
+                "--piece-y": placements[i].mobile.y,
+                "--piece-size": placements[i].mobile.s,
+              } as CSSProperties
+            }
+          >
+            <CatalogImage
+              src={piece.imageUrl}
+              alt=""
+              fill
+              sizes="(min-width: 80rem) 30rem, (min-width: 52rem) 36vw, 75vw"
+              loading={priority ? "eager" : "lazy"}
+            />
+          </div>
+        )
+    )
+  );
   return (
     <article className="look-editorial" aria-labelledby={`look-title-${look.id}`}>
-      <Link href={href} className="look-editorial-visual" tabIndex={-1} aria-hidden="true">
-        {look.imageUrl ? (
-          <CatalogImage
-            src={look.imageUrl}
-            alt=""
-            fill
-            sizes="(min-width: 80rem) 44rem, (min-width: 52rem) 55vw, 100vw"
-            loading={priority ? "eager" : "lazy"}
-          />
-        ) : (
-          look.pieces.map(
-            (piece, i) =>
-              piece.imageUrl && (
-                <div
-                  key={piece.productId}
-                  className="look-editorial-piece"
-                  style={
-                    {
-                      "--piece-x": placements[i].mobile.x,
-                      "--piece-y": placements[i].mobile.y,
-                      "--piece-size": placements[i].mobile.s,
-                    } as CSSProperties
-                  }
-                >
-                  <CatalogImage
-                    src={piece.imageUrl}
-                    alt=""
-                    fill
-                    sizes="(min-width: 80rem) 30rem, (min-width: 52rem) 36vw, 75vw"
-                    loading={priority ? "eager" : "lazy"}
-                  />
-                </div>
-              )
-          )
-        )}
-      </Link>
+      <PointerZoom className="look-editorial-zoom" scale={look.imageUrl ? 1.1 : 1.2}>
+        <Link href={href} className="look-editorial-visual" tabIndex={-1} aria-hidden="true">
+          {visual}
+        </Link>
+      </PointerZoom>
       <div className="look-editorial-copy">
         <p className="look-editorial-kicker">
           <span>{String(index + 1).padStart(2, "0")}</span>
