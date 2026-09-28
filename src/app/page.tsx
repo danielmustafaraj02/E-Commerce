@@ -1,34 +1,34 @@
 import type { CSSProperties } from "react";
+import Image from "next/image";
+import { AnimatedHeading } from "@/components/animated-heading";
 import type { Metadata } from "next";
-import Image, { getImageProps } from "next/image";
-import { preload } from "react-dom";
 import { Link } from "@/components/localized-link";
 import { getStoreSettings, ogImage } from "@/lib/store-settings";
 import { getHomepageData } from "@/lib/homepage-data";
 import { getLocale, type Locale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-import { localizedName, localizedCardProduct } from "@/lib/product-i18n";
+import { localizedName, localizedDescription, localizedCardProduct } from "@/lib/product-i18n";
 import { hreflangAlternates, localizedCanonical } from "@/lib/hreflang";
 import { fitTitle } from "@/lib/seo-text";
 import { truncateAtWord } from "@/lib/text";
 import { CatalogImage } from "@/components/catalog-image";
-import { AnimatedHeading } from "@/components/animated-heading";
 import { ShelfItem } from "@/components/shelf-item";
-import { CategoryStrip } from "@/components/category-strip";
 import { Reveal } from "@/components/reveal";
+import { EditorialReveal } from "@/components/editorial-reveal";
 import { NewsletterSignupForm } from "@/components/newsletter-signup-form";
 import { FaqSection } from "@/components/faq-section";
 import { buildFaq } from "@/lib/faq";
 import { getShippingFacts } from "@/lib/shipping-banner";
 import { GiftFinderArrow } from "@/components/gift-finder-arrow";
 import { HeroNecklaceCarousel, type HeroSlide } from "@/components/hero-necklace-carousel";
-import { db } from "@/lib/db";
 import { getAllLooks } from "@/lib/look-data";
-import { LookCard } from "@/components/look-card";
+import { LookEditorial } from "@/components/look-editorial";
+import { getLookPageCopy, getLookEditorialDescription } from "@/lib/i18n/look-page-copy";
 import { ComposePromo } from "@/components/compose-promo";
 import { GiftCardAd } from "@/components/gift-card-ad";
 import { JournalPreview } from "@/components/journal/journal-preview";
 import { formatMoney } from "@/lib/format";
+import { db } from "@/lib/db";
 import { homeFontClasses } from "./home-fonts";
 import "./home.css";
 
@@ -94,7 +94,7 @@ const SHELF_SIZE = 4;
 const NEW_ARRIVALS_SIZE = 8;
 
 const HERO_SRC = "/hero/handmade-red-murano-glass-necklace.jpg";
-const HERO_SIZES = "(min-width: 52rem) 24rem, 70vw";
+const HERO_SIZES = "(min-width: 52rem) 36vw, 100vw";
 // Necklaces photographed in the same oval drape as the hero, so the rotation
 // reads as one frame changing colour. Slugs match the catalog photos' names.
 // Each carries the deep tone of its glass: the hero's button takes it on
@@ -108,19 +108,10 @@ const HERO_NECKLACES = [
   { slug: "collana-perla-celeste-5e4eb6", accent: "#2e5670" },
 ];
 const HERO_NECKLACE_SLUGS = HERO_NECKLACES.map((n) => n.slug);
-const HERO_BACKGROUND_SRC = "/hero/ivory-marble-background.jpg";
-const ROMAN = ["I", "II", "III", "IV", "V", "VI"];
+
+const COLLECTION_ORDER = ["collane", "bracciali", "orecchini"];
 
 export default async function Home() {
-  // The hero necklace is the lead image at every viewport size.
-  const hero = getImageProps({ src: HERO_SRC, alt: "", fill: true, sizes: HERO_SIZES }).props;
-  preload(hero.src, {
-    as: "image",
-    imageSrcSet: hero.srcSet,
-    imageSizes: hero.sizes,
-    fetchPriority: "high",
-  });
-
   const [
     settings,
     locale,
@@ -150,13 +141,13 @@ export default async function Home() {
   ]);
   const dict = getDictionary(locale);
   const looks = await getAllLooks(locale, 3);
+  const lookCopy = getLookPageCopy(locale);
+  const editorialCollections = COLLECTION_ORDER.flatMap((prefix) => {
+    const category = categoriesWithImage.find((item) => item.slug.startsWith(prefix));
+    return category?.image ? [category] : [];
+  });
   const heroSlides: HeroSlide[] = [
-    {
-      src: HERO_SRC,
-      alt: dict.home.heroImageAlt,
-      href: null,
-      accent: HERO_ACCENT,
-    },
+    { src: HERO_SRC, alt: dict.home.heroImageAlt, href: null, accent: HERO_ACCENT },
     ...HERO_NECKLACES.flatMap(({ slug, accent }) => {
       const product = heroNecklaces.find((p) => p.slug === slug);
       return product
@@ -164,7 +155,6 @@ export default async function Home() {
             {
               src: `/products/collane-in-vetro-di-murano/${slug}.png`,
               alt: localizedName(product, locale),
-              label: localizedName(product, locale),
               href: `/products/${slug}`,
               accent,
             },
@@ -218,15 +208,6 @@ export default async function Home() {
         className="shelf-hero"
         style={{ "--hero-accent": HERO_ACCENT } as CSSProperties}
       >
-        <Image
-          src={HERO_BACKGROUND_SRC}
-          alt=""
-          fill
-          loading="lazy"
-          quality={90}
-          sizes="100vw"
-          className="shelf-hero-backdrop"
-        />
         <div className="shelf-wrap">
           <div className="shelf-hero-grid">
             <div className="shelf-hero-copy">
@@ -250,28 +231,81 @@ export default async function Home() {
             <HeroNecklaceCarousel
               slides={heroSlides}
               sizes={HERO_SIZES}
-              previousLabel={dict.home.previousSlide}
-              nextLabel={dict.home.nextSlide}
+              previousLabel={dict.previousSlide}
+              nextLabel={dict.nextSlide}
               zoomLabels={{
-                open: dict.nav.zoomImage,
-                close: dict.nav.closeZoom,
-                hint: dict.nav.zoomHint,
-                viewPiece: dict.nav.viewPiece,
+                open: dict.zoomImage,
+                close: dict.closeZoom,
+                hint: dict.zoomHint,
+                viewPiece: dict.viewPiece,
               }}
             />
           </div>
-          {facts.length > 0 && (
-            <ul className="shelf-facts">
-              {facts.map((fact) => (
-                <li key={fact.text}>
-                  <FactIcon name={fact.icon} />
-                  <span>{fact.text}</span>
-                </li>
-              ))}
-            </ul>
-          )}
         </div>
       </section>
+      <div className="shelf-wrap">
+        {facts.length > 0 && (
+          <ul className="shelf-facts">
+            {facts.map((fact) => (
+              <li key={fact.text}>
+                <FactIcon name={fact.icon} />
+                <span>{fact.text}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <div className="home-editorial">
+        {editorialCollections.map((category, index) => {
+          const name = localizedName(category, locale);
+          return (
+            <section
+              key={category.id}
+              className="home-editorial-row"
+              aria-labelledby={`collection-${category.id}`}
+            >
+              <EditorialReveal>
+                <div className="home-editorial-copy" data-editorial-part="copy">
+                  <p className="home-editorial-kicker">
+                    {index === 0 ? settings.storeName : dict.home.heroTagline}
+                  </p>
+                  <span className="home-editorial-number" aria-hidden="true">
+                    0{index + 1}
+                  </span>
+                  <h2 id={`collection-${category.id}`} className="home-editorial-title">
+                    {name}
+                  </h2>
+                  <p className="home-editorial-description">
+                    {truncateAtWord(
+                      localizedDescription(category, locale) || dict.home.heroSubtitle,
+                      220
+                    )}
+                  </p>
+                  <Link href={`/category/${category.slug}`} className="home-editorial-link">
+                    {dict.home.shopCollection}
+                    <span aria-hidden="true">↗</span>
+                  </Link>
+                </div>
+                <Link
+                  href={`/category/${category.slug}`}
+                  className="home-editorial-image"
+                  data-editorial-part="image"
+                  aria-label={`${dict.home.shopCollection}: ${name}`}
+                >
+                  <CatalogImage
+                    src={category.image!.url}
+                    alt={name}
+                    fill
+                    sizes="(min-width: 90rem) 58rem, (min-width: 52rem) 65vw, 100vw"
+                    loading="lazy"
+                  />
+                </Link>
+              </EditorialReveal>
+            </section>
+          );
+        })}
+      </div>
 
       {bestSellers.length > 0 && (
         <section className="shelf-section">
@@ -288,48 +322,6 @@ export default async function Home() {
                 />
               ))}
             </ul>
-          </div>
-        </section>
-      )}
-
-      {categoriesWithImage.length > 0 && (
-        <section className="shelf-section shelf-section--categories">
-          <div className="shelf-wrap">
-            <Reveal className="home-category-reveal" repeatOnView>
-              <div className="shelf-heading-row shelf-heading-row--center">
-                <p className="shelf-eyebrow shelf-eyebrow--center">{dict.home.heroTagline}</p>
-                <h2 className="shelf-heading">{dict.home.shopByCategory}</h2>
-              </div>
-              <CategoryStrip className="shelf-categories">
-                {categoriesWithImage.map((category, index) => {
-                  const name = localizedName(category, locale);
-                  return (
-                    <li key={category.id} className="shelf-category">
-                      <div className="shelf-category-photo">
-                        {category.image && (
-                          <CatalogImage
-                            src={category.image.url}
-                            alt=""
-                            fill
-                            sizes="(min-width: 64rem) 19rem, (min-width: 48rem) 30vw, 50vw"
-                          />
-                        )}
-                      </div>
-                      <span className="shelf-category-index" aria-hidden="true">
-                        {ROMAN[index] ?? index + 1}
-                      </span>
-                      <h3 className="shelf-category-name">
-                        <Link href={`/category/${category.slug}`}>{name}</Link>
-                      </h3>
-                      <span className="shelf-category-cta" aria-hidden="true">
-                        {dict.home.shopCollection}
-                        <span className="shelf-category-arrow">→</span>
-                      </span>
-                    </li>
-                  );
-                })}
-              </CategoryStrip>
-            </Reveal>
           </div>
         </section>
       )}
@@ -358,16 +350,18 @@ export default async function Home() {
 
       <section className="shelf-section shelf-section--looks">
         <div className="shelf-wrap">
-          <Reveal className="home-looks-heading-reveal" repeatOnView>
+          <div className="looks-editorial-heading">
             <div className="shelf-heading-row shelf-heading-row--center">
               <p className="shelf-eyebrow shelf-eyebrow--center">{dict.look.kicker}</p>
               <h2 className="shelf-heading">{dict.looks.title}</h2>
             </div>
-          </Reveal>
+            <p className="looks-editorial-intro">{lookCopy.editorialIntro}</p>
+          </div>
           {looks.length > 0 && (
-            <div className="look-cards">
-              {looks.map((look) => (
-                <LookCard
+            <div className="looks-editorial-list">
+              {looks.map((look, index) => (
+                <LookEditorial
+                  index={index}
                   key={look.id}
                   look={look}
                   locale={settings.defaultLocale}
@@ -375,6 +369,9 @@ export default async function Home() {
                     view: dict.looks.viewLook,
                     save: dict.look.save,
                     pieces: dict.looks.pieces,
+                    description: getLookEditorialDescription(look.name, locale),
+                    included: lookCopy.editorialIncluded,
+                    price: lookCopy.editorialPrice,
                   }}
                 />
               ))}
@@ -457,9 +454,7 @@ export default async function Home() {
               <span>{dict.giftFinder.homeCtaLine}</span>
               <GiftFinderArrow />
             </Link>
-            <p className="shelf-giftfinder-details">
-              {dict.giftFinder.homeCtaDetails}
-            </p>
+            <p className="shelf-giftfinder-details">{dict.giftFinder.homeCtaDetails}</p>
           </div>
         </Reveal>
       </section>
@@ -502,6 +497,8 @@ export default async function Home() {
         />
       )}
 
+      <JournalPreview locale={locale} />
+
       <section className="shelf-newsletter shelf-section">
         <div className="shelf-wrap shelf-newsletter-wrap">
           <div className="shelf-newsletter-inner">
@@ -514,8 +511,6 @@ export default async function Home() {
           </span>
         </div>
       </section>
-
-      <JournalPreview locale={locale} />
     </main>
   );
 }
