@@ -1,0 +1,10 @@
+Generated with the built-in image generation tool.
+Reference: public/hero/handmade-red-murano-glass-necklace.jpg
+
+Use case: compositing / luxury product editorial.
+Asset: full-width desktop homepage hero photograph, very wide landscape about 2:1, high resolution.
+Input image 1 is the exact real red Murano glass necklace reference. Preserve its recognizable construction, silver lobster clasp, fine red bead strand, faceted red spacers, rounded translucent ruby-red lampwork beads and dark red/gold swirled focal beads. Keep the necklace intact as one closed loop, no new pendants, no extra jewelry.
+Create a photorealistic luxury still life on a warm pale ivory honed travertine desk in an Italian atelier, viewed almost directly overhead with a subtle natural angle. Place the full necklace on the RIGHT half, large and clearly readable, softly oval and gently diagonal, its center around x=73%, y=51%, occupying about 32% of image width and  seventy percent of its height, fully within the frame. It should rest naturally on stone with soft contact shadows and sophisticated glass reflections.
+The LEFT 48% is uninterrupted pale ivory stone negative space for dark teal homepage typography; keep this area softly lit and very calm with barely perceptible stone grain, no busy veins or objects.
+Minimal styling only: a small folded corner of warm white linen at the extreme upper-right edge, a partially cropped closed ivory paper sketchbook with no writing at the far lower-right edge, and a subtle soft diagonal window shadow near the upper edge. These props are quiet peripheral accents; the necklace is the hero.
+Light: soft late-morning side window daylight, warm neutral white balance, gentle shadows, realistic rich ruby glass, soft gold flecks, exquisite tactile materials. Premium jewelry campaign, art-directed but believable, understated Italian elegance. No flowers, no hands, no people, no text, no branding, no watermarks, no borders, no graphic overlays. Do not bake any website interface into the photograph.

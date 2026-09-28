@@ -4,13 +4,13 @@ import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { hreflangAlternates, localizedCanonical } from "@/lib/hreflang";
 import { getAllLooks } from "@/lib/look-data";
-import { getLookPageCopy } from "@/lib/i18n/look-page-copy";
+import { getLookPageCopy, getLookEditorialDescription } from "@/lib/i18n/look-page-copy";
 import { applyTemplate } from "@/lib/i18n/format";
 import { COMPOSED_LOOK_DISCOUNT_PERCENT } from "@/lib/looks";
 import type { FaqItem } from "@/lib/faq";
 import { ShelfMain } from "@/components/shelf-main";
 import { ShelfHead, ShelfBody } from "@/components/shelf-page";
-import { LookCard } from "@/components/look-card";
+import { LookEditorial } from "@/components/look-editorial";
 import { ComposePromo } from "@/components/compose-promo";
 import { FaqSection } from "@/components/faq-section";
 
@@ -47,9 +47,33 @@ export default async function LooksPage() {
   return (
     <ShelfMain>
       <ShelfHead title={dict.looks.title} width="full">
-        <p className="shop-lede">{dict.looks.subtitle}</p>
+        <p className="shop-lede">{copy.editorialIntro}</p>
       </ShelfHead>
       <ShelfBody width="full">
+        {looks.length === 0 ? (
+          <p className="look-grid-empty">{dict.looks.empty}</p>
+        ) : (
+          <div className="looks-editorial-list">
+            {looks.map((look, i) => (
+              <LookEditorial
+                index={i}
+                heading="h2"
+                key={look.id}
+                look={look}
+                locale={settings.defaultLocale}
+                priority={i === 0}
+                labels={{
+                  view: dict.looks.viewLook,
+                  save: dict.look.save,
+                  pieces: dict.looks.pieces,
+                  description: getLookEditorialDescription(look.name, locale),
+                  included: copy.editorialIncluded,
+                  price: copy.editorialPrice,
+                }}
+              />
+            ))}
+          </div>
+        )}
         <ComposePromo
           labels={{
             kicker: dict.looks.composeKicker,
@@ -58,25 +82,6 @@ export default async function LooksPage() {
             cta: dict.looks.composeCta,
           }}
         />
-        {looks.length === 0 ? (
-          <p className="look-grid-empty">{dict.looks.empty}</p>
-        ) : (
-          <div className="look-cards">
-            {looks.map((look, i) => (
-              <LookCard
-                key={look.id}
-                look={look}
-                locale={settings.defaultLocale}
-                priority={i < 3}
-                labels={{
-                  view: dict.looks.viewLook,
-                  save: dict.look.save,
-                  pieces: dict.looks.pieces,
-                }}
-              />
-            ))}
-          </div>
-        )}
         {looks.length > 0 && (
           <>
             <section className="looks-page-reasons" aria-labelledby="looks-page-reasons-title">

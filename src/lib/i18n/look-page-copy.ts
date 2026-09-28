@@ -6,9 +6,14 @@ import type { Locale } from "./locale";
 // stories fall back (lib/product-i18n.ts). Discount claims restate the rules
 // in lib/looks.ts, so keep them aligned when editing.
 const en = {
+  editorialIntro:
+    "A look brings together a necklace, a bracelet and earrings, selected for the way their colours and shapes complement one another. Wear the complete composition, or let a single piece set the tone.",
+  editorialDescription:
+    "Three expressions of Murano glass, brought together in one considered composition. Wear them together for a complete look, or individually as a quiet signature.",
+  editorialIncluded: "In this look",
+  editorialPrice: "The complete look",
   listingWhyTitle: "A look, already in harmony",
-  listingWhyIntro:
-    "Each combination is chosen to make Murano glass easy to wear, give or collect.",
+  listingWhyIntro: "Each combination is chosen to make Murano glass easy to wear, give or collect.",
   listingWhy: [
     {
       title: "Colours that belong together",
@@ -109,6 +114,12 @@ const en = {
 export type LookPageCopy = typeof en;
 
 const it: LookPageCopy = {
+  editorialIntro:
+    "Un look riunisce collana, bracciale e orecchini, scelti per l’armonia dei colori e delle forme. Indossa l’abbinamento completo, oppure lascia che un solo gioiello racconti il tuo stile.",
+  editorialDescription:
+    "Tre espressioni del vetro di Murano, riunite in un abbinamento curato. Da indossare insieme per un look completo, o singolarmente come un dettaglio personale.",
+  editorialIncluded: "I gioielli del look",
+  editorialPrice: "Il look completo",
   listingWhyTitle: "Un look già in armonia",
   listingWhyIntro:
     "Ogni abbinamento è pensato per rendere il vetro di Murano facile da indossare, regalare e collezionare.",
@@ -203,7 +214,8 @@ const it: LookPageCopy = {
     care: "Poche semplici abitudini per mantenere colore e brillantezza.",
     giftTitle: "Trova Regalo",
     gift: "Qualche domanda per trovare il pezzo giusto per qualcuno.",
-    returns: "14 giorni per recedere dall'acquisto, con rimborso sul metodo di pagamento originale.",
+    returns:
+      "14 giorni per recedere dall'acquisto, con rimborso sul metodo di pagamento originale.",
     about: "Chi siamo e come lavoriamo.",
     contact: "Una domanda su un pezzo o su un ordine? Scrivici.",
   },
@@ -211,4 +223,21 @@ const it: LookPageCopy = {
 
 export function getLookPageCopy(locale: Locale): LookPageCopy {
   return locale === "it" ? it : en;
+}
+
+export function getLookEditorialDescription(name: string, locale: Locale): string {
+  const descriptions: Record<string, { en: string; it: string }> = {
+    "rosso rubino": {
+      en: "Ruby reds bring a rich note of colour to this three-piece composition. Pair the complete look with a simple neckline, or wear one piece as the focal point.",
+      it: "Il rosso rubino dà profondità e carattere a questo abbinamento di tre gioielli. Scegli una scollatura semplice per valorizzare il look completo, oppure lascia protagonista un solo pezzo.",
+    },
+    "rosa e salvia": {
+      en: "Soft pink meets sage green in a delicate balance of colour. Wear the three pieces with linen and light neutrals, or choose a single accent for every day.",
+      it: "Il rosa incontra il verde salvia in un delicato equilibrio di colori. Abbina i tre gioielli al lino e ai toni neutri, oppure scegli un solo dettaglio da indossare ogni giorno.",
+    },
+  };
+  const description = descriptions[name.trim().toLowerCase()];
+  return (
+    description?.[locale === "it" ? "it" : "en"] ?? getLookPageCopy(locale).editorialDescription
+  );
 }
