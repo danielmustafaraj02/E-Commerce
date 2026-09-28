@@ -308,6 +308,15 @@
   isolation: isolate;
   background: #f7f2ea;
 }
+/* The home hero alone sits on the ivory marble backdrop; other pages that
+   reuse .shelf-hero keep the flat `--ground` colour from above. */
+.shelf-home .shelf-hero {
+  background-color: #f7f2ea;
+  background-image: url("/hero/ivory-marble-background.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
 /* Full-bleed hero photography. */
 .shelf-hero-backdrop {
   object-fit: cover;
