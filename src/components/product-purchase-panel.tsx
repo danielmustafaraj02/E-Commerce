@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { QuantityStepper } from "@/components/quantity-stepper";
 import { AddToCartButton } from "@/components/add-to-cart-button";
 import { BuyNowButton } from "@/components/buy-now-button";
@@ -19,25 +19,17 @@ type CartProduct = {
 };
 
 // Owns everything quantity-dependent (the stepper plus every button that
-// adds to the cart) so the count only has to live in one place, and the
-// mobile sticky bar — a second Add to Cart that appears once the real one
-// scrolls out of view. The sticky bar's mobile/desktop visibility is a CSS
-// rule (.shop-sticky-cta in shop.css), not a Tailwind hidden/sm:* utility:
-// this page's CSS can load after the shared Tailwind stylesheet in the
-// cascade (see the gallery fix earlier), so a bare utility class isn't
-// reliably guaranteed to win at every viewport width. The scroll-triggered
-// on/off (this component's job) is layered on top via a CSS class React
-// toggles, which the desktop media query overrides unconditionally either way.
+// adds to the cart) so the count only has to live in one place. The old
+// mobile sticky add-to-cart bar was removed; the inline controls are the
+// only path to the cart.
 export function ProductPurchasePanel({
   product,
-  priceDisplay,
   dict,
   cartDict,
   showBuyNow,
   wishlist,
 }: {
   product: CartProduct;
-  priceDisplay: string;
   dict: Dictionary["product"];
   cartDict: { decreaseQuantity: string; increaseQuantity: string };
   showBuyNow: boolean;
@@ -55,31 +47,10 @@ export function ProductPurchasePanel({
   };
 }) {
   const [quantity, setQuantity] = useState(1);
-  const inlineRef = useRef<HTMLDivElement>(null);
-  const [stickyVisible, setStickyVisible] = useState(false);
-
-  useEffect(() => {
-    const el = inlineRef.current;
-    if (!el) return;
-    // IntersectionObserver reports both "not reached yet" and "scrolled past"
-    // as non-intersecting. Only show the sticky action after the inline
-    // controls have crossed the top of the viewport.
-    const observer = new IntersectionObserver(
-      ([entry]) => setStickyVisible(entry.boundingClientRect.bottom <= 0),
-      {
-        rootMargin: "0px 0px -10% 0px",
-      }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
 
   return (
     <>
-      <div
-        ref={inlineRef}
-        className="shop-purchase-controls mt-6 flex flex-wrap items-center gap-3"
-      >
+      <div className="shop-purchase-controls mt-6 flex flex-wrap items-center gap-3">
         <QuantityStepper
           value={quantity}
           onChange={(next) => setQuantity(Math.max(1, next))}
@@ -101,18 +72,6 @@ export function ProductPurchasePanel({
       )}
 
       <WishlistButton {...wishlist} />
-
-      <div className={`shop-sticky-cta ${stickyVisible ? "shop-sticky-cta--visible" : ""}`}>
-        <div className="shop-sticky-cta-inner">
-          <span className="shop-sticky-cta-price">{priceDisplay}</span>
-          <AddToCartButton
-            product={product}
-            dict={dict}
-            quantity={quantity}
-            className="shop-cta-teal"
-          />
-        </div>
-      </div>
     </>
   );
 }

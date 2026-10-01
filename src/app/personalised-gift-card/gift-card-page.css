@@ -98,7 +98,7 @@
   display: flex;
   flex-direction: column;
   padding: 1.75rem 1.5rem 1.5rem;
-  background: #fff;
+  background: var(--ivory);
   border: 1px solid color-mix(in srgb, var(--rule) 70%, transparent);
   border-radius: 4px;
 }
@@ -149,7 +149,7 @@
   padding: 0.45rem 1rem;
   border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
   border-radius: 999px;
-  background: #fff;
+  background: var(--ivory);
   font-size: 0.95rem;
 }
 
@@ -190,12 +190,12 @@
 .gcp-tips {
   align-self: start;
   padding: 2rem 1.75rem;
-  background: #123d43;
+  background: var(--midnight);
   border-radius: 4px;
-  color: #f5efe4;
+  color: var(--ivory);
 }
 .gcp-tips h2 {
-  color: #fff;
+  color: var(--ivory);
   font-size: 1.6rem;
 }
 .gcp-tips ul {

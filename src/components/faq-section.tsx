@@ -25,16 +25,28 @@ export function FaqSection({
   const content = (
     <div className={`faq faq--${variant}`}>
       <div className="faq-intro">
-        <h2 className="shelf-heading">{dict.home.faqTitle}</h2>
+        <p className="faq-eyebrow">{dict.faq.eyebrow}</p>
+        <h2 className="shelf-heading faq-title">{dict.home.faqTitle}</h2>
         {variant === "editorial" && (
           <>
-            <p>{dict.faq.intro}</p>
-            <div className="faq-wave-flow" aria-hidden="true" />
+            <p className="faq-lede">{dict.faq.intro}</p>
+            {/* The way to a person, given the weight of a real control rather
+                than left as the tail of a sentence under the accordion. The
+                teal wave that used to sit here is gone: it was the one stroke
+                of a colour the palette does not contain. */}
+            <Link href="/contact" className="faq-contact-cta">
+              {dict.faq.contactCta}
+              <span aria-hidden="true">→</span>
+            </Link>
           </>
         )}
       </div>
       <div>
-        <Reveal className="faq-list-reveal" repeatOnView>
+        {/* On entry only. With `repeatOnView` the reveal also ran BACKWARDS:
+            leaving the viewport set data-reveal="false", whose rule hides every
+            row — so a resize, or scrolling the section out and back, left a
+            column of blank rules where the questions had been. */}
+        <Reveal className="faq-list-reveal">
           <FaqAccordion
             items={items}
             initial={FAQ_INITIAL}
@@ -42,12 +54,16 @@ export function FaqSection({
             fewerLabel={dict.faq.fewer}
           />
         </Reveal>
-        <p className="faq-contact">
-          {dict.faq.stillQuestion}{" "}
-          <Link href="/contact">
-            {dict.faq.contactCta} <span aria-hidden="true">→</span>
-          </Link>
-        </p>
+        {/* On the compact variant the intro column has no call to action, so
+            the contact line stays where it was. */}
+        {variant === "compact" && (
+          <p className="faq-contact">
+            {dict.faq.stillQuestion}{" "}
+            <Link href="/contact">
+              {dict.faq.contactCta} <span aria-hidden="true">→</span>
+            </Link>
+          </p>
+        )}
       </div>
     </div>
   );

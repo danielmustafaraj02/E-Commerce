@@ -7,9 +7,22 @@ const defaults = {
   id: "default",
   storeName: "My Store",
   logoUrl: null as string | null,
-  primaryColor: "#123D43",
-  secondaryColor: "#4F46E5",
+  // The brand defaults, matching the palette in app/palette.css. An admin
+  // can override both from Settings > Appearance; these are only the fallback.
+  primaryColor: "#A6824A",
+  secondaryColor: "#5D1E21",
   fontFamily: "Inter",
+  // Site style — null everywhere means "use the theme default" (app/palette.css).
+  colorBackground: null as string | null,
+  colorSurface: null as string | null,
+  colorText: null as string | null,
+  colorTextMuted: null as string | null,
+  colorPrimary: null as string | null,
+  colorOnPrimary: null as string | null,
+  colorAccent: null as string | null,
+  colorBorder: null as string | null,
+  fontHeading: null as string | null,
+  fontBody: null as string | null,
   defaultCurrency: "EUR",
   defaultLocale: "en-US",
   contactEmail: "hello@example.com",
@@ -63,8 +76,19 @@ const defaults = {
 // header, and nearly every page) that each need this within one request
 // share a single DB round trip instead of re-querying per call.
 export const getStoreSettings = cache(async () => {
-  const settings = await db.storeSettings.findFirst();
-  return settings ?? defaults;
+  try {
+    const settings = await db.storeSettings.findFirst();
+    return settings ?? defaults;
+  } catch (error) {
+    // The storefront should still render before the database is available
+    // (for example during local setup or while a deployment is starting).
+    // Keep the neutral defaults as the documented fallback rather than turning
+    // every page request into a 500 response.
+    if (process.env.NODE_ENV !== "production") {
+      console.warn("Store settings unavailable; using fallback defaults.", error);
+    }
+    return defaults;
+  }
 });
 
 // Next.js replaces `openGraph`/`twitter` wholesale per route rather than

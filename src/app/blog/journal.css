@@ -48,7 +48,7 @@
 .journal-filters a[aria-current="page"] {
   background: var(--ink);
   border-color: var(--ink);
-  color: #fff;
+  color: var(--ivory);
 }
 .journal-index-list {
   display: grid;
@@ -117,7 +117,7 @@
 /* Phones: plain white behind every photo, the images' own background. */
 @media (max-width: 47.99rem) {
   .journal-figure-frame {
-    background: #fff;
+    background: var(--ivory);
   }
 }
 .journal-figure figcaption {
@@ -265,7 +265,7 @@
   text-align: center;
 }
 .journal-prose .journal-cta a {
-  color: #fff;
+  color: var(--ivory);
   text-decoration: none;
 }
 .journal-sources {
@@ -384,5 +384,98 @@
   }
   .journal-series ol {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+/* Editorial article treatment: quiet luxury, wide image, asymmetric reading
+   column, generous whitespace and small tracked metadata. */
+.journal-article {
+  --journal-editorial-max: 78rem;
+}
+
+.journal-article .journal-hero {
+  width: min(100%, var(--journal-editorial-max));
+  max-width: none;
+  margin: 0 auto;
+}
+
+.journal-article .journal-hero .journal-figure-frame {
+  aspect-ratio: 16 / 8.5;
+  background: var(--ivory);
+}
+
+.journal-article-head {
+  max-width: 70rem;
+  padding: clamp(2.5rem, 7vw, 6rem) clamp(1.25rem, 7vw, 7rem) 2rem;
+}
+
+.journal-article-head h1 {
+  max-width: 13ch;
+  font-size: clamp(2.8rem, 7vw, 6.8rem);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 0.98;
+  color: var(--midnight, var(--ink));
+}
+
+.journal-series-kicker,
+.journal-breadcrumb,
+.journal-card-meta {
+  letter-spacing: 0.14em;
+}
+
+.journal-prose {
+  max-width: 70rem;
+  padding-inline: clamp(1.25rem, 7vw, 7rem);
+  font-size: clamp(1.05rem, 1.25vw, 1.2rem);
+  line-height: 1.8;
+}
+
+.journal-prose > * {
+  max-width: 42rem;
+}
+
+.journal-prose .journal-intro {
+  max-width: 52rem;
+  margin-top: 1rem;
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  line-height: 1.45;
+  color: var(--midnight, var(--ink));
+}
+
+.journal-prose h2 {
+  max-width: 24rem;
+  margin-top: clamp(4rem, 8vw, 8rem);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+  color: var(--midnight, var(--ink));
+}
+
+.journal-facts {
+  max-width: 52rem;
+  margin-block: 3rem;
+  border-block: 1px solid var(--rule);
+  background: transparent;
+  padding: 1.5rem 0;
+}
+
+.journal-sources {
+  max-width: 52rem;
+}
+
+@media (max-width: 47.99rem) {
+  .journal-article .journal-hero .journal-figure-frame {
+    aspect-ratio: 4 / 3;
+  }
+
+  .journal-article-head h1 {
+    font-size: clamp(2.5rem, 13vw, 4.5rem);
+  }
+
+  .journal-prose {
+    padding-inline: 1.25rem;
   }
 }

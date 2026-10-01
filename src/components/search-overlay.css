@@ -1,0 +1,255 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   Header search — a single glass magnifier that unfolds into a full field.
+
+   The closed state is one quiet icon in the icon cluster; clicking it opens
+   a wide ivory field in place of the icon, so the header never reflows. The
+   champagne hairline draws itself out from the middle, the placeholder
+   settles in, and the input is focused on the same frame so typing can
+   start immediately. No overlay, no portal: the header's sticky backdrop
+   stays intact and page content is never covered.
+
+   Motion follows the "The Murano Journal" north star — one small,
+   purposeful moment, flat surfaces, hairline borders rather than shadows.
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* ── Closed state: the magnifier button ─────────────────────────────────── */
+
+.header-search__trigger {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex: 0 0 auto;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: none;
+  color: color-mix(in srgb, var(--foreground) 80%, transparent);
+  cursor: pointer;
+  transition:
+    width 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.25s ease-out,
+    color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.header-search__trigger:hover {
+  color: var(--foreground);
+  border-color: color-mix(in srgb, var(--gold) 55%, transparent);
+}
+
+.header-search__trigger:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.header-search__trigger svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.5;
+  /* The lens is turned in the light, not clicked. */
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.header-search__trigger:hover svg {
+  transform: scale(1.12) rotate(-6deg);
+}
+
+/* Champagne hairline drawing under the icon on hover — the same ornament
+   as the nav link underlines, scaled down to a single glyph. */
+.header-search__trigger::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0.6rem;
+  bottom: 0.3rem;
+  height: 1px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.header-search__trigger:hover::after {
+  transform: scaleX(1);
+}
+
+/* ── The wrapper holds the row's spare width in both states ─────────────── */
+
+.header-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* The trigger does not sit next to the open field — it *becomes* it. Fading
+   alone would leave a stray magnifier floating beside the field, so its
+   width collapses to zero over the same duration as the field's growth: the
+   field then opens out of the exact space the icon occupied, and only one
+   lens is ever on screen. */
+.header-search[data-open="true"] .header-search__trigger {
+  width: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    width 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.22s ease-out,
+    color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── The field: opens by growing out of the trigger's own footprint ─────── */
+
+.header-search__field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 0;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: var(--background);
+  transition:
+    width 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.4s ease-out 0.2s;
+}
+
+.header-search[data-open="true"] .header-search__field {
+  width: min(24rem, 100%);
+  border-color: color-mix(in srgb, var(--gold) 45%, transparent);
+  /* The field resolves out of a blur as it opens, so the eye reads it as
+     coming into focus rather than sliding sideways. */
+  animation: search-focus 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes search-focus {
+  0% {
+    filter: blur(7px);
+  }
+  100% {
+    filter: blur(0);
+  }
+}
+
+/* The inner row, held at its open width so the icon and input never squash
+   while the outer width animates. */
+.header-search__inner {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: min(24rem, 100%);
+  padding-block: 0.5rem;
+  padding-inline: 1rem;
+}
+
+.header-search__icon {
+  flex: 0 0 auto;
+  /* Petrol, not grey: the in-field lens is now the only magnifier on screen,
+     so it carries the full interaction colour of the closed state. */
+  color: color-mix(in srgb, var(--accent) 75%, var(--foreground));
+  transition: color 0.3s ease-out;
+}
+
+.header-search__icon svg {
+  width: 15px;
+  height: 15px;
+  stroke-width: 1.5;
+}
+
+.header-search[data-open="true"] .header-search__icon {
+  color: var(--accent);
+}
+.header-search__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 0;
+  background: none;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--foreground);
+  outline: none;
+}
+
+.header-search__input::placeholder {
+  color: color-mix(in srgb, var(--foreground) 40%, transparent);
+  /* The placeholder arrives a beat after the field, so the eye lands in
+     the empty field rather than on the text. */
+  opacity: 0;
+  transform: translateY(3px);
+  transition:
+    opacity 0.5s ease-out 0.24s,
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.24s;
+}
+
+.header-search[data-open="true"] .header-search__input::placeholder {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.header-search__input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.header-search__close {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: color-mix(in srgb, var(--foreground) 55%, transparent);
+  cursor: pointer;
+  opacity: 0;
+  transform: rotate(-45deg) scale(0.7);
+  transition:
+    opacity 0.3s ease-out,
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.25s ease-out;
+}
+
+.header-search[data-open="true"] .header-search__close {
+  opacity: 1;
+  transform: rotate(0) scale(1);
+  transition-delay: 0.2s;
+}
+
+.header-search__close:hover {
+  color: var(--foreground);
+}
+
+.header-search__close:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.header-search__close svg {
+  width: 15px;
+  height: 15px;
+  stroke-width: 1.75;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.header-search__close:hover svg {
+  transform: rotate(90deg);
+}
+
+/* ── Reduced motion: the field still opens, it just arrives instantly ──── */
+
+@media (prefers-reduced-motion: reduce) {
+  .header-search__field,
+  .header-search__input::placeholder,
+  .header-search__close,
+  .header-search__trigger,
+  .header-search__trigger svg,
+  .header-search__trigger::after,
+  .header-search__close svg {
+    transition: none;
+    animation: none;
+  }
+}

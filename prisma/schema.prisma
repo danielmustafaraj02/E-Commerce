@@ -21,33 +21,53 @@ datasource db {
 // ---------------------------------------------------------------------------
 
 model StoreSettings {
-  id                     String   @id @default(cuid())
-  storeName              String   @default("My Store")
-  logoUrl                String?
-  primaryColor           String   @default("#111827")
-  secondaryColor         String   @default("#4F46E5")
-  fontFamily             String   @default("Inter")
-  defaultCurrency        String   @default("EUR")
-  defaultLocale          String   @default("en-US")
-  contactEmail           String   @default("hello@example.com")
-  vatNumber              String?
-  companyLegalName       String?
-  companyAddress         String?
-  pricesIncludeTax       Boolean  @default(true)
-  freeShippingThreshold  Int? // cents; null = disabled
+  id             String  @id @default(cuid())
+  storeName      String  @default("My Store")
+  logoUrl        String?
+  primaryColor   String  @default("#111827")
+  secondaryColor String  @default("#4F46E5")
+  fontFamily     String  @default("Inter")
+
+  // ── Site style: Admin > Settings > Site style ────────────────────────────
+  // Eight colour ROLES and two type roles. Null everywhere means "use the
+  // theme default" (app/palette.css), so an untouched store is byte-identical
+  // to one that never opened the form, and "restore defaults" is a null write
+  // rather than a copy of today's hex values frozen into the row.
+  // primaryColor/secondaryColor above stay for the legacy --store-primary /
+  // --store-secondary variables and are not part of this set.
+  colorBackground       String?
+  colorSurface          String?
+  colorText             String?
+  colorTextMuted        String?
+  colorPrimary          String?
+  colorOnPrimary        String?
+  colorAccent           String?
+  colorBorder           String?
+  // The family name only; the faces themselves are loaded in
+  // app/home-fonts.ts. Null = the bundled role default.
+  fontHeading           String?
+  fontBody              String?
+  defaultCurrency       String  @default("EUR")
+  defaultLocale         String  @default("en-US")
+  contactEmail          String  @default("hello@example.com")
+  vatNumber             String?
+  companyLegalName      String?
+  companyAddress        String?
+  pricesIncludeTax      Boolean @default(true)
+  freeShippingThreshold Int? // cents; null = disabled
   // Short authenticity/trust line shown as a badge on product pages, near
   // the price — e.g. "100% authentic, handmade in Murano." Free text (not a
   // boolean) so it stays meaningful if the catalog changes to something
   // that isn't Murano glass. Null = badge not shown.
-  trustBadgeText         String?
+  trustBadgeText        String?
   // Homepage "What customers say" shelf — real reviews only (never
   // fabricated), but some stores launch before they have enough of them to
   // look credible, so admins can hide the section entirely until then.
-  showTestimonials       Boolean  @default(true)
+  showTestimonials      Boolean @default(true)
   // Personalised gift card add-on (/personalised-gift-card): offered only
   // while enabled; the price is charged per order, in cents.
-  giftCardEnabled        Boolean  @default(false)
-  giftCardPrice          Int      @default(500)
+  giftCardEnabled       Boolean @default(false)
+  giftCardPrice         Int     @default(500)
 
   // SEO — Admin > Settings > SEO. All optional with fallbacks applied in
   // src/lib/store-settings.ts and consumed by src/app/layout.tsx,
@@ -76,14 +96,14 @@ model StoreSettings {
 
   // Same DB-first/env-fallback pattern for the rest of the integrations —
   // Admin > Settings > Integrations.
-  resendApiKey         String?
-  emailFrom            String?
-  turnstileSiteKey     String?
-  turnstileSecretKey   String?
-  upstashRedisUrl      String?
-  upstashRedisToken    String?
-  googleClientId       String?
-  googleClientSecret   String?
+  resendApiKey       String?
+  emailFrom          String?
+  turnstileSiteKey   String?
+  turnstileSecretKey String?
+  upstashRedisUrl    String?
+  upstashRedisToken  String?
+  googleClientId     String?
+  googleClientSecret String?
 
   // Offline payment methods — no gateway needed, so these are plain toggles
   // + the details the customer needs to act on (bank details, COD surcharge)
@@ -120,10 +140,10 @@ model User {
   emailVerified DateTime?
   image         String?
 
-  mfaSecret       String? // TOTP secret, set once admin/staff enrolls MFA
-  mfaEnabled      Boolean @default(false)
-  failedLoginCount Int    @default(0)
-  lockedUntil     DateTime?
+  mfaSecret         String? // TOTP secret, set once admin/staff enrolls MFA
+  mfaEnabled        Boolean   @default(false)
+  failedLoginCount  Int       @default(0)
+  lockedUntil       DateTime?
   // Set whenever the password changes (reset flow). Sessions issued before this
   // moment are rejected — see src/lib/session-refresh.ts.
   passwordChangedAt DateTime?
@@ -186,21 +206,21 @@ model VerificationToken {
 // ---------------------------------------------------------------------------
 
 model Category {
-  id       String  @id @default(cuid())
-  name     String
+  id            String     @id @default(cuid())
+  name          String
   // Per-locale display names, shown when the storefront locale matches (see
   // src/lib/product-i18n.ts). Optional and fall back to `name` so catalogs
   // that only ever had one language keep working unchanged.
-  nameEn   String?
-  nameFr   String?
-  nameDe   String?
-  nameAr   String?
-  nameZh   String?
-  nameRu   String?
-  nameEs   String?
-  namePt   String?
-  nameHi   String?
-  nameJa   String?
+  nameEn        String?
+  nameFr        String?
+  nameDe        String?
+  nameAr        String?
+  nameZh        String?
+  nameRu        String?
+  nameEs        String?
+  namePt        String?
+  nameHi        String?
+  nameJa        String?
   // Optional page copy shown below the product grid on /category/[slug]: Italian
   // in `description`, then one column per locale, with the same fallback as
   // products (locale -> English -> Italian). See src/lib/product-i18n.ts.
@@ -215,10 +235,10 @@ model Category {
   descriptionPt String?
   descriptionHi String?
   descriptionJa String?
-  slug     String  @unique
-  parentId String?
-  parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  children Category[] @relation("CategoryTree")
+  slug          String     @unique
+  parentId      String?
+  parent        Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  children      Category[] @relation("CategoryTree")
 
   products Product[]
   taxRules TaxRule[]
@@ -227,7 +247,7 @@ model Category {
 }
 
 model Product {
-  id                String   @id @default(cuid())
+  id                String  @id @default(cuid())
   name              String
   // Per-locale translations, shown when the storefront locale matches (see
   // src/lib/product-i18n.ts). All optional and fall back to name/description
@@ -243,7 +263,7 @@ model Product {
   namePt            String?
   nameHi            String?
   nameJa            String?
-  slug              String   @unique
+  slug              String  @unique
   description       String
   descriptionEn     String?
   descriptionFr     String?
@@ -259,7 +279,7 @@ model Product {
   // page (uniqueness, gift framing, handmade-in-Murano heritage) — separate
   // from `description` above. English-only translation for now, same
   // one-locale-at-a-time rollout as name/description originally had.
-  story             String   @default("")
+  story             String  @default("")
   storyEn           String?
   price             Int // cents, tax-inclusive display price (see StoreSettings.pricesIncludeTax)
   // Display-only "was" price (cents), shown crossed out with a discount badge
@@ -268,11 +288,11 @@ model Product {
   // against ProductPriceChange in lib/price-history.ts). Shown only while
   // higher than `price`.
   compareAtPrice    Int?
-  currency          String   @default("EUR")
-  sku               String   @unique
-  stockQty          Int      @default(0)
-  lowStockThreshold Int      @default(5)
-  active            Boolean  @default(true)
+  currency          String  @default("EUR")
+  sku               String  @unique
+  stockQty          Int     @default(0)
+  lowStockThreshold Int     @default(5)
+  active            Boolean @default(true)
   // One canonical color per piece, for the filter swatches on /products and
   // /category/[slug] — a fixed small palette (see PRODUCT_COLORS in
   // src/lib/product-colors.ts), not free text, so the filter UI can render
@@ -289,7 +309,7 @@ model Product {
   supplier       Supplier? @relation(fields: [supplierId], references: [id])
   supplierSku    String?
   costPrice      Int? // cents, what we pay the supplier per unit
-  trackInventory Boolean @default(true)
+  trackInventory Boolean   @default(true)
 
   categoryId String?
   category   Category? @relation(fields: [categoryId], references: [id])
@@ -327,13 +347,13 @@ model Product {
 // Admin > Looks. Buying all its pieces together takes discountPercent off
 // each one, applied server-side in lib/pricing.ts.
 model Look {
-  id              String   @id @default(cuid())
+  id              String    @id @default(cuid())
   name            String
   // Optional styled photo of the pieces together; without it the product
   // page composes the pieces' own photos.
   imageUrl        String?
-  discountPercent Int      @default(15)
-  active          Boolean  @default(true)
+  discountPercent Int       @default(15)
+  active          Boolean   @default(true)
   products        Product[]
 
   createdAt DateTime @default(now())
@@ -519,7 +539,7 @@ model ShippingZoneMethod {
 // ---------------------------------------------------------------------------
 
 model TaxRule {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   country     String // ISO 3166-1 alpha-2
   region      String?
   ratePercent Float
@@ -548,26 +568,26 @@ model Order {
   // pending -> cancelled
   // paid/processing/shipped -> refunded
 
-  subtotal       Int // cents
-  taxAmount      Int // cents
-  taxRatePercent Float?
-  shippingAmount Int // cents
-  discountAmount Int    @default(0) // cents, discount code + complete-the-look saving
+  subtotal                  Int // cents
+  taxAmount                 Int // cents
+  taxRatePercent            Float?
+  shippingAmount            Int // cents
+  discountAmount            Int          @default(0) // cents, discount code + complete-the-look saving
   // The complete-the-look part of discountAmount (see lib/looks.ts).
-  bundleDiscountAmount Int @default(0) // cents
+  bundleDiscountAmount      Int          @default(0) // cents
   // Personalised gift card printed and packed with the order (lib/gift-card.ts):
   // its price (part of subtotal) and exactly what to print.
-  giftCardAmount      Int     @default(0) // cents
-  giftCardMessageType String? // preset | custom
-  giftCardMessage     String?
-  giftCardRecipient   String?
-  giftCardSender      String?
-  giftCardFont        String?
-  giftCardStickers    Json? // [{ icon, x, y }] as % of the card, at most 3
-  giftCardBack        String? // ivory | lagoon | ruby | blush
+  giftCardAmount            Int          @default(0) // cents
+  giftCardMessageType       String? // preset | custom
+  giftCardMessage           String?
+  giftCardRecipient         String?
+  giftCardSender            String?
+  giftCardFont              String?
+  giftCardStickers          Json? // [{ icon, x, y }] as % of the card, at most 3
+  giftCardBack              String? // ivory | lagoon | ruby | blush
   // A standalone digital store voucher is issued only after payment succeeds.
   // The tax on the underlying goods is calculated when the voucher is redeemed.
-  giftVoucherPurchaseAmount  Int      @default(0) // cents
+  giftVoucherPurchaseAmount Int          @default(0) // cents
   giftVoucherRecipientEmail String?
   giftVoucherRecipientName  String?
   giftVoucherSenderName     String?
@@ -577,15 +597,15 @@ model Order {
   // the unpaid order expires or a paid order is refunded.
   appliedGiftVoucherId      String?
   appliedGiftVoucher        GiftVoucher? @relation("GiftVoucherRedemptions", fields: [appliedGiftVoucherId], references: [id], onDelete: Restrict)
-  giftVoucherRedeemedAmount Int      @default(0) // cents
+  giftVoucherRedeemedAmount Int          @default(0) // cents
   giftVoucherRestoredAt     DateTime?
-  total          Int // cents
-  currency       String @default("EUR")
+  total                     Int // cents
+  currency                  String       @default("EUR")
   // The storefront language the customer checked out in. Emails about the order
   // (status updates, abandoned-cart reminder) are sent from webhooks and cron,
   // with no request to read a language from, so they use this. Null on orders
   // placed before it existed: those get English.
-  locale String?
+  locale                    String?
 
   addressId String?
   address   Address? @relation(fields: [addressId], references: [id])
@@ -646,14 +666,14 @@ model OrderItem {
 }
 
 model Payment {
-  id                    String  @id @default(cuid())
+  id                    String   @id @default(cuid())
   orderId               String
-  order                 Order   @relation(fields: [orderId], references: [id])
+  order                 Order    @relation(fields: [orderId], references: [id])
   provider              String // stripe | paypal
-  providerTransactionId String? @unique
-  status                String  @default("pending") // pending | succeeded | failed | refunded
+  providerTransactionId String?  @unique
+  status                String   @default("pending") // pending | succeeded | failed | refunded
   amount                Int // cents
-  currency              String  @default("EUR")
+  currency              String   @default("EUR")
   createdAt             DateTime @default(now())
 
   @@index([orderId])
@@ -679,8 +699,8 @@ model DiscountCode {
 model GiftVoucher {
   id              String   @id @default(cuid())
   code            String   @unique
-  originalAmount  Int      // cents
-  balance         Int      // cents remaining
+  originalAmount  Int // cents
+  balance         Int // cents remaining
   currency        String   @default("EUR")
   status          String   @default("active") // active | void
   recipientEmail  String
@@ -771,14 +791,14 @@ model AuditLog {
 // working on this repo, so ideas/todos survive between sessions instead of
 // living only in chat history. Not customer-facing.
 model ImprovementTask {
-  id          String    @id @default(cuid())
-  title       String
-  description String?
-  priority    String    @default("medium") // low | medium | high
-  status      String    @default("open") // open | done
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  completedAt DateTime?
+  id              String    @id @default(cuid())
+  title           String
+  description     String?
+  priority        String    @default("medium") // low | medium | high
+  status          String    @default("open") // open | done
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  completedAt     DateTime?
   // Picked up by the nightly "Roadmap tasks for Claude" routine through
   // api/automation/roadmap/claim; the run writes what it changed and what to
   // check into claudeReport (the "Bacheca" on Admin > Roadmap).

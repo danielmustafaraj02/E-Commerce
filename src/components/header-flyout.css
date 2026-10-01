@@ -1,0 +1,403 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   Header cart / wishlist flyouts.
+
+   The icon opens a small panel of the pieces already in that list, so the
+   shopper sees what they picked without leaving the page. Design language is
+   the same as the Products dropdown: ivory surface, champagne hairline, flat
+   (no lift, no tilt), and one slow motion — the thumbnail's gentle zoom on
+   row hover.
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* ── Wrapper: holds the panel so hover can bridge icon → panel ──────────── */
+
+.hf-root {
+  position: relative;
+  pointer-events: auto;
+}
+
+/* The trigger is the real link; only its colour and glyph move on hover. */
+.hf-trigger {
+  position: relative;
+}
+
+/* ── Panel ──────────────────────────────────────────────────────────────── */
+
+.hf-panel {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  /* Right-aligned to the icon: the panel hangs off the cart/heart at the end
+     of the row, so it can never slide off the right edge of the viewport. */
+  right: 0;
+  z-index: 60;
+  width: 21rem;
+  background: var(--background);
+  border: 1px solid color-mix(in srgb, var(--champagne) 68%, var(--background));
+  border-radius: 0.75rem;
+  overflow: hidden;
+  /* Same deliberate exception as the Products dropdown: this one floating
+     overlay needs real depth to separate from the page beneath. */
+  box-shadow:
+    0 14px 36px color-mix(in srgb, var(--foreground) 12%, transparent),
+    0 2px 6px color-mix(in srgb, var(--foreground) 5%, transparent);
+}
+
+.hf-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem 0.7rem;
+}
+
+.hf-title {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--foreground) 70%, transparent);
+}
+
+.hf-count {
+  font-size: 0.78rem;
+  color: color-mix(in srgb, var(--foreground) 50%, transparent);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Rows ───────────────────────────────────────────────────────────────── */
+
+.hf-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 0.5rem;
+}
+
+.hf-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background 0.2s ease;
+}
+
+.hf-row:hover {
+  background: color-mix(in srgb, var(--accent) 4%, var(--background));
+}
+
+.hf-row-link {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0.4rem;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 0.5rem;
+}
+
+/* Photo: a small square plate, ivory-backed like the catalog photos. */
+.hf-thumb {
+  position: relative;
+  display: block;
+  flex: 0 0 auto;
+  width: 3.5rem;
+  height: 3.5rem;
+  overflow: hidden;
+  border-radius: 0.25rem;
+  background: color-mix(in srgb, var(--foreground) 4%, var(--background));
+}
+
+.hf-thumb img {
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* A clear, slow push on hover — the photo leans in rather than twitching. */
+.hf-row:hover .hf-thumb img {
+  transform: scale(1.16);
+}
+
+/* The row itself answers the pointer with a wipe of accent from the left,
+   like ink drawn across the line. */
+.hf-row {
+  overflow: hidden;
+}
+
+.hf-row::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 0.5rem;
+}
+
+.hf-row:hover::before {
+  transform: scaleX(1);
+}
+
+.hf-row-link,
+.hf-remove {
+  position: relative;
+}
+
+/* The product name is the link's accessible name, so the thumbnail stays
+   decorative; this keeps the name available to a screen reader without
+   showing it twice. */
+.hf-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.hf-row-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.hf-row-name {
+  font-size: 0.83rem;
+  line-height: 1.3;
+  color: var(--foreground);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.hf-row-meta {
+  font-size: 0.78rem;
+  color: color-mix(in srgb, var(--foreground) 60%, transparent);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Remove: a small ×, quiet until the row is hovered, so the panel is a
+   place to look rather than a wall of buttons. */
+.hf-remove {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.35rem;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: color-mix(in srgb, var(--foreground) 40%, transparent);
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.7) rotate(-20deg);
+  transition:
+    opacity 0.25s ease,
+    transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.hf-row:hover .hf-remove,
+.hf-remove:focus-visible {
+  opacity: 1;
+  transform: scale(1) rotate(0);
+}
+
+.hf-remove:hover {
+  color: var(--danger, var(--foreground));
+  background: color-mix(in srgb, var(--danger, var(--foreground)) 10%, transparent);
+}
+
+.hf-remove:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 1px;
+  opacity: 1;
+}
+
+.hf-more {
+  padding: 0.35rem 0.9rem 0.15rem;
+  font-size: 0.78rem;
+  color: color-mix(in srgb, var(--foreground) 50%, transparent);
+}
+
+.hf-empty {
+  margin: 0;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--foreground) 55%, transparent);
+}
+
+/* ── Wishlist empty state: the beating heart ──────────────────────────────
+   The panel only reaches this state when the list is empty, so this one
+   moment is the whole panel's payoff. A small rose heart beats — two quick
+   pulses then rest, the way a heart actually beats — and a soft glow swells
+   with it, as if it were lit from inside. */
+
+.hf-empty--wish {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 1.7rem 1rem 1.4rem;
+}
+
+.hf-empty--wish .hf-empty {
+  padding: 0;
+}
+
+.hf-heart {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: color-mix(in srgb, var(--rose, var(--brass)) 80%, var(--gold));
+  /* The glow swells on the same 2.4s clock as the beat, so light and pulse
+     read as one gesture. */
+  filter: drop-shadow(0 0 0.35rem color-mix(in srgb, var(--rose, var(--brass)) 0%, transparent));
+  animation: hf-heartbeat 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  transform-origin: center 60%;
+}
+
+/* Two quick systoles, then a long rest — the rest is what makes it read as
+   a heartbeat rather than a metronome. */
+@keyframes hf-heartbeat {
+  0%,
+  46%,
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0.2rem color-mix(in srgb, var(--rose, var(--brass)) 0%, transparent));
+  }
+  8% {
+    transform: scale(1.22);
+    filter: drop-shadow(0 0 0.55rem color-mix(in srgb, var(--rose, var(--brass)) 55%, transparent));
+  }
+  18% {
+    transform: scale(1.02);
+  }
+  28% {
+    transform: scale(1.14);
+    filter: drop-shadow(0 0 0.4rem color-mix(in srgb, var(--rose, var(--brass)) 38%, transparent));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hf-heart {
+    animation: none;
+  }
+}
+
+/* The cart panel swaps the heart for the cart glyph: stroke, not fill, so
+   the line icon reads like the header's cart button — and it carries the
+   accent's ink rather than the wishlist's rose. */
+.hf-heart--cart {
+  color: color-mix(in srgb, var(--accent) 75%, var(--gold));
+  transform-origin: center;
+}
+
+/* ── Footer: subtotal, then the two actions ─────────────────────────────── */
+
+.hf-foot {
+  border-top: 1px solid color-mix(in srgb, var(--champagne) 55%, transparent);
+  padding: 0.7rem 1rem 0.85rem;
+  margin-top: 0.5rem;
+}
+
+.hf-subtotal {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  margin-bottom: 0.65rem;
+  color: var(--foreground);
+}
+
+.hf-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.hf-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 auto;
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--gold);
+  background: var(--color-primary, var(--accent));
+  color: var(--background);
+  font-size: 0.82rem;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  position: relative;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* A champagne sheen sweeps across the filled button on hover — the same
+   treatment as the site's primary buttons, at this smaller scale. */
+.hf-cta::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 20%,
+    color-mix(in srgb, var(--gold) 45%, transparent) 50%,
+    transparent 80%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hf-cta:hover::after {
+  transform: translateX(120%);
+}
+
+.hf-cta:hover {
+  background: var(--accent-deep, var(--accent));
+  transform: translateY(-1px);
+}
+
+/* The quiet variant is an outline: "view the cart" is a read, "checkout" is
+   the commitment, so only the latter gets filled. */
+.hf-cta--quiet {
+  background: none;
+  border-color: color-mix(in srgb, var(--gold) 60%, transparent);
+  color: var(--accent);
+}
+
+.hf-cta--quiet:hover {
+  background: color-mix(in srgb, var(--accent) 7%, var(--background));
+  color: var(--accent);
+}
+
+.hf-cta:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* ── Reduced motion ─────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .hf-panel {
+    animation: none;
+  }
+  .hf-thumb img {
+    transition: none;
+  }
+}

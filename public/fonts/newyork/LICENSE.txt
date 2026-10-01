@@ -1,0 +1,29 @@
+NewYork Free Serif Typeface
+Designer: Artem Nevsky
+Source:   https://freedesignresources.net/newyork-free-serif-typeface/
+Obtained: 2026-10-01, package "NewYork-font_Artem-Nevsky_221020.zip"
+
+Embedded copyright string in the font:
+  "Copyright (c) 2020 by Artem Nevsky. All rights reserved."
+
+WHAT THE SOURCE PAGE STATES
+  File Type : .otf
+  Web Font  : Yes
+  License   : 100% Free
+
+WHAT THE PACKAGE CONTAINS
+  NewYork.otf only. The archive ships NO licence document, so the statement
+  above (from the distributor's page) is the only licence evidence there is.
+
+TWO THINGS TO CHECK BEFORE RELYING ON THIS COMMERCIALLY
+  1. The font's OS/2 fsType flag is 4 ("Preview & Print embedding"). Read
+     strictly, that permission bit does not cover web-font embedding, and it
+     disagrees with the distributor's "Web Font: Yes".
+  2. "100% Free" is not a named licence (it is not OFL, not MIT), and the
+     copyright string reserves all rights. For a commercial storefront, get
+     the author's written confirmation for web use.
+
+WHAT WAS DONE TO THE FILE
+  NewYork.otf -> NewYork-Regular.woff2 with woff2_compress (109 KB -> 30 KB).
+  Nothing was subset, renamed or re-outlined. One real weight (400, upright);
+  the font has no bold and no italic, so none is ever synthesised.

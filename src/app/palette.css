@@ -1,0 +1,109 @@
+/* ===========================================================================
+   THE PALETTE — the only place brand colours are written down.
+
+   Change a value here and the whole site follows: every token, surface, rule,
+   button, veil and animation in every stylesheet is derived from these five.
+
+     Bottle Green  #154230   the ink: headlines, body copy, hero veils
+     Garnet        #5D1E21   secondary depth, the darker accent step
+     Onyx          #101111   the deepest ground: shadows, on-dark chrome
+     Bronze        #A6824A   the accent: CTAs, arrows, active states
+     Linen         #E6E2DA   hairlines, rules, surfaces, tinted bands
+
+   The `*-rgb` companions are the same colours as bare channel triplets, for
+   the places that need an alpha (veils, shadows, scrims): `rgb(var(--bottle-rgb) / 55%)`.
+   They mirror the hex above — if you change one, change the other.
+   =========================================================================== */
+
+:root {
+  /* ── The five ─────────────────────────────────────────────────────────── */
+  --bottle: #154230;
+  --garnet: #5d1e21;
+  --onyx: #101111;
+  /* Named --bronze, not --gold: globals.css already aliases --gold to the
+     accent, so a --gold here would make --brass and --gold point at each
+     other and resolve to nothing. */
+  --bronze: #a6824a;
+  --linen: #e6e2da;
+
+  /* ── The same five as channel triplets (for rgb(var(--x-rgb) / a%)) ───── */
+  --bottle-rgb: 21 66 48;
+  --garnet-rgb: 93 30 33;
+  --onyx-rgb: 16 17 17;
+  --bronze-rgb: 166 130 74;
+  --linen-rgb: 230 226 218;
+
+  /* ── THE EIGHT ROLES — what Admin > Settings > Site style controls ─────
+     Every alias below, and through them every stylesheet in the site, reads
+     from these eight. They default to the five palette colours above, so an
+     untouched store looks exactly as it did; the admin form writes the same
+     eight names as inline custom properties on <html>, which outrank this
+     block and therefore re-colour every page, locale, button, link, form,
+     menu and footer at once. Tailwind's own --color-* theme tokens
+     (globals.css) are pointed at these, so the utility classes follow too.
+
+     The prefix is --site-, not --color-: Tailwind v4 owns --color-* here.
+
+     Deliberately NOT here: --danger, --success and --warning (globals.css),
+     and the external brands' own colours. A store must not be able to make
+     its error state look like its success state, and a payment mark has to
+     stay the colour the payment network requires. */
+  --site-bg: var(--ground);
+  --site-surface: var(--linen);
+  --site-text: var(--bottle);
+  --site-text-muted: color-mix(in srgb, var(--site-text) 66%, var(--site-bg));
+  --site-primary: var(--bottle);
+  --site-on-primary: var(--linen);
+  --site-accent: var(--bronze);
+  --site-border: color-mix(in srgb, var(--site-surface) 78%, var(--site-bg));
+
+  /* ── The five, under the names the stylesheets already use ─────────────
+     The palette above is the source of truth. This alias layer is what every
+     component talks to, so renaming a colour in the palette never means
+     touching a component. */
+  --midnight: var(--site-text); /* the ink */
+  --sapphire: var(--garnet); /* the secondary depth */
+  --champagne: var(--site-surface); /* the hairline */
+  /* --ivory is the site's page ground and reads WHITE, not linen: white
+     pages are the house style, and the linen lives on the surfaces that sit
+     on the page so they stay distinguishable from it. */
+  --ivory: var(--site-bg);
+  --brass: var(--site-accent); /* the accent */
+
+  --midnight-rgb: var(--bottle-rgb);
+  --sapphire-rgb: var(--garnet-rgb);
+  --champagne-rgb: var(--linen-rgb);
+  --ivory-rgb: var(--linen-rgb);
+  --brass-rgb: var(--bronze-rgb);
+  /* ── Derived neutrals, so no stylesheet invents a shade ──────────────── */
+  /* The page ground is WHITE, not the palette's linen: the linen is kept for
+     surfaces that sit ON the page (panels, cards, tinted bands) so they still
+     read as distinct from the page itself. Change --ground to re-tint the
+     whole site. */
+  --ground: #ffffff;
+  /* The primary surface and the text that sits on it, as their own aliases,
+     so a button never has to guess which of the two "ink" means. */
+  --primary: var(--site-primary);
+  --on-primary: var(--site-on-primary);
+  /* The deepest step of the ink, for shadows. Onyx is already dark enough
+     to read as "the shadow colour", so shadows are just it at an alpha
+     rather than a second, hand-picked near-black. */
+  --shadow-rgb: var(--onyx-rgb);
+  /* A whisper of the ink: the quietest text that still clears 4.5:1. */
+  --ink-muted: var(--site-text-muted);
+  /* The hairline colour, from linen rather than a hand-picked grey. */
+  --hairline: var(--site-border);
+  /* The accent, lightened — a hover or a highlight, never for text. */
+  --brass-light: color-mix(in srgb, var(--bronze) 62%, var(--ground));
+  /* The accent, deepened — the CTA's hover. */
+  --brass-deep: color-mix(in srgb, var(--bronze) 74%, var(--garnet));
+  /* Garnet, deepened: the darkest accent step, for pressed states. */
+  --sapphire-deep: color-mix(in srgb, var(--garnet) 78%, var(--onyx));
+  /* On dark: linen is the text colour, bronze the secondary. */
+  --on-dark: var(--site-on-primary);
+  --on-dark-soft: color-mix(in srgb, var(--linen) 78%, transparent);
+  /* Text that sits ON the bronze accent. Onyx, not ivory: white on bronze is
+     only 3.5:1 and fails AA for the small uppercase CTA label, while onyx on
+     bronze is 5.3:1. */
+  --on-accent: var(--onyx);
+}

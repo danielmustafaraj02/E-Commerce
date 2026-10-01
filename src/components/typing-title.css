@@ -1,0 +1,153 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   The typing hero title — pure CSS typewriter.
+
+   The component sets the animation longhands inline (the step count is the
+   line's own character count); this file provides the layout, the keyframes
+   and the cursor.
+
+   Headline: the element's box grows from width 0 to 100% in one discrete
+   step per character (typing-w), text clipped by overflow: hidden, with the
+   cursor as the element's own gold border-inline-end (typing-caret-blink —
+   it blinks while the line is written and ends transparent, handing the eye
+   down to the next line).
+
+   Wrapped (the lede): the text wraps, so a width reveal would overflow.
+   Instead a stepped clip-path wipe (typing-clip) gives the same discrete
+   rhythm; the cursor is a small inline bar that comes on at the line's
+   --start-delay and blinks forever after, resting at the end of the lede.
+   ───────────────────────────────────────────────────────────────────────── */
+
+.typing-title {
+  display: block;
+  /* Nothing is revealed until the box has grown past it. */
+  overflow: hidden;
+  /* One line, exactly like a typewriter. */
+  white-space: nowrap;
+  width: 0;
+  /* The cursor: a gold bar on the inline end of the box, riding the growing
+     edge while the line is written. Its blink is set inline by the component
+     (typing-caret-blink, 1 iteration, forwards — which ends transparent). */
+  border-inline-end: 0.09em solid transparent;
+}
+
+/* ── Keyframes ──────────────────────────────────────────────────────────── */
+
+@keyframes typing-w {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes typing-caret-blink {
+  0%,
+  100% {
+    border-color: transparent;
+  }
+  50% {
+    border-color: var(--gold, var(--brass));
+  }
+}
+
+/* The wrapped variant: stepped clip-path wipe instead of a width reveal. */
+.typing-title--wrap {
+  width: auto;
+  overflow: visible;
+  white-space: normal;
+  border-inline-end: none;
+}
+
+/* Each subtitle line owns its own animation. The text is a separate child so
+   a long subtitle can wrap naturally, while the individual line still writes
+   in discrete typewriter steps instead of appearing all at once. */
+.typing-title--wrap .typing-title__text {
+  display: inline;
+  clip-path: inset(0 100% 0 0);
+  animation-name: var(--typing-animation, typing-clip);
+  animation-duration: var(--typing-duration, 3500ms);
+  animation-timing-function: var(--typing-steps, steps(30, end));
+  animation-delay: var(--typing-delay, 0ms);
+  animation-fill-mode: forwards;
+}
+
+.typing-title--wrap[data-rtl="true"] .typing-title__text {
+  clip-path: inset(0 0 0 100%);
+}
+
+
+@keyframes typing-clip {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    /* Slightly past the edge, so the last glyph is never shaved. */
+    clip-path: inset(0 -0.15em 0 0);
+  }
+}
+
+/* Same wipe, mirrored for right-to-left lines: reveal from the right. */
+@keyframes typing-clip-rtl {
+  from {
+    clip-path: inset(0 0 0 100%);
+  }
+  to {
+    clip-path: inset(0 0 0 -0.15em);
+  }
+}
+
+/* ── The wrapped line's cursor ──────────────────────────────────────────── */
+
+/* The gate holds the bar invisible until the line starts typing (its delay
+   is the line's --start-delay), then the bar inside blinks forever — two
+   spans so the gate's opacity and the bar's blink never fight. */
+.typing-title__caret-gate {
+  display: inline-block;
+  opacity: 0;
+  animation: typing-caret-gate 1ms linear var(--start-delay, 0ms) forwards;
+}
+
+@keyframes typing-caret-gate {
+  to {
+    opacity: 1;
+  }
+}
+
+.typing-title__caret {
+  display: inline-block;
+  width: 0.09em;
+  height: 0.92em;
+  margin-inline-start: 0.06em;
+  vertical-align: -0.08em;
+  background: var(--gold, var(--brass));
+  animation: typing-caret-rest var(--caret-cycle, 500ms) step-end infinite;
+}
+
+@keyframes typing-caret-rest {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ── Reduced motion: the text is simply there, no cursor theatre ────────── */
+@media (prefers-reduced-motion: reduce) {
+  .typing-title,
+  .typing-title--wrap,
+  .typing-title__caret-gate,
+  .typing-title__caret {
+    /* The component sets the animations inline, so only !important wins. */
+    animation: none !important;
+  }
+  .typing-title {
+    width: auto !important;
+    border-inline-end-color: transparent !important;
+  }
+  .typing-title__caret-gate {
+    opacity: 0 !important;
+  }
+}

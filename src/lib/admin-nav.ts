@@ -58,6 +58,7 @@ export function buildAdminSections(opts: {
       label: "Settings",
       items: [
         { href: "/admin/settings", label: "Store settings" },
+        { href: "/admin/settings/site-style", label: "Site style" },
         { href: "/admin/settings/payments", label: "Payments" },
         { href: "/admin/settings/integrations", label: "Integrations" },
         { href: "/admin/team", label: "Team & roles" },

@@ -40,19 +40,19 @@
   overflow: hidden;
   isolation: isolate;
   /* White, the photos' own background (see .shelf-item-photo in home.css). */
-  background: #fff;
+  background: var(--ivory);
 }
 .lp-piece-photo img {
   object-fit: cover;
   mix-blend-mode: multiply;
   filter: brightness(1.05) contrast(1.03);
   -webkit-mask-image:
-    linear-gradient(to right, transparent, #000 5%, #000 95%, transparent),
-    linear-gradient(to bottom, transparent, #000 3%, #000 97%, transparent);
+    linear-gradient(to right, transparent, var(--midnight) 5%, var(--midnight) 95%, transparent),
+    linear-gradient(to bottom, transparent, var(--midnight) 3%, var(--midnight) 97%, transparent);
   -webkit-mask-composite: source-in;
   mask-image:
-    linear-gradient(to right, transparent, #000 5%, #000 95%, transparent),
-    linear-gradient(to bottom, transparent, #000 3%, #000 97%, transparent);
+    linear-gradient(to right, transparent, var(--midnight) 5%, var(--midnight) 95%, transparent),
+    linear-gradient(to bottom, transparent, var(--midnight) 3%, var(--midnight) 97%, transparent);
   mask-composite: intersect;
   transition: scale 1.1s cubic-bezier(0.22, 0.61, 0.36, 1);
 }

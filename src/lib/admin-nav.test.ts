@@ -33,6 +33,7 @@ describe("buildAdminSections", () => {
   it("lists every admin-only page under Settings for admins", () => {
     expect(section("settings").items.map((i) => i.href)).toEqual([
       "/admin/settings",
+      "/admin/settings/site-style",
       "/admin/settings/payments",
       "/admin/settings/integrations",
       "/admin/team",

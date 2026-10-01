@@ -2,47 +2,78 @@
    ground, hairline rules, no cards: easy to scan, calm. Uses the shelf tokens
    (home.css) with fallbacks. */
 .faq {
-  --faq-ink: var(--ink, #0e3a46);
-  --faq-soft: var(--ink-soft, color-mix(in srgb, #0e3a46 76%, transparent));
-  --faq-rule: var(--rule, color-mix(in srgb, #0e3a46 18%, transparent));
+  --faq-ink: var(--ink, var(--midnight));
+  --faq-soft: var(--ink-soft, color-mix(in srgb, var(--midnight) 76%, transparent));
+  --faq-rule: var(--rule, color-mix(in srgb, var(--midnight) 18%, transparent));
   display: grid;
   gap: 1.5rem;
   color: var(--faq-ink);
 }
-.faq-intro p {
-  margin: 0.9rem 0 0;
-  max-width: 24rem;
-  color: color-mix(in srgb, var(--faq-ink) 88%, white);
-  font-size: 1.0625rem;
-  line-height: 1.65;
-}
-/* A continuous wave line, tiled from the same brand motif (brand-signature.tsx's
-   BrandWave path, one repeat unit = 18 of its 72-wide viewBox) so it can loop
-   seamlessly. Flows right-to-left, the same direction the eye reads Italian in
-   reverse: new crest enters from the right as the last one exits left. */
-.faq-wave-flow {
-  display: block;
-  width: 100%;
-  height: 16px;
-  margin-top: 1rem;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 20'%3E%3Cpath d='M1 10C7 6 13 6 19 10S31 14 37 10 49 6 55 10 65 14 71 10' fill='none' stroke='%231f7a85' stroke-width='1.35' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: repeat-x;
-  background-size: 72px 16px;
-}
-@media (prefers-reduced-motion: no-preference) {
-  .faq-wave-flow {
-    animation: faq-wave-flow 6s linear infinite;
-  }
-}
-@keyframes faq-wave-flow {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: -72px 0;
-  }
+.faq-eyebrow {
+  margin: 0 0 1.5rem;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--faq-soft);
 }
 
+/* Lighter than the section headings elsewhere: this one sits beside a column
+   of questions rather than over a grid, so it leads without shouting. */
+.faq-title {
+  margin: 0;
+  font-size: clamp(2rem, 3.2vw, 3rem);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+}
+
+.faq-lede {
+  margin: 1.5rem 0 0;
+  max-width: 22rem;
+  color: var(--faq-soft);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+/* The contact route, as a real control. Sans, like every other button here. */
+.faq-contact-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 2.25rem;
+  min-height: 3rem;
+  padding-inline: 1.75rem;
+  border: 1px solid var(--faq-rule);
+  color: var(--faq-ink);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition:
+    border-color 0.25s ease,
+    color 0.25s ease;
+}
+.faq-contact-cta:hover,
+.faq-contact-cta:focus-visible {
+  border-color: var(--faq-ink);
+}
+.faq-contact-cta span {
+  transition: transform 0.3s var(--ease-out-soft, ease);
+}
+@media (hover: hover) and (pointer: fine) {
+  .faq-contact-cta:hover span {
+    transform: translateX(0.25em);
+  }
+}
+/* The teal wave that used to sit under the lede is gone: #1f7a85 is not one
+   of the palette's five colours, and an animated decorative stroke is exactly
+   the kind of ornament this section reads better without. */
 .faq-accordion {
   border-top: 1px solid var(--faq-rule);
 }
@@ -57,45 +88,50 @@
   }
   .faq-list-reveal[data-reveal="false"] .faq-item:not([hidden]) {
     opacity: 0;
-    transform: translateX(1.25rem);
+    transform: translateX(0.75rem);
   }
+  /* A light arrival, not a performance. At 1.2s a row with delays stepping
+     0.24s apart the ten questions took well over three seconds to finish
+     landing — and because the selector only matches rows that are NOT hidden,
+     the four behind "Altre domande" began that same slow fade the moment they
+     were revealed, so the reader clicked and watched an empty column. */
   .faq-list-reveal[data-reveal="true"] .faq-item:not([hidden]) {
-    animation: faq-row-in 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    animation: faq-row-in 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) both;
   }
   .faq-list-reveal[data-reveal="true"] .faq-item:nth-child(1) {
-    animation-delay: 0s;
+    animation-delay: 0.0s;
   }
   .faq-list-reveal[data-reveal="true"] .faq-item:nth-child(2) {
-    animation-delay: 0.24s;
+    animation-delay: 0.07s;
   }
   .faq-list-reveal[data-reveal="true"] .faq-item:nth-child(3) {
-    animation-delay: 0.48s;
+    animation-delay: 0.14s;
   }
   .faq-list-reveal[data-reveal="true"] .faq-item:nth-child(4) {
-    animation-delay: 0.72s;
+    animation-delay: 0.21s;
   }
   .faq-list-reveal[data-reveal="true"] .faq-item:nth-child(5) {
-    animation-delay: 0.96s;
+    animation-delay: 0.28s;
   }
   .faq-list-reveal[data-reveal="true"] .faq-item:nth-child(6) {
-    animation-delay: 1.2s;
+    animation-delay: 0.35s;
   }
   .faq-list-reveal[data-reveal="true"] .faq-item:nth-child(7) {
-    animation-delay: 1.44s;
+    animation-delay: 0.42s;
   }
   .faq-list-reveal[data-reveal="true"] .faq-item:nth-child(8) {
-    animation-delay: 1.68s;
+    animation-delay: 0.49s;
   }
   .faq-list-reveal[data-reveal="true"] .faq-item:nth-child(9) {
-    animation-delay: 1.92s;
+    animation-delay: 0.56s;
   }
   .faq-list-reveal[data-reveal="true"] .faq-item:nth-child(10) {
-    animation-delay: 2.16s;
+    animation-delay: 0.63s;
   }
   @keyframes faq-row-in {
     from {
       opacity: 0;
-      transform: translateX(1.25rem);
+      transform: translateX(0.75rem);
     }
     to {
       opacity: 1;
@@ -107,12 +143,17 @@
   margin: 0;
   font: inherit;
 }
+/* The whole row IS the button — number, question and icon are its children,
+   so every pixel of the line toggles the answer. A grid, not a flex row with
+   space-between: the number and the icon are fixed tracks and the question
+   takes the rest, so a long question wraps inside its own column instead of
+   squeezing the numeral or pushing the icon off the end. */
 .faq-question button {
-  display: flex;
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr) 1rem;
   width: 100%;
   min-height: 3.75rem;
   align-items: center;
-  justify-content: space-between;
   gap: 1.25rem;
   padding: 1.15rem 0;
   background: none;
@@ -128,10 +169,31 @@
   text-align: start;
   cursor: pointer;
 }
+/* Focus in the brand's own ink, drawn just inside the row's rules rather than
+   on the palette-foreign teal this used to use. */
 .faq-question button:focus-visible,
-.faq-more:focus-visible {
-  outline: 2px solid var(--teal, #1f7a85);
-  outline-offset: 2px;
+.faq-more:focus-visible,
+.faq-contact-cta:focus-visible {
+  outline: 2px solid var(--faq-ink);
+  outline-offset: -2px;
+}
+
+/* The editorial index, in tabular figures so 01 and 06 are the same width and
+   the questions all start on one line. */
+.faq-number {
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  font-variant-numeric: tabular-nums;
+  color: var(--faq-soft);
+  transition: color 0.25s ease;
+}
+.faq-question button[aria-expanded="true"] .faq-number {
+  color: var(--faq-ink);
+}
+
+.faq-question-text {
+  min-width: 0;
 }
 /* A plus that becomes a minus. */
 .faq-icon {
@@ -139,7 +201,7 @@
   flex-shrink: 0;
   width: 1rem;
   height: 1rem;
-  color: var(--gold, #b89a62);
+  color: var(--gold, var(--brass));
 }
 .faq-icon::before,
 .faq-icon::after {
@@ -148,27 +210,34 @@
   inset: 50% 0 auto;
   height: 1px;
   background: currentColor;
-  transition: transform 0.2s ease;
+  transition: transform 0.32s var(--ease-out-soft, cubic-bezier(0.22, 0.61, 0.36, 1));
 }
+/* The upright stroke of the plus. Opening rotates it flat onto the other one,
+   so the + becomes a − in a single unhurried turn. */
 .faq-icon::after {
   transform: rotate(90deg);
 }
 .faq-question button[aria-expanded="true"] .faq-icon::after {
   transform: rotate(0deg);
 }
+/* 0fr -> 1fr on a grid row: the answer opens to its OWN height, whatever that
+   is, so there is no max-height to guess at and no long answer gets clipped. */
 .faq-answer {
   display: grid;
   grid-template-rows: 0fr;
   visibility: hidden;
+  /* Indented to the question's own column, so answers and questions share a
+     left edge instead of the answer starting under the numeral. */
+  padding-inline-start: calc(2.25rem + 1.25rem);
   transition:
-    grid-template-rows 0.2s ease,
-    visibility 0s linear 0.2s;
+    grid-template-rows 0.34s var(--ease-out-soft, cubic-bezier(0.22, 0.61, 0.36, 1)),
+    visibility 0s linear 0.34s;
 }
 .faq-answer[data-open="true"] {
   grid-template-rows: 1fr;
   visibility: visible;
   transition:
-    grid-template-rows 0.2s ease,
+    grid-template-rows 0.34s var(--ease-out-soft, cubic-bezier(0.22, 0.61, 0.36, 1)),
     visibility 0s;
 }
 .faq-answer > div {
@@ -208,20 +277,35 @@
   align-items: center;
   gap: 0.35rem;
 }
+/* The way to the rest of the questions: a quiet line at the foot of the
+   column, not a second boxed control competing with "Contattaci". It still
+   toggles the hidden rows in place — there is no separate FAQ page to send
+   anyone to, so nothing here pretends to be a link to one. */
 .faq-more {
-  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.5rem 0 0 auto;
   min-height: 2.75rem;
-  padding: 0 1.1rem;
+  padding: 0;
   background: none;
-  border: 1px solid var(--faq-rule);
-  border-radius: 6px;
+  border: 0;
   color: var(--faq-ink);
-  font: inherit;
-  font-size: 0.75rem;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.9rem;
   font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  letter-spacing: 0;
+  text-transform: none;
   cursor: pointer;
+  background-image: linear-gradient(var(--gold, var(--brass)), var(--gold, var(--brass)));
+  background-repeat: no-repeat;
+  background-position: left calc(100% - 0.65rem);
+  background-size: 0 1px;
+  transition: background-size 0.4s var(--ease-out-soft, ease);
+}
+.faq-more:hover,
+.faq-more:focus-visible {
+  background-size: 100% 1px;
 }
 .faq-contact {
   margin: 1.5rem 0 0;
@@ -244,7 +328,59 @@
 @media (min-width: 52rem) {
   .faq--editorial {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
-    gap: 4rem;
+    gap: 4.5rem;
+  }
+  /* One hairline between the two columns — a border on the accordion side, so
+     it needs no extra element and cannot be mistaken for a row rule. */
+  .faq--editorial > :last-child {
+    border-inline-start: 1px solid var(--faq-rule);
+    padding-inline-start: 4.5rem;
+    margin-inline-start: -0.5rem;
+  }
+  .faq-intro {
+    position: sticky;
+    top: 7rem;
+    align-self: start;
+  }
+}
+
+/* ── Phones ───────────────────────────────────────────────────────────────
+   One column, no divider, and room for a question to use. */
+@media (max-width: 51.99rem) {
+  .faq {
+    gap: 2.25rem;
+    padding-inline: 4px;
+  }
+  .faq-title {
+    font-size: clamp(1.75rem, 8vw, 2.25rem);
+  }
+  .faq-lede {
+    max-width: none;
+  }
+  .faq-contact-cta {
+    margin-top: 1.75rem;
+    /* A comfortable target, and never wider than the screen. */
+    min-height: 3rem;
+    width: 100%;
+    justify-content: center;
+  }
+  /* The numeral and the icon tighten so the question keeps the width: at
+     390px the desktop tracks took a fifth of the line before the first word. */
+  .faq-question button {
+    grid-template-columns: 1.75rem minmax(0, 1fr) 0.875rem;
+    gap: 0.85rem;
+    min-height: 3.5rem;
+    padding: 1rem 0;
+    font-size: 1rem;
+  }
+  .faq-number {
+    font-size: 0.7rem;
+  }
+  .faq-answer {
+    padding-inline-start: calc(1.75rem + 0.85rem);
+  }
+  .faq-more {
+    margin-inline: 0 auto;
   }
 }
 

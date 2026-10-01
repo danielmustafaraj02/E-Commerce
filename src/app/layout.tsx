@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Geist_Mono } from "next/font/google";
 import { homeFontClasses } from "./home-fonts";
+import { siteStyleVars } from "@/lib/site-style";
+import { googleFontsHref } from "@/lib/font-pairings";
 import { getStoreSettings } from "@/lib/store-settings";
 import { ogLocale, ogAlternateLocales } from "@/lib/hreflang";
 import { absoluteUrl, isPlaceholderCompany, toSafeJsonLd } from "@/lib/json-ld";
@@ -81,7 +83,9 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#ffffff",
+  // Bottle Green, from the palette (app/palette.css) — the chrome tint, not
+  // the page ground, so the mobile browser bar matches the brand.
+  themeColor: "#154230",
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
@@ -106,19 +110,38 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     settings.defaultLocale
   );
 
+  const googleFontsUrl = googleFontsHref(settings.fontHeading, settings.fontBody);
+
   return (
     <html
       lang={locale}
       dir={localeDir(locale)}
       className={`${homeFontClasses} ${geistMono.variable} h-full antialiased`}
+      /* Site style (Admin > Settings > Site style). Inline custom properties
+         on <html> outrank :root in app/palette.css, so the eight colour roles
+         and the two type roles re-colour and re-face every page, locale,
+         button, link, form, menu and footer from one place. Roles the admin
+         has not set are simply absent, and fall through to the theme. */
       style={
         {
           "--store-primary": settings.primaryColor,
           "--store-secondary": settings.secondaryColor,
+          ...siteStyleVars(settings),
         } as React.CSSProperties
       }
     >
       <head>
+        {/* The admin's chosen font pairing, when one is set. Nothing is
+            requested while the store is on its bundled faces, and only
+            families from the catalogue in lib/font-pairings.ts can ever
+            appear here — a hand-typed family is treated as a local one. */}
+        {googleFontsUrl && (
+          <>
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+            <link rel="stylesheet" href={googleFontsUrl} />
+          </>
+        )}
         {/* Organization structured data for Google's Knowledge Panel / rich
             results. type=application/ld+json is inert data, not an executable
             script, so it isn't subject to the nonce-gated CSP script-src. */}
@@ -190,7 +213,13 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body
         className="bg-background text-foreground flex min-h-full flex-col vc-init"
-        style={{ fontFamily: `${settings.fontFamily}, var(--font-sans)` }}
+        /* No font-family override here. It used to hard-set
+           `${settings.fontFamily}` — "Inter" by default, a family this site
+           never loads — in front of the real stack, so <body> resolved to a
+           font that was not there and the role variables below it were only
+           ever reached by fallback. Typography is now the --font-body /
+           --font-heading roles, which the admin edits in Settings > Site
+           style and which body already inherits through globals.css. */
       >
         {/* First tab stop: lets keyboard and screen-reader users jump past the
             header and navigation. Targets the page wrapper in template.tsx. */}

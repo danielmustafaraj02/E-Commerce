@@ -16,7 +16,8 @@
   gap: clamp(2.5rem, 6vw, 7rem);
   align-items: center;
   padding-block: clamp(4rem, 8vw, 7rem);
-  border-top: 1px solid var(--rule);
+  /* The old top hairline (which read as a stray line under the section
+     heading) is gone — the rows separate by whitespace alone. */
   opacity: 1;
   transform: none;
 }
@@ -32,17 +33,139 @@
   position: relative;
   min-width: 0;
   overflow: hidden;
+  /* The scroll-linked parallax writes --look-shift here (see
+     components/look-editorial-scroll.tsx). Inert by default: without JS the
+     custom property is never set and the fallback below keeps the row still. */
+  translate: 0 var(--look-shift, 0px);
+  transition: translate 0.4s var(--ease-out-soft);
 }
+/* Rows only drift once the component has taken over, so a page without JS
+   (or before hydration) never shows a half-applied offset. */
+[data-look-scroll="on"] .look-editorial-zoom {
+  translate: 0 var(--look-shift, 0px);
+}
+
+/* Editorial entrance, one scroll-driven sequence, in this order: the lead
+   necklace settles first; then the title writes in, then the description;
+   the remaining pieces of the set join after the copy; the price is last.
+   The observer applies data-editorial-state to the copy and image wrapper. */
+@media (prefers-reduced-motion: no-preference) {
+  .look-editorial-copy[data-editorial-state="pending"] .look-editorial-index,
+  .look-editorial-copy[data-editorial-state="pending"] .look-editorial-title,
+  .look-editorial-copy[data-editorial-state="pending"] .look-editorial-description,
+  .look-editorial-copy[data-editorial-state="pending"] .look-editorial-price,
+  .look-editorial-copy[data-editorial-state="pending"] .look-editorial-cta {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  .look-editorial-copy[data-editorial-state="visible"] .look-editorial-index,
+  .look-editorial-copy[data-editorial-state="visible"] .look-editorial-title,
+  .look-editorial-copy[data-editorial-state="visible"] .look-editorial-description,
+  .look-editorial-copy[data-editorial-state="visible"] .look-editorial-price,
+  .look-editorial-copy[data-editorial-state="visible"] .look-editorial-cta {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .look-editorial-copy[data-editorial-state] .look-editorial-index,
+  .look-editorial-copy[data-editorial-state] .look-editorial-title,
+  .look-editorial-copy[data-editorial-state] .look-editorial-description,
+  .look-editorial-copy[data-editorial-state] .look-editorial-price,
+  .look-editorial-copy[data-editorial-state] .look-editorial-cta {
+    transition:
+      opacity 700ms var(--ease-out-soft),
+      transform 800ms var(--ease-out-soft);
+  }
+
+  .look-editorial-copy[data-editorial-state="visible"] .look-editorial-title {
+    transition-delay: 200ms;
+  }
+
+  .look-editorial-copy[data-editorial-state="visible"] .look-editorial-description {
+    transition-delay: 550ms;
+  }
+
+  /* The rest of the set joins after the copy is in; the price follows them. */
+  .look-editorial-copy[data-editorial-state="visible"] .look-editorial-price {
+    transition-delay: 1550ms;
+  }
+
+  /* The way in is the last beat, just behind the price. The button is a link,
+     so it stays clickable throughout — the reveal only paints it. */
+  .look-editorial-copy[data-editorial-state="visible"] .look-editorial-cta {
+    transition-delay: 1700ms;
+  }
+
+  /* The companion pieces fade in as the third beat, one after another. The
+     piece wrapper carries only opacity here — its transform is the placement
+     math and must not be animated away. */
+  .look-editorial-zoom[data-editorial-state="pending"] .look-editorial-piece {
+    opacity: 0;
+  }
+  .look-editorial-zoom[data-editorial-state="visible"] .look-editorial-piece {
+    opacity: 1;
+    transition: opacity 700ms var(--ease-out-soft);
+    transition-delay: 1050ms;
+  }
+  .look-editorial-zoom[data-editorial-state="visible"] .look-editorial-piece:nth-child(2) {
+    transition-delay: 1200ms;
+  }
+  .look-editorial-zoom[data-editorial-state] .look-editorial-piece {
+    will-change: opacity;
+  }
+}
+/* The photograph sits directly on the page: the panel keeps the ground colour
+   (not white), so the jewellery melts into the section instead of floating in
+   a box that reads as a pasted card. */
 .look-editorial-visual {
   position: relative;
   display: block;
   width: 100%;
   aspect-ratio: 1 / 1.12;
   min-width: 0;
-  background: #fff;
+  background: none;
 }
 .look-editorial-visual img {
   object-fit: contain;
+}
+
+/* The image is the first beat: it settles in before the text choreography
+   starts. */
+@media (prefers-reduced-motion: no-preference) {
+  .look-editorial-image[data-editorial-state="pending"] img,
+  .look-editorial-zoom[data-editorial-state="pending"] img {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+  .look-editorial-image[data-editorial-state="visible"] img,
+  .look-editorial-zoom[data-editorial-state="visible"] img {
+    opacity: 1;
+    transform: none;
+  }
+  .look-editorial-zoom img {
+    transition:
+      opacity 900ms var(--ease-out-soft),
+      transform 1100ms var(--ease-out-soft);
+  }
+  /* Scroll-linked: each row's copy and photograph drift at their own rates as
+     the row crosses the viewport, so scrolling up reverses the motion exactly
+     as scrolling down advances it. The offsets come from --look-copy-shift /
+     --look-shift, written per row by components/look-editorial-scroll.tsx. */
+  [data-look-scroll="on"] .look-editorial-copy {
+    translate: 0 var(--look-copy-shift, 0px);
+  }
+  .look-editorial-copy {
+    transition: translate 0.4s var(--ease-out-soft);
+  }
+  /* The companion pieces of a composed look ride slightly further than the
+     photograph, which is what gives the arrangement its depth. */
+  [data-look-scroll="on"] .look-editorial-piece {
+    translate: 0 var(--look-piece-shift, 0px);
+  }
+  .look-editorial-piece {
+    transition: translate 0.4s var(--ease-out-soft);
+  }
 }
 .look-editorial-piece {
   position: absolute;
@@ -50,129 +173,175 @@
   transform: translate(calc((var(--piece-x) - 0.5) * 100%), calc((var(--piece-y) - 0.5) * 100%))
     scale(var(--piece-size));
 }
-/* -- Zoom under the pointer ----------------------------------------------------
-   A look is a composition, so the answer to "what is that?" is per accessory,
-   not per look: PointerZoom grows each layer towards the cursor and leaves the
-   others where they are. The placement transform lives on the layer wrapper,
-   the zoom on its image, so the two compose instead of overwriting each other.
-   Pointer-only — a scale that fires on tap would just make the page lurch. */
-@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  .look-editorial-visual img,
-  .look-editorial-piece img {
-    transform: scale(var(--pz-scale, 1));
-    transform-origin: var(--pz-x, 50%) var(--pz-y, 50%);
-    transition: transform 900ms var(--ease-out-soft);
-  }
-  /* The zoomed piece comes to the front, but only once the pointer has
-     settled on it, so a glance across a look never makes the layers jump. */
-  .look-editorial-piece {
-    z-index: 0;
-    transition: z-index 0s 500ms;
-  }
-  .look-editorial-piece:hover {
-    z-index: 2;
-    transition-delay: 0s;
-  }
-}
+/* -- Zoom under the pointer ---------------------------------------------------
+   Removed: the pointer-zoom magnification answered "which piece is that"
+   nicely, but a photograph that swells under the cursor read as restless on
+   a quiet page. The photograph is still now; the way in is the name. */
 .look-editorial-copy {
   max-width: 31rem;
   padding-block: 1rem;
 }
-.look-editorial-kicker {
+
+/* The editorial index: a tracked numeral and a rule running off to the side.
+   Tabular figures so 01 and 02 are the same width and the rule never shifts. */
+.look-editorial-index {
   display: flex;
   align-items: center;
-  gap: 1.2rem;
+  gap: 1.25rem;
   margin: 0 0 1.5rem;
+  font-family: var(--font-ui), system-ui, sans-serif;
   font-size: 0.7rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  font-variant-numeric: tabular-nums;
   color: var(--ink-soft);
 }
-.look-editorial-kicker span {
-  color: var(--aventurine-deep);
-  border-inline-end: 1px solid var(--rule);
-  padding-inline-end: 1.2rem;
+/* The rule is the element's own trailing line, so it needs no extra markup
+   and cannot be read out as content. */
+.look-editorial-index::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--rule);
 }
 .shelf .look-editorial-title {
   font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(2.5rem, 4vw, 4.5rem);
+  /* Down from a 4.5rem ceiling: the copy column is the narrower half of the
+     row and now carries a rule and its indent too, so the old maximum broke
+     a two-word look name across two lines at every desktop width. */
+  font-size: clamp(2.25rem, 3.1vw, 3.5rem);
   font-weight: 400;
   line-height: 1.06;
   letter-spacing: -0.025em;
   margin: 0;
   overflow-wrap: anywhere;
 }
+
+/* The title is the link. The arrow rides beside it on hover — the same
+   slide-out affordance the collections use — and the colour leans deeper
+   while the pointer is on it. */
+.look-editorial-title a {
+  display: inline;
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.35s var(--ease-out-soft);
+}
+.look-editorial-title a:hover,
+.look-editorial-title a:focus-visible {
+  color: var(--accent-deep);
+}
+
+/* ── The call to action ───────────────────────────────────────────────────
+   The site's own .btn-primary; this only sizes and places it. The name above
+   is still a link, but a name is not an affordance on its own — this is the
+   clear, premium way in the row was missing. */
+.look-editorial-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: 2.25rem;
+  min-height: 3.25rem;
+  padding-inline: 2rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  /* Transform only, so the hover cannot reflow the copy column. */
+  transition: transform 0.25s var(--ease-out-soft);
+}
+
+.look-editorial-arrow {
+  display: inline-block;
+  font-size: 1.1em;
+  line-height: 1;
+  transform: translateX(0);
+  transition: transform 0.4s var(--ease-out-soft);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .look-editorial-cta:hover {
+    transform: translateY(-1px);
+  }
+  .look-editorial-cta:hover .look-editorial-arrow,
+  .look-editorial-cta:focus-visible .look-editorial-arrow {
+    transform: translateX(0.3em);
+  }
+}
+
+.look-editorial-cta:active {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .look-editorial-cta,
+  .look-editorial-cta:hover,
+  .look-editorial-arrow {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* Clean sans beneath the serif heading, which is the site's own pairing: the
+   description was set in the display serif at 1.25rem, so a five-line
+   paragraph competed with the name above it instead of supporting it. */
 .look-editorial-description {
   margin: 1.5rem 0 2rem;
-  font-family: var(--font-display), Georgia, serif;
-  font-size: 1.25rem;
-  line-height: 1.7;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  max-width: 26rem;
   color: var(--ink-soft);
+  text-wrap: pretty;
 }
-.look-editorial-label {
-  margin: 0 0 0.8rem;
-  font-size: 0.65rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
-.look-editorial-included {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: 0.55rem;
-  font-size: 0.88rem;
-}
-.look-editorial-included a {
-  text-underline-offset: 4px;
-}
-.look-editorial-included a:hover {
-  text-decoration: underline;
-}
-.look-editorial-purchase {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--rule);
-}
+
+/* The price row: current price first, in display serif; the struck old
+   price behind it; and the saving as a small gold-hairline hallmark, so the
+   discount reads at a glance without shouting. */
 .look-editorial-price {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 1rem;
+  column-gap: 1rem;
+  row-gap: 0.5rem;
   margin: 0;
   font-family: var(--font-display), Georgia, serif;
   font-size: 1.7rem;
 }
 .look-editorial-price s {
   font-size: 1rem;
+  font-weight: 400;
   color: var(--ink-soft);
 }
 .look-editorial-saving {
-  margin: 0.3rem 0 0;
-  font-size: 0.78rem;
-  color: var(--aventurine-deep);
-}
-.look-editorial-cta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-  margin-top: 1.75rem;
-  padding-block: 0.75rem;
-  border-bottom: 1px solid var(--ink);
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-}
-.look-editorial-cta span {
-  font-size: 1.25rem;
+  color: var(--aventurine-deep);
+  padding: 0.14rem 0.55rem;
+  border: 1px solid color-mix(in srgb, var(--gold, var(--brass)) 55%, transparent);
+  border-radius: 2px;
 }
 .look-editorial a:focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 5px;
 }
 @media (min-width: 52rem) {
+  /* A single hairline between the composition and the copy, on whichever side
+     the copy sits — the rows alternate. It replaces nothing and adds no box:
+     one rule, the same token the rest of the page divides with. */
+  .look-editorial-copy {
+    border-inline-start: 1px solid var(--rule);
+    padding-inline-start: clamp(2.5rem, 4vw, 4.5rem);
+  }
+  .look-editorial:nth-child(even) .look-editorial-copy {
+    border-inline-start: 0;
+    border-inline-end: 1px solid var(--rule);
+    padding-inline-start: 0;
+    padding-inline-end: clamp(2.5rem, 4vw, 4.5rem);
+  }
+
   .look-editorial:nth-child(even) .look-editorial-zoom {
     grid-column: 2;
     grid-row: 1;
@@ -198,6 +367,28 @@
   }
   .look-editorial-copy {
     max-width: none;
+  }
+  /* The row is one column here, so a side rule would be a line across nothing. */
+  .look-editorial-copy,
+  .look-editorial:nth-child(even) .look-editorial-copy {
+    border-inline: 0;
+    padding-inline: 0;
+  }
+  .look-editorial-index {
+    margin-bottom: 1.1rem;
+  }
+  .look-editorial-description {
+    margin: 1.1rem 0 1.5rem;
+    max-width: none;
+  }
+  /* Full width and a comfortable target, in line with the site's other
+     mobile buttons. */
+  .look-editorial-cta {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    min-height: 3.25rem;
+    margin-top: 1.75rem;
   }
   .looks-editorial-intro {
     text-align: start;

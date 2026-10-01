@@ -1,18 +1,25 @@
 /* Full-screen mobile menu (components/mobile-nav-menu.tsx). Same ivory, ink
    and hairline language as the footer (components/footer.css, which also
-   styles the shared social icons, legal row and brand signature). */
+   styles the shared social icons, legal row and brand signature).
+
+   The menu is sized to fit ONE screen wherever it can: compact rows and a
+   short logo mean no scrolling on a phone, which reads far calmer than a
+   full-screen sheet that runs over the fold. */
 .mobile-menu {
-  --footer-ground: #fff;
-  --footer-ink: #123d43;
+  --footer-ground: var(--ivory);
+  --footer-ink: var(--midnight);
   --footer-soft: color-mix(in srgb, var(--footer-ink) 72%, transparent);
   --footer-rule: color-mix(in srgb, var(--footer-ink) 14%, transparent);
-  --footer-teal: #1f7a85;
+  --footer-teal: var(--sapphire);
   position: fixed;
   inset: 0;
   z-index: var(--layer-modal, 60);
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  /* The whole menu, edge to edge, and never a second scroll inside the
+     scroll: the page behind is already locked, and a menu that scrolls on
+     top of it reads broken. Compact rows keep everything on one screen. */
+  overflow-y: hidden;
   background: var(--footer-ground);
   color: var(--footer-ink);
   padding: env(safe-area-inset-top, 0px) var(--page-gutter) env(safe-area-inset-bottom, 0px);
@@ -25,22 +32,17 @@
   position: relative;
   display: flex;
   justify-content: center;
-  padding-block: 1rem 1.25rem;
+  align-items: center;
+  padding-block: 0.75rem 0.9rem;
 }
-.mobile-menu-top .brand-signature {
-  margin: 0;
-  font-size: 0.8rem;
+/* The store's logo image — the menu opens onto the brand mark itself. */
+.mobile-menu-logo {
+  display: inline-flex;
+  align-items: center;
 }
-.mobile-menu-top .brand-signature svg {
-  display: none;
-}
-.mobile-menu-top .brand-signature::after {
-  content: "";
-  display: block;
-  width: 2rem;
-  height: 1px;
-  margin: 0.7rem auto 0;
-  background: var(--gold, #b89a62);
+.mobile-menu-logo img {
+  height: 2.75rem;
+  width: auto;
 }
 .mobile-menu-close {
   position: absolute;
@@ -63,8 +65,8 @@
 }
 .mobile-menu-close:hover,
 .mobile-menu-close:focus-visible {
-  background: color-mix(in srgb, var(--gold, #b89a62) 12%, #fff);
-  color: var(--accent, #123d43);
+  background: color-mix(in srgb, var(--gold, var(--brass)) 12%, var(--ivory));
+  color: var(--accent, var(--midnight));
   transform: rotate(90deg);
 }
 
@@ -106,11 +108,13 @@
   cursor: pointer;
 }
 
-/* The collections: names in the display serif, hairlines between, a thin gold
-   arrow that steps forward on press. */
+/* The collections: names in the display serif, hairlines between, a thumbnail
+   of the collection's newest piece beside the name, and a thin gold arrow
+   that steps forward on press. Compact by design — the menu should fit one
+   screen rather than scroll. */
 .mobile-menu-links {
   list-style: none;
-  margin: 2rem 0 0;
+  margin: 1.1rem 0 0;
   padding: 0;
 }
 .mobile-menu-links li + li {
@@ -122,19 +126,36 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  min-height: 4.25rem;
+  min-height: 3.2rem;
+  padding-block: 0.3rem;
   transition:
     color 0.2s ease,
     padding-inline 0.25s ease;
 }
+/* The thumbnail: a small square of the newest piece, hairline-framed. The
+   photos are shot on white at 2:3, so `cover` keeps the piece from being
+   stretched into the square. */
+.mobile-menu-thumb {
+  position: relative;
+  display: block;
+  flex: 0 0 auto;
+  width: 2.75rem;
+  height: 2.75rem;
+  overflow: hidden;
+  border-radius: 0.25rem;
+  background: color-mix(in srgb, var(--footer-ink) 5%, var(--ivory));
+}
+.mobile-menu-thumb img {
+  object-fit: cover;
+}
 .mobile-menu-label {
-  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
-  font-size: 2rem;
+  font-family: var(--font-chrome, var(--font-display)), Georgia, serif;
+  font-size: 1.35rem;
   font-weight: 500;
   line-height: 1.1;
 }
 .mobile-menu-arrow {
-  color: var(--gold, #b89a62);
+  color: var(--gold, var(--brass));
   font-size: 1.1rem;
   transition:
     transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
@@ -155,25 +176,41 @@
   color: var(--footer-ink);
 }
 
-/* About and the guide: a quieter row of small capitals. */
+/* About and the guide: a quieter row of small capitals, tight so the menu
+   still closes within one screen. */
 .mobile-menu-secondary {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem 1.75rem;
+  gap: 0.25rem 1.5rem;
   list-style: none;
-  margin: 1.75rem 0 0;
-  padding: 1.5rem 0 0;
+  margin: 1rem 0 0;
+  padding: 1.1rem 0 0;
   border-top: 1px solid var(--footer-rule);
 }
 .mobile-menu-secondary a {
   display: inline-flex;
   align-items: center;
+  gap: 0.5rem;
   min-height: 2.75rem;
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--footer-soft);
+  transition: color 0.2s ease;
+}
+.mobile-menu-secondary a svg {
+  flex: 0 0 auto;
+  color: var(--gold, var(--brass));
+  transition: color 0.2s ease;
+}
+.mobile-menu-secondary a:hover,
+.mobile-menu-secondary a:focus-visible {
+  color: var(--footer-ink);
+}
+.mobile-menu-secondary a:hover svg,
+.mobile-menu-secondary a:focus-visible svg {
+  color: var(--footer-teal);
 }
 
 /* Account/wishlist/sign-in: same quiet small-caps row as .mobile-menu-secondary,
@@ -190,17 +227,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.9rem;
-  margin: 0 calc(-1 * var(--page-gutter));
-  padding: 2.5rem var(--page-gutter) 2rem;
+  gap: 0.55rem;
+  margin-top: auto; /* pinned to the bottom edge, so the top block never fights it */
+  margin-inline: calc(-1 * var(--page-gutter));
+  padding: 1rem var(--page-gutter) 0.9rem;
   text-align: center;
-}
-.mobile-menu-tagline {
-  margin: 0 0 0.5rem;
-  font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
-  font-style: italic;
-  font-size: 1.15rem;
-  color: var(--footer-soft);
+  border-top: 1px solid var(--footer-rule);
 }
 .mobile-menu-closing nav {
   position: relative;

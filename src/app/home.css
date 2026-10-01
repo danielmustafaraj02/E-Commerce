@@ -9,11 +9,11 @@
    isn't, its white edge will show as a faint tint.
 
    Palette (from the glass itself):
-     ink         #0e3a46  deep lagoon (text — a dark teal, not tinted black)
-     accent      #7b4b94  bead violet (links, buttons, focus)
-     teal/rose   #1f7a85 / #c65b8a  the other two glass colours (rules, accents)
-     tints       lilac #f5f2f7, aqua #edf2f1, sand #f6f2ea, blush #f6eff1 (kept barely tinted)
-     violet-night #3f2154  the newsletter band, with the gold of the flecks
+     ink         var(--midnight)  deep lagoon (text — a dark teal, not tinted black)
+     accent      var(--sapphire)  bead violet (links, buttons, focus)
+     teal/rose   var(--sapphire) / var(--brass)  the other two glass colours (rules, accents)
+     tints       lilac var(--ivory), aqua var(--ivory), sand var(--ivory), blush var(--ivory) (kept barely tinted)
+     violet-night var(--sapphire)  the newsletter band, with the gold of the flecks
    Every text/background pair used here is at least 4.5:1.
 
    Type: Cardo (Venetian old-style roman, Aldine lineage) for headings, product
@@ -28,28 +28,28 @@
 .shelf {
   /* White pages with barely-warm bands instead of coloured tints: the glass
      in the photographs is the only saturated thing on the page. */
-  --ground: #fff;
-  --tint-lilac: #faf8f5;
-  --tint-aqua: #fff;
-  --tint-sand: #faf8f5;
-  --tint-blush: #faf8f5;
-  --teal: #1f7a85;
-  --rose: #c65b8a;
-  --ink: #123d43;
-  --ink-soft: #527176;
-  --rule: #d9cdbb;
-  --accent: #123d43;
-  --accent-deep: #0b3035;
-  --violet-night: #123d43;
-  --aventurine: #b89a62;
-  --gold: #b89a62;
-  --gold-soft: #d9c7a0;
-  --aventurine-deep: #7d6437;
-  --wash-violet: #faf8f5;
-  --wash-aqua: #faf8f5;
-  --wash-rose: #faf8f5;
-  --on-dark-error: #ffc9c9;
-  --on-dark-ok: #b8f0c8;
+  --ground: var(--ivory);
+  --tint-lilac: var(--ivory);
+  --tint-aqua: var(--ivory);
+  --tint-sand: var(--ivory);
+  --tint-blush: var(--ivory);
+  --teal: var(--sapphire);
+  --rose: var(--brass);
+  --ink: var(--midnight);
+  --ink-soft: var(--ink-muted);
+  --rule: var(--hairline);
+  --accent: var(--midnight);
+  --accent-deep: var(--midnight);
+  --violet-night: var(--midnight);
+  --aventurine: var(--brass);
+  --gold: var(--brass);
+  --gold-soft: var(--champagne);
+  --aventurine-deep: var(--brass-deep);
+  --wash-violet: var(--ivory);
+  --wash-aqua: var(--ivory);
+  --wash-rose: var(--ivory);
+  --on-dark-error: var(--brass-light);
+  --on-dark-ok: var(--on-dark-soft);
 
   /* Motion scale. Two easings only, so the whole page shares one voice: a
      fast curve for anything the pointer is driving (it must feel attached to
@@ -71,7 +71,7 @@
 
 .shelf :where(h1, h2, h3) {
   text-wrap: balance;
-  font-family: var(--font-display), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-family: var(--font-chrome, var(--font-display)), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
   font-weight: 500;
   line-height: 1.1;
   letter-spacing: 0;
@@ -156,11 +156,46 @@
   margin-top: 0;
 }
 
+/* The heading and its introduction as one block, so the link beside them
+   aligns to the introduction's baseline rather than floating against the
+   heading's, and wraps below the pair on a narrow screen. */
+.shelf-heading-row--intro {
+  align-items: flex-end;
+}
+.shelf-heading-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+/* Clean sans beneath the serif heading — the site's own pairing for
+   supporting text. */
+.shelf-heading-intro {
+  margin: 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  max-width: 34rem;
+  text-wrap: pretty;
+}
+
 .shelf-link {
   color: var(--accent);
   font-weight: 500;
   font-size: 0.95rem;
   text-underline-offset: 0.25em;
+}
+/* On a phone the link is a primary way out of the section and sits on its own
+   line, so it gets a real target: the text is only ~26px tall, well under the
+   44px minimum, and padding is what makes the difference without moving the
+   baseline the underline is drawn on. */
+@media (max-width: 47.99rem) {
+  .shelf-heading-row .shelf-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
 }
 .shelf-link:hover {
   color: var(--accent-deep);
@@ -199,23 +234,6 @@
   margin-inline: auto;
   padding: clamp(1.5rem, 4vw, 2.75rem) clamp(1.1rem, 4vw, 3rem);
   text-align: center;
-}
-.shelf-giftfinder-content::before,
-.shelf-giftfinder-content::after {
-  position: absolute;
-  z-index: -1;
-  pointer-events: none;
-  content: "";
-}
-.shelf-giftfinder-content::before {
-  inset: 0;
-  border-block: 1px solid color-mix(in srgb, var(--gold) 52%, transparent);
-  transform: scaleX(0.06);
-}
-.shelf-giftfinder-content::after {
-  inset: 0.45rem 0.55rem;
-  border-inline: 1px solid color-mix(in srgb, var(--gold) 42%, transparent);
-  transform: scaleY(0.06);
 }
 .shelf-giftfinder-time,
 .shelf-giftfinder-details {
@@ -299,12 +317,6 @@
   transform: scaleX(-1) translateX(0.35em);
 }
 @media (prefers-reduced-motion: no-preference) {
-  .shelf-giftfinder-reveal[data-reveal="true"] .shelf-giftfinder-content::before {
-    animation: giftfinder-rule-open 1.35s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s both;
-  }
-  .shelf-giftfinder-reveal[data-reveal="true"] .shelf-giftfinder-content::after {
-    animation: giftfinder-frame-open 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) 0.72s both;
-  }
   .shelf-giftfinder-reveal[data-reveal="true"] .shelf-giftfinder-time,
   .shelf-giftfinder-reveal[data-reveal="true"] .shelf-giftfinder-link,
   .shelf-giftfinder-reveal[data-reveal="true"] .shelf-giftfinder-details {
@@ -313,14 +325,6 @@
   .shelf-giftfinder-reveal[data-reveal="true"] .shelf-giftfinder-time { animation-delay: 0.18s; }
   .shelf-giftfinder-reveal[data-reveal="true"] .shelf-giftfinder-link { animation-delay: 0.42s; }
   .shelf-giftfinder-reveal[data-reveal="true"] .shelf-giftfinder-details { animation-delay: 0.68s; }
-}
-@keyframes giftfinder-rule-open {
-  from { transform: scaleX(0.06); opacity: 0.35; }
-  to { transform: scaleX(1); opacity: 1; }
-}
-@keyframes giftfinder-frame-open {
-  from { transform: scaleY(0.06); opacity: 0.25; }
-  to { transform: scaleY(1); opacity: 1; }
 }
 @keyframes giftfinder-copy-in {
   from { opacity: 0; transform: translateY(14px); }
@@ -331,10 +335,6 @@
   .shelf-giftfinder-link .giftfinder-arrow,
   .shelf-giftfinder-link::after {
     transition: none;
-  }
-  .shelf-giftfinder-content::before,
-  .shelf-giftfinder-content::after {
-    transform: none;
   }
   .shelf-giftfinder-link:hover .giftfinder-arrow {
     transform: none;
@@ -350,44 +350,48 @@
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  background: #f7f2ea;
+  background: var(--ivory);
 }
-/* The home hero alone sits on the ivory marble backdrop; other pages that
+/* The home hero sits on the full-screen atelier film; other pages that
    reuse .shelf-hero keep the flat `--ground` colour from above. */
 .shelf-home .shelf-hero {
-  background-color: #f7f2ea;
+  background-color: var(--ivory);
 }
-/* The marble lives on its own layer rather than on the hero itself so it can
-   be scaled on the compositor. Animating `background-size` or
-   `background-position` instead would repaint a full-viewport image on every
-   frame, which drops frames on phones — the exact devices this is sized for.
-   z-index: -1 paints it above the hero's own background yet below the
-   in-flow copy, because the hero sets `isolation: isolate`. */
-.shelf-home .shelf-hero::before {
-  content: "";
+/* A legibility wash on its own layer: strong at the copy's edge, letting go
+   of the film by the middle of the hero, so the film reads as one full-screen
+   picture. z-index 0 puts it ABOVE the film (which is z-index -1) but below
+   the in-flow copy column, which paints after it in the hero's stacking
+   context. */
+/* A legibility wash on a real element (see page.tsx): strong at the copy's
+   edge, letting go of the film by the middle of the hero. z-index 0 puts it
+   ABOVE the film (z -1) but below the in-flow copy column. */
+.shelf-home .shelf-hero-veil {
   position: absolute;
   inset: 0;
-  z-index: -1;
-  background-image: url("/hero/ivory-marble-background.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  will-change: transform;
+  z-index: 0;
+  pointer-events: none;
+  /* The copy is WHITE, so the wash is what it stands on: the film is darkened
+     under the words and let go of by the middle of the hero. ONYX, not the
+     palette's --midnight — that token is the brand's bottle green, and
+     pouring it over the photograph tinted the whole hero green. Onyx darkens
+     the film without recolouring it. */
+  background: linear-gradient(
+    90deg,
+    rgb(var(--shadow-rgb) / 82%),
+    rgb(var(--shadow-rgb) / 55%) 42%,
+    rgb(var(--shadow-rgb) / 18%) 68%,
+    transparent 82%
+  );
 }
-@media (prefers-reduced-motion: no-preference) {
-  /* One slow drift, 26s, ending where it started so it never visibly jumps.
-     Barely there — the point is that the hero is not a frozen photograph. */
-  .shelf-home .shelf-hero::before {
-    animation: marble-drift 26s ease-in-out infinite alternate;
-  }
-}
-@keyframes marble-drift {
-  from {
-    transform: scale(1) translate3d(0, 0, 0);
-  }
-  to {
-    transform: scale(1.07) translate3d(-0.8%, -0.6%, 0);
-  }
+[dir="rtl"] .shelf-home .shelf-hero-veil {
+  /* The copy column is on the right in RTL, so the wash mirrors too. */
+  background: linear-gradient(
+    270deg,
+    rgb(var(--shadow-rgb) / 82%),
+    rgb(var(--shadow-rgb) / 55%) 42%,
+    rgb(var(--shadow-rgb) / 18%) 68%,
+    transparent 82%
+  );
 }
 /* Full-bleed hero photography. */
 .shelf-hero-backdrop {
@@ -395,6 +399,123 @@
   object-position: 100% 0%;
   z-index: -1;
 }
+
+/* The hero film. The source is a 720x900 portrait crop (chosen so the
+   necklace at her throat is inside the frame). Stretched across a 1440px
+   hero with object-fit: cover it would crop to a thin band and zoom ~2.5x,
+   landing on her forehead — so instead the film keeps its portrait shape
+   and is given the right-hand column of the hero. The copy sits beside it in
+   the left column, so no scrim is needed to keep the text legible. */
+.shelf-hero-video {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  width: clamp(20rem, 36vw, 32rem);
+  height: 100%;
+  object-fit: cover;
+  /* The cropped source is 4:5 and this column is taller than wide, so the
+     crop trims top and bottom; centring keeps her face and the necklace both
+     in frame, which is the whole point of the column. */
+  object-position: 50% 45%;
+  /* A hairline where the film meets the ivory, so the column reads as a
+     deliberate panel rather than a picture bleeding off the page. */
+  border-inline-start: 1px solid color-mix(in srgb, var(--champagne) 45%, transparent);
+}
+
+/* Desktop keeps the source's portrait composition in a dedicated panel on
+   the right. The previous full-bleed treatment enlarged the low-resolution
+   film across the whole hero and made the image look soft. Mobile retains the
+   full-bleed crop below, where the existing framing is already right. */
+@media (min-width: 52rem) {
+  .shelf-home .shelf-hero-video {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: auto;
+    width: 58%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 45%;
+    border: 0;
+    z-index: 0;
+  }
+
+  /* The reference uses a clean ivory editorial panel on the left, not a
+     gradient over the film. The copy and the portrait meet at one crisp
+     vertical edge. */
+  .shelf-home .shelf-hero-veil {
+    right: 58%;
+    background: none;
+  }
+
+  .shelf-home .shelf-hero-grid {
+    position: relative;
+    z-index: 1;
+    width: 42%;
+    max-width: none;
+    margin-inline: 0;
+    padding-block: 4.5rem 3.5rem;
+  }
+
+  .shelf-home .shelf-hero-copy {
+    max-width: 31rem;
+    align-items: flex-start;
+    gap: 1.4rem;
+    padding-inline-end: 2rem;
+  }
+
+  .shelf-home .shelf-hero .shelf-title,
+  .shelf-home .shelf-hero .shelf-title .hero-typing-type,
+  .shelf-home .shelf-hero .shelf-lede,
+  .shelf-home .shelf-hero .shelf-lede .hero-typing-type {
+    color: var(--midnight);
+  }
+
+  .shelf-home .shelf-hero .shelf-title {
+    font-size: clamp(3.5rem, 5.7vw, 6rem);
+    line-height: 0.98;
+  }
+
+  .shelf-home .shelf-hero .shelf-lede {
+    font-size: clamp(1.05rem, 1.55vw, 1.4rem);
+    line-height: 1.45;
+  }
+
+  .shelf-home .shelf-hero .shelf-title,
+  .shelf-home .shelf-hero .shelf-lede {
+    text-shadow: none;
+  }
+
+  .shelf-home .shelf-hero .shelf-hero-copy .shelf-button {
+    background: var(--midnight);
+    border-color: var(--midnight);
+    color: var(--ivory);
+  }
+
+  .shelf-home .shelf-hero .shelf-hero-copy .shelf-button:hover {
+    background: var(--brass-deep);
+    border-color: var(--brass-deep);
+    color: var(--ivory);
+  }
+}
+
+@media (max-width: 51.99rem) {
+  .shelf-home .shelf-hero-video {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-position: var(--hero-video-x, 50%) 30%;
+    border: 0;
+  }
+}
+
+/* No scrim. The copy lives in its own grid column and never overlaps the
+   film, so there is nothing to veil — and any wash here would paint over the
+   picture itself (the column sits under this pseudo-element), which is what
+   turned the right-hand side of the hero into blank ivory. The hairline on
+   .shelf-hero-video is the only separation. */
 .hero-look-rollercoaster {
   display: none;
 }
@@ -424,6 +545,38 @@
   gap: 1rem;
   align-items: center;
   padding-block: 2.5rem 0.5rem;
+}
+/* The copy and the pinned trust row both live inside the hero, so the hero has
+   to be tall enough to hold them without the two colliding on a short screen.
+   Its height is the viewport — a full-screen film — PLUS a reserve for the
+   trust row that is pinned to the bottom edge. `svh` is the small viewport
+   height, the one that already excludes the browser's own chrome, so the
+   reserve is real room on a laptop and not a scrollbar's worth of overflow. */
+/* The copy and the pinned trust row both live inside the hero, so on every
+   screen the hero reaches exactly the bottom of the first screen: the full
+   viewport height minus the sticky header above it (--hero-header-offset is
+   measured from the header itself by components/header-height.tsx). The trust
+   row is NOT added on top of that: it is pinned INSIDE the hero against this
+   very edge, so adding its height would push the marks below the fold. */
+.shelf-home .shelf-hero {
+  min-height: calc(100svh - var(--hero-header-offset, 5.75rem));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.shelf-home .shelf-hero > .shelf-wrap {
+  /* The copy takes the space the trust row does not, so the two can never
+     overlap however tight the screen gets. */
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+}
+/* On a short screen (a 720p laptop, a landscape tablet) the same rule holds;
+   only the veil above the marks is trimmed so the copy keeps its room. */
+@media (min-width: 52rem) and (max-height: 52rem) {
+  .shelf-home .shelf-hero {
+    min-height: calc(100svh - var(--hero-header-offset, 5.75rem));
+  }
 }
 .shelf-hero-copy {
   display: flex;
@@ -471,15 +624,30 @@
     transform: translateY(0) scale(var(--hero-bead-scale, 1.24)) rotate(0);
   }
 }
-/* Subtle entrance for product shelf items and other content */
+/* Subtle entrance for product shelf items and other content: the piece
+   slides in from the left as it rises, so a grid that staggers its cards
+   left-to-right reads as one wave travelling across the row. */
 @keyframes shelf-item-enter {
   from {
     opacity: 0;
-    transform: translateY(24px) scale(0.98);
+    transform: translateX(-30px) translateY(24px) scale(0.98);
   }
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+}
+/* The exit mirrors the entrance: same leftward drift and rise, ending
+   invisible — scrolling back out of a grid, the cards leave in the same
+   left-to-right order they arrived in. */
+@keyframes shelf-item-exit {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-30px) translateY(24px) scale(0.98);
   }
 }
 @keyframes section-fade-in {
@@ -510,30 +678,25 @@
     transform: translateX(0);
   }
 }
-/* The h1 is excluded here — it plays its own word-by-word .word-in entrance
-   (see AnimatedHeading) instead of the whole-line rise every other child
-   gets, so the store name doesn't get two competing entrance motions. */
-.shelf-hero-copy > *:not(h1) {
+/* The h1 and the lede are excluded here — both play their own typing reveal
+   (see components/typing-title.tsx) instead of the whole-line rise every other
+   child gets, so typed copy doesn't get two competing entrance motions (the
+   lede used to rise in at a fixed 2100ms while its typing had already begun,
+   which made the words appear mid-sentence and left its caret riding an
+   invisible line). */
+.shelf-hero-copy > *:not(h1):not(.typing-title) {
   animation: hero-rise 0.78s cubic-bezier(0.2, 0.75, 0.3, 1) both;
 }
-.shelf-hero-copy .shelf-title .word-in {
-  animation-duration: 0.42s;
-  animation-timing-function: cubic-bezier(0.2, 0.75, 0.3, 1);
-}
-.shelf-hero-copy .shelf-title .word-in:nth-of-type(2) {
-  animation-delay: 90ms;
-}
-.shelf-hero-copy .shelf-title .word-in:nth-of-type(3) {
-  animation-delay: 180ms;
-}
-.shelf-hero-copy .shelf-lede {
-  animation-delay: 320ms;
-}
+/* The subtitle, CTA and note wait for the name to be written before they
+   rise in — the hero introduces itself before it asks anything. */
 .shelf-hero-copy .shelf-button {
-  animation-delay: 560ms;
+  /* The CTA is the last line of the typed sequence: it waits for the lede's
+     own final keystroke (--cta-delay, computed per locale in page.tsx) and
+     then rises as one piece. */
+  animation-delay: var(--cta-delay, 4600ms);
 }
 .shelf-hero-copy .shelf-note {
-  animation-delay: 680ms;
+  animation-delay: 2460ms;
 }
 
 .shelf-button {
@@ -543,7 +706,7 @@
   gap: 0.9rem;
   /* Petrol, a hairline of Venetian gold, spaced capitals. */
   background: var(--accent);
-  color: #fbf9f5;
+  color: var(--ivory);
   border: 1px solid var(--gold);
   font-family: var(--font-ui), system-ui, sans-serif;
   font-size: 0.8rem;
@@ -556,6 +719,41 @@
   text-decoration: none;
   transition: background-color 0.2s ease;
 }
+/* The homepage hero's CTA: a solid bronze block that has to be looked at.
+   The outlined/link treatment it wore earlier disappeared against the film's
+   dark ground — this is a filled, generously spaced button in the accent, with
+   a bronze hairline that catches the light on hover. */
+.shelf-home .shelf-hero .shelf-hero-copy .shelf-button {
+  background: var(--brass);
+  border: 1px solid var(--brass);
+  border-radius: 4px;
+  padding: 1.05rem 2.1rem;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  min-height: 3.25rem;
+  /* Onyx, not ivory: white on the bronze accent is only 3.5:1 and fails AA
+     for this small uppercase label; onyx on bronze is 5.3:1. */
+  color: var(--on-accent);
+  transition:
+    background-color 0.45s var(--ease-out-soft),
+    border-color 0.45s var(--ease-out-soft),
+    transform 0.45s var(--ease-out-soft),
+    box-shadow 0.45s var(--ease-out-soft);
+}
+.shelf-home .shelf-hero .shelf-hero-copy .shelf-button:hover {
+  background: var(--brass-deep);
+  border-color: var(--brass-deep);
+  color: var(--on-accent);
+  /* A soft lift: the block rises a hair off the film, nothing bouncy. */
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgb(var(--midnight-rgb) / 28%);
+}
+.shelf-home .shelf-hero .shelf-hero-copy .shelf-button:hover .shelf-button-arrow {
+  transform: translateX(4px);
+}
 .shelf-button:hover {
   background: var(--accent-deep);
 }
@@ -565,66 +763,67 @@
     padding-inline: 1.4rem;
   }
 }
-/* The hero's button takes the colour of the necklace on show (--hero-accent,
-   set by components/hero-necklace-carousel.tsx), fading between them. */
-.shelf-hero-copy .shelf-button {
-  background: var(--hero-accent, var(--accent));
-  transition: background-color 0.9s ease;
-}
-/* The name takes the same colour; the italic line under it stays ink. */
+/* The hero's button is the still-life editorial link (see the block inside
+   .shelf-button above); the necklace colour it used to wear is retired
+   together with the filled pill. The typed overlay colours stay: the title
+   reads white, the lede slightly softer ivory, over the darkened film. */
+/* The name takes the same colour; the lede under it stays bright ivory so the
+   two read as different voices at the same contrast. */
 .shelf-hero-copy .shelf-title {
-  color: var(--hero-accent, var(--ink));
+  color: var(--ivory);
   transition: color 0.9s ease;
 }
-.shelf-hero-copy .shelf-button:hover {
-  background: color-mix(in srgb, var(--hero-accent, var(--accent)) 78%, black);
+.shelf-home .shelf-hero .shelf-lede {
+  color: var(--ivory);
 }
-.shelf-hero-copy .shelf-button {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-  animation-name: hero-rise;
-  animation-duration: 0.78s;
-  animation-timing-function: cubic-bezier(0.2, 0.75, 0.3, 1);
+/* The hero copy sits on a photograph, so it is painted in the on-dark colour
+   and NOT in the page ink — over the film the brand's bottle green measured
+   about 1.4:1 against the picture behind it, which is barely a silhouette.
+
+   These selectors used to name .hero-typing-visible, the absolutely
+   positioned overlay the typewriter had before it was rebuilt to reveal real
+   characters in place. That class no longer exists, so the rules matched
+   nothing and the title fell back to the ink. They now name the element the
+   characters actually live in, and the title is set on the heading itself so
+   it holds whatever the typing effect does. */
+.shelf-home .shelf-hero .shelf-title,
+.shelf-home .shelf-hero .shelf-title .hero-typing-type,
+.shelf-home .shelf-hero .shelf-lede,
+.shelf-home .shelf-hero .shelf-lede .hero-typing-type {
+  color: #ffffff;
 }
-/* A single soft highlight that crosses the button once on hover, like light
-   moving over a polished lid. `both` fill modes would leave it parked on
-   screen between hovers, so the resting state is the untransformed one. */
-@media (prefers-reduced-motion: no-preference) {
-  .shelf-button::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: linear-gradient(
-      100deg,
-      transparent 20%,
-      rgb(255 255 255 / 22%) 50%,
-      transparent 80%
-    );
-    transform: translateX(-110%);
-    pointer-events: none;
-  }
-  .shelf-button:hover::after,
-  .shelf-button:focus-visible::after {
-    animation: button-sheen 900ms var(--ease-in-out-soft);
-  }
+
+/* A soft dark halo under the words. It is a text-shadow, not a panel: the
+   film stays visible, but every glyph carries its own contrast with it, so
+   the copy holds up over a bright frame as well as a dark one — and the
+   photograph changes brightness as the video plays. */
+.shelf-home .shelf-hero .shelf-title,
+.shelf-home .shelf-hero .shelf-lede {
+  text-shadow:
+    0 1px 2px rgb(var(--onyx-rgb) / 55%),
+    0 2px 18px rgb(var(--onyx-rgb) / 45%);
 }
-@keyframes button-sheen {
-  from {
-    transform: translateX(-110%);
-  }
-  to {
-    transform: translateX(110%);
-  }
+/* A quiet, deliberate hover: the colour deepens and the gold hairline
+   brightens from the resting 1px to full gold. No sweep, no sheen — the
+   stillness is the luxury. */
+.shelf-button {
+  transition:
+    background-color 0.45s var(--ease-out-soft),
+    border-color 0.45s var(--ease-out-soft),
+    transform 0.45s var(--ease-out-soft);
+}
+.shelf-button:hover,
+.shelf-button:focus-visible {
+  border-color: var(--gold, var(--brass));
+}
+.shelf-button:hover .shelf-button-arrow,
+.shelf-button:focus-visible .shelf-button-arrow {
+  transform: translateX(4px);
 }
 .shelf-button-arrow {
   font-size: 1.05rem;
   letter-spacing: 0;
   transition: transform var(--motion-quick) var(--ease-in-out-soft);
-}
-.shelf-button:hover .shelf-button-arrow {
-  transform: translateX(4px);
 }
 .shelf-facts {
   display: grid;
@@ -637,30 +836,67 @@
   line-height: 1.35;
   color: var(--ink);
 }
+/* On the home hero the facts live INSIDE the hero, pinned to its bottom
+   edge: the film keeps running behind them, and a soft ivory veil rises
+   behind the row. The WRAPPER spans the full hero width (not the 64rem
+   reading column) so the veil has no visible side edges — a rectangle
+   floating over full-bleed film reads as a pasted box, while an edge-to-edge
+   fade reads as light pooling at the bottom of the picture. The .shelf-facts
+   rules above stay untouched for the other pages that use the strip. */
+/* The trust-marks strip was removed from the hero, so its ivory veil (the
+   hero's old ::after) is gone with it — no reason to whiten the film's
+   bottom third any more. */
+.shelf-hero-facts-wrap {
+  position: absolute;
+  inset-inline: 0;
+  /* Pinned to the hero's bottom edge, which the hero's own min-height has
+     already aligned with the bottom of the first screen. */
+  bottom: 0;
+  z-index: 1;
+  width: 100%;
+  max-width: none;
+  padding-top: 4rem;
+}
+.shelf-home .shelf-hero .shelf-facts {
+  max-width: 64rem;
+  margin-inline: auto;
+  /* The fade above the marks is carried by the ::after veil, so this only
+     has to hold the row clear of the hero's bottom edge. */
+  padding: 0 0 1.2rem;
+  background: none;
+}
+[dir="rtl"] .shelf-home .shelf-hero .shelf-facts {
+  background: none;
+  padding-inline: 0;
+}
 .shelf-facts li {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
   padding-inline: 0.75rem;
+  /* The marks are the last thing on the first screen; they arrive last and
+     then simply stay, so a photograph passing behind them never leaves them
+     mid-fade when the shopper looks. */
+  animation-delay: 0s;
 }
 .shelf-facts li + li {
   border-inline-start: 1px solid var(--rule);
 }
 .shelf-facts svg {
   flex: none;
-  color: var(--ink);
+  color: var(--accent-deep);
 }
 /* The three trust marks arrive in sequence, each fading up slightly behind
-   the last. The row sits above the fold on desktop, so it runs on its own
-   timer rather than waiting for a scroll observer. */
+   the last — after the hero's own copy has settled, so the eye reads them
+   last, on the last line of the screen. */
 @media (prefers-reduced-motion: no-preference) {
   .shelf-home .shelf-facts li {
     animation: fact-rise var(--motion-base) var(--ease-out-soft) both;
   }
-  .shelf-home .shelf-facts li:nth-child(1) { animation-delay: 700ms; }
-  .shelf-home .shelf-facts li:nth-child(2) { animation-delay: 820ms; }
-  .shelf-home .shelf-facts li:nth-child(3) { animation-delay: 940ms; }
+  .shelf-home .shelf-facts li:nth-child(1) { animation-delay: 2.2s; }
+  .shelf-home .shelf-facts li:nth-child(2) { animation-delay: 2.32s; }
+  .shelf-home .shelf-facts li:nth-child(3) { animation-delay: 2.44s; }
 }
 @keyframes fact-rise {
   from {
@@ -829,23 +1065,32 @@
    feather the photo's outer edge with a mask so any corner shadow fades into the
    ground. The image box must therefore match the photo's own edges, which is why
    the frames below use the photos' 2:3 ratio (or crop symmetrically) with
-   object-fit: cover. Feather is small (5% x 3%) so the pieces, which sit well
-   inside the frame, are untouched. */
+   object-fit: cover. The feather is generous (9% x 6%) — the pieces sit well
+   inside the frame, so a wider fade costs nothing and reads as gallery
+   lighting rather than as a pasted-in rectangle. */
 .shelf-item-photo img,
 .shelf-category-photo img {
   object-fit: cover;
   mix-blend-mode: multiply;
-  filter: brightness(1.05) contrast(1.03);
+  filter: brightness(1.07) contrast(1.02);
   -webkit-mask-image:
-    linear-gradient(to right, transparent, #000 5%, #000 95%, transparent),
-    linear-gradient(to bottom, transparent, #000 3%, #000 97%, transparent);
+    linear-gradient(to right, transparent, var(--midnight) 9%, var(--midnight) 91%, transparent),
+    linear-gradient(to bottom, transparent, var(--midnight) 6%, var(--midnight) 94%, transparent);
   -webkit-mask-composite: source-in;
   mask-image:
-    linear-gradient(to right, transparent, #000 5%, #000 95%, transparent),
-    linear-gradient(to bottom, transparent, #000 3%, #000 97%, transparent);
+    linear-gradient(to right, transparent, var(--midnight) 9%, var(--midnight) 91%, transparent),
+    linear-gradient(to bottom, transparent, var(--midnight) 6%, var(--midnight) 94%, transparent);
   mask-composite: intersect;
 }
+/* The product photographs are CONTAINED, never cropped. The shared rule above
+   sets `cover`, which is right for the editorial category tiles but wrong for
+   a product: the catalogue's frames run from 0.666 (portrait) through 0.89 to
+   1.0 (square), and `cover` in a 2/3 box trims a square photograph by a third
+   of its width — so the same piece read at a different size and a different
+   crop depending only on which frame it was shot in. Contained, every piece is
+   whole and every card shows the same proportions. */
 .shelf-item-photo img {
+  object-fit: contain;
   transition: transform var(--motion-slow) var(--ease-out-soft);
 }
 @media (hover: hover) and (pointer: fine) {
@@ -870,11 +1115,17 @@
     gap: 3.5rem 2rem;
   }
 }
+/* Photograph, name, price — the name's row takes the slack, so the price sits
+   on the SAME line across every card in the row however many lines the name
+   runs to. As flex-column with a flat gap, a two-line name pushed its own
+   price down and the row's prices stepped out of alignment. Grid items stretch
+   to the tallest card by default, so `1fr` on the name resolves to the same
+   offset for all of them. */
 .shelf-item {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  row-gap: 0.55rem;
   opacity: 1;
   transform: none;
 }
@@ -912,6 +1163,30 @@
   [data-reveal="true"] .shelf-item:nth-child(7) { animation-delay: 0.58s; }
   [data-reveal="true"] .shelf-item:nth-child(8) { animation-delay: 0.66s; }
 }
+/* Scroll-driven stagger (components/shelf-stagger.tsx): the cards come from
+   the left, row after row (left-to-right, top-to-bottom), once. There is no
+   exit — see the component for why a two-way reveal made products vanish
+   while they were still on screen. */
+@media (prefers-reduced-motion: no-preference) {
+  .shelf-stagger[data-shown="false"] .shelf-item {
+    opacity: 0;
+  }
+  .shelf-stagger[data-shown="true"] .shelf-item {
+    /* Unhurried, but no longer a wait: at 1.25s a card plus 1.06s of delay on
+       the last one, the eighth piece did not finish arriving until 2.3s after
+       the grid came into view — long enough that a reader scrolling at normal
+       speed met a half-empty second row. */
+    animation: shelf-item-enter 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .shelf-stagger .shelf-item:nth-child(1) { animation-delay: 0.05s; }
+  .shelf-stagger .shelf-item:nth-child(2) { animation-delay: 0.11s; }
+  .shelf-stagger .shelf-item:nth-child(3) { animation-delay: 0.17s; }
+  .shelf-stagger .shelf-item:nth-child(4) { animation-delay: 0.23s; }
+  .shelf-stagger .shelf-item:nth-child(5) { animation-delay: 0.29s; }
+  .shelf-stagger .shelf-item:nth-child(6) { animation-delay: 0.35s; }
+  .shelf-stagger .shelf-item:nth-child(7) { animation-delay: 0.41s; }
+  .shelf-stagger .shelf-item:nth-child(8) { animation-delay: 0.47s; }
+}
 .shelf-item-photo {
   position: relative;
   z-index: 1;
@@ -921,8 +1196,13 @@
   pointer-events: none;
   /* Pure white, the photos' own background, so no browser can show a seam
      around them (iOS Safari doesn't always honour the multiply blend) —
-     same fallback as .shop-product-photo/.shop-thumb on the product page. */
-  background: #fff;
+     same fallback as .shop-product-photo/.shop-thumb on the product page.
+     The white plate itself is then multiplied into the band below, so on
+     tinted sections the plate takes the band's colour instead of reading as
+     a white rectangle pasted on it; the isolated stacking context keeps the
+     img's own multiply working against the white inside the plate. */
+  background: var(--ivory);
+  mix-blend-mode: multiply;
 }
 .shelf-item-photo > button {
   pointer-events: auto;
@@ -943,7 +1223,15 @@
   background-position: center calc(100% - 0.04em);
   background-size: 0 1px;
   padding-bottom: 0.12em;
-  transition: background-size var(--interactive-duration) ease;
+  /* 1.4s was slower than most pointers dwell on a card, so the underline
+     usually never finished — the hover read as nothing happening at all.
+     Still unhurried, but now it completes within the gesture. */
+  transition: background-size 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .shelf-item-name a {
+    transition: none;
+  }
 }
 .shelf-item-name a::after {
   content: "";
@@ -954,12 +1242,33 @@
 .shelf-item-name a:focus-visible {
   background-size: 100% 1px;
 }
+/* The link is stretched over the whole card, so keyboard focus has to be
+   visible on the CARD, not on the few words of the name — drawing it on the
+   anchor alone outlined a zero-height box behind the photograph. The
+   underline was previously the only focus signal, which is not a focus
+   indicator at all for anyone who cannot see a colour change. */
+.shelf-item-name a:focus-visible {
+  outline: none;
+}
+.shelf-item:has(.shelf-item-name a:focus-visible)::after {
+  content: "";
+  position: absolute;
+  inset: -0.75rem;
+  border-radius: 2px;
+  outline: 2px solid var(--accent-deep, var(--ink));
+  pointer-events: none;
+}
+/* Clean sans for the price: a figure is information, not display copy, and
+   the serif's old-style numerals sat unevenly beside the struck "was" price. */
 .shelf-item-price {
-  font-family: var(--font-display), Georgia, serif;
-  font-size: 1.15rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 1rem;
   font-weight: 500;
   color: var(--ink);
-  font-variant-numeric: lining-nums;
+  font-variant-numeric: tabular-nums lining-nums;
 }
 .shelf-badge {
   position: absolute;
@@ -976,22 +1285,26 @@
 
 /* -- Special Selection: a handful of pieces with a genuine "was" price ------ */
 
-/* A quiet corner tag, not a shouting red sticker — the same restrained
-   ink/ground pairing as .shelf-badge, just on the opposite corner so it never
-   collides with an out-of-stock badge (the two never render together). */
+/* A quiet corner tag, not a shouting sticker: no box at all — small,
+   letter-spaced capitals on the page's own ground with a single hairline of
+   gold around them, like an embossed hallmark. On the opposite corner from
+   the out-of-stock badge, which the two never render together. */
 .shelf-discount-badge {
   position: absolute;
-  top: 0.25rem;
-  inset-inline-end: 0;
+  top: 0.4rem;
+  inset-inline-end: 0.4rem;
   z-index: 1;
-  background: var(--ground);
-  color: var(--accent-deep);
-  font-size: 0.78rem;
-  font-weight: 600;
+  background: color-mix(in srgb, var(--ground) 72%, transparent);
+  color: var(--aventurine-deep);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   line-height: 1.4;
-  padding: 0.1rem 0.5rem;
-  border: 1px solid color-mix(in srgb, var(--accent-deep) 30%, transparent);
+  padding: 0.14rem 0.55rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
   border-radius: 2px;
+  backdrop-filter: blur(2px);
 }
 .shelf-item-price-compare {
   color: var(--ink-soft);
@@ -1022,7 +1335,7 @@
    and makes each piece feel intentional in the grid. The photo itself still
    dissolves into the ivory ground through the existing multiply treatment. */
 .shelf-item-photo {
-  background: #f5f1e9;
+  background: var(--ivory);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gold) 24%, transparent);
   transition: box-shadow 0.55s ease;
 }
@@ -1056,7 +1369,7 @@
 .shelf-home .shelf-item-photo,
 .shelf-home .shelf-item:hover .shelf-item-photo,
 .shelf-home .shelf-item:has(:focus-visible) .shelf-item-photo {
-  background: #fff;
+  background: var(--ivory);
   box-shadow: none;
 }
 .shelf-home .shelf-item-photo::after {
@@ -1073,8 +1386,8 @@
 /* -- Categories: the pieces themselves, deliberately uneven ---------------- */
 
 .shelf-section--categories {
-  background: #f8f6f1;
-  border-block: 1px solid color-mix(in srgb, var(--champagne) 58%, #fff);
+  background: var(--ivory);
+  border-block: 1px solid color-mix(in srgb, var(--champagne) 58%, var(--ivory));
 }
 
 .shelf-categories {
@@ -1093,8 +1406,8 @@
   text-align: center;
   padding: 1rem 1rem 1.5rem;
   border: 1.5px solid color-mix(in srgb, var(--gold) 38%, white);
-  background: #fffefa;
-  box-shadow: 0 0.75rem 2rem rgb(37 34 27 / 4%);
+  background: var(--ivory);
+  box-shadow: 0 0.75rem 2rem rgb(var(--shadow-rgb) / 4%);
   transition:
     transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
     border-color 0.45s ease,
@@ -1132,7 +1445,7 @@
   .shelf-category:hover {
     transform: translateY(-3px);
     border-color: color-mix(in srgb, var(--gold) 72%, white);
-    box-shadow: 0 1.25rem 2.5rem rgb(37 34 27 / 8%);
+    box-shadow: 0 1.25rem 2.5rem rgb(var(--shadow-rgb) / 8%);
   }
 }
 /* Give each category image a quiet gallery mat, with the jewelry inset from
@@ -1143,7 +1456,7 @@
   aspect-ratio: 2 / 3;
   overflow: hidden;
   border: 1.5px solid color-mix(in srgb, var(--gold) 50%, white);
-  background: #fff;
+  background: var(--ivory);
 }
 .shelf-category-photo::after {
   position: absolute;
@@ -1313,7 +1626,7 @@
     /* The section's own ground, not white: the photos are shot on white and
        blended with `multiply`, so they dissolve only into a matching backdrop.
        Left white, each photo would read as a pale plate laid on ivory. */
-    background: #f8f6f1;
+    background: var(--ivory);
   }
   .shelf-category-photo::after {
     inset: 0.45rem;
@@ -1729,19 +2042,24 @@
 
 /* -- Newsletter band ------------------------------------------------------- */
 
+/* A narrow band, not a full section: the generic .shelf-section rhythm gave
+   this up to 6.5rem of padding above and below, which turned a one-line
+   invitation into a screen-tall slab. Everything here is trimmed so the band
+   reads as a strip the eye crosses on the way to the footer. */
 .shelf-newsletter {
   background: var(--violet-night);
-  color: #fff;
+  color: var(--ivory);
+  padding-block: clamp(2.5rem, 5vw, 3.75rem);
 }
 .shelf-newsletter :where(h2) {
-  color: #fff;
+  color: var(--ivory);
 }
 .shelf-newsletter-wrap {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: clamp(1.5rem, 5vw, 4rem);
-  min-height: 20rem;
+  gap: clamp(1.5rem, 5vw, 3rem);
+  min-height: 0;
 }
 .shelf-newsletter-inner {
   position: relative;
@@ -1749,17 +2067,24 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.75rem;
+  gap: 0.5rem;
   max-width: 30rem;
+}
+/* A strip, not a poster: the heading inherits the site's display scale rather
+   than the section-heading's, which is what made the band screen-tall. */
+.shelf-newsletter-inner :where(h2) {
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
 }
 .shelf-newsletter-inner > form {
   width: 100%;
 }
 .shelf-newsletter-discount {
-  justify-self: center;
+  justify-self: end;
   color: var(--gold-soft);
   font-family: var(--font-display), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-size: clamp(10rem, 23vw, 19rem);
+  /* Once a billboard filling half the band; now a mark beside the copy, sized
+     to the band's new height rather than to the viewport. */
+  font-size: clamp(3.5rem, 7.5vw, 6rem);
   font-weight: 400;
   letter-spacing: -0.09em;
   line-height: 0.8;
@@ -1768,30 +2093,31 @@
 }
 .shelf-newsletter p {
   margin: 0;
-  color: color-mix(in srgb, #fff 82%, transparent);
+  max-width: 34rem;
+  color: color-mix(in srgb, var(--ivory) 82%, transparent);
 }
 @media (max-width: 47.99rem) {
   .shelf-newsletter-wrap {
     grid-template-columns: minmax(0, 1fr);
-    gap: 2rem;
+    gap: 1.25rem;
     min-height: 0;
   }
   .shelf-newsletter-inner {
     max-width: 34rem;
   }
   .shelf-newsletter-discount {
-    justify-self: end;
-    font-size: clamp(6rem, 25vw, 10rem);
+    justify-self: start;
+    font-size: clamp(3rem, 14vw, 4.5rem);
   }
 }
 /* On the petrol band the button turns ivory, keeping its gold hairline. */
 .shelf .shelf-newsletter .btn-primary {
-  background: #fbf9f5;
+  background: var(--ivory);
   color: var(--ink);
   border-color: var(--gold);
 }
 .shelf .shelf-newsletter .btn-primary:hover {
-  background: #fff;
+  background: var(--ivory);
   color: var(--ink);
 }
 .shelf-newsletter a,
@@ -1827,31 +2153,67 @@
   text-transform: uppercase;
 }
 .shelf .btn-secondary:hover:not(:disabled) {
-  background: #fbf9f5;
+  background: var(--ivory);
   border-color: var(--ink);
   color: var(--ink);
 }
+/* The site's primary CTA on the editorial surfaces (home, shop, the collection
+   showcase). Deep brand green with a hairline of Venetian gold, crisp ivory
+   text, and tracking pulled back from 0.16em to 0.1em: at 0.16 an uppercase
+   Italian label like SCOPRI GLI ORECCHINI read as spaced-out signage rather
+   than a button. Every CTA that uses this class gets the change — nothing here
+   is scoped to one section. */
 .shelf .btn-primary {
   background: var(--accent);
-  color: #fbf9f5;
-  border-color: var(--gold);
+  color: var(--ivory);
+  border: 1px solid color-mix(in srgb, var(--gold) 70%, transparent);
   border-radius: 6px;
+  /* Balanced padding: a touch more side than top, so the label sits in an
+     optically square field rather than a letterbox. */
+  padding: 0.85rem 1.6rem;
   font-size: 0.78rem;
   font-weight: 500;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  transition:
+    background-color var(--interactive-duration) ease,
+    border-color var(--interactive-duration) ease,
+    box-shadow var(--interactive-duration) ease;
 }
-.shelf .btn-primary:hover {
-  background: var(--accent-deep);
-  color: #fff;
-  border-color: transparent;
-  box-shadow: none;
+/* Hover is a gentle DEEPENING of the same green — the previous rule jumped to
+   --accent-deep, which resolves to the garnet step, so hovering a green button
+   turned it red. The border warms rather than vanishing, so the button does not
+   appear to lose its edge. */
+.shelf .btn-primary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent) 88%, black);
+  color: var(--ivory);
+  border-color: color-mix(in srgb, var(--gold) 92%, transparent);
+  box-shadow: 0 0.5rem 1.1rem -0.7rem rgb(var(--midnight-rgb) / 45%);
   transform: none;
+}
+/* Pressed: deeper again and flat, so the surface reads as pushed in. */
+.shelf .btn-primary:active:not(:disabled) {
+  background: color-mix(in srgb, var(--accent) 76%, black);
+  border-color: color-mix(in srgb, var(--gold) 70%, transparent);
+  box-shadow: none;
+}
+/* Keyboard focus in gold: the global rule outlines in --accent, which is the
+   same green as this button's own fill and therefore invisible on it. */
+.shelf .btn-primary:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+/* Touch: the 48px floor, measured on the control itself rather than inherited
+   from the coarse-pointer rule, so a phone with a fine pointer gets it too. */
+@media (max-width: 51.99rem) {
+  .shelf .btn-primary {
+    min-height: 48px;
+  }
 }
 .shelf .field {
   border-radius: 4px;
   border-color: color-mix(in srgb, var(--ink) 35%, transparent);
-  background: #fff;
+  background: var(--ivory);
 }
 .shelf .field:hover {
   border-color: var(--accent);
@@ -1879,11 +2241,37 @@
 .shelf-home .shelf-section {
   padding-block: var(--home-section-space);
 }
+/* The newsletter is a strip, not a section: the band above sets a narrow
+   padding, but this more specific rule would otherwise restore the full
+   section rhythm and the band would grow back to a slab. */
+.shelf-home .shelf-section.shelf-newsletter {
+  padding-block: clamp(2.5rem, 5vw, 3.75rem);
+}
+/* The look rows arrive almost directly under the section heading — the big
+   gap the generic section rhythm left above them made the heading read as if
+   it belonged to the previous block. */
+.shelf-section--looks .shelf-heading-row {
+  margin-bottom: 1.25rem;
+}
+.shelf-section--looks .looks-editorial-list .look-editorial:first-child {
+  padding-block-start: clamp(2rem, 4vw, 3.5rem);
+}
 .shelf-home .shelf-heading-row {
   margin-bottom: 3rem;
 }
 .shelf-home .shelf-hero-grid {
-  padding-block: 3.5rem 1.5rem;
+  /* Desktop overrides this with the compact reference layout; mobile keeps
+     the existing lower placement over the full-bleed film. */
+  padding-block: clamp(9rem, 16vh, 14rem) clamp(2rem, 5vh, 4rem);
+}
+.shelf-home .shelf-hero-copy {
+  position: relative;
+  z-index: 1;
+}
+@media (min-width: 52rem) {
+  .shelf-home .shelf-hero-grid {
+    padding-block: 4.5rem 3.5rem;
+  }
 }
 .shelf-home .shelf-hero-copy {
   gap: 1.75rem;
@@ -2053,9 +2441,74 @@
 
 /* Copy on the left, the necklace to its right and slightly behind it, on the
    marble; the trust row sits underneath as three short columns. */
+@media (prefers-reduced-motion: reduce) {
+  /* Someone who asked for less motion should not get a looping film. The
+     poster stays, so the hero keeps its picture — just a still one. */
+  .shelf-home .shelf-hero-video {
+    display: none;
+  }
+  /* The film's poster stands in as the still backdrop, full-bleed like the
+     film it replaces. */
+  .shelf-home .shelf-hero {
+    background-image: url("/hero/hero-atelier-poster.jpg");
+    background-size: cover;
+    background-position: 50% 30%;
+    background-repeat: no-repeat;
+  }
+}
+
 @media (max-width: 51.99rem) {
   .shelf-hero-backdrop {
     object-position: 78% 0%;
+  }
+  /* Stacked layout: the film still covers the whole hero (it is the full-screen
+     backdrop on every width); only its crop biases upward so her face and the
+     necklace stay in frame behind the stacked copy. */
+  /* Set as a CUSTOM PROPERTY, not as object-position: the home hero's own rule
+     is `.shelf-home .shelf-hero-video`, which outranks this selector, so the
+     declaration that used to live here never reached the home page at all —
+     the phone crop silently stayed on the desktop framing. A variable has no
+     such contest, because only one rule declares the property that reads it.
+
+     55% rather than 50%: on a phone the frame loses ~38% of its width, and
+     nudging the window right by that much brings the necklace — the piece the
+     hero is actually selling — onto the centre line. The vertical half is
+     untouched. */
+  .shelf-hero-video {
+    --hero-video-x: 55%;
+  }
+  /* On the full-bleed film the stacked layout puts the copy AND the necklace
+     carousel over the picture, so the wash turns top-to-bottom — but only a
+     whisper of it: the film should read, not be veiled. */
+  .shelf-home .shelf-hero {
+    background-position: 72% top;
+  }
+  .shelf-home .shelf-hero-veil {
+    /* The copy reads white over the film, so the film still needs dimming —
+       but in ONYX. Using the brand ink here washed the photograph green. */
+    background: linear-gradient(
+      180deg,
+      rgb(var(--shadow-rgb) / 22%),
+      rgb(var(--shadow-rgb) / 55%) 55%,
+      rgb(var(--shadow-rgb) / 74%)
+    );
+  }
+  [dir="rtl"] .shelf-home .shelf-hero-veil {
+    background: linear-gradient(
+      180deg,
+      rgb(var(--shadow-rgb) / 22%),
+      rgb(var(--shadow-rgb) / 55%) 55%,
+      rgb(var(--shadow-rgb) / 74%)
+    );
+  }
+  /* The texts themselves go white with a soft dark shadow — maximum
+     contrast, the classic cinematic hero. */
+  .shelf-home .shelf-hero .shelf-title {
+    color: var(--ivory);
+  }
+  .shelf-home .shelf-hero .shelf-lede {
+    color: var(--ivory);
+    text-shadow: none;
   }
   /* Copy, then the necklace, then the CTA: the copy wrapper steps aside
      (display: contents) so the button can be ordered after the carousel. */
@@ -2064,7 +2517,9 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 1.1rem;
-    padding-block: 2.25rem 1.5rem;
+    /* Same lowered copy as desktop: a tall spacer above pushes the name,
+       lede and CTA into the lower half of the film. */
+    padding-block: clamp(12rem, 30vh, 19rem) 2.25rem;
   }
   .shelf-home .shelf-hero-copy {
     display: contents;
@@ -2107,7 +2562,7 @@
     padding: 0.55rem;
     border: 1px solid color-mix(in srgb, var(--gold) 60%, transparent);
     border-radius: 50%;
-    background: rgb(251 249 245 / 88%);
+    background: rgb(var(--ivory-rgb) / 88%);
     backdrop-filter: blur(4px);
   }
   .shelf-eyebrow {
@@ -2166,7 +2621,7 @@
 /* -- Home: the personalised gift card ad (components/gift-card-ad.tsx) ------- */
 
 .gc-ad {
-  background: #faf8f5;
+  background: var(--ivory);
 }
 .gc-ad-grid {
   display: grid;
@@ -2209,28 +2664,30 @@
    studio background. */
 @media (max-width: 47.99rem) {
   .shelf-section[class*="--"]:has(img) {
-    background: #fff;
+    background: var(--ivory);
   }
 }
 
-/* Desktop home: the necklace carousel sits beside the brand copy, like the
-   phone layout, with enough room for each piece to read clearly. */
+/* Desktop home: the copy sits on the left of the full-screen film, which runs
+   behind the whole hero. The grid is therefore a single column — the film is
+   absolutely positioned and takes no grid track — and the only thing that has
+   to be reserved is horizontal room on the left, where the wash keeps the
+   headline legible over moving footage. */
 @media (min-width: 52rem) {
   .shelf-home .shelf-hero > .shelf-wrap {
     max-width: 88rem;
     padding-inline: clamp(2rem, 6vw, 6rem);
   }
   .shelf-home .shelf-hero-grid {
-    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    grid-template-columns: minmax(0, 1fr);
     align-items: center;
-    gap: clamp(3.5rem, 6vw, 6.5rem);
-    padding-block: clamp(5.5rem, 9vw, 8.5rem) clamp(4.5rem, 7vw, 6.5rem);
+    padding-block: clamp(3rem, 6vw, 5rem) clamp(2rem, 4vw, 3.5rem);
   }
   .shelf-home .shelf-hero-copy {
     max-width: 34rem;
   }
+  /* The title no longer needs to break early — it sits alone in its column. */
   .shelf-home .shelf-hero-copy .shelf-title {
-    max-width: 8ch;
     color: var(--ink);
     font-size: clamp(3.5rem, 7vw, 6.4rem);
     line-height: 0.99;
@@ -2256,7 +2713,7 @@
     stroke-linejoin: round;
   }
   .hero-look-track-shadow {
-    stroke: color-mix(in srgb, #b89a62 12%, transparent);
+    stroke: color-mix(in srgb, var(--brass) 12%, transparent);
     stroke-width: 19;
   }
   .hero-look-track-rail {
@@ -2267,7 +2724,7 @@
     transition: stroke-dashoffset 1.8s cubic-bezier(0.22, 0.61, 0.36, 1);
   }
   .hero-look-track-rail--inner {
-    stroke: color-mix(in srgb, #1f7a85 44%, transparent);
+    stroke: color-mix(in srgb, var(--sapphire) 44%, transparent);
     stroke-width: 1;
     transition-delay: 0.18s;
   }
@@ -2313,7 +2770,7 @@
     opacity: 0;
     pointer-events: none;
     transform: translate3d(0, 1.5rem, 0) scale(0.94);
-    filter: drop-shadow(0 1rem 1.4rem rgb(37 34 27 / 10%));
+    filter: drop-shadow(0 1rem 1.4rem rgb(var(--shadow-rgb) / 10%));
     transition:
       left 1.35s cubic-bezier(0.2, 0.7, 0.15, 1),
       right 1.35s cubic-bezier(0.2, 0.7, 0.15, 1),
@@ -2361,7 +2818,7 @@
   .hero-look-rollercoaster[data-ready="true"] .hero-look-carriage--previous,
   .hero-look-rollercoaster[data-ready="true"] .hero-look-carriage--next {
     opacity: 0.68;
-    filter: drop-shadow(0 0.5rem 1rem rgb(37 34 27 / 6%));
+    filter: drop-shadow(0 0.5rem 1rem rgb(var(--shadow-rgb) / 6%));
   }
   .hero-look-carriage--offstage {
     z-index: 0;
@@ -2382,8 +2839,8 @@
     aspect-ratio: 3 / 4;
     overflow: hidden;
     border: 1px solid color-mix(in srgb, var(--gold) 72%, white);
-    background: #fffefa;
-    box-shadow: 0 1.25rem 3rem rgb(37 34 27 / 12%);
+    background: var(--ivory);
+    box-shadow: 0 1.25rem 3rem rgb(var(--shadow-rgb) / 12%);
     transition:
       box-shadow 0.9s ease,
       border-color 0.9s ease;
@@ -2391,7 +2848,7 @@
   .hero-look-carriage--active .hero-look-frame {
     animation: hero-look-focus 1.35s cubic-bezier(0.2, 0.7, 0.15, 1) both;
     border-color: color-mix(in srgb, var(--gold) 82%, white);
-    box-shadow: 0 1.5rem 3.5rem rgb(37 34 27 / 15%);
+    box-shadow: 0 1.5rem 3.5rem rgb(var(--shadow-rgb) / 15%);
   }
   @keyframes hero-look-focus {
     from {
@@ -2430,7 +2887,7 @@
   .hero-look-name {
     max-width: 100%;
     font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
-    color: color-mix(in srgb, var(--ink) 82%, #a98b58);
+    color: color-mix(in srgb, var(--ink) 82%, var(--brass-deep));
     font-size: clamp(0.9rem, 1.25vw, 1.08rem);
     letter-spacing: 0.025em;
     line-height: 1.2;
@@ -2473,7 +2930,7 @@
     place-items: center;
     border: 1px solid color-mix(in srgb, var(--gold) 55%, white);
     border-radius: 50%;
-    background: rgb(255 254 250 / 92%);
+    background: rgb(var(--ivory-rgb) / 92%);
     color: var(--ink);
     font-size: 1.1rem;
     cursor: pointer;
@@ -2554,7 +3011,7 @@
     height: 2.5rem;
     border: 1px solid color-mix(in srgb, var(--gold) 55%, white);
     border-radius: 50%;
-    background: rgb(255 254 250 / 92%);
+    background: rgb(var(--ivory-rgb) / 92%);
     opacity: 0.9;
   }
 }
@@ -2597,7 +3054,7 @@
   border: 0;
   display: flex;
   flex-direction: column;
-  background: #fff;
+  background: var(--ivory);
   color: var(--ink);
   overscroll-behavior: contain;
 }
@@ -2608,7 +3065,7 @@
   animation: lightbox-in 0.45s cubic-bezier(0.2, 0.75, 0.3, 1) both;
 }
 .lightbox::backdrop {
-  background: #fff;
+  background: var(--ivory);
 }
 @keyframes lightbox-in {
   from {
@@ -2647,7 +3104,7 @@
   padding: 0;
   border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
   border-radius: 50%;
-  background: rgb(255 255 255 / 85%);
+  background: rgb(var(--ivory-rgb) / 85%);
   color: var(--ink);
   cursor: pointer;
   transition:
@@ -2852,18 +3309,32 @@
 }
 .journal-preview-grid {
   display: grid;
-  gap: 1.25rem;
+  gap: 1.9rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
+/* Mobile-first: each story is a full-width card — image on top, text under
+   it — so the thumbnail is never a cramped 7.5rem postage stamp beside
+   squeezed text. The three-across desktop grid re-asserts itself at 48rem. */
 .journal-preview-card {
-  display: grid;
-  grid-template-columns: 7.5rem minmax(0, 1fr);
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 1rem;
-  padding-top: 1.25rem;
+  padding-top: 1.5rem;
   border-top: 1px solid var(--rule);
+}
+.journal-preview-image {
+  display: block;
+  width: 100%;
+}
+.journal-preview-image .journal-figure,
+.journal-preview-image .journal-figure-frame {
+  width: 100%;
+}
+.journal-preview-image .journal-figure-frame {
+  aspect-ratio: 16 / 10;
 }
 .journal-preview-image {
   display: block;
@@ -2899,7 +3370,7 @@
   gap: 0.3rem;
 }
 .journal-preview-kicker {
-  margin: 0;
+  margin: 0 0 0.2rem;
   color: var(--ink-soft);
   font-size: 0.67rem;
   font-weight: 600;
@@ -2907,8 +3378,8 @@
   text-transform: uppercase;
 }
 .journal-preview-copy h3 {
-  font-size: 1.08rem;
-  line-height: 1.25;
+  font-size: 1.2rem;
+  line-height: 1.3;
 }
 .journal-preview-copy h3 a {
   color: var(--ink);
@@ -2996,38 +3467,105 @@
   overflow: hidden;
 }
 .home-editorial-row + .home-editorial-row {
-  border-top: 1px solid rgb(184 154 98 / 24%);
+  border-top: 1px solid rgb(var(--brass-rgb) / 24%);
 }
 .home-editorial-inner {
   max-width: 100rem;
   margin-inline: auto;
   padding: clamp(4rem, 8vw, 6rem) clamp(1.5rem, 5vw, 5rem);
   display: grid;
-  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr);
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
   align-items: center;
   gap: clamp(2rem, 4vw, 4.5rem);
-  min-height: min(56rem, 90svh);
+  min-height: min(52rem, 86svh);
 }
 .home-editorial-copy {
   padding-block: 2rem;
+  /* The copy cell is now just the name: centred, and itself the click
+     target through the stretched link that covers the whole cell. */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  text-align: center;
+  min-height: 14rem;
+  /* The whole cell answers the pointer as a link — the stretched link under
+     the type is the affordance, not a button. */
+  cursor: pointer;
 }
-.home-editorial-kicker {
-  margin: 0 0 3rem;
-  font-size: 0.7rem;
-  letter-spacing: 0.18em;
+
+/* A small eyebrow above the name, so a shopper who lands mid-page knows what
+   kind of piece the photograph shows before reading the collection name. */
+.home-editorial-eyebrow {
+  margin: 0 0 1.1rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink-soft) 90%, transparent);
 }
-.home-editorial-number {
-  display: block;
-  margin-bottom: 1.2rem;
-  color: var(--ink-soft);
-  font-size: 0.75rem;
-  letter-spacing: 0.16em;
+
+/* The stretched link: invisible, it covers the copy cell so the collection
+   name is the button. It sits UNDER the title (z-index) so text selection is
+   not swallowed, but hit-testing still reaches it everywhere between and
+   around the letters. */
+.home-editorial-stretch {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  outline: none;
+}
+.home-editorial-stretch:focus-visible {
+  outline: 2px solid var(--gold, var(--brass));
+  outline-offset: -2px;
+}
+/* Quiet affordance: the name leans toward the visitor when its row is
+   pointed at, since there is no separate "Shop" line anymore. */
+@media (hover: hover) and (pointer: fine) {
+  .home-editorial-row:hover .home-editorial-title {
+    color: var(--accent-deep);
+    letter-spacing: 0.01em;
+    transition:
+      color 0.45s var(--ease-out-soft),
+      letter-spacing 0.45s var(--ease-out-soft);
+  }
 }
 .shelf .home-editorial-title {
-  font-size: clamp(2.8rem, 4.5vw, 5.5rem);
+  font-size: clamp(2.6rem, 4.2vw, 5rem);
   line-height: 1.04;
   overflow-wrap: anywhere;
+}
+/* The arrow slides out beside the name when the row is pointed at: the click
+   affordance without a button. It starts as a zero-width clip so the resting
+   line is exactly the collection name, nothing more. */
+.home-editorial-arrow {
+  display: inline-block;
+  margin-inline-start: 0;
+  width: 0;
+  overflow: hidden;
+  opacity: 0;
+  vertical-align: baseline;
+  font-size: 0.5em;
+  color: var(--gold);
+  transform: translateX(-0.4em);
+  transition:
+    width 0.5s var(--ease-out-soft),
+    opacity 0.35s ease-out,
+    transform 0.5s var(--ease-out-soft);
+}
+@media (hover: hover) and (pointer: fine) {
+  .home-editorial-row:hover .home-editorial-arrow,
+  .home-editorial-row:focus-within .home-editorial-arrow {
+    width: 1em;
+    opacity: 1;
+    transform: translateX(0);
+  }
+  /* Keyboard: the focus ring lands on the stretched link, and the arrow
+     answers it the same way, so tabbing shows the affordance too. */
+  .home-editorial-row:focus-within .home-editorial-title {
+    color: var(--accent-deep);
+  }
 }
 /* The same soft champagne bar that opens New arrivals, reused under every
    collection title so the three rows read as one family. */
@@ -3037,8 +3575,9 @@
   width: min(11rem, 55%);
   height: 1px;
   margin-top: clamp(1.4rem, 2vw, 2rem);
-  background: linear-gradient(90deg, var(--gold), transparent);
-  transform-origin: left center;
+  margin-inline: auto;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  transform-origin: center;
 }
 .home-editorial-description {
   max-width: 30rem;
@@ -3073,27 +3612,58 @@
 .home-editorial-image {
   position: relative;
   display: block;
-  width: 100%;
-  height: clamp(32rem, 58vw, 53rem);
+  width: min(100%, 40rem);
+  justify-self: center;
+  height: clamp(26rem, 44vw, 40rem);
   mix-blend-mode: multiply;
 }
 .home-editorial-image img {
   object-fit: contain;
 }
 /* Content is visible until the observer prepares an off-screen entrance.
-   Text slides from the left, jewelry fades in from the right with grace and polish. */
+   The copy arrives as a small choreography rather than one block slide:
+   the eyebrow fades in, the collection name rises from below with a slight
+   blur resolving to sharp (the same "pane of glass coming into focus" move
+   the hero and flyouts use), and the champagne bar draws last. The jewelry
+   fades in from the right as before. */
 @media (prefers-reduced-motion: no-preference) {
   .home-editorial-copy[data-editorial-state] {
     transition:
-      opacity 800ms cubic-bezier(0.16, 1, 0.3, 1),
-      transform 1000ms cubic-bezier(0.16, 1, 0.3, 1);
+      opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 1100ms cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .home-editorial-image[data-editorial-state] {
-    transition: opacity 950ms cubic-bezier(0.16, 1, 0.3, 1);
+  .home-editorial-eyebrow,
+  .home-editorial-title {
+    /* Prepared by the JS only when off-screen: visible without it. */
+    opacity: 1;
+  }
+  .home-editorial-copy[data-editorial-state="pending"] .home-editorial-eyebrow,
+  .home-editorial-copy[data-editorial-state="pending"] .home-editorial-title {
+    opacity: 0;
+    transform: translateY(26px);
+    filter: blur(6px);
+  }
+  .home-editorial-copy[data-editorial-state] .home-editorial-eyebrow,
+  .home-editorial-copy[data-editorial-state] .home-editorial-title {
+    transition:
+      opacity 900ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 1100ms cubic-bezier(0.16, 1, 0.3, 1),
+      filter 900ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  /* The eyebrow leads, the name follows a beat behind — reading order,
+     staged. */
+  .home-editorial-copy[data-editorial-state="pending"] .home-editorial-eyebrow {
+    transition-delay: 0ms;
+  }
+  .home-editorial-copy[data-editorial-state="pending"] .home-editorial-title {
+    transition-delay: 160ms;
   }
   .home-editorial-copy[data-editorial-state="pending"] {
     opacity: 0;
-    transform: translateX(-36px);
+    transform: translateX(-24px);
+  }
+  .home-editorial-image[data-editorial-state] {
+    transition: opacity 950ms cubic-bezier(0.16, 1, 0.3, 1);
   }
   .home-editorial-image[data-editorial-state="pending"] {
     opacity: 0;
@@ -3102,6 +3672,12 @@
   .home-editorial-image[data-editorial-state="visible"] {
     opacity: 1;
     transform: none;
+  }
+  .home-editorial-copy[data-editorial-state="visible"] .home-editorial-eyebrow,
+  .home-editorial-copy[data-editorial-state="visible"] .home-editorial-title {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
   }
   /* The photograph settles the last 2% of its travel as it arrives: the
      movement is what makes a still image feel placed rather than pasted.
@@ -3112,10 +3688,10 @@
   .home-editorial-image[data-editorial-state="pending"] img {
     transform: scale(1.04);
   }
-  /* The champagne bar draws itself under the collection title, last in the
-     sequence, so the eye lands on the photograph only once the frame is set. */
+  /* The champagne bar draws itself under the collection title after the
+     name has landed, completing the staged entrance. */
   .home-editorial-copy[data-editorial-state] .home-editorial-title::after {
-    transition: transform 1100ms var(--ease-out-soft) 380ms;
+    transition: transform 1100ms var(--ease-out-soft) 620ms;
   }
   .home-editorial-copy[data-editorial-state="pending"] .home-editorial-title::after {
     transform: scaleX(0);
@@ -3172,7 +3748,7 @@
 }
 @media (min-width: 52rem) {
   .home-editorial-row:nth-child(even) .home-editorial-inner {
-    grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.8fr);
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr);
   }
   .home-editorial-row:nth-child(even) .home-editorial-image {
     grid-column: 1;
@@ -3191,16 +3767,8 @@
     min-height: auto;
   }
   .home-editorial-copy {
-    padding: 0;
-  }
-  .home-editorial-kicker {
-    margin-bottom: 1.75rem;
-  }
-  .home-editorial-number {
-    margin-bottom: 0.75rem;
-  }
-  .home-editorial-description {
-    margin-block: 1rem;
+    padding: 1.5rem 0;
+    min-height: 9rem;
   }
   .home-editorial-image {
     height: clamp(24rem, 115vw, 44rem);
@@ -3221,7 +3789,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgb(250 247 241 / 72%), rgb(250 247 241 / 28%) 40%, transparent 56%);
+  background: linear-gradient(90deg, rgb(var(--ivory-rgb) / 72%), rgb(var(--ivory-rgb) / 28%) 40%, transparent 56%);
   pointer-events: none;
 }
 .shelf-home .shelf-hero--still-life .shelf-hero-grid {
@@ -3235,7 +3803,7 @@
   .shelf-hero--still-life {
     display: flex;
     flex-direction: column;
-    background: #faf7f1;
+    background: var(--ivory);
   }
   .shelf-hero--still-life .shelf-hero-scene {
     position: relative;
@@ -3428,5 +3996,18 @@
   .shelf-home .shelf-facts li {
     opacity: 1;
     transform: none;
+  }
+}
+
+/* Desktop reference: keep all hero copy in the brand's bottle green. This is
+   intentionally scoped to desktop so the mobile cinematic treatment stays
+   unchanged. */
+@media (min-width: 52rem) {
+  .shelf-home .shelf-hero .shelf-title,
+  .shelf-home .shelf-hero .shelf-title .hero-typing-type,
+  .shelf-home .shelf-hero .shelf-lede,
+  .shelf-home .shelf-hero .shelf-lede .hero-typing-type,
+  .shelf-home .shelf-hero .shelf-note {
+    color: var(--midnight);
   }
 }

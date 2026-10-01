@@ -1,13 +1,24 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 
-/** Only prepare off-screen content: hydration must never hide visible jewelry. */
+/**
+ * Prepares off-screen editorial content for its scroll-in sequence: every
+ * descendant marked `data-editorial-part` is set to `pending` (invisible) and
+ * flipped to `visible` by an observer as it reaches the viewport.
+ *
+ * It renders NO wrapper element, and observes the element the caller marks
+ * with `data-editorial-root` instead. A wrapper would become the grid's only
+ * child, which renumbers its items and silently kills every `nth-child` layout
+ * rule that alternates the editorial rows.
+ *
+ * Hydration can never hide visible jewellery: parts already on screen are
+ * never marked pending, and a focus or a reduced-motion change reveals
+ * everything immediately.
+ */
 export function EditorialReveal({ children }: { children: ReactNode }) {
-  const ref = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    const root = ref.current;
+    const root = document.querySelector<HTMLElement>("[data-editorial-root]");
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     if (!root || motion.matches || !("IntersectionObserver" in window)) return;
 
@@ -48,9 +59,5 @@ export function EditorialReveal({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  return (
-    <div ref={ref} className="home-editorial-inner">
-      {children}
-    </div>
-  );
+  return <>{children}</>;
 }

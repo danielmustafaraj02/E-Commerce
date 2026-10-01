@@ -127,6 +127,13 @@ export default async function proxy(request: NextRequest) {
   // Express Checkout (Apple Pay/Google Pay via @stripe/react-stripe-js,
   // src/components/express-checkout-button.tsx) is the one place this app
   // loads a third-party script on-page rather than redirecting to it —
+  // Google Fonts gets two equally narrow additions, and only because Admin >
+  // Settings > Site style can put a font pairing on the storefront: the
+  // stylesheet comes from fonts.googleapis.com and the face files from
+  // fonts.gstatic.com. Without both the link is blocked and the chosen
+  // pairing silently renders as the fallback serif. Only those two hosts are
+  // allowed, and only for styles and fonts — neither can run a script.
+  //
   // still SAQ-A (Stripe's Elements iframe tokenizes client-side, same
   // guarantee as Hosted Checkout's redirect), but it needs three narrow,
   // Stripe-only additions: js.stripe.com can load *as* a script (also
@@ -137,9 +144,9 @@ export default async function proxy(request: NextRequest) {
   const csp = `
     default-src 'self';
     script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://js.stripe.com${isDev ? " 'unsafe-eval'" : ""};
-    style-src 'self' 'unsafe-inline';
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
     img-src 'self' https: data:;
-    font-src 'self' data:;
+    font-src 'self' data: https://fonts.gstatic.com;
     connect-src 'self' https://api.stripe.com https://m.stripe.network;
     frame-src https://js.stripe.com https://hooks.stripe.com;
     object-src 'none';

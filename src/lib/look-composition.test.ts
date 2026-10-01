@@ -15,7 +15,8 @@ describe("lookComposition", () => {
     expect(necklace.desktop.s).toBeGreaterThan(bracelet.desktop.s);
     expect(bracelet.desktop.x).toBeLessThan(0.5);
     expect(earrings.desktop.x).toBeGreaterThan(0.5);
-    expect(earrings.desktop.y).toBeGreaterThan(bracelet.desktop.y);
+    // The small pair sits together below the necklace (one tight group).
+    expect(earrings.desktop.y).toBeGreaterThanOrEqual(bracelet.desktop.y);
     // Phones: necklace on top, the other two below it.
     expect(necklace.mobile.y).toBeLessThan(bracelet.mobile.y);
     expect([bracelet, necklace, earrings].every((p) => p.visible)).toBe(true);

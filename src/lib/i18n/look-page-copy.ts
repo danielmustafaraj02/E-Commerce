@@ -9,7 +9,7 @@ const en = {
   editorialIntro:
     "A look brings together a necklace, a bracelet and earrings, selected for the way their colours and shapes complement one another. Wear the complete composition, or let a single piece set the tone.",
   editorialDescription:
-    "Three expressions of Murano glass, brought together in one considered composition. Wear them together for a complete look, or individually as a quiet signature.",
+    "Three pieces of Murano glass, made as one. Wear them together, or one at a time as a quiet signature.",
   editorialIncluded: "In this look",
   editorialPrice: "The complete look",
   listingWhyTitle: "A look, already in harmony",
@@ -228,12 +228,12 @@ export function getLookPageCopy(locale: Locale): LookPageCopy {
 export function getLookEditorialDescription(name: string, locale: Locale): string {
   const descriptions: Record<string, { en: string; it: string }> = {
     "rosso rubino": {
-      en: "Ruby reds bring a rich note of colour to this three-piece composition. Pair the complete look with a simple neckline, or wear one piece as the focal point.",
-      it: "Il rosso rubino dà profondità e carattere a questo abbinamento di tre gioielli. Scegli una scollatura semplice per valorizzare il look completo, oppure lascia protagonista un solo pezzo.",
+      en: "Ruby red, across three pieces. Wear them together for a coordinated look, or let one take the lead.",
+      it: "Il rosso rubino, in tre gioielli. Indossali insieme per un look coordinato, oppure lascia protagonista un solo pezzo.",
     },
     "rosa e salvia": {
-      en: "Soft pink meets sage green in a delicate balance of colour. Wear the three pieces with linen and light neutrals, or choose a single accent for every day.",
-      it: "Il rosa incontra il verde salvia in un delicato equilibrio di colori. Abbina i tre gioielli al lino e ai toni neutri, oppure scegli un solo dettaglio da indossare ogni giorno.",
+      en: "Soft pink and sage green, in balance. Wear the three together, or choose a single accent for every day.",
+      it: "Rosa e verde salvia, in equilibrio. Indossa i tre gioielli insieme, oppure scegli un solo dettaglio per ogni giorno.",
     },
   };
   const description = descriptions[name.trim().toLowerCase()];

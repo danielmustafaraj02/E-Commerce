@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
-import { AnimatedHeading } from "@/components/animated-heading";
+import { HeroTypingSequence } from "@/components/hero-typing-sequence";
 import type { Metadata } from "next";
 import { Link } from "@/components/localized-link";
 import { getStoreSettings, ogImage } from "@/lib/store-settings";
@@ -14,21 +14,21 @@ import { truncateAtWord } from "@/lib/text";
 import { CatalogImage } from "@/components/catalog-image";
 import { ShelfItem } from "@/components/shelf-item";
 import { Reveal } from "@/components/reveal";
+import { ShelfStagger } from "@/components/shelf-stagger";
 import { EditorialReveal } from "@/components/editorial-reveal";
+import { LookEditorialScroll } from "@/components/look-editorial-scroll";
+import { getShowcaseCopy, SHOWCASE_SCENE_ORDER } from "@/lib/i18n/showcase-copy";
+import { CollectionShowcase } from "@/components/collection-showcase";
 import { NewsletterSignupForm } from "@/components/newsletter-signup-form";
 import { FaqSection } from "@/components/faq-section";
 import { buildFaq } from "@/lib/faq";
 import { getShippingFacts } from "@/lib/shipping-banner";
 import { GiftFinderArrow } from "@/components/gift-finder-arrow";
-import { HeroNecklaceCarousel, type HeroSlide } from "@/components/hero-necklace-carousel";
+
 import { getAllLooks } from "@/lib/look-data";
 import { LookEditorial } from "@/components/look-editorial";
 import { getLookPageCopy, getLookEditorialDescription } from "@/lib/i18n/look-page-copy";
-import { ComposePromo } from "@/components/compose-promo";
-import { GiftCardAd } from "@/components/gift-card-ad";
 import { JournalPreview } from "@/components/journal/journal-preview";
-import { formatMoney } from "@/lib/format";
-import { db } from "@/lib/db";
 import { homeFontClasses } from "./home-fonts";
 import "./home.css";
 
@@ -93,75 +93,27 @@ const SHELF_SIZE = 4;
 // keeps it to two rows of two.
 const NEW_ARRIVALS_SIZE = 8;
 
-const HERO_SRC = "/hero/handmade-red-murano-glass-necklace.jpg";
-const HERO_SIZES = "(min-width: 52rem) 36vw, 100vw";
-// Necklaces photographed in the same oval drape as the hero, so the rotation
-// reads as one frame changing colour. Slugs match the catalog photos' names.
-// Each carries the deep tone of its glass: the hero's button takes it on
-// while that necklace is showing (all dark enough for its white text).
-const HERO_ACCENT = "#7d1a24";
-const HERO_NECKLACES = [
-  { slug: "collana-rame-antico-85514c", accent: "#5a3522" },
-  { slug: "collana-ametista-9e7d11", accent: "#4b2a5c" },
-  { slug: "collana-smeraldo-e-argento-a0dd26", accent: "#1f4d3f" },
-  { slug: "collana-perla-rosa-antico-f396d8", accent: "#7a3f52" },
-  { slug: "collana-perla-celeste-5e4eb6", accent: "#2e5670" },
-];
-const HERO_NECKLACE_SLUGS = HERO_NECKLACES.map((n) => n.slug);
+// The colour the hero's title and CTA take on. A CSS reference, not a hex,
+// so it re-colours with the palette in app/palette.css.
+const HERO_ACCENT = "var(--brass)";
 
 const COLLECTION_ORDER = ["collane", "bracciali", "orecchini"];
 
+// A short breath between the store name finishing and the lede starting, so
+// the caret's handoff reads as a pause between sentences, not a race.
+const LEDE_PICKUP_PAUSE_MS = 450;
+
 export default async function Home() {
-  const [
-    settings,
-    locale,
-    { products, specialSelection, categoriesWithImage, bestSellers, reviews },
-    heroNecklaces,
-  ] = await Promise.all([
-    getStoreSettings(),
-    getLocale(),
-    getHomepageData(),
-    db.product.findMany({
-      where: { slug: { in: HERO_NECKLACE_SLUGS }, active: true },
-      select: {
-        slug: true,
-        name: true,
-        nameEn: true,
-        nameFr: true,
-        nameDe: true,
-        nameEs: true,
-        namePt: true,
-        nameJa: true,
-        nameZh: true,
-        nameRu: true,
-        nameAr: true,
-        nameHi: true,
-      },
-    }),
-  ]);
+  const [settings, locale, { products, specialSelection, categoriesWithImage, bestSellers, reviews }] =
+    await Promise.all([getStoreSettings(), getLocale(), getHomepageData()]);
   const dict = getDictionary(locale);
   const looks = await getAllLooks(locale, 3);
   const lookCopy = getLookPageCopy(locale);
+  const showcaseCopy = getShowcaseCopy(locale);
   const editorialCollections = COLLECTION_ORDER.flatMap((prefix) => {
     const category = categoriesWithImage.find((item) => item.slug.startsWith(prefix));
     return category?.image ? [category] : [];
   });
-  const heroSlides: HeroSlide[] = [
-    { src: HERO_SRC, alt: dict.home.heroImageAlt, href: null, accent: HERO_ACCENT },
-    ...HERO_NECKLACES.flatMap(({ slug, accent }) => {
-      const product = heroNecklaces.find((p) => p.slug === slug);
-      return product
-        ? [
-            {
-              src: `/products/collane-in-vetro-di-murano/${slug}.png`,
-              alt: localizedName(product, locale),
-              href: `/products/${slug}`,
-              accent,
-            },
-          ]
-        : [];
-    }),
-  ];
   const testimonials = reviews
     .filter((review) => review.comment)
     .map((review) => ({
@@ -188,16 +140,6 @@ export default async function Home() {
     quickAddLabel: dict.product.addToCart,
     addedLabel: dict.product.added,
   };
-  const points = [
-    { title: dict.home.whyShipping, body: dict.home.whyShippingBody },
-    { title: dict.home.whySecure, body: dict.home.whySecureBody },
-    { title: dict.home.whyReturns, body: dict.home.whyReturnsBody },
-  ];
-  const facts = [
-    { icon: "badge", text: settings.trustBadgeText },
-    { icon: "returns", text: dict.product.returnsBadge },
-    { icon: "secure", text: dict.product.secureBadge },
-  ].filter((fact): fact is { icon: FactIconName; text: string } => Boolean(fact.text));
 
   // The design (app/home.css) is scoped to `.shelf`: the glass is the only
   // saturated thing on the page, and the product photos are blended straight
@@ -208,104 +150,65 @@ export default async function Home() {
         className="shelf-hero"
         style={{ "--hero-accent": HERO_ACCENT } as CSSProperties}
       >
+        <video
+          className="shelf-hero-video"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster="/hero/hero-atelier-poster.jpg"
+          aria-hidden="true"
+          tabIndex={-1}
+          suppressHydrationWarning
+        >
+          <source src="/hero/hero-atelier.webm" type="video/webm" />
+          <source src="/hero/hero-atelier.mp4" type="video/mp4" />
+        </video>
+        {/* The legibility veil, a real element: the ::before pseudo-element on
+            this hero silently stopped painting in one browser build, so the
+            wash moved onto a node that cannot fail. Above the film (z -1),
+            below the copy column. */}
+        <div className="shelf-hero-veil" aria-hidden="true" />
         <div className="shelf-wrap">
           <div className="shelf-hero-grid">
             <div className="shelf-hero-copy">
-              <AnimatedHeading
-                as="h1"
-                text={settings.storeName}
-                className="shelf-title"
-                translate="no"
+              <HeroTypingSequence
+                title={settings.storeName}
+                subtitle={dict.home.heroSubtitle}
+                locale={locale}
+                cta={
+                  <Link href="/products" className="shelf-button">
+                    {dict.home.heroCta}
+                    <span aria-hidden="true" className="shelf-button-arrow">
+                      →
+                    </span>
+                  </Link>
+                }
               />
-              <p className="shelf-lede">{dict.home.heroSubtitle}</p>
-              <Link href="/products" className="shelf-button">
-                {dict.home.heroCta}
-                <span aria-hidden="true" className="shelf-button-arrow">
-                  →
-                </span>
-              </Link>
-              {settings.pricesIncludeTax && (
-                <p className="shelf-note">{dict.home.pricesIncludeTax}</p>
-              )}
             </div>
-            <HeroNecklaceCarousel
-              slides={heroSlides}
-              sizes={HERO_SIZES}
-              previousLabel={dict.home.previousSlide}
-              nextLabel={dict.home.nextSlide}
-              zoomLabels={{
-                open: dict.nav.zoomImage,
-                close: dict.nav.closeZoom,
-                hint: dict.nav.zoomHint,
-                viewPiece: dict.nav.viewPiece,
-              }}
-            />
           </div>
         </div>
       </section>
-      <div className="shelf-wrap">
-        {facts.length > 0 && (
-          <ul className="shelf-facts">
-            {facts.map((fact) => (
-              <li key={fact.text}>
-                <FactIcon name={fact.icon} />
-                <span>{fact.text}</span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
 
-      <div className="home-editorial">
-        {editorialCollections.map((category, index) => {
-          const name = localizedName(category, locale);
-          return (
-            <section
-              key={category.id}
-              className="home-editorial-row"
-              aria-labelledby={`collection-${category.id}`}
-            >
-              <EditorialReveal>
-                <div className="home-editorial-copy" data-editorial-part="copy">
-                  <p className="home-editorial-kicker">
-                    {index === 0 ? settings.storeName : dict.home.heroTagline}
-                  </p>
-                  <span className="home-editorial-number" aria-hidden="true">
-                    0{index + 1}
-                  </span>
-                  <h2 id={`collection-${category.id}`} className="home-editorial-title">
-                    {name}
-                  </h2>
-                  <p className="home-editorial-description">
-                    {truncateAtWord(
-                      localizedDescription(category, locale) || dict.home.heroSubtitle,
-                      220
-                    )}
-                  </p>
-                  <Link href={`/category/${category.slug}`} className="home-editorial-link">
-                    {dict.home.shopCollection}
-                    <span aria-hidden="true">↗</span>
-                  </Link>
-                </div>
-                <Link
-                  href={`/category/${category.slug}`}
-                  className="home-editorial-image"
-                  data-editorial-part="image"
-                  aria-label={`${dict.home.shopCollection}: ${name}`}
-                >
-                  <CatalogImage
-                    src={category.image!.url}
-                    alt={name}
-                    fill
-                    sizes="(min-width: 90rem) 58rem, (min-width: 52rem) 65vw, 100vw"
-                    loading="lazy"
-                  />
-                </Link>
-              </EditorialReveal>
-            </section>
-          );
+      {/* The collections showcase: a scroll-driven sequence. The stage pins and
+          the page's own scroll carries it from the necklace (centred) through
+          the bracelet (copy left) to the earrings (copy right); after the last
+          one the stage releases and normal scrolling resumes. */}
+      <CollectionShowcase
+        items={editorialCollections.map((category, i) => {
+          const scene = SHOWCASE_SCENE_ORDER[i] ?? "necklace";
+          return {
+            id: category.id,
+            href: `/category/${category.slug}`,
+            name: localizedName(category, locale),
+            image: category.image!.url,
+            description: showcaseCopy.scenes[scene].description,
+            cta: showcaseCopy.scenes[scene].cta,
+            scene,
+          };
         })}
-      </div>
+      />
 
       {bestSellers.length > 0 && (
         <section className="shelf-section">
@@ -313,7 +216,7 @@ export default async function Home() {
             <div className="shelf-heading-row">
               <h2 className="shelf-heading">{dict.home.bestSellers}</h2>
             </div>
-            <ul className="shelf-row">
+            <ShelfStagger className="shelf-row">
               {bestSellers.slice(0, SHELF_SIZE).map((product) => (
                 <ShelfItem
                   key={product.id}
@@ -321,7 +224,7 @@ export default async function Home() {
                   {...shelfProps}
                 />
               ))}
-            </ul>
+            </ShelfStagger>
           </div>
         </section>
       )}
@@ -329,13 +232,19 @@ export default async function Home() {
       {products.length > 0 && (
         <section className="shelf-section">
           <div className="shelf-wrap">
-            <div className="shelf-heading-row">
-              <h2 className="shelf-heading">{dict.home.newArrivals}</h2>
+            {/* Heading and its one-line introduction travel together as a
+                group, so the link baselines with the introduction on a wide
+                screen and wraps BELOW the whole group on a narrow one. */}
+            <div className="shelf-heading-row shelf-heading-row--intro">
+              <div className="shelf-heading-group">
+                <h2 className="shelf-heading">{dict.home.newArrivals}</h2>
+                <p className="shelf-heading-intro">{dict.home.newArrivalsIntro}</p>
+              </div>
               <Link href="/products" className="shelf-link">
                 {dict.footer.allProducts}
               </Link>
             </div>
-            <ul className="shelf-row shelf-row--two-rows">
+            <ShelfStagger className="shelf-row shelf-row--two-rows">
               {products.slice(0, NEW_ARRIVALS_SIZE).map((product) => (
                 <ShelfItem
                   key={product.slug}
@@ -343,7 +252,7 @@ export default async function Home() {
                   {...shelfProps}
                 />
               ))}
-            </ul>
+            </ShelfStagger>
           </div>
         </section>
       )}
@@ -355,17 +264,21 @@ export default async function Home() {
               <p className="shelf-eyebrow shelf-eyebrow--center">{dict.look.kicker}</p>
               <h2 className="shelf-heading">{dict.looks.title}</h2>
             </div>
-            <p className="looks-editorial-intro">{lookCopy.editorialIntro}</p>
           </div>
           {looks.length > 0 && (
-            <div className="looks-editorial-list">
-              {looks.map((look, index) => (
-                <LookEditorial
-                  index={index}
-                  key={look.id}
-                  look={look}
-                  locale={settings.defaultLocale}
-                  labels={{
+            <div className="looks-editorial-list" data-editorial-root>
+              {/* One controller for the whole list: it arms the scroll-in
+                  sequence (EditorialReveal) and the scroll-linked drift
+                  (LookEditorialScroll), so the rows respond continuously to
+                  scrolling in both directions. */}
+              <EditorialReveal>
+                {looks.map((look, index) => (
+                  <LookEditorial
+                    index={index}
+                    key={look.id}
+                    look={look}
+                    locale={settings.defaultLocale}
+                    labels={{
                     view: dict.looks.viewLook,
                     save: dict.look.save,
                     pieces: dict.looks.pieces,
@@ -374,17 +287,11 @@ export default async function Home() {
                     price: lookCopy.editorialPrice,
                   }}
                 />
-              ))}
+                ))}
+              </EditorialReveal>
+              <LookEditorialScroll />
             </div>
           )}
-          <ComposePromo
-            labels={{
-              kicker: dict.looks.composeKicker,
-              title: dict.looks.composeTitle,
-              subtitle: dict.looks.composeSubtitle,
-              cta: dict.looks.composeCta,
-            }}
-          />
           {looks.length > 0 && (
             <p className="shelf-looks-more">
               <Link href="/looks" className="shelf-link">
@@ -430,22 +337,6 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="shelf-section shelf-section--sand">
-        <div className="shelf-wrap">
-          <div className="shelf-heading-row">
-            <h2 className="shelf-heading">{dict.home.whyUsTitle}</h2>
-          </div>
-          <ul className="shelf-points">
-            {points.map((point) => (
-              <li key={point.title} className="shelf-point">
-                <h3>{point.title}</h3>
-                <p>{point.body}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
       <section className="shelf-section shelf-giftfinder-band">
         <Reveal className="shelf-wrap shelf-giftfinder-reveal" repeatOnView>
           <div className="shelf-giftfinder-content">
@@ -485,18 +376,6 @@ export default async function Home() {
         </section>
       )}
 
-      {settings.giftCardEnabled && (
-        <GiftCardAd
-          dict={dict.giftCard}
-          brand={settings.storeName}
-          price={formatMoney(
-            settings.giftCardPrice,
-            settings.defaultCurrency,
-            settings.defaultLocale
-          )}
-        />
-      )}
-
       <JournalPreview locale={locale} />
 
       <section className="shelf-newsletter shelf-section">
@@ -512,31 +391,5 @@ export default async function Home() {
         </div>
       </section>
     </main>
-  );
-}
-
-type FactIconName = "badge" | "returns" | "secure";
-
-const FACT_ICON_PATHS: Record<FactIconName, string> = {
-  badge: "M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3z M8.8 12.2l2.2 2.2 4.4-4.6",
-  returns: "M4 9h11a5 5 0 010 10H9 M4 9l4-4 M4 9l4 4",
-  secure: "M6 11h12v9H6z M8.5 11V8a3.5 3.5 0 017 0v3 M12 15v2",
-};
-
-function FactIcon({ name }: { name: FactIconName }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="28"
-      height="28"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.3"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d={FACT_ICON_PATHS[name]} />
-    </svg>
   );
 }

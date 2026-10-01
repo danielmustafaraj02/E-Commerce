@@ -3,13 +3,13 @@
    drawn as small glass beads. Scoped to `.pf`. */
 
 .pf {
-  --pf-card: #fbf9f5;
-  --pf-ink: #123d43;
-  --pf-ink-soft: #527176;
-  --pf-gold: #b89a62;
-  --pf-rule: #d9cdbb;
-  --pf-cta: #123d43;
-  --pf-cta-hover: #0b3035;
+  --pf-card: var(--ivory);
+  --pf-ink: var(--midnight);
+  --pf-ink-soft: var(--ink-muted);
+  --pf-gold: var(--brass);
+  --pf-rule: var(--hairline);
+  --pf-cta: var(--midnight);
+  --pf-cta-hover: var(--midnight);
   color: var(--pf-ink);
   font-family: var(--font-ui), system-ui, sans-serif;
   font-size: 0.9rem;
@@ -20,7 +20,7 @@
   background: var(--pf-card);
   border: 1px solid var(--pf-rule);
   border-radius: 14px;
-  box-shadow: 0 1px 2px rgb(18 61 67 / 0.04);
+  box-shadow: 0 1px 2px rgb(var(--midnight-rgb) / 0.04);
 }
 
 /* -- Header ------------------------------------------------------------------ */
@@ -132,7 +132,7 @@ fieldset.pf-section > .pf-label {
   padding: 0.6rem 0.75rem;
   border: 1px solid var(--pf-rule);
   border-radius: 8px;
-  background: #fff;
+  background: var(--ivory);
   color: var(--pf-ink);
   font: inherit;
 }
@@ -189,7 +189,7 @@ fieldset.pf-section > .pf-label {
   border: 1.5px solid var(--pf-gold);
   border-radius: 999px;
   background: var(--pf-card);
-  box-shadow: 0 1px 2px rgb(18 61 67 / 0.12);
+  box-shadow: 0 1px 2px rgb(var(--midnight-rgb) / 0.12);
   cursor: grab;
   transition: transform 0.15s ease;
 }
@@ -244,26 +244,33 @@ fieldset.pf-section > .pf-label {
   height: 1.8rem;
   border-radius: 999px;
   pointer-events: none;
-  background:
+  /* The bead's own colour is set as background-COLOR, not as the last layer of
+     the background shorthand: inside `background`, a trailing var() is parsed
+     as one more image position and resolves to `none`, which left every swatch
+     blank. Colour and image stack are separate longhands, so they can't
+     collide. */
+  background-color: var(--bead, var(--ivory));
+  background-image:
     /* specular highlight */
-    radial-gradient(circle at 32% 27%, rgb(255 255 255 / 0.9) 0 7%, rgb(255 255 255 / 0) 24%),
+    radial-gradient(circle at 32% 27%, rgb(var(--ivory-rgb) / 0.9) 0 7%, rgb(var(--ivory-rgb) / 0) 24%),
     /* light caught on the far side of the glass */
-    radial-gradient(circle at 68% 80%, rgb(255 255 255 / 0.32) 0, rgb(255 255 255 / 0) 34%),
+    radial-gradient(circle at 68% 80%, rgb(var(--ivory-rgb) / 0.32) 0, rgb(var(--ivory-rgb) / 0) 34%),
     /* faint marbling */
     conic-gradient(
       from 210deg at 58% 58%,
-      rgb(255 255 255 / 0.14),
-      rgb(255 255 255 / 0) 25%,
-      rgb(0 0 0 / 0.08) 45%,
-      rgb(255 255 255 / 0.1) 70%,
-      rgb(255 255 255 / 0)
+      rgb(var(--ivory-rgb) / 0.14),
+      rgb(var(--ivory-rgb) / 0) 25%,
+      rgb(var(--shadow-rgb) / 0.08) 45%,
+      rgb(var(--ivory-rgb) / 0.1) 70%,
+      rgb(var(--ivory-rgb) / 0)
     ),
     /* depth toward the edge */
-    radial-gradient(circle at 50% 45%, rgb(0 0 0 / 0) 52%, rgb(0 0 0 / 0.3) 100%),
-    var(--bead);
+    radial-gradient(circle at 50% 45%, rgb(0 0 0 / 0) 52%, rgb(var(--shadow-rgb) / 0.3) 100%);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
   box-shadow:
     0 0 0 1px var(--pf-rule),
-    0 1px 2px rgb(18 61 67 / 0.18);
+    0 1px 2px rgb(var(--midnight-rgb) / 0.18);
   opacity: 0.94;
   transition:
     transform 0.15s ease,
@@ -276,7 +283,7 @@ fieldset.pf-section > .pf-label {
   box-shadow:
     0 0 0 2px var(--pf-card),
     0 0 0 3.5px var(--pf-gold),
-    0 1px 2px rgb(18 61 67 / 0.18);
+    0 1px 2px rgb(var(--midnight-rgb) / 0.18);
 }
 .pf-bead:has(:focus-visible) {
   outline: 1px solid var(--pf-ink);
@@ -302,7 +309,7 @@ fieldset.pf-section > .pf-label {
   margin: 0;
   border: 1px solid var(--pf-gold);
   border-radius: 3px;
-  background: #fff;
+  background: var(--ivory);
   cursor: pointer;
 }
 .pf-check::after {
@@ -346,7 +353,7 @@ fieldset.pf-section > .pf-label {
   border: 1px solid var(--pf-gold);
   border-radius: 6px;
   background: var(--pf-cta);
-  color: #fbf9f5;
+  color: var(--ivory);
   font-family: var(--font-ui), system-ui, sans-serif;
   font-size: 0.74rem;
   font-weight: 500;

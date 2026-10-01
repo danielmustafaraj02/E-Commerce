@@ -22,6 +22,19 @@ const LABELS: Record<Platform, string> = {
   twitterUrl: "X",
 };
 
+/* Each platform's own brand colour — the hover fill and the tooltip pill are
+   painted with it, so the footer's icons answer the pointer in the platform's
+   own voice while the resting state stays the footer's petrol ink. */
+const BRAND: Record<Platform, string> = {
+  instagramUrl:
+    "linear-gradient(-45deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5)",
+  facebookUrl: "#1877f2",
+  tiktokUrl: "#101419",
+  youtubeUrl: "#ff0000",
+  linkedinUrl: "#0a66c2",
+  twitterUrl: "#101419",
+};
+
 function SocialIcon({ platform }: { platform: Platform }) {
   const common = { width: 18, height: 18, viewBox: "0 0 24 24", "aria-hidden": true as const };
   switch (platform) {
@@ -88,9 +101,16 @@ export function SocialLinks({ urls, label }: { urls: SocialUrls; label: string }
   if (entries.length === 0) return null;
   return (
     <nav aria-label={label}>
+      {/* data-tooltip feeds the floating name pill (see footer.css); the
+          inline --bg carries the platform's own hover colour down to the
+          rising fill and the tooltip. */}
       <ul className="social-links">
         {entries.map((entry) => (
-          <li key={entry.platform}>
+          <li
+            key={entry.platform}
+            data-tooltip={entry.label}
+            style={{ "--bg": BRAND[entry.platform] } as React.CSSProperties}
+          >
             <a
               href={entry.href}
               target="_blank"

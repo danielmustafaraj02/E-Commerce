@@ -1,6 +1,5 @@
 import type { CSSProperties } from "react";
 import { Link } from "@/components/localized-link";
-import { PointerZoom } from "@/components/pointer-zoom";
 import { CatalogImage } from "@/components/catalog-image";
 import { formatMoney } from "@/lib/format";
 import { applyTemplate } from "@/lib/i18n/format";
@@ -33,6 +32,15 @@ export function LookEditorial({
   const Heading = heading;
   const href = `/looks/${look.id}`;
   const money = (value: number) => formatMoney(value, look.pieces[0].currency, locale);
+  /* The observer applies data-editorial-state to the copy and image wrapper. */
+  const KIND_ORDER = { necklace: 0, bracelet: 1, earrings: 2 } as const;
+  const orderedPieces = [...look.pieces]
+    .map((piece, i) => ({ piece, i }))
+    .sort(
+      (a, b) =>
+        (KIND_ORDER[a.piece.kind ?? "earrings"] ?? 3) -
+        (KIND_ORDER[b.piece.kind ?? "earrings"] ?? 3)
+    );
   const placements = lookComposition(
     look.pieces.map((piece) => ({ kind: piece.kind, selected: true }))
   );
@@ -48,8 +56,8 @@ export function LookEditorial({
       loading={priority ? "eager" : "lazy"}
     />
   ) : (
-    look.pieces.map(
-      (piece, i) =>
+    orderedPieces.map(
+      ({ piece, i }) =>
         piece.imageUrl && (
           <div
             key={piece.productId}
@@ -75,44 +83,48 @@ export function LookEditorial({
   );
   return (
     <article className="look-editorial" aria-labelledby={`look-title-${look.id}`}>
-      <PointerZoom className="look-editorial-zoom" scale={look.imageUrl ? 1.1 : 1.2}>
+      {/* The photograph is still; the name below is the way in. The observer
+          marks this wrapper and the copy column as the two editorial parts. */}
+      <div className="look-editorial-zoom" data-editorial-part>
         <Link href={href} className="look-editorial-visual" tabIndex={-1} aria-hidden="true">
           {visual}
         </Link>
-      </PointerZoom>
-      <div className="look-editorial-copy">
-        <p className="look-editorial-kicker">
+      </div>
+      <div className="look-editorial-copy" data-editorial-part>
+        {/* The editorial index: a numeral and a rule, the same device the
+            collection showcase uses. Decorative — the heading already names
+            the look — so it is hidden from assistive tech rather than read
+            out as a second, competing count. */}
+        <p className="look-editorial-index" aria-hidden="true">
           <span>{String(index + 1).padStart(2, "0")}</span>
-          {applyTemplate(labels.pieces, { n: look.pieces.length })}
         </p>
+        {/* The name is the link; the way in is the button beneath. The arrow
+            that used to ride on the title is gone: with a real call to action
+            below it was a second affordance for the same destination, and it
+            had no space before it, so it printed as "Rosso Rubino→" and hung
+            past the copy column's right edge. */}
         <Heading id={`look-title-${look.id}`} className="look-editorial-title">
           <Link href={href}>{look.name}</Link>
         </Heading>
         <p className="look-editorial-description">{labels.description}</p>
-        <p className="look-editorial-label">{labels.included}</p>
-        <ul className="look-editorial-included">
-          {look.pieces.map((piece) => (
-            <li key={piece.productId}>
-              <Link href={`/products/${piece.slug}`}>{piece.name}</Link>
-            </li>
-          ))}
-        </ul>
-        <div className="look-editorial-purchase">
-          <p className="look-editorial-label">{labels.price}</p>
-          <p className="look-editorial-price">
-            <span>{money(look.pricing.setTotal)}</span>
-            {look.discountPercent > 0 && <s>{money(look.pricing.individualTotal)}</s>}
-          </p>
+        <p className="look-editorial-price">
+          <span>{money(look.pricing.setTotal)}</span>
+          {look.discountPercent > 0 && <s>{money(look.pricing.individualTotal)}</s>}
           {look.discountPercent > 0 && (
-            <p className="look-editorial-saving">
+            <span className="look-editorial-saving">
               {applyTemplate(labels.save, { percent: look.discountPercent })}
-            </p>
+            </span>
           )}
-          <Link href={href} className="look-editorial-cta">
-            {labels.view}
-            <span aria-hidden="true">↗</span>
-          </Link>
-        </div>
+        </p>
+        {/* The call to action, in the site's own button. `labels.view` is the
+            existing localised label for this destination (looks.viewLook) —
+            it was already being passed in and never rendered. */}
+        <Link href={href} className="btn-primary look-editorial-cta">
+          {labels.view}
+          <span className="look-editorial-arrow" aria-hidden="true">
+            →
+          </span>
+        </Link>
       </div>
     </article>
   );

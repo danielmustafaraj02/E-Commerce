@@ -516,7 +516,6 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
               <div className="shop-buy">
                 <ProductPurchasePanel
                   product={cartProduct}
-                  priceDisplay={priceDisplay}
                   dict={dict.product}
                   cartDict={dict.cart}
                   showBuyNow={!outOfStock}

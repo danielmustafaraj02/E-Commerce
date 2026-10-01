@@ -69,7 +69,13 @@ export function FaqAccordion({
                 aria-controls={`faq-a-${item.id}`}
                 onClick={() => setOpen(expanded ? null : item.id)}
               >
-                <span>{item.question}</span>
+                {/* The editorial index. Decorative numbering, not content —
+                    the question itself is the accessible name of the control,
+                    so this is hidden rather than read out before every one. */}
+                <span className="faq-number" aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span className="faq-question-text">{item.question}</span>
                 <span className="faq-icon" aria-hidden="true" />
               </button>
             </h3>

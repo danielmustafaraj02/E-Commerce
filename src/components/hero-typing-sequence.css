@@ -1,0 +1,140 @@
+.hero-typing-sequence {
+  display: contents;
+}
+
+.hero-typing-line {
+  position: relative;
+  isolation: isolate;
+}
+
+.hero-typing-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* The typed copy is in the document WHOLE from the first frame; only
+   `visibility` moves. There is no second, absolutely-positioned copy of the
+   text to keep in sync and nothing re-wraps, so a glyph that has been written
+   can never shift and a half-typed word can never jump to the next line. */
+.hero-typing-type {
+  display: block;
+}
+
+/* One row of the title. Each word of the store name is its own row, so
+   "Perla / Murano / Glass" is the layout before anything is typed rather than
+   the result of a line filling up. */
+.hero-typing-row {
+  position: relative;
+  display: block;
+}
+
+/* The lede is a single row that wraps normally; its words are the unbreakable
+   units, so the wrapping is decided once by the complete sentence and holds
+   for the whole reveal. */
+.hero-typing-sequence p .hero-typing-row {
+  display: inline;
+}
+
+.hero-typing-word {
+  white-space: nowrap;
+}
+
+.hero-typing-char {
+  visibility: hidden;
+}
+
+.hero-typing-char[data-on="true"] {
+  visibility: visible;
+}
+
+.hero-typing-cta {
+  display: inline-flex;
+  position: relative;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+}
+
+.hero-typing-cta--visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+  transition:
+    opacity 500ms var(--ease-out-soft),
+    transform 500ms var(--ease-out-soft);
+}
+
+/* The caret: a gold bar riding the last written character. It is drawn as that
+   character's own ::after, absolutely placed just past its end, so it occupies
+   NO space — an inline caret would widen the line and push every glyph still
+   to come, which is the one thing the fixed layout above exists to prevent.
+   Sized in em so it scales with the huge title. */
+.hero-typing-char[data-caret="true"] {
+  position: relative;
+}
+
+.hero-typing-char[data-caret="true"]::after,
+.hero-typing-row[data-caret-start="true"]::before {
+  content: "";
+  position: absolute;
+  top: 0.1em;
+  width: 0.07em;
+  height: 0.86em;
+  background: var(--gold, var(--brass));
+}
+
+.hero-typing-char[data-caret="true"]::after {
+  inset-inline-start: 100%;
+  margin-inline-start: 0.07em;
+}
+
+/* At the very start of a row there is no written character to ride, so the
+   caret waits at the row's own edge. */
+.hero-typing-row[data-caret-start="true"]::before {
+  inset-inline-start: 0;
+}
+
+/* Steady while keys are falling; blinking only while the hand rests — at a
+   word gap, at punctuation, and between the two lines. */
+.hero-typing-sequence[data-resting="true"] .hero-typing-char[data-caret="true"]::after,
+.hero-typing-sequence[data-resting="true"] .hero-typing-row[data-caret-start="true"]::before {
+  animation: hero-caret-blink 0.9s step-end infinite;
+}
+
+@keyframes hero-caret-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Everything at once, no caret: the effect writes the finished state and
+     never schedules a keystroke. */
+  .hero-typing-char {
+    visibility: visible;
+  }
+
+  .hero-typing-char[data-caret="true"]::after,
+  .hero-typing-row[data-caret-start="true"]::before {
+    display: none;
+  }
+
+  .hero-typing-cta {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+    transition: none;
+  }
+}

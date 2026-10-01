@@ -80,6 +80,7 @@ const en = {
     shopCollection: "Shop Collection",
     pricesIncludeTax: "All prices shown include VAT/IVA.",
     newArrivals: "New arrivals",
+    newArrivalsIntro: "New colours, new details.",
     specialSelectionTitle: "Selected pieces, special prices.",
     specialSelectionSubtitle:
       "Discover a selection of handmade Murano glass jewelry at special prices, available while supplies last.",
@@ -103,7 +104,7 @@ const en = {
     newsletterCtaBody:
       "Subscribe and use code WELCOME10 at checkout. You'll also get new pieces and the occasional offer, straight to your inbox.",
     newsletterSubmit: "Get 10% off",
-    faqTitle: "Common questions",
+    faqTitle: "Before you choose.",
     faq: [
       {
         question: "Is this real Murano glass?",
@@ -194,9 +195,9 @@ const en = {
   // "Complete the look" on the product page (components/complete-the-look.tsx).
   look: {
     kicker: "Complete the look",
-    title: "Complete the Murano look",
+    title: "One look, three details.",
     subtitle: "Three pieces, one unmistakable look.",
-    intro: "The matching necklace, bracelet and earrings from this collection, chosen to be worn together.",
+    intro: "Necklace, bracelet and earrings from the same collection, made to be worn together.",
     individualTotal: "Individual total",
     setTotal: "Complete set",
     pairTotal: "Two pieces",
@@ -411,7 +412,8 @@ const en = {
   },
   // FAQ (components/faq-section.tsx); shipping answers are filled from the zones.
   faq: {
-    intro: "The things people most often ask before choosing a piece. If yours isn't here, we're happy to help.",
+    intro: "The answers that make choosing easy.",
+    eyebrow: "Information / FAQ",
     more: "More questions",
     fewer: "Fewer questions",
     stillQuestion: "Still have a question?",
@@ -944,10 +946,11 @@ const it: Dictionary = {
     shopNow: "Acquista ora",
     heroTagline: "Autentico vetro di Murano",
     heroMobileLede: "Fatto a mano a Murano, una perla alla volta.",
-    heroCta: "Scopri i gioielli di Murano",
+    heroCta: "Scopri i gioielli",
     shopCollection: "Scopri la collezione",
     pricesIncludeTax: "Tutti i prezzi mostrati includono IVA.",
     newArrivals: "Nuovi arrivi",
+    newArrivalsIntro: "Nuovi colori, nuovi dettagli.",
     specialSelectionTitle: "Pezzi selezionati, prezzi speciali.",
     specialSelectionSubtitle:
       "Scopri una selezione di gioielli in vetro di Murano fatti a mano a prezzi speciali, disponibili fino a esaurimento scorte.",
@@ -971,7 +974,7 @@ const it: Dictionary = {
     newsletterCtaBody:
       "Iscriviti e usa il codice WELCOME10 al checkout. Riceverai anche nuovi pezzi e offerte occasionali, direttamente nella tua email.",
     newsletterSubmit: "Ottieni il 10%",
-    faqTitle: "Domande frequenti",
+    faqTitle: "Prima di scegliere.",
     faq: [
       {
         question: "È vero vetro di Murano?",
@@ -1063,9 +1066,9 @@ const it: Dictionary = {
   },
   look: {
     kicker: "Completa il look",
-    title: "Completa il look di Murano",
+    title: "Un look, tre dettagli.",
     subtitle: "Tre pezzi, un look inconfondibile.",
-    intro: "Collana, bracciale e orecchini abbinati di questa collezione, scelti per essere indossati insieme.",
+    intro: "Collana, bracciale e orecchini della stessa collezione, pensati per essere indossati insieme.",
     individualTotal: "Totale dei singoli pezzi",
     setTotal: "Set completo",
     pairTotal: "Due pezzi",
@@ -1277,7 +1280,8 @@ const it: Dictionary = {
     photoCredit: "Foto: {credit}",
   },
   faq: {
-    intro: "Le domande che ci vengono fatte più spesso prima di scegliere un gioiello. Se la tua non c'è, siamo felici di aiutarti.",
+    intro: "Le risposte per scegliere con serenità.",
+    eyebrow: "Informazioni / FAQ",
     more: "Altre domande",
     fewer: "Meno domande",
     stillQuestion: "Hai ancora una domanda?",
@@ -1822,6 +1826,7 @@ const fr: Dictionary = {
     shopCollection: "Voir la collection",
     pricesIncludeTax: "Tous les prix affichés incluent la TVA.",
     newArrivals: "Nouveautés",
+    newArrivalsIntro: "Nouvelles couleurs, nouveaux détails.",
     specialSelectionTitle: "Pièces sélectionnées, prix spéciaux.",
     specialSelectionSubtitle:
       "Découvrez une sélection de bijoux en verre de Murano faits main à prix spéciaux, disponible jusqu'à épuisement des stocks.",
@@ -1845,7 +1850,7 @@ const fr: Dictionary = {
     newsletterCtaBody:
       "Abonnez-vous et utilisez le code WELCOME10 lors du paiement, ainsi que de nouvelles pièces et des offres occasionnelles, directement dans votre boîte mail.",
     newsletterSubmit: "Obtenir -10 %",
-    faqTitle: "Questions fréquentes",
+    faqTitle: "Avant de choisir.",
     faq: [
       {
         question: "Est-ce du vrai verre de Murano ?",
@@ -2151,7 +2156,8 @@ const fr: Dictionary = {
     photoCredit: "Photo : {credit}",
   },
   faq: {
-    intro: "Les questions que l'on nous pose le plus souvent avant de choisir un bijou. Si la vôtre n'y figure pas, nous serons ravis de vous aider.",
+    intro: "Les réponses pour choisir en toute sérénité.",
+    eyebrow: "Informations / FAQ",
     more: "Plus de questions",
     fewer: "Moins de questions",
     stillQuestion: "Vous avez encore une question ?",
@@ -2700,6 +2706,7 @@ const de: Dictionary = {
     shopCollection: "Kollektion entdecken",
     pricesIncludeTax: "Alle angezeigten Preise verstehen sich inklusive Mehrwertsteuer.",
     newArrivals: "Neuheiten",
+    newArrivalsIntro: "Neue Farben, neue Details.",
     specialSelectionTitle: "Ausgewählte Stücke, besondere Preise.",
     specialSelectionSubtitle:
       "Entdecken Sie eine Auswahl handgefertigten Muranoglas-Schmucks zu besonderen Preisen, erhältlich nur solange der Vorrat reicht.",
@@ -2723,7 +2730,7 @@ const de: Dictionary = {
     newsletterCtaBody:
       "Abonnieren Sie und verwenden Sie den Code WELCOME10 an der Kasse, plus neue Stücke und gelegentliche Angebote direkt in Ihrem Posteingang.",
     newsletterSubmit: "10 % sparen",
-    faqTitle: "Häufige Fragen",
+    faqTitle: "Bevor Sie wählen.",
     faq: [
       {
         question: "Ist das echtes Murano-Glas?",
@@ -3029,7 +3036,8 @@ const de: Dictionary = {
     photoCredit: "Foto: {credit}",
   },
   faq: {
-    intro: "Die Fragen, die uns vor dem Kauf am häufigsten gestellt werden. Ist Ihre nicht dabei, helfen wir Ihnen gern.",
+    intro: "Die Antworten für eine ruhige Wahl.",
+    eyebrow: "Informationen / FAQ",
     more: "Weitere Fragen",
     fewer: "Weniger Fragen",
     stillQuestion: "Haben Sie noch eine Frage?",
@@ -3577,6 +3585,7 @@ const ar: Dictionary = {
     shopCollection: "تسوّق المجموعة",
     pricesIncludeTax: "جميع الأسعار المعروضة تشمل ضريبة القيمة المضافة.",
     newArrivals: "وصل حديثًا",
+    newArrivalsIntro: "ألوان جديدة، تفاصيل جديدة.",
     specialSelectionTitle: "قطع مختارة، أسعار خاصة.",
     specialSelectionSubtitle:
       "اكتشف مجموعة مختارة من مجوهرات زجاج مورانو المصنوعة يدويًا بأسعار خاصة، متوفرة حتى نفاد الكمية.",
@@ -3600,7 +3609,7 @@ const ar: Dictionary = {
     newsletterCtaBody:
       "اشترك واستخدم الرمز WELCOME10 عند الدفع، بالإضافة إلى قطع جديدة وعروض بين الحين والآخر تصلك مباشرة إلى بريدك.",
     newsletterSubmit: "احصل على خصم ١٠٪",
-    faqTitle: "أسئلة شائعة",
+    faqTitle: "قبل أن تختار.",
     faq: [
       {
         question: "هل هذا زجاج مورانو حقيقي؟",
@@ -3904,7 +3913,8 @@ const ar: Dictionary = {
     photoCredit: "الصورة: {credit}",
   },
   faq: {
-    intro: "أكثر ما يسألنا عنه الناس قبل اختيار قطعة. إن لم تجد سؤالك هنا، يسعدنا مساعدتك.",
+    intro: "إجابات تساعدك على الاختيار بثقة.",
+    eyebrow: "معلومات / الأسئلة الشائعة",
     more: "المزيد من الأسئلة",
     fewer: "أسئلة أقل",
     stillQuestion: "هل لديك سؤال آخر؟",
@@ -4426,6 +4436,7 @@ const zh: Dictionary = {
     shopCollection: "选购系列",
     pricesIncludeTax: "所有显示价格均含增值税。",
     newArrivals: "新品上架",
+    newArrivalsIntro: "新色彩，新细节。",
     specialSelectionTitle: "精选臻品，特惠价格。",
     specialSelectionSubtitle:
       "探索精选的穆拉诺手工玻璃饰品，特惠价格，数量有限，售完为止。",
@@ -4449,7 +4460,7 @@ const zh: Dictionary = {
     newsletterCtaBody:
       "订阅后在结算时使用优惠码 WELCOME10，还能第一时间收到新品和不定期优惠信息，直达您的邮箱。",
     newsletterSubmit: "领取首单九折",
-    faqTitle: "常见问题",
+    faqTitle: "选择之前。",
     faq: [
       {
         question: "这是真正的穆拉诺玻璃吗？",
@@ -4751,7 +4762,8 @@ const zh: Dictionary = {
     photoCredit: "摄影：{credit}",
   },
   faq: {
-    intro: "选购前大家最常问的问题。如果这里没有你的问题，我们很乐意为你解答。",
+    intro: "让你安心选择的答案。",
+    eyebrow: "信息 / 常见问题",
     more: "更多问题",
     fewer: "收起问题",
     stillQuestion: "还有其他问题吗？",
@@ -5259,6 +5271,7 @@ const ru: Dictionary = {
     shopCollection: "Смотреть коллекцию",
     pricesIncludeTax: "Все указанные цены включают НДС.",
     newArrivals: "Новинки",
+    newArrivalsIntro: "Новые цвета, новые детали.",
     specialSelectionTitle: "Избранные изделия, особые цены.",
     specialSelectionSubtitle:
       "Откройте для себя подборку украшений ручной работы из муранского стекла по особым ценам, количество ограничено.",
@@ -5282,7 +5295,7 @@ const ru: Dictionary = {
     newsletterCtaBody:
       "Подпишитесь и используйте код WELCOME10 при оформлении заказа, а также получайте новинки и редкие акции прямо на почту.",
     newsletterSubmit: "Получить скидку 10%",
-    faqTitle: "Часто задаваемые вопросы",
+    faqTitle: "Прежде чем выбрать.",
     faq: [
       {
         question: "Это настоящее муранское стекло?",
@@ -5590,7 +5603,8 @@ const ru: Dictionary = {
     photoCredit: "Фото: {credit}",
   },
   faq: {
-    intro: "Вопросы, которые нам чаще всего задают перед выбором украшения. Если вашего здесь нет, мы с радостью поможем.",
+    intro: "Ответы, чтобы выбирать спокойно.",
+    eyebrow: "Информация / Вопросы",
     more: "Ещё вопросы",
     fewer: "Меньше вопросов",
     stillQuestion: "Остались вопросы?",
@@ -6133,6 +6147,7 @@ const es: Dictionary = {
     shopCollection: "Ver la colección",
     pricesIncludeTax: "Todos los precios mostrados incluyen IVA.",
     newArrivals: "Novedades",
+    newArrivalsIntro: "Nuevos colores, nuevos detalles.",
     specialSelectionTitle: "Piezas seleccionadas, precios especiales.",
     specialSelectionSubtitle:
       "Descubre una selección de joyas artesanales de vidrio de Murano a precios especiales, disponibles hasta agotar existencias.",
@@ -6156,7 +6171,7 @@ const es: Dictionary = {
     newsletterCtaBody:
       "Suscríbete y usa el código WELCOME10 al finalizar la compra, además de piezas nuevas y ofertas ocasionales, directo a tu bandeja de entrada.",
     newsletterSubmit: "Ahorrar un 10 %",
-    faqTitle: "Preguntas frecuentes",
+    faqTitle: "Antes de elegir.",
     faq: [
       {
         question: "¿Es vidrio de Murano real?",
@@ -6463,7 +6478,8 @@ const es: Dictionary = {
     photoCredit: "Foto: {credit}",
   },
   faq: {
-    intro: "Las preguntas que más nos hacen antes de elegir una pieza. Si la tuya no está aquí, estaremos encantados de ayudarte.",
+    intro: "Las respuestas para elegir con tranquilidad.",
+    eyebrow: "Información / FAQ",
     more: "Más preguntas",
     fewer: "Menos preguntas",
     stillQuestion: "¿Tienes alguna otra pregunta?",
@@ -7003,6 +7019,7 @@ const pt: Dictionary = {
     shopCollection: "Ver a coleção",
     pricesIncludeTax: "Todos os preços apresentados incluem IVA.",
     newArrivals: "Novidades",
+    newArrivalsIntro: "Novas cores, novos detalhes.",
     specialSelectionTitle: "Peças selecionadas, preços especiais.",
     specialSelectionSubtitle:
       "Descubra uma seleção de joias artesanais em vidro de Murano a preços especiais, disponíveis até esgotar o stock.",
@@ -7026,7 +7043,7 @@ const pt: Dictionary = {
     newsletterCtaBody:
       "Subscreva e use o código WELCOME10 na finalização da compra, além de novas peças e ofertas ocasionais, diretamente na sua caixa de correio.",
     newsletterSubmit: "Poupar 10%",
-    faqTitle: "Perguntas frequentes",
+    faqTitle: "Antes de escolher.",
     faq: [
       {
         question: "É mesmo vidro de Murano?",
@@ -7333,7 +7350,8 @@ const pt: Dictionary = {
     photoCredit: "Fotografia: {credit}",
   },
   faq: {
-    intro: "As perguntas que mais nos fazem antes de escolher uma peça. Se a sua não estiver aqui, teremos todo o gosto em ajudar.",
+    intro: "As respostas para escolher com tranquilidade.",
+    eyebrow: "Informações / FAQ",
     more: "Mais perguntas",
     fewer: "Menos perguntas",
     stillQuestion: "Ainda tem alguma dúvida?",
@@ -7875,6 +7893,7 @@ const hi: Dictionary = {
     shopCollection: "संग्रह देखें",
     pricesIncludeTax: "दिखाई गई सभी कीमतों में VAT/IVA शामिल है।",
     newArrivals: "नए आगमन",
+    newArrivalsIntro: "नए रंग, नए विवरण।",
     specialSelectionTitle: "चुनिंदा टुकड़े, खास कीमतें।",
     specialSelectionSubtitle:
       "हाथ से बनी मुरानो ग्लास ज्वेलरी का चुनिंदा संग्रह खास कीमतों पर देखें, स्टॉक खत्म होने तक उपलब्ध।",
@@ -7898,7 +7917,7 @@ const hi: Dictionary = {
     newsletterCtaBody:
       "सब्सक्राइब करें और चेकआउट पर कोड WELCOME10 का उपयोग करें, साथ ही नए उत्पाद और कभी-कभार ऑफर सीधे आपके इनबॉक्स में।",
     newsletterSubmit: "10% छूट पाएं",
-    faqTitle: "सामान्य प्रश्न",
+    faqTitle: "चुनने से पहले।",
     faq: [
       {
         question: "क्या यह असली मुरानो ग्लास है?",
@@ -8202,7 +8221,8 @@ const hi: Dictionary = {
     photoCredit: "फ़ोटो: {credit}",
   },
   faq: {
-    intro: "कोई पीस चुनने से पहले लोग हमसे सबसे ज़्यादा यही पूछते हैं। अगर आपका सवाल यहाँ नहीं है, तो हमें मदद करके खुशी होगी।",
+    intro: "निश्चिंत होकर चुनने के लिए ज़रूरी जवाब।",
+    eyebrow: "जानकारी / सामान्य प्रश्न",
     more: "और सवाल",
     fewer: "कम सवाल",
     stillQuestion: "अब भी कोई सवाल है?",
@@ -8740,6 +8760,7 @@ const ja: Dictionary = {
     shopCollection: "コレクションを見る",
     pricesIncludeTax: "表示価格はすべて付加価値税(VAT/IVA)込みです。",
     newArrivals: "新着商品",
+    newArrivalsIntro: "新しい色、新しいディテール。",
     specialSelectionTitle: "厳選アイテム、特別価格。",
     specialSelectionSubtitle:
       "ムラノガラスのハンドメイドジュエリーを特別価格でセレクトしました。在庫がなくなり次第終了です。",
@@ -8763,7 +8784,7 @@ const ja: Dictionary = {
     newsletterCtaBody:
       "ご登録いただき、チェックアウト時にコードWELCOME10をご利用ください、新作情報やお得な情報もメールでお届けします。",
     newsletterSubmit: "初回10％オフ",
-    faqTitle: "よくある質問",
+    faqTitle: "選ぶ前に。",
     faq: [
       {
         question: "本物のムラノガラスですか?",
@@ -9069,7 +9090,8 @@ const ja: Dictionary = {
     photoCredit: "写真：{credit}",
   },
   faq: {
-    intro: "作品を選ぶ前によくいただくご質問です。ここにないご質問も、お気軽にお問い合わせください。",
+    intro: "安心して選ぶための答え。",
+    eyebrow: "インフォメーション / FAQ",
     more: "ほかの質問",
     fewer: "閉じる",
     stillQuestion: "ほかにご質問はありますか？",

@@ -12,6 +12,12 @@ const nextConfig: NextConfig = {
     // is smaller at equivalent quality. Next tries formats in this order and
     // serves whichever the requesting browser's Accept header supports.
     formats: ["image/avif", "image/webp"],
+    // Next 16 requires every quality a caller uses to be allowlisted here,
+    // otherwise it logs a warning and falls back to the default. The app uses
+    // 70 (carousel thumbs) and 90 (catalog/hero), plus 75 as the default, and
+    // 95 for the small nav-dropdown thumbnails, which are scaled *up* on
+    // retina and would look soft at 90.
+    qualities: [70, 75, 90, 95],
   },
   // Renamed images keep working at their old addresses (search engines may
   // have indexed them).

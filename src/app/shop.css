@@ -53,7 +53,7 @@
   padding: 0.3rem 1rem;
   border: 1px solid var(--rule);
   border-radius: 999px;
-  background: color-mix(in srgb, #fff 60%, transparent);
+  background: color-mix(in srgb, var(--ivory) 60%, transparent);
   color: var(--ink);
   font-size: 0.92rem;
   text-decoration: none;
@@ -65,7 +65,7 @@
 .shop-chip:hover {
   background: var(--accent);
   border-color: var(--accent);
-  color: #fff;
+  color: var(--ivory);
 }
 
 /* -- Listing: filter sidebar + grid ---------------------------------------- */
@@ -102,7 +102,7 @@
   list-style: none;
 }
 .shop-grid .shelf-item-photo {
-  background: #fff;
+  background: var(--ivory);
   box-shadow: none;
   transition: none;
 }
@@ -120,7 +120,7 @@
   padding: 1.25rem;
   border: 1px solid var(--rule);
   border-radius: 14px;
-  background: color-mix(in srgb, #fff 65%, transparent);
+  background: color-mix(in srgb, var(--ivory) 65%, transparent);
 }
 .shop-filter-card :where(.border-t) {
   border-color: var(--rule);
@@ -166,7 +166,7 @@
     box-shadow: 0 7px 18px color-mix(in srgb, var(--accent) 14%, transparent);
   }
   .shop-page[aria-current="page"]:hover {
-    color: #fff;
+    color: var(--ivory);
     background-color: var(--accent-deep);
     box-shadow: 0 7px 18px color-mix(in srgb, var(--accent) 24%, transparent);
   }
@@ -174,7 +174,7 @@
 .shop-page[aria-current="page"] {
   background: var(--accent);
   border-color: var(--accent);
-  color: #fff;
+  color: var(--ivory);
   font-weight: 600;
 }
 
@@ -226,7 +226,7 @@
   isolation: isolate;
   /* Pure white, the photos' own background, so no browser can show a seam
      around them (iOS Safari doesn't always honour the multiply blend). */
-  background: #fff;
+  background: var(--ivory);
   box-shadow: inset 0 0 0 1px var(--rule);
 }
 .shop-product-photo {
@@ -249,14 +249,14 @@
 .shop-thumb img {
   object-fit: cover;
   mix-blend-mode: multiply;
-  filter: brightness(1.05) contrast(1.03);
+  filter: brightness(1.07) contrast(1.02);
   -webkit-mask-image:
-    linear-gradient(to right, transparent, #000 5%, #000 95%, transparent),
-    linear-gradient(to bottom, transparent, #000 3%, #000 97%, transparent);
+    linear-gradient(to right, transparent, var(--midnight) 9%, var(--midnight) 91%, transparent),
+    linear-gradient(to bottom, transparent, var(--midnight) 6%, var(--midnight) 94%, transparent);
   -webkit-mask-composite: source-in;
   mask-image:
-    linear-gradient(to right, transparent, #000 5%, #000 95%, transparent),
-    linear-gradient(to bottom, transparent, #000 3%, #000 97%, transparent);
+    linear-gradient(to right, transparent, var(--midnight) 9%, var(--midnight) 91%, transparent),
+    linear-gradient(to bottom, transparent, var(--midnight) 6%, var(--midnight) 94%, transparent);
   mask-composite: intersect;
 }
 
@@ -400,8 +400,8 @@
 
 /* Product detail gallery: a clean white mount with one quiet, neutral edge. */
 .shop-gallery .shop-product-photo {
-  background: #fff;
-  box-shadow: inset 0 0 0 1px #efefec;
+  background: var(--ivory);
+  box-shadow: inset 0 0 0 1px var(--ivory);
 }
 .shop-gallery .shop-product-photo::after {
   display: none;
@@ -410,8 +410,8 @@
   transition: transform 0.45s ease;
 }
 .shop-thumb {
-  background: #fff;
-  border-color: #efefec;
+  background: var(--ivory);
+  border-color: var(--ivory);
 }
 .shop-thumb--active {
   border-color: var(--accent);
@@ -741,16 +741,20 @@
   font-size: 0.91rem;
   line-height: 1.65;
 }
-/* Same restrained look as .shelf-discount-badge on the product cards. */
+/* Same hallmark look as .shelf-discount-badge on the product cards: small
+   letter-spaced capitals on a gold hairline. */
 .shop-discount-badge {
   display: inline-block;
   vertical-align: middle;
   margin-inline-start: 0.6rem;
-  color: var(--accent-deep);
-  font-size: 0.8rem;
+  color: var(--aventurine-deep);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   line-height: 1.4;
-  padding: 0.1rem 0.5rem;
-  border: 1px solid color-mix(in srgb, var(--accent-deep) 30%, transparent);
+  padding: 0.14rem 0.55rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
   border-radius: 2px;
 }
 .shop-prose {
@@ -808,7 +812,7 @@
   height: 3.5rem;
   border-radius: 999px;
   border: 1px solid var(--rule);
-  background: #fbf9f5;
+  background: var(--ivory);
   color: var(--gold);
   font-family: var(--font-display), Georgia, serif;
   font-size: 1.5rem;
@@ -832,7 +836,7 @@
 .shelf .form-card {
   border: 1px solid var(--rule);
   border-radius: var(--radius-panel);
-  background: #fbf9f5;
+  background: var(--ivory);
   box-shadow: none;
 }
 .shop-panel-pad {
@@ -957,7 +961,7 @@
   height: 1px;
   pointer-events: none;
   opacity: 0;
-  background: linear-gradient(90deg, transparent, rgb(184 154 98 / 36%));
+  background: linear-gradient(90deg, transparent, rgb(var(--brass-rgb) / 36%));
   transform: scaleX(0);
   transform-origin: left center;
   animation: empty-cart-trail 1.9s ease-out both;
@@ -1115,7 +1119,7 @@
 }
 .shop-tile:hover {
   border-color: var(--accent);
-  background: color-mix(in srgb, #fff 90%, transparent);
+  background: color-mix(in srgb, var(--ivory) 90%, transparent);
 }
 .shop-tile-icon {
   display: flex;
@@ -1135,14 +1139,14 @@
    near-black primary. */
 .shelf .option-card {
   border-color: var(--rule);
-  background: color-mix(in srgb, #fff 55%, transparent);
+  background: color-mix(in srgb, var(--ivory) 55%, transparent);
 }
 .shelf .option-card:hover {
   border-color: color-mix(in srgb, var(--accent) 55%, transparent);
 }
 .shelf .option-card:has(:checked) {
   border-color: var(--accent);
-  background: #fbf9f5;
+  background: var(--ivory);
   box-shadow: inset 0 0 0 1px var(--accent);
 }
 .shelf .field-radio::after {
@@ -1197,12 +1201,12 @@ a.shop-line-name:focus-visible {
 /* -- Sign in / register ------------------------------------------------------- */
 
 .auth-flow-page {
-  background: linear-gradient(135deg, #f1efeb, #faf8f5 55%, #e9e5df);
+  background: linear-gradient(135deg, var(--ivory), var(--ivory) 55%, var(--hairline));
 }
 
 .shop-auth-title {
   margin: 1.5rem 0 1.25rem;
-  color: #20201e;
+  color: var(--midnight);
   font-family: var(--font-display), Georgia, serif;
   font-size: clamp(2rem, 4vw, 2.8rem);
   font-weight: 500;
@@ -1223,10 +1227,10 @@ a.shop-line-name:focus-visible {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   min-height: 569px;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, #b89a62 34%, transparent);
+  border: 1px solid color-mix(in srgb, var(--brass) 34%, transparent);
   border-radius: 5px;
-  background: #fbf9f5;
-  box-shadow: 0 1.5rem 4rem -1.5rem rgb(25 32 32 / 28%);
+  background: var(--ivory);
+  box-shadow: 0 1.5rem 4rem -1.5rem rgb(var(--midnight-rgb) / 28%);
 }
 .auth-form-side {
   z-index: 1;
@@ -1252,7 +1256,7 @@ a.shop-line-name:focus-visible {
 }
 .auth-eyebrow {
   margin: 0;
-  color: #766748;
+  color: var(--ink-muted);
   font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.2em;
@@ -1265,7 +1269,7 @@ a.shop-line-name:focus-visible {
   grid-row: 1;
   min-height: 100%;
   overflow: hidden;
-  background: #77736d;
+  background: var(--ink-muted);
   transition: transform 520ms cubic-bezier(0.62, 0, 0.82, 1);
 }
 .auth-panel[data-mode="register"] .auth-form-side {
@@ -1280,7 +1284,7 @@ a.shop-line-name:focus-visible {
 .auth-image-wash {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgb(18 28 27 / 4%) 45%, rgb(13 23 22 / 68%) 100%);
+  background: linear-gradient(180deg, rgb(var(--midnight-rgb) / 4%) 45%, rgb(var(--midnight-rgb) / 68%) 100%);
 }
 .auth-image-caption {
   position: absolute;
@@ -1309,7 +1313,7 @@ a.shop-line-name:focus-visible {
 }
 .auth-form-side .field {
   border: 0;
-  border-bottom: 1px solid #cfc6b7;
+  border-bottom: 1px solid var(--hairline);
   border-radius: 0;
   background: transparent;
   padding: 0.55rem 0.15rem;
@@ -1317,11 +1321,11 @@ a.shop-line-name:focus-visible {
   transition: border-color 180ms ease;
 }
 .auth-form-side .field:hover:not(:disabled):not(:focus) {
-  border-color: #9e8965;
+  border-color: var(--ink-muted);
   background: transparent;
 }
 .auth-form-side .field:focus {
-  border-color: #9e8965;
+  border-color: var(--ink-muted);
   box-shadow: none;
 }
 .auth-form-side .field[aria-invalid="true"] {
@@ -1437,7 +1441,7 @@ a.shop-line-name:focus-visible {
   min-height: clamp(33rem, 70svh, 49rem);
   overflow: hidden;
   border-bottom: 2px solid var(--gold);
-  background: #344a49;
+  background: var(--sapphire);
 }
 .about-hero-image {
   object-fit: cover;
@@ -1450,16 +1454,16 @@ a.shop-line-name:focus-visible {
   z-index: 1;
   inset: 0;
   background:
-    radial-gradient(ellipse 70% 80% at 20% 85%, rgb(7 27 29 / 72%) 0%, rgb(7 27 29 / 48%) 45%, rgb(7 27 29 / 0%) 78%),
-    linear-gradient(90deg, rgb(9 31 33 / 42%) 0%, rgb(9 31 33 / 12%) 60%, transparent 100%),
-    linear-gradient(0deg, rgb(8 31 33 / 90%) 0%, rgb(8 31 33 / 68%) 22%, rgb(8 31 33 / 22%) 62%, transparent 100%);
+    radial-gradient(ellipse 70% 80% at 20% 85%, rgb(var(--midnight-rgb) / 72%) 0%, rgb(var(--midnight-rgb) / 48%) 45%, rgb(var(--midnight-rgb) / 0%) 78%),
+    linear-gradient(90deg, rgb(var(--midnight-rgb) / 42%) 0%, rgb(var(--midnight-rgb) / 12%) 60%, transparent 100%),
+    linear-gradient(0deg, rgb(var(--midnight-rgb) / 90%) 0%, rgb(var(--midnight-rgb) / 68%) 22%, rgb(var(--midnight-rgb) / 22%) 62%, transparent 100%);
   pointer-events: none;
 }
 .about-hero::before {
   position: absolute;
   z-index: 2;
   inset: 1rem;
-  border: 1px solid rgb(255 250 240 / 30%);
+  border: 1px solid rgb(var(--ivory-rgb) / 30%);
   content: "";
   pointer-events: none;
 }
@@ -1471,14 +1475,14 @@ a.shop-line-name:focus-visible {
   left: clamp(2rem, 8vw, 8rem);
   max-width: 78rem;
   margin-inline: auto;
-  color: #fffaf0;
+  color: var(--ivory);
 }
 .about-hero-kicker {
   display: flex;
   align-items: center;
   gap: 0.85rem;
   margin: 0 0 1rem;
-  color: #e4c98e;
+  color: var(--champagne);
   font-family: var(--font-ui), system-ui, sans-serif;
   font-size: 0.72rem;
   font-weight: 600;
@@ -1489,12 +1493,12 @@ a.shop-line-name:focus-visible {
 .about-hero-kicker::before {
   width: 2.5rem;
   height: 1px;
-  background: #d2b474;
+  background: var(--brass-light);
   content: "";
 }
 .about-hero-title {
   max-width: 16ch;
-  color: #fffaf0;
+  color: var(--ivory);
   font-size: clamp(3.2rem, 7vw, 6.5rem);
   font-weight: 500;
   line-height: 0.98;
@@ -1508,7 +1512,7 @@ a.shop-line-name:focus-visible {
   width: 3.2rem;
   height: 1px;
   margin-top: 1.25rem;
-  background: #d2b474;
+  background: var(--brass-light);
   content: "";
 }
 /* Weight 500 and a tight shadow: Cormorant's hairlines at 400 break up
@@ -1516,7 +1520,7 @@ a.shop-line-name:focus-visible {
 .about-hero-intro {
   max-width: 49rem;
   margin: 1.1rem 0 0;
-  color: #fffaf0;
+  color: var(--ivory);
   font-family: var(--font-display), Georgia, serif;
   font-size: clamp(1.05rem, 1.6vw, 1.3rem);
   font-weight: 500;
@@ -1732,9 +1736,9 @@ a.shop-line-name:focus-visible {
   padding: 0.75rem 1rem;
   border-radius: 0.625rem;
   background: var(--petrol-deep);
-  color: #fff;
+  color: var(--ivory);
   font-size: 0.875rem;
-  box-shadow: 0 8px 24px rgb(0 0 0 / 0.18);
+  box-shadow: 0 8px 24px rgb(var(--shadow-rgb) / 0.18);
   overflow: hidden;
 }
 .cart-undo-toast-label {
@@ -1748,7 +1752,7 @@ a.shop-line-name:focus-visible {
   flex-shrink: 0;
   padding: 0.25rem 0.625rem;
   border-radius: 0.375rem;
-  background: rgb(255 255 255 / 0.15);
+  background: rgb(var(--ivory-rgb) / 0.15);
   color: var(--glass-gold);
   font-size: 0.8125rem;
   font-weight: 600;
@@ -1756,7 +1760,7 @@ a.shop-line-name:focus-visible {
   transition: background-color 0.15s ease;
 }
 .cart-undo-toast-action:hover {
-  background: rgb(255 255 255 / 0.25);
+  background: rgb(var(--ivory-rgb) / 0.25);
 }
 .cart-undo-toast-bar {
   position: absolute;
@@ -1817,7 +1821,7 @@ a.shop-line-name:focus-visible {
   margin-inline-end: 0.6rem;
   border-radius: 999px;
   background: var(--accent);
-  color: #fff;
+  color: var(--ivory);
 }
 
 /* The guide: long copy, so more air between lines, paragraphs and sections. */
@@ -1853,8 +1857,8 @@ a.shop-line-name:focus-visible {
   padding-block: clamp(2.5rem, 6vw, 5.5rem);
   border-bottom: 0;
   background:
-    radial-gradient(ellipse at 16% 14%, rgb(217 205 187 / 18%), transparent 36%),
-    linear-gradient(112deg, #fff 0%, #faf8f5 62%, #f4f0e8 100%);
+    radial-gradient(ellipse at 16% 14%, rgb(var(--champagne-rgb) / 18%), transparent 36%),
+    linear-gradient(112deg, var(--ivory) 0%, var(--ivory) 62%, var(--ivory) 100%);
 }
 .murano-guide-head::after {
   position: absolute;
@@ -1862,7 +1866,7 @@ a.shop-line-name:focus-visible {
   bottom: 0;
   left: 0;
   height: 2px;
-  background: linear-gradient(90deg, var(--teal), var(--gold) 54%, #c65b8a);
+  background: linear-gradient(90deg, var(--teal), var(--gold) 54%, var(--brass));
   content: "";
 }
 .murano-guide-hero {
@@ -1917,14 +1921,14 @@ a.shop-line-name:focus-visible {
   aspect-ratio: 0.93;
   border: 1px solid color-mix(in srgb, var(--gold) 52%, transparent);
   border-radius: 48% 48% 3px 3px;
-  background: #d7c5a4;
-  box-shadow: 0 1.5rem 4rem rgb(27 53 53 / 12%);
+  background: var(--champagne);
+  box-shadow: 0 1.5rem 4rem rgb(var(--midnight-rgb) / 12%);
 }
 .murano-gondola-scene::before {
   position: absolute;
   z-index: 1;
   inset: 0;
-  border: 1px solid rgb(255 255 255 / 52%);
+  border: 1px solid rgb(var(--ivory-rgb) / 52%);
   border-radius: inherit;
   content: "";
   pointer-events: none;
@@ -1957,7 +1961,7 @@ a.shop-line-name:focus-visible {
 }
 .venetian-gull {
   fill: none;
-  stroke: #53645e;
+  stroke: var(--ink-muted);
   stroke-linecap: round;
   stroke-width: 2.1;
   transform-box: fill-box;
@@ -1990,7 +1994,7 @@ a.shop-line-name:focus-visible {
   aspect-ratio: 2.4;
   border: 1px solid color-mix(in srgb, var(--gold) 48%, var(--rule));
   border-radius: 3px;
-  box-shadow: 0 1.2rem 2.6rem -2rem rgb(18 61 67 / 24%);
+  box-shadow: 0 1.2rem 2.6rem -2rem rgb(var(--midnight-rgb) / 24%);
 }
 .murano-art-scene svg {
   display: block;
@@ -2002,9 +2006,9 @@ a.shop-line-name:focus-visible {
   right: 1rem;
   bottom: 0.8rem;
   padding: 0.34rem 0.65rem;
-  border: 1px solid rgb(255 255 255 / 42%);
-  background: rgb(18 61 67 / 82%);
-  color: #fffaf0;
+  border: 1px solid rgb(var(--ivory-rgb) / 42%);
+  background: rgb(var(--midnight-rgb) / 82%);
+  color: var(--ivory);
   font-family: var(--font-ui), system-ui, sans-serif;
   font-size: 0.62rem;
   font-weight: 500;
@@ -2044,7 +2048,7 @@ a.shop-line-name:focus-visible {
   transform-box: fill-box;
   transform-origin: 52% 86%;
   animation: seagull-breathe 4.4s ease-in-out infinite;
-  filter: drop-shadow(0 2px 2px rgb(31 48 50 / 12%));
+  filter: drop-shadow(0 2px 2px rgb(var(--midnight-rgb) / 12%));
 }
 .seagull-head {
   transform-box: fill-box;
@@ -2168,7 +2172,7 @@ a.shop-line-name:focus-visible {
 }
 .murano-guide-section ol li > span:first-child {
   border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
-  background: #fbf8f1;
+  background: var(--ivory);
   color: var(--aventurine-deep);
 }
 .murano-guide-section details {
@@ -2195,8 +2199,8 @@ a.shop-line-name:focus-visible {
   padding: clamp(1.5rem, 4vw, 3rem);
   border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
   background:
-    radial-gradient(ellipse at 100% 0%, rgb(184 154 98 / 12%), transparent 42%),
-    #faf8f5;
+    radial-gradient(ellipse at 100% 0%, rgb(var(--brass-rgb) / 12%), transparent 42%),
+    var(--ivory);
 }
 .murano-guide-cta-wrap .shop-cta-title {
   color: var(--ink);
@@ -2207,7 +2211,7 @@ a.shop-line-name:focus-visible {
 }
 .murano-guide-cta-wrap .shop-chip {
   border-radius: 2px;
-  background: #fff;
+  background: var(--ivory);
 }
 @keyframes gondola-glide {
   0%, 100% { transform: translate3d(-1px, 0, 0) rotate(-0.4deg); }
@@ -2410,129 +2414,19 @@ a.shop-line-name:focus-visible {
   margin-bottom: 0;
 }
 
-/* -- Sticky mobile Add to Cart bar (components/product-purchase-panel.tsx) --- */
-
-/* Mobile only, and only once the inline Add to Cart button has scrolled out
-   of view — ProductPurchasePanel toggles .shop-sticky-cta--visible via an
-   IntersectionObserver. The desktop media query hides it unconditionally
-   regardless of that class, for the same cross-stylesheet cascade-order
-   reason documented on .shop-gallery-desktop above: a component-owned CSS
-   toggle, not a Tailwind hidden/sm:* utility, since this page's CSS chunk
-   can load after the shared Tailwind stylesheet in the cascade. */
-.shop-sticky-cta {
-  display: none;
-}
-.shop-sticky-cta--visible {
-  display: block;
-  position: fixed;
-  inset-inline: 0;
-  bottom: 0;
-  z-index: var(--layer-sticky-action);
-  background: var(--ground);
-  border-top: 1px solid var(--rule);
-  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
-  padding-block: 0.75rem;
-  padding-inline: var(--page-gutter);
-  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
-}
-/* Whatever section is mid-scroll (related products, the bundle promo, etc.)
-   meets the bar's hard edge with no transition — this fades it out instead,
-   so content reads as easing behind the bar rather than getting clipped. */
-.shop-sticky-cta--visible::before {
-  content: "";
-  position: absolute;
-  inset-inline: 0;
-  bottom: 100%;
-  height: 1.75rem;
-  background: linear-gradient(to bottom, transparent, var(--ground));
-  pointer-events: none;
-}
-.shop-sticky-cta-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  max-width: 30rem;
-  margin-inline: auto;
-}
-.shop-sticky-cta-price {
-  color: var(--ink);
-  font-family: var(--font-display), Georgia, serif;
-  font-size: 1.35rem;
-  font-weight: 500;
-  white-space: nowrap;
-}
-/* Phones: the sticky Add to Cart bar covers the bottom of the screen, so the
-   page's last section needs room to scroll clear of it, and a little air
-   before the footer. */
+/* -- Sticky mobile Add to Cart bar — REMOVED ------------------------------- */
+/* The fixed bottom bar (price + Aggiungi questo gioiello) was taken out at
+   the user's request; the inline purchase controls at the top of the product
+   page are the only add-to-cart now. Rules below kept only where they still
+   serve the page without the bar. */
 @media (max-width: 39.99rem) {
   .shop-product-page {
-    padding-bottom: 7rem;
-  }
-  .shop-product-page > section:last-of-type {
-    padding-bottom: 4.5rem;
-  }
-}
-.shop-sticky-cta .btn-primary {
-  /* Higher specificity (0,2,0) than the button's own max-sm:w-full (0,1,0)
-     utility, so this reliably wins regardless of stylesheet load order —
-     the button fills the row via flex, not via width:100%, so it shares
-     space with the price beside it instead of forcing it onto its own line. */
-  width: auto;
-  margin: 0;
-  flex: 1;
-  min-height: 3.25rem;
-  border-radius: var(--radius-control);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-@media (max-width: 22rem) {
-  .shop-sticky-cta-inner {
-    gap: 0.6rem;
-  }
-  .shop-sticky-cta-price {
-    font-size: 1.15rem;
-  }
-  .shop-sticky-cta .btn-primary {
-    padding-inline: 0.55rem;
-    font-size: 0.66rem;
-    letter-spacing: 0.04em;
-  }
-}
-.shop-sticky-cta .btn-primary::after {
-  display: inline-block;
-  width: 0.48rem;
-  height: 0.48rem;
-  flex: 0 0 auto;
-  border-top: 1.5px solid currentColor;
-  border-right: 1.5px solid currentColor;
-  content: "";
-  transform: rotate(45deg);
-}
-@media (min-width: 40rem) {
-  .shop-sticky-cta,
-  .shop-sticky-cta--visible {
-    display: none;
-  }
-}
-
-/* The bar is fixed, so once a shopper reaches the true bottom of the page
-   it would otherwise sit permanently over the last ~70px of the footer with
-   no way to scroll past it. Reserving that space up front (rather than
-   toggling it with .shop-sticky-cta--visible) means the page never shifts
-   as the bar shows/hides while scrolling — only the amount of blank space
-   at the very end changes. :has() scopes it to pages that render the bar
-   at all, so every other page's footer is untouched. */
-body:has(.shop-sticky-cta) footer {
-  padding-bottom: calc(4.75rem + env(safe-area-inset-bottom, 0px));
-}
-@media (min-width: 40rem) {
-  body:has(.shop-sticky-cta) footer {
     padding-bottom: 0;
   }
 }
+
+/* The bar used to reserve space over the footer via body:has() — reverted,
+   since nothing fixed overlaps it anymore. */
 
 /* -- Complete the look (components/complete-the-look.tsx) ------------------- */
 
@@ -2540,7 +2434,7 @@ body:has(.shop-sticky-cta) footer {
    read as styled by the brand, not as a promotion. Photos are on white, so
    multiply drops them into the sand like the shelf cards. */
 .look-section {
-  background: #fff;
+  background: var(--ivory);
   border-top: 1px solid var(--rule);
   padding-block: 3.5rem;
 }
@@ -2549,10 +2443,10 @@ body:has(.shop-sticky-cta) footer {
   gap: 2rem;
 }
 .look-kicker {
-  margin: 0 0 0.6rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
+  margin: 0 0 0.9rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--ink-soft);
 }
@@ -2566,14 +2460,15 @@ body:has(.shop-sticky-cta) footer {
   color: var(--ink);
 }
 .look-copy {
-  margin: 0.9rem 0 0;
-  max-width: 34rem;
+  margin: 1rem 0 0;
+  /* One sentence, so the measure is the sentence's rather than a paragraph's. */
+  max-width: 30rem;
   color: var(--ink-soft);
-  line-height: 1.6;
+  line-height: 1.65;
 }
 .look-visual {
   position: relative;
-  margin-top: 1.75rem;
+  margin-top: 2.25rem;
   aspect-ratio: 4 / 5;
 }
 .look-visual--styled {
@@ -2663,7 +2558,7 @@ body:has(.shop-sticky-cta) footer {
   transition: opacity 200ms ease;
 }
 .look-piece[data-selected="false"] .look-piece-photo {
-  opacity: 0.45;
+  opacity: 0.6;
 }
 @media (prefers-reduced-motion: reduce) {
   /* No movement: pieces just fade in and out of their places. */
@@ -2697,20 +2592,21 @@ body:has(.shop-sticky-cta) footer {
   font-weight: 600;
   font-size: 1.45rem;
 }
+/* The saving in restrained gold, set as type rather than as a filled pill:
+   a coloured lozenge beside the price reads as a promotional sticker, which
+   is the one thing this section should not look like. */
 .look-save {
   justify-self: start;
   display: inline-flex;
   gap: 0.6rem;
-  margin-top: 0.35rem;
-  padding: 0.3rem 0.8rem;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--teal) 12%, var(--ground));
-  color: var(--ink);
-  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  color: var(--gold);
+  font-size: 0.78rem;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.1em;
 }
-.look-save dt {
+.look-save dt,
+.look-save dd {
   text-transform: uppercase;
 }
 .look-pieces {
@@ -2720,15 +2616,26 @@ body:has(.shop-sticky-cta) footer {
   display: grid;
   gap: 0.6rem;
 }
+/* Rows on hairlines, not cards. Three bordered, rounded, filled boxes put a
+   frame around every line of a three-line list and read as form controls;
+   the set should read as a list of pieces. The selectable area is unchanged —
+   the whole row is still labels for one checkbox. */
 .look-piece {
   display: grid;
   grid-template-columns: 4.5rem 1fr auto;
   align-items: center;
   gap: 1rem;
-  padding: 0.6rem 0.9rem 0.6rem 0.6rem;
-  background: var(--ground);
-  border: 1px solid var(--rule);
-  border-radius: 4px;
+  padding: 0.75rem 0.25rem;
+  border-bottom: 1px solid var(--rule);
+  transition: opacity 200ms ease;
+}
+.look-piece:first-child {
+  border-top: 1px solid var(--rule);
+}
+/* A deselected row recedes as a whole, which is the same language the
+   showcase uses when the piece leaves the composition. */
+.look-piece[data-selected="false"] {
+  opacity: 0.55;
 }
 .look-piece-photo {
   position: relative;
@@ -2770,9 +2677,9 @@ a.look-piece-name:focus-visible {
   font-variant-numeric: tabular-nums;
 }
 .look-piece-check {
-  width: 1.4rem;
-  height: 1.4rem;
-  accent-color: var(--ink);
+  width: 1.15rem;
+  height: 1.15rem;
+  accent-color: var(--midnight);
   cursor: pointer;
 }
 .look-piece-check-target {
@@ -2797,11 +2704,75 @@ a.look-piece-name:focus-visible {
 }
 .shelf .btn-primary.look-cta {
   width: 100%;
-  min-height: 3.25rem;
-  margin-top: 1.25rem;
-  letter-spacing: 0.08em;
+  min-height: 3.5rem;
+  margin-top: 1.75rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  font-size: 0.9rem;
+  font-size: 0.82rem;
+  /* Transform and opacity only, so the hover cannot reflow the column. */
+  transition:
+    transform 200ms var(--ease-out-soft, ease),
+    opacity 200ms ease;
+}
+.shelf .btn-primary.look-cta:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+.shelf .btn-primary.look-cta:active:not(:disabled) {
+  transform: translateY(0);
+}
+.shelf .btn-primary.look-cta:disabled {
+  opacity: 0.45;
+}
+@media (prefers-reduced-motion: reduce) {
+  .shelf .btn-primary.look-cta,
+  .shelf .btn-primary.look-cta:hover:not(:disabled) {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* ── The section's scroll reveal ──────────────────────────────────────────
+   Opacity and a small lift, nothing else, so no layout moves and nothing is
+   delayed: the section is interactive from the first frame whatever its
+   reveal state, and it renders fully visible when the effect never runs. */
+.look-section[data-reveal="false"] .look-intro > *,
+.look-section[data-reveal="false"] .look-visual,
+.look-section[data-reveal="false"] .look-details > * {
+  opacity: 0;
+  transform: translateY(14px);
+}
+.look-section .look-intro > *,
+.look-section .look-visual,
+.look-section .look-details > * {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 520ms ease-out,
+    transform 520ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.look-section .look-intro > *:nth-child(2) {
+  transition-delay: 60ms;
+}
+.look-section .look-visual {
+  transition-delay: 120ms;
+}
+.look-section .look-details > *:nth-child(2) {
+  transition-delay: 60ms;
+}
+.look-section .look-details > *:nth-child(3) {
+  transition-delay: 120ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  .look-section[data-reveal="false"] .look-intro > *,
+  .look-section[data-reveal="false"] .look-visual,
+  .look-section[data-reveal="false"] .look-details > *,
+  .look-section .look-intro > *,
+  .look-section .look-visual,
+  .look-section .look-details > * {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 .look-note {
   margin: 0.9rem 0 0;
@@ -2813,8 +2784,11 @@ a.look-piece-name:focus-visible {
     padding-block: 5rem;
   }
   .look-grid {
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-    gap: 4rem;
+    /* The composition is the thing worth looking at, so it takes the larger
+       share. `s` in lib/look-composition.ts is a fraction of the frame, so
+       every piece grows with the column without any slot being re-tuned. */
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: 3.5rem;
     align-items: start;
   }
   .look-details {
@@ -2864,8 +2838,8 @@ a.look-piece-name:focus-visible {
 .expandable [data-clamped="true"] {
   max-height: calc(var(--lines) * 1lh);
   overflow: hidden;
-  -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent);
-  mask-image: linear-gradient(to bottom, #000 55%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, var(--midnight) 55%, transparent);
+  mask-image: linear-gradient(to bottom, var(--midnight) 55%, transparent);
 }
 .expandable-toggle {
   margin-top: 0.4rem;
@@ -2892,33 +2866,62 @@ a.look-piece-name:focus-visible {
 .shop-buy .shop-purchase-controls {
   display: grid;
   grid-template-columns: minmax(5.25rem, 6.5rem) minmax(0, 1fr);
-  align-items: center;
+  /* Both cells take the height of the TALLER of the pair, so the stepper and
+     Add to Cart line up exactly. `align-items: stretch` (the default) let the
+     stepper's own h-11 grow the row and left the outline button floating
+     short of it. */
+  align-items: stretch;
   gap: 0.8rem;
   width: 100%;
   margin-top: 0;
 }
+/* The secondary action: a quiet outline that shares the row with the quantity
+   stepper. It carries no lift and no shadow — the primary below it is the one
+   that has to be looked at. */
 .shop-buy .shop-cta-teal {
   width: 100%;
-  min-height: 3.75rem;
+  min-height: 3.5rem;
+  /* No margin: this button shares a grid row with the quantity stepper, and
+     the mt-3/margin it inherits from the Tailwind class on the element used to
+     drop it 13.6px below the stepper, so the two no longer lined up. The row's
+     gap does the spacing. */
+  margin: 0;
   padding-inline: 0.9rem;
+  align-self: center;
   border-radius: var(--radius-control);
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  box-shadow: 0 0.75rem 1.5rem -1.1rem rgb(18 61 67 / 70%);
+  box-shadow: none;
   transition:
     background-color 0.2s ease,
-    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
     transform 0.2s ease;
 }
+/* The primary action: Buy This Piece Now. It spans the full width beneath the
+   quantity row and is the tallest thing in the group, so the eye lands on it
+   first. The shadow is the only lift in the panel. */
+.shop-buy > .btn-primary {
+  width: 100%;
+  min-height: 4rem;
+  margin-top: 0.8rem;
+  padding-inline: 1.1rem;
+  border-radius: var(--radius-control);
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  box-shadow: 0 0.75rem 1.5rem -1.1rem rgb(var(--midnight-rgb) / 70%);
+}
+/* The stepper fills its cell exactly, overriding the component's own h-11. */
 .shop-buy .shop-purchase-quantity {
   width: 6.5rem;
   min-width: 0;
-  height: 3.75rem;
+  height: auto;
+  align-self: stretch;
   border-color: color-mix(in srgb, var(--gold) 46%, var(--rule));
   border-radius: 3px;
-  background: #fff;
+  background: var(--ivory);
 }
 .shop-buy .shop-purchase-quantity button {
   width: 2.35rem;
@@ -2958,16 +2961,22 @@ a.look-piece-name:focus-visible {
   justify-content: center;
   gap: 0.75rem;
   min-height: 3.5rem;
-  margin-top: 0.85rem;
+  /* Add to Cart shares a grid row with the quantity stepper, so it must not
+     carry a top margin: the 0.85rem that used to sit here dropped the button
+     13.6px below the stepper and broke the row's alignment. The row's own gap
+     provides the spacing. */
+  margin-top: 0;
+  align-self: center;
   padding-inline: 1.1rem;
   border: 1px solid color-mix(in srgb, var(--gold) 58%, var(--rule));
   border-radius: 3px;
-  background: #fff;
+  background: var(--ivory);
   color: var(--ink);
   font-size: 0.73rem;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  box-shadow: none;
   transition:
     border-color 0.2s ease,
     color 0.2s ease,
@@ -2976,7 +2985,7 @@ a.look-piece-name:focus-visible {
 }
 .shop-buy .btn-secondary:hover:not(:disabled) {
   border-color: var(--gold);
-  background: #fbf9f5;
+  background: var(--ivory);
   color: var(--accent-deep);
 }
 .shop-buy button[aria-pressed] {
@@ -3002,7 +3011,7 @@ a.look-piece-name:focus-visible {
 }
 .shop-buy button[aria-pressed]:hover {
   border-color: var(--gold);
-  background: #fbf9f5;
+  background: var(--ivory);
   color: var(--ink);
   text-decoration: none;
 }
@@ -3015,8 +3024,8 @@ a.look-piece-name:focus-visible {
 }
 .shop-buy button[aria-pressed="true"] {
   border-color: color-mix(in srgb, var(--rose) 42%, var(--rule));
-  background: color-mix(in srgb, var(--rose) 7%, #fff);
-  color: #994668;
+  background: color-mix(in srgb, var(--rose) 7%, var(--ivory));
+  color: var(--brass-deep);
 }
 .shop-buy .shop-wishlist-action-row,
 .shop-buy .shop-wishlist-action-wrap {
@@ -3253,7 +3262,7 @@ a.look-piece-name:focus-visible {
   overflow: hidden;
   border: 1px solid var(--rule);
   border-radius: 4px;
-  background: #fff;
+  background: var(--ivory);
   transition: border-color 0.55s ease;
 }
 .look-card-visual::after {
@@ -3508,7 +3517,7 @@ a.look-piece-name:focus-visible {
   padding: 2.25rem 1.75rem;
   border: 1px solid transparent;
   border-radius: 4px;
-  background: #fff;
+  background: var(--ivory);
   text-align: center;
   justify-items: center;
 }
@@ -3624,7 +3633,7 @@ a.look-piece-name:focus-visible {
   overflow: hidden;
   border: 1px solid var(--rule);
   border-radius: 4px;
-  background: #fff;
+  background: var(--ivory);
 }
 .composer-visual::after {
   content: "";
@@ -3805,7 +3814,7 @@ a.look-piece-name:focus-visible {
   aspect-ratio: 1 / 1;
   border: 1px solid var(--rule);
   border-radius: 4px;
-  background: #fff;
+  background: var(--ivory);
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
@@ -3874,7 +3883,7 @@ a.look-piece-name:focus-visible {
 .cart-gift .gc-card--small {
   max-width: 7rem;
   padding: 0.8rem 0.55rem 0.6rem;
-  box-shadow: 0 8px 18px -12px rgb(18 61 67 / 0.4);
+  box-shadow: 0 8px 18px -12px rgb(var(--midnight-rgb) / 0.4);
 }
 .cart-gift .gc-card--small .gc-card-text p {
   font-size: 0.55rem;
@@ -4023,7 +4032,7 @@ a.look-piece-name:focus-visible {
   .cart-flow .cart-items .shop-thumb--cart {
     border-color: color-mix(in srgb, var(--gold) 38%, white);
     border-radius: 0.65rem;
-    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 76%);
+    box-shadow: inset 0 0 0 1px rgb(var(--ivory-rgb) / 76%);
   }
   .cart-flow .cart-items .shop-line-name {
     font-size: 1.12rem;

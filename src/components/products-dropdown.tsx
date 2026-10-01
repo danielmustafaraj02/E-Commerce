@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Link } from "@/components/localized-link";
 import { useRef, useState, useEffect, useCallback } from "react";
 import "./products-dropdown.css";
@@ -7,6 +8,10 @@ import "./products-dropdown.css";
 interface CategoryLink {
   href: string;
   label: string;
+  // The category's thumbnail, borrowed from its newest product (the Category
+  // model has no image column). Null when the category has no product with a
+  // picture yet — the row then renders as a label only, same as before.
+  imageUrl?: string | null;
 }
 
 export function ProductsDropdown({
@@ -14,11 +19,14 @@ export function ProductsDropdown({
   label,
   viewAllLabel,
   viewAllHref = "/products",
+  locale,
 }: {
   categories: CategoryLink[];
   label: string;
   viewAllLabel: string;
   viewAllHref?: string;
+  locale?: string;
+  signedIn?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -95,16 +103,36 @@ export function ProductsDropdown({
       </button>
 
       <div className={`pd-panel${open ? " pd-panel-open" : ""}`} role="menu">
+        <div className="pd-body">
         <div className="pd-inner">
-          {categories.map((cat) => (
+          {categories.map((cat, index) => (
             <Link
               key={cat.href}
               href={cat.href}
               role="menuitem"
-              className="pd-item"
+              /* --i drives the per-row stagger on the menu's entrance. */
+              style={{ "--i": index } as React.CSSProperties}
+              className={`pd-item${cat.imageUrl ? " pd-item--with-image" : ""}`}
               onClick={() => setOpen(false)}
             >
-              {cat.label}
+              {cat.imageUrl ? (
+                <span className="pd-thumb" aria-hidden="true">
+                  <Image
+                    src={cat.imageUrl}
+                    alt=""
+                    fill
+                    /* The plate is a 3rem ≈ 48px square, and the 0.9s hover
+                       zoom pushes it to ~52px — so ask the optimizer for a 2x
+                       plate (96px). The old "120px" was left over from when
+                       this was a big grid tile; keeping it would have shipped
+                       roughly double the bytes for no visible gain. */
+                    sizes="48px"
+                    quality={95}
+                    className="object-cover"
+                  />
+                </span>
+              ) : null}
+              <span className="pd-item-label">{cat.label}</span>
             </Link>
           ))}
           <div className="pd-divider" />
@@ -129,6 +157,7 @@ export function ProductsDropdown({
               <path d="M3 7h8M8 4l3 3-3 3" />
             </svg>
           </Link>
+        </div>
         </div>
       </div>
     </div>

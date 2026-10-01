@@ -50,7 +50,7 @@ export function BuyNowButton({
         );
         router.push("/checkout");
       }}
-      className={`btn-secondary transition-transform duration-150 will-change-transform active:scale-95 max-sm:w-full max-sm:py-3 ${className}`}
+      className={`btn-primary transition-transform duration-150 will-change-transform active:scale-95 max-sm:w-full max-sm:py-3 ${className}`}
     >
       {label}
     </button>

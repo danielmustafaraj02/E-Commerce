@@ -40,18 +40,47 @@ export function CompleteTheLook({
     () => new Set(look.pieces.filter((p) => p.available).map((p) => p.productId))
   );
   const [added, setAdded] = useState(false);
+  // Starts revealed on the server and for anyone who prefers reduced motion,
+  // so the section is never hidden behind an effect that might not run.
+  const [revealed, setRevealed] = useState(true);
   const rootRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const el = rootRef.current;
     if (!el) return;
+
+    /* One observer serves both jobs, at two thresholds: the reveal fires as
+       soon as a sliver of the section is on screen, the analytics event only
+       once it is properly in view (the 0.4 it has always used). A second
+       observer for the animation would be a second subscription to the same
+       element for the same scroll. */
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let seen = false;
+    let shown = reduce.matches;
+    if (!shown && el.getBoundingClientRect().top > window.innerHeight) {
+      // Only hide what is genuinely below the fold: anything already on
+      // screen at mount stays put rather than flashing out and back in.
+      setRevealed(false);
+    } else {
+      shown = true;
+    }
+
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        trackLookEvent("viewed", { lookId: look.id });
-        observer.disconnect();
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          if (!shown) {
+            shown = true;
+            setRevealed(true);
+          }
+          if (!seen && entry.intersectionRatio >= 0.4) {
+            seen = true;
+            trackLookEvent("viewed", { lookId: look.id });
+          }
+        }
+        if (seen && shown) observer.disconnect();
       },
-      { threshold: 0.4 }
+      { threshold: [0.01, 0.4] }
     );
     observer.observe(el);
     return () => observer.disconnect();
@@ -125,18 +154,23 @@ export function CompleteTheLook({
   };
 
   return (
-    <section ref={rootRef} className="look-section" aria-labelledby="look-title">
+    <section
+      ref={rootRef}
+      className="look-section"
+      data-reveal={revealed}
+      aria-labelledby="look-title"
+    >
       <div className="shelf-wrap look-grid">
         <div className="look-intro">
           <p className="look-kicker">{dict.kicker}</p>
           <h2 id="look-title" className="shelf-heading look-title">
             {dict.title}
           </h2>
-          <p className="look-subtitle">{dict.subtitle}</p>
+          {/* One supporting sentence, and nothing else. The subtitle restated
+              the heading and the pair hint restated a saving the price block
+              and the button both already announce when two pieces are
+              selected; both are still in the dictionary for other callers. */}
           <p className="look-copy">{dict.intro}</p>
-          <p className="look-copy look-pair-hint">
-            {applyTemplate(dict.pairHint, { percent: pairPercent })}
-          </p>
 
           {look.imageUrl ? (
             <div className="look-visual look-visual--styled">

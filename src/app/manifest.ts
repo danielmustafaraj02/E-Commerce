@@ -14,8 +14,10 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
     description: settings.metaDescription || `Shop at ${settings.storeName}`,
     start_url: "/",
     display: "standalone",
-    background_color: "#ffffff",
-    theme_color: "#ffffff",
+    // Matches the palette's Cream (app/palette.css) so the installed app opens
+    // on the same ground as the site.
+    background_color: "#E6E2DA",
+    theme_color: "#154230",
     icons: [
       { src: "/icon.png", sizes: "256x256", type: "image/png" },
       { src: "/apple-icon.png", sizes: "180x180", type: "image/png" },

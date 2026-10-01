@@ -20,7 +20,7 @@
   margin-inline: auto;
   padding: clamp(1.5rem, 4vw, 3rem);
   background:
-    radial-gradient(ellipse at 48% 44%, rgb(255 255 255 / 0.92), transparent 68%), #f4f0e7;
+    radial-gradient(ellipse at 48% 44%, rgb(var(--ivory-rgb) / 0.92), transparent 68%), var(--ivory);
 }
 
 .gift-voucher-card-stage .gc-card {
@@ -28,7 +28,7 @@
   aspect-ratio: 1.58;
   max-width: none;
   padding: 1.6rem 1.5rem 1.2rem;
-  box-shadow: 0 16px 30px -22px rgb(18 61 67 / 0.55);
+  box-shadow: 0 16px 30px -22px rgb(var(--midnight-rgb) / 0.55);
 }
 
 .gift-voucher-card-stage .gc-card-text {
@@ -44,7 +44,7 @@
 .gift-voucher-card-caption {
   max-width: 23rem;
   margin: 1.4rem auto 0;
-  color: var(--muted, #687775);
+  color: var(--muted, var(--ink-muted));
   font-size: 0.8rem;
   line-height: 1.7;
   text-align: center;
@@ -56,7 +56,7 @@
   gap: 1rem;
   max-width: 28rem;
   margin: 2rem auto 0;
-  color: var(--ink, #123d43);
+  color: var(--ink, var(--midnight));
   font-family: var(--font-display), Georgia, serif;
   font-size: 1.08rem;
   line-height: 1.65;
@@ -70,7 +70,7 @@
   flex: 0 0 1.4rem;
   height: 1px;
   margin-top: 0.9rem;
-  background: #b89a62;
+  background: var(--brass);
 }
 
 .gift-voucher-form {
@@ -78,12 +78,12 @@
   flex-direction: column;
   gap: 1.1rem;
   padding: 0.25rem 0 0 1.5rem;
-  border-left: 1px solid var(--rule, #d8cdb8);
+  border-left: 1px solid var(--rule, var(--hairline));
 }
 
 .gift-voucher-form-eyebrow {
   margin: 0;
-  color: #8a7147;
+  color: var(--ink-muted);
   font-size: 0.67rem;
   font-weight: 600;
   letter-spacing: 0.19em;
@@ -100,7 +100,7 @@
 .gift-voucher-field > span {
   display: block;
   margin-bottom: 0.45rem;
-  color: var(--ink, #123d43);
+  color: var(--ink, var(--midnight));
   font-size: 0.82rem;
   font-weight: 500;
 }
@@ -117,9 +117,9 @@
   min-height: 3.15rem;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--rule, #d8cdb8);
-  background: #fffdfa;
-  color: var(--ink, #123d43);
+  border: 1px solid var(--rule, var(--hairline));
+  background: var(--ivory);
+  color: var(--ink, var(--midnight));
   cursor: pointer;
   font-family: var(--font-display), Georgia, serif;
   font-size: 1.06rem;
@@ -132,13 +132,13 @@
 
 .gift-voucher-amount:hover {
   transform: translateY(-1px);
-  border-color: #b89a62;
+  border-color: var(--brass);
 }
 
 .gift-voucher-amount.is-selected {
-  border-color: #123d43;
-  background: #123d43;
-  color: #fff;
+  border-color: var(--midnight);
+  background: var(--midnight);
+  color: var(--ivory);
 }
 
 .gift-voucher-amount input {
@@ -151,7 +151,7 @@
 }
 
 .gift-voucher-amount:has(input:focus-visible) {
-  outline: 2px solid #b89a62;
+  outline: 2px solid var(--brass);
   outline-offset: 3px;
 }
 
@@ -167,7 +167,7 @@
 .gift-voucher-delivery-note,
 .gift-voucher-terms {
   margin: 0;
-  color: var(--muted, #687775);
+  color: var(--muted, var(--ink-muted));
   font-size: 0.76rem;
   line-height: 1.65;
 }
@@ -180,9 +180,9 @@
   gap: 1rem;
   margin-top: 0.15rem;
   padding: 0.85rem 1rem 0.85rem 1.2rem;
-  border: 1px solid #b89a62;
-  background: #123d43;
-  color: #fff;
+  border: 1px solid var(--brass);
+  background: var(--midnight);
+  color: var(--ivory);
   cursor: pointer;
   font-size: 0.7rem;
   font-weight: 600;
@@ -202,8 +202,8 @@
 
 .gift-voucher-submit:hover:not(:disabled) {
   transform: translateY(-1px);
-  background: #0c3035;
-  box-shadow: 0 8px 20px -12px rgb(18 61 67 / 0.75);
+  background: var(--midnight);
+  box-shadow: 0 8px 20px -12px rgb(var(--midnight-rgb) / 0.75);
 }
 
 .gift-voucher-submit:hover:not(:disabled) span {
@@ -211,7 +211,7 @@
 }
 
 .gift-voucher-submit:focus-visible {
-  outline: 2px solid #b89a62;
+  outline: 2px solid var(--brass);
   outline-offset: 3px;
 }
 

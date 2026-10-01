@@ -1,17 +1,21 @@
 @import "tailwindcss";
+/* The brand palette — every colour in the site comes from these five. */
+@import "./palette.css";
 
 :root {
   color-scheme: light;
-  /* Brand palette: white paper, deep petrol ink, champagne rules and a
-     sparing Venetian gold. The glass itself supplies any other colour. */
-  --background: #ffffff;
-  --foreground: #123d43;
-  --surface: #faf8f5;
-  --ink-soft: #527176;
-  --champagne: #d9cdbb;
-  --gold: #b89a62;
-  --petrol: #123d43;
-  --petrol-deep: #0b3035;
+  /* Every brand token below is DERIVED from the five palette colours in
+     palette.css. Nothing here is a hand-picked shade: change a value there and
+     the whole storefront re-colours. */
+  --background: var(--ivory);
+  --foreground: var(--midnight);
+  --surface: var(--ivory);
+  --ink-soft: var(--ink-muted);
+  /* --champagne is the palette's own (#d8c3a5) and needs no alias here;
+     hairlines that want the quieter mix read --hairline directly. */
+  --gold: var(--brass);
+  --petrol: var(--midnight);
+  --petrol-deep: var(--sapphire-deep);
   --danger: #dc2626;
   --success: #15803d;
   --warning: #b45309;
@@ -33,15 +37,18 @@
   --layer-modal: 60;
   /* Fixed brand palette taken from the glass itself. Unlike --store-primary
      these are not admin-editable: they are what makes hover/focus/checked
-     states and the decorative bands colorful whatever primary color is set. */
-  --accent: var(--petrol);
-  --accent-deep: var(--petrol-deep);
-  --glass-teal: #1f7a85;
-  --glass-rose: #c65b8a;
-  --glass-gold: #f5c451;
-  /* Raw admin-picked brand colors, set inline on <html> from StoreSettings. */
-  --store-primary: #123d43;
-  --store-secondary: #4f46e5;
+     states and the decorative bands colorful whatever primary color is set.
+     All derived from the five palette colours. */
+  --accent: var(--midnight);
+  --accent-deep: var(--sapphire-deep);
+  --glass-teal: var(--sapphire);
+  --glass-rose: var(--brass);
+  --glass-gold: var(--champagne);
+  /* Raw admin-picked brand colors, set inline on <html> from StoreSettings.
+     The fallback is the palette's own brass, so a store with no colour picked
+     yet still looks like the brand. */
+  --store-primary: var(--brass);
+  --store-secondary: var(--sapphire);
 }
 
 /* A custom Murano scrollbar: dark lagoon glass with a fine champagne highlight
@@ -49,7 +56,7 @@
    scrolling and keyboard behavior stay intact. */
 html,
 body {
-  scrollbar-color: #123d43 #e8dfd0;
+  scrollbar-color: var(--midnight) var(--hairline);
   scrollbar-width: auto;
   scrollbar-gutter: stable;
 }
@@ -60,18 +67,18 @@ body::-webkit-scrollbar {
 }
 html::-webkit-scrollbar-track,
 body::-webkit-scrollbar-track {
-  border-inline-start: 1px solid #d1c2a9;
-  background: linear-gradient(180deg, #eee8dc 0%, #ddd1bc 100%);
+  border-inline-start: 1px solid var(--hairline);
+  background: linear-gradient(180deg, var(--hairline) 0%, var(--hairline) 100%);
 }
 html::-webkit-scrollbar-thumb,
 body::-webkit-scrollbar-thumb {
   min-height: 3.5rem;
-  border: 2px solid #e8dfd0;
+  border: 2px solid var(--hairline);
   border-radius: 0;
-  background-color: #123d43;
+  background-color: var(--midnight);
   background-image:
-    linear-gradient(90deg, transparent 34%, #d9c08c 50%, transparent 66%),
-    linear-gradient(180deg, #1f6870 0%, #0b3035 100%);
+    linear-gradient(90deg, transparent 34%, var(--champagne) 50%, transparent 66%),
+    linear-gradient(180deg, var(--sapphire) 0%, var(--midnight) 100%);
   background-clip: padding-box;
   transition:
     background-color 180ms ease,
@@ -79,20 +86,20 @@ body::-webkit-scrollbar-thumb {
 }
 html::-webkit-scrollbar-thumb:hover,
 body::-webkit-scrollbar-thumb:hover {
-  border-color: #e1d3b9;
-  background-color: #b89a62;
+  border-color: var(--hairline);
+  background-color: var(--brass);
   background-image:
-    linear-gradient(90deg, transparent 34%, #fff3d2 50%, transparent 66%),
-    linear-gradient(180deg, #b89a62 0%, #8b6c3f 100%);
+    linear-gradient(90deg, transparent 34%, var(--brass-light) 50%, transparent 66%),
+    linear-gradient(180deg, var(--brass) 0%, var(--brass-deep) 100%);
 }
 html::-webkit-scrollbar-thumb:active,
 body::-webkit-scrollbar-thumb:active {
-  background-color: #9c7b47;
-  background-image: linear-gradient(180deg, #c4a66d 0%, #8b6c3f 100%);
+  background-color: var(--brass-deep);
+  background-image: linear-gradient(180deg, var(--brass-light) 0%, var(--brass-deep) 100%);
 }
 html::-webkit-scrollbar-corner,
 body::-webkit-scrollbar-corner {
-  background: #e8dfd0;
+  background: var(--hairline);
 }
 
 /* @theme inline values that are plain literals get inlined directly into the
@@ -101,9 +108,12 @@ body::-webkit-scrollbar-corner {
    through a var() indirection (as background/foreground/primary/secondary
    already do) keeps the utility classes theme-reactive. */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-surface: var(--surface);
+  /* Pointed at the --site-* roles (app/palette.css) wherever one exists, so
+     a Tailwind utility like `bg-background` or `border-hairline` follows the
+     admin's palette instead of drifting from the stylesheets' own tokens. */
+  --color-background: var(--site-bg);
+  --color-foreground: var(--site-text);
+  --color-surface: var(--site-surface);
   --color-primary: var(--store-primary);
   --color-secondary: var(--store-secondary);
   --color-danger: var(--danger);
@@ -111,8 +121,42 @@ body::-webkit-scrollbar-corner {
   --color-warning: var(--warning);
   --color-accent: var(--accent);
   --color-accent-deep: var(--accent-deep);
-  --font-sans: var(--font-ui);
+  /* The divider/hairline token from palette.css. Registered here so Tailwind's
+     `border-hairline` utility resolves to it; without this the class is inert. */
+  --color-hairline: var(--hairline);
+  --font-sans: var(--font-body-stack);
   --font-mono: var(--font-geist-mono);
+
+  /* ── The three type ROLES ────────────────────────────────────────────────
+     Every family in the site resolves through one of these, and the two that
+     carry a webfont are declared in app/home-fonts.ts. Admin > Settings >
+     Site style rewrites --font-heading-family / --font-body-family on <html>,
+     so changing a role here changes it on every page and in every locale
+     without a single component knowing which family it got.
+
+     --font-heading   headings, display copy    NewYork (Artem Nevsky)
+     --font-body      running text              DM Sans
+     --font-ui        controls, labels, buttons DM Sans (same family, own role)
+
+     The stack is: whatever the admin chose, then the loaded webfont, then
+     native fallbacks. */
+  --font-heading-stack: var(--font-heading-family, var(--font-heading)),
+    "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-body-stack: var(--font-body-family, var(--font-body)), system-ui,
+    -apple-system, "Segoe UI", sans-serif;
+
+  /* ── Legacy names, kept as aliases ───────────────────────────────────────
+     Hundreds of declarations across the stylesheets already say
+     var(--font-display) / var(--font-ui) / var(--font-chrome). Pointing them
+     at the roles is what lets the whole site follow the admin's choice
+     without touching those declarations one by one.
+
+     --font-chrome used to name Apple's SYSTEM serif "New York", which exists
+     only on Apple platforms and is a different typeface from the NewYork this
+     site now loads. Everyone else silently got Georgia. */
+  --font-display: var(--font-heading-stack);
+  --font-chrome: var(--font-heading-stack);
+  --font-ui: var(--font-body-stack);
 }
 
 body {
@@ -310,9 +354,9 @@ button:not(:disabled),
 }
 
 .cart-celebration {
-  --cart-celebration-petrol: #123d43;
-  --cart-celebration-gold: #b89a62;
-  --cart-celebration-ground: #fffaf4;
+  --cart-celebration-petrol: var(--midnight);
+  --cart-celebration-gold: var(--brass);
+  --cart-celebration-ground: var(--ivory);
   position: fixed;
   z-index: 80;
   inset: 0;
@@ -341,10 +385,10 @@ button:not(:disabled),
   background: var(--cart-celebration-gold);
 }
 .cart-celebration__confetti--rose {
-  background: #c65b8a;
+  background: var(--brass);
 }
 .cart-celebration__confetti--teal {
-  background: #1f7a85;
+  background: var(--sapphire);
 }
 .cart-celebration__vehicle {
   position: absolute;
@@ -352,7 +396,7 @@ button:not(:disabled),
   left: 50%;
   width: clamp(6rem, 11vw, 9rem);
   color: var(--cart-celebration-petrol);
-  filter: drop-shadow(0 10px 18px rgb(18 61 67 / 20%));
+  filter: drop-shadow(0 10px 18px rgb(var(--midnight-rgb) / 20%));
   animation: cart-celebration-drive 1.9s cubic-bezier(0.2, 0.7, 0.25, 1) both;
 }
 .cart-celebration__vehicle svg {
@@ -700,7 +744,7 @@ button:not(:disabled),
 }
 .locale-transition-kicker {
   margin: 0 0 0.6rem;
-  color: rgb(102 91 80 / 65%);
+  color: rgb(var(--shadow-rgb) / 65%);
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.4em;
@@ -722,7 +766,7 @@ button:not(:disabled),
   left: 50%;
   width: clamp(9.5rem, 35vw, 13rem);
   aspect-ratio: 1;
-  border: 2px solid rgb(217 199 160 / 18%);
+  border: 2px solid rgb(var(--brass-rgb) / 18%);
   border-radius: 50%;
   content: "";
   transform: translate(-50%, -50%);
@@ -730,12 +774,12 @@ button:not(:disabled),
   opacity: 0.4;
 }
 .locale-transition-stage::before {
-  box-shadow: 0 0 0 0.8rem rgb(217 199 160 / 4%);
+  box-shadow: 0 0 0 0.8rem rgb(var(--brass-rgb) / 4%);
   animation: locale-orbit 6s linear infinite;
 }
 .locale-transition-stage::after {
   width: clamp(12rem, 48vw, 18rem);
-  border-color: rgb(217 199 160 / 8%);
+  border-color: rgb(var(--brass-rgb) / 8%);
   border-style: dashed;
   animation: locale-orbit 20s linear infinite reverse;
 }
@@ -750,14 +794,14 @@ button:not(:disabled),
   gap: 0.45rem;
   width: clamp(8rem, 27vw, 10.5rem);
   aspect-ratio: 1;
-  border: 1.5px solid rgb(217 199 160 / 55%);
+  border: 1.5px solid rgb(var(--brass-rgb) / 55%);
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #fffbf5 0%, #fef8f2 35%, #f5ebe0 100%);
+  background: radial-gradient(circle at 30% 30%, var(--ivory) 0%, var(--ivory) 35%, var(--ivory) 100%);
   box-shadow:
-    0 0 0 1rem rgb(217 199 160 / 3%),
-    0 2rem 5rem rgb(102 91 80 / 12%),
-    inset 0 1px 2px rgb(255 255 255 / 60%),
-    inset 0 -1px 2px rgb(102 91 80 / 8%);
+    0 0 0 1rem rgb(var(--brass-rgb) / 3%),
+    0 2rem 5rem rgb(var(--shadow-rgb) / 12%),
+    inset 0 1px 2px rgb(var(--ivory-rgb) / 60%),
+    inset 0 -1px 2px rgb(var(--shadow-rgb) / 8%);
   line-height: 1;
   will-change: transform, opacity;
 }
@@ -765,7 +809,7 @@ button:not(:disabled),
   font-size: clamp(3.5rem, 12vw, 5.25rem);
 }
 .locale-transition-word {
-  color: rgb(60 55 50 / 85%);
+  color: rgb(var(--midnight-rgb) / 85%);
   font-family: var(--font-display, Georgia), Georgia, serif;
   font-size: clamp(0.85rem, 3vw, 1.05rem);
   font-weight: 600;
@@ -893,8 +937,8 @@ button:not(:disabled),
      option text invisible even though it's still fully clickable. Literal
      (non-variable) colors on <option> survive that repaint correctly. */
   select.field option {
-    color: #171717;
-    background-color: #ffffff;
+    color: var(--midnight);
+    background-color: var(--ivory);
   }
   .field:hover:not(:disabled):not(:focus) {
     border-color: color-mix(in srgb, var(--accent) 50%, transparent);
@@ -1092,7 +1136,7 @@ button:not(:disabled),
   .btn-primary {
     border: 1px solid var(--gold);
     background: var(--color-primary);
-    color: #fbf9f5;
+    color: var(--ivory);
     padding: 0.7rem 1.35rem;
     min-height: 2.75rem;
     transition:
@@ -1101,7 +1145,7 @@ button:not(:disabled),
   }
   .btn-primary:hover:not(:disabled) {
     background: color-mix(in srgb, var(--color-primary) 72%, black);
-    box-shadow: 0 0.45rem 1rem -0.6rem rgb(18 61 67 / 42%);
+    box-shadow: 0 0.45rem 1rem -0.6rem rgb(var(--midnight-rgb) / 42%);
   }
   .btn-primary:active:not(:disabled) {
     background: color-mix(in srgb, var(--color-primary) 60%, black);
@@ -1111,6 +1155,48 @@ button:not(:disabled),
     opacity: 0.55;
     pointer-events: none;
     box-shadow: none;
+  }
+
+  /* ── The arrow affordance, shared ─────────────────────────────────────────
+     A CTA opts in by adding `.btn-arrow` and carrying a
+     `<span class="btn-arrow-glyph" aria-hidden="true">→</span>` after its label.
+     It lives here, beside the button variants, rather than in any one page's
+     stylesheet, so every arrow CTA on the site moves the same distance at the
+     same speed. The glyph is aria-hidden: the link's accessible name is its
+     label, not "label right arrow".
+
+     The gap and the glyph's own translate are separate on purpose — animating
+     the gap would re-lay-out the button's contents on every hover frame, while
+     a transform on the glyph alone is composited. */
+  .btn-arrow {
+    gap: 0.55rem;
+  }
+  .btn-arrow-glyph {
+    display: inline-block;
+    /* Optically aligned: the arrow glyph sits high in its em box in most of the
+       UI faces, so a hair of downward nudge puts it on the text's own line. */
+    translate: 0 0.03em;
+    transition: translate var(--interactive-duration) ease;
+  }
+  /* 3px forward, and only when a pointer can actually hover — on a touch
+     screen :hover sticks after a tap and would leave the arrow displaced. */
+  @media (hover: hover) {
+    .btn-arrow:hover:not(:disabled) .btn-arrow-glyph {
+      translate: 3px 0.03em;
+    }
+  }
+  /* Pressed: the arrow settles back, so the button reads as taken rather than
+     still inviting. */
+  .btn-arrow:active:not(:disabled) .btn-arrow-glyph {
+    translate: 1px 0.03em;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn-arrow-glyph,
+    .btn-arrow:hover:not(:disabled) .btn-arrow-glyph,
+    .btn-arrow:active:not(:disabled) .btn-arrow-glyph {
+      transition: none;
+      translate: 0 0.03em;
+    }
   }
 
   .btn-secondary {
@@ -1301,7 +1387,7 @@ button:not(:disabled),
     display: none;
     align-items: center;
     justify-content: center;
-    color: #fff;
+    color: var(--ivory);
     mix-blend-mode: difference;
     pointer-events: none;
   }
@@ -1380,21 +1466,21 @@ button:not(:disabled),
   height: 28rem;
   top: -10rem;
   left: -8rem;
-  background: radial-gradient(circle, #f5c451 0%, #f5c451 25%, transparent 78%);
+  background: radial-gradient(circle, var(--champagne) 0%, var(--champagne) 25%, transparent 78%);
 }
 .hero-glass-bg::after {
   width: 30rem;
   height: 30rem;
   bottom: -12rem;
   right: -10rem;
-  background: radial-gradient(circle, #7cc7c0 0%, #7cc7c0 25%, transparent 78%);
+  background: radial-gradient(circle, var(--sapphire) 0%, var(--sapphire) 25%, transparent 78%);
 }
 .hero-glass-bg span {
   width: 22rem;
   height: 22rem;
   top: -7rem;
   right: -6rem;
-  background: radial-gradient(circle, #e8607f 0%, #e8607f 25%, transparent 78%);
+  background: radial-gradient(circle, var(--brass-light) 0%, var(--brass-light) 25%, transparent 78%);
 }
 @media (prefers-reduced-motion: no-preference) {
   .hero-glass-bg::before,
@@ -1483,4 +1569,35 @@ h1,
 h2,
 h3 {
   text-wrap: balance;
+}
+
+/* ── The navbar's foot ───────────────────────────────────────────────────────
+   A line drawn from the palette's own five colours, so the store chrome reads
+   as its own band rather than as the top of the page. It replaces the plain
+   hairline border the header used to carry: a single neutral rule separated
+   nothing on a white page, and the header simply dissolved into the content
+   under it.
+
+   Drawn as an ::after rather than a border, so the 2px costs the header no
+   height and nothing below it shifts — the header's measured height (see
+   components/header-height.tsx) feeds the hero's own sizing, so growing the
+   element would have moved the first screen.
+
+   The stops are the palette in its own order — ink, the darker accent step,
+   the accent, the hairline — fading out to the right so the line reads as an
+   editorial mark rather than as a striped rule. */
+.site-header::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--bottle) 0%,
+    var(--garnet) 30%,
+    var(--bronze) 62%,
+    var(--linen) 100%
+  );
+  pointer-events: none;
 }

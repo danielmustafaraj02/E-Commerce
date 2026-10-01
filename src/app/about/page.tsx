@@ -63,6 +63,12 @@ export default async function AboutPage() {
     { title: dict.about.value3Title, body: dict.about.value3Body },
   ];
 
+  const points = [
+    { title: dict.home.whyShipping, body: dict.home.whyShippingBody },
+    { title: dict.home.whySecure, body: dict.home.whySecureBody },
+    { title: dict.home.whyReturns, body: dict.home.whyReturnsBody },
+  ];
+
   return (
     <ShelfMain className="about-page">
       <section className="about-hero">
@@ -107,6 +113,25 @@ export default async function AboutPage() {
                   <div className="shop-panel shop-panel-pad">
                     <h3 className="shop-ui mb-2 font-medium">{value.title}</h3>
                     <p className="text-foreground/70 text-sm">{value.body}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </Reveal>
+
+        {/* "Why choose us": the home page's trust strip, restated here as
+            three panels in the same family as the values above — where a
+            shopper deciding whether to trust the store actually reads. */}
+        <Reveal>
+          <div className="about-values-section">
+            <AnimatedHeading as="h2" text={dict.home.whyUsTitle} className="shop-h2-plain" />
+            <div className="grid gap-6 sm:grid-cols-3">
+              {points.map((point, index) => (
+                <Reveal key={point.title} delayMs={index * 80}>
+                  <div className="shop-panel shop-panel-pad">
+                    <h3 className="shop-ui mb-2 font-medium">{point.title}</h3>
+                    <p className="text-foreground/70 text-sm">{point.body}</p>
                   </div>
                 </Reveal>
               ))}

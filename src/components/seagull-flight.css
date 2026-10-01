@@ -31,7 +31,7 @@
   height: 100%;
   overflow: visible;
   /* White on ivory needs a soft edge to read. */
-  filter: drop-shadow(0 2px 2.5px rgb(18 61 67 / 22%));
+  filter: drop-shadow(0 2px 2.5px rgb(var(--midnight-rgb) / 22%));
 }
 
 /* Wings hinge at the shoulder (SVG user units). */

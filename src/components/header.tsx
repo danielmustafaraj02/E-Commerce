@@ -3,10 +3,12 @@ import { Link } from "@/components/localized-link";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { CartLink } from "@/components/cart-link";
-import { GuestWishlistLink } from "@/components/guest-wishlist-link";
+import { CartFlyout, WishlistFlyout } from "@/components/header-flyout";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { MobileNavMenu } from "@/components/mobile-nav-menu";
 import { ProductsDropdown } from "@/components/products-dropdown";
+import { HeaderSearch } from "@/components/search-overlay";
+import { HeaderHeight } from "@/components/header-height";
 import type { Locale } from "@/lib/i18n/locale";
 import { localizedName } from "@/lib/product-i18n";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
@@ -29,12 +31,51 @@ export async function Header({
 }) {
   const [session, categories] = await Promise.all([
     auth(),
+    // Categories have no image of their own (see model Category in
+    // prisma/schema.prisma), so the dropdown thumbnails each borrow the first
+    // picture of their newest product. `position: "asc"` + `createdAt: "desc"`
+    // keeps it to one image per category: we ask for one product row, and
+    // Prisma returns exactly one image on it.
     db.category.findMany({
       where: { parentId: null },
       orderBy: { name: "asc" },
       take: 8,
+      select: {
+        slug: true,
+        name: true,
+        nameEn: true,
+        nameFr: true,
+        nameDe: true,
+        nameAr: true,
+        nameZh: true,
+        nameRu: true,
+        nameEs: true,
+        namePt: true,
+        nameHi: true,
+        nameJa: true,
+        products: {
+          where: { active: true },
+          orderBy: { createdAt: "desc" },
+          take: 1,
+          select: {
+            images: {
+              orderBy: { position: "asc" },
+              take: 1,
+              select: { url: true },
+            },
+          },
+        },
+      },
     }),
   ]);
+
+  // Narrow the query result to what the two nav rows need: an href, a
+  // localized label, and an optional thumbnail.
+  const categoryLinks = categories.map((category) => ({
+    href: `/category/${category.slug}`,
+    label: localizedName(category, locale),
+    imageUrl: category.products[0]?.images[0]?.url ?? null,
+  }));
 
   const isStaff = session?.user.role === "admin" || session?.user.role === "staff";
 
@@ -43,6 +84,26 @@ export async function Header({
     : 0;
 
   const navChipClass = "nav-link link-underline text-foreground/80 shrink-0";
+
+  // Flyout copy, shared by the cart and wishlist panels. All of it already
+  // exists in the dictionary for the 11 locales — the panels are new, the
+  // words are the storefront's.
+  const flyoutLabels = {
+    title: dict.wishlist.title,
+    empty: dict.cart.empty,
+    remove: dict.cart.remove,
+    viewAll: dict.footer.allProducts,
+    itemCount: dict.wishlist.itemCount,
+    subtotal: dict.checkout.subtotal,
+    checkout: dict.cart.checkout,
+  };
+
+  // The wishlist flyout gets its own empty line — reusing the cart's "your
+  // cart is empty" inside the wishlist panel read as a bug.
+  const wishlistFlyoutLabels = {
+    ...flyoutLabels,
+    empty: dict.wishlist.empty,
+  };
 
   // Same destinations as the desktop row below, for the full-screen mobile
   // menu (MobileNavMenu) — resolved here since it needs plain strings, not
@@ -61,19 +122,28 @@ export async function Header({
     session?.user
       ? { href: "/account", label: dict.nav.account, account: true }
       : { href: "/login", label: dict.nav.signIn, account: true },
-    ...categories.map((category) => ({
-      href: `/category/${category.slug}`,
-      label: localizedName(category, locale),
-    })),
+    // The collections are NOT in this list: the menu renders them as its own
+    // thumbnail rows (categories prop), so they would otherwise appear twice.
     { href: "/looks", label: dict.looks.navLabel },
     { href: "/about", label: dict.footer.about, secondary: true },
-    { href: "/murano-glass", label: dict.footer.muranoGuide, secondary: true },
   ];
 
   // The blur only matters where the header is sticky (sm and up); on phones
   // it scrolls away anyway, and the backdrop-filter was a rendering cost.
+  // The hairline under the bar uses the project's shared --hairline token, so the
+  // header reads as a distinct band from the page it scrolls over.
   return (
-    <header className="glass-rule bg-background/90 relative z-40 sm:sticky sm:top-0 sm:backdrop-blur-sm">
+    <header
+      className="site-header relative z-40 bg-background sm:sticky sm:top-0"
+      /* The store chrome's face: Apple's "New York" system serif where it
+         exists, with serif fallbacks elsewhere. Set on the header so every
+         nav link, chip and account/cart label inherits it; descendants can
+         still override where a control genuinely needs the UI face. */
+      style={{ fontFamily: "var(--font-chrome)" }}
+    >
+      {/* Reports the header's measured height to CSS, so the hero below can
+          fill exactly the rest of the first screen. */}
+      <HeaderHeight />
       <div className="mx-auto flex w-full max-w-7xl items-center gap-7 px-4 py-4 sm:px-6 sm:py-3.5">
 
         {/* ── Logo (far left, desktop only — mobile has its own centered logo below) ── */}
@@ -95,12 +165,11 @@ export async function Header({
             even when overflow-y is set to visible. ── */}
         <nav className="hidden min-w-0 items-center gap-6 text-[0.95rem] whitespace-nowrap lg:flex">
           <ProductsDropdown
-            categories={categories.map((category) => ({
-              href: `/category/${category.slug}`,
-              label: localizedName(category, locale),
-            }))}
+            categories={categoryLinks}
             label={dict.nav.products}
             viewAllLabel={dict.nav.viewAll}
+            locale={locale}
+            signedIn={Boolean(session?.user)}
           />
           <Link href="/looks" className={navChipClass}>
             {dict.looks.navLabel}
@@ -108,49 +177,23 @@ export async function Header({
           <Link href="/about" className={navChipClass}>
             {dict.footer.about}
           </Link>
-          <Link href="/murano-glass" className={navChipClass}>
-            {dict.footer.muranoGuide}
-          </Link>
         </nav>
 
         {/* ── Spacer pushes everything after here to the right (desktop only) ── */}
         <div className="hidden flex-1 lg:block" />
 
-        {/* ── Search bar ────────────────────────────────────────────────── */}
-        <form
-          action="/products"
-          method="GET"
-          role="search"
-          className="relative hidden items-center lg:flex"
-        >
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 20 20"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            className="text-foreground/50 pointer-events-none absolute start-3"
-            aria-hidden="true"
-          >
-            <circle cx="9" cy="9" r="6.5" />
-            <path d="M18 18l-4-4" strokeLinecap="round" />
-          </svg>
-          <input
-            type="search"
-            name="q"
-            placeholder={dict.nav.searchPlaceholder}
-            aria-label={dict.nav.searchPlaceholder}
-            enterKeyHint="search"
-            autoComplete="off"
-            className="field w-44 min-w-0 rounded-md py-2 ps-10 pe-3 text-sm shadow-none xl:w-52"
-          />
-        </form>
+        {/* ── Search: a magnifier that unfolds into a field ───────────────── */}
+        <div className="hidden lg:flex">
+          <HeaderSearch placeholder={dict.nav.searchPlaceholder} label={dict.nav.search} />
+        </div>
 
         {/* ── Icon cluster (locale, wishlist, cart, admin, account/login) ── */}
         <div className="hidden items-center gap-x-4 text-[0.95rem] whitespace-nowrap lg:flex">
           <LocaleSwitcher current={locale} />
           {session?.user ? (
+            // Signed-in: the wishlist is DB-backed, so the header keeps the
+            // server count and the plain link — the flyout reads the
+            // device-local guest store, which would show the wrong list.
             <Link
               href="/account/wishlist"
               aria-label={dict.nav.wishlist}
@@ -174,9 +217,14 @@ export async function Header({
               {wishlistCount > 0 ? <span>({wishlistCount})</span> : null}
             </Link>
           ) : (
-            <GuestWishlistLink label={dict.nav.wishlist} />
+            <WishlistFlyout
+              label={dict.nav.wishlist}
+              labels={wishlistFlyoutLabels}
+              locale={locale}
+              signedIn={false}
+            />
           )}
-          <CartLink label={dict.nav.cart} />
+          <CartFlyout label={dict.nav.cart} labels={flyoutLabels} locale={locale} />
           {isStaff && (
             <Link
               href="/admin"
@@ -237,12 +285,13 @@ export async function Header({
           <div className="flex items-center">
             <MobileNavMenu
               links={mobileNavLinks}
+              categories={categoryLinks}
+              logoUrl={headerLogoSrc(logoUrl)}
               menuLabel={dict.nav.menu}
               closeLabel={dict.nav.closeMenu}
               searchPlaceholder={dict.nav.searchPlaceholder}
               searchLabel={dict.nav.search}
               storeName={storeName}
-              tagline={dict.footer.brandTagline}
               social={social}
               socialLabel={dict.footer.socialNav}
               legal={legalLinks(dict)}
