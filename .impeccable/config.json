@@ -29,6 +29,12 @@
         ],
         "createdAt": "2026-09-25T23:23:24.319Z",
         "reason": "Pre-existing full-width top gradient rule on .site-footer::before (inset: 0 0 auto, 3px), not a card side border. Documented in DESIGN.md as the intentional header/footer decorative band; unchanged by this session's edits."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "${encodeuricomponent(pairing.heading",
+        "createdAt": "2026-10-01T22:29:55.732Z",
+        "reason": "Admin Site style preview loads the Google family the admin picked at runtime, so it cannot be a fixed DESIGN.md family; admin UI, not storefront type. User asked for the font-pairing dropdown."
       }
     ]
   }

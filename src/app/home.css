@@ -776,32 +776,37 @@
 .shelf-home .shelf-hero .shelf-lede {
   color: var(--ivory);
 }
-/* The hero copy sits on a photograph, so it is painted in the on-dark colour
-   and NOT in the page ink — over the film the brand's bottle green measured
-   about 1.4:1 against the picture behind it, which is barely a silhouette.
+/* ── Hero copy over the film ──────────────────────────────────────────────
+   ONLY below the two-column breakpoint. From 52rem the hero is a split: the
+   copy sits on its own ivory panel and the film takes the right-hand 58%, so
+   there the ink is already 11.9:1 on white and needs neither a light colour
+   nor a shadow — a halo there is just a smudge behind green text.
+
+   Below 52rem the film is full-bleed and the copy sits on top of it, where
+   the brand's bottle green measured about 1.4:1 against the picture: barely
+   a silhouette. There the copy is white, with a soft dark halo so each glyph
+   carries its own contrast — the video's brightness changes as it plays, so
+   a fixed wash alone cannot be relied on.
 
    These selectors used to name .hero-typing-visible, the absolutely
    positioned overlay the typewriter had before it was rebuilt to reveal real
    characters in place. That class no longer exists, so the rules matched
    nothing and the title fell back to the ink. They now name the element the
-   characters actually live in, and the title is set on the heading itself so
-   it holds whatever the typing effect does. */
-.shelf-home .shelf-hero .shelf-title,
-.shelf-home .shelf-hero .shelf-title .hero-typing-type,
-.shelf-home .shelf-hero .shelf-lede,
-.shelf-home .shelf-hero .shelf-lede .hero-typing-type {
-  color: #ffffff;
-}
+   characters actually live in. */
+@media (max-width: 51.99rem) {
+  .shelf-home .shelf-hero .shelf-title,
+  .shelf-home .shelf-hero .shelf-title .hero-typing-type,
+  .shelf-home .shelf-hero .shelf-lede,
+  .shelf-home .shelf-hero .shelf-lede .hero-typing-type {
+    color: #ffffff;
+  }
 
-/* A soft dark halo under the words. It is a text-shadow, not a panel: the
-   film stays visible, but every glyph carries its own contrast with it, so
-   the copy holds up over a bright frame as well as a dark one — and the
-   photograph changes brightness as the video plays. */
-.shelf-home .shelf-hero .shelf-title,
-.shelf-home .shelf-hero .shelf-lede {
-  text-shadow:
-    0 1px 2px rgb(var(--onyx-rgb) / 55%),
-    0 2px 18px rgb(var(--onyx-rgb) / 45%);
+  .shelf-home .shelf-hero .shelf-title,
+  .shelf-home .shelf-hero .shelf-lede {
+    text-shadow:
+      0 1px 2px rgb(var(--onyx-rgb) / 55%),
+      0 2px 18px rgb(var(--onyx-rgb) / 45%);
+  }
 }
 /* A quiet, deliberate hover: the colour deepens and the gold hairline
    brightens from the resting 1px to full gold. No sweep, no sheen — the
