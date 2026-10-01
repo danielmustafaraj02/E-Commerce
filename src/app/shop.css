@@ -28,10 +28,13 @@
      title is the only ornament. */
   background: var(--ground);
   border-bottom: 1px solid var(--rule);
-  padding-block: 3.25rem 2.5rem;
+  /* Tightened from 3.25/2.5rem. On a 1280x720 laptop the head alone ran to
+     210px and pushed the filter panel and the first row of prices below the
+     fold; the listing is what the page is for, so the banner gives way. */
+  padding-block: 2rem 1.5rem;
 }
 .shop-title {
-  font-size: clamp(2.3rem, 5.5vw, 3.5rem);
+  font-size: clamp(2rem, 4vw, 2.75rem);
   overflow-wrap: anywhere;
 }
 .shop-head-text > :is(h1, .shop-title)::after {
@@ -80,8 +83,10 @@
   .shop-layout {
     flex-direction: row;
     align-items: flex-start;
-    gap: 3.5rem;
-    padding-block: 3rem 5rem;
+    gap: 2.5rem;
+    /* 1.75rem of lead-in, not 3rem: every pixel here is one the first row of
+       products does not get. */
+    padding-block: 1.75rem 5rem;
   }
 }
 /* Listings use more of a wide screen than the 64rem reading column. */
@@ -105,6 +110,12 @@
   background: var(--ivory);
   box-shadow: none;
   transition: none;
+  /* 4/5 on the listing, against the shelf's 2/3. A listing is scanned, and a
+     2/3 plate made each card 448px tall, so a 720px-high laptop could not show
+     one complete row — the price, the thing a listing exists to compare, was
+     always just below the fold. The photographs are `contain`, so a shorter
+     plate crops nothing; it only reduces the empty margin around the piece. */
+  aspect-ratio: 4 / 5;
 }
 .shop-grid .shelf-item-photo::after {
   display: none;
@@ -182,10 +193,17 @@
 
 .shop-product {
   background: var(--ground);
+  /* The product section inherits .shelf-section's --home-section-space, which
+     is 104px at this width — a homepage rhythm, meant to separate bands of a
+     long scrolling page. On a product page it is the FIRST thing under the
+     header, so it opened the page with 104px of nothing above the breadcrumb
+     and pushed the piece, the price and the button down with it. The jewel
+     should be the first thing on screen. */
+  padding-block: clamp(1.25rem, 2.5vw, 2rem) var(--home-section-space);
 }
 .shop-back {
   display: inline-block;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 .shop-product-grid {
   display: grid;

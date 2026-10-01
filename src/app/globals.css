@@ -1592,12 +1592,15 @@ h3 {
   inset-inline: 0;
   bottom: 0;
   height: 2px;
+  /* Drawn from the ROLES, not the five raw brand colours, so the line follows
+     whatever palette the admin picks in Settings > Site style instead of
+     staying bottle-green under a sand-and-plum store. */
   background: linear-gradient(
     90deg,
-    var(--bottle) 0%,
-    var(--garnet) 30%,
-    var(--bronze) 62%,
-    var(--linen) 100%
+    var(--site-text) 0%,
+    var(--site-primary) 30%,
+    var(--site-accent) 62%,
+    var(--site-surface) 100%
   );
   pointer-events: none;
 }

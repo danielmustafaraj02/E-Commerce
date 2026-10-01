@@ -7,7 +7,7 @@ import "./hero-typing-sequence.css";
    reads as a machine streaming text; a few milliseconds of variation per key
    is what makes it read as a hand. No mistakes and no backspacing — those are
    a different, much louder effect. */
-const CHAR_MS = 58;
+const CHAR_MS = 82;
 const CHAR_JITTER_MS = 26;
 /* A beat at a word gap, a breath at punctuation. */
 const WORD_PAUSE_MS = 120;
@@ -83,11 +83,12 @@ function keystroke(scale: number) {
   return (CHAR_MS + (Math.random() - 0.5) * 2 * CHAR_JITTER_MS) * scale;
 }
 
-/* The title is written at full weight; the lede runs at a little over twice
-   the pace, which still reads as typing and brings the whole sequence in
-   under about six seconds. */
+/* The title is written at full weight; the lede runs faster, because it is
+   several times longer. Both were slowed deliberately — the hand should be
+   visible. The lede is also a shorter sentence now, so the whole sequence
+   still lands in about six and a half seconds. */
 const TITLE_SPEED = 1;
-const SUBTITLE_SPEED = 0.42;
+const SUBTITLE_SPEED = 0.62;
 
 /**
  * One typed block, rendered WHOLE from the first frame.

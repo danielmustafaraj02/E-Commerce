@@ -16,7 +16,6 @@ import { ShelfItem } from "@/components/shelf-item";
 import { Reveal } from "@/components/reveal";
 import { ShelfStagger } from "@/components/shelf-stagger";
 import { EditorialReveal } from "@/components/editorial-reveal";
-import { LookEditorialScroll } from "@/components/look-editorial-scroll";
 import { getShowcaseCopy, SHOWCASE_SCENE_ORDER } from "@/lib/i18n/showcase-copy";
 import { CollectionShowcase } from "@/components/collection-showcase";
 import { NewsletterSignupForm } from "@/components/newsletter-signup-form";
@@ -268,9 +267,11 @@ export default async function Home() {
           {looks.length > 0 && (
             <div className="looks-editorial-list" data-editorial-root>
               {/* One controller for the whole list: it arms the scroll-in
-                  sequence (EditorialReveal) and the scroll-linked drift
-                  (LookEditorialScroll), so the rows respond continuously to
-                  scrolling in both directions. */}
+                  sequence. The scroll-linked parallax drift that used to run
+                  alongside it is gone — three elements of a row sliding past
+                  each other at three different rates read as a carousel
+                  effect, not as an editorial page. The rows now simply
+                  arrive, in order, and then hold still. */}
               <EditorialReveal>
                 {looks.map((look, index) => (
                   <LookEditorial
@@ -289,7 +290,6 @@ export default async function Home() {
                 />
                 ))}
               </EditorialReveal>
-              <LookEditorialScroll />
             </div>
           )}
           {looks.length > 0 && (

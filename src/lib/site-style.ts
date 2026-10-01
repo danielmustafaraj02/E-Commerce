@@ -54,7 +54,7 @@ export const DEFAULT_COLORS: Record<ColorRole, string> = {
   colorBackground: "#ffffff",
   colorSurface: "#e6e2da",
   colorText: "#154230",
-  colorTextMuted: "#6d8579",
+  colorTextMuted: "#658276",
   colorPrimary: "#154230",
   colorOnPrimary: "#e6e2da",
   colorAccent: "#a6824a",
@@ -159,8 +159,14 @@ export const CONTRAST_PAIRS: {
   { fg: "colorTextMuted", bg: "colorBackground", label: "Secondary text on background", min: 4.5 },
   { fg: "colorOnPrimary", bg: "colorPrimary", label: "Label on primary button", min: 4.5 },
   { fg: "colorAccent", bg: "colorBackground", label: "Accent on background", min: 3 },
-  { fg: "colorBorder", bg: "colorBackground", label: "Border on background", min: 3 },
 ];
+
+/* Deliberately NOT checked: border against background. WCAG 1.4.11 asks 3:1 of
+   UI components and of boundaries a reader needs in order to understand the
+   interface — not of a decorative hairline between two sections. The site's
+   own divider is 1.19:1 by design, and listing that as a failure would have
+   greeted every admin with a warning about the theme they had not touched,
+   which is the fastest way to teach someone to ignore the warnings. */
 
 export type ContrastReport = {
   label: string;

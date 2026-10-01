@@ -764,15 +764,23 @@
 .showcase-rail-label {
   flex: 1 1 auto;
   min-width: 0;
-  font-size: 0.72rem;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.7rem;
   line-height: 1.25;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-align: right;
   overflow-wrap: anywhere;
-  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  color: color-mix(in srgb, var(--ink) 50%, transparent);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s var(--ease-out-soft);
+  /* Arrives by drifting IN toward its dot, never by moving the dot: the
+     translate is on the label alone and the row's height is fixed, so the
+     rhythm of the rail is identical in every state. */
+  transform: translateX(0.5rem);
+  transition:
+    opacity 0.5s var(--ease-out-soft),
+    transform 0.5s var(--ease-out-soft),
+    color 0.5s var(--ease-out-soft);
 }
 
 /* The current category's name is always shown; the others on hover/focus. */
@@ -780,6 +788,13 @@
 .showcase-rail-item:focus-visible ~ .showcase-rail-label,
 .showcase-rail-row:has([data-state="active"]) .showcase-rail-label {
   opacity: 1;
+  transform: translateX(0);
+}
+/* A passed category keeps a trace of itself, so the rail reads as a route
+   already partly walked rather than as one lit dot in the dark. */
+.showcase-rail-row:has([data-state="passed"]) .showcase-rail-label {
+  opacity: 0.45;
+  transform: translateX(0);
 }
 
 /* The current label carries the brand colour. */
@@ -803,20 +818,44 @@
   color: var(--hairline);
 }
 
-/* The dot itself, centred in the fixed-size button. */
+/* The dot itself, centred in the fixed-size button.
+
+   One fixed 10px box in EVERY state, scaled by `scale`. Sizing the element
+   differently per state would move its centre by a fraction of a pixel and
+   make the column of dots shimmer as the reader scrolls; a transform cannot,
+   and it is also the only thing here the compositor can animate on its own. */
 .showcase-rail-item::after {
   content: "";
-  width: 6px;
-  height: 6px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   border: 1px solid currentColor;
   background: var(--ivory);
-  /* Only colour changes here; the active state also scales. Never size, margin or
-     position, so the dot's centre is identical in every state. */
+  scale: 0.6;
   transition:
-    background-color 0.25s var(--ease-out-soft),
-    border-color 0.25s var(--ease-out-soft),
-    scale 0.25s var(--ease-out-soft);
+    background-color 0.45s var(--ease-out-soft),
+    border-color 0.45s var(--ease-out-soft),
+    scale 0.55s cubic-bezier(0.22, 1.1, 0.36, 1);
+}
+
+/* The ring: a second, independent circle that expands out of the dot as it
+   becomes current and settles as a soft halo. Drawn as its own pseudo-element
+   rather than a box-shadow so it can scale and fade on its own curve — a
+   shadow would have to animate its spread, which is not a compositor
+   property and jitters on a scroll. */
+.showcase-rail-item::before {
+  content: "";
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  opacity: 0;
+  scale: 0.45;
+  pointer-events: none;
+  transition:
+    opacity 0.6s var(--ease-out-soft),
+    scale 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* Upcoming: a small outlined circle, in a quiet neutral. */
@@ -832,6 +871,7 @@
 
 .showcase-rail-item[data-state="passed"]::after {
   background: currentColor;
+  scale: 0.5;
 }
 
 /* Current: brand green, slightly larger, with a subtle outer ring. The ring is a
@@ -841,11 +881,26 @@
 }
 
 .showcase-rail-item[data-state="active"]::after {
-  width: 9px;
-  height: 9px;
   background: currentColor;
   border-color: currentColor;
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--midnight) 14%, transparent);
+  scale: 1;
+}
+
+.showcase-rail-item[data-state="active"]::before {
+  opacity: 0.35;
+  scale: 1;
+}
+
+/* Hover and keyboard focus give the dot a little of the active treatment, so
+   the rail answers the pointer before it is clicked. */
+@media (hover: hover) and (pointer: fine) {
+  .showcase-rail-item:hover::after {
+    scale: 0.85;
+  }
+  .showcase-rail-item:hover::before {
+    opacity: 0.2;
+    scale: 0.85;
+  }
 }
 
 /* Visible keyboard focus, drawn inside the rail's own track. */
@@ -858,25 +913,22 @@
   outline-offset: 3px;
 }
 
-/* ── Tablet: dots only ────────────────────────────────────────────────────────
-   Below this width the column cannot hold a wrapping label alongside the dot
-   and still leave the content a usable measure, so the visible label is dropped
-   entirely. Each dot still carries its localised category name in aria-label,
-   so the control stays fully accessible with no floating tooltip. */
+/* ── Narrower desktops: the same rail, just tighter ───────────────────────
+   The labels used to be dropped entirely below 64rem, which left a bare 60px
+   column of three dots between 832px and 1024px — a different component to
+   look at, for no reason the reader could see, at the one width where a
+   laptop most often sits. The label stays; the column and the type simply
+   narrow. Below 52rem the phone layout takes over and the labels do go, but
+   there the rail is a deliberate 40px mark in the margin. */
 @media (max-width: 64rem) {
   .showcase {
-    /* Dots only: a narrow track — but a real one, so the dots are never over
-       the text. */
-    --showcase-rail-col: 3.75rem;
+    --showcase-rail-col: clamp(7rem, 11vw, 9rem);
+    --showcase-rail-gap: 20px;
   }
 
   .showcase-rail-label {
-    display: none;
-  }
-
-  .showcase-rail-row {
-    justify-content: center;
-    padding-left: 0;
+    font-size: 0.66rem;
+    letter-spacing: 0.05em;
   }
 }
 
@@ -1043,6 +1095,13 @@
 /* ── Reduced motion: the plain stacked layout, nothing pinned ──────────────── */
 
 @media (prefers-reduced-motion: reduce) {
+  /* The rail still states where the reader is; it just stops moving to say so. */
+  .showcase-rail-item::after,
+  .showcase-rail-item::before,
+  .showcase-rail-label {
+    transition: none;
+  }
+
   .showcase {
     height: auto !important;
   }

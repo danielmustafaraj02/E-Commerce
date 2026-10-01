@@ -4,6 +4,7 @@ import { useActionState, useMemo, useState, useTransition } from "react";
 import { FormAlert } from "@/components/form-alert";
 import { saveSiteStyle, resetSiteStyle, type SiteStyleState } from "./actions";
 import { FONT_PAIRINGS, BUNDLED_PAIRING, findPairing } from "@/lib/font-pairings";
+import { COLOR_PALETTES, THEME_PALETTE, findPalette } from "@/lib/color-palettes";
 import {
   COLOR_ROLES,
   CSS_VAR,
@@ -87,6 +88,13 @@ export function SiteStyleForm({ style }: { style: SiteStyle }) {
   const pairing = findPairing(draft.fontHeading, draft.fontBody);
   const custom = !pairing && Boolean(draft.fontHeading.trim() || draft.fontBody.trim());
 
+  /* Which named palette the eight roles currently spell, if any. Nothing set
+     at all is the site's own palette; anything else that matches no entry is
+     "Custom", which is simply what hand-editing a role produces. */
+  const anyColorSet = COLOR_ROLES.some((r) => draft[r].trim().length > 0);
+  const palette = findPalette(draft);
+  const customPalette = anyColorSet && !palette;
+
   const previewVars = {
     ...Object.fromEntries(COLOR_ROLES.map((role) => [CSS_VAR[role], effective[role]])),
     "--preview-heading": draft.fontHeading.trim()
@@ -107,9 +115,49 @@ export function SiteStyleForm({ style }: { style: SiteStyle }) {
         <section className="flex flex-col gap-3">
           <h2 className="text-sm font-semibold">Colours</h2>
           <p className="text-xs text-neutral-500">
-            Leave a role empty to follow the theme. Errors, success and warning
-            colours, and external brand marks, are deliberately not editable.
+            Start from a palette, then adjust any role by hand. Leave a role
+            empty to follow the theme. Errors, success and warning colours, and
+            external brand marks, are deliberately not editable.
           </p>
+          <label className="flex flex-col gap-1 text-sm">
+            <span className="font-medium">Palette</span>
+            <select
+              value={palette?.id ?? (customPalette ? "custom" : THEME_PALETTE.id)}
+              onChange={(e) => {
+                const chosen = COLOR_PALETTES.find((p) => p.id === e.target.value);
+                setDraft((d) => ({
+                  ...d,
+                  ...Object.fromEntries(
+                    COLOR_ROLES.map((r) => [r, chosen ? chosen.colors[r] : ""])
+                  ),
+                }));
+              }}
+              className="rounded border border-neutral-300 px-2 py-2 text-sm"
+            >
+              <option value={THEME_PALETTE.id}>{THEME_PALETTE.name}</option>
+              {customPalette && <option value="custom">Custom — edited by hand</option>}
+              {COLOR_PALETTES.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+            <span className="flex items-center gap-2 text-xs text-neutral-500">
+              {/* The eight roles as a strip, so a palette can be recognised
+                  before it is applied. */}
+              <span className="inline-flex overflow-hidden rounded border border-neutral-300">
+                {COLOR_ROLES.map((r) => (
+                  <span
+                    key={r}
+                    title={LABELS[r]}
+                    style={{ background: effective[r] }}
+                    className="h-4 w-4"
+                  />
+                ))}
+              </span>
+              {palette?.note ?? (customPalette ? "Your own combination" : THEME_PALETTE.note)}
+            </span>
+          </label>
           <div className="grid gap-3 sm:grid-cols-2">
             {COLOR_ROLES.map((role) => (
               <div key={role} className="flex flex-col gap-1">

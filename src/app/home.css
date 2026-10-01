@@ -434,7 +434,9 @@
     right: 0;
     bottom: 0;
     left: auto;
-    width: 58%;
+    /* 54%, not 58%: the copy column is the one that was running out of room,
+       and the film reads just as well a few points narrower. */
+    width: 54%;
     height: 100%;
     object-fit: cover;
     object-position: 50% 45%;
@@ -446,7 +448,7 @@
      gradient over the film. The copy and the portrait meet at one crisp
      vertical edge. */
   .shelf-home .shelf-hero-veil {
-    right: 58%;
+    right: 54%;
     background: none;
   }
 
@@ -473,14 +475,19 @@
     color: var(--midnight);
   }
 
+  /* Down from 5.7vw / 6rem. At 1850px that was 102px a line, and the store
+     name on three lines took 304px of an 818px hero on its own — the lede and
+     the button were left pressed against the fold. The name still leads; it
+     just leaves the rest of the column room to breathe. */
   .shelf-home .shelf-hero .shelf-title {
-    font-size: clamp(3.5rem, 5.7vw, 6rem);
-    line-height: 0.98;
+    font-size: clamp(3rem, 4.4vw, 4.75rem);
+    line-height: 1;
   }
 
   .shelf-home .shelf-hero .shelf-lede {
-    font-size: clamp(1.05rem, 1.55vw, 1.4rem);
-    line-height: 1.45;
+    font-size: clamp(1rem, 1.35vw, 1.25rem);
+    line-height: 1.5;
+    max-width: 30rem;
   }
 
   .shelf-home .shelf-hero .shelf-title,
@@ -586,7 +593,10 @@
   max-width: 31rem;
 }
 .shelf-title {
-  font-size: clamp(2.75rem, 8vw, 5.5rem);
+  /* Trimmed from an 8vw / 5.5rem ceiling: at 1850px that resolved to 102px a
+     line and the three-line store name alone took 300px of the hero, which
+     left the lede and the button crowded against the fold. */
+  font-size: clamp(2.5rem, 6.2vw, 4.25rem);
 }
 .shelf-lede {
   font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
@@ -2691,11 +2701,18 @@
   .shelf-home .shelf-hero-copy {
     max-width: 34rem;
   }
-  /* The title no longer needs to break early — it sits alone in its column. */
+  /* The title no longer needs to break early — it sits alone in its column.
+
+     This is the rule that actually decides the desktop size: it has the same
+     specificity as .shelf-home .shelf-hero .shelf-title further up the file
+     and comes later, so it wins. Keep the two in step.
+
+     Down from 7vw / 6.4rem, which resolved to 102px a line and gave the
+     three-line store name 304px of an 818px hero on its own. */
   .shelf-home .shelf-hero-copy .shelf-title {
     color: var(--ink);
-    font-size: clamp(3.5rem, 7vw, 6.4rem);
-    line-height: 0.99;
+    font-size: clamp(3rem, 4.4vw, 4.75rem);
+    line-height: 1;
   }
   .shelf-home .shelf-hero-copy .shelf-lede {
     max-width: 30rem;

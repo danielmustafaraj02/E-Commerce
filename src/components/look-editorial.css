@@ -33,18 +33,8 @@
   position: relative;
   min-width: 0;
   overflow: hidden;
-  /* The scroll-linked parallax writes --look-shift here (see
-     components/look-editorial-scroll.tsx). Inert by default: without JS the
-     custom property is never set and the fallback below keeps the row still. */
-  translate: 0 var(--look-shift, 0px);
-  transition: translate 0.4s var(--ease-out-soft);
+  /* No parallax. The row holds its place once it has arrived. */
 }
-/* Rows only drift once the component has taken over, so a page without JS
-   (or before hydration) never shows a half-applied offset. */
-[data-look-scroll="on"] .look-editorial-zoom {
-  translate: 0 var(--look-shift, 0px);
-}
-
 /* Editorial entrance, one scroll-driven sequence, in this order: the lead
    necklace settles first; then the title writes in, then the description;
    the remaining pieces of the set join after the copy; the price is last.
@@ -74,27 +64,27 @@
   .look-editorial-copy[data-editorial-state] .look-editorial-price,
   .look-editorial-copy[data-editorial-state] .look-editorial-cta {
     transition:
-      opacity 700ms var(--ease-out-soft),
-      transform 800ms var(--ease-out-soft);
+      opacity 520ms var(--ease-out-soft),
+      transform 560ms var(--ease-out-soft);
   }
 
   .look-editorial-copy[data-editorial-state="visible"] .look-editorial-title {
-    transition-delay: 200ms;
+    transition-delay: 0ms;
   }
 
   .look-editorial-copy[data-editorial-state="visible"] .look-editorial-description {
-    transition-delay: 550ms;
+    transition-delay: 90ms;
   }
 
   /* The rest of the set joins after the copy is in; the price follows them. */
   .look-editorial-copy[data-editorial-state="visible"] .look-editorial-price {
-    transition-delay: 1550ms;
+    transition-delay: 180ms;
   }
 
   /* The way in is the last beat, just behind the price. The button is a link,
      so it stays clickable throughout — the reveal only paints it. */
   .look-editorial-copy[data-editorial-state="visible"] .look-editorial-cta {
-    transition-delay: 1700ms;
+    transition-delay: 250ms;
   }
 
   /* The companion pieces fade in as the third beat, one after another. The
@@ -105,11 +95,11 @@
   }
   .look-editorial-zoom[data-editorial-state="visible"] .look-editorial-piece {
     opacity: 1;
-    transition: opacity 700ms var(--ease-out-soft);
-    transition-delay: 1050ms;
+    transition: opacity 520ms var(--ease-out-soft);
+    transition-delay: 120ms;
   }
   .look-editorial-zoom[data-editorial-state="visible"] .look-editorial-piece:nth-child(2) {
-    transition-delay: 1200ms;
+    transition-delay: 200ms;
   }
   .look-editorial-zoom[data-editorial-state] .look-editorial-piece {
     will-change: opacity;
@@ -145,26 +135,8 @@
   }
   .look-editorial-zoom img {
     transition:
-      opacity 900ms var(--ease-out-soft),
-      transform 1100ms var(--ease-out-soft);
-  }
-  /* Scroll-linked: each row's copy and photograph drift at their own rates as
-     the row crosses the viewport, so scrolling up reverses the motion exactly
-     as scrolling down advances it. The offsets come from --look-copy-shift /
-     --look-shift, written per row by components/look-editorial-scroll.tsx. */
-  [data-look-scroll="on"] .look-editorial-copy {
-    translate: 0 var(--look-copy-shift, 0px);
-  }
-  .look-editorial-copy {
-    transition: translate 0.4s var(--ease-out-soft);
-  }
-  /* The companion pieces of a composed look ride slightly further than the
-     photograph, which is what gives the arrangement its depth. */
-  [data-look-scroll="on"] .look-editorial-piece {
-    translate: 0 var(--look-piece-shift, 0px);
-  }
-  .look-editorial-piece {
-    transition: translate 0.4s var(--ease-out-soft);
+      opacity 620ms var(--ease-out-soft),
+      transform 680ms var(--ease-out-soft);
   }
 }
 .look-editorial-piece {
