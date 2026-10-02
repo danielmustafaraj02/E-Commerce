@@ -69,11 +69,31 @@ export function buildAdminSections(opts: {
   return sections;
 }
 
+/**
+ * Strip a leading locale segment, so "/it/admin/settings" is matched as
+ * "/admin/settings".
+ *
+ * Admin pages are not locale-prefixed, but they are reachable that way — the
+ * proxy accepts "/it/admin/..." and serves the admin. When it was, nothing in
+ * the nav matched, activeSection() fell back to the FIRST section, and the
+ * sidebar showed Overview's links on top of a Settings page: every admin-only
+ * item (Site style, Payments, Integrations, Team, Legal pages) was simply
+ * unreachable from the navigation.
+ *
+ * Only a real locale segment is stripped — two letters, optionally with a
+ * region — so a future "/administration" or an admin page whose own path
+ * begins with two letters is left alone.
+ */
+function stripLocale(pathname: string) {
+  return pathname.replace(/^\/[a-z]{2}(?:-[A-Za-z0-9]{2,8})?(?=\/)/, "");
+}
+
 // Does this item's page (or a page nested under it) match the current path?
 // "/admin" only matches itself, otherwise every admin page would light it up.
 function matches(item: NavItem, pathname: string) {
-  if (item.href === "/admin") return pathname === "/admin";
-  return pathname === item.href || pathname.startsWith(`${item.href}/`);
+  const path = stripLocale(pathname);
+  if (item.href === "/admin") return path === "/admin";
+  return path === item.href || path.startsWith(`${item.href}/`);
 }
 
 // The most specific matching item wins: /admin/settings/payments belongs to

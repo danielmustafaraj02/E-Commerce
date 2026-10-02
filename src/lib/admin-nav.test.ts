@@ -97,3 +97,33 @@ describe("badges and sidebars", () => {
     expect(hasSidebar(section("planning"))).toBe(false);
   });
 });
+
+/* Admin pages are not locale-prefixed, but they are reachable that way. When
+   the nav did not account for it, every admin-only Settings link became
+   unreachable: the sidebar fell back to Overview on top of a Settings page. */
+describe("locale-prefixed admin paths", () => {
+  const sections = buildAdminSections({
+    isAdmin: true,
+    newOrderCount: 0,
+    newCustomerCount: 0,
+  });
+
+  it.each([
+    ["/it/admin/settings", "settings"],
+    ["/en/admin/settings/site-style", "settings"],
+    ["/pt-BR/admin/orders", "sales"],
+    ["/it/admin", "overview"],
+    ["/admin/settings", "settings"],
+  ])("resolves %s to the %s section", (path, id) => {
+    expect(activeSection(sections, path).id).toBe(id);
+  });
+
+  it("still finds the item itself, not just the section", () => {
+    const settings = activeSection(sections, "/it/admin/settings/site-style");
+    expect(activeItem(settings, "/it/admin/settings/site-style")?.label).toBe("Site style");
+  });
+
+  it("does not mistake a non-locale first segment for one", () => {
+    expect(activeSection(sections, "/administration/x").id).toBe("overview");
+  });
+});

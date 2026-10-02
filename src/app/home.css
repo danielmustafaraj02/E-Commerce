@@ -432,7 +432,12 @@
   .shelf-home .shelf-hero-video {
     top: 0;
     right: 0;
-    bottom: 0;
+    /* A band of page left under the film. The hero still ends exactly at the
+       fold — what changed is that the picture no longer runs into it, so the
+       section closes on white instead of being sliced off by the viewport
+       edge. The left-hand column is already white, so this reads as one
+       continuous foot across the hero rather than a gap on one side. */
+    bottom: var(--hero-foot, 2rem);
     left: auto;
     /* 54%, not 58%: the copy column is the one that was running out of room,
        and the film reads just as well a few points narrower. */
@@ -518,6 +523,57 @@
   }
 }
 
+/* The film's one control: small, quiet, and in the corner of the picture.
+   Quiet because the film is a backdrop — but a real button, so the motion can
+   be stopped by anyone it bothers. */
+.shelf-hero-video-toggle {
+  position: absolute;
+  z-index: 2;
+  inset-block-end: 1rem;
+  inset-inline-end: 1rem;
+  display: grid;
+  place-items: center;
+  /* 44px of target around a 12px glyph. */
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgb(var(--linen-rgb) / 35%);
+  border-radius: 50%;
+  background: rgb(var(--onyx-rgb) / 42%);
+  color: var(--linen);
+  cursor: pointer;
+  opacity: 0.55;
+  transition:
+    opacity 0.25s var(--ease-out-soft),
+    background-color 0.25s var(--ease-out-soft);
+}
+.shelf-hero-video-toggle:hover,
+.shelf-hero-video-toggle:focus-visible {
+  opacity: 1;
+  background: rgb(var(--onyx-rgb) / 62%);
+}
+.shelf-hero-video-toggle:focus-visible {
+  outline: 2px solid var(--linen);
+  outline-offset: 2px;
+}
+/* When autoplay was refused the control is the way in, so it stops being
+   quiet about it. */
+.shelf-hero-video-toggle[data-blocked="true"] {
+  opacity: 1;
+  background: rgb(var(--onyx-rgb) / 70%);
+}
+.shelf-hero-video-glyph {
+  display: grid;
+  place-items: center;
+}
+@media (prefers-reduced-motion: reduce) {
+  .shelf-hero-video-toggle {
+    transition: none;
+    /* With motion reduced the film does not start on its own, so the control
+       is the only way to see it: make it visible. */
+    opacity: 1;
+  }
+}
+
 /* No scrim. The copy lives in its own grid column and never overlaps the
    film, so there is nothing to veil — and any wash here would paint over the
    picture itself (the column sits under this pseudo-element), which is what
@@ -566,10 +622,14 @@
    row is NOT added on top of that: it is pinned INSIDE the hero against this
    very edge, so adding its height would push the marks below the fold. */
 .shelf-home .shelf-hero {
+  /* The breathing room under the film, also subtracted from the copy's own
+     centring so the two stay optically level. */
+  --hero-foot: clamp(1.25rem, 2.8vh, 2.5rem);
   min-height: calc(100svh - var(--hero-header-offset, 5.75rem));
   display: flex;
   flex-direction: column;
   justify-content: center;
+  padding-bottom: var(--hero-foot);
 }
 .shelf-home .shelf-hero > .shelf-wrap {
   /* The copy takes the space the trust row does not, so the two can never

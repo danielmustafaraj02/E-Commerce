@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
 import { HeroTypingSequence } from "@/components/hero-typing-sequence";
+import { HeroVideo } from "@/components/hero-video";
 import type { Metadata } from "next";
 import { Link } from "@/components/localized-link";
 import { getStoreSettings, ogImage } from "@/lib/store-settings";
@@ -149,21 +150,18 @@ export default async function Home() {
         className="shelf-hero"
         style={{ "--hero-accent": HERO_ACCENT } as CSSProperties}
       >
-        <video
+        {/* Both files carry no audio track at all, so there is nothing to
+            mute and no volume control to offer. The component handles a
+            refused autoplay, reduced motion and pause/resume. */}
+        <HeroVideo
           className="shelf-hero-video"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
           poster="/hero/hero-atelier-poster.jpg"
-          aria-hidden="true"
-          tabIndex={-1}
-          suppressHydrationWarning
-        >
-          <source src="/hero/hero-atelier.webm" type="video/webm" />
-          <source src="/hero/hero-atelier.mp4" type="video/mp4" />
-        </video>
+          sources={[
+            { src: "/hero/hero-atelier.webm", type: "video/webm" },
+            { src: "/hero/hero-atelier.mp4", type: "video/mp4" },
+          ]}
+          playLabel={dict.home.heroVideoPlay}
+        />
         {/* The legibility veil, a real element: the ::before pseudo-element on
             this hero silently stopped painting in one browser build, so the
             wash moved onto a node that cannot fail. Above the film (z -1),

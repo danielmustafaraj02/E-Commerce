@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import Link from "next/link";
 import { updateStoreSettings } from "./actions";
 import { FormAlert } from "@/components/form-alert";
 
@@ -50,6 +51,23 @@ export function SettingsForm({ settings }: { settings: Settings }) {
         Logo URL
         <input name="logoUrl" defaultValue={settings.logoUrl ?? ""} className="field" />
       </label>
+      {/* The storefront's colours and typography moved to Settings > Site
+          style, which controls them by ROLE. The three fields below are what
+          is left of the older model and are kept because other things still
+          read them — but they are not where the palette and the fonts live,
+          and an admin looking for those needs to be sent there rather than
+          left editing a field that no longer does what its label implies. */}
+      <div className="rounded border border-neutral-200 bg-neutral-50 p-3 text-sm">
+        <strong className="block">Colours and fonts live in Site style</strong>
+        <p className="mt-1 text-neutral-600">
+          Palette by role, named palettes, your own saved palettes and the font
+          pairings are all in{" "}
+          <Link href="/admin/settings/site-style" className="underline">
+            Settings → Site style
+          </Link>
+          .
+        </p>
+      </div>
       <div className="flex gap-3">
         <label className="flex flex-1 flex-col gap-1 text-sm">
           Primary color
@@ -59,6 +77,9 @@ export function SettingsForm({ settings }: { settings: Settings }) {
             defaultValue={settings.primaryColor}
             className="field-color"
           />
+          <span className="text-xs text-neutral-500">
+            Legacy accent, still used by a few older components.
+          </span>
         </label>
         <label className="flex flex-1 flex-col gap-1 text-sm">
           Secondary color
@@ -68,11 +89,19 @@ export function SettingsForm({ settings }: { settings: Settings }) {
             defaultValue={settings.secondaryColor}
             className="field-color"
           />
+          <span className="text-xs text-neutral-500">Legacy, as above.</span>
         </label>
       </div>
       <label className="flex flex-col gap-1 text-sm">
         Font family
         <input name="fontFamily" required defaultValue={settings.fontFamily} className="field" />
+        {/* Honest rather than quietly dead: this field drove a font-family on
+            <body> that named a family the site never loaded, so body text
+            resolved to it and fell back. That override is gone; the heading
+            and body faces are roles now, set in Site style. */}
+        <span className="text-xs text-amber-700">
+          No longer applied to the storefront — set the typeface in Site style.
+        </span>
       </label>
       <div className="flex gap-3">
         <label className="flex flex-1 flex-col gap-1 text-sm">

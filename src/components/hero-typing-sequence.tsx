@@ -16,8 +16,18 @@ import "./hero-typing-sequence.css";
 
    Ranges are the brief's: 45–110ms between characters, occasional 120–220ms
    at a word gap, 250–450ms after punctuation or a line change. */
+/* However much the pace is scaled down, a keystroke never drops below this:
+   the brief's floor is 45ms, and below roughly that the letters stop reading
+   as struck and start reading as streamed. */
+const MIN_KEYSTROKE_MS = 42;
+/* How many characters share one pace before the hand hesitates. The lede runs
+   in longer bursts; the TITLE uses shorter ones, because its words are five
+   or six letters — at a burst of seven each word came out as one even run,
+   which is precisely what made it read as a machine. */
 const BURST_MIN = 3;
 const BURST_MAX = 7;
+const TITLE_BURST_MIN = 2;
+const TITLE_BURST_MAX = 4;
 /* The pace of one burst, picked once per burst and shared by its letters. */
 const BURST_FAST_MS = 46;
 const BURST_SLOW_MS = 96;
@@ -28,9 +38,15 @@ const HESITATE_MAX_MS = 150;
 const WORD_PAUSE_MIN_MS = 120;
 const WORD_PAUSE_MAX_MS = 220;
 const WORD_PAUSE_CHANCE = 0.45;
-/* A stop, or the end of a line, gets a breath. */
+/* A stop gets a breath. */
 const PUNCT_PAUSE_MIN_MS = 250;
 const PUNCT_PAUSE_MAX_MS = 450;
+/* A LINE change gets considerably more than a stop does. "Perla / Murano /
+   Glass" is three separate thoughts set on three lines, and at punctuation
+   length the three ran together into one stuttering word — the hand has to be
+   heard lifting between them. */
+const LINE_PAUSE_MIN_MS = 520;
+const LINE_PAUSE_MAX_MS = 820;
 /* Between the title and the lede, and between the lede and the button. */
 const TITLE_PAUSE_MS = 300;
 const SUBTITLE_PAUSE_MS = 160;
@@ -113,7 +129,11 @@ function buildBlock(text: string, linePerWord: boolean, pace: number): Block {
         burstLeft = 0;
       } else {
         if (burstLeft <= 0) {
-          burstLeft = Math.round(between(BURST_MIN, BURST_MAX));
+          burstLeft = Math.round(
+            linePerWord
+              ? between(TITLE_BURST_MIN, TITLE_BURST_MAX)
+              : between(BURST_MIN, BURST_MAX)
+          );
           burstMs = between(BURST_FAST_MS, BURST_SLOW_MS);
           /* The hesitation that separates two bursts inside one word. */
           if (i > 0) {
@@ -128,16 +148,19 @@ function buildBlock(text: string, linePerWord: boolean, pace: number): Block {
         burstLeft -= 1;
       }
 
-      /* A line of the title is its own thought: ending one earns a breath. */
+      /* A line of the title is its own thought: ending one earns a real lift,
+         not merely a comma's worth of hesitation. */
       if (linePerWord && i === 0 && previousWord) {
-        delay = Math.max(delay, between(PUNCT_PAUSE_MIN_MS, PUNCT_PAUSE_MAX_MS));
+        delay = Math.max(delay, between(LINE_PAUSE_MIN_MS, LINE_PAUSE_MAX_MS));
         rest = true;
       }
 
       const entry: Char = {
         ch,
         endsWord: i === letters.length - 1,
-        delay: Math.round(delay * pace),
+        /* The rests keep their full length — they are what the rhythm is made
+           of — while the keystrokes themselves are floored. */
+        delay: Math.round(rest ? delay * pace : Math.max(MIN_KEYSTROKE_MS, delay * pace)),
         rest,
       };
       chars.push(entry);
@@ -152,12 +175,16 @@ function buildBlock(text: string, linePerWord: boolean, pace: number): Block {
   return { rows, chars, text };
 }
 
-/* The title is written at full weight; the lede flows faster, because it is
-   several times longer and the button must not be kept waiting for it. The
+/* The title is written SLOWER than life — it is three words, it is the brand's
+   name, and it is the one thing on the page worth watching being written. The
+   lede flows faster, because it is several times longer and the button must
+   not be kept waiting for it. The
    pace scales the whole timeline without changing its SHAPE — the bursts and
-   the breaths keep their proportions to each other. */
-const TITLE_PACE = 1;
-const SUBTITLE_PACE = 0.66;
+   the breaths keep their proportions to each other. 0.5 brings the whole
+   sequence in around six seconds; the button should not be the last thing a
+   visitor waits for. */
+const TITLE_PACE = 1.35;
+const SUBTITLE_PACE = 0.5;
 
 /**
  * One typed block, rendered WHOLE from the first frame.
@@ -403,7 +430,20 @@ export function HeroTypingSequence({
           active={shownPhase === "subtitle"}
         />
       </p>
-      <span className={`hero-typing-cta${shownPhase === "cta" ? " hero-typing-cta--visible" : ""}`}>
+      {/* The button arrives once the TITLE is written, not once everything is
+          — it fades in gently while the lede types beneath it. With the title
+          deliberately slow, waiting for the last full stop meant the only
+          thing on the page a visitor can act on stayed unusable for seven and
+          a half seconds. It is still the last element to appear, which is the
+          sequence the brief asks for; it just no longer waits for the lede to
+          finish before becoming real. */}
+      <span
+        className={`hero-typing-cta${
+          shownPhase === "subtitle" || shownPhase === "cta"
+            ? " hero-typing-cta--visible"
+            : ""
+        }`}
+      >
         {cta}
       </span>
     </div>
