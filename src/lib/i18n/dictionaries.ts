@@ -63,14 +63,17 @@ const en = {
   home: {
     heroEyebrow: "Welcome",
     heroImageAlt: "Handmade red Murano glass bead necklace",
-    // Intentionally store-specific rather than the platform-generic
-    // wording this string used to carry, the store owner explicitly
-    // asked for these exact phrases ("authentic Venetian lampwork glass",
-    // "handmade in Murano/Venice, Italy") for AI answer engines (GEO) to
-    // pick up as an E-E-A-T signal. A future non-jewelry deployment of
-    // this codebase should replace this line, same as it would replace
-    // the product catalog itself.
-    heroSubtitle: "Murano glass, lampworked and assembled by hand — one bead at a time.",
+    // Store-specific rather than platform-generic: a future non-jewelry
+    // deployment should replace this line, same as it would replace the
+    // product catalog.
+    //
+    // This line previously carried "lampwork"/"lampworked" (and "a lume" in
+    // Italian), kept deliberately as a GEO/E-E-A-T signal for AI answer
+    // engines. The store owner has since asked for that word to go from the
+    // hero. The technique is still described on the product pages and in the
+    // FAQ, which is where an answer engine can still find it — the hero is
+    // now the brand line rather than the keyword line.
+    heroSubtitle: "Murano glass jewelry, assembled by hand. One bead at a time.",
     shopNow: "Shop now",
     // Mobile-only hero (below 52rem): headline, one short sentence, CTA.
     heroTagline: "Authentic Murano Glass",
@@ -948,7 +951,7 @@ const it: Dictionary = {
   home: {
     heroEyebrow: "Benvenuto",
     heroImageAlt: "Collana artigianale di perle in vetro di Murano rosso",
-    heroSubtitle: "Vetro di Murano lavorato a lume e montato a mano, una perla alla volta.",
+    heroSubtitle: "Gioielli in vetro di Murano, assemblati a mano. Una perla alla volta.",
     shopNow: "Acquista ora",
     heroTagline: "Autentico vetro di Murano",
     heroMobileLede: "Fatto a mano a Murano, una perla alla volta.",
@@ -1831,7 +1834,7 @@ const fr: Dictionary = {
   home: {
     heroEyebrow: "Bienvenue",
     heroImageAlt: "Collier artisanal en perles de verre de Murano rouge",
-    heroSubtitle: "Verre de Murano travaillé au chalumeau et monté à la main, perle après perle.",
+    heroSubtitle: "Bijoux en verre de Murano, assemblés à la main. Une perle à la fois.",
     shopNow: "Achetez maintenant",
     heroTagline: "Authentique verre de Murano",
     heroMobileLede: "Fait main à Murano, en Italie, perle après perle.",
@@ -2718,7 +2721,7 @@ const de: Dictionary = {
   home: {
     heroEyebrow: "Willkommen",
     heroImageAlt: "Handgefertigte Halskette aus roten Muranoglasperlen",
-    heroSubtitle: "Muranoglas, vor der Lampe geformt und von Hand montiert — Perle für Perle.",
+    heroSubtitle: "Schmuck aus Muranoglas, von Hand gefertigt. Perle für Perle.",
     shopNow: "Jetzt einkaufen",
     heroTagline: "Echtes Muranoglas",
     heroMobileLede: "Handgefertigt auf Murano, Italien, Perle für Perle.",
@@ -3604,7 +3607,7 @@ const ar: Dictionary = {
   home: {
     heroEyebrow: "أهلاً بك",
     heroImageAlt: "عقد يدوي الصنع من خرز زجاج مورانو الأحمر",
-    heroSubtitle: "زجاج مورانو المشكَّل باللهب والمركَّب يدويًا، خرزة واحدة في كل مرة.",
+    heroSubtitle: "مجوهرات من زجاج مورانو، مركَّبة يدويًا. خرزة واحدة في كل مرة.",
     shopNow: "تسوّق الآن",
     heroTagline: "زجاج مورانو الأصلي",
     heroMobileLede: "مصنوع يدويًا في مورانو بإيطاليا، خرزة تلو الأخرى.",
@@ -4462,7 +4465,7 @@ const zh: Dictionary = {
   home: {
     heroEyebrow: "欢迎光临",
     heroImageAlt: "手工制作的红色穆拉诺玻璃珠项链",
-    heroSubtitle: "穆拉诺玻璃，灯工成型，手工串制，一珠一世界。",
+    heroSubtitle: "穆拉诺玻璃首饰，手工串制。一次一颗珠子。",
     shopNow: "立即选购",
     heroTagline: "正宗穆拉诺玻璃",
     heroMobileLede: "在意大利穆拉诺岛手工制作，一颗一颗精心打造。",
@@ -5304,7 +5307,7 @@ const ru: Dictionary = {
   home: {
     heroEyebrow: "Добро пожаловать",
     heroImageAlt: "Ожерелье ручной работы из красных муранских стеклянных бусин",
-    heroSubtitle: "Муранское стекло ручной работы, собранное вручную — бусина за бусиной.",
+    heroSubtitle: "Украшения из муранского стекла, собранные вручную. Бусина за бусиной.",
     shopNow: "В магазин",
     heroTagline: "Подлинное муранское стекло",
     heroMobileLede: "Ручная работа с острова Мурано, бусина за бусиной.",
@@ -6187,7 +6190,7 @@ const es: Dictionary = {
   home: {
     heroEyebrow: "Bienvenido",
     heroImageAlt: "Collar artesanal de cuentas de vidrio de Murano rojo",
-    heroSubtitle: "Vidrio de Murano trabajado a soplete y montado a mano, cuenta a cuenta.",
+    heroSubtitle: "Joyas de cristal de Murano, montadas a mano. Una cuenta a la vez.",
     shopNow: "Comprar ahora",
     heroTagline: "Auténtico cristal de Murano",
     heroMobileLede: "Hecho a mano en Murano, Italia, cuenta a cuenta.",
@@ -7066,7 +7069,7 @@ const pt: Dictionary = {
   home: {
     heroEyebrow: "Bem-vindo",
     heroImageAlt: "Colar artesanal de contas em vidro de Murano vermelho",
-    heroSubtitle: "Vidro de Murano trabalhado ao maçarico e montado à mão, conta a conta.",
+    heroSubtitle: "Joias em vidro de Murano, montadas à mão. Uma conta de cada vez.",
     shopNow: "Comprar agora",
     heroTagline: "Autêntico vidro de Murano",
     heroMobileLede: "Feito à mão em Murano, Itália, conta a conta.",
@@ -7947,7 +7950,7 @@ const hi: Dictionary = {
   home: {
     heroEyebrow: "स्वागत है",
     heroImageAlt: "हाथ से बनी लाल मुरानो ग्लास मनकों की माला",
-    heroSubtitle: "मुरानो ग्लास, लैम्पवर्क से गढ़ा और हाथ से जोड़ा गया — एक मनका एक बार में।",
+    heroSubtitle: "मुरानो ग्लास ज्वेलरी, हाथ से जोड़ी गई। एक बार में एक मनका।",
     shopNow: "अभी खरीदें",
     heroTagline: "प्रामाणिक मुरानो ग्लास",
     heroMobileLede: "इटली के मुरानो में हाथ से बना, एक-एक मनका।",
@@ -8821,7 +8824,7 @@ const ja: Dictionary = {
   home: {
     heroEyebrow: "ようこそ",
     heroImageAlt: "手作りの赤いムラノガラスビーズネックレス",
-    heroSubtitle: "ランプワークで成形し、手作業で組み上げたムラーノガラス。ひと粒ずつ。",
+    heroSubtitle: "ムラーノガラスのジュエリーを、手作業で組み上げて。ひと粒ずつ。",
     shopNow: "今すぐ購入",
     heroTagline: "本物のムラーノガラス",
     heroMobileLede: "イタリア・ムラーノ島で、ひと粒ずつ手作り。",

@@ -3,18 +3,37 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import "./hero-typing-sequence.css";
 
-/* One keystroke, plus the jitter either side of it. A perfectly even cadence
-   reads as a machine streaming text; a few milliseconds of variation per key
-   is what makes it read as a hand. No mistakes and no backspacing — those are
-   a different, much louder effect. */
-const CHAR_MS = 82;
-const CHAR_JITTER_MS = 26;
-/* A beat at a word gap, a breath at punctuation. */
-const WORD_PAUSE_MS = 120;
-const PUNCT_PAUSE_MS = 420;
+/* ── The rhythm ───────────────────────────────────────────────────────────
+   A hand does not type at one speed with noise sprinkled on it. It moves in
+   BURSTS — a few characters in quick succession — and then hesitates, and it
+   rests longest where the sentence rests: at a word gap, and after a stop.
+
+   Jittering every single keystroke, which this did before, produces the
+   opposite impression: no two letters alike is just as mechanical as all of
+   them identical, because there is no pattern underneath for the eye to read
+   as intention. So the variation lives at the level of the BURST, and the
+   letters inside a burst share one pace.
+
+   Ranges are the brief's: 45–110ms between characters, occasional 120–220ms
+   at a word gap, 250–450ms after punctuation or a line change. */
+const BURST_MIN = 3;
+const BURST_MAX = 7;
+/* The pace of one burst, picked once per burst and shared by its letters. */
+const BURST_FAST_MS = 46;
+const BURST_SLOW_MS = 96;
+/* The hesitation between two bursts inside a word. */
+const HESITATE_MIN_MS = 70;
+const HESITATE_MAX_MS = 150;
+/* A word gap: most are free, some are a real beat. */
+const WORD_PAUSE_MIN_MS = 120;
+const WORD_PAUSE_MAX_MS = 220;
+const WORD_PAUSE_CHANCE = 0.45;
+/* A stop, or the end of a line, gets a breath. */
+const PUNCT_PAUSE_MIN_MS = 250;
+const PUNCT_PAUSE_MAX_MS = 450;
 /* Between the title and the lede, and between the lede and the button. */
-const TITLE_PAUSE_MS = 320;
-const SUBTITLE_PAUSE_MS = 180;
+const TITLE_PAUSE_MS = 300;
+const SUBTITLE_PAUSE_MS = 160;
 
 const SENTENCE_END = /[.!?…]$/;
 const CLAUSE_END = /[,;:—–]$/;
@@ -23,8 +42,11 @@ type Char = {
   ch: string;
   /** True on the last character of its word, which is where a pause lands. */
   endsWord: boolean;
-  /** How long to wait AFTER this character before the next one. */
-  pauseAfter: number;
+  /** Milliseconds to wait BEFORE writing this character. Precomputed once. */
+  delay: number;
+  /** True when that wait is long enough to read as a rest, which is when the
+   *  caret is allowed to blink. */
+  rest: boolean;
 };
 
 type Row = { words: Char[][] };
@@ -44,24 +66,79 @@ type Block = { rows: Row[]; chars: Char[]; text: string };
  * character instead. That keeps the caret off a blank cell and keeps the
  * character count equal to the number of visible glyphs.
  */
-function buildBlock(text: string, linePerWord: boolean): Block {
+const between = (min: number, max: number) => min + Math.random() * (max - min);
+
+/**
+ * Build the block AND its timeline, once.
+ *
+ * The timeline is computed here rather than per keystroke so that one run has
+ * one fixed rhythm: the effect only reads numbers, a re-render cannot reroll
+ * them mid-sentence, and `pace` lets the lede run faster than the title
+ * without changing the SHAPE of the rhythm.
+ */
+function buildBlock(text: string, linePerWord: boolean, pace: number): Block {
   const words = text.trim().split(/\s+/).filter(Boolean);
   const chars: Char[] = [];
 
-  const built = words.map((word) => {
+  /* Burst state: how many characters are left in the current burst, and the
+     pace those characters share. */
+  let burstLeft = 0;
+  let burstMs = BURST_FAST_MS;
+
+  const built = words.map((word, wordIndex) => {
     const letters = [...word];
+    const previousWord = wordIndex > 0 ? words[wordIndex - 1] : null;
+
     return letters.map((ch, i) => {
-      const endsWord = i === letters.length - 1;
+      let delay: number;
+      let rest = false;
+
+      if (i === 0 && previousWord) {
+        /* A word gap. Most cost nothing beyond the next keystroke; some are a
+           real beat, and a stop is always a breath — that is what makes the
+           sentence audible rather than a stream of letters. */
+        if (SENTENCE_END.test(previousWord)) {
+          delay = between(PUNCT_PAUSE_MIN_MS, PUNCT_PAUSE_MAX_MS);
+          rest = true;
+        } else if (CLAUSE_END.test(previousWord)) {
+          delay = between(PUNCT_PAUSE_MIN_MS * 0.7, PUNCT_PAUSE_MAX_MS * 0.7);
+          rest = true;
+        } else if (Math.random() < WORD_PAUSE_CHANCE) {
+          delay = between(WORD_PAUSE_MIN_MS, WORD_PAUSE_MAX_MS);
+          rest = true;
+        } else {
+          delay = burstMs;
+        }
+        /* A new word starts a new burst, so the hand "re-aims". */
+        burstLeft = 0;
+      } else {
+        if (burstLeft <= 0) {
+          burstLeft = Math.round(between(BURST_MIN, BURST_MAX));
+          burstMs = between(BURST_FAST_MS, BURST_SLOW_MS);
+          /* The hesitation that separates two bursts inside one word. */
+          if (i > 0) {
+            delay = between(HESITATE_MIN_MS, HESITATE_MAX_MS);
+            rest = true;
+          } else {
+            delay = burstMs;
+          }
+        } else {
+          delay = burstMs;
+        }
+        burstLeft -= 1;
+      }
+
+      /* A line of the title is its own thought: ending one earns a breath. */
+      if (linePerWord && i === 0 && previousWord) {
+        delay = Math.max(delay, between(PUNCT_PAUSE_MIN_MS, PUNCT_PAUSE_MAX_MS));
+        rest = true;
+      }
+
       const entry: Char = {
         ch,
-        endsWord,
-        pauseAfter: !endsWord
-          ? 0
-          : SENTENCE_END.test(word)
-            ? PUNCT_PAUSE_MS
-            : CLAUSE_END.test(word)
-              ? PUNCT_PAUSE_MS * 0.6
-              : WORD_PAUSE_MS,
+        endsWord: i === letters.length - 1,
+        delay: Math.round(delay * pace),
+        rest,
       };
       chars.push(entry);
       return entry;
@@ -75,20 +152,12 @@ function buildBlock(text: string, linePerWord: boolean): Block {
   return { rows, chars, text };
 }
 
-/** A keystroke's own length: the base pace with a little variation either way.
- *  `scale` is the block's own pace — the lede is several times longer than the
- *  store name, and at the title's cadence it would have taken about thirteen
- *  seconds, with the button unusable until the last full stop. */
-function keystroke(scale: number) {
-  return (CHAR_MS + (Math.random() - 0.5) * 2 * CHAR_JITTER_MS) * scale;
-}
-
-/* The title is written at full weight; the lede runs faster, because it is
-   several times longer. Both were slowed deliberately — the hand should be
-   visible. The lede is also a shorter sentence now, so the whole sequence
-   still lands in about six and a half seconds. */
-const TITLE_SPEED = 1;
-const SUBTITLE_SPEED = 0.62;
+/* The title is written at full weight; the lede flows faster, because it is
+   several times longer and the button must not be kept waiting for it. The
+   pace scales the whole timeline without changing its SHAPE — the bursts and
+   the breaths keep their proportions to each other. */
+const TITLE_PACE = 1;
+const SUBTITLE_PACE = 0.66;
 
 /**
  * One typed block, rendered WHOLE from the first frame.
@@ -171,8 +240,14 @@ export function HeroTypingSequence({
   /* The two blocks are derived once per copy change, so the typing effect's
      dependencies are stable and a parent re-render cannot restart the
      sequence. */
-  const titleBlock = useMemo(() => buildBlock(title, true), [title]);
-  const subtitleBlock = useMemo(() => buildBlock(subtitle, false), [subtitle]);
+  /* Built once per copy change, which is also what pins the timeline: the
+     random choices inside buildBlock happen here, not on every keystroke and
+     not on every re-render. */
+  const titleBlock = useMemo(() => buildBlock(title, true, TITLE_PACE), [title]);
+  const subtitleBlock = useMemo(
+    () => buildBlock(subtitle, false, SUBTITLE_PACE),
+    [subtitle]
+  );
 
   const [phase, setPhase] = useState<Phase>("idle");
   const [titleCount, setTitleCount] = useState(0);
@@ -256,12 +331,13 @@ export function HeroTypingSequence({
         return;
       }
 
-      const previous = n > 0 ? block.chars[n - 1] : undefined;
-      const speed = which === "title" ? TITLE_SPEED : SUBTITLE_SPEED;
-      const pause = (previous?.pauseAfter ?? 0) * speed;
-      /* Resting through the pause, striking through the keystroke itself. */
-      if (pause > 0) setResting(true);
-      wait(pause + keystroke(speed), () => {
+      /* The next character's own wait, decided when the block was built. */
+      const next = block.chars[n];
+      /* The caret blinks only where the hand genuinely rests — a word gap, a
+         breath after a stop, the hesitation between two bursts — and holds
+         steady through the quick runs in between. */
+      if (next.rest) setResting(true);
+      wait(next.delay, () => {
         setResting(false);
         setCount(n + 1);
         type(which, n + 1);
