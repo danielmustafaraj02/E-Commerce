@@ -437,12 +437,16 @@
        section closes on white instead of being sliced off by the viewport
        edge. The left-hand column is already white, so this reads as one
        continuous foot across the hero rather than a gap on one side. */
-    bottom: var(--hero-foot, 2rem);
+    bottom: auto;
     left: auto;
     /* 54%, not 58%: the copy column is the one that was running out of room,
        and the film reads just as well a few points narrower. */
     width: 54%;
-    height: 100%;
+    /* The height is stated outright rather than implied by top+bottom. A
+       <video> is a REPLACED element: with `height: auto` it takes its own
+       intrinsic ratio and ignores the bottom offset entirely, which first
+       left no foot at all and then overflowed the hero by 400px. */
+    height: calc(100% - var(--hero-foot, 2rem));
     object-fit: cover;
     object-position: 50% 45%;
     border: 0;
@@ -804,9 +808,16 @@
   letter-spacing: 0.2em;
   text-transform: uppercase;
   min-height: 3.25rem;
-  /* Onyx, not ivory: white on the bronze accent is only 3.5:1 and fails AA
-     for this small uppercase label; onyx on bronze is 5.3:1. */
-  color: var(--on-accent);
+  /* The PRIMARY pair, not the accent pair. --on-accent is a single fixed
+     colour (onyx), chosen back when the accent was always bronze — onyx on
+     bronze is 5.3:1. The palette is admin-controlled now, and on a navy or
+     plum accent that same onyx label measured 2.33:1 and simply disappeared.
+     --site-primary / --site-on-primary are a pair the admin chooses TOGETHER
+     and that Settings > Site style contrast-checks at 4.5:1, so this button
+     stays legible whatever palette is applied. */
+  background: var(--site-primary);
+  border-color: var(--site-primary);
+  color: var(--site-on-primary);
   transition:
     background-color 0.45s var(--ease-out-soft),
     border-color 0.45s var(--ease-out-soft),
@@ -814,9 +825,11 @@
     box-shadow 0.45s var(--ease-out-soft);
 }
 .shelf-home .shelf-hero .shelf-hero-copy .shelf-button:hover {
-  background: var(--brass-deep);
-  border-color: var(--brass-deep);
-  color: var(--on-accent);
+  /* Deepened from the primary itself, so the hover follows the palette too
+     instead of jumping back to bronze. */
+  background: color-mix(in srgb, var(--site-primary) 86%, var(--onyx));
+  border-color: color-mix(in srgb, var(--site-primary) 86%, var(--onyx));
+  color: var(--site-on-primary);
   /* A soft lift: the block rises a hair off the film, nothing bouncy. */
   transform: translateY(-2px);
   box-shadow: 0 10px 24px rgb(var(--midnight-rgb) / 28%);

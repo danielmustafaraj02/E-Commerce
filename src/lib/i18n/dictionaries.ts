@@ -4,6 +4,7 @@ export type Dictionary = typeof en;
 
 const en = {
   nav: {
+    collectionsEyebrow: "Explore the collections",
     searchPlaceholder: "Search products",
     search: "Search",
     cart: "Cart",
@@ -892,6 +893,7 @@ const en = {
 
 const it: Dictionary = {
   nav: {
+    collectionsEyebrow: "Esplora le collezioni",
     searchPlaceholder: "Cerca prodotti",
     search: "Cerca",
     cart: "Carrello",
@@ -1776,6 +1778,7 @@ const it: Dictionary = {
 
 const fr: Dictionary = {
   nav: {
+    collectionsEyebrow: "Explorer les collections",
     searchPlaceholder: "Rechercher des produits",
     search: "Rechercher",
     cart: "Panier",
@@ -2665,6 +2668,7 @@ const fr: Dictionary = {
 
 const de: Dictionary = {
   nav: {
+    collectionsEyebrow: "Die Kollektionen entdecken",
     searchPlaceholder: "Produkte suchen",
     search: "Suchen",
     cart: "Warenkorb",
@@ -3551,6 +3555,7 @@ const de: Dictionary = {
 
 const ar: Dictionary = {
   nav: {
+    collectionsEyebrow: "استكشف المجموعات",
     searchPlaceholder: "ابحث عن المنتجات",
     search: "بحث",
     cart: "السلة",
@@ -4411,6 +4416,7 @@ const ar: Dictionary = {
 
 const zh: Dictionary = {
   nav: {
+    collectionsEyebrow: "探索系列",
     searchPlaceholder: "搜索商品",
     search: "搜索",
     cart: "购物车",
@@ -5253,6 +5259,7 @@ const zh: Dictionary = {
 
 const ru: Dictionary = {
   nav: {
+    collectionsEyebrow: "Коллекции",
     searchPlaceholder: "Поиск товаров",
     search: "Поиск",
     cart: "Корзина",
@@ -6138,6 +6145,7 @@ const ru: Dictionary = {
 
 const es: Dictionary = {
   nav: {
+    collectionsEyebrow: "Explora las colecciones",
     searchPlaceholder: "Buscar productos",
     search: "Buscar",
     cart: "Carrito",
@@ -7018,6 +7026,7 @@ const es: Dictionary = {
 
 const pt: Dictionary = {
   nav: {
+    collectionsEyebrow: "Explore as coleções",
     searchPlaceholder: "Pesquisar produtos",
     search: "Pesquisar",
     cart: "Carrinho",
@@ -7900,6 +7909,7 @@ const pt: Dictionary = {
 
 const hi: Dictionary = {
   nav: {
+    collectionsEyebrow: "संग्रह देखें",
     searchPlaceholder: "उत्पाद खोजें",
     search: "खोजें",
     cart: "कार्ट",
@@ -8774,6 +8784,7 @@ const hi: Dictionary = {
 
 const ja: Dictionary = {
   nav: {
+    collectionsEyebrow: "コレクションを見る",
     searchPlaceholder: "商品を検索",
     search: "検索",
     cart: "カート",

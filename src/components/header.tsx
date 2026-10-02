@@ -168,6 +168,7 @@ export async function Header({
             categories={categoryLinks}
             label={dict.nav.products}
             viewAllLabel={dict.nav.viewAll}
+            eyebrow={dict.nav.collectionsEyebrow}
             locale={locale}
             signedIn={Boolean(session?.user)}
           />

@@ -304,3 +304,167 @@
   transform: translateX(3px);
 }
 
+
+
+/* ── Editorial panel ──────────────────────────────────────────────────────
+   A quiet sheet of the page rather than a floating card: one hairline, a
+   square corner, generous air, and rows separated by rules instead of by
+   tinted blocks. Everything below overrides the older card treatment above;
+   it is appended rather than edited in place so the two can be compared. */
+.pd-body {
+  border: 1px solid var(--rule, var(--champagne));
+  border-radius: 2px;
+  padding: 1.35rem 1.35rem 0.4rem;
+  /* The measure is set HERE, on the flex container, not on .pd-inner: as a
+     flex child .pd-inner was being sized to its content whatever width it
+     asked for, so the rows stopped short of the panel edge and the arrows
+     tucked against the names. */
+  width: 21rem;
+  max-width: calc(100vw - 2rem);
+  box-sizing: border-box;
+  background: var(--ground, #fff);
+  /* The old card lifted off the page with a heavy drop shadow; an editorial
+     panel sits ON the page, so the shadow is barely more than a settling. */
+  box-shadow: 0 18px 40px rgb(var(--shadow-rgb) / 0.08);
+}
+
+.pd-inner {
+  /* Fills the measure its container sets. */
+  width: 100%;
+}
+
+/* The kicker and its short gold rule. */
+.pd-eyebrow {
+  position: relative;
+  margin: 0 0 1rem;
+  padding-bottom: 0.7rem;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink, var(--midnight));
+}
+.pd-eyebrow::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  bottom: 0;
+  width: 2.75rem;
+  height: 1px;
+  background: var(--gold, var(--brass));
+}
+
+/* One row: picture, name, arrow — on a rule, not on a tint. */
+.pd-item--with-image,
+.pd-item {
+  display: grid;
+  /* Explicit, because these links sit in a flex context further up and were
+     being sized to their content: the arrow ended up tucked against the name
+     instead of held at the panel's edge. */
+  width: 100%;
+  box-sizing: border-box;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.7rem 0.1rem;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  border-bottom: 1px solid var(--rule, var(--champagne));
+}
+/* The last category row keeps its rule: it is what separates the list from
+   the "view all" line beneath. */
+.pd-item:last-of-type {
+  border-bottom: 1px solid var(--rule, var(--champagne));
+}
+.pd-item--with-image:hover,
+.pd-item--with-image:focus-visible,
+.pd-item:hover,
+.pd-item:focus-visible {
+  background: none;
+  border-color: var(--rule, var(--champagne));
+}
+
+/* A larger, squarer plate with its own hairline — the piece is the point. */
+.pd-thumb {
+  width: 3.1rem;
+  height: 3.1rem;
+  border-radius: 0;
+  border: 1px solid var(--rule, var(--champagne));
+  background: var(--ground, #fff);
+  overflow: hidden;
+}
+.pd-thumb img {
+  object-fit: contain;
+}
+
+/* The name in the display serif, at a size that can carry the panel. */
+.pd-item-label {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  color: var(--ink, var(--midnight));
+}
+
+.pd-item-arrow,
+.pd-view-all svg {
+  color: var(--ink, var(--midnight));
+  transition: transform 0.3s var(--ease-out-soft, ease);
+}
+@media (hover: hover) and (pointer: fine) {
+  .pd-item:hover .pd-item-arrow,
+  .pd-item:focus-visible .pd-item-arrow,
+  .pd-view-all:hover svg,
+  .pd-view-all:focus-visible svg {
+    transform: translateX(0.3rem);
+  }
+  .pd-item:hover .pd-item-label,
+  .pd-item:focus-visible .pd-item-label {
+    color: var(--accent-deep, var(--ink));
+  }
+}
+
+/* The divider element the markup already carried is redundant now that every
+   row draws its own rule. */
+.pd-divider {
+  display: none;
+}
+
+.pd-view-all {
+  display: grid;
+  width: 100%;
+  box-sizing: border-box;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.85rem 0.1rem;
+  border-radius: 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 0.92rem;
+  color: var(--ink, var(--midnight));
+}
+.pd-view-all:hover,
+.pd-view-all:focus-visible {
+  background: none;
+  color: var(--accent-deep, var(--ink));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pd-item-arrow,
+  .pd-view-all svg {
+    transition: none;
+  }
+}
+
+/* The old grid capped the list at a 15rem column — that cap, not anything in
+   the rules above, is what kept the rows short of the panel edge. One
+   full-width column now; the measure is the panel's. */
+.pd-inner:has(.pd-item--with-image) {
+  display: block;
+  grid-template-columns: none;
+  max-width: none;
+  gap: 0;
+}

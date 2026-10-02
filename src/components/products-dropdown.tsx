@@ -18,12 +18,15 @@ export function ProductsDropdown({
   categories,
   label,
   viewAllLabel,
+  eyebrow,
   viewAllHref = "/products",
   locale,
 }: {
   categories: CategoryLink[];
   label: string;
   viewAllLabel: string;
+  /** The editorial kicker above the list — "Explore the collections". */
+  eyebrow?: string;
   viewAllHref?: string;
   locale?: string;
   signedIn?: boolean;
@@ -105,6 +108,14 @@ export function ProductsDropdown({
       <div className={`pd-panel${open ? " pd-panel-open" : ""}`} role="menu">
         <div className="pd-body">
         <div className="pd-inner">
+          {/* The kicker, with the gold hairline the rest of the site uses to
+              open an editorial block. Decorative: the links below carry the
+              meaning, so it is not announced as a heading. */}
+          {eyebrow ? (
+            <p className="pd-eyebrow" aria-hidden="true">
+              {eyebrow}
+            </p>
+          ) : null}
           {categories.map((cat, index) => (
             <Link
               key={cat.href}
@@ -133,6 +144,22 @@ export function ProductsDropdown({
                 </span>
               ) : null}
               <span className="pd-item-label">{cat.label}</span>
+              {/* The same arrow the footer row carries, so every row reads as
+                  a way through rather than only the last one. */}
+              <svg
+                className="pd-item-arrow"
+                width="16"
+                height="16"
+                viewBox="0 0 14 14"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M3 7h8M8 4l3 3-3 3" />
+              </svg>
             </Link>
           ))}
           <div className="pd-divider" />

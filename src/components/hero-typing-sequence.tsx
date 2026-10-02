@@ -212,7 +212,6 @@ function TypedBlock({
   return (
     <span aria-hidden="true" className="hero-typing-type">
       {block.rows.map((row, r) => {
-        const rowStart = index;
         const body = row.words.map((word, w) => {
           const span = (
             <span className="hero-typing-word" key={w}>
@@ -239,9 +238,15 @@ function TypedBlock({
           <span
             className="hero-typing-row"
             key={r}
-            /* Before the row's first keystroke the caret has no character to
-               ride, so it sits at the row's start instead. */
-            data-caret-start={active && revealed === rowStart ? "true" : undefined}
+            /* ONLY at the very beginning, before a single character exists to
+               ride. The condition used to be `revealed === rowStart`, which is
+               true for row 2 at the exact moment row 1 finishes — so during
+               the pause between lines TWO carets were drawn at once, one
+               trailing "Perla" and one waiting on the empty line below. A
+               caret is a single insertion point; it cannot be in two places.
+               Once anything is written, the trailing caret on the last
+               character is the only one. */
+            data-caret-start={active && revealed === 0 && r === 0 ? "true" : undefined}
           >
             {body}
           </span>
