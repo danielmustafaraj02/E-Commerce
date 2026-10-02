@@ -27,6 +27,9 @@ import {
 import { buildProductMetaDescription, fitTitle } from "@/lib/seo-text";
 import { hreflangAlternates, localizedCanonical, ogLocale } from "@/lib/hreflang";
 import { ProductPurchasePanel } from "@/components/product-purchase-panel";
+import { DeliveryEstimate } from "@/components/delivery-estimate";
+import { ShippingToDestination } from "@/components/shipping-to-destination";
+import { deliveryEstimateText } from "@/lib/delivery-estimate";
 import { ShareButtons } from "@/components/share-buttons";
 import { ShelfItem } from "@/components/shelf-item";
 import { Reveal } from "@/components/reveal";
@@ -530,6 +533,31 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                     isSignedIn: Boolean(userId),
                     addLabel: dict.product.addToWishlist,
                     removeLabel: dict.product.removeFromWishlist,
+                  }}
+                />
+                {/* Under the CTA, as the brief asks: the dates, the rule they
+                    come from, and the word "estimate". The window itself is
+                    computed by lib/delivery-estimate.ts, the single source the
+                    cart and the checkout read too. */}
+                <DeliveryEstimate
+                  locale={uiLocale}
+                  label={dict.product.deliveryEstimateLabel}
+                  window={dict.product.deliveryEstimateWindow}
+                  note={dict.product.deliveryEstimateNote}
+                  initialRange={deliveryEstimateText(uiLocale)}
+                />
+                {/* The real rate for a chosen destination, read from the same
+                    zones checkout charges from. Nothing is assumed from the
+                    interface language. */}
+                <ShippingToDestination
+                  locale={uiLocale}
+                  currency={settings.defaultCurrency}
+                  labels={{
+                    to: dict.product.shippingToLabel,
+                    choose: dict.product.shippingToChoose,
+                    free: dict.product.shippingToFree,
+                    none: dict.product.shippingToNone,
+                    loading: dict.product.shippingToLoading,
                   }}
                 />
               </div>

@@ -23,6 +23,8 @@ const defaults = {
   colorBorder: null as string | null,
   fontHeading: null as string | null,
   fontBody: null as string | null,
+  // Palettes the admin saved themselves; see lib/color-palettes.ts.
+  customPalettes: null as unknown,
   defaultCurrency: "EUR",
   defaultLocale: "en-US",
   contactEmail: "hello@example.com",

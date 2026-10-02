@@ -2,9 +2,20 @@
 
 import { useActionState, useMemo, useState, useTransition } from "react";
 import { FormAlert } from "@/components/form-alert";
-import { saveSiteStyle, resetSiteStyle, type SiteStyleState } from "./actions";
+import {
+  saveSiteStyle,
+  resetSiteStyle,
+  saveCustomPalette,
+  deleteCustomPalette,
+  type SiteStyleState,
+} from "./actions";
 import { FONT_PAIRINGS, BUNDLED_PAIRING, findPairing } from "@/lib/font-pairings";
-import { COLOR_PALETTES, THEME_PALETTE, findPalette } from "@/lib/color-palettes";
+import {
+  COLOR_PALETTES,
+  THEME_PALETTE,
+  findPalette,
+  type CustomPalette,
+} from "@/lib/color-palettes";
 import {
   COLOR_ROLES,
   CSS_VAR,
@@ -60,12 +71,24 @@ function toDraft(style: SiteStyle): Draft {
  * the draft's own custom properties, so they are painted by exactly the
  * variables the storefront reads.
  */
-export function SiteStyleForm({ style }: { style: SiteStyle }) {
+export function SiteStyleForm({
+  style,
+  customPalettes,
+}: {
+  style: SiteStyle;
+  customPalettes: CustomPalette[];
+}) {
   const saved = useMemo(() => toDraft(style), [style]);
   const [draft, setDraft] = useState<Draft>(saved);
   const [state, formAction, pending] = useActionState<SiteStyleState, FormData>(saveSiteStyle, {});
   const [resetState, setResetState] = useState<SiteStyleState>({});
   const [resetting, startReset] = useTransition();
+  const [paletteName, setPaletteName] = useState("");
+  const [paletteState, savePaletteAction, savingPalette] = useActionState<
+    SiteStyleState,
+    FormData
+  >(saveCustomPalette, {});
+  const [deleting, startDelete] = useTransition();
 
   const set = (key: keyof Draft, value: string) =>
     setDraft((current) => ({ ...current, [key]: value }));
@@ -92,8 +115,14 @@ export function SiteStyleForm({ style }: { style: SiteStyle }) {
      at all is the site's own palette; anything else that matches no entry is
      "Custom", which is simply what hand-editing a role produces. */
   const anyColorSet = COLOR_ROLES.some((r) => draft[r].trim().length > 0);
-  const palette = findPalette(draft);
+  const palette = findPalette(draft, customPalettes);
   const customPalette = anyColorSet && !palette;
+  /* A bundled palette carries a note; one the admin saved does not. */
+  const paletteNote: string = palette
+    ? ((palette as { note?: string }).note ?? "Your own palette")
+    : customPalette
+      ? "Your own combination — name it below to reuse it"
+      : THEME_PALETTE.note;
 
   const previewVars = {
     ...Object.fromEntries(COLOR_ROLES.map((role) => [CSS_VAR[role], effective[role]])),
@@ -124,7 +153,10 @@ export function SiteStyleForm({ style }: { style: SiteStyle }) {
             <select
               value={palette?.id ?? (customPalette ? "custom" : THEME_PALETTE.id)}
               onChange={(e) => {
-                const chosen = COLOR_PALETTES.find((p) => p.id === e.target.value);
+                const id = e.target.value;
+                const chosen =
+                  customPalettes.find((p) => p.id === id) ??
+                  COLOR_PALETTES.find((p) => p.id === id);
                 setDraft((d) => ({
                   ...d,
                   ...Object.fromEntries(
@@ -136,11 +168,22 @@ export function SiteStyleForm({ style }: { style: SiteStyle }) {
             >
               <option value={THEME_PALETTE.id}>{THEME_PALETTE.name}</option>
               {customPalette && <option value="custom">Custom — edited by hand</option>}
-              {COLOR_PALETTES.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name}
-                </option>
-              ))}
+              {customPalettes.length > 0 && (
+                <optgroup label="Your palettes">
+                  {customPalettes.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                    </option>
+                  ))}
+                </optgroup>
+              )}
+              <optgroup label="From coolors.co (elegant)">
+                {COLOR_PALETTES.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+              </optgroup>
             </select>
             <span className="flex items-center gap-2 text-xs text-neutral-500">
               {/* The eight roles as a strip, so a palette can be recognised
@@ -155,7 +198,7 @@ export function SiteStyleForm({ style }: { style: SiteStyle }) {
                   />
                 ))}
               </span>
-              {palette?.note ?? (customPalette ? "Your own combination" : THEME_PALETTE.note)}
+              {paletteNote}
             </span>
           </label>
           <div className="grid gap-3 sm:grid-cols-2">
@@ -198,6 +241,70 @@ export function SiteStyleForm({ style }: { style: SiteStyle }) {
             ))}
           </div>
         </section>
+
+        {/* Keep the eight colours under a name of your own. The hidden inputs
+            carry the RESOLVED colours, not the draft, so a palette saved while
+            some roles are still on the theme stores what you can actually see
+            rather than a row of blanks. It is a separate form, because saving
+            a palette is not the same act as applying the style. */}
+        <div className="rounded border border-neutral-200 p-3">
+          {paletteState.error && <FormAlert type="error">{paletteState.error}</FormAlert>}
+          {paletteState.ok && <FormAlert type="success">{paletteState.ok}</FormAlert>}
+          <div className="flex flex-wrap items-end gap-2">
+            <label className="flex min-w-48 flex-1 flex-col gap-1 text-sm">
+              <span className="font-medium">Save these colours as…</span>
+              <input
+                form="save-palette"
+                name="name"
+                value={paletteName}
+                onChange={(e) => setPaletteName(e.target.value)}
+                placeholder="e.g. Autumn window"
+                maxLength={40}
+                className="rounded border border-neutral-300 px-2 py-1.5 text-sm"
+              />
+            </label>
+            <button
+              form="save-palette"
+              type="submit"
+              disabled={savingPalette || paletteName.trim().length === 0}
+              className="rounded border border-neutral-300 px-4 py-2 text-sm disabled:opacity-40"
+            >
+              {savingPalette ? "Saving…" : "Save palette"}
+            </button>
+          </div>
+          <p className="mt-1 text-xs text-neutral-500">
+            Saving under a name you already used replaces it. Saved palettes
+            are not contrast-checked for you — the warnings above still apply.
+          </p>
+
+          {customPalettes.length > 0 && (
+            <ul className="mt-3 flex flex-col gap-1">
+              {customPalettes.map((p) => (
+                <li key={p.id} className="flex items-center gap-2 text-sm">
+                  <span className="inline-flex overflow-hidden rounded border border-neutral-300">
+                    {COLOR_ROLES.map((r) => (
+                      <span key={r} style={{ background: p.colors[r] }} className="h-3.5 w-3.5" />
+                    ))}
+                  </span>
+                  <span className="flex-1 truncate">{p.name}</span>
+                  <button
+                    type="button"
+                    disabled={deleting}
+                    onClick={() =>
+                      startDelete(async () => {
+                        const result = await deleteCustomPalette(p.id);
+                        setResetState(result);
+                      })
+                    }
+                    className="rounded px-2 py-1 text-xs text-red-700 underline disabled:opacity-40"
+                  >
+                    Delete
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
 
         <section className="flex flex-col gap-3">
           <h2 className="text-sm font-semibold">Type</h2>
@@ -308,6 +415,15 @@ export function SiteStyleForm({ style }: { style: SiteStyle }) {
           </button>
           {dirty && <span className="text-xs text-amber-700">Unsaved changes</span>}
         </div>
+      </form>
+
+      {/* Its own form element, so the Save-palette button cannot submit the
+          style form. Rendered as a sibling and linked by id, because a form
+          may not be nested inside another. */}
+      <form action={savePaletteAction} id="save-palette" className="hidden">
+        {COLOR_ROLES.map((r) => (
+          <input key={r} type="hidden" name={r} value={effective[r]} />
+        ))}
       </form>
 
       {/* The preview. Real elements, painted by the draft's own variables —

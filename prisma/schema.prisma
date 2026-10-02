@@ -47,6 +47,12 @@ model StoreSettings {
   // app/home-fonts.ts. Null = the bundled role default.
   fontHeading           String?
   fontBody              String?
+  // Palettes the admin has saved themselves, as
+  // [{ id, name, colors: { colorBackground, ... } }]. JSON rather than a table
+  // because they are a short, unordered list owned entirely by this one
+  // settings row, never queried or joined, and only read and written whole.
+  // The shape is validated on write in the Site style action.
+  customPalettes        Json?
   defaultCurrency       String  @default("EUR")
   defaultLocale         String  @default("en-US")
   contactEmail          String  @default("hello@example.com")

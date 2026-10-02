@@ -165,12 +165,64 @@ export const COLOR_PALETTES: ColorPalette[] = [
     },
   },];
 
+/* ── Palettes the admin saved themselves ──────────────────────────────────
+   Stored on the settings row as JSON. They behave exactly like the built-in
+   ones in the selector; the only differences are that they can be deleted and
+   that nothing guarantees their contrast, which is why the form shows the
+   same warnings for them that it shows for hand-edited colours. */
+
+export type CustomPalette = {
+  id: string;
+  name: string;
+  colors: Record<ColorRole, string>;
+};
+
+const HEX = /^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i;
+
+/**
+ * Read custom palettes out of whatever the JSON column holds.
+ *
+ * Written defensively on purpose: the column is JSON, so it can contain
+ * anything an older version of this code (or a hand-edited row) left there.
+ * Anything that is not a complete, well-formed palette is dropped rather than
+ * being allowed to reach a style attribute.
+ */
+export function parseCustomPalettes(value: unknown): CustomPalette[] {
+  if (!Array.isArray(value)) return [];
+  const roles = Object.keys(DEFAULT_COLORS) as ColorRole[];
+  const out: CustomPalette[] = [];
+  for (const entry of value) {
+    if (!entry || typeof entry !== "object") continue;
+    const e = entry as Record<string, unknown>;
+    const id = typeof e.id === "string" ? e.id : null;
+    const name = typeof e.name === "string" ? e.name.trim() : "";
+    const colors = e.colors as Record<string, unknown> | undefined;
+    if (!id || !name || !colors || typeof colors !== "object") continue;
+    if (!roles.every((r) => typeof colors[r] === "string" && HEX.test(colors[r] as string))) {
+      continue;
+    }
+    out.push({
+      id,
+      name,
+      colors: Object.fromEntries(
+        roles.map((r) => [r, (colors[r] as string).toLowerCase()])
+      ) as Record<ColorRole, string>,
+    });
+  }
+  return out;
+}
+
 /** The palette whose eight roles exactly match what is set, if any. */
-export function findPalette(colors: Partial<Record<ColorRole, string | null>>) {
+export function findPalette(
+  colors: Partial<Record<ColorRole, string | null>>,
+  custom: CustomPalette[] = []
+) {
   const keys = Object.keys(DEFAULT_COLORS) as ColorRole[];
   const same = (p: Record<ColorRole, string>) =>
     keys.every(
       (k) => (colors[k] ?? "").trim().toLowerCase() === p[k].toLowerCase()
     );
-  return COLOR_PALETTES.find((p) => same(p.colors)) ?? null;
+  /* The admin's own palettes are searched first: if a saved palette happens
+     to match a bundled one, the one they named is the one to show. */
+  return custom.find((p) => same(p.colors)) ?? COLOR_PALETTES.find((p) => same(p.colors)) ?? null;
 }

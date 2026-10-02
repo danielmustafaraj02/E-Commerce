@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { COLOR_PALETTES, THEME_PALETTE, findPalette } from "./color-palettes";
+import {
+  COLOR_PALETTES,
+  THEME_PALETTE,
+  findPalette,
+  parseCustomPalettes,
+  type CustomPalette,
+} from "./color-palettes";
 import { COLOR_ROLES, contrastReport, resolveColors } from "./site-style";
 
 describe("colour palettes", () => {
@@ -48,5 +54,37 @@ describe("colour palettes", () => {
 
   it("treats an empty style as the theme's own colours", () => {
     expect(resolveColors({})).toEqual(THEME_PALETTE.colors);
+  });
+});
+
+describe("custom palettes", () => {
+  const colors = Object.fromEntries(
+    COLOR_ROLES.map((r) => [r, "#123456"])
+  ) as CustomPalette["colors"];
+  const good: CustomPalette = { id: "custom-1", name: "Autumn window", colors };
+
+  it("reads a well-formed palette back", () => {
+    expect(parseCustomPalettes([good])).toEqual([good]);
+  });
+
+  /* The column is JSON, so it can hold anything a hand-edited row or an older
+     version left there. None of it may reach a style attribute. */
+  it("drops anything malformed rather than trusting it", () => {
+    expect(parseCustomPalettes(null)).toEqual([]);
+    expect(parseCustomPalettes("nope")).toEqual([]);
+    expect(parseCustomPalettes([null, 7, "x"])).toEqual([]);
+    expect(parseCustomPalettes([{ ...good, name: "   " }])).toEqual([]);
+    expect(parseCustomPalettes([{ ...good, colors: { colorText: "#fff" } }])).toEqual([]);
+    expect(
+      parseCustomPalettes([
+        { ...good, colors: { ...good.colors, colorAccent: "red; }" } },
+      ])
+    ).toEqual([]);
+  });
+
+  it("is found by findPalette, and wins over a bundled one it matches", () => {
+    expect(findPalette(good.colors, [good])?.id).toBe("custom-1");
+    const shadow = { ...good, colors: COLOR_PALETTES[0].colors };
+    expect(findPalette(COLOR_PALETTES[0].colors, [shadow])?.id).toBe("custom-1");
   });
 });
