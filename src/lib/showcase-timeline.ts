@@ -64,10 +64,15 @@ const COPY_IN_START = 0.8;
 /** Total timeline length, in units, for `count` scenes. */
 export const timelineLength = (count: number) => Math.max(1, 2 * count - 1);
 
-/** How tall the showcase section should be, in pixels: one stage-height of
- *  scroll per timeline unit, plus the stage itself. */
+/** Scroll consumed per timeline unit, as a fraction of the stage height.
+ *  Below 1 the sequence needs less scrolling (the scenes still travel a full
+ *  stage height; they just do it over a shorter scroll distance). */
+export const SCROLL_PER_UNIT = 0.5;
+
+/** How tall the showcase section should be, in pixels: the stage itself plus
+ *  SCROLL_PER_UNIT stage-heights of scroll per timeline unit. */
 export const sectionHeight = (count: number, stageHeight: number) =>
-  (timelineLength(count) + 1) * stageHeight;
+  (1 + timelineLength(count) * SCROLL_PER_UNIT) * stageHeight;
 
 /**
  * ── THE ONE TIMELINE ────────────────────────────────────────────────────────

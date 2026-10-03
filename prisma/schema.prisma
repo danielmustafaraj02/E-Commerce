@@ -134,6 +134,16 @@ model StoreSettings {
   // picks from the homepage's popular pieces on its own.
   muranoReasonProductIds String[] @default([])
 
+  // Page builder — Admin > Settings > Page layout. Each is the ordered list of
+  // sections as [{ id, visible }]. Null = the built-in order, so an untouched
+  // store renders exactly as before. Shape is validated on write and
+  // normalised on read (src/lib/page-layout.ts).
+  homeLayout        Json?
+  productPageLayout Json?
+  // Home page text overrides: { [locale]: { [fieldKey]: string } }. Null = the
+  // built-in dictionary copy. Whitelisted keys only (src/lib/home-copy.ts).
+  homeCopy          Json?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -362,6 +372,10 @@ model Product {
   giftStyles     String[] @default([])
   giftOccasions  String[] @default([])
   giftRecipients String[] @default([])
+
+  // Per-product page overrides: { hidden: [sectionId], blocks: [{ title, body }] }.
+  // Null = follow the store-wide product page layout. See src/lib/page-layout.ts.
+  pageLayout Json?
 
   images        ProductImage[]
   orderItems    OrderItem[]

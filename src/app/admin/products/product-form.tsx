@@ -1,6 +1,8 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import { ProductImagesField, ProductPageContentField } from "./product-page-fields";
+import { parseProductPageLayout } from "@/lib/page-layout";
 import { FormAlert } from "@/components/form-alert";
 import { GIFT_STYLES, GIFT_OCCASIONS, GIFT_RECIPIENTS } from "@/lib/gift-finder";
 
@@ -42,6 +44,7 @@ export type ProductFormValues = {
   active: boolean;
   unlisted: boolean;
   featuredInCarousel: boolean;
+  pageLayout?: unknown;
   imageUrls: string;
   trackInventory: boolean;
   supplierId: string | null;
@@ -538,21 +541,9 @@ export function ProductForm({
         </div>
       </fieldset>
 
-      <label className="flex flex-col gap-1.5 text-sm">
-        <span className="font-medium">Image URLs (one per line)</span>
-        <textarea
-          name="imageUrls"
-          rows={3}
-          defaultValue={initial?.imageUrls}
-          placeholder="https://..."
-          className="field font-mono text-xs"
-        />
-        <span className="text-foreground/60 text-xs">
-          Add <code>lifestyle</code> after a URL (e.g. <code>https://... lifestyle</code>) for
-          on-model/lifestyle photos — it skips the white-background blend that otherwise shows as a
-          white halo around them.
-        </span>
-      </label>
+      <ProductImagesField initial={initial?.imageUrls ?? ""} />
+
+      <ProductPageContentField initial={parseProductPageLayout(initial?.pageLayout)} />
       <label className="flex cursor-pointer items-center gap-2 text-sm">
         <input
           type="checkbox"

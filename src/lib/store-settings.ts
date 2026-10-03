@@ -70,6 +70,10 @@ const defaults = {
   linkedinUrl: null as string | null,
   // Pieces beside the home page's "why Murano" reasons; empty = automatic.
   muranoReasonProductIds: [] as string[],
+  // Page builder layouts; null = built-in order (see lib/page-layout.ts).
+  homeLayout: null as unknown,
+  productPageLayout: null as unknown,
+  homeCopy: null as unknown,
 };
 
 // Single-row white-label config. Falls back to hardcoded neutral defaults

@@ -10,6 +10,7 @@ import {
   sceneBoundary,
   segment,
   sectionHeight,
+  SCROLL_PER_UNIT,
   smooth,
   timelineLength,
 } from "./showcase-timeline";
@@ -49,8 +50,8 @@ describe("timeline shape", () => {
     expect(timelineLength(4)).toBe(7);
   });
 
-  it("reserves one stage-height of scroll per unit, plus the stage itself", () => {
-    expect(sectionHeight(3, 600)).toBe((5 + 1) * 600);
+  it("reserves SCROLL_PER_UNIT stage-heights of scroll per unit, plus the stage itself", () => {
+    expect(sectionHeight(3, 600)).toBe((1 + 5 * SCROLL_PER_UNIT) * 600);
   });
 });
 

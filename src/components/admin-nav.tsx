@@ -35,7 +35,7 @@ export function AdminShell({
   const sidebar = hasSidebar(current);
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="admin-ui flex flex-1 flex-col">
       <nav aria-label="Admin sections" className="border-foreground/10 border-b">
         <ul className="mx-auto flex w-full max-w-6xl gap-1 overflow-x-auto px-4 text-sm whitespace-nowrap">
           {sections.map((section) => {

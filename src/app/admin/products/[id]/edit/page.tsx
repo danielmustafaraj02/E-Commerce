@@ -61,6 +61,7 @@ export default async function EditProductPage({ params }: PageProps<"/admin/prod
           active: product.active,
           unlisted: product.unlisted,
           featuredInCarousel: product.featuredInCarousel,
+          pageLayout: product.pageLayout,
           imageUrls: product.images
             .map((image) => (image.isLifestyle ? `${image.url} lifestyle` : image.url))
             .join("\n"),

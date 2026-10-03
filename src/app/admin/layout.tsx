@@ -4,6 +4,7 @@ import { AdminShell } from "@/components/admin-nav";
 import { buildAdminSections } from "@/lib/admin-nav";
 import { db } from "@/lib/db";
 import { noIndexMetadata } from "@/lib/seo";
+import "./admin.css";
 
 // Every other private/account-scoped route (cart, checkout, account, login,
 // ...) sets this; /admin is robots.txt-disallowed too, but that only blocks

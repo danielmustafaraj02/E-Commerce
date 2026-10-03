@@ -13,9 +13,9 @@ export type PopularProduct = {
   imageUrl: string;
 };
 
-const AUTOSCROLL_MS = 3800;
-const CLONE = 5; /* items cloned at each end — must match visible count */
-const VISIBLE = 5;
+const AUTOSCROLL_MS = 6500;
+const SWIPE_PX = 40;
+const CLONE = 5; /* items cloned at each end — must be >= the max visible count (see CSS) */
 
 export function PopularCarousel({ products }: { products: PopularProduct[] }) {
   const n = products.length;
@@ -33,6 +33,7 @@ export function PopularCarousel({ products }: { products: PopularProduct[] }) {
   const [snap, setSnap] = useState(false);
   const [paused, setPaused] = useState(false);
   const [hovered, setHovered] = useState<number | null>(null);
+  const touchX = useRef<number | null>(null);
   const closeTimer = useRef<number | undefined>(undefined);
   /* Signals that the next trackIndex change is a snap (no transition) */
   const snapPending = useRef(false);
@@ -106,11 +107,24 @@ export function PopularCarousel({ products }: { products: PopularProduct[] }) {
 
   return (
     <div className="popular-carousel" style={{ "--pop-ext-n": extN } as CSSProperties}>
-      <div className="popular-viewport">
+      <div
+        className="popular-viewport"
+        onTouchStart={(e) => {
+          touchX.current = e.touches[0].clientX;
+        }}
+        onTouchEnd={(e) => {
+          if (touchX.current === null) return;
+          const dx = e.changedTouches[0].clientX - touchX.current;
+          touchX.current = null;
+          if (Math.abs(dx) < SWIPE_PX) return;
+          if (dx < 0) next();
+          else prev();
+        }}
+      >
         <ul
           className="popular-track"
           style={{
-            width: `calc(var(--pop-ext-n) * 100% / ${VISIBLE})`,
+            width: "calc(var(--pop-ext-n) * 100% / var(--pop-visible))",
             transform: `translateX(calc(-${trackIndex} * 100% / var(--pop-ext-n)))`,
             transition: snap ? "none" : undefined,
           }}
@@ -134,7 +148,7 @@ export function PopularCarousel({ products }: { products: PopularProduct[] }) {
                       src={product.imageUrl}
                       alt=""
                       fill
-                      sizes="(min-width: 80rem) 20vw, (min-width: 52rem) 25vw, 50vw"
+                      sizes="(min-width: 80rem) 14vw, (min-width: 64rem) 18vw, (min-width: 48rem) 25vw, (min-width: 36rem) 40vw, 80vw"
                     />
                   </div>
                 </Link>

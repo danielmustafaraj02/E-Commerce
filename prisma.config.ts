@@ -41,8 +41,26 @@ try {
 // client, leaving `migrate deploy` hanging/timing out on a lock nobody is
 // really holding anymore. DATABASE_URL_UNPOOLED (Neon's direct, non-PgBouncer
 // connection string) doesn't have that problem.
+//
+// If DATABASE_URL_UNPOOLED isn't set but DATABASE_URL is a Neon pooled URL
+// (host `ep-xxx-pooler.…`), derive the direct URL by dropping `-pooler`.
+function directUrl(url: string | undefined) {
+  if (!url) return url;
+  try {
+    const u = new URL(url);
+    if (u.hostname.endsWith(".neon.tech")) {
+      u.hostname = u.hostname.replace(/-pooler(?=\.)/, "");
+    }
+    return u.toString();
+  } catch {
+    return url;
+  }
+}
+
 const databaseUrl =
-  process.env.DATABASE_URL_UNPOOLED ?? process.env.DATABASE_URL ?? "postgresql://placeholder";
+  process.env.DATABASE_URL_UNPOOLED ??
+  directUrl(process.env.DATABASE_URL) ??
+  "postgresql://placeholder";
 
 export default defineConfig({
   schema: "prisma/schema.prisma",

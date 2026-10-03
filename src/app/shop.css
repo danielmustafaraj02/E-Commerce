@@ -4941,3 +4941,10 @@ a.look-piece-name:focus-visible {
     transition-timing-function: var(--ease-out-soft);
   }
 }
+
+/* Per-product extra text blocks (Admin > Products > Page content). */
+.shop-custom-blocks {
+  display: grid;
+  gap: 2rem;
+  max-width: 46rem;
+}

@@ -6,6 +6,7 @@ import { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
 import { requireStaff, requireAdmin } from "@/lib/require-admin";
 import { writeAuditLog } from "@/lib/audit-log";
+import { parseProductPageLayout } from "@/lib/page-layout";
 import { compareAtPriceError } from "@/lib/price-history";
 import { GIFT_STYLES, GIFT_OCCASIONS, GIFT_RECIPIENTS } from "@/lib/gift-finder";
 
@@ -150,6 +151,7 @@ export async function createProduct(_prevState: unknown, formData: FormData) {
     product = await db.product.create({
       data: {
         ...fields,
+        pageLayout: readPageLayout(formData),
         price: Math.round(price * 100),
         compareAtPrice: compareAtPrice !== undefined ? Math.round(compareAtPrice * 100) : undefined,
         costPrice: costPrice !== undefined ? Math.round(costPrice * 100) : undefined,
@@ -244,6 +246,7 @@ export async function updateProduct(productId: string, _prevState: unknown, form
       where: { id: productId },
       data: {
         ...fields,
+        pageLayout: readPageLayout(formData),
         price: Math.round(price * 100),
         // Explicit null (not undefined) so clearing these in the edit form
         // actually clears them — Prisma's `update` skips undefined fields.
@@ -339,4 +342,18 @@ export async function deleteProduct(productId: string) {
   });
 
   redirect("/admin/products");
+}
+
+/** Per-product page overrides from the form's hidden JSON field. Normalised
+ *  here so only known section ids and trimmed, capped blocks are stored; an
+ *  empty result is stored as NULL ("follow the store-wide layout"). */
+function readPageLayout(formData: FormData) {
+  let raw: unknown = null;
+  try {
+    raw = JSON.parse(String(formData.get("pageLayout") ?? "null"));
+  } catch {
+    raw = null;
+  }
+  const layout = parseProductPageLayout(raw);
+  return layout.hidden.length === 0 && layout.blocks.length === 0 ? Prisma.DbNull : layout;
 }

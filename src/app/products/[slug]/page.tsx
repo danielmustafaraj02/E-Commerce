@@ -1,5 +1,11 @@
 import { siteBaseUrl } from "@/lib/site-url";
-import { cache } from "react";
+import { cache, Fragment, type ReactNode } from "react";
+import {
+  PRODUCT_SECTIONS,
+  parseProductPageLayout,
+  visibleOrder,
+  type ProductSectionId,
+} from "@/lib/page-layout";
 import type { Metadata } from "next";
 import { ProductGallery } from "@/components/product-gallery";
 import { CatalogImage } from "@/components/catalog-image";
@@ -405,6 +411,168 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
     settings.contactEmail
   );
 
+  const customBlocks = parseProductPageLayout(product.pageLayout).blocks;
+  const productSections: Record<ProductSectionId, ReactNode> = {
+    /* gift-box photo: shared packaging shot, not this product's own photography */
+    gift: (
+      <section className="shelf-section shelf-section--blush">
+        <Reveal
+          className="shelf-wrap shop-gift-section shop-gift-reveal"
+          repeatOnView
+        >
+          <div className="shop-gift-photo">
+            <CatalogImage
+              src="/products/orecchini-in-vetro-di-murano/orecchini-goccia-di-rubino-3.png"
+              alt={dict.product.giftSectionEyebrow}
+              fill
+              sizes="(min-width: 40rem) 45vw, 100vw"
+            />
+          </div>
+          <div className="shop-gift-copy">
+            <p className="shop-gift-eyebrow">{dict.product.giftSectionEyebrow}</p>
+            <h2 className="shop-gift-headline">{dict.product.giftSectionHeadline}</h2>
+            <p className="shop-gift-body">{dict.product.giftSectionBody}</p>
+            <a href="#gift-packaging" className="shop-gift-link">
+              {dict.product.giftSectionLink}
+              <InlineArrowIcon />
+            </a>
+            <ul className="shop-gift-features">
+              <li>
+                <GiftIcon />
+                {dict.product.giftFeature1}
+              </li>
+              <li>
+                <HeartSmallIcon />
+                {dict.product.giftFeature2}
+              </li>
+              <li>
+                <SparkleIcon />
+                {dict.product.giftFeature3}
+              </li>
+            </ul>
+          </div>
+        </Reveal>
+      </section>
+),
+    customBlocks: customBlocks.length > 0 && (
+      <section className="shelf-section">
+        <Reveal className="shelf-wrap shop-custom-blocks">
+          {customBlocks.map((block, i) => (
+            <div key={i} className="shop-custom-block">
+              {block.title && <h2 className="shelf-heading">{block.title}</h2>}
+              {block.body && <p className="shop-story-prose">{block.body}</p>}
+            </div>
+          ))}
+        </Reveal>
+      </section>
+    ),
+    reviews: product.reviews.length > 0 && (
+        <section id="reviews" className="shelf-section">
+          <Reveal className="shelf-wrap shop-reviews">
+            <h2 className="shelf-heading">{dict.product.reviews}</h2>
+            <ul className="flex flex-col gap-4">
+              {product.reviews.map((review) => (
+                <li key={review.id} className="border-foreground/10 border-b pb-4">
+                  <p className="text-sm font-medium">
+                    {review.user.name ?? "Anonymous"} &middot; {review.rating}/5
+                  </p>
+                  {review.comment && (
+                    <p className="text-foreground/80 mt-1 text-sm">{review.comment}</p>
+                  )}
+                </li>
+              ))}
+            </ul>
+
+            {!userId ? (
+              <p className="text-foreground/70 mt-4 text-sm">
+                <Link href="/login" className="text-primary hover:underline">
+                  {dict.product.signInToReview}
+                </Link>
+              </p>
+            ) : isVerifiedBuyer || myReview ? (
+              <ReviewForm
+                productId={product.id}
+                slug={product.slug}
+                existing={myReview ? { rating: myReview.rating, comment: myReview.comment } : null}
+                dict={dict.product}
+              />
+            ) : (
+              <p className="text-foreground/70 mt-4 text-sm">{dict.product.verifiedPurchaseOnly}</p>
+            )}
+          </Reveal>
+        </section>
+      ),
+    story: (
+      <section className="shelf-section">
+        <div className="shelf-wrap">
+          <div className={story ? "shop-story-faq-grid" : undefined}>
+            {story && (
+              <Reveal className="shop-story shop-story-reveal">
+                <h2 className="shelf-heading shop-story-heading">{dict.product.storyTitle}</h2>
+                <p className="shop-story-prose">{story}</p>
+                <Link
+                  href="/blog/history-of-murano-glass"
+                  className="shelf-link shop-story-link"
+                >
+                  {dict.journal.storyLink} <span aria-hidden="true">→</span>
+                </Link>
+              </Reveal>
+            )}
+            {/* Same questions as the homepage FAQ, which carries the markup. */}
+            <FaqSection items={faq} dict={dict} variant="compact" structuredItems={[]} />
+          </div>
+        </div>
+      </section>
+    ),
+    look: look && (
+        <CompleteTheLook
+          look={look}
+          currentProductId={product.id}
+          locale={settings.defaultLocale}
+          dict={dict.look}
+          outOfStockLabel={dict.product.outOfStock}
+        />
+      ),
+    giftCard: settings.giftCardEnabled && (
+        <Reveal>
+          <GiftCardAd
+            dict={dict.giftCard}
+            brand={settings.storeName}
+            price={formatMoney(
+              settings.giftCardPrice,
+              settings.defaultCurrency,
+              settings.defaultLocale
+            )}
+          />
+        </Reveal>
+      ),
+    related: relatedProducts.length > 0 && (
+        <section className="shelf-section shelf-section--sand">
+          <Reveal className="shelf-wrap">
+            <h2 className="shelf-heading shop-related-heading">{dict.product.youMightAlsoLike}</h2>
+            <ul className="shelf-row">
+              {relatedProducts.map((related) => (
+                <ShelfItem
+                  key={related.slug}
+                  product={localizedCardProduct(related, uiLocale)}
+                  locale={settings.defaultLocale}
+                  outOfStockLabel={dict.product.outOfStock}
+                  quickAddLabel={dict.product.addToCart}
+                  addedLabel={dict.product.added}
+                />
+              ))}
+            </ul>
+          </Reveal>
+        </section>
+      ),
+  };
+  const productOrder = visibleOrder(
+    settings.productPageLayout,
+    PRODUCT_SECTIONS,
+    parseProductPageLayout(product.pageLayout).hidden
+  ) as ProductSectionId[];
+
+
   return (
     <main className={`shelf shop-product-page flex flex-1 flex-col ${homeFontClasses}`}>
       <script
@@ -657,149 +825,9 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
         </div>
       </section>
 
-      {/* The gift-box photo is a shared packaging shot reused across the
-          catalog's galleries (see ProductGallery), not this product's own
-          photography — deliberately, since every piece ships in the same box. */}
-      <section className="shelf-section shelf-section--blush">
-        <Reveal
-          className="shelf-wrap shop-gift-section shop-gift-reveal"
-          repeatOnView
-        >
-          <div className="shop-gift-photo">
-            <CatalogImage
-              src="/products/orecchini-in-vetro-di-murano/orecchini-goccia-di-rubino-3.png"
-              alt={dict.product.giftSectionEyebrow}
-              fill
-              sizes="(min-width: 40rem) 45vw, 100vw"
-            />
-          </div>
-          <div className="shop-gift-copy">
-            <p className="shop-gift-eyebrow">{dict.product.giftSectionEyebrow}</p>
-            <h2 className="shop-gift-headline">{dict.product.giftSectionHeadline}</h2>
-            <p className="shop-gift-body">{dict.product.giftSectionBody}</p>
-            <a href="#gift-packaging" className="shop-gift-link">
-              {dict.product.giftSectionLink}
-              <InlineArrowIcon />
-            </a>
-            <ul className="shop-gift-features">
-              <li>
-                <GiftIcon />
-                {dict.product.giftFeature1}
-              </li>
-              <li>
-                <HeartSmallIcon />
-                {dict.product.giftFeature2}
-              </li>
-              <li>
-                <SparkleIcon />
-                {dict.product.giftFeature3}
-              </li>
-            </ul>
-          </div>
-        </Reveal>
-      </section>
-
-      {product.reviews.length > 0 && (
-        <section id="reviews" className="shelf-section">
-          <Reveal className="shelf-wrap shop-reviews">
-            <h2 className="shelf-heading">{dict.product.reviews}</h2>
-            <ul className="flex flex-col gap-4">
-              {product.reviews.map((review) => (
-                <li key={review.id} className="border-foreground/10 border-b pb-4">
-                  <p className="text-sm font-medium">
-                    {review.user.name ?? "Anonymous"} &middot; {review.rating}/5
-                  </p>
-                  {review.comment && (
-                    <p className="text-foreground/80 mt-1 text-sm">{review.comment}</p>
-                  )}
-                </li>
-              ))}
-            </ul>
-
-            {!userId ? (
-              <p className="text-foreground/70 mt-4 text-sm">
-                <Link href="/login" className="text-primary hover:underline">
-                  {dict.product.signInToReview}
-                </Link>
-              </p>
-            ) : isVerifiedBuyer || myReview ? (
-              <ReviewForm
-                productId={product.id}
-                slug={product.slug}
-                existing={myReview ? { rating: myReview.rating, comment: myReview.comment } : null}
-                dict={dict.product}
-              />
-            ) : (
-              <p className="text-foreground/70 mt-4 text-sm">{dict.product.verifiedPurchaseOnly}</p>
-            )}
-          </Reveal>
-        </section>
-      )}
-
-      <section className="shelf-section">
-        <div className="shelf-wrap">
-          <div className={story ? "shop-story-faq-grid" : undefined}>
-            {story && (
-              <Reveal className="shop-story shop-story-reveal">
-                <h2 className="shelf-heading shop-story-heading">{dict.product.storyTitle}</h2>
-                <p className="shop-story-prose">{story}</p>
-                <Link
-                  href="/blog/history-of-murano-glass"
-                  className="shelf-link shop-story-link"
-                >
-                  {dict.journal.storyLink} <span aria-hidden="true">→</span>
-                </Link>
-              </Reveal>
-            )}
-            {/* Same questions as the homepage FAQ, which carries the markup. */}
-            <FaqSection items={faq} dict={dict} variant="compact" structuredItems={[]} />
-          </div>
-        </div>
-      </section>
-
-      {look && (
-        <CompleteTheLook
-          look={look}
-          currentProductId={product.id}
-          locale={settings.defaultLocale}
-          dict={dict.look}
-          outOfStockLabel={dict.product.outOfStock}
-        />
-      )}
-
-      {settings.giftCardEnabled && (
-        <Reveal>
-          <GiftCardAd
-            dict={dict.giftCard}
-            brand={settings.storeName}
-            price={formatMoney(
-              settings.giftCardPrice,
-              settings.defaultCurrency,
-              settings.defaultLocale
-            )}
-          />
-        </Reveal>
-      )}
-
-      {relatedProducts.length > 0 && (
-        <section className="shelf-section shelf-section--sand">
-          <Reveal className="shelf-wrap">
-            <h2 className="shelf-heading shop-related-heading">{dict.product.youMightAlsoLike}</h2>
-            <ul className="shelf-row">
-              {relatedProducts.map((related) => (
-                <ShelfItem
-                  key={related.slug}
-                  product={localizedCardProduct(related, uiLocale)}
-                  locale={settings.defaultLocale}
-                  outOfStockLabel={dict.product.outOfStock}
-                  quickAddLabel={dict.product.addToCart}
-                  addedLabel={dict.product.added}
-                />
-              ))}
-            </ul>
-          </Reveal>
-        </section>
-      )}
+      {productOrder.map((id) => (
+        <Fragment key={id}>{productSections[id]}</Fragment>
+      ))}
     </main>
   );
 }

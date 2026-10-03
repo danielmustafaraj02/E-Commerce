@@ -34,6 +34,8 @@ describe("buildAdminSections", () => {
     expect(section("settings").items.map((i) => i.href)).toEqual([
       "/admin/settings",
       "/admin/settings/site-style",
+      "/admin/settings/page-layout",
+      "/admin/settings/page-copy",
       "/admin/settings/payments",
       "/admin/settings/integrations",
       "/admin/team",

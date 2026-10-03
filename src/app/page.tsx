@@ -1,4 +1,6 @@
-import type { CSSProperties } from "react";
+import { Fragment, type CSSProperties, type ReactNode } from "react";
+import { applyHomeCopy, parseHomeCopy } from "@/lib/home-copy";
+import { HOME_SECTIONS, visibleOrder, type HomeSectionId } from "@/lib/page-layout";
 import Image from "next/image";
 import { HeroTypingSequence } from "@/components/hero-typing-sequence";
 import { HeroVideo } from "@/components/hero-video";
@@ -115,7 +117,8 @@ export default async function Home() {
     locale,
     { products, specialSelection, categoriesWithImage, heroProduct, bestSellers, reviews, popularProducts },
   ] = await Promise.all([getStoreSettings(), getLocale(), getHomepageData()]);
-  const dict = getDictionary(locale);
+  // Staff overrides from Admin > Settings > Page text, per language.
+  const dict = applyHomeCopy(getDictionary(locale), parseHomeCopy(settings.homeCopy)[locale]);
   const looks = await getAllLooks(locale, 3);
   const lookCopy = getLookPageCopy(locale);
   const showcaseCopy = getShowcaseCopy(locale);
@@ -174,6 +177,240 @@ export default async function Home() {
     quickAddLabel: dict.product.addToCart,
     addedLabel: dict.product.added,
   };
+
+  const homeSections: Record<HomeSectionId, ReactNode> = {
+    popular: popularProducts.length >= 3 && (
+        <section className="shelf-section shelf-section--popular">
+          <div className="shelf-wrap">
+            <Reveal>
+              <div className="shelf-heading-row shelf-heading-row--center">
+                <h2 className="shelf-heading">{dict.home.popularTitle}</h2>
+              </div>
+            </Reveal>
+          </div>
+          <PopularCarousel
+            products={popularProducts
+              .filter((p) => p.images[0])
+              .map((p) => ({
+                slug: p.slug,
+                name: localizedName(p, locale),
+                price: formatMoney(p.price, settings.defaultCurrency, locale),
+                imageUrl: p.images[0].url,
+              }))}
+          />
+        </section>
+      ),
+    bestSellers: bestSellers.length > 0 && (
+        <section className="shelf-section">
+          <div className="shelf-wrap">
+            <Reveal>
+              <div className="shelf-heading-row">
+                <h2 className="shelf-heading">{dict.home.bestSellers}</h2>
+              </div>
+            </Reveal>
+            <ShelfStagger className="shelf-row">
+              {bestSellers.slice(0, SHELF_SIZE).map((product) => (
+                <ShelfItem
+                  key={product.id}
+                  product={localizedCardProduct(product, locale)}
+                  {...shelfProps}
+                />
+              ))}
+            </ShelfStagger>
+          </div>
+        </section>
+      ),
+    looks: (
+      <section className="shelf-section shelf-section--looks">
+        <div className="shelf-wrap">
+          <div className="looks-editorial-heading">
+            <div className="shelf-heading-row shelf-heading-row--center">
+              <p className="shelf-eyebrow shelf-eyebrow--center">{dict.look.kicker}</p>
+              <h2 className="shelf-heading">{dict.looks.title}</h2>
+            </div>
+          </div>
+          {looks.length > 0 && (
+            <div className="looks-editorial-list" data-editorial-root>
+              {/* One controller for the whole list: it arms the scroll-in
+                  sequence. The scroll-linked parallax drift that used to run
+                  alongside it is gone — three elements of a row sliding past
+                  each other at three different rates read as a carousel
+                  effect, not as an editorial page. The rows now simply
+                  arrive, in order, and then hold still. */}
+              <EditorialReveal>
+                {looks.map((look, index) => (
+                  <LookEditorial
+                    index={index}
+                    key={look.id}
+                    look={look}
+                    locale={settings.defaultLocale}
+                    labels={{
+                    view: dict.looks.viewLook,
+                    save: dict.look.save,
+                    pieces: dict.looks.pieces,
+                    description: getLookEditorialDescription(look.name, locale),
+                    included: lookCopy.editorialIncluded,
+                    price: lookCopy.editorialPrice,
+                    kinds: dict.giftFinder.preference,
+                  }}
+                />
+                ))}
+              </EditorialReveal>
+            </div>
+          )}
+          {looks.length > 0 && (
+            <p className="shelf-looks-more">
+              <Link href="/looks" className="shelf-link">
+                {dict.looks.allLooks} <span aria-hidden="true">→</span>
+              </Link>
+            </p>
+          )}
+        </div>
+      </section>
+),
+    newArrivals: products.length > 0 && (
+        <section className="shelf-section">
+          <div className="shelf-wrap">
+            {/* Heading and its one-line introduction travel together as a
+                group, so the link baselines with the introduction on a wide
+                screen and wraps BELOW the whole group on a narrow one. */}
+            <Reveal>
+              <div className="shelf-heading-row shelf-heading-row--intro">
+                <div className="shelf-heading-group">
+                  <h2 className="shelf-heading">{dict.home.newArrivals}</h2>
+                  <p className="shelf-heading-intro">{dict.home.newArrivalsIntro}</p>
+                </div>
+                <Link href="/products" className="shelf-link">
+                  {dict.footer.allProducts}
+                </Link>
+              </div>
+            </Reveal>
+            <ShelfStagger className="shelf-row shelf-row--two-rows">
+              {products.slice(0, NEW_ARRIVALS_SIZE).map((product) => (
+                <ShelfItem
+                  key={product.slug}
+                  product={localizedCardProduct(product, locale)}
+                  {...shelfProps}
+                />
+              ))}
+            </ShelfStagger>
+          </div>
+        </section>
+      ),
+    special: specialSelection.length > 0 && (
+        <section className="shelf-section">
+          <div className="shelf-wrap">
+            <Reveal>
+              <div className="shelf-heading-row shelf-heading-row--intro">
+                <div className="shelf-heading-group">
+                  <h2 className="shelf-heading">{dict.home.specialSelectionTitle}</h2>
+                  <p className="shelf-special-subtitle">{dict.home.specialSelectionSubtitle}</p>
+                </div>
+                <Link href="/products?sale=1" className="shelf-link">
+                  {dict.home.specialSelectionCta} →
+                </Link>
+              </div>
+              <ul className="shelf-row shelf-row--special">
+                {specialSelection.map((product) => (
+                  <ShelfItem
+                    key={product.slug}
+                    product={localizedCardProduct(product, locale)}
+                    {...shelfProps}
+                  />
+                ))}
+              </ul>
+            </Reveal>
+          </div>
+        </section>
+      ),
+    reasons: reasonProducts.length > 0 && (
+        <section className="shelf-section shelf-section--reasons">
+          <MuranoReasons
+            products={reasonProducts.map((product) => ({
+              slug: product.slug,
+              name: localizedName(product, locale),
+              // The store's own number format, like every other price on this
+              // page's shelves and looks ("80,00 €"), not the interface language's.
+              price: formatMoney(product.price, settings.defaultCurrency, settings.defaultLocale),
+              imageUrl: product.images[0].url,
+            }))}
+            reasons={[
+              { title: dict.home.muranoReason1Title, body: dict.home.muranoReason1Body },
+              { title: dict.home.muranoReason2Title, body: dict.home.muranoReason2Body },
+              { title: dict.home.muranoReason3Title, body: dict.home.muranoReason3Body },
+            ]}
+            viewLabel={lookCopy.viewPiece}
+          />
+        </section>
+      ),
+    faq: (
+      <section className="shelf-section">
+        <div className="shelf-wrap">
+          <FaqSection items={faq} dict={dict} />
+        </div>
+      </section>
+),
+    giftFinder: (
+      <section className="shelf-section shelf-giftfinder-band">
+        <Reveal className="shelf-wrap shelf-giftfinder-reveal" repeatOnView>
+          <div className="shelf-giftfinder-content">
+            <p className="shelf-giftfinder-time">{dict.giftFinder.homeCtaTime}</p>
+            <Link href="/gift-finder" className="shelf-giftfinder-link">
+              <span>{dict.giftFinder.homeCtaLine}</span>
+              <GiftFinderArrow />
+            </Link>
+            <p className="shelf-giftfinder-details">{dict.giftFinder.homeCtaDetails}</p>
+          </div>
+        </Reveal>
+      </section>
+),
+    testimonials: settings.showTestimonials && testimonials.length > 0 && (
+        <section className="shelf-section">
+          <div className="shelf-wrap">
+            <Reveal>
+              <div className="shelf-heading-row">
+                <h2 className="shelf-heading">{dict.home.testimonialsTitle}</h2>
+              </div>
+            </Reveal>
+            <ul className="shelf-quotes">
+              {testimonials.slice(0, 3).map((review) => (
+                <li key={review.id}>
+                  <figure className="shelf-quote">
+                    <span className="shelf-stars" aria-hidden="true">
+                      {"\u2605".repeat(review.rating)}
+                    </span>
+                    <span className="sr-only">{review.rating}/5</span>
+                    <blockquote>{review.comment}</blockquote>
+                    <figcaption>
+                      {review.authorName}, {review.productName}
+                    </figcaption>
+                  </figure>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      ),
+    journal: (
+      <JournalPreview locale={locale} />
+),
+    newsletter: (
+      <section className="shelf-newsletter shelf-section">
+        <div className="shelf-wrap shelf-newsletter-wrap">
+          <div className="shelf-newsletter-inner">
+            <h2 className="shelf-heading">{dict.home.newsletterCtaTitle}</h2>
+            <p>{dict.home.newsletterCtaBody}</p>
+            <NewsletterSignupForm dict={dict.footer} submitLabel={dict.home.newsletterSubmit} />
+          </div>
+          <span className="shelf-newsletter-discount" aria-hidden="true">
+            −10%
+          </span>
+        </div>
+      </section>
+),
+  };
+  const homeOrder = visibleOrder(settings.homeLayout, HOME_SECTIONS) as HomeSectionId[];
+
 
   // The design (app/home.css) is scoped to `.shelf`: the glass is the only
   // saturated thing on the page, and the product photos are blended straight
@@ -263,235 +500,9 @@ export default async function Home() {
         })}
       />
 
-      {popularProducts.length >= 3 && (
-        <section className="shelf-section shelf-section--popular">
-          <div className="shelf-wrap">
-            <Reveal>
-              <div className="shelf-heading-row shelf-heading-row--center">
-                <h2 className="shelf-heading">{dict.home.popularTitle}</h2>
-              </div>
-            </Reveal>
-          </div>
-          <PopularCarousel
-            products={popularProducts
-              .filter((p) => p.images[0])
-              .map((p) => ({
-                slug: p.slug,
-                name: localizedName(p, locale),
-                price: formatMoney(p.price, settings.defaultCurrency, locale),
-                imageUrl: p.images[0].url,
-              }))}
-          />
-        </section>
-      )}
-
-      {bestSellers.length > 0 && (
-        <section className="shelf-section">
-          <div className="shelf-wrap">
-            <Reveal>
-              <div className="shelf-heading-row">
-                <h2 className="shelf-heading">{dict.home.bestSellers}</h2>
-              </div>
-            </Reveal>
-            <ShelfStagger className="shelf-row">
-              {bestSellers.slice(0, SHELF_SIZE).map((product) => (
-                <ShelfItem
-                  key={product.id}
-                  product={localizedCardProduct(product, locale)}
-                  {...shelfProps}
-                />
-              ))}
-            </ShelfStagger>
-          </div>
-        </section>
-      )}
-
-      <section className="shelf-section shelf-section--looks">
-        <div className="shelf-wrap">
-          <div className="looks-editorial-heading">
-            <div className="shelf-heading-row shelf-heading-row--center">
-              <p className="shelf-eyebrow shelf-eyebrow--center">{dict.look.kicker}</p>
-              <h2 className="shelf-heading">{dict.looks.title}</h2>
-            </div>
-          </div>
-          {looks.length > 0 && (
-            <div className="looks-editorial-list" data-editorial-root>
-              {/* One controller for the whole list: it arms the scroll-in
-                  sequence. The scroll-linked parallax drift that used to run
-                  alongside it is gone — three elements of a row sliding past
-                  each other at three different rates read as a carousel
-                  effect, not as an editorial page. The rows now simply
-                  arrive, in order, and then hold still. */}
-              <EditorialReveal>
-                {looks.map((look, index) => (
-                  <LookEditorial
-                    index={index}
-                    key={look.id}
-                    look={look}
-                    locale={settings.defaultLocale}
-                    labels={{
-                    view: dict.looks.viewLook,
-                    save: dict.look.save,
-                    pieces: dict.looks.pieces,
-                    description: getLookEditorialDescription(look.name, locale),
-                    included: lookCopy.editorialIncluded,
-                    price: lookCopy.editorialPrice,
-                    kinds: dict.giftFinder.preference,
-                  }}
-                />
-                ))}
-              </EditorialReveal>
-            </div>
-          )}
-          {looks.length > 0 && (
-            <p className="shelf-looks-more">
-              <Link href="/looks" className="shelf-link">
-                {dict.looks.allLooks} <span aria-hidden="true">→</span>
-              </Link>
-            </p>
-          )}
-        </div>
-      </section>
-
-      {products.length > 0 && (
-        <section className="shelf-section">
-          <div className="shelf-wrap">
-            {/* Heading and its one-line introduction travel together as a
-                group, so the link baselines with the introduction on a wide
-                screen and wraps BELOW the whole group on a narrow one. */}
-            <Reveal>
-              <div className="shelf-heading-row shelf-heading-row--intro">
-                <div className="shelf-heading-group">
-                  <h2 className="shelf-heading">{dict.home.newArrivals}</h2>
-                  <p className="shelf-heading-intro">{dict.home.newArrivalsIntro}</p>
-                </div>
-                <Link href="/products" className="shelf-link">
-                  {dict.footer.allProducts}
-                </Link>
-              </div>
-            </Reveal>
-            <ShelfStagger className="shelf-row shelf-row--two-rows">
-              {products.slice(0, NEW_ARRIVALS_SIZE).map((product) => (
-                <ShelfItem
-                  key={product.slug}
-                  product={localizedCardProduct(product, locale)}
-                  {...shelfProps}
-                />
-              ))}
-            </ShelfStagger>
-          </div>
-        </section>
-      )}
-
-      {specialSelection.length > 0 && (
-        <section className="shelf-section">
-          <div className="shelf-wrap">
-            <Reveal>
-              <div className="shelf-heading-row shelf-heading-row--intro">
-                <div className="shelf-heading-group">
-                  <h2 className="shelf-heading">{dict.home.specialSelectionTitle}</h2>
-                  <p className="shelf-special-subtitle">{dict.home.specialSelectionSubtitle}</p>
-                </div>
-                <Link href="/products?sale=1" className="shelf-link">
-                  {dict.home.specialSelectionCta} →
-                </Link>
-              </div>
-              <ul className="shelf-row shelf-row--special">
-                {specialSelection.map((product) => (
-                  <ShelfItem
-                    key={product.slug}
-                    product={localizedCardProduct(product, locale)}
-                    {...shelfProps}
-                  />
-                ))}
-              </ul>
-            </Reveal>
-          </div>
-        </section>
-      )}
-
-      {reasonProducts.length > 0 && (
-        <section className="shelf-section shelf-section--reasons">
-          <MuranoReasons
-            products={reasonProducts.map((product) => ({
-              slug: product.slug,
-              name: localizedName(product, locale),
-              // The store's own number format, like every other price on this
-              // page's shelves and looks ("80,00 €"), not the interface language's.
-              price: formatMoney(product.price, settings.defaultCurrency, settings.defaultLocale),
-              imageUrl: product.images[0].url,
-            }))}
-            reasons={[
-              { title: dict.home.muranoReason1Title, body: dict.home.muranoReason1Body },
-              { title: dict.home.muranoReason2Title, body: dict.home.muranoReason2Body },
-              { title: dict.home.muranoReason3Title, body: dict.home.muranoReason3Body },
-            ]}
-            viewLabel={lookCopy.viewPiece}
-          />
-        </section>
-      )}
-
-      <section className="shelf-section">
-        <div className="shelf-wrap">
-          <FaqSection items={faq} dict={dict} />
-        </div>
-      </section>
-
-      <section className="shelf-section shelf-giftfinder-band">
-        <Reveal className="shelf-wrap shelf-giftfinder-reveal" repeatOnView>
-          <div className="shelf-giftfinder-content">
-            <p className="shelf-giftfinder-time">{dict.giftFinder.homeCtaTime}</p>
-            <Link href="/gift-finder" className="shelf-giftfinder-link">
-              <span>{dict.giftFinder.homeCtaLine}</span>
-              <GiftFinderArrow />
-            </Link>
-            <p className="shelf-giftfinder-details">{dict.giftFinder.homeCtaDetails}</p>
-          </div>
-        </Reveal>
-      </section>
-
-      {settings.showTestimonials && testimonials.length > 0 && (
-        <section className="shelf-section">
-          <div className="shelf-wrap">
-            <Reveal>
-              <div className="shelf-heading-row">
-                <h2 className="shelf-heading">{dict.home.testimonialsTitle}</h2>
-              </div>
-            </Reveal>
-            <ul className="shelf-quotes">
-              {testimonials.slice(0, 3).map((review) => (
-                <li key={review.id}>
-                  <figure className="shelf-quote">
-                    <span className="shelf-stars" aria-hidden="true">
-                      {"\u2605".repeat(review.rating)}
-                    </span>
-                    <span className="sr-only">{review.rating}/5</span>
-                    <blockquote>{review.comment}</blockquote>
-                    <figcaption>
-                      {review.authorName}, {review.productName}
-                    </figcaption>
-                  </figure>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-      )}
-
-      <JournalPreview locale={locale} />
-
-      <section className="shelf-newsletter shelf-section">
-        <div className="shelf-wrap shelf-newsletter-wrap">
-          <div className="shelf-newsletter-inner">
-            <h2 className="shelf-heading">{dict.home.newsletterCtaTitle}</h2>
-            <p>{dict.home.newsletterCtaBody}</p>
-            <NewsletterSignupForm dict={dict.footer} submitLabel={dict.home.newsletterSubmit} />
-          </div>
-          <span className="shelf-newsletter-discount" aria-hidden="true">
-            −10%
-          </span>
-        </div>
-      </section>
+      {homeOrder.map((id) => (
+        <Fragment key={id}>{homeSections[id]}</Fragment>
+      ))}
     </main>
   );
 }
