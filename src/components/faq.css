@@ -4,7 +4,7 @@
 .faq {
   --faq-ink: var(--ink, var(--midnight));
   --faq-soft: var(--ink-soft, color-mix(in srgb, var(--midnight) 76%, transparent));
-  --faq-rule: var(--rule, color-mix(in srgb, var(--midnight) 18%, transparent));
+  --faq-rule: color-mix(in srgb, var(--midnight) 22%, var(--rule, transparent));
   display: grid;
   gap: 1.5rem;
   color: var(--faq-ink);

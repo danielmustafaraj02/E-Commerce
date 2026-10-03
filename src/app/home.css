@@ -4408,3 +4408,60 @@
     color: var(--midnight);
   }
 }
+
+/* -- Home polish: one rhythm between sections --------------------------------
+   Sections used to meet on a hard 1px rule, one reveal used the browser's
+   default `ease` while the rest used the page's own curve, and a few headings
+   (best sellers, new arrivals, FAQ, testimonials) never revealed at all.
+   This block gives the page a single voice: seams that fade out at the edges,
+   one entrance curve, and a heading that lands a beat before its introduction. */
+
+/* Seams: a centred hairline that fades toward both edges replaces the
+   full-width border, so neighbouring sections blend instead of butting. */
+.shelf-home > .shelf-section + .shelf-section:not(.shelf-newsletter) {
+  position: relative;
+  border-top: 0;
+}
+.shelf-home > .shelf-section + .shelf-section:not(.shelf-newsletter)::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--gold) 55%, var(--rule)) 8%,
+    color-mix(in srgb, var(--gold) 55%, var(--rule)) 92%,
+    transparent
+  );
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* One entrance curve and one travel distance for every section reveal. */
+  .shelf-home [data-reveal] {
+    transform: translateY(1.25rem);
+    transition:
+      opacity 1s var(--ease-out-soft),
+      transform 1s var(--ease-out-soft);
+    transition-delay: var(--reveal-delay, 0s);
+  }
+  .shelf-home [data-reveal="true"] {
+    transform: translateY(0);
+  }
+
+  /* The heading lands first; its introduction follows a beat later. */
+  .shelf-home [data-reveal="false"] .shelf-heading-intro,
+  .shelf-home [data-reveal="false"] .shelf-special-subtitle {
+    opacity: 0;
+    transform: translateY(0.6rem);
+  }
+  .shelf-home [data-reveal="true"] .shelf-heading-intro,
+  .shelf-home [data-reveal="true"] .shelf-special-subtitle {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity 0.9s var(--ease-out-soft) 0.28s,
+      transform 0.9s var(--ease-out-soft) 0.28s;
+  }
+}

@@ -66,7 +66,7 @@
 
 /* The short accent rule under a title, as under every look's name. */
 .mr-title-rule {
-  display: block;
+  display: none;
   width: 2.25rem;
   height: 2px;
   margin-top: 1rem;
@@ -201,15 +201,12 @@
   color: var(--midnight);
 }
 
-/* ── Desktop: a hairline between the copy and the piece ───────────────────────
-   On whichever side the copy sits, as in the looks rows. */
+/* ── Desktop: room between the copy and the piece, with no dividing line. ── */
 @media (min-width: 52rem) {
   .mr-row--img-right .mr-copy {
-    border-inline-end: 1px solid var(--mr-line);
     padding-inline-end: clamp(2.5rem, 4vw, 4.5rem);
   }
   .mr-row--img-left .mr-copy {
-    border-inline-start: 1px solid var(--mr-line);
     padding-inline-start: clamp(2.5rem, 4vw, 4.5rem);
   }
 }

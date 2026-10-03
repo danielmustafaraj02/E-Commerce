@@ -288,9 +288,11 @@ export default async function Home() {
       {bestSellers.length > 0 && (
         <section className="shelf-section">
           <div className="shelf-wrap">
-            <div className="shelf-heading-row">
-              <h2 className="shelf-heading">{dict.home.bestSellers}</h2>
-            </div>
+            <Reveal>
+              <div className="shelf-heading-row">
+                <h2 className="shelf-heading">{dict.home.bestSellers}</h2>
+              </div>
+            </Reveal>
             <ShelfStagger className="shelf-row">
               {bestSellers.slice(0, SHELF_SIZE).map((product) => (
                 <ShelfItem
@@ -357,15 +359,17 @@ export default async function Home() {
             {/* Heading and its one-line introduction travel together as a
                 group, so the link baselines with the introduction on a wide
                 screen and wraps BELOW the whole group on a narrow one. */}
-            <div className="shelf-heading-row shelf-heading-row--intro">
-              <div className="shelf-heading-group">
-                <h2 className="shelf-heading">{dict.home.newArrivals}</h2>
-                <p className="shelf-heading-intro">{dict.home.newArrivalsIntro}</p>
+            <Reveal>
+              <div className="shelf-heading-row shelf-heading-row--intro">
+                <div className="shelf-heading-group">
+                  <h2 className="shelf-heading">{dict.home.newArrivals}</h2>
+                  <p className="shelf-heading-intro">{dict.home.newArrivalsIntro}</p>
+                </div>
+                <Link href="/products" className="shelf-link">
+                  {dict.footer.allProducts}
+                </Link>
               </div>
-              <Link href="/products" className="shelf-link">
-                {dict.footer.allProducts}
-              </Link>
-            </div>
+            </Reveal>
             <ShelfStagger className="shelf-row shelf-row--two-rows">
               {products.slice(0, NEW_ARRIVALS_SIZE).map((product) => (
                 <ShelfItem
@@ -449,9 +453,11 @@ export default async function Home() {
       {settings.showTestimonials && testimonials.length > 0 && (
         <section className="shelf-section">
           <div className="shelf-wrap">
-            <div className="shelf-heading-row">
-              <h2 className="shelf-heading">{dict.home.testimonialsTitle}</h2>
-            </div>
+            <Reveal>
+              <div className="shelf-heading-row">
+                <h2 className="shelf-heading">{dict.home.testimonialsTitle}</h2>
+              </div>
+            </Reveal>
             <ul className="shelf-quotes">
               {testimonials.slice(0, 3).map((review) => (
                 <li key={review.id}>

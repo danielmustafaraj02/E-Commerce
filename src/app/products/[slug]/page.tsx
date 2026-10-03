@@ -701,7 +701,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
 
       {product.reviews.length > 0 && (
         <section id="reviews" className="shelf-section">
-          <div className="shelf-wrap shop-reviews">
+          <Reveal className="shelf-wrap shop-reviews">
             <h2 className="shelf-heading">{dict.product.reviews}</h2>
             <ul className="flex flex-col gap-4">
               {product.reviews.map((review) => (
@@ -732,7 +732,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
             ) : (
               <p className="text-foreground/70 mt-4 text-sm">{dict.product.verifiedPurchaseOnly}</p>
             )}
-          </div>
+          </Reveal>
         </section>
       )}
 
@@ -768,20 +768,22 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
       )}
 
       {settings.giftCardEnabled && (
-        <GiftCardAd
-          dict={dict.giftCard}
-          brand={settings.storeName}
-          price={formatMoney(
-            settings.giftCardPrice,
-            settings.defaultCurrency,
-            settings.defaultLocale
-          )}
-        />
+        <Reveal>
+          <GiftCardAd
+            dict={dict.giftCard}
+            brand={settings.storeName}
+            price={formatMoney(
+              settings.giftCardPrice,
+              settings.defaultCurrency,
+              settings.defaultLocale
+            )}
+          />
+        </Reveal>
       )}
 
       {relatedProducts.length > 0 && (
         <section className="shelf-section shelf-section--sand">
-          <div className="shelf-wrap">
+          <Reveal className="shelf-wrap">
             <h2 className="shelf-heading shop-related-heading">{dict.product.youMightAlsoLike}</h2>
             <ul className="shelf-row">
               {relatedProducts.map((related) => (
@@ -795,7 +797,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                 />
               ))}
             </ul>
-          </div>
+          </Reveal>
         </section>
       )}
     </main>
