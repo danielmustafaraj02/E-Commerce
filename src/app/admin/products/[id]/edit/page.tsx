@@ -59,6 +59,8 @@ export default async function EditProductPage({ params }: PageProps<"/admin/prod
           lowStockThreshold: product.lowStockThreshold,
           categoryId: product.categoryId,
           active: product.active,
+          unlisted: product.unlisted,
+          featuredInCarousel: product.featuredInCarousel,
           imageUrls: product.images
             .map((image) => (image.isLifestyle ? `${image.url} lifestyle` : image.url))
             .join("\n"),
@@ -74,14 +76,14 @@ export default async function EditProductPage({ params }: PageProps<"/admin/prod
 
       <div className="border-foreground/10 mt-8 flex gap-3 border-t pt-6">
         <form action={boundDeactivate}>
-          <button type="submit" className="border-foreground/20 rounded border px-4 py-2 text-sm">
+          <button type="submit" className="border-foreground/20 rounded-(--radius-button) border px-4 py-2 text-sm">
             Deactivate
           </button>
         </form>
         <form action={boundDelete}>
           <button
             type="submit"
-            className="border-danger/40 text-danger rounded border px-4 py-2 text-sm"
+            className="border-danger/40 text-danger rounded-(--radius-button) border px-4 py-2 text-sm"
           >
             Delete
           </button>

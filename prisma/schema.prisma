@@ -129,6 +129,11 @@ model StoreSettings {
   youtubeUrl   String?
   linkedinUrl  String?
 
+  // The pieces shown beside the three "why Murano" reasons on the home page, in
+  // row order, chosen in Admin > Settings. Empty (the default) means the section
+  // picks from the homepage's popular pieces on its own.
+  muranoReasonProductIds String[] @default([])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -246,10 +251,19 @@ model Category {
   parent        Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   children      Category[] @relation("CategoryTree")
 
-  products Product[]
+  // The product whose first photo represents this category on the homepage
+  // "Shop by category" shelf and in the header's Products menu — picked in
+  // Admin > Categories. Null, or a product that has since been deleted,
+  // deactivated, unlisted or left without photos, falls back to the
+  // category's oldest active product: a tile is never random and never empty.
+  coverProductId String?
+  coverProduct   Product? @relation("CategoryCover", fields: [coverProductId], references: [id], onDelete: SetNull)
+
+  products Product[] @relation("CategoryProducts")
   taxRules TaxRule[]
 
   @@index([parentId])
+  @@index([coverProductId])
 }
 
 model Product {
@@ -299,6 +313,16 @@ model Product {
   stockQty          Int     @default(0)
   lowStockThreshold Int     @default(5)
   active            Boolean @default(true)
+  // Reachable at /products/<slug> but kept out of every browse surface
+  // (listings, category pages, homepage shelves, gift finder, sitemap,
+  // llms.txt, the Google Merchant feed). `active` controls whether a product
+  // exists for customers at all; this controls only whether it is advertised.
+  // Used for payment test products and unannounced/link-only pieces.
+  unlisted          Boolean @default(false)
+  // Pinned to the "community favourites" carousel on the homepage. Staff sets
+  // this in Admin > Products; the carousel falls back to random picks when no
+  // products are pinned.
+  featuredInCarousel Boolean @default(false)
   // One canonical color per piece, for the filter swatches on /products and
   // /category/[slug] — a fixed small palette (see PRODUCT_COLORS in
   // src/lib/product-colors.ts), not free text, so the filter UI can render
@@ -318,7 +342,12 @@ model Product {
   trackInventory Boolean   @default(true)
 
   categoryId String?
-  category   Category? @relation(fields: [categoryId], references: [id])
+  category   Category? @relation("CategoryProducts", fields: [categoryId], references: [id])
+
+  // Categories that use this product's first photo as their cover image (the
+  // homepage "Shop by category" shelf and the header's Products menu). Named
+  // relation because Product and Category are now joined twice.
+  coverOfCategories Category[] @relation("CategoryCover")
 
   // The styled set this piece belongs to ("Complete the look" on the product
   // page, bundle discount at checkout — see lib/looks.ts).

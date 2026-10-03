@@ -12,7 +12,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const [products, categories, legalPages, looks] = await Promise.all([
     db.product.findMany({
-      where: { active: true },
+      where: { active: true, unlisted: false },
       select: { slug: true, updatedAt: true },
     }),
     db.category.findMany({ select: { slug: true } }),

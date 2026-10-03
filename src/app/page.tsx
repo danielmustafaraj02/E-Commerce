@@ -2,9 +2,11 @@ import type { CSSProperties } from "react";
 import Image from "next/image";
 import { HeroTypingSequence } from "@/components/hero-typing-sequence";
 import { HeroVideo } from "@/components/hero-video";
+import { HeroVideoProduct } from "@/components/hero-video-product";
 import type { Metadata } from "next";
 import { Link } from "@/components/localized-link";
 import { getStoreSettings, ogImage } from "@/lib/store-settings";
+import { formatMoney } from "@/lib/format";
 import { getHomepageData } from "@/lib/homepage-data";
 import { getLocale, type Locale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
@@ -24,6 +26,10 @@ import { FaqSection } from "@/components/faq-section";
 import { buildFaq } from "@/lib/faq";
 import { getShippingFacts } from "@/lib/shipping-banner";
 import { GiftFinderArrow } from "@/components/gift-finder-arrow";
+import { PopularCarousel } from "@/components/popular-carousel";
+import { MuranoReasons } from "@/components/murano-reasons";
+import { chosenBySlot, pickReasonProducts } from "@/lib/murano-reasons";
+import { db } from "@/lib/db";
 
 import { getAllLooks } from "@/lib/look-data";
 import { LookEditorial } from "@/components/look-editorial";
@@ -104,12 +110,40 @@ const COLLECTION_ORDER = ["collane", "bracciali", "orecchini"];
 const LEDE_PICKUP_PAUSE_MS = 450;
 
 export default async function Home() {
-  const [settings, locale, { products, specialSelection, categoriesWithImage, bestSellers, reviews }] =
-    await Promise.all([getStoreSettings(), getLocale(), getHomepageData()]);
+  const [
+    settings,
+    locale,
+    { products, specialSelection, categoriesWithImage, heroProduct, bestSellers, reviews, popularProducts },
+  ] = await Promise.all([getStoreSettings(), getLocale(), getHomepageData()]);
   const dict = getDictionary(locale);
   const looks = await getAllLooks(locale, 3);
   const lookCopy = getLookPageCopy(locale);
   const showcaseCopy = getShowcaseCopy(locale);
+  // The pieces beside the "why Murano" reasons: the one staff chose for each row
+  // in Admin > Settings, and the homepage's popular pieces for any row left on
+  // Automatic. A chosen piece that has since been unpublished, hidden or lost
+  // its photo is treated as not chosen, not shown broken.
+  // `?? []`: the column is new, and until its migration has been applied (and the
+  // dev server restarted) the settings row simply does not carry it.
+  const chosenReasonIds = settings.muranoReasonProductIds ?? [];
+  const chosenReasonProducts = chosenReasonIds.some(Boolean)
+    ? chosenBySlot(
+        await db.product.findMany({
+          where: {
+            id: { in: chosenReasonIds.filter(Boolean) },
+            active: true,
+            unlisted: false,
+            images: { some: {} },
+          },
+          include: { images: { take: 1, orderBy: { position: "asc" } } },
+        }),
+        chosenReasonIds
+      )
+    : [];
+  const reasonProducts = pickReasonProducts(
+    chosenReasonProducts,
+    popularProducts.filter((product) => product.images[0])
+  );
   const editorialCollections = COLLECTION_ORDER.flatMap((prefix) => {
     const category = categoriesWithImage.find((item) => item.slug.startsWith(prefix));
     return category?.image ? [category] : [];
@@ -162,6 +196,28 @@ export default async function Home() {
           ]}
           playLabel={dict.home.heroVideoPlay}
         />
+        {/* The piece worn in the film, linked to its own page. Rendered only
+            when that product is really on sale and has a photo — see
+            HERO_VIDEO_PRODUCT_SLUG in lib/homepage-data.ts. */}
+        {heroProduct && heroProduct.images[0] && (
+          <HeroVideoProduct
+            href={`/products/${heroProduct.slug}`}
+            name={localizedName(heroProduct, locale)}
+            imageUrl={heroProduct.images[0].url}
+            price={formatMoney(heroProduct.price, settings.defaultCurrency, locale)}
+            compareAtPrice={
+              heroProduct.compareAtPrice && heroProduct.compareAtPrice > heroProduct.price
+                ? formatMoney(heroProduct.compareAtPrice, settings.defaultCurrency, locale)
+                : undefined
+            }
+            labels={{
+              eyebrow: dict.home.heroProductEyebrow,
+              cta: dict.home.heroProductCta,
+              open: dict.home.heroProductOpen,
+              close: dict.home.heroProductClose,
+            }}
+          />
+        )}
         {/* The legibility veil, a real element: the ::before pseudo-element on
             this hero silently stopped painting in one browser build, so the
             wash moved onto a node that cannot fail. Above the film (z -1),
@@ -207,6 +263,28 @@ export default async function Home() {
         })}
       />
 
+      {popularProducts.length >= 3 && (
+        <section className="shelf-section shelf-section--popular">
+          <div className="shelf-wrap">
+            <Reveal>
+              <div className="shelf-heading-row shelf-heading-row--center">
+                <h2 className="shelf-heading">{dict.home.popularTitle}</h2>
+              </div>
+            </Reveal>
+          </div>
+          <PopularCarousel
+            products={popularProducts
+              .filter((p) => p.images[0])
+              .map((p) => ({
+                slug: p.slug,
+                name: localizedName(p, locale),
+                price: formatMoney(p.price, settings.defaultCurrency, locale),
+                imageUrl: p.images[0].url,
+              }))}
+          />
+        </section>
+      )}
+
       {bestSellers.length > 0 && (
         <section className="shelf-section">
           <div className="shelf-wrap">
@@ -217,34 +295,6 @@ export default async function Home() {
               {bestSellers.slice(0, SHELF_SIZE).map((product) => (
                 <ShelfItem
                   key={product.id}
-                  product={localizedCardProduct(product, locale)}
-                  {...shelfProps}
-                />
-              ))}
-            </ShelfStagger>
-          </div>
-        </section>
-      )}
-
-      {products.length > 0 && (
-        <section className="shelf-section">
-          <div className="shelf-wrap">
-            {/* Heading and its one-line introduction travel together as a
-                group, so the link baselines with the introduction on a wide
-                screen and wraps BELOW the whole group on a narrow one. */}
-            <div className="shelf-heading-row shelf-heading-row--intro">
-              <div className="shelf-heading-group">
-                <h2 className="shelf-heading">{dict.home.newArrivals}</h2>
-                <p className="shelf-heading-intro">{dict.home.newArrivalsIntro}</p>
-              </div>
-              <Link href="/products" className="shelf-link">
-                {dict.footer.allProducts}
-              </Link>
-            </div>
-            <ShelfStagger className="shelf-row shelf-row--two-rows">
-              {products.slice(0, NEW_ARRIVALS_SIZE).map((product) => (
-                <ShelfItem
-                  key={product.slug}
                   product={localizedCardProduct(product, locale)}
                   {...shelfProps}
                 />
@@ -284,6 +334,7 @@ export default async function Home() {
                     description: getLookEditorialDescription(look.name, locale),
                     included: lookCopy.editorialIncluded,
                     price: lookCopy.editorialPrice,
+                    kinds: dict.giftFinder.preference,
                   }}
                 />
                 ))}
@@ -300,15 +351,46 @@ export default async function Home() {
         </div>
       </section>
 
+      {products.length > 0 && (
+        <section className="shelf-section">
+          <div className="shelf-wrap">
+            {/* Heading and its one-line introduction travel together as a
+                group, so the link baselines with the introduction on a wide
+                screen and wraps BELOW the whole group on a narrow one. */}
+            <div className="shelf-heading-row shelf-heading-row--intro">
+              <div className="shelf-heading-group">
+                <h2 className="shelf-heading">{dict.home.newArrivals}</h2>
+                <p className="shelf-heading-intro">{dict.home.newArrivalsIntro}</p>
+              </div>
+              <Link href="/products" className="shelf-link">
+                {dict.footer.allProducts}
+              </Link>
+            </div>
+            <ShelfStagger className="shelf-row shelf-row--two-rows">
+              {products.slice(0, NEW_ARRIVALS_SIZE).map((product) => (
+                <ShelfItem
+                  key={product.slug}
+                  product={localizedCardProduct(product, locale)}
+                  {...shelfProps}
+                />
+              ))}
+            </ShelfStagger>
+          </div>
+        </section>
+      )}
+
       {specialSelection.length > 0 && (
         <section className="shelf-section">
           <div className="shelf-wrap">
             <Reveal>
-              <div className="shelf-heading-row">
-                <div>
+              <div className="shelf-heading-row shelf-heading-row--intro">
+                <div className="shelf-heading-group">
                   <h2 className="shelf-heading">{dict.home.specialSelectionTitle}</h2>
                   <p className="shelf-special-subtitle">{dict.home.specialSelectionSubtitle}</p>
                 </div>
+                <Link href="/products?sale=1" className="shelf-link">
+                  {dict.home.specialSelectionCta} →
+                </Link>
               </div>
               <ul className="shelf-row shelf-row--special">
                 {specialSelection.map((product) => (
@@ -319,13 +401,29 @@ export default async function Home() {
                   />
                 ))}
               </ul>
-              <div className="shelf-special-cta">
-                <Link href="/products?sale=1" className="shelf-button">
-                  {dict.home.specialSelectionCta}
-                </Link>
-              </div>
             </Reveal>
           </div>
+        </section>
+      )}
+
+      {reasonProducts.length > 0 && (
+        <section className="shelf-section shelf-section--reasons">
+          <MuranoReasons
+            products={reasonProducts.map((product) => ({
+              slug: product.slug,
+              name: localizedName(product, locale),
+              // The store's own number format, like every other price on this
+              // page's shelves and looks ("80,00 €"), not the interface language's.
+              price: formatMoney(product.price, settings.defaultCurrency, settings.defaultLocale),
+              imageUrl: product.images[0].url,
+            }))}
+            reasons={[
+              { title: dict.home.muranoReason1Title, body: dict.home.muranoReason1Body },
+              { title: dict.home.muranoReason2Title, body: dict.home.muranoReason2Body },
+              { title: dict.home.muranoReason3Title, body: dict.home.muranoReason3Body },
+            ]}
+            viewLabel={lookCopy.viewPiece}
+          />
         </section>
       )}
 

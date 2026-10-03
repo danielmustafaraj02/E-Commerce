@@ -32,7 +32,7 @@ export default async function AdminTeamPage() {
                 <p className="font-medium">{member.name ?? member.email}</p>
                 <p className="text-foreground/70">{member.email}</p>
               </div>
-              <span className="border-foreground/20 rounded-full border px-3 py-1 text-xs tracking-wide uppercase">
+              <span className="border-foreground/20 rounded border px-3 py-1 text-xs tracking-wide uppercase">
                 {member.role}
               </span>
             </li>

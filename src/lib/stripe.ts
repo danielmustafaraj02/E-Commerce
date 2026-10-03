@@ -46,3 +46,64 @@ export async function getStripe() {
   }
   return cached.client;
 }
+
+// ---------------------------------------------------------------------------
+// Which payment methods to advertise ("we accept" badges)
+// ---------------------------------------------------------------------------
+
+/** The Stripe methods this storefront draws a badge for. */
+export type StripePaymentMethodId =
+  | "klarna"
+  | "bancontact"
+  | "eps"
+  | "satispay"
+  | "mbway"
+  | "amazonpay";
+
+// Stripe account CAPABILITIES, not a hardcoded list: what Checkout offers is
+// decided in Dashboard > Settings > Payment methods, so a list written here
+// would start lying the moment one is switched on or off. A capability counts
+// only when it is "active" — "pending" means Stripe is still reviewing it and
+// the method is not yet offered to anyone.
+const BADGE_CAPABILITIES: Record<string, StripePaymentMethodId> = {
+  klarna_payments: "klarna",
+  bancontact_payments: "bancontact",
+  eps_payments: "eps",
+  satispay_payments: "satispay",
+  mb_way_payments: "mbway",
+  amazon_pay_payments: "amazonpay",
+};
+
+// One account lookup per hour per key, kept in the module rather than in
+// Next's data cache: it is a tiny, account-wide fact, and every page in the
+// site renders the footer. A failure is never fatal — the badges simply fall
+// back to the methods we can confirm without asking Stripe.
+let methodCache: { key: string; at: number; methods: StripePaymentMethodId[] } | null = null;
+const METHOD_CACHE_MS = 60 * 60 * 1000;
+
+export async function getStripePaymentMethods(): Promise<StripePaymentMethodId[]> {
+  const secretKey = await getStripeSecretKey();
+  if (!secretKey) return [];
+
+  if (methodCache?.key === secretKey && Date.now() - methodCache.at < METHOD_CACHE_MS) {
+    return methodCache.methods;
+  }
+
+  try {
+    const stripe = await getStripe();
+    // retrieveCurrent(), not retrieve(id): this key's OWN account. Passing an
+    // empty id would request /v1/accounts/ instead of /v1/account.
+    const account = await stripe.accounts.retrieveCurrent();
+    const capabilities = (account.capabilities ?? {}) as Record<string, string | undefined>;
+    const methods = Object.entries(BADGE_CAPABILITIES)
+      .filter(([capability]) => capabilities[capability] === "active")
+      .map(([, id]) => id);
+    methodCache = { key: secretKey, at: Date.now(), methods };
+    return methods;
+  } catch {
+    // A restricted key, a network blip or an account that doesn't allow the
+    // lookup: show the methods we're sure of rather than failing a page.
+    methodCache = { key: secretKey, at: Date.now(), methods: [] };
+    return [];
+  }
+}

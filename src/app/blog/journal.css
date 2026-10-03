@@ -40,7 +40,7 @@
   min-height: 2.5rem;
   padding: 0 1rem;
   border: 1px solid var(--rule);
-  border-radius: 999px;
+  border-radius: var(--radius-button);
   font-size: 0.85rem;
   color: var(--ink);
   text-decoration: none;

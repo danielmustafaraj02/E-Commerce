@@ -61,7 +61,7 @@
     background-color 0.2s ease,
     color 0.2s ease,
     transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
-  border-radius: 50%;
+  border-radius: var(--radius-button);
 }
 .mobile-menu-close:hover,
 .mobile-menu-close:focus-visible {
@@ -142,7 +142,7 @@
   width: 2.75rem;
   height: 2.75rem;
   overflow: hidden;
-  border-radius: 0.25rem;
+  border-radius: var(--radius-panel);
   background: color-mix(in srgb, var(--footer-ink) 5%, var(--ivory));
 }
 .mobile-menu-thumb img {

@@ -230,7 +230,7 @@ export function SiteStyleForm({
                   <button
                     type="button"
                     onClick={() => set(role, "")}
-                    className="shrink-0 rounded border border-neutral-300 px-2 py-1.5 text-xs"
+                    className="shrink-0 rounded-(--radius-button) border border-neutral-300 px-2 py-1.5 text-xs"
                     title="Follow the theme default"
                   >
                     Default
@@ -267,7 +267,7 @@ export function SiteStyleForm({
               form="save-palette"
               type="submit"
               disabled={savingPalette || paletteName.trim().length === 0}
-              className="rounded border border-neutral-300 px-4 py-2 text-sm disabled:opacity-40"
+              className="rounded-(--radius-button) border border-neutral-300 px-4 py-2 text-sm disabled:opacity-40"
             >
               {savingPalette ? "Saving…" : "Save palette"}
             </button>
@@ -296,7 +296,7 @@ export function SiteStyleForm({
                         setResetState(result);
                       })
                     }
-                    className="rounded px-2 py-1 text-xs text-red-700 underline disabled:opacity-40"
+                    className="rounded-(--radius-button) px-2 py-1 text-xs text-red-700 underline disabled:opacity-40"
                   >
                     Delete
                   </button>
@@ -387,7 +387,7 @@ export function SiteStyleForm({
           <button
             type="submit"
             disabled={pending || !dirty}
-            className="rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-40"
+            className="rounded-(--radius-button) bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-40"
           >
             {pending ? "Saving…" : "Save changes"}
           </button>
@@ -395,7 +395,7 @@ export function SiteStyleForm({
             type="button"
             onClick={() => setDraft(saved)}
             disabled={!dirty || pending}
-            className="rounded border border-neutral-300 px-4 py-2 text-sm disabled:opacity-40"
+            className="rounded-(--radius-button) border border-neutral-300 px-4 py-2 text-sm disabled:opacity-40"
           >
             Discard changes
           </button>
@@ -409,7 +409,7 @@ export function SiteStyleForm({
                 if (result.ok) setDraft(toDraft({}));
               })
             }
-            className="rounded border border-neutral-300 px-4 py-2 text-sm disabled:opacity-40"
+            className="rounded-(--radius-button) border border-neutral-300 px-4 py-2 text-sm disabled:opacity-40"
           >
             {resetting ? "Restoring…" : "Restore defaults"}
           </button>
@@ -478,7 +478,7 @@ export function SiteStyleForm({
                 background: "var(--site-primary)",
                 color: "var(--site-on-primary)",
               }}
-              className="rounded px-4 py-2.5 text-xs font-medium tracking-widest uppercase"
+              className="rounded-(--radius-button) px-4 py-2.5 text-xs font-medium tracking-widest uppercase"
             >
               Discover the jewellery
             </button>

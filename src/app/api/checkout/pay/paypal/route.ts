@@ -6,6 +6,7 @@ import { createPaypalOrder } from "@/lib/paypal";
 import { canAccessOrder } from "@/lib/orders";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { getFeedback } from "@/lib/i18n/feedback";
+import { captureError } from "@/lib/monitoring";
 
 const schema = z.object({ orderNumber: z.string().min(1) });
 
@@ -57,6 +58,29 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ url: paypalOrder.approveUrl });
   } catch (error) {
-    return NextResponse.json({ error: (error as Error).message }, { status: 503 });
+    // PayPal's raw response goes to the log, never to the browser: it carries
+    // the debug id and the account-level reason (PAYEE_ACCOUNT_RESTRICTED,
+    // for one), which is operator information, not shopper information.
+    captureError(error, {
+      route: "checkout/pay/paypal",
+      orderNumber: order.orderNumber,
+      hint: paypalFailureHint((error as Error).message),
+    });
+    return NextResponse.json({ error: t.paymentMethodUnavailable }, { status: 503 });
   }
+}
+
+// Turns the one PayPal failure that is never a bug in this code into a line an
+// operator can act on, instead of leaving a raw 422 in the log.
+function paypalFailureHint(message: string) {
+  if (message.includes("PAYEE_ACCOUNT_RESTRICTED")) {
+    return "The PayPal business account receiving the money is restricted. Nothing to fix in this app: sign in to PayPal, open the Resolution Center and clear the limitation (usually a pending email, identity or business verification).";
+  }
+  if (message.includes("PAYEE_ACCOUNT_LOCKED_OR_CLOSED")) {
+    return "The PayPal business account is locked or closed. Contact PayPal support.";
+  }
+  if (message.includes("invalid_client") || message.includes("authenticate")) {
+    return "PayPal rejected the credentials. Check the client ID/secret in Admin > Settings > Payments, and that they are LIVE credentials if PAYPAL_ENV is live.";
+  }
+  return undefined;
 }

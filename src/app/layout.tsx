@@ -6,7 +6,7 @@ import { googleFontsHref } from "@/lib/font-pairings";
 import { getStoreSettings } from "@/lib/store-settings";
 import { ogLocale, ogAlternateLocales } from "@/lib/hreflang";
 import { absoluteUrl, isPlaceholderCompany, toSafeJsonLd } from "@/lib/json-ld";
-import { isStripeConfigured } from "@/lib/stripe";
+import { getStripePaymentMethods, isStripeConfigured } from "@/lib/stripe";
 import { isPaypalConfigured } from "@/lib/paypal";
 import { getLocale, localeDir } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
@@ -89,11 +89,12 @@ export const viewport: Viewport = {
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const [settings, locale, cardsEnabled, paypalEnabled] = await Promise.all([
+  const [settings, locale, cardsEnabled, paypalEnabled, stripeMethods] = await Promise.all([
     getStoreSettings(),
     getLocale(),
     isStripeConfigured(),
     isPaypalConfigured(),
+    getStripePaymentMethods(),
   ]);
   const dict = getDictionary(locale);
   const social = {
@@ -225,7 +226,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
             header and navigation. Targets the page wrapper in template.tsx. */}
         <a
           href="#main-content"
-          className="bg-background text-foreground sr-only rounded px-4 py-2 text-sm font-medium shadow-lg focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100]"
+          className="bg-background text-foreground sr-only rounded-(--radius-button) px-4 py-2 text-sm font-medium shadow-lg focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100]"
         >
           {dict.a11y.skipToContent}
         </a>
@@ -250,7 +251,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           payments={{
             cards: cardsEnabled,
             paypal: paypalEnabled,
-            klarna: settings.klarnaEnabled,
+            stripeMethods,
             bankTransfer: settings.bankTransferEnabled,
           }}
         />

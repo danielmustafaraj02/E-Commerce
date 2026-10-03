@@ -163,6 +163,7 @@ export default async function CategoryPage({
 
   const where = {
     active: true,
+    unlisted: false,
     categoryId: category.id,
     ...(filters.inStock && { stockQty: { gt: 0 } }),
     ...(filters.color?.length && { color: { in: filters.color } }),
@@ -184,7 +185,7 @@ export default async function CategoryPage({
       select: { id: true, stockQty: true },
     }),
     db.product.aggregate({
-      where: { active: true, categoryId: category.id },
+      where: { active: true, unlisted: false, categoryId: category.id },
       _min: { price: true },
       _max: { price: true },
     }),

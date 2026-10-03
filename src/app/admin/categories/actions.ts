@@ -36,6 +36,8 @@ const categorySchema = z.object({
     .max(200)
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Slug must be lowercase, hyphen-separated"),
   parentId: z.string().min(1).optional(),
+  // "" means "automatic" (fall back to the newest product), stored as null.
+  coverProductId: z.string().min(1).optional(),
 });
 
 // A blank description is stored as null, so the storefront falls back to the
@@ -64,7 +66,20 @@ function parseForm(formData: FormData) {
     nameJa: formData.get("nameJa") || undefined,
     slug: formData.get("slug"),
     parentId: formData.get("parentId") || undefined,
+    coverProductId: formData.get("coverProductId") || undefined,
   });
+}
+
+// The cover must be a product of this very category, so a tampered form can't
+// pin another category's photo (or a product that doesn't exist) onto a tile.
+async function coverProductIdFor(categoryId: string | null, coverProductId: string | undefined) {
+  if (!coverProductId) return null;
+  if (!categoryId) return null;
+  const product = await db.product.findFirst({
+    where: { id: coverProductId, categoryId },
+    select: { id: true },
+  });
+  return product?.id ?? null;
 }
 
 export async function createCategory(_prevState: unknown, formData: FormData) {
@@ -91,6 +106,8 @@ export async function createCategory(_prevState: unknown, formData: FormData) {
       ...descriptionData(parsed.data),
       slug: parsed.data.slug,
       parentId: parsed.data.parentId || null,
+      // A category being created has no products yet, so there is nothing to
+      // pin: the form shows the picker only once products exist.
     },
   });
 
@@ -139,6 +156,7 @@ export async function updateCategory(categoryId: string, _prevState: unknown, fo
       ...descriptionData(parsed.data),
       slug: parsed.data.slug,
       parentId: parsed.data.parentId || null,
+      coverProductId: await coverProductIdFor(categoryId, parsed.data.coverProductId),
     },
   });
 

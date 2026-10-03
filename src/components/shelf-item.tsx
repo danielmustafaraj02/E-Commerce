@@ -1,6 +1,7 @@
 import { Link } from "@/components/localized-link";
 import { CatalogImage } from "@/components/catalog-image";
 import { QuickAddButton } from "@/components/quick-add-button";
+import { StarRating } from "@/components/star-rating";
 import { formatMoney, formatDiscountPercent } from "@/lib/format";
 
 type ShelfItemData = {
@@ -27,6 +28,8 @@ export function ShelfItem({
   quickAddLabel,
   addedLabel,
   sizes = "(min-width: 64rem) 15rem, (min-width: 48rem) 25vw, 50vw",
+  rating,
+  scarcityLabel,
 }: {
   product: ShelfItemData;
   locale: string;
@@ -34,6 +37,12 @@ export function ShelfItem({
   quickAddLabel: string;
   addedLabel: string;
   sizes?: string;
+  // Real review data only: shown when the piece has at least one review.
+  // `label` is the screen-reader text (the stars themselves are decorative).
+  rating?: { average: number; count: number; label: string };
+  // A short urgency line ("Only 2 left"). The caller sets it only when the
+  // piece really is running low, so it is never invented here.
+  scarcityLabel?: string;
 }) {
   const outOfStock = product.stockQty <= 0;
   const image = product.images[0];
@@ -70,7 +79,10 @@ export function ShelfItem({
         )}
       </div>
       <h3 className="shelf-item-name">
-        <Link href={`/products/${product.slug}`}>{product.name}</Link>
+        <Link href={`/products/${product.slug}`}>
+          {product.name}
+          <span className="shelf-item-arrow" aria-hidden="true">→</span>
+        </Link>
       </h3>
       <span className="shelf-item-price">
         {hasDiscount && (
@@ -80,6 +92,20 @@ export function ShelfItem({
         )}
         {formatMoney(product.price, product.currency, locale)}
       </span>
+      {(rating || (!outOfStock && scarcityLabel)) && (
+        <p className="shelf-item-meta">
+          {rating && (
+            <span className="shelf-item-rating">
+              <StarRating rating={rating.average} size={13} />
+              <span className="sr-only">{rating.label}</span>
+              <span aria-hidden="true">({rating.count})</span>
+            </span>
+          )}
+          {!outOfStock && scarcityLabel && (
+            <span className="shelf-item-scarcity">{scarcityLabel}</span>
+          )}
+        </p>
+      )}
     </li>
   );
 }

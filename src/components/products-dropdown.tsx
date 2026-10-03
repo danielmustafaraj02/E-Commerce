@@ -83,7 +83,7 @@ export function ProductsDropdown({
     >
       <button
         type="button"
-        className="nav-link link-underline pd-trigger text-foreground/80"
+        className="nav-link link-underline pd-trigger text-foreground"
         aria-expanded={open}
         aria-haspopup="true"
         onClick={() => setOpen((v) => !v)}

@@ -85,7 +85,7 @@ export function AddressMap({
         href={link}
         target="_blank"
         rel="noopener noreferrer"
-        className="bg-background/90 text-foreground hover:text-accent absolute start-2 bottom-2 rounded px-2 py-1 text-xs font-medium shadow-sm"
+        className="bg-background/90 text-foreground hover:text-accent absolute start-2 bottom-2 rounded-(--radius-button) px-2 py-1 text-xs font-medium shadow-sm"
       >
         {openLabel}
       </a>

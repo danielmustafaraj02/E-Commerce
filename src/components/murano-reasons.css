@@ -1,0 +1,305 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   Why Murano — three reasons, each beside a piece
+   (components/murano-reasons.tsx; the pieces are chosen in Admin > Settings).
+
+   Set in the same language as the looks section above it so the page reads as
+   one thing: the same column as every other section (.shelf-wrap), rows that
+   alternate sides and are separated by whitespace alone, the display title with
+   a short accent rule beneath it, the sans description, the site's own primary
+   button, a hairline between the copy and the piece, and the same pop-up card.
+   No heading, no numerals, no tinted bands.
+   ───────────────────────────────────────────────────────────────────────── */
+
+.mr-section {
+  /* The hairline between a row's copy and its piece: the same colour recipe as
+     the looks rows (--look-line in look-editorial.css). */
+  --mr-line: color-mix(in srgb, var(--ink) 45%, transparent);
+}
+
+.mr-row {
+  display: grid;
+  align-items: center;
+  gap: clamp(2.5rem, 6vw, 6rem);
+  padding-block: clamp(3rem, 6vw, 5.5rem);
+}
+/* The section's own padding is the breathing room above the first row and
+   below the last; the rows' padding only separates one from the next. */
+.mr-row:first-child {
+  padding-top: 0;
+}
+.mr-row:last-child {
+  padding-bottom: 0;
+}
+
+.mr-row--img-right {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  grid-template-areas: "copy visual";
+}
+.mr-row--img-left {
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  grid-template-areas: "visual copy";
+}
+
+/* ── The copy ─────────────────────────────────────────────────────────────── */
+
+.mr-copy {
+  grid-area: copy;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  max-width: 31rem;
+  padding-block: 1rem;
+}
+
+.mr-title {
+  margin: 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.9rem, 2.8vw, 2.6rem);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+/* The short accent rule under a title, as under every look's name. */
+.mr-title-rule {
+  display: block;
+  width: 2.25rem;
+  height: 2px;
+  margin-top: 1rem;
+  background: var(--accent);
+}
+
+.mr-body {
+  margin: 1.5rem 0 2rem;
+  max-width: 26rem;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
+  text-wrap: pretty;
+}
+
+/* The site's .btn-primary; this only sizes and places it, as the looks do. */
+.mr-cta {
+  min-height: 3.25rem;
+  padding-inline: 2rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+/* ── The piece ────────────────────────────────────────────────────────────── */
+
+.mr-visual {
+  grid-area: visual;
+  position: relative;
+  min-width: 0;
+  aspect-ratio: 1 / 1.05;
+}
+
+.mr-visual-link {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+}
+
+.mr-visual-link img {
+  object-fit: contain;
+  /* The photographs are on white; multiply lets them sit on the page. */
+  mix-blend-mode: multiply;
+  transition: transform 0.65s var(--ease-out-soft, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .mr-visual:hover .mr-visual-link img {
+    transform: scale(1.03);
+  }
+}
+
+/* ── The pop-up card ──────────────────────────────────────────────────────────
+   The same card as the pieces in a look (look-editorial.css): one fixed size, so
+   it is identical in every row, a name held to two lines, price, and a link
+   pinned to the foot. Centred inside `transform`, not with the `translate`
+   property: the CSS build drops a lone `translate` when `transform` is also set,
+   which left it hanging off the centre line instead of centred on it. */
+.mr-popup {
+  --card-w: min(15rem, calc(100% - 1rem));
+  --card-h: 8.5rem;
+  position: absolute;
+  z-index: 10;
+  left: 50%;
+  bottom: 8%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: var(--card-w);
+  height: var(--card-h);
+  padding: 1.1rem 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--champagne) 70%, transparent);
+  border-radius: var(--radius-panel);
+  background: var(--ivory);
+  color: var(--midnight);
+  box-shadow:
+    0 2px 4px rgb(var(--onyx-rgb) / 6%),
+    0 12px 32px rgb(var(--onyx-rgb) / 14%);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 8px);
+  transition:
+    opacity 0.22s var(--ease-out-soft, ease),
+    transform 0.22s var(--ease-out-soft, ease),
+    visibility 0s linear 0.22s;
+}
+.mr-popup[data-open="true"] {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+  transition-delay: 0s;
+  pointer-events: auto;
+}
+
+.mr-popup-name {
+  margin: 0;
+  min-height: 2.6em;
+  font-family: var(--font-display), serif;
+  font-size: 1rem;
+  line-height: 1.3;
+  color: var(--midnight);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.mr-popup-price {
+  margin: 0.3rem 0 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--midnight);
+}
+
+.mr-popup-link {
+  display: inline-block;
+  align-self: flex-start;
+  margin-top: auto;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.82rem;
+  color: var(--brass-deep, var(--brass));
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.mr-popup-link:hover {
+  color: var(--midnight);
+}
+
+/* ── Desktop: a hairline between the copy and the piece ───────────────────────
+   On whichever side the copy sits, as in the looks rows. */
+@media (min-width: 52rem) {
+  .mr-row--img-right .mr-copy {
+    border-inline-end: 1px solid var(--mr-line);
+    padding-inline-end: clamp(2.5rem, 4vw, 4.5rem);
+  }
+  .mr-row--img-left .mr-copy {
+    border-inline-start: 1px solid var(--mr-line);
+    padding-inline-start: clamp(2.5rem, 4vw, 4.5rem);
+  }
+}
+
+/* ── Entrance ────────────────────────────────────────────────────────────────
+   The copy rises in order — title, rule, text, button — and the piece settles
+   just behind it. Hidden state on data-reveal="false" (set in the server HTML),
+   the sequence on "true". Gated on JavaScript running and on motion being
+   welcome: without either the row is simply there. Fill mode is `backwards`, so
+   once an item has arrived it returns to its ordinary styles and the button's
+   hover is not held down by a finished animation. The global [data-reveal] rule
+   in globals.css (a 0.9s fade of the whole element) is switched off for the row
+   — it would dim the sequence — and, with no script, would leave it invisible. */
+.mr-row[data-reveal] {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+@keyframes mr-rise {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+}
+
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .mr-row[data-reveal="false"] .mr-title,
+  .mr-row[data-reveal="false"] .mr-title-rule,
+  .mr-row[data-reveal="false"] .mr-body,
+  .mr-row[data-reveal="false"] .mr-cta,
+  .mr-row[data-reveal="false"] .mr-visual-link {
+    opacity: 0;
+  }
+
+  .mr-row[data-reveal="true"] .mr-title,
+  .mr-row[data-reveal="true"] .mr-title-rule,
+  .mr-row[data-reveal="true"] .mr-body,
+  .mr-row[data-reveal="true"] .mr-cta,
+  .mr-row[data-reveal="true"] .mr-visual-link {
+    animation: mr-rise 0.75s var(--ease-out-soft, cubic-bezier(0.16, 1, 0.3, 1)) backwards;
+  }
+  .mr-row[data-reveal="true"] .mr-title-rule {
+    animation-delay: 0.08s;
+  }
+  .mr-row[data-reveal="true"] .mr-body {
+    animation-delay: 0.16s;
+  }
+  .mr-row[data-reveal="true"] .mr-cta {
+    animation-delay: 0.26s;
+  }
+  .mr-row[data-reveal="true"] .mr-visual-link {
+    animation-delay: 0.12s;
+  }
+}
+
+/* ── Mobile: the copy, then the piece ─────────────────────────────────────── */
+
+@media (max-width: 51.99rem) {
+  .mr-row,
+  .mr-row--img-right,
+  .mr-row--img-left {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "copy"
+      "visual";
+    gap: 1.75rem;
+    padding-block: 2.5rem;
+  }
+
+  .mr-copy {
+    max-width: none;
+    padding-block: 0;
+  }
+
+  .mr-body {
+    max-width: none;
+    margin: 1.1rem 0 1.5rem;
+  }
+
+  /* Full width and a comfortable target, as the looks' button is on a phone. */
+  .mr-cta {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .mr-visual {
+    width: 100%;
+    max-width: 38rem;
+    justify-self: center;
+  }
+}

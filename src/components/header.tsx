@@ -32,10 +32,17 @@ export async function Header({
   const [session, categories] = await Promise.all([
     auth(),
     // Categories have no image of their own (see model Category in
-    // prisma/schema.prisma), so the dropdown thumbnails each borrow the first
-    // picture of their newest product. `position: "asc"` + `createdAt: "desc"`
-    // keeps it to one image per category: we ask for one product row, and
-    // Prisma returns exactly one image on it.
+    // prisma/schema.prisma), so each dropdown thumbnail borrows a product's
+    // first picture: the cover product picked in Admin > Categories, else —
+    // when none is set, or it has no photo — that category's OLDEST active
+    // product. Oldest, not newest, so the tile doesn't silently change every
+    // time a piece is added, and because it is the fallback the homepage
+    // "Shop by category" shelf already used (lib/homepage-data.ts): with the
+    // two ordered differently, an unpinned category showed one photo in the
+    // menu and a different one on the homepage.
+    // `position: "asc"` + `createdAt: "asc"` keeps it to one image per
+    // category: we ask for one product row, and Prisma returns exactly one
+    // image on it.
     db.category.findMany({
       where: { parentId: null },
       orderBy: { name: "asc" },
@@ -53,9 +60,16 @@ export async function Header({
         namePt: true,
         nameHi: true,
         nameJa: true,
+        coverProduct: {
+          select: {
+            active: true,
+            unlisted: true,
+            images: { orderBy: { position: "asc" }, take: 1, select: { url: true } },
+          },
+        },
         products: {
-          where: { active: true },
-          orderBy: { createdAt: "desc" },
+          where: { active: true, unlisted: false },
+          orderBy: [{ createdAt: "asc" }, { id: "asc" }],
           take: 1,
           select: {
             images: {
@@ -71,11 +85,18 @@ export async function Header({
 
   // Narrow the query result to what the two nav rows need: an href, a
   // localized label, and an optional thumbnail.
-  const categoryLinks = categories.map((category) => ({
-    href: `/category/${category.slug}`,
-    label: localizedName(category, locale),
-    imageUrl: category.products[0]?.images[0]?.url ?? null,
-  }));
+  const categoryLinks = categories.map((category) => {
+    // A cover product that has since been deactivated or unlisted is ignored
+    // here rather than shown: the storefront must not advertise it.
+    const cover = category.coverProduct;
+    const coverUrl =
+      cover && cover.active && !cover.unlisted ? (cover.images[0]?.url ?? null) : null;
+    return {
+      href: `/category/${category.slug}`,
+      label: localizedName(category, locale),
+      imageUrl: coverUrl ?? category.products[0]?.images[0]?.url ?? null,
+    };
+  });
 
   const isStaff = session?.user.role === "admin" || session?.user.role === "staff";
 
@@ -83,7 +104,13 @@ export async function Header({
     ? await db.wishlistItem.count({ where: { userId: session.user.id } })
     : 0;
 
-  const navChipClass = "nav-link link-underline text-foreground/80 shrink-0";
+  // Full ink, not foreground/80: at 80% the bottle green drops from 11.3:1 to
+  // 6.2:1 on the ivory ground, which a light serif at ~1rem reads as washed
+  // out rather than quiet. The restraint comes from the size and the slow
+  // underline draw, not from fading the text.
+  const navChipClass = "nav-link link-underline text-foreground shrink-0";
+  // Same reasoning for the right-hand cluster (admin, sign in, register).
+  const clusterLinkClass = "link-underline text-foreground transition-colors";
 
   // Flyout copy, shared by the cart and wishlist panels. All of it already
   // exists in the dictionary for the 11 locales — the panels are new, the
@@ -163,7 +190,7 @@ export async function Header({
             Keep overflow visible so the Products menu can extend below the
             header. A scroll container clips absolutely positioned descendants,
             even when overflow-y is set to visible. ── */}
-        <nav className="hidden min-w-0 items-center gap-6 text-[0.95rem] whitespace-nowrap lg:flex">
+        <nav className="hidden min-w-0 items-center gap-6 text-[1.02rem] font-medium tracking-[0.01em] whitespace-nowrap lg:flex">
           <ProductsDropdown
             categories={categoryLinks}
             label={dict.nav.products}
@@ -189,7 +216,7 @@ export async function Header({
         </div>
 
         {/* ── Icon cluster (locale, wishlist, cart, admin, account/login) ── */}
-        <div className="hidden items-center gap-x-4 text-[0.95rem] whitespace-nowrap lg:flex">
+        <div className="hidden items-center gap-x-4 text-[1.02rem] font-medium tracking-[0.01em] whitespace-nowrap lg:flex">
           <LocaleSwitcher current={locale} />
           {session?.user ? (
             // Signed-in: the wishlist is DB-backed, so the header keeps the
@@ -199,7 +226,7 @@ export async function Header({
               href="/account/wishlist"
               aria-label={dict.nav.wishlist}
               title={dict.nav.wishlist}
-              className="group link-underline text-foreground/80 hover:text-danger flex items-center gap-1 transition-colors"
+              className="group link-underline text-foreground hover:text-danger flex items-center gap-1 transition-colors"
             >
               <svg
                 width="20"
@@ -229,7 +256,7 @@ export async function Header({
           {isStaff && (
             <Link
               href="/admin"
-              className="link-underline text-foreground/80 hover:text-accent transition-colors"
+              className={`${clusterLinkClass} hover:text-accent`}
             >
               {dict.nav.admin}
             </Link>
@@ -239,7 +266,7 @@ export async function Header({
               href="/account"
               aria-label={dict.nav.account}
               title={dict.nav.account}
-              className="group link-underline text-foreground/80 hover:text-accent flex items-center"
+              className="group link-underline text-foreground hover:text-accent flex items-center"
             >
               <svg
                 width="20"
@@ -261,14 +288,14 @@ export async function Header({
             <>
               <Link
                 href="/login"
-                className="link-underline text-foreground/80 hover:text-accent transition-colors"
+                className={`${clusterLinkClass} hover:text-accent`}
               >
                 {dict.nav.signIn}
               </Link>
               <span className="hidden 2xl:inline">
                 <Link
                   href="/register"
-                  className="link-underline text-foreground/80 hover:text-accent transition-colors"
+                  className={`${clusterLinkClass} hover:text-accent`}
                 >
                   {dict.nav.register}
                 </Link>

@@ -9,7 +9,7 @@ import { getDictionary } from "@/lib/i18n/dictionaries";
 import { isPaypalConfigured } from "@/lib/paypal";
 import { ShelfMain } from "@/components/shelf-main";
 import { ShelfHead, ShelfBody } from "@/components/shelf-page";
-import { isStripeConfigured } from "@/lib/stripe";
+import { getStripePaymentMethods, isStripeConfigured } from "@/lib/stripe";
 import { CheckoutClient } from "./checkout-client";
 
 export default async function CheckoutPage() {
@@ -23,6 +23,7 @@ export default async function CheckoutPage() {
     stripePublishableKey,
     paypalEnabled,
     cardsEnabled,
+    stripeMethods,
   ] = await Promise.all([
       auth(),
       getStoreSettings(),
@@ -33,6 +34,7 @@ export default async function CheckoutPage() {
       getStripePublishableKey(),
       isPaypalConfigured(),
       isStripeConfigured(),
+      getStripePaymentMethods(),
     ]);
   const dict = getDictionary(uiLocale);
 
@@ -78,7 +80,7 @@ export default async function CheckoutPage() {
           paymentMethods={{
             cards: cardsEnabled,
             paypal: paypalEnabled,
-            klarna: cardsEnabled && settings.klarnaEnabled,
+            stripeMethods,
             bankTransfer: settings.bankTransferEnabled && Boolean(settings.bankIban),
           }}
           trustLabels={{

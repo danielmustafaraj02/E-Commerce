@@ -67,7 +67,7 @@ export function GuestWishlistClient({
                       onClick={() => removeItem(item.productId)}
                       aria-label={wishlistDict.remove}
                       title={wishlistDict.remove}
-                      className="bg-background/95 text-danger absolute top-2 right-2 z-10 flex h-9 w-9 items-center justify-center rounded-full shadow-md transition-transform duration-200 hover:scale-110 active:scale-95"
+                      className="bg-background/95 text-danger absolute top-2 right-2 z-10 flex h-9 w-9 items-center justify-center rounded-(--radius-button) shadow-md transition-transform duration-200 hover:scale-110 active:scale-95"
                     >
                       <span aria-hidden="true" className="text-base leading-none">
                         ♥

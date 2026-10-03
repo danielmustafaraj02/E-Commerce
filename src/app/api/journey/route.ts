@@ -71,6 +71,7 @@ export async function GET(request: Request) {
     const candidates = await db.product.findMany({
       where: {
         active: true,
+        unlisted: false,
         id: { notIn: ids },
         OR: [{ stockQty: { gt: 0 } }, { trackInventory: false }],
         AND: [{ OR: [{ color: { in: colors } }, { lookId: { in: lookIds } }] }],

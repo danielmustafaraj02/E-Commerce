@@ -337,7 +337,7 @@
     padding-inline-start: 4.5rem;
     margin-inline-start: -0.5rem;
   }
-  .faq-intro {
+  .faq--editorial .faq-intro {
     position: sticky;
     top: 7rem;
     align-self: start;

@@ -30,6 +30,27 @@ export function ProductGallery({
   const mobileRailRef = useRef<HTMLDivElement>(null);
   const active = images[selected] ?? images[0];
 
+  // A product with no photograph at all (an unlisted payment-test product, or
+  // a piece whose shots haven't been uploaded yet) would otherwise leave the
+  // whole left column blank and the page looking broken. A quiet framed panel
+  // holds the same space the photo would. Purely decorative, so it carries no
+  // text to translate and is hidden from assistive tech — the name, price and
+  // description beside it already say what the product is.
+  if (images.length === 0) {
+    return (
+      <div className="shop-gallery">
+        <div className="shop-product-photo shop-photo-placeholder" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="4" width="18" height="16" rx="2.5" />
+            <circle cx="8.75" cy="9.75" r="1.6" />
+            <path d="M3.5 17.2l4.9-4.6a1.7 1.7 0 0 1 2.3 0l5.2 4.9" />
+            <path d="M14.2 14.4l2.2-2a1.7 1.7 0 0 1 2.3 0l1.8 1.6" />
+          </svg>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="shop-gallery">
       <div className="shop-gallery-desktop">

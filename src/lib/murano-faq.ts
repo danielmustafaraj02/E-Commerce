@@ -56,7 +56,7 @@ export async function getMuranoFaqFacts(settings: {
   giftCardPrice: number;
 }): Promise<MuranoFaqFacts> {
   const products = await db.product.findMany({
-    where: { active: true },
+    where: { active: true, unlisted: false },
     select: { price: true, category: { select: { name: true, nameEn: true, slug: true } } },
   });
   const byKind: Partial<Record<ProductType, Range>> = {};

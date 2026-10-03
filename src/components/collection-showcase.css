@@ -4,19 +4,21 @@
 
    Layout, and why it is split in two:
 
-   The three jewellery pieces all travel down ONE central vertical axis. The
-   text alternates left / right / left beside them. These are deliberately
-   separate concerns:
+   The three jewellery pieces all travel down ONE vertical axis, and the text
+   sits beside them. These are deliberately separate concerns:
 
-     .showcase-figure   the jewellery — always centred, in a fixed-size box
-     .showcase-copy     the text — placed in whichever side column is free
+     .showcase-figure   the jewellery — on the shared axis, in a fixed-size box
+     .showcase-copy     the text — in the column to the left of the axis
 
-   Because the copy is positioned in a side column and the figure is centred
-   independently, changing which SIDE the text sits on can never shift the
-   jewellery horizontally. An earlier version put each scene in a two-column
-   grid and swapped the columns, which moved the bracelet to x+287 and the
-   earrings to x-287: the three pieces sat on three different axes and nothing
-   read as one continuous column of jewellery moving through the screen.
+   Because the copy is positioned independently and the figure always sits on
+   the same axis, nothing slides sideways between scenes. An earlier version put
+   each scene in a two-column grid and swapped the columns, which moved the
+   bracelet to x+287 and the earrings to x-287: the three pieces sat on three
+   different axes. A later one centred the axis and alternated the text left /
+   right / left, which squeezed the copy into the ~200px between the stage edge
+   and the piece (a one-line description wrapped) and left the other half of the
+   stage empty. On desktop the axis now sits at --showcase-axis of the content
+   column and the copy is always on its left — see "Desktop composition" below.
 
    Per frame the component writes three custom properties per scene:
      --scene-y         vertical offset in px (negative leaving, positive arriving)
@@ -255,8 +257,9 @@
      bracelet  1.37 of a 1.471 ceiling
      earrings  1.10 of a 1.449 ceiling  */
 
-.showcase[data-scene-live] .showcase-figure {
-  /* One formula for all three. The height is the smallest of:
+.showcase[data-scene-live] .showcase-scene {
+  /* Declared on the SCENE, not the figure, so the copy can read the piece's
+     real width too; the figure inherits it. One formula for all three. The height is the smallest of:
 
        1. --showcase-piece-fit, the hard "fits below the navbar and above the
           fixed chrome" cap, which is what normally binds;
@@ -287,7 +290,7 @@
   transform: scale(var(--showcase-piece-zoom, 1));
 }
 
-.showcase-scene[data-placement="necklace"] .showcase-figure {
+.showcase-scene[data-placement="necklace"] {
   --showcase-piece-ratio: 1023 / 1537;
   --showcase-piece-ratio-num: 1023;
   --showcase-piece-ratio-den: 1537;
@@ -296,7 +299,7 @@
   --showcase-piece-zoom: 1.1;
 }
 
-.showcase-scene[data-placement="bracelet"] .showcase-figure {
+.showcase-scene[data-placement="bracelet"] {
   /* The same portrait frame as the necklace — NOT the square this file used to
      claim — with the piece sitting smaller inside it, so it takes the largest
      zoom of the three. */
@@ -308,7 +311,7 @@
   --showcase-piece-zoom: 1.37;
 }
 
-.showcase-scene[data-placement="earrings"] .showcase-figure {
+.showcase-scene[data-placement="earrings"] {
   --showcase-piece-ratio: 1164 / 1351;
   --showcase-piece-ratio-num: 1164;
   --showcase-piece-ratio-den: 1351;
@@ -624,10 +627,20 @@
 
   .showcase-description {
     margin-top: clamp(0.4rem, 1.4svh, 0.7rem);
-    font-size: clamp(0.9rem, 3.8vw, 1.02rem);
+    /* One line. The middle track is only ~226px wide once the scene's padding
+       and the two 44px indicator gutters are taken out, and the longest line
+       (the Italian bracelet one, ~20em) needs more than that — so the line is
+       allowed to be as wide as it is (max-content) and to spill equally into
+       the gutters on both sides, where nothing is drawn but the indicator's dots
+       far at the right edge. It is capped 3.5rem short of each screen edge, and
+       the type scales with the screen so that cap is enough; only on a screen
+       too narrow for even that does it wrap, instead of reaching the dots.
+       (It was a flat 3.8vw under a 32ch cap, so it wrapped on every phone.) */
+    font-size: clamp(0.72rem, calc((100vw - 7rem) / 20.2), 1.02rem);
     line-height: 1.5;
-    /* Centred under the piece, so the measure has to be centred too. */
-    max-width: 32ch;
+    width: max-content;
+    max-width: calc(100vw - 7rem);
+    flex-shrink: 0;
     margin-inline: auto;
   }
 
@@ -709,6 +722,104 @@
   justify-content: center;
   gap: 0;
   min-width: 0;
+}
+
+/* ── Desktop composition: the copy and the piece as one group ───────────────
+   The old layout centred the piece on the stage and pushed the copy into the
+   leftover edge, between the stage's edge and the piece's half-box — about 200px
+   at 1440, so the one-line description wrapped onto two — while the other half
+   of the stage stood empty (and so did a left-hand column kept only to mirror
+   the rail).
+
+   Now the stage is [content | rail]. All three pieces still travel down ONE
+   axis (so nothing slides sideways between scenes), but that axis sits at
+   --showcase-axis of the content column instead of the middle, and the copy is
+   always on its left. The copy takes the room that frees up: it is as wide as
+   its longest line (a one-line description stays one line) and is capped at the
+   piece's own clearance, so it wraps only on a screen with truly no room. */
+@media (min-width: 52rem) {
+  .showcase {
+    --showcase-axis: 64%;
+    /* The copy's left edge: roomier than the page gutter, so the group
+       (copy + piece) sits balanced in the content column and the space left
+       beside it is roughly the same on both sides. */
+    --showcase-copy-left: clamp(24px, 9vw, 168px);
+  }
+
+  .showcase[data-scene-live] .showcase-stage {
+    grid-template-columns: minmax(0, 1fr) var(--showcase-rail-col);
+  }
+
+  .showcase[data-scene-live] .showcase-content {
+    grid-column: 1;
+  }
+
+  .showcase[data-scene-live] .showcase-rail:not(.showcase-rail-scene) {
+    grid-column: 2;
+  }
+
+  .showcase[data-scene-live] .showcase-figure {
+    justify-self: start;
+    left: var(--showcase-axis);
+    /* `transform`, not `translate`: the CSS build drops a lone `translate`. */
+    transform: translateX(-50%);
+  }
+
+  .showcase[data-scene-live] .showcase-copy[data-side] {
+    left: var(--showcase-copy-left);
+    right: auto;
+    width: max-content;
+    /* Clear of the piece's actual box: half its real width (height x the
+       photograph's ratio) plus the gap, measured from the axis. */
+    max-width: max(
+      11rem,
+      calc(
+        var(--showcase-axis) -
+          var(--showcase-piece-height) * var(--showcase-piece-ratio-num) /
+          var(--showcase-piece-ratio-den) / 2 - var(--showcase-copy-gap) -
+          var(--showcase-copy-left)
+      )
+    );
+    text-align: left;
+    align-items: flex-start;
+    --copy-slide: 1.75rem;
+  }
+
+  /* Mirror composition: when copy is on the RIGHT the piece axis flips to the
+     left (100% - axis = 36%) so the whole group mirrors rather than only the
+     text moving while the image stays put. `:has()` lets the scene itself drive
+     the figure's position from the copy's data-side attribute. */
+  .showcase[data-scene-live] .showcase-scene:has(.showcase-copy[data-side="right"]) .showcase-figure {
+    left: calc(100% - var(--showcase-axis));
+  }
+
+  .showcase[data-scene-live] .showcase-copy[data-side="right"] {
+    left: auto;
+    right: var(--showcase-copy-left);
+    text-align: right;
+    align-items: flex-end;
+    --copy-slide: -1.75rem;
+    /* Same formula as the left side: available space between the copy's outer
+       edge and the piece's nearest half-width, minus the gap. */
+    max-width: max(
+      11rem,
+      calc(
+        var(--showcase-axis) -
+          var(--showcase-piece-height) * var(--showcase-piece-ratio-num) /
+          var(--showcase-piece-ratio-den) / 2 - var(--showcase-copy-gap) -
+          var(--showcase-copy-left)
+      )
+    );
+  }
+
+  .showcase[data-scene-live] .showcase-description {
+    max-width: none;
+  }
+
+  /* A little more presence for the heading now that it has the room. */
+  .showcase-title {
+    font-size: clamp(2.25rem, 4.4vw, 4.25rem);
+  }
 }
 
 /* The connecting track: a muted hairline, with the brand-green progress line
@@ -946,10 +1057,10 @@
    rather than a flicker. The stage-level rail is hidden here. */
 @media (max-width: 51.99rem) {
   .showcase {
-    /* The indicator's gutter: wide enough for the dot and its hit area, narrow
-       enough to leave the jewellery and the copy the rest of a phone screen.
+    /* The indicator's gutter: 44px gives a comfortable touch target column
+       while leaving the jewellery and copy the rest of the phone screen.
        Mirrored on the left as empty space, so the central axis is preserved. */
-    --showcase-rail-col: 40px;
+    --showcase-rail-col: 44px;
   }
 
   .showcase[data-scene-live] .showcase-stage {
@@ -1017,17 +1128,90 @@
     translate: -50% 0;
   }
 
-  /* Smaller dots than the desktop rail, so the indicator reads as a quiet mark
-     in the margin rather than as a control strip. */
+  /* Dots on mobile: slightly larger than before so they read as tappable
+     controls rather than decorative marks. The hit area stays 44px so touch
+     targets meet WCAG minimum without changing the rhythm. */
   .showcase-rail-item::after {
-    width: 5px;
-    height: 5px;
+    width: 7px;
+    height: 7px;
   }
 
   .showcase-rail-item[data-state="active"]::after {
-    width: 8px;
-    height: 8px;
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--midnight) 14%, transparent);
+    width: 10px;
+    height: 10px;
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--midnight) 14%, transparent);
+  }
+
+  /* Passed dots keep a visible filled state so the rail reads as a route
+     already walked, not just an empty track. */
+  .showcase-rail-item[data-state="passed"]::after {
+    width: 6px;
+    height: 6px;
+    background: color-mix(in srgb, var(--midnight) 40%, transparent);
+  }
+}
+
+/* ── Swipe hint — mobile only ─────────────────────────────────────────────────
+   A subtle label at the foot of the pinned stage nudging users to swipe
+   horizontally. Hidden by default; the mobile query overrides it to flex.
+   CSS hides it on desktop (nothing to swipe there — the rail's dots are the
+   way in, and the scroll itself drives the sequence). */
+.showcase-swipe-hint {
+  display: none;
+}
+
+@media (max-width: 51.99rem) {
+  .showcase[data-scene-live] .showcase-swipe-hint {
+    position: absolute;
+    inset-inline: 0;
+    bottom: max(env(safe-area-inset-bottom, 0px), 0.75rem);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    margin: 0;
+    pointer-events: none;
+    font-family: var(--font-ui), system-ui, sans-serif;
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--ink) 38%, transparent);
+    /* Fade out after a few seconds so it doesn't permanently clutter the stage.
+       The animation plays once on mount and stops, leaving the hint invisible.
+       If JS is off or reduced-motion is set, this element is display:none. */
+    animation: swipe-hint-fade 4s 1.5s ease-out forwards;
+  }
+
+  .showcase-swipe-arrow {
+    display: inline-block;
+    /* A gentle opacity pulse: one arrow dims while the other brightens, so the
+       pair together reads as a left-right motion cue without any mechanical
+       back-and-forth. cubic-bezier(0.16, 1, 0.3, 1) is the site's --ease-out-soft
+       — it arrives quickly and settles, never bouncy. */
+    animation: swipe-arrow-pulse 1.1s 1.5s cubic-bezier(0.16, 1, 0.3, 1) 3 alternate;
+  }
+
+  .showcase-swipe-arrow:last-child {
+    animation-direction: alternate-reverse;
+  }
+}
+
+@keyframes swipe-hint-fade {
+  0%   { opacity: 1; }
+  70%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes swipe-arrow-pulse {
+  0%   { opacity: 1; }
+  100% { opacity: 0.25; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .showcase-swipe-hint {
+    display: none !important;
   }
 }
 
@@ -1069,6 +1253,19 @@
   .showcase[data-scene-live] .showcase-scene .showcase-copy[data-side="right"] {
     grid-column: 1;
     grid-row: auto;
+  }
+
+  /* And the desktop composition's placement: stacked, the piece is centred and
+     the copy is as wide as its column, as it was before that layout existed. */
+  .showcase[data-scene-live] .showcase-figure {
+    justify-self: center;
+    left: auto;
+    transform: none;
+  }
+
+  .showcase[data-scene-live] .showcase-copy[data-side] {
+    width: auto;
+    max-width: var(--showcase-measure);
   }
 
   .showcase[data-scene-live] .showcase-figure,

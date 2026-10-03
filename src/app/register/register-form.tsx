@@ -27,7 +27,6 @@ export default function RegisterForm({
 
   return (
     <div className="form-card flex flex-col gap-4">
-      {googleEnabled && <GoogleSignInButton callbackUrl={callbackUrl} dict={dict} />}
       <form action={formAction} className="flex flex-col gap-4">
         <label className="flex flex-col gap-1.5 text-sm">
           <span className="font-medium">{dict.name}</span>
@@ -50,6 +49,8 @@ export default function RegisterForm({
           {pending ? dict.creatingAccount : dict.createAccount}
         </button>
       </form>
+
+      {googleEnabled && <GoogleSignInButton callbackUrl={callbackUrl} dict={dict} />}
     </div>
   );
 }

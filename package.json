@@ -12,6 +12,7 @@
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio",
     "import:products": "tsx scripts/import-products.ts",
+    "db:payment-test-product": "tsx scripts/create-payment-test-product.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",

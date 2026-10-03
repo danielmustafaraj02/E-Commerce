@@ -78,9 +78,9 @@ describe("GET /llms.txt", () => {
     expect(body).not.toContain("include VAT");
   });
 
-  it("publishes only public catalog data: only active products are queried", async () => {
+  it("publishes only public catalog data: only active, listed products are queried", async () => {
     await GET();
 
-    expect(mocks.products.mock.calls[0][0].where).toEqual({ active: true });
+    expect(mocks.products.mock.calls[0][0].where).toEqual({ active: true, unlisted: false });
   });
 });

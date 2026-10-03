@@ -57,7 +57,7 @@ export default async function AdminProductsPage({ searchParams }: PageProps<"/ad
         <h1 className="text-2xl font-semibold">Products</h1>
         <Link
           href="/admin/products/new"
-          className="bg-primary rounded px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
+          className="bg-primary rounded-(--radius-button) px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
         >
           New product
         </Link>
@@ -147,7 +147,17 @@ export default async function AdminProductsPage({ searchParams }: PageProps<"/ad
                     {product.supplier ? `Dropship: ${product.supplier.name}` : "In-house"}
                   </td>
                   <td className="py-3 pr-4">
-                    <StatusBadge status={product.active ? "active" : "inactive"} />
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <StatusBadge status={product.active ? "active" : "inactive"} />
+                      {product.unlisted && (
+                        <span
+                          title="Reachable only by direct link — hidden from listings, search, sitemap and feeds"
+                          className="border-foreground/15 text-foreground/60 rounded border px-2 py-0.5 text-[11px]"
+                        >
+                          Unlisted
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="py-3 pr-4 text-right">
                     <Link

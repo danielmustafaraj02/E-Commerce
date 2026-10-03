@@ -144,7 +144,24 @@ describe("PayPal pay route", () => {
     const res = await pay();
 
     expect(res.status).toBe(503);
-    expect(await res.json()).toEqual({ error: "PayPal is not configured" });
+    expect(mocks.createPayment).not.toHaveBeenCalled();
+  });
+
+  it("never passes PayPal's own error text through to the browser", async () => {
+    // A real 422 body: it names the merchant account's state and carries the
+    // debug id. That belongs in the log, not in a shopper's network tab.
+    mocks.createPaypalOrder.mockRejectedValue(
+      new Error(
+        'PayPal order creation failed: {"name":"UNPROCESSABLE_ENTITY","details":[{"issue":"PAYEE_ACCOUNT_RESTRICTED"}],"debug_id":"01a6b440fe11f"}'
+      )
+    );
+
+    const res = await pay();
+    const body = await res.json();
+
+    expect(res.status).toBe(503);
+    expect(JSON.stringify(body)).not.toContain("PAYEE_ACCOUNT_RESTRICTED");
+    expect(JSON.stringify(body)).not.toContain("debug_id");
     expect(mocks.createPayment).not.toHaveBeenCalled();
   });
 });

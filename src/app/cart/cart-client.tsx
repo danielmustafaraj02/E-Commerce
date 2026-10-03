@@ -155,8 +155,8 @@ export function CartClient({
                 <div
                   className="shop-fill"
                   style={{
-                    width: `${Math.min(100, (estimatedSubtotal / freeShippingThreshold) * 100)}%`,
-                  }}
+                    "--fill": Math.min(1, estimatedSubtotal / freeShippingThreshold),
+                  } as React.CSSProperties}
                 />
               </div>
             </>

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useActionState } from "react";
 import { FormAlert } from "@/components/form-alert";
 import {
@@ -12,6 +13,7 @@ export function CategoryForm({
   action,
   initial,
   categories,
+  coverProducts = [],
   submitLabel,
 }: {
   action: (prevState: unknown, formData: FormData) => Promise<{ error: string | null } | void>;
@@ -29,8 +31,12 @@ export function CategoryForm({
     nameJa: string | null;
     slug: string;
     parentId: string | null;
+    coverProductId?: string | null;
   } & Partial<CategoryDescriptions>;
   categories: { id: string; name: string }[];
+  // Candidates for the cover image: this category's own products that have at
+  // least one photo. Empty on a new category, which has no products yet.
+  coverProducts?: { id: string; name: string; imageUrl: string }[];
   submitLabel: string;
 }) {
   const [state, formAction, pending] = useActionState(action, { error: null as string | null });
@@ -162,6 +168,39 @@ export function CategoryForm({
         </select>
       </label>
 
+      <fieldset className="border-foreground/15 flex flex-col gap-3 rounded-lg border p-4">
+        <legend className="px-1 text-sm font-medium">Cover image</legend>
+        <p className="text-foreground/60 -mt-1 text-xs">
+          The piece that represents this category — its first photo is used on the homepage
+          &ldquo;Shop by category&rdquo; shelf and on the thumbnail in the header&rsquo;s Products
+          menu. Only products in this category that have a photo are listed.
+        </p>
+        {coverProducts.length === 0 ? (
+          <p className="text-foreground/60 text-xs">
+            No products with a photo in this category yet. Add one, then come back to pick the
+            cover.
+          </p>
+        ) : (
+          <div className="flex flex-wrap gap-3">
+            <CoverChoice
+              value=""
+              label="Automatic"
+              hint="Newest product"
+              checked={!initial?.coverProductId}
+            />
+            {coverProducts.map((product) => (
+              <CoverChoice
+                key={product.id}
+                value={product.id}
+                label={product.name}
+                imageUrl={product.imageUrl}
+                checked={initial?.coverProductId === product.id}
+              />
+            ))}
+          </div>
+        )}
+      </fieldset>
+
       {state?.error && <FormAlert type="error">{state.error}</FormAlert>}
 
       <button type="submit" disabled={pending} className="btn-primary mt-2 w-fit text-sm">
@@ -192,6 +231,47 @@ function DescriptionField({
         defaultValue={initial?.[field.key] ?? ""}
         className="field"
       />
+    </label>
+  );
+}
+
+// One selectable cover: a radio rendered as its product's thumbnail. A radio
+// (not a <select>) because the choice is a picture — you pick it by looking at
+// it — and the whole tile is the label, so the hit target is the image itself.
+function CoverChoice({
+  value,
+  label,
+  hint,
+  imageUrl,
+  checked,
+}: {
+  value: string;
+  label: string;
+  hint?: string;
+  imageUrl?: string;
+  checked: boolean;
+}) {
+  return (
+    <label className="group cursor-pointer text-xs" title={label}>
+      <input
+        type="radio"
+        name="coverProductId"
+        value={value}
+        defaultChecked={checked}
+        className="peer sr-only"
+      />
+      <span
+        className="border-foreground/15 peer-focus-visible:ring-primary/50 peer-checked:border-primary bg-surface relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-lg border-2 transition-colors peer-focus-visible:ring-2"
+      >
+        {imageUrl ? (
+          <Image src={imageUrl} alt="" width={96} height={96} className="h-full w-full object-cover" />
+        ) : (
+          <span className="text-foreground/60 px-2 text-center leading-tight">{hint}</span>
+        )}
+      </span>
+      <span className="text-foreground/70 peer-checked:text-foreground mt-1.5 block w-24 truncate">
+        {label}
+      </span>
     </label>
   );
 }

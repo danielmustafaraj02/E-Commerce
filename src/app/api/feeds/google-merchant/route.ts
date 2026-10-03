@@ -39,7 +39,7 @@ export async function GET(request: Request) {
   const base = siteBaseUrl(settings);
 
   const products = await db.product.findMany({
-    where: { active: true },
+    where: { active: true, unlisted: false },
     include: {
       images: { orderBy: { position: "asc" }, take: 1 + MAX_ADDITIONAL_IMAGES },
       category: true,

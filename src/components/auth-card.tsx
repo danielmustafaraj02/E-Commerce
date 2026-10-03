@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import LoginForm from "@/app/login/login-form";
 import RegisterForm from "@/app/register/register-form";
-import { BrandWave } from "@/components/brand-signature";
 import Image from "next/image";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
@@ -82,7 +81,6 @@ export function AuthCard({
       <div className="auth-form-side">
         <div className="auth-form-content">
           <p className="auth-eyebrow">{storeName}</p>
-          <BrandWave className="auth-wave" />
           <h1
             key={mode}
             ref={headingRef}

@@ -43,7 +43,7 @@ export default async function GiftFinderPage() {
   const dict = getDictionary(uiLocale);
 
   const products = await db.product.findMany({
-    where: { active: true },
+    where: { active: true, unlisted: false },
     select: {
       id: true,
       slug: true,

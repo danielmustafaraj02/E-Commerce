@@ -1,7 +1,7 @@
 import { siteBaseUrl } from "@/lib/site-url";
 import { z } from "zod";
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Link } from "@/components/localized-link";
 import { db } from "@/lib/db";
 import { getStoreSettings, ogImage } from "@/lib/store-settings";
 import { getLocale, type Locale } from "@/lib/i18n/locale";
@@ -17,10 +17,20 @@ import { ProductFilterPanel } from "@/components/product-filter-panel";
 import { Pagination } from "@/components/pagination";
 import { isProductColorKey } from "@/lib/product-colors";
 import { getGiftVoucherCopy } from "@/lib/gift-voucher-copy";
+import { getShopCopy } from "@/lib/i18n/shop-copy";
+import { applyTemplate } from "@/lib/i18n/format";
+import { getShippingBanner } from "@/lib/shipping-banner";
+import { TrustBadges } from "@/components/trust-badges";
 
 const PAGE_SIZE = 12;
 
+// Omitted = newest first, the order the catalog already used.
+type SortKey = "price-asc" | "price-desc";
+
 const filtersSchema = z.object({
+  // `.catch`: a mangled ?sort= only drops the sort, instead of failing the
+  // whole parse and silently discarding every filter with it.
+  sort: z.enum(["price-asc", "price-desc"]).optional().catch(undefined),
   q: z.string().trim().min(1).optional(),
   category: z.array(z.string().trim().min(1)).optional(),
   minPrice: z.coerce.number().nonnegative().optional(),
@@ -68,7 +78,8 @@ export async function generateMetadata({
     !raw.maxPrice &&
     !raw.inStock &&
     !raw.color &&
-    !raw.sale;
+    !raw.sale &&
+    !raw.sort;
   const page = Array.isArray(raw.page) ? raw.page[0] : raw.page;
   const canonical =
     isPlainPagination && page && page !== "1" ? `/products?page=${page}` : "/products";
@@ -126,6 +137,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
     inStock: single(raw.inStock),
     sale: single(raw.sale),
     color: colorValues.length ? colorValues : undefined,
+    sort: single(raw.sort),
     page: single(raw.page),
   });
   const filters = parsed.success ? parsed.data : { page: 1 };
@@ -134,14 +146,21 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
     getStoreSettings(),
     db.category.findMany({ orderBy: { name: "asc" } }),
     getLocale(),
-    db.product.aggregate({ where: { active: true }, _min: { price: true }, _max: { price: true } }),
+    db.product.aggregate({ where: { active: true, unlisted: false }, _min: { price: true }, _max: { price: true } }),
   ]);
   const dict = getDictionary(uiLocale);
+  const shopCopy = getShopCopy(uiLocale);
+  const shippingBanner = await getShippingBanner(
+    dict.product.shippingBanner,
+    settings.defaultCurrency,
+    settings.defaultLocale
+  );
   const priceMin = (priceBounds._min.price ?? 0) / 100;
   const priceMax = (priceBounds._max.price ?? 0) / 100;
 
   const where = {
     active: true,
+    unlisted: false,
     ...(filters.q && {
       OR: [
         { name: { contains: filters.q } },
@@ -169,9 +188,17 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
   // Int column, so this fetches the matching set's ids+stock cheaply,
   // resorts in JS (a stable sort, so createdAt-desc order is preserved
   // within each group), then fetches only the current page's ids in full.
+  // Price sorts break ties newest-first, and the in-stock-first pass below
+  // still applies on top, so a sold-out piece never leads a price-sorted grid.
+  const orderBy =
+    filters.sort === "price-asc"
+      ? [{ price: "asc" as const }, { createdAt: "desc" as const }]
+      : filters.sort === "price-desc"
+        ? [{ price: "desc" as const }, { createdAt: "desc" as const }]
+        : [{ createdAt: "desc" as const }];
   const allMatchingIds = await db.product.findMany({
     where,
-    orderBy: { createdAt: "desc" },
+    orderBy,
     select: { id: true, stockQty: true, price: true, compareAtPrice: true },
   });
   // Prisma can't compare two columns in a where, so "compare-at above price"
@@ -185,18 +212,37 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
     .slice((filters.page - 1) * PAGE_SIZE, filters.page * PAGE_SIZE)
     .map((p) => p.id);
 
-  const pageProducts = pageIds.length
-    ? await db.product.findMany({
-        where: { id: { in: pageIds } },
-        include: { images: { take: 1, orderBy: { position: "asc" } } },
-      })
-    : [];
+  // One grouped query for the ratings of just this page's pieces; a piece with
+  // no reviews has no row, so it simply shows no stars.
+  const [pageProducts, ratingRows] = pageIds.length
+    ? await Promise.all([
+        db.product.findMany({
+          where: { id: { in: pageIds } },
+          include: { images: { take: 1, orderBy: { position: "asc" } } },
+        }),
+        db.review.groupBy({
+          by: ["productId"],
+          where: { productId: { in: pageIds } },
+          _avg: { rating: true },
+          _count: { _all: true },
+        }),
+      ])
+    : [[], []];
   const productById = new Map(pageProducts.map((p) => [p.id, p]));
   const products = pageIds.map((id) => productById.get(id)!).filter(Boolean);
+  const ratingById = new Map(
+    ratingRows.flatMap((row) =>
+      row._avg.rating === null
+        ? []
+        : [[row.productId, { average: row._avg.rating, count: row._count._all }] as const]
+    )
+  );
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
-  const buildPageHref = (page: number) => {
+  // Keeps every active filter; `page` is left out when it is not given, so a
+  // sort link always lands back on page 1.
+  const buildHref = ({ page, sort }: { page?: number; sort?: SortKey }) => {
     const params = new URLSearchParams();
     if (filters.q) params.set("q", filters.q);
     for (const category of filters.category ?? []) params.append("category", category);
@@ -205,9 +251,16 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
     if (filters.inStock) params.set("inStock", filters.inStock);
     if (filters.sale) params.set("sale", filters.sale);
     for (const color of filters.color ?? []) params.append("color", color);
-    params.set("page", String(page));
-    return `/products?${params.toString()}`;
+    if (sort) params.set("sort", sort);
+    if (page !== undefined) params.set("page", String(page));
+    return params.size ? `/products?${params.toString()}` : "/products";
   };
+  const buildPageHref = (page: number) => buildHref({ page, sort: filters.sort });
+  const sortOptions: { key: SortKey | undefined; label: string }[] = [
+    { key: undefined, label: shopCopy.sortNewest },
+    { key: "price-asc", label: shopCopy.sortPriceAsc },
+    { key: "price-desc", label: shopCopy.sortPriceDesc },
+  ];
 
   // Only for the plain, unfiltered catalog view — a search/filter result is
   // a thin, high-cardinality slice that isn't worth asserting as a
@@ -218,7 +271,8 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
     !filters.minPrice &&
     !filters.maxPrice &&
     !filters.color &&
-    !filters.sale;
+    !filters.sale &&
+    !filters.sort;
   const itemListJsonLd =
     isPlainBrowse && products.length > 0
       ? {
@@ -237,6 +291,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
   const clearParams = new URLSearchParams();
   if (filters.q) clearParams.set("q", filters.q);
   if (filters.sale) clearParams.set("sale", filters.sale);
+  if (filters.sort) clearParams.set("sort", filters.sort);
   const clearHref = clearParams.size ? `/products?${clearParams.toString()}` : "/products";
 
   return (
@@ -256,6 +311,15 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
                 ? dict.home.specialSelectionTitle
                 : dict.products.allProducts}
           </h1>
+          {/* The reassurances a shopper looks for before committing, in the
+              store's own already-translated copy (the product page uses the
+              same strings): shipping first, since it is the strongest one.
+              The full row is hidden on phones, where it would push the first
+              row of pieces below the fold. */}
+          {shippingBanner && <p className="shop-promise">{shippingBanner}</p>}
+          <div className="hidden sm:block">
+            <TrustBadges trustBadgeText={settings.trustBadgeText} dict={dict.product} />
+          </div>
         </div>
       </header>
 
@@ -308,21 +372,86 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
 
         <section className="shop-results">
           {products.length === 0 ? (
-            <p className="shelf-note">{dict.products.noResults}</p>
+            // A dead end loses the shopper; hand them a way back instead.
+            <div className="shop-empty">
+              <p className="shelf-note">{dict.products.noResults}</p>
+              <p className="shop-empty-hint">{shopCopy.emptyHint}</p>
+              <div className="shop-chips">
+                <Link href="/products" className="shop-chip">
+                  {dict.footer.allProducts}
+                </Link>
+                {categories.map((category) => (
+                  <Link key={category.id} href={`/category/${category.slug}`} className="shop-chip">
+                    {localizedName(category, uiLocale)}
+                  </Link>
+                ))}
+                <Link href="/gift-finder" className="shop-chip">
+                  {dict.giftFinder.metaTitle}
+                </Link>
+              </div>
+            </div>
           ) : (
-            <ul className="shop-grid">
-              {products.map((product) => (
-                <ShelfItem
-                  key={product.slug}
-                  product={localizedCardProduct(product, uiLocale)}
-                  locale={settings.defaultLocale}
-                  outOfStockLabel={dict.product.outOfStock}
-                  quickAddLabel={dict.product.addToCart}
-                  addedLabel={dict.product.added}
-                  sizes="(min-width: 40rem) 20vw, 50vw"
-                />
-              ))}
-            </ul>
+            <>
+              <div className="shop-toolbar">
+                <p className="shop-count" aria-live="polite">
+                  {shopCopy.pieceCount(total)}
+                </p>
+                {total > 1 && (
+                  <nav className="shop-sort" aria-label={shopCopy.sortLabel}>
+                    <span className="shop-sort-label" aria-hidden="true">
+                      {shopCopy.sortLabel}
+                    </span>
+                    <ul>
+                      {sortOptions.map((option) => (
+                        <li key={option.key ?? "newest"}>
+                          <Link
+                            href={buildHref({ sort: option.key })}
+                            // Same catalog, reordered: nothing for a crawler to follow.
+                            rel="nofollow"
+                            aria-current={filters.sort === option.key ? "true" : undefined}
+                            className="shop-sort-link"
+                          >
+                            {option.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </nav>
+                )}
+              </div>
+              <ul className="shop-grid">
+                {products.map((product) => {
+                  const rating = ratingById.get(product.id);
+                  // Untracked pieces have no real stock count, so never claim one.
+                  const lowStock =
+                    product.trackInventory &&
+                    product.stockQty > 0 &&
+                    product.stockQty <= product.lowStockThreshold;
+                  return (
+                    <ShelfItem
+                      key={product.slug}
+                      product={localizedCardProduct(product, uiLocale)}
+                      locale={settings.defaultLocale}
+                      outOfStockLabel={dict.product.outOfStock}
+                      quickAddLabel={dict.product.addToCart}
+                      addedLabel={dict.product.added}
+                      sizes="(min-width: 40rem) 20vw, 50vw"
+                      rating={
+                        rating && {
+                          ...rating,
+                          label: `${rating.average.toFixed(1)}/5 · ${applyTemplate(dict.product.reviewCount, { n: rating.count })}`,
+                        }
+                      }
+                      scarcityLabel={
+                        lowStock
+                          ? applyTemplate(dict.product.onlyLeft, { n: product.stockQty })
+                          : undefined
+                      }
+                    />
+                  );
+                })}
+              </ul>
+            </>
           )}
 
           <Pagination

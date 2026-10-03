@@ -1,6 +1,8 @@
 import type { CSSProperties } from "react";
 import { Link } from "@/components/localized-link";
 import { CatalogImage } from "@/components/catalog-image";
+import { LookPieceHover } from "@/components/look-piece-hover";
+import { LookSinglePieces } from "@/components/look-single-pieces";
 import { formatMoney } from "@/lib/format";
 import { applyTemplate } from "@/lib/i18n/format";
 import { lookComposition } from "@/lib/look-composition";
@@ -27,6 +29,8 @@ export function LookEditorial({
     description: string;
     included: string;
     price: string;
+    // The word printed beside each piece ("Necklace"); the raw kind if absent.
+    kinds?: Record<"necklace" | "bracelet" | "earrings", string>;
   };
 }) {
   const Heading = heading;
@@ -47,6 +51,10 @@ export function LookEditorial({
   // A look is either one composed photograph or several placed pieces, and the
   // zoom has to work either way: a single photo magnifies as a whole, a composed
   // look magnifies whichever accessory is under the pointer, one at a time.
+  const composed = !look.imageUrl;
+  /* Images only — no <Link> children, to avoid <a> inside <a>. For composed
+     looks the hover overlays (which do contain links) are placed as siblings
+     of this <Link>, outside it. */
   const visual = look.imageUrl ? (
     <CatalogImage
       src={look.imageUrl}
@@ -89,23 +97,89 @@ export function LookEditorial({
         <Link href={href} className="look-editorial-visual" tabIndex={-1} aria-hidden="true">
           {visual}
         </Link>
+        {/* Hover overlays for composed looks: same positioning as the images
+            above but rendered OUTSIDE the <Link> to avoid <a> inside <a>. */}
+        {composed &&
+          orderedPieces.map(
+            ({ piece, i }) =>
+              piece.imageUrl && (
+                <LookPieceHover
+                  key={piece.productId}
+                  slug={piece.slug}
+                  name={piece.name}
+                  price={money(piece.price)}
+                  cta={labels.view}
+                  style={
+                    {
+                      "--piece-x": placements[i].mobile.x,
+                      "--piece-y": placements[i].mobile.y,
+                      "--piece-size": placements[i].mobile.s,
+                    } as CSSProperties
+                  }
+                />
+              )
+          )}
+        {/* Piece-kind labels: numbered annotations overlaid on the composition.
+            Only for multi-piece composed looks (not a single cover photo). */}
+        {composed &&
+          orderedPieces.map(({ piece, i }, labelIdx) =>
+            piece.kind ? (
+              <span
+                key={piece.productId}
+                className={`look-editorial-piece-tag look-editorial-piece-tag--${piece.kind}`}
+                // The piece's own placement: the label sits level with the top of
+                // the piece and its line runs out to the piece's near side.
+                style={
+                  {
+                    "--piece-x": placements[i].mobile.x,
+                    "--piece-y": placements[i].mobile.y,
+                    "--piece-size": placements[i].mobile.s,
+                  } as CSSProperties
+                }
+                aria-hidden="true"
+              >
+                <span className="look-editorial-piece-tag-label">
+                  <span className="look-editorial-piece-tag-num">
+                    {String(labelIdx + 1).padStart(2, "0")}
+                  </span>
+                  <span className="look-editorial-piece-tag-kind">
+                    {labels.kinds?.[piece.kind] ?? piece.kind}
+                  </span>
+                </span>
+                <span className="look-editorial-piece-tag-line" />
+              </span>
+            ) : null
+          )}
+        {/* Circular discount badge: visible only when the look carries a saving. */}
+        {look.discountPercent > 0 && (
+          <span className="look-editorial-disc-badge" aria-hidden="true">
+            <span className="look-editorial-disc-pct">{look.discountPercent}%</span>
+            <span className="look-editorial-disc-save">save</span>
+          </span>
+        )}
+        {/* For single-photo looks: piece thumbnails with hover popup cards,
+            overlaid at the bottom so each individual piece is reachable. */}
+        {!composed && look.pieces[0] && (
+          <LookSinglePieces
+            pieces={look.pieces}
+            cta={labels.view}
+            locale={locale}
+            currency={look.pieces[0].currency}
+          />
+        )}
       </div>
       <div className="look-editorial-copy" data-editorial-part>
-        {/* The editorial index: a numeral and a rule, the same device the
-            collection showcase uses. Decorative — the heading already names
-            the look — so it is hidden from assistive tech rather than read
-            out as a second, competing count. */}
+        {/* Eyebrow: "01 / IN THIS LOOK ————". Decorative, hidden from AT. */}
         <p className="look-editorial-index" aria-hidden="true">
-          <span>{String(index + 1).padStart(2, "0")}</span>
+          <span className="look-editorial-index-num">{String(index + 1).padStart(2, "0")}</span>
+          <span className="look-editorial-index-sep" aria-hidden="true">/</span>
+          <span className="look-editorial-index-label">{labels.included}</span>
         </p>
-        {/* The name is the link; the way in is the button beneath. The arrow
-            that used to ride on the title is gone: with a real call to action
-            below it was a second affordance for the same destination, and it
-            had no space before it, so it printed as "Rosso Rubino→" and hung
-            past the copy column's right edge. */}
         <Heading id={`look-title-${look.id}`} className="look-editorial-title">
           <Link href={href}>{look.name}</Link>
         </Heading>
+        {/* A short accent rule drawn below the title, matching the reference. */}
+        <span className="look-editorial-title-rule" aria-hidden="true" />
         <p className="look-editorial-description">{labels.description}</p>
         <p className="look-editorial-price">
           <span>{money(look.pricing.setTotal)}</span>

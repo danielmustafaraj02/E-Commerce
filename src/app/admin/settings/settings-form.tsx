@@ -33,9 +33,19 @@ type Settings = {
   tiktokUrl: string | null;
   youtubeUrl: string | null;
   linkedinUrl: string | null;
+  muranoReasonProductIds: string[];
 };
 
-export function SettingsForm({ settings }: { settings: Settings }) {
+export function SettingsForm({
+  settings,
+  reasonPieces,
+  reasonTitles,
+}: {
+  settings: Settings;
+  // The pieces a "why Murano" row can show, and the three reasons' titles.
+  reasonPieces: { id: string; name: string }[];
+  reasonTitles: string[];
+}) {
   const [state, formAction, pending] = useActionState(updateStoreSettings, {
     error: null as string | null,
     success: false,
@@ -202,6 +212,31 @@ export function SettingsForm({ settings }: { settings: Settings }) {
         />
         Show &quot;What customers say&quot; on the homepage
       </label>
+
+      <fieldset className="border-foreground/10 bg-background/50 flex flex-col gap-3 rounded-lg border p-4">
+        <legend className="px-1 text-sm font-medium">Home page: why Murano</legend>
+        <span className="text-foreground/60 text-xs">
+          The piece shown beside each of the three reasons. A row left on Automatic gets one of
+          the shop&apos;s popular pieces, so the section is never empty.
+        </span>
+        {reasonTitles.map((title, row) => (
+          <label key={title} className="flex flex-col gap-1 text-sm">
+            {title}
+            <select
+              name="muranoReasonProductIds"
+              defaultValue={(settings.muranoReasonProductIds ?? [])[row] ?? ""}
+              className="field"
+            >
+              <option value="">Automatic</option>
+              {reasonPieces.map((piece) => (
+                <option key={piece.id} value={piece.id}>
+                  {piece.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        ))}
+      </fieldset>
 
       <fieldset className="border-foreground/10 bg-background/50 flex flex-col gap-3 rounded-lg border p-4">
         <legend className="px-1 text-sm font-medium">Personalised gift card</legend>

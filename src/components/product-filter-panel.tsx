@@ -48,6 +48,9 @@ export function ProductFilterPanel({
     inStock?: "1";
     sale?: "1";
     color?: string[];
+    // The listing's sort order, carried through the GET form so applying a
+    // filter does not reset it. Not a filter: it never lights the active dot.
+    sort?: string;
   };
   priceMin: number;
   priceMax: number;
@@ -125,6 +128,7 @@ export function ProductFilterPanel({
         <form method="GET" className="pf-form">
           {filters.q && <input type="hidden" name="q" value={filters.q} />}
           {filters.sale && <input type="hidden" name="sale" value={filters.sale} />}
+          {filters.sort && <input type="hidden" name="sort" value={filters.sort} />}
 
           {showCategory && categories && (
             <fieldset className="pf-section">

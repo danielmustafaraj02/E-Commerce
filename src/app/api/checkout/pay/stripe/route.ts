@@ -7,6 +7,7 @@ import { canAccessOrder } from "@/lib/orders";
 import { getStoreSettings } from "@/lib/store-settings";
 import { ONLINE_HOLD_MS } from "@/lib/abandoned-orders";
 import { getFeedback } from "@/lib/i18n/feedback";
+import { captureError } from "@/lib/monitoring";
 import { getGiftVoucherCopy } from "@/lib/gift-voucher-copy";
 import { locales, type Locale } from "@/lib/i18n/locale-constants";
 import { formatMoney } from "@/lib/format";
@@ -36,7 +37,11 @@ export async function POST(request: Request) {
   try {
     stripe = await getStripe();
   } catch (error) {
-    return NextResponse.json({ error: (error as Error).message }, { status: 503 });
+    // Same reasoning as the PayPal route: a provider's own error text can name
+    // the account, the key or the reason it was refused, so it is logged and
+    // not returned to the browser.
+    captureError(error, { route: "checkout/pay/stripe", orderNumber: order.orderNumber });
+    return NextResponse.json({ error: t.paymentMethodUnavailable }, { status: 503 });
   }
 
   const settings = await getStoreSettings();

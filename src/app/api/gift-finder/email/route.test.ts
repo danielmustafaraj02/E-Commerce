@@ -48,7 +48,7 @@ describe("POST /api/gift-finder/email", () => {
 
     expect(response.status).toBe(200);
     expect(mocks.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({ where: { id: { in: ["p1"] }, active: true } })
+      expect.objectContaining({ where: { id: { in: ["p1"] }, active: true, unlisted: false } })
     );
     const call = mocks.sendEmail.mock.calls[0][0];
     expect(call.to).toBe("shopper@example.com");

@@ -9,7 +9,7 @@ import { CatalogImage } from "@/components/catalog-image";
 import { TurnstileWidget } from "@/components/turnstile-widget";
 import { FormAlert } from "@/components/form-alert";
 import { AddressCheck } from "@/components/address-check";
-import { PaymentIcons } from "@/components/payment-icons";
+import { PaymentIcons, type AcceptedPayments } from "@/components/payment-icons";
 import { TrustBadges } from "@/components/trust-badges";
 import { applyTemplate } from "@/lib/i18n/format";
 import { isValidPostalCode } from "@/lib/postal-code";
@@ -87,12 +87,7 @@ export function CheckoutClient({
   stripePublishableKey: string | null;
   expressCheckoutLabel: string;
   quoteLoadingLabel: string;
-  paymentMethods: {
-    cards: boolean;
-    paypal: boolean;
-    klarna: boolean;
-    bankTransfer: boolean;
-  };
+  paymentMethods: AcceptedPayments;
   trustLabels: {
     handmadeInMurano: string;
     secureBadge: string;

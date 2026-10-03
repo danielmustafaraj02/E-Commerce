@@ -20,7 +20,7 @@ const STATUS_STYLES: Record<string, string> = {
 export function StatusBadge({ status }: { status: string }) {
   return (
     <span
-      className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium capitalize ${
+      className={`inline-block rounded px-2.5 py-0.5 text-xs font-medium capitalize ${
         STATUS_STYLES[status] ?? "bg-foreground/10 text-foreground/60"
       }`}
     >

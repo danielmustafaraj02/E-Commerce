@@ -1,9 +1,28 @@
 import { defineConfig } from "prisma/config";
+import { readFileSync } from "fs";
+
+// Variables the caller exported themselves (shell, CI) — these always win.
+const fromShell = new Set(Object.keys(process.env));
 
 try {
   process.loadEnvFile();
 } catch {
   // .env is optional (e.g. in CI where vars are injected directly)
+}
+
+// Next.js precedence: shell > .env.local > .env, so the CLI targets the same
+// database as `next dev`. process.loadEnvFile can't override, so apply by hand;
+// `DATABASE_URL=... npx prisma ...` still points the CLI somewhere else.
+try {
+  const lines = readFileSync(".env.local", "utf8").split(/\r?\n/);
+  for (const line of lines) {
+    const m = line.match(/^([A-Z_][A-Z0-9_]*)=(.*)$/);
+    if (m && !fromShell.has(m[1])) {
+      process.env[m[1]] = m[2].replace(/^"(.*)"$/, "$1").replace(/^'(.*)'$/, "$1");
+    }
+  }
+} catch {
+  // .env.local is optional
 }
 
 // `prisma generate` (run from postinstall) doesn't need a live DB connection,

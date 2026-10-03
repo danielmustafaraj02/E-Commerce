@@ -68,6 +68,8 @@ const defaults = {
   tiktokUrl: null as string | null,
   youtubeUrl: null as string | null,
   linkedinUrl: null as string | null,
+  // Pieces beside the home page's "why Murano" reasons; empty = automatic.
+  muranoReasonProductIds: [] as string[],
 };
 
 // Single-row white-label config. Falls back to hardcoded neutral defaults

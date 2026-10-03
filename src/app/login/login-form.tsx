@@ -33,8 +33,6 @@ export default function LoginForm({
 
   return (
     <div className="form-card flex flex-col gap-4">
-      {googleEnabled && <GoogleSignInButton callbackUrl={callbackUrl} dict={dict} />}
-
       <form action={formAction} className="flex flex-col gap-4">
         <input type="hidden" name="callbackUrl" value={callbackUrl} />
         <label className="flex flex-col gap-1.5 text-sm">
@@ -87,6 +85,8 @@ export default function LoginForm({
           {pending ? dict.signingIn : dict.signIn}
         </button>
       </form>
+
+      {googleEnabled && <GoogleSignInButton callbackUrl={callbackUrl} dict={dict} />}
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/require-admin";
 import { writeAuditLog } from "@/lib/audit-log";
+import { MURANO_REASON_COUNT } from "@/lib/murano-reasons";
 
 // A full https:// address, or a file on this site ("/og-image.png"):
 // metadataBase in the root layout turns the latter into a full URL.
@@ -42,6 +43,8 @@ const settingsSchema = z.object({
   tiktokUrl: z.string().url().optional().or(z.literal("")),
   youtubeUrl: z.string().url().optional().or(z.literal("")),
   linkedinUrl: z.string().url().optional().or(z.literal("")),
+  // One product id per "why Murano" row; "" = Automatic.
+  muranoReasonProductIds: z.array(z.string().max(64)).max(MURANO_REASON_COUNT),
 });
 
 export async function updateStoreSettings(_prevState: unknown, formData: FormData) {
@@ -75,6 +78,7 @@ export async function updateStoreSettings(_prevState: unknown, formData: FormDat
     tiktokUrl: formData.get("tiktokUrl") || "",
     youtubeUrl: formData.get("youtubeUrl") || "",
     linkedinUrl: formData.get("linkedinUrl") || "",
+    muranoReasonProductIds: formData.getAll("muranoReasonProductIds").map(String),
   });
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input", success: false };
@@ -83,8 +87,34 @@ export async function updateStoreSettings(_prevState: unknown, formData: FormDat
 
   const before = await db.storeSettings.findFirst();
 
+  // The piece for each "why Murano" row. Only a real, published piece counts, and
+  // a piece cannot sit in two rows: anything else is stored as "" (Automatic), so
+  // the home page can never be pointed at something it would have to hide.
+  const requestedPieces = Array.from(
+    { length: MURANO_REASON_COUNT },
+    (_, row) => data.muranoReasonProductIds[row] ?? ""
+  );
+  const wantedPieces = requestedPieces.filter(Boolean);
+  const publishedPieces = wantedPieces.length
+    ? new Set(
+        (
+          await db.product.findMany({
+            where: { id: { in: wantedPieces }, active: true, unlisted: false },
+            select: { id: true },
+          })
+        ).map((product) => product.id)
+      )
+    : new Set<string>();
+  const usedPieces = new Set<string>();
+  const muranoReasonProductIds = requestedPieces.map((id) => {
+    if (!id || !publishedPieces.has(id) || usedPieces.has(id)) return "";
+    usedPieces.add(id);
+    return id;
+  });
+
   const normalized = {
     ...data,
+    muranoReasonProductIds,
     logoUrl: data.logoUrl || null,
     vatNumber: data.vatNumber || null,
     companyLegalName: data.companyLegalName || null,

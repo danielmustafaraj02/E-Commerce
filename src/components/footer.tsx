@@ -5,7 +5,7 @@ import type { Locale } from "@/lib/i18n/locale";
 import { localizedName } from "@/lib/product-i18n";
 import { buildFooterNav } from "@/lib/footer-nav";
 import { getGiftVoucherCopy } from "@/lib/gift-voucher-copy";
-import { PaymentIcons } from "@/components/payment-icons";
+import { PaymentIcons, type AcceptedPayments } from "@/components/payment-icons";
 import { CatalogImage } from "@/components/catalog-image";
 import { NewsletterSignupForm } from "@/components/newsletter-signup-form";
 import { FooterAccordion } from "@/components/footer-accordion";
@@ -15,13 +15,6 @@ import { Reveal } from "@/components/reveal";
 import { homeFontClasses } from "@/app/home-fonts";
 import { MURANO_FAQ_LOCALE, MURANO_FAQ_NAV_LABEL, MURANO_FAQ_PATH } from "@/lib/murano-faq";
 import "./footer.css";
-
-type PaymentMethods = {
-  cards: boolean;
-  paypal: boolean;
-  klarna: boolean;
-  bankTransfer: boolean;
-};
 
 // Emerald Waves Necklace; falls back to the hero photo if it's ever removed.
 const FOOTER_PRODUCT_SLUG = "collana-onde-di-smeraldo-143dbf";
@@ -66,7 +59,7 @@ export async function Footer({
   contactEmail: string;
   shippingBanner: string | null;
   social: SocialUrls;
-  payments: PaymentMethods;
+  payments: AcceptedPayments;
   dict: Dictionary;
   locale: Locale;
   giftCardEnabled: boolean;
@@ -109,7 +102,11 @@ export async function Footer({
     { key: "gift", label: f.trustGift },
     { key: "shipping", label: f.trustShipping },
   ] as const;
-  const hasPayments = payments.cards || payments.paypal || payments.klarna || payments.bankTransfer;
+  const hasPayments =
+    payments.cards ||
+    payments.paypal ||
+    payments.bankTransfer ||
+    (payments.stripeMethods?.length ?? 0) > 0;
 
   return (
     <footer className={`site-footer ${homeFontClasses}`}>
@@ -178,10 +175,15 @@ export async function Footer({
       <div className="site-footer-bottom">
         <SocialLinks urls={social} label={f.socialNav} />
 
-        {hasPayments && (
+        {(payments.cards || payments.paypal) && (
           <div className="footer-payments">
             <span>{f.weAccept}</span>
-            <PaymentIcons {...payments} labels={{ bankTransfer: dict.payment.bankTransfer }} />
+            <PaymentIcons
+              cards={payments.cards}
+              paypal={payments.paypal}
+              bankTransfer={false}
+              labels={{ bankTransfer: dict.payment.bankTransfer }}
+            />
           </div>
         )}
 

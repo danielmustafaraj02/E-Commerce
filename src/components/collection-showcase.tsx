@@ -101,9 +101,10 @@ const SCENE_PROPS = [
   "--copy-reveal",
 ] as const;
 
-/** Which side of the central jewellery axis each scene's text sits on:
- *  left, right, left. The jewellery itself is always centred, so alternating
- *  the text side never shifts the pieces horizontally. */
+/** Which side of the jewellery axis each scene's text sits on. Alternates so
+ *  each scene mirrors the previous one. When "right", CSS also flips the
+ *  piece's axis so the whole composition mirrors — piece moves left, copy moves
+ *  right — rather than only the copy moving while the image stays put. */
 const COPY_SIDE: Record<ShowcaseItem["scene"], "left" | "right"> = {
   necklace: "left",
   bracelet: "right",
@@ -566,9 +567,40 @@ export function CollectionShowcase({
     };
 
     enable();
+
+    /* Swipe to navigate between scenes on mobile. A horizontal swipe calls
+       scrollToScene so the page jumps to the correct reading position for the
+       adjacent scene — same path as the dot buttons, no extra state. The guard
+       on deltaX > deltaY means a slow vertical scroll never triggers navigation
+       by accident. Passive listeners keep the touch path off the main thread. */
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    const onTouchStart = (e: TouchEvent) => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    };
+
+    const onTouchEnd = (e: TouchEvent) => {
+      if (!active) return;
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      /* Require a minimum horizontal travel and that X dominates Y, so a
+         diagonal scroll doesn't accidentally fire the swipe. */
+      if (Math.abs(dx) < 48 || Math.abs(dy) > Math.abs(dx) * 0.9) return;
+      const direction = dx < 0 ? 1 : -1; // swipe left → next, right → prev
+      const next = Math.min(Math.max(readingIndex + direction, 0), entries.length - 1);
+      if (next !== readingIndex) scrollToScene(next);
+    };
+
+    stage.addEventListener("touchstart", onTouchStart, { passive: true });
+    stage.addEventListener("touchend", onTouchEnd, { passive: true });
+
     motion.addEventListener("change", onMotionChange);
     return () => {
       motion.removeEventListener("change", onMotionChange);
+      stage.removeEventListener("touchstart", onTouchStart);
+      stage.removeEventListener("touchend", onTouchEnd);
       disable();
     };
   }, [items]);
@@ -655,6 +687,17 @@ export function CollectionShowcase({
           onSelect={scrollToScene}
           label={railLabel}
         />
+
+        {/* Mobile swipe hint — visible at the base of the pinned stage only on
+            phones (CSS hides it on wider screens). Tells users they can swipe
+            between collections in addition to scrolling. Hidden from
+            assistive tech because the rail's aria-labels already convey
+            that navigation is available. */}
+        <p className="showcase-swipe-hint" aria-hidden="true">
+          <span className="showcase-swipe-arrow">←</span>
+          {" Swipe "}
+          <span className="showcase-swipe-arrow">→</span>
+        </p>
       </div>
     </div>
   );

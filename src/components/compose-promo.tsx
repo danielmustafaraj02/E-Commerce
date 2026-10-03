@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { Link } from "@/components/localized-link";
 import { applyTemplate } from "@/lib/i18n/format";
 import { COMPOSED_LOOK_DISCOUNT_PERCENT } from "@/lib/looks";
@@ -12,8 +13,12 @@ export function ComposePromo({
   return (
     <Reveal className="compose-promo-reveal" repeatOnView>
       <aside className="compose-promo">
-        <p className="compose-promo-figure" aria-hidden="true">
-          −{COMPOSED_LOOK_DISCOUNT_PERCENT}%
+        <p
+          className="compose-promo-figure"
+          aria-hidden="true"
+          style={{ "--promo-n": COMPOSED_LOOK_DISCOUNT_PERCENT } as CSSProperties}
+        >
+          −<span className="compose-promo-num" />%
         </p>
         <div className="compose-promo-text">
           <p className="compose-promo-kicker">{labels.kicker}</p>

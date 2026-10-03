@@ -32,7 +32,7 @@
   width: 21rem;
   background: var(--background);
   border: 1px solid color-mix(in srgb, var(--champagne) 68%, var(--background));
-  border-radius: 0.75rem;
+  border-radius: var(--radius-panel);
   overflow: hidden;
   /* Same deliberate exception as the Products dropdown: this one floating
      overlay needs real depth to separate from the page beneath. */
@@ -76,7 +76,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-panel);
   transition: background 0.2s ease;
 }
 
@@ -93,7 +93,7 @@
   padding: 0.4rem;
   text-decoration: none;
   color: inherit;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-panel);
 }
 
 /* Photo: a small square plate, ivory-backed like the catalog photos. */
@@ -104,7 +104,7 @@
   width: 3.5rem;
   height: 3.5rem;
   overflow: hidden;
-  border-radius: 0.25rem;
+  border-radius: var(--radius-panel);
   background: color-mix(in srgb, var(--foreground) 4%, var(--background));
 }
 
@@ -131,7 +131,7 @@
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  border-radius: 0.5rem;
+  border-radius: var(--radius-panel);
 }
 
 .hf-row:hover::before {
@@ -195,7 +195,7 @@
   height: 1.5rem;
   margin-right: 0.35rem;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-button);
   background: none;
   color: color-mix(in srgb, var(--foreground) 40%, transparent);
   cursor: pointer;
@@ -333,7 +333,7 @@
   justify-content: center;
   flex: 1 1 auto;
   padding: 0.55rem 0.9rem;
-  border-radius: 999px;
+  border-radius: var(--radius-button);
   border: 1px solid var(--gold);
   background: var(--color-primary, var(--accent));
   color: var(--background);

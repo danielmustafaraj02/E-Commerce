@@ -39,7 +39,7 @@ body:has(.auth-flow-page) .site-footer {
 .site-footer button:focus-visible {
   outline: 2px solid var(--footer-teal);
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: var(--radius-button);
 }
 .footer-display {
   font-family: var(--font-display), "Iowan Old Style", Georgia, serif;
@@ -68,7 +68,7 @@ body:has(.auth-flow-page) .site-footer {
   position: relative;
   display: flex;
   flex-direction: column;
-  border-radius: 14px;
+  border-radius: var(--radius-panel);
   border: 1px solid color-mix(in srgb, var(--brass) 30%, transparent);
   background:
     radial-gradient(ellipse at 82% 8%, color-mix(in srgb, var(--brass) 11%, transparent), transparent 48%),
@@ -105,7 +105,7 @@ body:has(.auth-flow-page) .site-footer {
   margin-top: 0.2rem;
   padding: 0 1.1rem;
   border: 1px solid var(--footer-ink);
-  border-radius: 6px;
+  border-radius: var(--radius-button);
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.16em;
@@ -179,7 +179,7 @@ body:has(.auth-flow-page) .site-footer {
   flex-direction: column;
   gap: 0.7rem;
   padding: 1.4rem;
-  border-radius: 14px;
+  border-radius: var(--radius-panel);
   border: 1px solid color-mix(in srgb, var(--brass) 62%, transparent);
   background:
     radial-gradient(ellipse at 100% 0%, color-mix(in srgb, var(--sapphire) 22%, transparent), transparent 52%),
@@ -192,7 +192,7 @@ body:has(.auth-flow-page) .site-footer {
   z-index: -1;
   inset: 0.6rem;
   border: 1px solid rgb(var(--brass-rgb) / 0.24);
-  border-radius: 9px;
+  border-radius: var(--radius-panel);
   pointer-events: none;
   content: "";
 }
@@ -214,7 +214,7 @@ body:has(.auth-flow-page) .site-footer {
   flex: 1;
   background: var(--ivory);
   border-color: rgb(var(--brass-rgb) / 0.72);
-  border-radius: 6px;
+  border-radius: var(--radius-panel);
 }
 .footer-newsletter .newsletter-email--invalid {
   border-color: var(--brass);
@@ -252,7 +252,7 @@ body:has(.auth-flow-page) .site-footer {
   background: var(--ivory);
   color: var(--footer-ink);
   border-color: var(--brass);
-  border-radius: 6px;
+  border-radius: var(--radius-button);
   font-size: 0.72rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -483,7 +483,7 @@ body:has(.auth-flow-page) .site-footer {
      height: 2.75rem;
      color: var(--footer-ink);
      border: 1px solid var(--footer-rule);
-     border-radius: 100%;
+     border-radius: var(--radius-button);
      overflow: hidden;
      outline: none;
      transition: color 0.3s ease-in-out;
@@ -508,13 +508,13 @@ body:has(.auth-flow-page) .site-footer {
     letter-spacing: 0.04em;
     color: var(--ivory);
     background: var(--bg, var(--footer-ink));
-    border-radius: 0.25rem;
+    border-radius: var(--radius-panel);
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
     white-space: nowrap;
     transition:
-      inset 0.4s cubic-bezier(0.47, 2, 0.41, 1.5),
+      inset 0.4s cubic-bezier(0.25, 1, 0.5, 1),
       visibility 0.3s ease-in-out,
       opacity 0.2s ease-in-out;
   }

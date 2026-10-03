@@ -47,7 +47,7 @@ export async function POST(request: Request) {
   const base = siteBaseUrl(settings);
 
   const products = await db.product.findMany({
-    where: { id: { in: parsed.data.productIds }, active: true },
+    where: { id: { in: parsed.data.productIds }, active: true, unlisted: false },
     select: {
       slug: true,
       name: true,

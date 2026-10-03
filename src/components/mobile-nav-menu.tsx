@@ -174,7 +174,7 @@ export function MobileNavMenu({
         aria-expanded={open}
         aria-controls={panelId}
         aria-label={menuLabel}
-        className="-ms-2 grid h-12 w-12 shrink-0 place-items-center rounded-md lg:hidden"
+        className="-ms-2 grid h-12 w-12 shrink-0 place-items-center rounded-(--radius-button) lg:hidden"
       >
         <svg
           width="26"

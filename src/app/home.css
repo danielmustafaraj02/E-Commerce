@@ -393,6 +393,19 @@
     transparent 82%
   );
 }
+@media (max-width: 51.99rem) {
+  /* Bigger, bolder title on mobile — fill the viewport width. */
+  .shelf-home .shelf-hero .shelf-title {
+    font-size: clamp(3rem, 11.5vw, 4.5rem);
+    line-height: 0.92;
+    letter-spacing: -0.025em;
+  }
+  .shelf-home .shelf-hero .shelf-lede {
+    font-size: clamp(1rem, 4vw, 1.2rem);
+    line-height: 1.6;
+  }
+}
+
 /* Full-bleed hero photography. */
 .shelf-hero-backdrop {
   object-fit: cover;
@@ -406,7 +419,8 @@
    landing on her forehead — so instead the film keeps its portrait shape
    and is given the right-hand column of the hero. The copy sits beside it in
    the left column, so no scrim is needed to keep the text legible. */
-.shelf-hero-video {
+.shelf-hero-video,
+.shelf-hero-product {
   position: absolute;
   top: 0;
   right: 0;
@@ -429,7 +443,8 @@
    film across the whole hero and made the image look soft. Mobile retains the
    full-bleed crop below, where the existing framing is already right. */
 @media (min-width: 52rem) {
-  .shelf-home .shelf-hero-video {
+  .shelf-home .shelf-hero-video,
+  .shelf-home .shelf-hero-product {
     top: 0;
     right: 0;
     /* A band of page left under the film. The hero still ends exactly at the
@@ -464,17 +479,17 @@
   .shelf-home .shelf-hero-grid {
     position: relative;
     z-index: 1;
-    width: 42%;
+    width: 46%;
     max-width: none;
     margin-inline: 0;
     padding-block: 4.5rem 3.5rem;
   }
 
   .shelf-home .shelf-hero-copy {
-    max-width: 31rem;
+    max-width: 34rem;
     align-items: flex-start;
-    gap: 1.4rem;
-    padding-inline-end: 2rem;
+    gap: 1.6rem;
+    padding-inline-end: 2.5rem;
   }
 
   .shelf-home .shelf-hero .shelf-title,
@@ -484,19 +499,18 @@
     color: var(--midnight);
   }
 
-  /* Down from 5.7vw / 6rem. At 1850px that was 102px a line, and the store
-     name on three lines took 304px of an 818px hero on its own — the lede and
-     the button were left pressed against the fold. The name still leads; it
-     just leaves the rest of the column room to breathe. */
+  /* Editorial luxury scale: the name commands the left panel. */
   .shelf-home .shelf-hero .shelf-title {
-    font-size: clamp(3rem, 4.4vw, 4.75rem);
-    line-height: 1;
+    font-size: clamp(4rem, 5.5vw, 7.5rem);
+    line-height: 0.92;
+    letter-spacing: -0.02em;
   }
 
   .shelf-home .shelf-hero .shelf-lede {
-    font-size: clamp(1rem, 1.35vw, 1.25rem);
-    line-height: 1.5;
-    max-width: 30rem;
+    font-size: clamp(0.9rem, 1.18vw, 1.05rem);
+    line-height: 1.72;
+    max-width: 26rem;
+    letter-spacing: 0.012em;
   }
 
   .shelf-home .shelf-hero .shelf-title,
@@ -504,26 +518,220 @@
     text-shadow: none;
   }
 
+  /* Filled midnight — solid and legible on ivory. */
   .shelf-home .shelf-hero .shelf-hero-copy .shelf-button {
     background: var(--midnight);
     border-color: var(--midnight);
     color: var(--ivory);
+    border-radius: var(--radius-button);
+    letter-spacing: 0.22em;
   }
 
   .shelf-home .shelf-hero .shelf-hero-copy .shelf-button:hover {
-    background: var(--brass-deep);
-    border-color: var(--brass-deep);
+    background: color-mix(in srgb, var(--midnight) 82%, var(--brass));
+    border-color: color-mix(in srgb, var(--midnight) 82%, var(--brass));
     color: var(--ivory);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgb(var(--midnight-rgb) / 20%);
   }
 }
 
 @media (max-width: 51.99rem) {
-  .shelf-home .shelf-hero-video {
+  .shelf-home .shelf-hero-video,
+  .shelf-home .shelf-hero-product {
     inset: 0;
     width: 100%;
     height: 100%;
     object-position: var(--hero-video-x, 50%) 30%;
     border: 0;
+  }
+}
+
+/* ── The hero film's product card (components/hero-video-product.tsx) ──────
+   A layer with the film's exact geometry (its selector is added to the three
+   rules above, so the two can never drift apart). The layer itself is inert:
+   only the card and the button take pointer events, so the hero copy, its CTA
+   and the play control stay clickable through it. */
+/* Two classes, so this outranks the `.shelf-home .shelf-hero-product` rules
+   above that give the layer the FILM's z-index (-1 / 0) along with its
+   geometry. Sharing the geometry is the point; sharing the depth is not. */
+.shelf-hero .shelf-hero-product {
+  /* The layer itself never takes a click; only the card and the button do.
+     That is what makes it safe to put it above everything else in the hero:
+     the copy column (.shelf-wrap, z-index 1) spans the film's width and was
+     otherwise swallowing clicks aimed at the card, so the link could not be
+     followed at all. */
+  pointer-events: none;
+  z-index: 3;
+}
+
+.shelf-hero-product-card {
+  position: absolute;
+  /* The resting place, used by the button/keyboard path: clear of the button
+     itself, which sits at 1.75rem and would otherwise be covered by the card
+     it just opened. The pointer path overrides left/top inline on every move,
+     so this only governs the touch/keyboard card. */
+  inset-block-end: 5rem;
+  inset-inline-end: 1.75rem;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  width: max-content;
+  max-width: min(20rem, 100% - 2rem);
+  padding: 0.7rem 2rem 0.7rem 0.7rem;
+  border: 1px solid color-mix(in srgb, var(--champagne) 70%, transparent);
+  border-radius: var(--radius-panel);
+  background: var(--ivory);
+  color: var(--midnight);
+  box-shadow:
+    0 1px 2px rgb(var(--onyx-rgb) / 6%),
+    0 14px 34px rgb(var(--onyx-rgb) / 12%);
+  /* Closed: invisible, unclickable, slightly below its position. */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition:
+    opacity 0.22s var(--ease-out-soft),
+    transform 0.22s var(--ease-out-soft),
+    visibility 0s linear 0.22s;
+}
+.shelf-hero-product-card[data-open="true"] {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition-delay: 0s;
+}
+/* When placed near the cursor via inline left/top, the corner offsets must
+   not also apply — the card is already positioned by the inline style. */
+.shelf-hero-product-card[data-positioned="true"] {
+  inset-block-end: auto;
+  inset-inline-end: auto;
+  /* No position transition: the card is placed once and stays put. */
+}
+
+.shelf-hero-product-photo {
+  flex: none;
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-panel);
+  object-fit: contain;
+  background: var(--ivory);
+}
+.shelf-hero-product-text {
+  min-width: 0;
+}
+.shelf-hero-product-eyebrow {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--midnight) 60%, var(--ivory));
+}
+.shelf-hero-product-name {
+  margin: 0.2rem 0 0;
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  line-height: 1.2;
+  color: var(--midnight);
+}
+.shelf-hero-product-price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin: 0.25rem 0 0;
+}
+.shelf-hero-product-price-current {
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--midnight);
+}
+.shelf-hero-product-price-was {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: color-mix(in srgb, var(--midnight) 45%, var(--ivory));
+  text-decoration: line-through;
+}
+.shelf-hero-product-link {
+  display: inline-block;
+  margin-top: 0.3rem;
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  color: var(--brass-deep);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.shelf-hero-product-link:hover {
+  color: var(--midnight);
+}
+
+.shelf-hero-product-close {
+  position: absolute;
+  inset-block-start: 0.15rem;
+  inset-inline-end: 0.15rem;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  background: none;
+  color: color-mix(in srgb, var(--midnight) 55%, var(--ivory));
+  font-size: 1.05rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.shelf-hero-product-close:hover {
+  color: var(--midnight);
+}
+
+/* The way in for touch — and for the keyboard on every device. On mouse
+   devices hover is the trigger, so the button is visually hidden until
+   focused, keeping the film uncluttered. */
+.shelf-hero-product-open {
+  position: absolute;
+  inset-block-end: 1.75rem;
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  pointer-events: auto;
+  padding: 0.55rem 1.1rem;
+  border: 1px solid color-mix(in srgb, var(--champagne) 70%, transparent);
+  border-radius: var(--radius-button);
+  background: rgb(var(--linen-rgb) / 92%);
+  color: var(--midnight);
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgb(var(--onyx-rgb) / 12%);
+}
+
+.shelf-hero-product-card :focus-visible,
+.shelf-hero-product-open:focus-visible {
+  outline: 2px solid var(--brass-deep);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  /* Hover is the way in — the button is a keyboard fallback only. */
+  .shelf-hero-product-open:not(:focus-visible) {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shelf-hero-product-card {
+    transform: none;
+    transition:
+      opacity 0.22s linear,
+      visibility 0s linear 0.22s;
+  }
+  .shelf-hero-product-card[data-open="true"] {
+    transition-delay: 0s;
   }
 }
 
@@ -541,7 +749,7 @@
   width: 44px;
   height: 44px;
   border: 1px solid rgb(var(--linen-rgb) / 35%);
-  border-radius: 50%;
+  border-radius: var(--radius-button);
   background: rgb(var(--onyx-rgb) / 42%);
   color: var(--linen);
   cursor: pointer;
@@ -789,7 +997,7 @@
   text-transform: uppercase;
   min-height: 3.25rem;
   padding: 0.95rem 1.9rem;
-  border-radius: 6px;
+  border-radius: var(--radius-button);
   text-decoration: none;
   transition: background-color 0.2s ease;
 }
@@ -800,7 +1008,7 @@
 .shelf-home .shelf-hero .shelf-hero-copy .shelf-button {
   background: var(--brass);
   border: 1px solid var(--brass);
-  border-radius: 4px;
+  border-radius: var(--radius-button);
   padding: 1.05rem 2.1rem;
   font-family: var(--font-ui), system-ui, sans-serif;
   font-size: 0.78rem;
@@ -839,6 +1047,26 @@
 }
 .shelf-button:hover {
   background: var(--accent-deep);
+}
+
+/* ── Desktop hero CTA: solid midnight — overrides the site-primary rule above.
+   The site-primary rule applies on mobile (fine over the film); on the clean
+   ivory panel the midnight block is more deliberate and more legible.         */
+@media (min-width: 52rem) {
+  .shelf-home .shelf-hero .shelf-hero-copy .shelf-button {
+    background: var(--midnight);
+    border-color: var(--midnight);
+    color: var(--ivory);
+    border-radius: var(--radius-button);
+    letter-spacing: 0.22em;
+  }
+  .shelf-home .shelf-hero .shelf-hero-copy .shelf-button:hover {
+    background: color-mix(in srgb, var(--midnight) 82%, var(--brass));
+    border-color: color-mix(in srgb, var(--midnight) 82%, var(--brass));
+    color: var(--ivory);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgb(var(--midnight-rgb) / 20%);
+  }
 }
 @media (max-width: 30rem) {
   .shelf-button {
@@ -1070,7 +1298,7 @@
   opacity: 1;
   outline: 1px solid var(--ink);
   outline-offset: 2px;
-  border-radius: 999px;
+  border-radius: var(--radius-button);
 }
 /* Every necklace in the set, under the photo — phones only (the arrows and
    counter do this job on wide screens). Unframed studio shots on the ground,
@@ -1330,6 +1558,24 @@
 .shelf-item-name a:focus-visible {
   background-size: 100% 1px;
 }
+.shelf-item-arrow {
+  display: inline-block;
+  margin-inline-start: 0.35em;
+  font-size: 0.85em;
+  color: var(--gold, var(--brass));
+  opacity: 0.55;
+  transition: opacity 0.25s ease, transform 0.25s var(--ease-out-soft);
+}
+.shelf-item:hover .shelf-item-arrow,
+.shelf-item:focus-within .shelf-item-arrow {
+  opacity: 1;
+  transform: translateX(3px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .shelf-item-arrow {
+    transition: none;
+  }
+}
 /* The link is stretched over the whole card, so keyboard focus has to be
    visible on the CARD, not on the few words of the name — drawing it on the
    anchor alone outlined a zero-height box behind the photograph. The
@@ -1342,7 +1588,7 @@
   content: "";
   position: absolute;
   inset: -0.75rem;
-  border-radius: 2px;
+  border-radius: var(--radius-panel);
   outline: 2px solid var(--accent-deep, var(--ink));
   pointer-events: none;
 }
@@ -1358,6 +1604,29 @@
   color: var(--ink);
   font-variant-numeric: tabular-nums lining-nums;
 }
+/* Review stars and a low-stock cue beneath the price (listing only, and only
+   when there is real data). Small and on the page's own ground; the cue takes
+   the discount hallmark's deep brass so it reads as information, not alarm. */
+.shelf-item-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem 0.75rem;
+  margin: 0;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+.shelf-item-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.shelf-item-scarcity {
+  color: var(--aventurine-deep);
+  font-weight: 500;
+}
 .shelf-badge {
   position: absolute;
   top: 0.25rem;
@@ -1368,7 +1637,7 @@
   font-size: 0.8rem;
   line-height: 1.4;
   padding: 0.1rem 0.55rem;
-  border-radius: 2px;
+  border-radius: var(--radius-panel);
 }
 
 /* -- Special Selection: a handful of pieces with a genuine "was" price ------ */
@@ -1391,7 +1660,7 @@
   line-height: 1.4;
   padding: 0.14rem 0.55rem;
   border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
-  border-radius: 2px;
+  border-radius: var(--radius-panel);
   backdrop-filter: blur(2px);
 }
 .shelf-item-price-compare {
@@ -1407,17 +1676,6 @@
   font-size: 1.05rem;
   max-width: 34rem;
   margin: 0.5rem 0 0;
-}
-.shelf-special-cta {
-  display: flex;
-  justify-content: center;
-  margin-top: 3rem;
-}
-.shelf-special-cta .shelf-button {
-  text-transform: uppercase;
-  letter-spacing: 0.09em;
-  font-size: 0.9rem;
-  padding: 0.9rem 2.5rem;
 }
 /* A quiet gallery mount gives the white studio photos a little more warmth
    and makes each piece feel intentional in the grid. The photo itself still
@@ -2232,7 +2490,7 @@
    secondary action), a hairline border, small spaced capitals. */
 .shelf .btn-secondary {
   border-color: var(--ink);
-  border-radius: 6px;
+  border-radius: var(--radius-button);
   background: transparent;
   color: var(--ink);
   font-size: 0.78rem;
@@ -2255,7 +2513,7 @@
   background: var(--accent);
   color: var(--ivory);
   border: 1px solid color-mix(in srgb, var(--gold) 70%, transparent);
-  border-radius: 6px;
+  border-radius: var(--radius-button);
   /* Balanced padding: a touch more side than top, so the label sits in an
      optically square field rather than a letterbox. */
   padding: 0.85rem 1.6rem;
@@ -2299,7 +2557,7 @@
   }
 }
 .shelf .field {
-  border-radius: 4px;
+  border-radius: var(--radius-panel);
   border-color: color-mix(in srgb, var(--ink) 35%, transparent);
   background: var(--ivory);
 }
@@ -2319,7 +2577,7 @@
 .shelf summary:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
-  border-radius: 2px;
+  border-radius: var(--radius-panel);
 }
 
 /* -- Home page: more air ------------------------------------------------------ */
@@ -2338,6 +2596,48 @@
 /* The look rows arrive almost directly under the section heading — the big
    gap the generic section rhythm left above them made the heading read as if
    it belonged to the previous block. */
+/* ── Popular carousel section ─────────────────────────────────────────────
+   The eyebrow "OUR COMMUNITY FAVOURITES" gets a letter-spacing expansion
+   that reads as the title breathing in before it settles. */
+@media (prefers-reduced-motion: no-preference) {
+  .shelf-section--popular [data-reveal="true"] .shelf-eyebrow {
+    animation: popular-title-in 1.4s var(--ease-out-soft) 0.1s both;
+  }
+}
+@keyframes popular-title-in {
+  from {
+    opacity: 0;
+    letter-spacing: 0.55em;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    letter-spacing: 0.28em;
+    transform: translateY(0);
+  }
+}
+/* The flanking rules of the eyebrow draw in as the text settles */
+@media (prefers-reduced-motion: no-preference) {
+  .shelf-section--popular [data-reveal="true"] .shelf-eyebrow::before,
+  .shelf-section--popular [data-reveal="true"] .shelf-eyebrow::after {
+    animation: popular-rule-in 1s var(--ease-out-soft) 0.5s both;
+  }
+}
+@keyframes popular-rule-in {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+.shelf-section--looks {
+  /* The animated editorial rows create GPU-composited stacking contexts via
+     will-change. Without isolation those contexts can bleed visually above the
+     following FAQ section on scroll. A new stacking context here keeps all the
+     composited layers contained within this section. */
+  isolation: isolate;
+}
+.shelf-home .look-editorial {
+  padding-block: clamp(2rem, 4vw, 3.5rem);
+}
 .shelf-section--looks .shelf-heading-row {
   margin-bottom: 1.25rem;
 }
@@ -2401,8 +2701,8 @@
 }
 @media (min-width: 52rem) {
   .shelf-home .shelf-hero-grid {
-    gap: 3rem;
-    padding-block: 5.5rem 3.5rem;
+    gap: 2rem;
+    padding-block: 4.5rem 5rem;
   }
 }
 
@@ -2572,21 +2872,23 @@
     background-position: 72% top;
   }
   .shelf-home .shelf-hero-veil {
-    /* The copy reads white over the film, so the film still needs dimming —
-       but in ONYX. Using the brand ink here washed the photograph green. */
+    /* Cinematic veil: clear window at the top, deepens dramatically for the
+       text area — the video shines above, the copy sits on solid dark. */
     background: linear-gradient(
       180deg,
-      rgb(var(--shadow-rgb) / 22%),
-      rgb(var(--shadow-rgb) / 55%) 55%,
-      rgb(var(--shadow-rgb) / 74%)
+      rgb(var(--shadow-rgb) / 8%),
+      rgb(var(--shadow-rgb) / 32%) 42%,
+      rgb(var(--shadow-rgb) / 75%) 68%,
+      rgb(var(--shadow-rgb) / 92%)
     );
   }
   [dir="rtl"] .shelf-home .shelf-hero-veil {
     background: linear-gradient(
       180deg,
-      rgb(var(--shadow-rgb) / 22%),
-      rgb(var(--shadow-rgb) / 55%) 55%,
-      rgb(var(--shadow-rgb) / 74%)
+      rgb(var(--shadow-rgb) / 8%),
+      rgb(var(--shadow-rgb) / 32%) 42%,
+      rgb(var(--shadow-rgb) / 75%) 68%,
+      rgb(var(--shadow-rgb) / 92%)
     );
   }
   /* The texts themselves go white with a soft dark shadow — maximum
@@ -3024,7 +3326,7 @@
     height: 2.5rem;
     place-items: center;
     border: 1px solid color-mix(in srgb, var(--gold) 55%, white);
-    border-radius: 50%;
+    border-radius: var(--radius-button);
     background: rgb(var(--ivory-rgb) / 92%);
     color: var(--ink);
     font-size: 1.1rem;
@@ -3105,7 +3407,7 @@
     width: 2.5rem;
     height: 2.5rem;
     border: 1px solid color-mix(in srgb, var(--gold) 55%, white);
-    border-radius: 50%;
+    border-radius: var(--radius-button);
     background: rgb(var(--ivory-rgb) / 92%);
     opacity: 0.9;
   }
@@ -3198,7 +3500,7 @@
   height: 2.75rem;
   padding: 0;
   border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
-  border-radius: 50%;
+  border-radius: var(--radius-button);
   background: rgb(var(--ivory-rgb) / 85%);
   color: var(--ink);
   cursor: pointer;

@@ -40,6 +40,8 @@ export type ProductFormValues = {
   lowStockThreshold: number;
   categoryId: string | null;
   active: boolean;
+  unlisted: boolean;
+  featuredInCarousel: boolean;
   imageUrls: string;
   trackInventory: boolean;
   supplierId: string | null;
@@ -559,6 +561,24 @@ export function ProductForm({
           className="field-checkbox"
         />
         Active (visible in the store)
+      </label>
+      <label className="flex cursor-pointer items-center gap-2 text-sm">
+        <input
+          type="checkbox"
+          name="unlisted"
+          defaultChecked={initial?.unlisted ?? false}
+          className="field-checkbox"
+        />
+        Unlisted (reachable only by direct link — hidden from listings, search, sitemap and feeds)
+      </label>
+      <label className="flex cursor-pointer items-center gap-2 text-sm">
+        <input
+          type="checkbox"
+          name="featuredInCarousel"
+          defaultChecked={initial?.featuredInCarousel ?? false}
+          className="field-checkbox"
+        />
+        Featured in homepage carousel (Community favourites)
       </label>
 
       {state?.error && <FormAlert type="error">{state.error}</FormAlert>}

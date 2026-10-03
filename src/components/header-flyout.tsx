@@ -189,7 +189,7 @@ export function CartFlyout({ label, labels, locale }: {
         href="/cart"
         aria-label={label}
         title={label}
-        className="hf-trigger group link-underline text-foreground/80 hover:text-primary flex items-center gap-1"
+        className="hf-trigger group link-underline text-foreground hover:text-primary flex items-center gap-1"
       >
         <svg
           width="25"
@@ -303,7 +303,7 @@ export function WishlistFlyout({ label, labels, locale, signedIn }: {
         href={href}
         aria-label={label}
         title={label}
-        className="hf-trigger group link-underline text-foreground/80 hover:text-danger flex items-center gap-1"
+        className="hf-trigger group link-underline text-foreground hover:text-danger flex items-center gap-1"
       >
         <svg
           width="20"

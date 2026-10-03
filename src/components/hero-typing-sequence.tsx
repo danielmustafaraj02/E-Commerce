@@ -8,48 +8,58 @@ import "./hero-typing-sequence.css";
    BURSTS — a few characters in quick succession — and then hesitates, and it
    rests longest where the sentence rests: at a word gap, and after a stop.
 
-   Jittering every single keystroke, which this did before, produces the
-   opposite impression: no two letters alike is just as mechanical as all of
-   them identical, because there is no pattern underneath for the eye to read
-   as intention. So the variation lives at the level of the BURST, and the
-   letters inside a burst share one pace.
+   Two sources of variation:
+   1. BURST-LEVEL: the whole burst shares one chosen pace, but the burst speed
+      itself is drawn from a gaussian (bell-curve) rather than a flat range, so
+      extreme speeds are rarer and the middle is more common — matching how
+      human WPM actually clusters.
+   2. CHAR-LEVEL: within a burst, each keystroke gets ±28% micro-jitter around
+      the burst's pace, so letters inside a burst are NOT perfectly metronomic.
+      Previously they were identical, which is the one thing that reads as
+      synthetic even when the burst rhythm is right.
 
-   Ranges are the brief's: 45–110ms between characters, occasional 120–220ms
-   at a word gap, 250–450ms after punctuation or a line change. */
-/* However much the pace is scaled down, a keystroke never drops below this:
-   the brief's floor is 45ms, and below roughly that the letters stop reading
-   as struck and start reading as streamed. */
-const MIN_KEYSTROKE_MS = 42;
-/* How many characters share one pace before the hand hesitates. The lede runs
-   in longer bursts; the TITLE uses shorter ones, because its words are five
-   or six letters — at a burst of seven each word came out as one even run,
-   which is precisely what made it read as a machine. */
-const BURST_MIN = 3;
-const BURST_MAX = 7;
-const TITLE_BURST_MIN = 2;
-const TITLE_BURST_MAX = 4;
-/* The pace of one burst, picked once per burst and shared by its letters. */
-const BURST_FAST_MS = 46;
-const BURST_SLOW_MS = 96;
-/* The hesitation between two bursts inside a word. */
-const HESITATE_MIN_MS = 70;
-const HESITATE_MAX_MS = 150;
-/* A word gap: most are free, some are a real beat. */
-const WORD_PAUSE_MIN_MS = 120;
-const WORD_PAUSE_MAX_MS = 220;
-const WORD_PAUSE_CHANCE = 0.45;
-/* A stop gets a breath. */
-const PUNCT_PAUSE_MIN_MS = 250;
-const PUNCT_PAUSE_MAX_MS = 450;
-/* A LINE change gets considerably more than a stop does. "Perla / Murano /
-   Glass" is three separate thoughts set on three lines, and at punctuation
-   length the three ran together into one stuttering word — the hand has to be
-   heard lifting between them. */
-const LINE_PAUSE_MIN_MS = 520;
-const LINE_PAUSE_MAX_MS = 820;
-/* Between the title and the lede, and between the lede and the button. */
-const TITLE_PAUSE_MS = 300;
-const SUBTITLE_PAUSE_MS = 160;
+   The title lines each earn a real theatrical pause — 0.8–1.6 s — because
+   "Perla / Murano / Glass" are three separate thoughts lifted on three beats,
+   not a single word that happens to wrap. */
+
+/* A keystroke never goes below this floor; below ~38ms the glyphs stop
+   reading as struck and start reading as streamed. */
+const MIN_KEYSTROKE_MS = 38;
+
+/* Burst sizes: shorter for the title (each word is one thought, so the
+   hesitations within it are real finger-lifts) and longer for the flowing
+   lede. */
+const BURST_MIN = 2;
+const BURST_MAX = 6;
+const TITLE_BURST_MIN = 1;
+const TITLE_BURST_MAX = 3;
+
+/* The burst pace range. The gaussian sampler makes extreme values rare, so
+   most bursts land in the comfortable middle. */
+const BURST_FAST_MS = 38;
+const BURST_SLOW_MS = 155;
+
+/* Hesitation between two bursts inside one word — the finger re-positions. */
+const HESITATE_MIN_MS = 88;
+const HESITATE_MAX_MS = 230;
+
+/* A word gap: more than half earn a real beat; the rest just continue. */
+const WORD_PAUSE_MIN_MS = 145;
+const WORD_PAUSE_MAX_MS = 310;
+const WORD_PAUSE_CHANCE = 0.54;
+
+/* After sentence-ending punctuation: a proper breath. */
+const PUNCT_PAUSE_MIN_MS = 320;
+const PUNCT_PAUSE_MAX_MS = 580;
+
+/* A title LINE change is the longest rest: the hand lifts, the eye moves,
+   the mind composes the next word. 0.8–1.6 s after pace scaling. */
+const LINE_PAUSE_MIN_MS = 680;
+const LINE_PAUSE_MAX_MS = 1300;
+
+/* Gaps between blocks. */
+const TITLE_PAUSE_MS = 440;
+const SUBTITLE_PAUSE_MS = 175;
 
 const SENTENCE_END = /[.!?…]$/;
 const CLAUSE_END = /[,;:—–]$/;
@@ -82,7 +92,15 @@ type Block = { rows: Row[]; chars: Char[]; text: string };
  * character instead. That keeps the caret off a blank cell and keeps the
  * character count equal to the number of visible glyphs.
  */
-const between = (min: number, max: number) => min + Math.random() * (max - min);
+/* Uniform sample — used only where we want true flat randomness (burst size). */
+const rand = (min: number, max: number) => min + Math.random() * (max - min);
+
+/* Gaussian approximation via averaging three uniform samples. This gives a
+   bell-curve distribution centred on (min+max)/2, so extreme values are rare
+   and mid-range values dominate — matching how human pause durations cluster
+   much more than a flat random range does. Used for all timing decisions. */
+const gauss = (min: number, max: number) =>
+  min + ((Math.random() + Math.random() + Math.random()) / 3) * (max - min);
 
 /**
  * Build the block AND its timeline, once.
@@ -114,13 +132,13 @@ function buildBlock(text: string, linePerWord: boolean, pace: number): Block {
            real beat, and a stop is always a breath — that is what makes the
            sentence audible rather than a stream of letters. */
         if (SENTENCE_END.test(previousWord)) {
-          delay = between(PUNCT_PAUSE_MIN_MS, PUNCT_PAUSE_MAX_MS);
+          delay = gauss(PUNCT_PAUSE_MIN_MS, PUNCT_PAUSE_MAX_MS);
           rest = true;
         } else if (CLAUSE_END.test(previousWord)) {
-          delay = between(PUNCT_PAUSE_MIN_MS * 0.7, PUNCT_PAUSE_MAX_MS * 0.7);
+          delay = gauss(PUNCT_PAUSE_MIN_MS * 0.7, PUNCT_PAUSE_MAX_MS * 0.7);
           rest = true;
         } else if (Math.random() < WORD_PAUSE_CHANCE) {
-          delay = between(WORD_PAUSE_MIN_MS, WORD_PAUSE_MAX_MS);
+          delay = gauss(WORD_PAUSE_MIN_MS, WORD_PAUSE_MAX_MS);
           rest = true;
         } else {
           delay = burstMs;
@@ -131,27 +149,31 @@ function buildBlock(text: string, linePerWord: boolean, pace: number): Block {
         if (burstLeft <= 0) {
           burstLeft = Math.round(
             linePerWord
-              ? between(TITLE_BURST_MIN, TITLE_BURST_MAX)
-              : between(BURST_MIN, BURST_MAX)
+              ? rand(TITLE_BURST_MIN, TITLE_BURST_MAX)
+              : rand(BURST_MIN, BURST_MAX)
           );
-          burstMs = between(BURST_FAST_MS, BURST_SLOW_MS);
+          burstMs = gauss(BURST_FAST_MS, BURST_SLOW_MS);
           /* The hesitation that separates two bursts inside one word. */
           if (i > 0) {
-            delay = between(HESITATE_MIN_MS, HESITATE_MAX_MS);
+            delay = gauss(HESITATE_MIN_MS, HESITATE_MAX_MS);
             rest = true;
           } else {
+            /* First char of the first burst in a word: the hand lands. */
             delay = burstMs;
           }
         } else {
-          delay = burstMs;
+          /* Within a burst the pace is shared, but not perfectly metronomic:
+             ±28% micro-jitter so consecutive letters never feel mechanical. */
+          delay = burstMs * (0.72 + Math.random() * 0.56);
         }
         burstLeft -= 1;
       }
 
-      /* A line of the title is its own thought: ending one earns a real lift,
-         not merely a comma's worth of hesitation. */
+      /* A title line is its own beat — the hand lifts, composes, re-aims.
+         The pause is considerably longer than punctuation: 0.8–1.6 s after
+         pace scaling, which is what makes three words read as three thoughts. */
       if (linePerWord && i === 0 && previousWord) {
-        delay = Math.max(delay, between(LINE_PAUSE_MIN_MS, LINE_PAUSE_MAX_MS));
+        delay = Math.max(delay, gauss(LINE_PAUSE_MIN_MS, LINE_PAUSE_MAX_MS));
         rest = true;
       }
 
@@ -175,16 +197,11 @@ function buildBlock(text: string, linePerWord: boolean, pace: number): Block {
   return { rows, chars, text };
 }
 
-/* The title is written SLOWER than life — it is three words, it is the brand's
-   name, and it is the one thing on the page worth watching being written. The
-   lede flows faster, because it is several times longer and the button must
-   not be kept waiting for it. The
-   pace scales the whole timeline without changing its SHAPE — the bursts and
-   the breaths keep their proportions to each other. 0.5 brings the whole
-   sequence in around six seconds; the button should not be the last thing a
-   visitor waits for. */
-const TITLE_PACE = 1.35;
-const SUBTITLE_PACE = 0.5;
+/* Title is deliberate — three words, each line a beat. Lede flows faster so
+   the button arrives while the subtitle is still typing. Pace scales the whole
+   timeline without changing its shape; the rests keep their proportions. */
+const TITLE_PACE = 1.52;
+const SUBTITLE_PACE = 0.52;
 
 /**
  * One typed block, rendered WHOLE from the first frame.

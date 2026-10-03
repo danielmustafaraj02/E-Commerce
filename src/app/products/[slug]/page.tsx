@@ -49,7 +49,7 @@ import { getLooksForProducts } from "@/lib/look-data";
 import { CompleteTheLook } from "@/components/complete-the-look";
 import { GiftFinderArrow } from "@/components/gift-finder-arrow";
 import { PaymentIcons } from "@/components/payment-icons";
-import { isStripeConfigured } from "@/lib/stripe";
+import { getStripePaymentMethods, isStripeConfigured } from "@/lib/stripe";
 import { isPaypalConfigured } from "@/lib/paypal";
 
 // Small single-use icons for the gift sections below — same stroke
@@ -243,14 +243,16 @@ export async function generateMetadata({
 export default async function ProductDetailPage({ params }: PageProps<"/products/[slug]">) {
   const { slug } = await params;
 
-  const [settings, uiLocale, product, session, cardsEnabled, paypalEnabled] = await Promise.all([
-    getStoreSettings(),
-    getLocale(),
-    getProduct(slug),
-    auth(),
-    isStripeConfigured(),
-    isPaypalConfigured(),
-  ]);
+  const [settings, uiLocale, product, session, cardsEnabled, paypalEnabled, stripeMethods] =
+    await Promise.all([
+      getStoreSettings(),
+      getLocale(),
+      getProduct(slug),
+      auth(),
+      isStripeConfigured(),
+      isPaypalConfigured(),
+      getStripePaymentMethods(),
+    ]);
 
   if (!product || !product.active) notFound();
   const dict = getDictionary(uiLocale);
@@ -278,7 +280,12 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
         : null,
       product.categoryId
         ? db.product.findMany({
-            where: { categoryId: product.categoryId, active: true, id: { not: product.id } },
+            where: {
+              categoryId: product.categoryId,
+              active: true,
+              unlisted: false,
+              id: { not: product.id },
+            },
             take: 4,
             orderBy: { createdAt: "desc" },
             include: { images: { take: 1, orderBy: { position: "asc" } } },
@@ -507,15 +514,6 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                 </p>
               )}
 
-              {/* The full description with a deliberate "Read more", never a
-                  sentence cut off mid-word. */}
-              <ExpandableText
-                text={description}
-                moreLabel={dict.journal.readMore}
-                lessLabel={dict.product.readLess}
-                className="shop-prose"
-              />
-
               <div className="shop-buy">
                 <ProductPurchasePanel
                   product={cartProduct}
@@ -562,6 +560,15 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                 />
               </div>
 
+              {/* Description after the buy CTA so it never pushes the button
+                  below the fold. */}
+              <ExpandableText
+                text={description}
+                moreLabel={dict.journal.readMore}
+                lessLabel={dict.product.readLess}
+                className="shop-prose"
+              />
+
               <TrustBadges trustBadgeText={settings.trustBadgeText} dict={dict.product} />
 
               {/* The same accepted-method marks as the footer and checkout,
@@ -571,7 +578,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                 <PaymentIcons
                   cards={cardsEnabled}
                   paypal={paypalEnabled}
-                  klarna={cardsEnabled && settings.klarnaEnabled}
+                  stripeMethods={stripeMethods}
                   bankTransfer={settings.bankTransferEnabled && Boolean(settings.bankIban)}
                   labels={{ bankTransfer: dict.payment.bankTransfer }}
                 />

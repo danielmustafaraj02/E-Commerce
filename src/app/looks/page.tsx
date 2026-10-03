@@ -69,6 +69,7 @@ export default async function LooksPage() {
                   description: getLookEditorialDescription(look.name, locale),
                   included: copy.editorialIncluded,
                   price: copy.editorialPrice,
+                  kinds: dict.giftFinder.preference,
                 }}
               />
             ))}

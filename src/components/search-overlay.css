@@ -23,7 +23,7 @@
   height: 2.25rem;
   flex: 0 0 auto;
   border: 1px solid transparent;
-  border-radius: 999px;
+  border-radius: var(--radius-button);
   background: none;
   color: color-mix(in srgb, var(--foreground) 80%, transparent);
   cursor: pointer;
@@ -110,7 +110,7 @@
   min-width: 0;
   overflow: hidden;
   border: 1px solid transparent;
-  border-radius: 999px;
+  border-radius: var(--radius-panel);
   background: var(--background);
   transition:
     width 0.6s cubic-bezier(0.16, 1, 0.3, 1),
@@ -201,7 +201,7 @@
   width: 1.6rem;
   height: 1.6rem;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-button);
   background: none;
   color: color-mix(in srgb, var(--foreground) 55%, transparent);
   cursor: pointer;

@@ -6,6 +6,11 @@
 import { getStoreSettings } from "@/lib/store-settings";
 import type { PaypalCapture } from "@/lib/paypal-amount";
 
+// Set to true to re-enable PayPal across the whole site (payment button,
+// footer "We Accept" badge, checkout flow). All integration code below stays
+// intact; only this flag gates the feature.
+const PAYPAL_ENABLED = false;
+
 // Live PayPal in production, the sandbox everywhere else — unless PAYPAL_ENV says
 // otherwise. Sandbox and live credentials only work against their own API, and a
 // Vercel preview build also has NODE_ENV=production, so set PAYPAL_ENV=sandbox
@@ -28,6 +33,7 @@ async function getPaypalCredentials() {
 }
 
 export async function isPaypalConfigured() {
+  if (!PAYPAL_ENABLED) return false;
   const { clientId, clientSecret } = await getPaypalCredentials();
   return Boolean(clientId && clientSecret);
 }

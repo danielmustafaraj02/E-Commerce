@@ -114,7 +114,7 @@ export function LocaleSwitcher({ current }: { current: Locale }) {
         disabled={pending}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className="locale-switcher-trigger border-foreground/15 hover:border-primary/40 hover:text-primary flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-sm font-medium transition-colors disabled:opacity-50"
+        className="locale-switcher-trigger border-foreground/25 hover:border-primary/40 hover:text-primary flex items-center gap-1.5 rounded-(--radius-button) border px-2.5 py-1.5 text-sm font-medium transition-colors disabled:opacity-50"
       >
         <span key={current} className="locale-switcher-current-flag" aria-hidden="true">
           {FLAGS[current]}
@@ -151,7 +151,7 @@ export function LocaleSwitcher({ current }: { current: Locale }) {
                 className={`locale-switcher-option flex w-full items-center justify-between gap-3 px-3 py-2 text-left transition-colors ${
                   current === locale
                     ? "text-primary bg-primary/5 font-semibold"
-                    : "hover:bg-surface text-foreground/80"
+                    : "hover:bg-surface text-foreground"
                 }`}
               >
                 <span className="flex items-center gap-2">

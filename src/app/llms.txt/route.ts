@@ -24,7 +24,7 @@ export async function GET() {
   const [categories, products, legalPages] = await Promise.all([
     db.category.findMany({ orderBy: { name: "asc" } }),
     db.product.findMany({
-      where: { active: true },
+      where: { active: true, unlisted: false },
       orderBy: { createdAt: "desc" },
       take: 200,
     }),

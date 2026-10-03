@@ -48,6 +48,8 @@ const productSchema = z.object({
   lowStockThreshold: z.coerce.number().int().nonnegative(),
   categoryId: z.string().min(1).optional(),
   active: z.coerce.boolean(),
+  unlisted: z.coerce.boolean(),
+  featuredInCarousel: z.coerce.boolean(),
   imageUrls: z.string().optional(),
   // Dropshipping
   trackInventory: z.coerce.boolean(),
@@ -109,6 +111,8 @@ function parseProductForm(formData: FormData) {
     lowStockThreshold: formData.get("lowStockThreshold"),
     categoryId: formData.get("categoryId") || undefined,
     active: formData.get("active") === "on",
+    unlisted: formData.get("unlisted") === "on",
+    featuredInCarousel: formData.get("featuredInCarousel") === "on",
     imageUrls: formData.get("imageUrls") || undefined,
     trackInventory: formData.get("trackInventory") === "on",
     supplierId: formData.get("supplierId") || undefined,
