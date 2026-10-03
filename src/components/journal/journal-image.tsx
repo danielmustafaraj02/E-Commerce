@@ -37,7 +37,7 @@ export function JournalImage({
   return (
     <figure className={`journal-figure ${className}`}>
       <div className="journal-figure-frame">
-        {image.kind === "file" ? (
+        {image.kind === "file" && src.startsWith("/") ? (
           <Image src={src} alt={alt} fill sizes={sizes} {...loadingProps} />
         ) : (
           <CatalogImage src={src} alt={alt} fill sizes={sizes} {...loadingProps} />

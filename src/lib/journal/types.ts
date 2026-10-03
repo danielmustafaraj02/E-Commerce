@@ -24,7 +24,14 @@ export type JournalImage =
       caption?: string;
       rights: ImageRights;
     }
-  | { kind: "file"; src: string; alt: string; altIt?: string; caption?: string; rights: ImageRights };
+  | {
+      kind: "file";
+      src: string;
+      alt: string;
+      altIt?: string;
+      caption?: string;
+      rights: ImageRights;
+    };
 
 export type Source = {
   title: string;

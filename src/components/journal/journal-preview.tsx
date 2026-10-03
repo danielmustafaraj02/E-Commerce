@@ -1,6 +1,7 @@
 import { JournalImage } from "@/components/journal/journal-image";
 import { Link } from "@/components/localized-link";
-import { ARTICLES, localizeArticle, readingMinutes } from "@/lib/journal";
+import { localizeArticle, readingMinutes } from "@/lib/journal";
+import { getAllArticles } from "@/lib/journal/db-articles";
 import { getJournalProducts } from "@/lib/journal/products";
 import type { JournalCategory } from "@/lib/journal/types";
 import { applyTemplate } from "@/lib/i18n/format";
@@ -11,7 +12,7 @@ const PREVIEW_COUNT = 3;
 const FALLBACK_IMAGE = "/hero/handmade-red-murano-glass-necklace.jpg";
 
 export async function JournalPreview({ locale }: { locale: Locale }) {
-  const articles = ARTICLES.slice(0, PREVIEW_COUNT).map((article) =>
+  const articles = (await getAllArticles()).slice(0, PREVIEW_COUNT).map((article) =>
     localizeArticle(article, locale)
   );
   const products = await getJournalProducts(

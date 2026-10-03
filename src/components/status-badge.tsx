@@ -8,6 +8,8 @@ const STATUS_STYLES: Record<string, string> = {
   refunded: "bg-foreground/10 text-foreground/60",
   active: "bg-success/10 text-success",
   inactive: "bg-foreground/10 text-foreground/60",
+  published: "bg-success/10 text-success",
+  draft: "bg-foreground/10 text-foreground/60",
   // Admin > Roadmap task priority/status.
   high: "bg-danger/10 text-danger",
   medium: "bg-warning/10 text-warning",

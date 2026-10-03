@@ -1,4 +1,5 @@
-import { ARTICLES, articleLanguages, articlePath } from "@/lib/journal";
+import { articleLanguages, articlePath } from "@/lib/journal";
+import { getAllArticles } from "@/lib/journal/db-articles";
 import { MURANO_FAQ_LOCALE, MURANO_FAQ_PATH } from "@/lib/murano-faq";
 import type { MetadataRoute } from "next";
 import { db } from "@/lib/db";
@@ -7,6 +8,7 @@ import { locales } from "@/lib/i18n/locale-constants";
 import { hreflangAlternates } from "@/lib/hreflang";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const allArticles = await getAllArticles();
   const settings = await getStoreSettings();
   const base = settings.siteUrl || process.env.NEXTAUTH_URL || "http://localhost:3000";
 
@@ -53,7 +55,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: "/contact" },
     {
       path: "/blog",
-      lastModified: new Date(ARTICLES[0].updated ?? ARTICLES[0].published),
+      lastModified: new Date(allArticles[0].updated ?? allArticles[0].published),
     },
     ...categories.map((category) => ({
       path: `/category/${category.slug}`,
@@ -83,7 +85,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Articles have English source copy and selected Italian translations. Each
   // translated version is a separate URL with a reciprocal two-language set.
-  const articles = ARTICLES.flatMap((article) => {
+  const articles = allArticles.flatMap((article) => {
     const paths = articleLanguages(article);
     const languages = Object.fromEntries(
       Object.entries(paths).map(([locale, path]) => [locale, `${base}${path}`])

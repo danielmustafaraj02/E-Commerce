@@ -277,58 +277,58 @@ model Category {
 }
 
 model Product {
-  id                String  @id @default(cuid())
-  name              String
+  id                 String  @id @default(cuid())
+  name               String
   // Per-locale translations, shown when the storefront locale matches (see
   // src/lib/product-i18n.ts). All optional and fall back to name/description
   // (then to the English fields for fr/de) so products that haven't been
   // translated into every language yet still render correctly.
-  nameEn            String?
-  nameFr            String?
-  nameDe            String?
-  nameAr            String?
-  nameZh            String?
-  nameRu            String?
-  nameEs            String?
-  namePt            String?
-  nameHi            String?
-  nameJa            String?
-  slug              String  @unique
-  description       String
-  descriptionEn     String?
-  descriptionFr     String?
-  descriptionDe     String?
-  descriptionAr     String?
-  descriptionZh     String?
-  descriptionRu     String?
-  descriptionEs     String?
-  descriptionPt     String?
-  descriptionHi     String?
-  descriptionJa     String?
+  nameEn             String?
+  nameFr             String?
+  nameDe             String?
+  nameAr             String?
+  nameZh             String?
+  nameRu             String?
+  nameEs             String?
+  namePt             String?
+  nameHi             String?
+  nameJa             String?
+  slug               String  @unique
+  description        String
+  descriptionEn      String?
+  descriptionFr      String?
+  descriptionDe      String?
+  descriptionAr      String?
+  descriptionZh      String?
+  descriptionRu      String?
+  descriptionEs      String?
+  descriptionPt      String?
+  descriptionHi      String?
+  descriptionJa      String?
   // Persuasive "why this piece" copy shown as its own section on the product
   // page (uniqueness, gift framing, handmade-in-Murano heritage) — separate
   // from `description` above. English-only translation for now, same
   // one-locale-at-a-time rollout as name/description originally had.
-  story             String  @default("")
-  storyEn           String?
-  price             Int // cents, tax-inclusive display price (see StoreSettings.pricesIncludeTax)
+  story              String  @default("")
+  storyEn            String?
+  price              Int // cents, tax-inclusive display price (see StoreSettings.pricesIncludeTax)
   // Display-only "was" price (cents), shown crossed out with a discount badge
   // — never charged. Staff can only set it to at most the lowest price in the
   // 30 days before the current price took effect (EU Omnibus rule, checked
   // against ProductPriceChange in lib/price-history.ts). Shown only while
   // higher than `price`.
-  compareAtPrice    Int?
-  currency          String  @default("EUR")
-  sku               String  @unique
-  stockQty          Int     @default(0)
-  lowStockThreshold Int     @default(5)
-  active            Boolean @default(true)
+  compareAtPrice     Int?
+  currency           String  @default("EUR")
+  sku                String  @unique
+  stockQty           Int     @default(0)
+  lowStockThreshold  Int     @default(5)
+  active             Boolean @default(true)
   // Reachable at /products/<slug> but kept out of every browse surface
   // (listings, category pages, homepage shelves, gift finder, sitemap,
   // llms.txt, the Google Merchant feed). `active` controls whether a product
   // exists for customers at all; this controls only whether it is advertised.
   // Used for payment test products and unannounced/link-only pieces.
-  unlisted          Boolean @default(false)
+  unlisted           Boolean @default(false)
   // Pinned to the "community favourites" carousel on the homepage. Staff sets
   // this in Admin > Products; the carousel falls back to random picks when no
   // products are pinned.
@@ -338,7 +338,7 @@ model Product {
   // src/lib/product-colors.ts), not free text, so the filter UI can render
   // real swatches instead of a text dropdown. Optional: an unset color just
   // doesn't match any color filter, it isn't excluded from browsing.
-  color             String?
+  color              String?
 
   // Dropshipping: a product sourced from a supplier who ships directly to
   // the customer. trackInventory=false skips the stock check/decrement at
@@ -376,6 +376,9 @@ model Product {
   // Per-product page overrides: { hidden: [sectionId], blocks: [{ title, body }] }.
   // Null = follow the store-wide product page layout. See src/lib/page-layout.ts.
   pageLayout Json?
+
+  // Journal articles that feature this piece (Admin > Articles).
+  journalPosts JournalPost[] @relation("JournalPostProducts")
 
   images        ProductImage[]
   orderItems    OrderItem[]
@@ -855,4 +858,38 @@ model ImprovementTask {
   claudeClaimedAt DateTime?
   claudeReport    String?
   claudeReportAt  DateTime?
+}
+
+// ---------------------------------------------------------------------------
+// Journal articles written in Admin > Articles. The nine long-form articles in
+// src/content/journal stay in code (sourced, reviewed in PRs); these are the
+// editable ones, merged with them in src/lib/journal/db-articles.ts. `body` is
+// a Block[] (src/lib/journal/types.ts), validated on write.
+// ---------------------------------------------------------------------------
+model JournalPost {
+  id            String    @id @default(cuid())
+  slug          String    @unique
+  title         String
+  seoTitle      String?
+  description   String
+  category      String    @default("history") // JournalCategory
+  intro         String
+  heroUrl       String
+  heroAlt       String    @default("")
+  body          Json      @default("[]")
+  // Citations, as Source[] (src/lib/journal/types.ts); empty = no sources block.
+  sources       Json      @default("[]")
+  // Optional Italian copy: { title, seoTitle?, description, intro, heroAlt?, body }.
+  translationIt Json?
+  published     Boolean   @default(false)
+  publishedAt   DateTime?
+
+  // Pieces the article features; shown in the article and, in reverse, on
+  // those products' pages.
+  products Product[] @relation("JournalPostProducts")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published, publishedAt])
 }

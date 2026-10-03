@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { uploadImage } from "../upload-image";
 import {
   MAX_BLOCK_BODY,
   MAX_BLOCK_TITLE,
@@ -51,18 +52,11 @@ export function ProductImagesField({ initial }: { initial: string }) {
     setUploading(files.length);
     const added: ImageRow[] = [];
     for (const file of Array.from(files)) {
-      const body = new FormData();
-      body.append("file", file);
-      try {
-        const res = await fetch("/api/admin/upload", { method: "POST", body });
-        const data = (await res.json()) as { url?: string; error?: string };
-        if (!res.ok || !data.url) {
-          setUploadError(data.error ?? "Upload failed.");
-          break;
-        }
-        added.push({ url: data.url, lifestyle: false });
-      } catch {
-        setUploadError("Upload failed. Check your connection.");
+      const result = await uploadImage(file);
+      if ("url" in result) {
+        added.push({ url: result.url, lifestyle: false });
+      } else {
+        setUploadError(result.error);
         break;
       }
     }

@@ -25,6 +25,7 @@ export function buildAdminSections(opts: {
         { href: "/admin/products", label: "Products" },
         { href: "/admin/categories", label: "Categories" },
         { href: "/admin/looks", label: "Looks" },
+        { href: "/admin/articles", label: "Articles" },
         { href: "/admin/suppliers", label: "Suppliers" },
       ],
     },

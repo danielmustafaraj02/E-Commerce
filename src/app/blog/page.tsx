@@ -4,7 +4,8 @@ import { getStoreSettings, ogImage } from "@/lib/store-settings";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { applyTemplate } from "@/lib/i18n/format";
-import { ARTICLES, localizeArticle, readingMinutes } from "@/lib/journal";
+import { localizeArticle, readingMinutes } from "@/lib/journal";
+import { getAllArticles } from "@/lib/journal/db-articles";
 import type { JournalCategory, LocalizedArticle } from "@/lib/journal/types";
 import { getJournalProducts } from "@/lib/journal/products";
 import { JournalImage } from "@/components/journal/journal-image";
@@ -23,7 +24,10 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: dict.title,
     description: dict.intro,
-    alternates: { canonical: localizedCanonical(locale, "/blog"), languages: hreflangAlternates("/blog") },
+    alternates: {
+      canonical: localizedCanonical(locale, "/blog"),
+      languages: hreflangAlternates("/blog"),
+    },
     openGraph: {
       title: dict.title,
       description: dict.intro,
@@ -34,12 +38,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function JournalIndexPage({ searchParams }: PageProps<"/blog">) {
-  const [{ category }, uiLocale] = await Promise.all([
-    searchParams,
-    getLocale(),
-  ]);
+  const [{ category }, uiLocale] = await Promise.all([searchParams, getLocale()]);
   const dict = getDictionary(uiLocale);
   const j = dict.journal;
+  const ARTICLES = await getAllArticles();
   const active = CATEGORIES.find((c) => c === category) ?? null;
   const articles = ARTICLES.filter((a) => !active || a.category === active);
   // Only offer filters that have articles behind them.
@@ -141,7 +143,12 @@ function ArticleCardText({
     <div className="journal-card-text">
       <p className="journal-kicker">
         {categoryLabel(j, article.category)}
-        {article.series && <> · {article.series.episode}/{article.series.total}</>}
+        {article.series && (
+          <>
+            {" "}
+            · {article.series.episode}/{article.series.total}
+          </>
+        )}
       </p>
       <h2 lang={article.contentLocale}>
         <Link href={`/blog/${article.slug}`}>{article.title}</Link>

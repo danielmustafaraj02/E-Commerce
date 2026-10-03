@@ -33,6 +33,7 @@ export const PRODUCT_SECTIONS = [
   { id: "reviews", label: "Reviews", hint: "Customer reviews and form" },
   { id: "customBlocks", label: "Custom blocks", hint: "Extra text written per product" },
   { id: "story", label: "Story & FAQ", hint: "Why this piece, and questions" },
+  { id: "articles", label: "Related articles", hint: "Journal articles that feature this piece" },
   { id: "look", label: "Complete the look", hint: "Matching set pieces" },
   { id: "giftCard", label: "Gift card ad", hint: "Personalised gift card promo" },
   { id: "related", label: "You might also like", hint: "Related products" },

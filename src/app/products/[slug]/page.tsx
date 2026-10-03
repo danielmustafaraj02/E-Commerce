@@ -1,4 +1,9 @@
 import { siteBaseUrl } from "@/lib/site-url";
+import "@/app/blog/journal.css";
+import { getArticlesForProduct } from "@/lib/journal/db-articles";
+import { getJournalProducts } from "@/lib/journal/products";
+import { localizeArticle } from "@/lib/journal";
+import { JournalImage } from "@/components/journal/journal-image";
 import { cache, Fragment, type ReactNode } from "react";
 import {
   PRODUCT_SECTIONS,
@@ -412,6 +417,14 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
   );
 
   const customBlocks = parseProductPageLayout(product.pageLayout).blocks;
+  // Journal articles that feature this piece (linked in Admin > Articles, or
+  // showing it in their own text), newest first, at most three.
+  const productArticles = (await getArticlesForProduct(product))
+    .slice(0, 3)
+    .map((article) => localizeArticle(article, uiLocale));
+  const articleProducts = await getJournalProducts(
+    productArticles.flatMap((a) => (a.hero.kind === "product" ? [a.hero.productSlug] : []))
+  );
   const productSections: Record<ProductSectionId, ReactNode> = {
     /* gift-box photo: shared packaging shot, not this product's own photography */
     gift: (
@@ -522,6 +535,31 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
             <FaqSection items={faq} dict={dict} variant="compact" structuredItems={[]} />
           </div>
         </div>
+      </section>
+    ),
+    articles: productArticles.length > 0 && (
+      <section className="shelf-section">
+        <Reveal className="shelf-wrap">
+          <h2 className="shelf-heading">{dict.journal.title}</h2>
+          <ul className="journal-related">
+            {productArticles.map((article) => (
+              <li key={article.slug}>
+                <Link href={`/blog/${article.slug}`}>
+                  <JournalImage
+                    image={article.hero}
+                    products={articleProducts}
+                    sizes="(min-width: 48rem) 22rem, 100vw"
+                    creditLabel={(credit) => credit}
+                    locale={article.contentLocale}
+                  />
+                  <span className="journal-related-title" lang={article.contentLocale}>
+                    {article.title}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
       </section>
     ),
     look: look && (

@@ -25,13 +25,10 @@ const journalArticles: Article[] = [
 
 const latestSeriesDate = journalArticles
   .filter((article) => article.series)
-  .reduce(
-    (latest, article) => {
-      const date = article.updated ?? article.published;
-      return date > latest ? date : latest;
-    },
-    "0000-00-00"
-  );
+  .reduce((latest, article) => {
+    const date = article.updated ?? article.published;
+    return date > latest ? date : latest;
+  }, "0000-00-00");
 
 export const ARTICLES = journalArticles.sort((a, b) => {
   const aDate = a.series ? latestSeriesDate : a.published;

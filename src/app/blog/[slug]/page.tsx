@@ -12,12 +12,12 @@ import {
   articleLanguages,
   articlePath,
   articleProductSlugs,
-  getArticle,
   localizeArticle,
   readingMinutes,
   relatedArticles,
   seriesArticles,
 } from "@/lib/journal";
+import { findArticle } from "@/lib/journal/db-articles";
 import type { Source } from "@/lib/journal/types";
 import { getJournalProducts } from "@/lib/journal/products";
 import { ArticleBody, InlineText } from "@/components/journal/article-body";
@@ -33,7 +33,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps<"/blog/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  const source = getArticle(slug);
+  const source = await findArticle(slug);
   if (!source) return {};
   const [uiLocale, products] = await Promise.all([
     getLocale(),
@@ -69,7 +69,7 @@ export async function generateMetadata({ params }: PageProps<"/blog/[slug]">): P
               url: image,
               alt:
                 article.contentLocale === "it"
-                  ? article.hero.altIt ?? article.hero.alt
+                  ? (article.hero.altIt ?? article.hero.alt)
                   : article.hero.alt,
             },
           ]
@@ -86,11 +86,11 @@ export async function generateMetadata({ params }: PageProps<"/blog/[slug]">): P
 
 export default async function JournalArticlePage({ params }: PageProps<"/blog/[slug]">) {
   const { slug } = await params;
-  const source = getArticle(slug);
+  const source = await findArticle(slug);
   if (!source) notFound();
 
   const relatedHeroSlugs = source.related.flatMap((relatedSlug) => {
-    const relatedArticle = getArticle(relatedSlug);
+    const relatedArticle = ARTICLES.find((a) => a.slug === relatedSlug);
     return relatedArticle?.hero.kind === "product" ? [relatedArticle.hero.productSlug] : [];
   });
   const [settings, uiLocale, products] = await Promise.all([
@@ -220,39 +220,39 @@ export default async function JournalArticlePage({ params }: PageProps<"/blog/[s
             }}
           />
 
-          <section className="journal-sources" aria-labelledby="journal-sources-title">
-            <h2 id="journal-sources-title" lang={uiLocale}>
-              {j.sources}
-            </h2>
-            <ul>
-              {article.sources.map((source) => (
-                <li key={source.url}>
-                  <p className="journal-source-heading">
-                    <a href={source.url} target="_blank" rel="noopener noreferrer">
-                      {source.title}
-                    </a>
-                  </p>
-                  <p className="journal-source-meta">
-                    {source.author ? `${source.author}. ` : ""}
-                    {source.publisher}
-                    {source.published ? ` · ${source.published}` : ""}
-                    {source.locator ? ` · ${source.locator}` : ""}
-                    {" · "}
-                    {article.contentLocale === "it" ? "Consultato" : "Accessed"}{" "}
-                    {formatArticleDate(source.accessed, article.contentLocale)}
-                    {source.kind && (
-                      <> · {sourceKindLabel(source.kind, article.contentLocale)}</>
-                    )}
-                  </p>
-                  <p className="journal-source-note">
-                    {article.contentLocale === "it"
-                      ? source.usedForIt ?? source.usedFor
-                      : source.usedFor}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </section>
+          {article.sources.length > 0 && (
+            <section className="journal-sources" aria-labelledby="journal-sources-title">
+              <h2 id="journal-sources-title" lang={uiLocale}>
+                {j.sources}
+              </h2>
+              <ul>
+                {article.sources.map((source) => (
+                  <li key={source.url}>
+                    <p className="journal-source-heading">
+                      <a href={source.url} target="_blank" rel="noopener noreferrer">
+                        {source.title}
+                      </a>
+                    </p>
+                    <p className="journal-source-meta">
+                      {source.author ? `${source.author}. ` : ""}
+                      {source.publisher}
+                      {source.published ? ` · ${source.published}` : ""}
+                      {source.locator ? ` · ${source.locator}` : ""}
+                      {" · "}
+                      {article.contentLocale === "it" ? "Consultato" : "Accessed"}{" "}
+                      {formatArticleDate(source.accessed, article.contentLocale)}
+                      {source.kind && <> · {sourceKindLabel(source.kind, article.contentLocale)}</>}
+                    </p>
+                    <p className="journal-source-note">
+                      {article.contentLocale === "it"
+                        ? (source.usedForIt ?? source.usedFor)
+                        : source.usedFor}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
         </div>
       </article>
 
