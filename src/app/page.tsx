@@ -225,7 +225,6 @@ export default async function Home() {
         <div className="shelf-wrap">
           <div className="looks-editorial-heading">
             <div className="shelf-heading-row shelf-heading-row--center">
-              <p className="shelf-eyebrow shelf-eyebrow--center">{dict.look.kicker}</p>
               <h2 className="shelf-heading">{dict.looks.title}</h2>
             </div>
           </div>

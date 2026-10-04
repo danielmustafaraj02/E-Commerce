@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/require-admin";
-import { RoleForm } from "./role-form";
+import { InviteForm, RoleForm } from "./role-form";
 
 export default async function AdminTeamPage() {
   await requireAdmin();
@@ -19,7 +19,17 @@ export default async function AdminTeamPage() {
       </p>
 
       <section className="mb-10">
-        <h2 className="mb-3 text-lg font-medium">Grant or change access</h2>
+        <h2 className="mb-1 text-lg font-medium">Add a team member</h2>
+        <p className="text-foreground/70 mb-3 text-sm">
+          Creates their account and emails them a link to choose a password. Staff and admins must
+          also set up two-factor sign-in at first login. Staff can add and edit articles, products
+          and orders.
+        </p>
+        <InviteForm />
+      </section>
+
+      <section className="mb-10">
+        <h2 className="mb-3 text-lg font-medium">Change an existing account&apos;s access</h2>
         <RoleForm />
       </section>
 

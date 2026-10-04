@@ -1653,9 +1653,9 @@
   z-index: 1;
   background: color-mix(in srgb, var(--ground) 72%, transparent);
   color: var(--aventurine-deep);
-  font-size: 0.68rem;
+  font-size: 0.8rem;
   font-weight: 500;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   line-height: 1.4;
   padding: 0.14rem 0.55rem;

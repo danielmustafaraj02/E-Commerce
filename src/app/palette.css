@@ -51,7 +51,9 @@
   --site-bg: var(--ground);
   --site-surface: var(--linen);
   --site-text: var(--bottle);
-  --site-text-muted: color-mix(in srgb, var(--site-text) 66%, var(--site-bg));
+  /* 72% keeps small muted text above 4.5:1 on both the white ground (4.95)
+     and ivory panels (4.80); the old 66% measured 4.18 / 4.08. */
+  --site-text-muted: color-mix(in srgb, var(--site-text) 72%, var(--site-bg));
   --site-primary: var(--bottle);
   --site-on-primary: var(--linen);
   --site-accent: var(--bronze);

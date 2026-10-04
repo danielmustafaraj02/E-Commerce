@@ -264,7 +264,10 @@ export function GiftFinderFlow({
     <section className="giftfinder">
       <div className="shelf-wrap giftfinder-wrap">
         <div className="giftfinder-progress" role="progressbar" aria-valuenow={progressPercent}>
-          <div className="giftfinder-progress-bar" style={{ width: `${progressPercent}%` }} />
+          <div
+            className="giftfinder-progress-bar"
+            style={{ transform: `scaleX(${progressPercent / 100})` }}
+          />
         </div>
 
         {phase === "quiz" && (

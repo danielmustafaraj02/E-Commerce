@@ -24,7 +24,7 @@ body:has(.auth-flow-page) .site-footer {
   position: absolute;
   z-index: 2;
   inset: 0 0 auto;
-  height: 3px;
+  height: 1px;
   background: linear-gradient(90deg, var(--footer-ink), var(--footer-teal) 44%, var(--brass) 100%);
   content: "";
 }
