@@ -7,7 +7,7 @@ import {
   slugify,
   type StoredBlock,
   type StoredSource,
-} from "@/lib/journal/db-articles";
+} from "@/lib/journal/article-schema";
 import { uploadImage } from "../upload-image";
 import type { ArticleState } from "./actions";
 

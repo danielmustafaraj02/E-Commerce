@@ -185,7 +185,7 @@ body:has(.auth-flow-page) .site-footer {
     radial-gradient(ellipse at 100% 0%, color-mix(in srgb, var(--sapphire) 22%, transparent), transparent 52%),
     linear-gradient(145deg, var(--midnight), var(--midnight));
   color: var(--ivory);
-  box-shadow: 0 1.25rem 2.75rem -0.5rem rgb(var(--midnight-rgb) / 0.4);
+  box-shadow: 0 0.6rem 0.9rem -0.4rem rgb(var(--midnight-rgb) / 0.35);
 }
 .footer-newsletter::before {
   position: absolute;

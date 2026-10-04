@@ -142,7 +142,7 @@
      on .pd-panel above handles the actual show/hide transition, so this
      only needs to carry depth, not motion. */
   box-shadow:
-    0 14px 36px color-mix(in srgb, var(--foreground) 13%, transparent),
+    0 8px 14px -2px color-mix(in srgb, var(--foreground) 14%, transparent),
     0 2px 6px color-mix(in srgb, var(--foreground) 5%, transparent);
 }
 
@@ -325,7 +325,7 @@
   background: var(--ground, #fff);
   /* The old card lifted off the page with a heavy drop shadow; an editorial
      panel sits ON the page, so the shadow is barely more than a settling. */
-  box-shadow: 0 18px 40px rgb(var(--shadow-rgb) / 0.08);
+  box-shadow: 0 6px 14px -2px rgb(var(--shadow-rgb) / 0.12);
 }
 
 .pd-inner {
