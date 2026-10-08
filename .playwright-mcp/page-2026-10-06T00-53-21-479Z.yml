@@ -1,0 +1,63 @@
+- main [ref=f7e2]:
+  - paragraph [ref=f7e3]: Home · Hero (film behind)
+  - generic [ref=f7e7]:
+    - heading "Perla Murano Glass" [level=1] [ref=f7e8]
+    - paragraph [ref=f7e10]:
+      - emphasis [ref=f7e11]: Gioielli in vetro di Murano, assemblati a mano. Una perla alla volta.
+    - paragraph [ref=f7e12]:
+      - link "Scopri i gioielli →" [ref=f7e13] [cursor=pointer]:
+        - /url: /products
+  - paragraph [ref=f7e14]: Home · Community favourites
+  - generic [ref=f7e18]:
+    - heading "I preferiti della community" [level=2] [ref=f7e20]
+    - generic [ref=f7e21]: "Product carousel: your live products slide here"
+  - paragraph [ref=f7e22]: Home · Why Murano (story rows)
+  - generic [ref=f7e26]:
+    - article [ref=f7e28]:
+      - generic [ref=f7e29]:
+        - heading "Settecento anni di artigianato ininterrotto" [level=2] [ref=f7e30]
+        - paragraph [ref=f7e33]: Ogni pezzo lascia Murano plasmato da un maestro che ha imparato il mestiere da chi lo ha preceduto, con gli stessi gesti da forno del XIV secolo. Nessuno stampo, nessuna macchina — solo soffio e mani.
+        - link "Vedi il pezzo" [ref=f7e34] [cursor=pointer]:
+          - /url: /products/orecchini-petalo-di-rosa-e081a0
+          - text: Vedi il pezzo
+          - generic [aria-hidden] [ref=f7e35]: →
+      - figure "Orecchini Petalo di Rosa Vedi il pezzo ↗" [ref=f7e36]:
+        - link [aria-hidden] [ref=f7e37] [cursor=pointer]:
+          - /url: /products/orecchini-petalo-di-rosa-e081a0
+    - article [ref=f7e40]:
+      - generic [ref=f7e41]:
+        - heading "Ogni pezzo esiste una sola volta" [level=2] [ref=f7e42]
+        - paragraph [ref=f7e45]: Il vetro fatto a mano non può essere riprodotto alla perfezione. I degradé di colore, le inclusioni e i vortici del tuo pezzo sono unicamente tuoi — mai prodotto in serie, mai duplicato.
+        - link "Vedi il pezzo" [ref=f7e46] [cursor=pointer]:
+          - /url: /products/collana-acquamarina-98782c
+          - text: Vedi il pezzo
+          - generic [aria-hidden] [ref=f7e47]: →
+      - figure "Collana Acquamarina Vedi il pezzo ↗" [ref=f7e48]:
+        - link [aria-hidden] [ref=f7e49] [cursor=pointer]:
+          - /url: /products/collana-acquamarina-98782c
+    - article [ref=f7e52]:
+      - generic [ref=f7e53]:
+        - heading "Un patrimonio culturale vivo" [level=2] [ref=f7e54]
+        - paragraph [ref=f7e57]: I maestri vetrai di Murano godono del riconoscimento UNESCO. Quando indossi un pezzo, porti con te una tradizione che Venezia custodisce da oltre settecento anni.
+        - link "Vedi il pezzo" [ref=f7e58] [cursor=pointer]:
+          - /url: /products/bangle-cremisi-3c2860
+          - text: Vedi il pezzo
+          - generic [aria-hidden] [ref=f7e59]: →
+      - figure "Bangle Cremisi Vedi il pezzo ↗" [ref=f7e60]:
+        - link [aria-hidden] [ref=f7e61] [cursor=pointer]:
+          - /url: /products/bangle-cremisi-3c2860
+  - paragraph [ref=f7e63]: Home · Gift finder band
+  - generic [ref=f7e67]:
+    - paragraph [ref=f7e68]:
+      - generic [ref=f7e70]: 5 domande · circa 5 minuti
+    - heading [level=2] [ref=f7e73]:
+      - link "Non sai cosa scegliere? Trova il regalo di Murano perfetto →" [ref=f7e74] [cursor=pointer]:
+        - /url: /gift-finder
+    - paragraph [ref=f7e76]: "Dicci per chi è, l’occasione, lo stile, il budget e il tipo di gioiello: ti abbineremo pezzi in vetro di Murano davvero disponibili."
+  - paragraph [ref=f7e77]: Home · Newsletter
+  - generic [ref=f7e80]:
+    - generic [ref=f7e81]:
+      - heading "Ottieni il 10% di sconto sul tuo primo ordine" [level=2] [ref=f7e83]
+      - paragraph [ref=f7e85]: Iscriviti e usa il codice WELCOME10 al checkout. Riceverai anche nuovi pezzi e offerte occasionali, direttamente nella tua email.
+      - generic [ref=f7e86]: Newsletter signup form
+    - heading "−10%" [level=2] [ref=f7e89]

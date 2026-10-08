@@ -75,27 +75,29 @@ function formatPrice(cents: number, currency: string, locale: string) {
 // The resolved banner text, or null (hide it) when the zones don't match it.
 // Cached per request: several components on one page render it.
 const loadZones = cache(() =>
-  db.shippingZone.findMany({
-    where: { countries: { some: { country: { in: [EUROPE, NORTH_AMERICA, REST_OF_WORLD] } } } },
-    select: {
-      countries: {
-        where: { country: { in: [EUROPE, NORTH_AMERICA, REST_OF_WORLD] } },
-        select: { country: true },
-      },
-      methods: {
-        select: {
-          method: {
-            select: {
-              basePrice: true,
-              active: true,
-              estimatedDaysMin: true,
-              estimatedDaysMax: true,
+  db.shippingZone
+    .findMany({
+      where: { countries: { some: { country: { in: [EUROPE, NORTH_AMERICA, REST_OF_WORLD] } } } },
+      select: {
+        countries: {
+          where: { country: { in: [EUROPE, NORTH_AMERICA, REST_OF_WORLD] } },
+          select: { country: true },
+        },
+        methods: {
+          select: {
+            method: {
+              select: {
+                basePrice: true,
+                active: true,
+                estimatedDaysMin: true,
+                estimatedDaysMax: true,
+              },
             },
           },
         },
       },
-    },
-  })
+    })
+    .catch(() => [] as never[])
 );
 
 // Shipping prices and delivery times for the FAQ, or nulls where the zones

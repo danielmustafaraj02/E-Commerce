@@ -1,15 +1,24 @@
+import type { ReactNode } from "react";
+import { LayoutSection } from "@/components/layout-section";
+import { PreviewBridge } from "@/components/layout-preview-bridge-server";
+import { isLayoutPreview } from "@/lib/layout-preview-server";
+import { pageEntries } from "@/lib/page-layout-store";
+import type { ARTICLE_SECTIONS } from "@/lib/page-layout";
 import { Link } from "@/components/localized-link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getStoreSettings } from "@/lib/store-settings";
 import { siteBaseUrl } from "@/lib/site-url";
 import { getLocale } from "@/lib/i18n/locale";
+import { ogLocale } from "@/lib/hreflang";
+import type { Locale } from "@/lib/i18n/locale-constants";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { applyTemplate } from "@/lib/i18n/format";
 import { toSafeJsonLd, absoluteUrl } from "@/lib/json-ld";
 import {
   ARTICLES,
   articleLanguages,
+  articleTranslationLocales,
   articlePath,
   articleProductSlugs,
   localizeArticle,
@@ -26,6 +35,7 @@ import { homeFontClasses } from "@/app/home-fonts";
 import { categoryLabel, formatArticleDate } from "../journal-shared";
 import "../../home.css";
 import "../journal.css";
+import "../article-opening.css";
 
 export function generateStaticParams() {
   return ARTICLES.map((article) => ({ slug: article.slug }));
@@ -43,11 +53,11 @@ export async function generateMetadata({ params }: PageProps<"/blog/[slug]">): P
   const image = journalImageSrc(article.hero, products);
   const canonical = articlePath(article.slug, article.contentLocale);
   const languages = articleLanguages(source);
-  const alternateLocale = source.translations?.it
-    ? article.contentLocale === "it"
-      ? ["en_US"]
-      : ["it_IT"]
-    : undefined;
+  const available = ["en", ...articleTranslationLocales(source)] as Locale[];
+  const alternateLocale =
+    available.length > 1
+      ? available.filter((l) => l !== article.contentLocale).map(ogLocale)
+      : undefined;
   return {
     title: article.seoTitle,
     description: article.description,
@@ -59,7 +69,7 @@ export async function generateMetadata({ params }: PageProps<"/blog/[slug]">): P
       title: article.seoTitle,
       description: article.description,
       type: "article",
-      locale: article.contentLocale === "it" ? "it_IT" : "en_US",
+      locale: ogLocale(article.contentLocale),
       alternateLocale,
       publishedTime: article.published,
       modifiedTime: article.updated ?? article.published,
@@ -84,7 +94,14 @@ export async function generateMetadata({ params }: PageProps<"/blog/[slug]">): P
   };
 }
 
-export default async function JournalArticlePage({ params }: PageProps<"/blog/[slug]">) {
+type ArticleSectionId = (typeof ARTICLE_SECTIONS)[number]["id"];
+
+export default async function JournalArticlePage({
+  params,
+  searchParams,
+}: PageProps<"/blog/[slug]">) {
+  const preview = await isLayoutPreview(searchParams);
+  const entries = await pageEntries("article", { preview });
   const { slug } = await params;
   const source = await findArticle(slug);
   if (!source) notFound();
@@ -145,24 +162,9 @@ export default async function JournalArticlePage({ params }: PageProps<"/blog/[s
     },
   ];
 
-  return (
-    <main className={`shelf journal ${homeFontClasses}`}>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: toSafeJsonLd(jsonLd) }}
-      />
-
-      <article className="journal-article" lang={article.contentLocale}>
-        <JournalImage
-          image={article.hero}
-          products={products}
-          sizes="(min-width: 64rem) 60rem, 100vw"
-          priority
-          className="journal-hero"
-          creditLabel={credit}
-          locale={article.contentLocale}
-        />
-
+  const sections: Record<ArticleSectionId, ReactNode> = {
+    head: (
+      <div className="journal-opening" data-has-image={!!heroSrc}>
         <header className="journal-article-head">
           <nav aria-label="Breadcrumb" className="journal-breadcrumb" lang={uiLocale}>
             <Link href="/blog">{j.title}</Link>
@@ -202,127 +204,151 @@ export default async function JournalArticlePage({ params }: PageProps<"/blog/[s
             </p>
           )}
         </header>
+        <JournalImage
+          image={article.hero}
+          products={products}
+          sizes="(min-width: 64rem) 60rem, 100vw"
+          priority
+          className="journal-hero"
+          creditLabel={credit}
+          locale={article.contentLocale}
+        />
+      </div>
+    ),
+    body: (
+      <div className="journal-prose" lang={article.contentLocale}>
+        <p className="journal-intro">
+          <InlineText text={article.intro} />
+        </p>
+        <ArticleBody
+          blocks={article.body}
+          products={products}
+          locale={settings.defaultLocale}
+          uiLocale={uiLocale}
+          labels={{
+            outOfStock: dict.product.outOfStock,
+            addToCart: dict.product.addToCart,
+            added: dict.product.added,
+            photoCredit: credit,
+          }}
+        />
 
-        <div className="journal-prose" lang={article.contentLocale}>
-          <p className="journal-intro">
-            <InlineText text={article.intro} />
-          </p>
-          <ArticleBody
-            blocks={article.body}
-            products={products}
-            locale={settings.defaultLocale}
-            uiLocale={uiLocale}
-            labels={{
-              outOfStock: dict.product.outOfStock,
-              addToCart: dict.product.addToCart,
-              added: dict.product.added,
-              photoCredit: credit,
-            }}
-          />
-
-          {article.sources.length > 0 && (
-            <section className="journal-sources" aria-labelledby="journal-sources-title">
-              <h2 id="journal-sources-title" lang={uiLocale}>
-                {j.sources}
-              </h2>
-              <ul>
-                {article.sources.map((source) => (
-                  <li key={source.url}>
-                    <p className="journal-source-heading">
-                      <a href={source.url} target="_blank" rel="noopener noreferrer">
-                        {source.title}
-                      </a>
-                    </p>
-                    <p className="journal-source-meta">
-                      {source.author ? `${source.author}. ` : ""}
-                      {source.publisher}
-                      {source.published ? ` · ${source.published}` : ""}
-                      {source.locator ? ` · ${source.locator}` : ""}
-                      {" · "}
-                      {article.contentLocale === "it" ? "Consultato" : "Accessed"}{" "}
-                      {formatArticleDate(source.accessed, article.contentLocale)}
-                      {source.kind && <> · {sourceKindLabel(source.kind, article.contentLocale)}</>}
-                    </p>
-                    <p className="journal-source-note">
-                      {article.contentLocale === "it"
-                        ? (source.usedForIt ?? source.usedFor)
-                        : source.usedFor}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-        </div>
-      </article>
-
-      {episodes.length > 0 && article.series && (
-        <nav
-          className="journal-series"
-          aria-label={
-            article.contentLocale === "it" ? article.series.titleIt : article.series.title
-          }
-          lang={article.contentLocale}
-        >
-          <div className="shelf-wrap">
-            <p className="journal-kicker">
-              {article.contentLocale === "it" ? "Percorso completo" : "The complete series"}
-            </p>
-            <h2>
-              {article.contentLocale === "it" ? article.series.titleIt : article.series.title}
+        {article.sources.length > 0 && (
+          <section className="journal-sources" aria-labelledby="journal-sources-title">
+            <h2 id="journal-sources-title" lang={uiLocale}>
+              {j.sources}
             </h2>
-            <ol>
-              {episodes.map((episode) => (
-                <li key={episode.slug}>
-                  {episode.slug === article.slug ? (
-                    <span aria-current="page">
-                      <span className="journal-series-number">{episode.series?.episode}</span>
-                      {episode.title}
-                    </span>
-                  ) : (
-                    <Link href={`/blog/${episode.slug}`}>
-                      <span className="journal-series-number">{episode.series?.episode}</span>
-                      {episode.title}
-                    </Link>
-                  )}
-                </li>
-              ))}
-            </ol>
-          </div>
-        </nav>
-      )}
-
-      {related.length > 0 && (
-        <section
-          className="shelf-section shelf-section--sand"
-          aria-labelledby="journal-related-title"
-        >
-          <div className="shelf-wrap">
-            <h2 id="journal-related-title" className="shelf-heading">
-              {j.related}
-            </h2>
-            <ul className="journal-related">
-              {related.map((r) => (
-                <li key={r.slug}>
-                  <Link href={`/blog/${r.slug}`}>
-                    <JournalImage
-                      image={r.hero}
-                      products={products}
-                      sizes="(min-width: 48rem) 22rem, 100vw"
-                      creditLabel={credit}
-                      locale={r.contentLocale}
-                    />
-                    <span className="journal-kicker">{categoryLabel(j, r.category)}</span>
-                    <span className="journal-related-title" lang={r.contentLocale}>
-                      {r.title}
-                    </span>
-                  </Link>
+            <ul>
+              {article.sources.map((source) => (
+                <li key={source.url}>
+                  <p className="journal-source-heading">
+                    <a href={source.url} target="_blank" rel="noopener noreferrer">
+                      {source.title}
+                    </a>
+                  </p>
+                  <p className="journal-source-meta">
+                    {source.author ? `${source.author}. ` : ""}
+                    {source.publisher}
+                    {source.published ? ` · ${source.published}` : ""}
+                    {source.locator ? ` · ${source.locator}` : ""}
+                    {" · "}
+                    {article.contentLocale === "it" ? "Consultato" : "Accessed"}{" "}
+                    {formatArticleDate(source.accessed, article.contentLocale)}
+                    {source.kind && <> · {sourceKindLabel(source.kind, article.contentLocale)}</>}
+                  </p>
+                  <p className="journal-source-note">
+                    {article.contentLocale === "it"
+                      ? (source.usedForIt ?? source.usedFor)
+                      : source.usedFor}
+                  </p>
                 </li>
               ))}
             </ul>
-          </div>
-        </section>
-      )}
+          </section>
+        )}
+      </div>
+    ),
+    series: episodes.length > 0 && article.series && (
+      <nav
+        className="journal-series"
+        aria-label={article.contentLocale === "it" ? article.series.titleIt : article.series.title}
+        lang={article.contentLocale}
+      >
+        <div className="shelf-wrap">
+          <p className="journal-kicker">
+            {article.contentLocale === "it" ? "Percorso completo" : "The complete series"}
+          </p>
+          <h2>{article.contentLocale === "it" ? article.series.titleIt : article.series.title}</h2>
+          <ol>
+            {episodes.map((episode) => (
+              <li key={episode.slug}>
+                {episode.slug === article.slug ? (
+                  <span aria-current="page">
+                    <span className="journal-series-number">{episode.series?.episode}</span>
+                    {episode.title}
+                  </span>
+                ) : (
+                  <Link href={`/blog/${episode.slug}`}>
+                    <span className="journal-series-number">{episode.series?.episode}</span>
+                    {episode.title}
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ol>
+        </div>
+      </nav>
+    ),
+    related: related.length > 0 && (
+      <section
+        className="shelf-section shelf-section--sand"
+        aria-labelledby="journal-related-title"
+      >
+        <div className="shelf-wrap">
+          <h2 id="journal-related-title" className="shelf-heading">
+            {j.related}
+          </h2>
+          <ul className="journal-related">
+            {related.map((r) => (
+              <li key={r.slug}>
+                <Link href={`/blog/${r.slug}`}>
+                  <JournalImage
+                    image={r.hero}
+                    products={products}
+                    sizes="(min-width: 48rem) 22rem, 100vw"
+                    creditLabel={credit}
+                    locale={r.contentLocale}
+                  />
+                  <span className="journal-kicker">{categoryLabel(j, r.category)}</span>
+                  <span className="journal-related-title" lang={r.contentLocale}>
+                    {r.title}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    ),
+  };
+
+  return (
+    <main className={`shelf journal ${homeFontClasses}`}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toSafeJsonLd(jsonLd) }}
+      />
+      <article
+        className={`journal-article journal ${homeFontClasses}`}
+        lang={article.contentLocale}
+      >
+        {entries.map((entry) => (
+          <LayoutSection key={entry.id} entry={entry} preview={preview}>
+            {entry.custom ? null : sections[entry.id as ArticleSectionId]}
+          </LayoutSection>
+        ))}
+      </article>
+      {preview && <PreviewBridge target="article" />}
     </main>
   );
 }

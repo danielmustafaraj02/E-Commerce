@@ -2,6 +2,8 @@
 // reviewed in pull requests like code, so every claim, source and image
 // licence is visible in the diff. Rules are enforced in journal.test.ts.
 
+import type { Locale } from "@/lib/i18n/locale-constants";
+
 export type JournalCategory = "history" | "craft" | "buying" | "care" | "gifting";
 
 // Where an image came from and why we may publish it. Anything we can't
@@ -47,7 +49,7 @@ export type Source = {
   published?: string;
 };
 
-export type JournalContentLocale = "en" | "it";
+export type JournalContentLocale = Locale;
 
 export type ArticleCopy = {
   title: string;
@@ -75,6 +77,8 @@ export type Block =
   | { type: "h2"; text: string }
   | { type: "h3"; text: string }
   | { type: "quote"; text: string; cite?: string }
+  | { type: "list"; items: string[]; ordered?: boolean }
+  | { type: "video"; url: string; caption?: string }
   | { type: "facts"; title: string; items: string[] }
   | { type: "image"; image: JournalImage }
   | { type: "products"; title: string; slugs: string[] }
@@ -89,7 +93,7 @@ export type Article = ArticleCopy & {
   sources: Source[];
   related: string[]; // other article slugs
   series?: ArticleSeries;
-  translations?: Partial<Record<"it", ArticleTranslation>>;
+  translations?: Partial<Record<Exclude<Locale, "en">, ArticleTranslation>>;
 };
 
 export type LocalizedArticle = Omit<Article, "translations" | keyof ArticleCopy> &

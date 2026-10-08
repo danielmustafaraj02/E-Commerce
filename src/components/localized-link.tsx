@@ -4,6 +4,7 @@ import NextLink from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import type { ComponentProps } from "react";
 import { splitLocalePrefix } from "@/lib/i18n/locale-constants";
+import { withCurrentLocale } from "@/lib/localized-href";
 
 // Shared by the Link wrapper below and useLocalizedRouter: given the
 // locale the CURRENT page is on and a candidate href, add that locale's
@@ -13,15 +14,6 @@ import { splitLocalePrefix } from "@/lib/i18n/locale-constants";
 // unchanged. With no current locale (unlocalized pages — admin, or
 // anywhere usePathname doesn't match a known locale) hrefs are left bare
 // too, since there's no locale to add.
-function withCurrentLocale(href: string, currentLocale: string | null): string {
-  return href.startsWith("/") &&
-    !href.startsWith("//") &&
-    currentLocale &&
-    splitLocalePrefix(href).locale === null
-    ? `/${currentLocale}${href}`
-    : href;
-}
-
 // Drop-in replacement for next/link's Link: every internal href written as
 // a bare, unprefixed path ("/products/foo") gets the *current page's*
 // locale prefix added automatically, so a click stays on the same language

@@ -478,3 +478,93 @@
     padding-inline: 1.25rem;
   }
 }
+
+.journal-video {
+  margin: 2.5rem 0;
+}
+.journal-video-frame {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  border: 0;
+  background: var(--tint-sand);
+}
+.journal-video figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+/* ── Editorial opening: the title leads, the photograph follows ───────────
+   The headline and its line of facts come first on the page, so the reader
+   knows what they are reading before the picture; the cover then runs wide,
+   inset by the same gutter as the text so its edges align with the column. */
+.journal-article .journal-article-head {
+  padding-block: clamp(2.5rem, 6vw, 5.5rem) clamp(2rem, 4vw, 3rem);
+}
+.journal-article .journal-article-head h1::after {
+  content: "";
+  display: block;
+  width: 3.25rem;
+  height: 1px;
+  margin-top: clamp(1.25rem, 2.5vw, 2rem);
+  background: var(--gold, var(--brass));
+}
+.journal-article .journal-hero {
+  width: min(calc(100% - 2 * clamp(1.25rem, 4vw, 3rem)), var(--journal-editorial-max));
+  margin-bottom: clamp(2.5rem, 6vw, 5rem);
+}
+@media (max-width: 47.99rem) {
+  .journal-article .journal-hero {
+    width: 100%;
+  }
+}
+
+/* ── Pieces inside an article: the site's own shelf, unframed, with a
+   kicker rule; the call to action is an underlined line, not a slab. */
+.journal-products .journal-facts-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.journal-products .journal-facts-title::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+.journal-products .shelf-item-photo,
+.journal-products .shelf-item:hover .shelf-item-photo,
+.journal-products .shelf-item:has(:focus-visible) .shelf-item-photo {
+  background: var(--ivory);
+  box-shadow: none;
+}
+.journal-products .shelf-item-photo::after {
+  display: none;
+}
+.journal-prose .journal-cta {
+  text-align: start;
+  margin-block: 2.5rem;
+}
+.journal-prose .journal-cta .shelf-button {
+  display: inline-flex;
+  gap: 0.6rem;
+  min-height: 0;
+  padding: 0 0 0.35rem;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  background: none;
+  color: var(--midnight);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.15rem, 1.8vw, 1.45rem);
+  letter-spacing: 0;
+  text-transform: none;
+  box-shadow: none;
+}
+.journal-prose .journal-cta .shelf-button:hover {
+  color: var(--brass-deep, var(--brass));
+  background: none;
+}
+.journal-prose .journal-products {
+  border-top: 0;
+  padding-top: 0;
+}

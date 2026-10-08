@@ -66,9 +66,7 @@ describe("getSceneFrame — reading intervals", () => {
 
   it("shows exactly one scene at a time while reading", () => {
     for (const i of [0, 1, 2]) {
-      const reading = [0, 1, 2].filter(
-        (j) => isReading(getSceneFrame(readUnit(i), j, COUNT, 600)),
-      );
+      const reading = [0, 1, 2].filter((j) => isReading(getSceneFrame(readUnit(i), j, COUNT, 600)));
       expect(reading).toEqual([i]);
     }
   });
@@ -126,9 +124,7 @@ describe("getSceneFrame — transition ordering", () => {
 
   it("never shows two scenes' copies at once mid-transition", () => {
     for (let u = 0; u <= timelineLength(COUNT); u += 0.05) {
-      const opacities = [0, 1, 2].map(
-        (i) => getSceneFrame(progressAt(u), i, COUNT, D).copyOpacity,
-      );
+      const opacities = [0, 1, 2].map((i) => getSceneFrame(progressAt(u), i, COUNT, D).copyOpacity);
       // A crossfade would put two above a visible threshold simultaneously.
       const readable = opacities.filter((o) => o >= 0.99).length;
       expect(readable).toBeLessThanOrEqual(1);
@@ -354,5 +350,42 @@ describe("getSceneFrame — edges", () => {
     const f = getSceneFrame(0.5, 0, 1, 600);
     expect(f.y).toBe(0);
     expect(f.copyOpacity).toBe(1);
+  });
+});
+describe("scroll distance and transition styles", () => {
+  it("scales the section height with the chosen scroll distance", () => {
+    expect(sectionHeight(3, 600)).toBe(sectionHeight(3, 600, SCROLL_PER_UNIT));
+    expect(sectionHeight(3, 600, 1)).toBeGreaterThan(sectionHeight(3, 600, 0.5));
+  });
+
+  it("clamps the distance the editor can set", async () => {
+    const { clampPerUnit } = await import("./showcase-timeline");
+    expect(clampPerUnit(9)).toBe(1.5);
+    expect(clampPerUnit(0)).toBe(0.25);
+    expect(clampPerUnit("x")).toBe(SCROLL_PER_UNIT);
+  });
+
+  it("cross-fades in place for fade and zoom, and only zoom scales", () => {
+    const mid = progressAt(1.5);
+    const slide = getSceneFrame(mid, 1, COUNT, 600, "slide");
+    const fade = getSceneFrame(mid, 1, COUNT, 600, "fade");
+    const zoom = getSceneFrame(mid, 1, COUNT, 600, "zoom");
+    expect(slide.y).not.toBe(0);
+    expect(fade.y).toBe(0);
+    expect(fade.scale).toBeUndefined();
+    expect(zoom.y).toBe(0);
+    expect(zoom.scale).toBeGreaterThan(0.8);
+    expect(zoom.scale).toBeLessThanOrEqual(1.15);
+  });
+
+  it("shows exactly one scene at rest, in every style", () => {
+    for (const style of ["slide", "fade", "zoom"] as const) {
+      for (let i = 0; i < COUNT; i++) {
+        const reading = getSceneFrame(progressAt(2 * i), i, COUNT, 600, style);
+        expect(reading.imageOpacity).toBeCloseTo(1);
+        expect(reading.copyOpacity).toBeCloseTo(1);
+        expect(reading.y).toBeCloseTo(0);
+      }
+    }
   });
 });

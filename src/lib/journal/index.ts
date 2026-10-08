@@ -1,3 +1,4 @@
+import { locales, type Locale } from "@/lib/i18n/locale-constants";
 import type { Article, ArticleCopy, Block, JournalContentLocale, LocalizedArticle } from "./types";
 import { historyOfMuranoGlass } from "@/content/journal/history-of-murano-glass";
 import { muranoGlassMaterials } from "@/content/journal/murano-glass-materials-cristallo-lattimo";
@@ -50,27 +51,41 @@ export function getArticle(slug: string) {
 
 // English remains the source copy. Individual articles may add an Italian
 // translation; other localized routes use the English copy until translated.
+const isLocale = (value: string): value is Locale => (locales as readonly string[]).includes(value);
+
 export const ARTICLE_LOCALE = "en" as const;
 export function articlePath(slug: string, locale: JournalContentLocale = ARTICLE_LOCALE) {
   return `/${locale}/blog/${slug}`;
+}
+
+/** The languages an article has its own copy in, besides English. */
+export function articleTranslationLocales(article: Pick<Article, "translations">) {
+  return locales.filter(
+    (locale): locale is Exclude<Locale, "en"> => locale !== "en" && !!article.translations?.[locale]
+  );
 }
 
 export function articleLanguages(article: Article) {
   const languages: Record<string, string> = {
     en: articlePath(article.slug, "en"),
   };
-  if (article.translations?.it) languages.it = articlePath(article.slug, "it");
+  for (const locale of articleTranslationLocales(article)) {
+    languages[locale] = articlePath(article.slug, locale);
+  }
   languages["x-default"] = languages.en;
   return languages;
 }
 
 export function localizeArticle(article: Article, requestedLocale: string): LocalizedArticle {
   const { translations = {}, ...shared } = article;
-  const translation = requestedLocale === "it" ? translations.it : undefined;
+  const translation =
+    isLocale(requestedLocale) && requestedLocale !== "en"
+      ? translations[requestedLocale]
+      : undefined;
   return {
     ...shared,
     ...(translation ?? {}),
-    contentLocale: translation ? "it" : "en",
+    contentLocale: translation ? (requestedLocale as Locale) : "en",
   };
 }
 
@@ -96,6 +111,8 @@ function blockText(block: Block): string {
     case "quote":
     case "cta":
       return block.text;
+    case "list":
+      return block.items.join(" ");
     case "facts":
       return [block.title, ...block.items].join(" ");
     default:
@@ -145,6 +162,6 @@ export function articleProductSlugs(article: Article) {
     }
   };
   addBody(article.body);
-  if (article.translations?.it) addBody(article.translations.it.body);
+  for (const translation of Object.values(article.translations ?? {})) addBody(translation.body);
   return [...slugs];
 }

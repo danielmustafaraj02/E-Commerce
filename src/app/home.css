@@ -4465,3 +4465,45 @@
       transform 0.9s var(--ease-out-soft) 0.28s;
   }
 }
+
+/* ── Hero, editorial pass ───────────────────────────────────────────────────
+   A place-name eyebrow over the name, a gold rule under it, a lede set large
+   enough to read as a line of the magazine, and a fine frame inside the film,
+   like a photograph mounted on the page. */
+.shelf-hero-eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.32em;
+}
+.shelf-home .shelf-hero .shelf-title::after {
+  content: "";
+  display: block;
+  width: 3.5rem;
+  height: 1px;
+  margin-top: clamp(1.25rem, 2.4vh, 1.9rem);
+  background: var(--gold, var(--brass));
+}
+@media (min-width: 52rem) {
+  .shelf-home .shelf-hero .shelf-lede {
+    font-size: clamp(1.15rem, 1.45vw, 1.45rem);
+    line-height: 1.5;
+    max-width: 24rem;
+  }
+  .shelf-home .shelf-hero::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    top: 1.25rem;
+    right: 1.25rem;
+    width: calc(54% - 2.5rem);
+    height: calc(100% - var(--hero-foot, 2rem) - 2.5rem);
+    border: 1px solid rgb(255 255 255 / 55%);
+    pointer-events: none;
+  }
+}
+/* On phones the copy sits on the film, like the title: ivory, softly shadowed. */
+@media (max-width: 51.99rem) {
+  .shelf-home .shelf-hero-eyebrow {
+    color: var(--ivory);
+    text-shadow: 0 1px 10px rgb(0 0 0 / 40%);
+  }
+}

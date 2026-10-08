@@ -3,18 +3,38 @@ import { ShelfItem } from "@/components/shelf-item";
 import { JournalImage } from "@/components/journal/journal-image";
 import { parseInline } from "@/lib/journal";
 import { localizedCardProduct } from "@/lib/product-i18n";
+import { videoEmbedUrl } from "@/lib/journal/article-schema";
 import type { Block } from "@/lib/journal/types";
 import type { JournalProductMap } from "@/lib/journal/products";
 import type { Locale } from "@/lib/i18n/locale";
 
 // Paragraph text with [label](href) links: internal ones via next/link,
 // sources in a new tab.
+// **bold** and *italic* are supported in plain text too.
+function Emphasis({ text }: { text: string }) {
+  return (
+    <>
+      {text
+        .split(/(\*\*[^*]+\*\*|\*[^*\s][^*]*\*)/)
+        .map((piece, i) =>
+          piece.startsWith("**") && piece.endsWith("**") && piece.length > 4 ? (
+            <strong key={i}>{piece.slice(2, -2)}</strong>
+          ) : piece.startsWith("*") && piece.endsWith("*") && piece.length > 2 ? (
+            <em key={i}>{piece.slice(1, -1)}</em>
+          ) : (
+            piece
+          )
+        )}
+    </>
+  );
+}
+
 export function InlineText({ text }: { text: string }) {
   return (
     <>
       {parseInline(text).map((part, i) =>
         !("href" in part) ? (
-          part.text
+          <Emphasis key={i} text={part.text} />
         ) : part.href.startsWith("/") ? (
           <Link key={i} href={part.href}>
             {part.text}
@@ -68,6 +88,35 @@ export function ArticleBody({
                 {block.cite && <figcaption>{block.cite}</figcaption>}
               </figure>
             );
+          case "list": {
+            const List = block.ordered ? "ol" : "ul";
+            return (
+              <List key={i}>
+                {block.items.map((item, j) => (
+                  <li key={j}>
+                    <InlineText text={item} />
+                  </li>
+                ))}
+              </List>
+            );
+          }
+          case "video": {
+            const src = videoEmbedUrl(block.url);
+            if (!src) return null;
+            return (
+              <figure key={i} className="journal-video">
+                <iframe
+                  className="journal-video-frame"
+                  src={src}
+                  title={block.caption || "Video"}
+                  loading="lazy"
+                  allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                  allowFullScreen
+                />
+                {block.caption && <figcaption>{block.caption}</figcaption>}
+              </figure>
+            );
+          }
           case "facts":
             return (
               <aside key={i} className="journal-facts">

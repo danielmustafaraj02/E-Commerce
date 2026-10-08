@@ -42,7 +42,7 @@ export function QuickAddButton({
           setAdded(true);
           setTimeout(() => setAdded(false), 1200);
         }}
-        className="bg-background/95 text-foreground absolute right-2.5 bottom-2.5 z-10 flex h-11 w-11 translate-y-2 items-center justify-center rounded-(--radius-button) opacity-0 shadow-sm transition-[background-color,opacity,transform] duration-200 group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:translate-y-0 group-hover:opacity-100 hover:bg-white focus-visible:translate-y-0 focus-visible:opacity-100 active:scale-[0.98] disabled:pointer-events-none motion-reduce:transition-none [@media(hover:none)]:translate-y-0 [@media(hover:none)]:opacity-100"
+        className="shelf-quick bg-background/95 text-foreground absolute right-2.5 bottom-2.5 z-10 flex h-11 w-11 translate-y-2 items-center justify-center rounded-(--radius-button) opacity-0 shadow-sm transition-[background-color,opacity,transform] duration-200 group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:translate-y-0 group-hover:opacity-100 hover:bg-white focus-visible:translate-y-0 focus-visible:opacity-100 active:scale-[0.98] disabled:pointer-events-none motion-reduce:transition-none [@media(hover:none)]:translate-y-0 [@media(hover:none)]:opacity-100"
       >
         {added ? (
           <svg

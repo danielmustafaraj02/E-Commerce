@@ -1,3 +1,10 @@
+import type { ReactNode } from "react";
+import { LayoutSection } from "@/components/layout-section";
+import { PreviewBridge } from "@/components/layout-preview-bridge-server";
+import { isLayoutPreview } from "@/lib/layout-preview-server";
+import { pageEntries } from "@/lib/page-layout-store";
+import type { JOURNAL_SECTIONS } from "@/lib/page-layout";
+import { withPageMeta } from "@/lib/page-meta";
 import { Link } from "@/components/localized-link";
 import type { Metadata } from "next";
 import { getStoreSettings, ogImage } from "@/lib/store-settings";
@@ -17,7 +24,7 @@ import "./journal.css";
 
 const CATEGORIES: JournalCategory[] = ["history", "craft", "buying", "care", "gifting"];
 
-export async function generateMetadata(): Promise<Metadata> {
+async function baseMetadata(): Promise<Metadata> {
   const [settings, locale] = await Promise.all([getStoreSettings(), getLocale()]);
   const dict = getDictionary(locale).journal;
   const image = ogImage(settings);
@@ -37,7 +44,15 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+export async function generateMetadata(): Promise<Metadata> {
+  return withPageMeta("/blog", await baseMetadata());
+}
+
+type JournalSectionId = (typeof JOURNAL_SECTIONS)[number]["id"];
+
 export default async function JournalIndexPage({ searchParams }: PageProps<"/blog">) {
+  const preview = await isLayoutPreview(searchParams);
+  const entries = await pageEntries("journal", { preview });
   const [{ category }, uiLocale] = await Promise.all([searchParams, getLocale()]);
   const dict = getDictionary(uiLocale);
   const j = dict.journal;
@@ -51,8 +66,8 @@ export default async function JournalIndexPage({ searchParams }: PageProps<"/blo
   );
   const [featured, ...rest] = articles;
 
-  return (
-    <main className={`shelf journal ${homeFontClasses}`}>
+  const sections: Record<JournalSectionId, ReactNode> = {
+    head: (
       <header className="journal-index-head shelf-wrap">
         <h1 className="shelf-heading">{j.title}</h1>
         <p className="journal-index-intro">{j.intro}</p>
@@ -71,58 +86,72 @@ export default async function JournalIndexPage({ searchParams }: PageProps<"/blo
           ))}
         </nav>
       </header>
+    ),
+    list: (
+      <>
+        <div className="shelf-wrap journal-index-list">
+          {featured && (
+            <article className="journal-card journal-card--featured">
+              <Link
+                href={`/blog/${featured.slug}`}
+                className="journal-card-image"
+                tabIndex={-1}
+                aria-hidden="true"
+              >
+                <JournalImage
+                  image={featured.hero}
+                  products={products}
+                  sizes="(min-width: 48rem) 55vw, 100vw"
+                  priority
+                  locale={localizeArticle(featured, uiLocale).contentLocale}
+                  creditLabel={(credit) => applyTemplate(j.photoCredit, { credit })}
+                />
+              </Link>
+              <ArticleCardText
+                article={localizeArticle(featured, uiLocale)}
+                dict={dict}
+                locale={uiLocale}
+                requestedLocale={uiLocale}
+              />
+            </article>
+          )}
+          {rest.map((article) => (
+            <article key={article.slug} className="journal-card">
+              <Link
+                href={`/blog/${article.slug}`}
+                className="journal-card-image"
+                tabIndex={-1}
+                aria-hidden="true"
+              >
+                <JournalImage
+                  image={article.hero}
+                  products={products}
+                  sizes="(min-width: 48rem) 16rem, 40vw"
+                  locale={localizeArticle(article, uiLocale).contentLocale}
+                  creditLabel={(credit) => applyTemplate(j.photoCredit, { credit })}
+                />
+              </Link>
+              <ArticleCardText
+                article={localizeArticle(article, uiLocale)}
+                dict={dict}
+                locale={uiLocale}
+                requestedLocale={uiLocale}
+              />
+            </article>
+          ))}
+        </div>
+      </>
+    ),
+  };
 
-      <div className="shelf-wrap journal-index-list">
-        {featured && (
-          <article className="journal-card journal-card--featured">
-            <Link
-              href={`/blog/${featured.slug}`}
-              className="journal-card-image"
-              tabIndex={-1}
-              aria-hidden="true"
-            >
-              <JournalImage
-                image={featured.hero}
-                products={products}
-                sizes="(min-width: 48rem) 55vw, 100vw"
-                priority
-                locale={localizeArticle(featured, uiLocale).contentLocale}
-                creditLabel={(credit) => applyTemplate(j.photoCredit, { credit })}
-              />
-            </Link>
-            <ArticleCardText
-              article={localizeArticle(featured, uiLocale)}
-              dict={dict}
-              locale={uiLocale}
-              requestedLocale={uiLocale}
-            />
-          </article>
-        )}
-        {rest.map((article) => (
-          <article key={article.slug} className="journal-card">
-            <Link
-              href={`/blog/${article.slug}`}
-              className="journal-card-image"
-              tabIndex={-1}
-              aria-hidden="true"
-            >
-              <JournalImage
-                image={article.hero}
-                products={products}
-                sizes="(min-width: 48rem) 16rem, 40vw"
-                locale={localizeArticle(article, uiLocale).contentLocale}
-                creditLabel={(credit) => applyTemplate(j.photoCredit, { credit })}
-              />
-            </Link>
-            <ArticleCardText
-              article={localizeArticle(article, uiLocale)}
-              dict={dict}
-              locale={uiLocale}
-              requestedLocale={uiLocale}
-            />
-          </article>
-        ))}
-      </div>
+  return (
+    <main className={`shelf journal ${homeFontClasses}`}>
+      {entries.map((entry) => (
+        <LayoutSection key={entry.id} entry={entry} preview={preview}>
+          {entry.custom ? null : sections[entry.id as JournalSectionId]}
+        </LayoutSection>
+      ))}
+      {preview && <PreviewBridge target="journal" />}
     </main>
   );
 }

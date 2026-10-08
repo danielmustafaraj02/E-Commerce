@@ -1,14 +1,19 @@
+import { LayoutSection } from "@/components/layout-section";
+import { PreviewBridge } from "@/components/layout-preview-bridge-server";
+import { isLayoutPreview } from "@/lib/layout-preview-server";
+import { withPageMeta } from "@/lib/page-meta";
 import { siteBaseUrl } from "@/lib/site-url";
 import "@/app/blog/journal.css";
 import { getArticlesForProduct } from "@/lib/journal/db-articles";
 import { getJournalProducts } from "@/lib/journal/products";
 import { localizeArticle } from "@/lib/journal";
 import { JournalImage } from "@/components/journal/journal-image";
-import { cache, Fragment, type ReactNode } from "react";
+import { cache, type ReactNode } from "react";
 import {
   PRODUCT_SECTIONS,
   parseProductPageLayout,
-  visibleOrder,
+  resolveLayout,
+  visibleEntries,
   type ProductSectionId,
 } from "@/lib/page-layout";
 import type { Metadata } from "next";
@@ -17,6 +22,7 @@ import { CatalogImage } from "@/components/catalog-image";
 import { Link } from "@/components/localized-link";
 import { notFound } from "next/navigation";
 import { auth } from "@/auth";
+import { LOCAL_ACCOUNTS_ENABLED } from "@/lib/local-features";
 import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
 import { formatMoney, formatDiscountPercent } from "@/lib/format";
@@ -167,9 +173,7 @@ const getProduct = cache((slug: string) =>
   })
 );
 
-export async function generateMetadata({
-  params,
-}: PageProps<"/products/[slug]">): Promise<Metadata> {
+async function baseMetadata({ params }: PageProps<"/products/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const [settings, locale, product] = await Promise.all([
     getStoreSettings(),
@@ -251,8 +255,18 @@ export async function generateMetadata({
   };
 }
 
-export default async function ProductDetailPage({ params }: PageProps<"/products/[slug]">) {
+export async function generateMetadata(
+  props: Parameters<typeof baseMetadata>[0]
+): Promise<Metadata> {
+  return withPageMeta(`product:${(await props.params).slug}`, await baseMetadata(props));
+}
+
+export default async function ProductDetailPage({
+  params,
+  searchParams,
+}: PageProps<"/products/[slug]">) {
   const { slug } = await params;
+  const preview = await isLayoutPreview(searchParams);
 
   const [settings, uiLocale, product, session, cardsEnabled, paypalEnabled, stripeMethods] =
     await Promise.all([
@@ -426,201 +440,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
     productArticles.flatMap((a) => (a.hero.kind === "product" ? [a.hero.productSlug] : []))
   );
   const productSections: Record<ProductSectionId, ReactNode> = {
-    /* gift-box photo: shared packaging shot, not this product's own photography */
-    gift: (
-      <section className="shelf-section shelf-section--blush">
-        <Reveal
-          className="shelf-wrap shop-gift-section shop-gift-reveal"
-          repeatOnView
-        >
-          <div className="shop-gift-photo">
-            <CatalogImage
-              src="/products/orecchini-in-vetro-di-murano/orecchini-goccia-di-rubino-3.png"
-              alt={dict.product.giftSectionEyebrow}
-              fill
-              sizes="(min-width: 40rem) 45vw, 100vw"
-            />
-          </div>
-          <div className="shop-gift-copy">
-            <p className="shop-gift-eyebrow">{dict.product.giftSectionEyebrow}</p>
-            <h2 className="shop-gift-headline">{dict.product.giftSectionHeadline}</h2>
-            <p className="shop-gift-body">{dict.product.giftSectionBody}</p>
-            <a href="#gift-packaging" className="shop-gift-link">
-              {dict.product.giftSectionLink}
-              <InlineArrowIcon />
-            </a>
-            <ul className="shop-gift-features">
-              <li>
-                <GiftIcon />
-                {dict.product.giftFeature1}
-              </li>
-              <li>
-                <HeartSmallIcon />
-                {dict.product.giftFeature2}
-              </li>
-              <li>
-                <SparkleIcon />
-                {dict.product.giftFeature3}
-              </li>
-            </ul>
-          </div>
-        </Reveal>
-      </section>
-),
-    customBlocks: customBlocks.length > 0 && (
-      <section className="shelf-section">
-        <Reveal className="shelf-wrap shop-custom-blocks">
-          {customBlocks.map((block, i) => (
-            <div key={i} className="shop-custom-block">
-              {block.title && <h2 className="shelf-heading">{block.title}</h2>}
-              {block.body && <p className="shop-story-prose">{block.body}</p>}
-            </div>
-          ))}
-        </Reveal>
-      </section>
-    ),
-    reviews: product.reviews.length > 0 && (
-        <section id="reviews" className="shelf-section">
-          <Reveal className="shelf-wrap shop-reviews">
-            <h2 className="shelf-heading">{dict.product.reviews}</h2>
-            <ul className="flex flex-col gap-4">
-              {product.reviews.map((review) => (
-                <li key={review.id} className="border-foreground/10 border-b pb-4">
-                  <p className="text-sm font-medium">
-                    {review.user.name ?? "Anonymous"} &middot; {review.rating}/5
-                  </p>
-                  {review.comment && (
-                    <p className="text-foreground/80 mt-1 text-sm">{review.comment}</p>
-                  )}
-                </li>
-              ))}
-            </ul>
-
-            {!userId ? (
-              <p className="text-foreground/70 mt-4 text-sm">
-                <Link href="/login" className="text-primary hover:underline">
-                  {dict.product.signInToReview}
-                </Link>
-              </p>
-            ) : isVerifiedBuyer || myReview ? (
-              <ReviewForm
-                productId={product.id}
-                slug={product.slug}
-                existing={myReview ? { rating: myReview.rating, comment: myReview.comment } : null}
-                dict={dict.product}
-              />
-            ) : (
-              <p className="text-foreground/70 mt-4 text-sm">{dict.product.verifiedPurchaseOnly}</p>
-            )}
-          </Reveal>
-        </section>
-      ),
-    story: (
-      <section className="shelf-section">
-        <div className="shelf-wrap">
-          <div className={story ? "shop-story-faq-grid" : undefined}>
-            {story && (
-              <Reveal className="shop-story shop-story-reveal">
-                <h2 className="shelf-heading shop-story-heading">{dict.product.storyTitle}</h2>
-                <p className="shop-story-prose">{story}</p>
-                <Link
-                  href="/blog/history-of-murano-glass"
-                  className="shelf-link shop-story-link"
-                >
-                  {dict.journal.storyLink} <span aria-hidden="true">→</span>
-                </Link>
-              </Reveal>
-            )}
-            {/* Same questions as the homepage FAQ, which carries the markup. */}
-            <FaqSection items={faq} dict={dict} variant="compact" structuredItems={[]} />
-          </div>
-        </div>
-      </section>
-    ),
-    articles: productArticles.length > 0 && (
-      <section className="shelf-section">
-        <Reveal className="shelf-wrap">
-          <h2 className="shelf-heading">{dict.journal.title}</h2>
-          <ul className="journal-related">
-            {productArticles.map((article) => (
-              <li key={article.slug}>
-                <Link href={`/blog/${article.slug}`}>
-                  <JournalImage
-                    image={article.hero}
-                    products={articleProducts}
-                    sizes="(min-width: 48rem) 22rem, 100vw"
-                    creditLabel={(credit) => credit}
-                    locale={article.contentLocale}
-                  />
-                  <span className="journal-related-title" lang={article.contentLocale}>
-                    {article.title}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </Reveal>
-      </section>
-    ),
-    look: look && (
-        <CompleteTheLook
-          look={look}
-          currentProductId={product.id}
-          locale={settings.defaultLocale}
-          dict={dict.look}
-          outOfStockLabel={dict.product.outOfStock}
-        />
-      ),
-    giftCard: settings.giftCardEnabled && (
-        <Reveal>
-          <GiftCardAd
-            dict={dict.giftCard}
-            brand={settings.storeName}
-            price={formatMoney(
-              settings.giftCardPrice,
-              settings.defaultCurrency,
-              settings.defaultLocale
-            )}
-          />
-        </Reveal>
-      ),
-    related: relatedProducts.length > 0 && (
-        <section className="shelf-section shelf-section--sand">
-          <Reveal className="shelf-wrap">
-            <h2 className="shelf-heading shop-related-heading">{dict.product.youMightAlsoLike}</h2>
-            <ul className="shelf-row">
-              {relatedProducts.map((related) => (
-                <ShelfItem
-                  key={related.slug}
-                  product={localizedCardProduct(related, uiLocale)}
-                  locale={settings.defaultLocale}
-                  outOfStockLabel={dict.product.outOfStock}
-                  quickAddLabel={dict.product.addToCart}
-                  addedLabel={dict.product.added}
-                />
-              ))}
-            </ul>
-          </Reveal>
-        </section>
-      ),
-  };
-  const productOrder = visibleOrder(
-    settings.productPageLayout,
-    PRODUCT_SECTIONS,
-    parseProductPageLayout(product.pageLayout).hidden
-  ) as ProductSectionId[];
-
-
-  return (
-    <main className={`shelf shop-product-page flex flex-1 flex-col ${homeFontClasses}`}>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: toSafeJsonLd(productJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: toSafeJsonLd(breadcrumbJsonLd) }}
-      />
+    top: (
       <section className="shelf-section shop-product">
         <div className="shelf-wrap">
           {product.category && (
@@ -775,7 +595,9 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
                 className="shop-prose"
               />
 
-              <TrustBadges trustBadgeText={settings.trustBadgeText} dict={dict.product} />
+              <div className="opt-trust">
+                <TrustBadges trustBadgeText={settings.trustBadgeText} dict={dict.product} />
+              </div>
 
               {/* The same accepted-method marks as the footer and checkout,
                   repeated where the buy decision happens. */}
@@ -862,10 +684,208 @@ export default async function ProductDetailPage({ params }: PageProps<"/products
           </div>
         </div>
       </section>
+    ),
+    /* gift-box photo: shared packaging shot, not this product's own photography */
+    gift: (
+      <section className="shelf-section shelf-section--blush">
+        <Reveal className="shelf-wrap shop-gift-section shop-gift-reveal" repeatOnView>
+          <div className="shop-gift-photo">
+            <CatalogImage
+              src="/products/orecchini-in-vetro-di-murano/orecchini-goccia-di-rubino-3.png"
+              alt={dict.product.giftSectionEyebrow}
+              fill
+              sizes="(min-width: 40rem) 45vw, 100vw"
+            />
+          </div>
+          <div className="shop-gift-copy">
+            <p className="shop-gift-eyebrow">{dict.product.giftSectionEyebrow}</p>
+            <h2 className="shop-gift-headline">{dict.product.giftSectionHeadline}</h2>
+            <p className="shop-gift-body">{dict.product.giftSectionBody}</p>
+            <a href="#gift-packaging" className="shop-gift-link">
+              {dict.product.giftSectionLink}
+              <InlineArrowIcon />
+            </a>
+            <ul className="shop-gift-features">
+              <li>
+                <GiftIcon />
+                {dict.product.giftFeature1}
+              </li>
+              <li>
+                <HeartSmallIcon />
+                {dict.product.giftFeature2}
+              </li>
+              <li>
+                <SparkleIcon />
+                {dict.product.giftFeature3}
+              </li>
+            </ul>
+          </div>
+        </Reveal>
+      </section>
+    ),
+    customBlocks: customBlocks.length > 0 && (
+      <section className="shelf-section">
+        <Reveal className="shelf-wrap shop-custom-blocks">
+          {customBlocks.map((block, i) => (
+            <div key={i} className="shop-custom-block">
+              {block.title && <h2 className="shelf-heading">{block.title}</h2>}
+              {block.body && <p className="shop-story-prose">{block.body}</p>}
+            </div>
+          ))}
+        </Reveal>
+      </section>
+    ),
+    reviews: product.reviews.length > 0 && (
+      <section id="reviews" className="shelf-section">
+        <Reveal className="shelf-wrap shop-reviews">
+          <h2 className="shelf-heading">{dict.product.reviews}</h2>
+          <ul className="flex flex-col gap-4">
+            {product.reviews.map((review) => (
+              <li key={review.id} className="border-foreground/10 border-b pb-4">
+                <p className="text-sm font-medium">
+                  {review.user.name ?? "Anonymous"} &middot; {review.rating}/5
+                </p>
+                {review.comment && (
+                  <p className="text-foreground/80 mt-1 text-sm">{review.comment}</p>
+                )}
+              </li>
+            ))}
+          </ul>
 
-      {productOrder.map((id) => (
-        <Fragment key={id}>{productSections[id]}</Fragment>
+          {!userId ? (
+            LOCAL_ACCOUNTS_ENABLED && (
+              <p className="text-foreground/70 mt-4 text-sm">
+                <Link href="/login" className="text-primary hover:underline">
+                  {dict.product.signInToReview}
+                </Link>
+              </p>
+            )
+          ) : isVerifiedBuyer || myReview ? (
+            <ReviewForm
+              productId={product.id}
+              slug={product.slug}
+              existing={myReview ? { rating: myReview.rating, comment: myReview.comment } : null}
+              dict={dict.product}
+            />
+          ) : (
+            <p className="text-foreground/70 mt-4 text-sm">{dict.product.verifiedPurchaseOnly}</p>
+          )}
+        </Reveal>
+      </section>
+    ),
+    story: (
+      <section className="shelf-section">
+        <div className="shelf-wrap">
+          <div className={story ? "shop-story-faq-grid" : undefined}>
+            {story && (
+              <Reveal className="shop-story shop-story-reveal">
+                <h2 className="shelf-heading shop-story-heading">{dict.product.storyTitle}</h2>
+                <p className="shop-story-prose">{story}</p>
+                <Link href="/blog/history-of-murano-glass" className="shelf-link shop-story-link">
+                  {dict.journal.storyLink} <span aria-hidden="true">→</span>
+                </Link>
+              </Reveal>
+            )}
+            {/* Same questions as the homepage FAQ, which carries the markup. */}
+            <FaqSection items={faq} dict={dict} variant="compact" structuredItems={[]} />
+          </div>
+        </div>
+      </section>
+    ),
+    articles: productArticles.length > 0 && (
+      <section className="shelf-section">
+        <Reveal className="shelf-wrap">
+          <h2 className="shelf-heading">{dict.journal.title}</h2>
+          <ul className="journal-related">
+            {productArticles.map((article) => (
+              <li key={article.slug}>
+                <Link href={`/blog/${article.slug}`}>
+                  <JournalImage
+                    image={article.hero}
+                    products={articleProducts}
+                    sizes="(min-width: 48rem) 22rem, 100vw"
+                    creditLabel={(credit) => credit}
+                    locale={article.contentLocale}
+                  />
+                  <span className="journal-related-title" lang={article.contentLocale}>
+                    {article.title}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+      </section>
+    ),
+    look: look && (
+      <CompleteTheLook
+        look={look}
+        currentProductId={product.id}
+        locale={settings.defaultLocale}
+        dict={dict.look}
+        outOfStockLabel={dict.product.outOfStock}
+      />
+    ),
+    giftCard: settings.giftCardEnabled && (
+      <Reveal>
+        <GiftCardAd
+          dict={dict.giftCard}
+          brand={settings.storeName}
+          price={formatMoney(
+            settings.giftCardPrice,
+            settings.defaultCurrency,
+            settings.defaultLocale
+          )}
+        />
+      </Reveal>
+    ),
+    related: relatedProducts.length > 0 && (
+      <section className="shelf-section shelf-section--sand shop-related">
+        <Reveal className="shelf-wrap">
+          <div className="shelf-heading-row">
+            <h2 className="shelf-heading">{dict.product.youMightAlsoLike}</h2>
+          </div>
+          <ul className="shelf-row">
+            {relatedProducts.map((related) => (
+              <ShelfItem
+                key={related.slug}
+                product={localizedCardProduct(related, uiLocale)}
+                locale={settings.defaultLocale}
+                outOfStockLabel={dict.product.outOfStock}
+                quickAddLabel={dict.product.addToCart}
+                addedLabel={dict.product.added}
+              />
+            ))}
+          </ul>
+        </Reveal>
+      </section>
+    ),
+  };
+  const productEntries = preview
+    ? resolveLayout(settings.productPageLayout, PRODUCT_SECTIONS)
+    : visibleEntries(
+        settings.productPageLayout,
+        PRODUCT_SECTIONS,
+        parseProductPageLayout(product.pageLayout).hidden
+      );
+
+  return (
+    <main className={`shelf shop-product-page flex flex-1 flex-col ${homeFontClasses}`}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toSafeJsonLd(productJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toSafeJsonLd(breadcrumbJsonLd) }}
+      />
+
+      {productEntries.map((entry) => (
+        <LayoutSection key={entry.id} entry={entry} preview={preview}>
+          {entry.custom ? null : productSections[entry.id as ProductSectionId]}
+        </LayoutSection>
       ))}
+      {preview && <PreviewBridge target="product" />}
     </main>
   );
 }

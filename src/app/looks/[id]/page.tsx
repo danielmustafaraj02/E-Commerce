@@ -1,3 +1,4 @@
+import { withPageMeta } from "@/lib/page-meta";
 import type { Metadata } from "next";
 import { Link } from "@/components/localized-link";
 import { notFound } from "next/navigation";
@@ -16,7 +17,7 @@ import { CompleteTheLook } from "@/components/complete-the-look";
 import { FaqSection } from "@/components/faq-section";
 import { LookLearnMore, LookPieces, LookWhy } from "@/components/look-page-sections";
 
-export async function generateMetadata({ params }: PageProps<"/looks/[id]">): Promise<Metadata> {
+async function baseMetadata({ params }: PageProps<"/looks/[id]">): Promise<Metadata> {
   const [{ id }, locale] = await Promise.all([params, getLocale()]);
   const look = await getLookById(id, locale);
   if (!look) return {};
@@ -38,6 +39,10 @@ export async function generateMetadata({ params }: PageProps<"/looks/[id]">): Pr
       images: image ? [{ url: image }] : undefined,
     },
   };
+}
+
+export async function generateMetadata(props: Parameters<typeof baseMetadata>[0]): Promise<Metadata> {
+  return withPageMeta(`look:${(await props.params).id}`, await baseMetadata(props));
 }
 
 export default async function LookPage({ params }: PageProps<"/looks/[id]">) {

@@ -1,0 +1,987 @@
+/* One set of real catalogue parts, composed differently by each persisted ID. */
+.look-tpl {
+  --tpl-ink: var(--midnight);
+  --tpl-hair: color-mix(in srgb, var(--brass) 48%, #fff);
+  --tpl-paper: color-mix(in srgb, var(--crema, #f3ece1) 55%, #fff);
+  --tpl-forest: var(--aventurine, #1f3d34);
+  --tpl-ruby: var(--rubino, #8c1c2b);
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  min-width: 0;
+  max-width: 90rem;
+  margin-inline: auto;
+  padding: clamp(1.5rem, 3cqw, 3rem);
+  background: transparent;
+  color: var(--tpl-ink);
+  overflow: clip;
+}
+.look-tpl-spread {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(16rem, 1fr);
+  grid-template-areas: "visual heading" "visual purchase";
+  align-content: center;
+  column-gap: clamp(1.5rem, 3cqw, 3rem);
+}
+.look-tpl-heading {
+  grid-area: heading;
+  align-self: end;
+  min-width: 0;
+}
+.look-tpl-visual {
+  grid-area: visual;
+  align-self: center;
+  min-width: 0;
+}
+.look-tpl-purchase {
+  grid-area: purchase;
+  min-width: 0;
+}
+.look-tpl-index {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font:
+    500 0.8125rem/1.5 var(--font-ui),
+    sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--tpl-ink) 80%, #fff);
+  margin: 0 0 0.85rem;
+}
+.look-tpl-index .look-editorial-index-num {
+  color: var(--brass);
+  font-size: 1.125rem;
+}
+.look-tpl-title {
+  font:
+    500 clamp(2.25rem, 4.5cqw, 4.5rem)/1.05 var(--font-display),
+    Georgia,
+    serif;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+  margin: 0;
+}
+.look-tpl-title a {
+  color: inherit;
+  text-decoration: none;
+}
+.look-tpl-rule {
+  display: block;
+  width: 2.5rem;
+  height: 1px;
+  background: var(--brass);
+  margin: 1rem 0;
+}
+.look-tpl-desc {
+  font:
+    1rem/1.75 var(--font-ui),
+    sans-serif;
+  color: color-mix(in srgb, var(--tpl-ink) 85%, #fff);
+  max-width: 43ch;
+  margin: 0 0 1.25rem;
+  text-wrap: pretty;
+}
+.look-tpl-price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.8rem;
+  margin: 0 0 1rem;
+  font:
+    600 clamp(1.5rem, 2.4cqw, 2rem)/1.3 var(--font-display),
+    Georgia,
+    serif;
+}
+.look-tpl-price s {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--site-text-muted);
+}
+.look-tpl-price .look-editorial-saving {
+  font:
+    500 0.8125rem/1.4 var(--font-ui),
+    sans-serif;
+  letter-spacing: 0.02em;
+  color: var(--tpl-ruby);
+  padding: 0.35rem 0.5rem;
+  border: 1px solid currentColor;
+}
+.look-tpl .look-editorial-cta {
+  min-height: 44px;
+  margin: 0;
+  font-size: 0.875rem;
+}
+.look-tpl :is(a, button):focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 3px;
+}
+
+/* XXL: the heading and purchase area anchor the left; jewellery occupies the
+   larger right field. Natural wrapping preserves arbitrary catalogue names. */
+.look-tpl--xxl .look-tpl-spread {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr);
+  grid-template-areas: "heading visual" "purchase visual";
+}
+.look-tpl--xxl .look-tpl-title {
+  font-size: clamp(3rem, 6.5cqw, 6.5rem);
+  max-width: 11ch;
+}
+
+/* Botanical Frame: open corner rules and two lightweight illustrated branches. */
+.look-tpl--botanical {
+  padding-inline: clamp(1.5rem, 5cqw, 4.5rem);
+}
+.look-tpl--botanical .look-tpl-visual {
+  position: relative;
+  padding: 1rem;
+  border-block: 1px solid var(--tpl-hair);
+  border-inline-start: 1px solid var(--tpl-hair);
+}
+.look-tpl--botanical .look-tpl-visual::after {
+  content: "";
+  position: absolute;
+  inset: -1px 0 -1px auto;
+  width: 15%;
+  border-inline-end: 1px solid var(--tpl-hair);
+  border-radius: 0 50% 50% 0;
+  pointer-events: none;
+}
+.look-tpl-branch {
+  position: absolute;
+  z-index: 0;
+  width: clamp(3rem, 6cqw, 5rem);
+  height: auto;
+  color: color-mix(in srgb, var(--tpl-forest) 60%, #fff);
+  pointer-events: none;
+}
+.look-tpl-branch--start {
+  inset: auto auto 0 0;
+  transform: rotate(-18deg);
+}
+.look-tpl-branch--end {
+  inset: 0 0 auto auto;
+  transform: rotate(160deg);
+}
+
+/* Modern Collage: two curved paper planes stay at the margins of the artwork. */
+.look-tpl--collage .look-tpl-spread {
+  z-index: auto;
+  grid-template-areas: "heading visual" "purchase visual";
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr);
+}
+.look-tpl--collage {
+  padding-inline-end: clamp(2rem, 7cqw, 6rem);
+}
+.look-tpl--collage .look-tpl-visual {
+  position: relative;
+  z-index: 1;
+  mix-blend-mode: multiply;
+}
+.look-tpl-collage-cream,
+.look-tpl-collage-ruby {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  border: 1px solid var(--tpl-hair);
+}
+.look-tpl-collage-cream {
+  width: 34%;
+  aspect-ratio: 1;
+  inset: -34% -12% auto auto;
+  background: var(--tpl-paper);
+  border-radius: 50%;
+}
+.look-tpl-collage-ruby {
+  width: 24%;
+  height: 42%;
+  inset: auto -16% -6% auto;
+  background: var(--tpl-ruby);
+  border-radius: 60% 0 0 0;
+}
+
+/* Quiet Atelier: narrow cream rails replace oversized circles and numerals. */
+.look-tpl--atelier {
+  border-block: 1px solid var(--tpl-hair);
+  padding-inline: clamp(2rem, 5cqw, 4rem);
+}
+.look-tpl--atelier::before,
+.look-tpl--atelier::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  width: clamp(0.5rem, 1.5cqw, 1.25rem);
+  background: var(--tpl-paper);
+  border-inline: 1px solid var(--tpl-hair);
+  pointer-events: none;
+}
+.look-tpl--atelier::before {
+  inset-inline-start: 0;
+}
+.look-tpl--atelier::after {
+  inset-inline-end: 0;
+}
+.look-tpl--atelier .look-tpl-title {
+  font-size: clamp(2.25rem, 4cqw, 4rem);
+}
+
+/* Runway remains available: image-heavy spread with a slim offset copy column. */
+.look-tpl--runway .look-tpl-spread {
+  grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr);
+}
+.look-tpl--runway .look-tpl-heading {
+  padding-block-start: 1.5rem;
+}
+.look-tpl--runway .look-tpl-title {
+  font-style: italic;
+}
+
+/* Gallery: different product proportions, aligned captions, one purchase area. */
+.look-tpl--collector .look-tpl-spread {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "heading" "visual" "purchase";
+  gap: 1.5rem;
+}
+.look-tpl--collector .look-tpl-heading {
+  max-width: 50rem;
+}
+.look-tpl-gallery {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) repeat(2, minmax(0, 1fr));
+  grid-template-rows: auto auto;
+  gap: 0 1.5rem;
+}
+.look-tpl-plate {
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 2;
+  color: inherit;
+  text-decoration: none;
+  min-width: 0;
+}
+.look-tpl-plate-img {
+  display: block;
+  position: relative;
+  height: clamp(15rem, 30cqw, 27rem);
+  background: transparent;
+}
+.look-tpl-plate-img img {
+  object-fit: contain;
+  background: transparent;
+}
+.look-tpl-plate:not(.look-tpl-plate--lead) .look-tpl-plate-img img {
+  padding: 10% 5%;
+}
+.look-tpl-plate-caption {
+  display: grid;
+  gap: 0.4rem;
+  grid-template-rows: auto minmax(2.7em, 1fr) auto;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--tpl-hair);
+  margin-top: 0.75rem;
+}
+.look-tpl-plate-kind {
+  font:
+    0.8125rem/1.5 var(--font-ui),
+    sans-serif;
+  color: var(--site-text-muted);
+}
+.look-tpl-plate-name {
+  font:
+    500 1.25rem/1.35 var(--font-display),
+    Georgia,
+    serif;
+  overflow-wrap: anywhere;
+}
+.look-tpl-plate-price {
+  font:
+    1.125rem/1.4 var(--font-display),
+    Georgia,
+    serif;
+}
+.look-tpl--collector .look-tpl-purchase {
+  border-top: 1px solid var(--tpl-hair);
+  padding-top: 1.25rem;
+}
+
+/* Botanical Atelier: one archival artwork strip; the product field is white. */
+.look-tpl--botanical-atelier {
+  padding-inline-start: clamp(2rem, 7cqw, 6rem);
+}
+.look-tpl--botanical-atelier .look-tpl-title {
+  font-size: clamp(2.5rem, 5cqw, 5rem);
+}
+.look-tpl-botanical-panel {
+  position: absolute;
+  z-index: 0;
+  inset: 0 auto 0 0;
+  width: clamp(0.75rem, 3cqw, 2.5rem);
+  overflow: hidden;
+  pointer-events: none;
+}
+.look-tpl-botanical-panel img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Forest Editorial: keep the product plane neutral, and place ivory typography
+   on the actual forest panel rather than over product or botanical imagery. */
+.look-tpl--forest {
+  padding: clamp(1rem, 2cqw, 2rem);
+  background: var(--tpl-forest);
+}
+.look-tpl--forest .look-tpl-spread {
+  gap: 0;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+}
+.look-tpl--forest .look-tpl-visual {
+  align-self: stretch;
+  display: grid;
+  align-content: center;
+  background: transparent;
+  padding: clamp(1rem, 2cqw, 2rem);
+}
+.look-tpl--forest :is(.look-tpl-heading, .look-tpl-purchase) {
+  --tpl-ink: #faf8f5;
+  color: var(--tpl-ink);
+  padding-inline: clamp(1.25rem, 3cqw, 3rem);
+}
+.look-tpl--forest .look-tpl-heading {
+  padding-top: 2rem;
+}
+.look-tpl--forest .look-tpl-purchase {
+  padding-bottom: 2rem;
+}
+.look-tpl--forest :is(.look-tpl-index, .look-tpl-desc, .look-tpl-price s) {
+  color: #faf8f5;
+}
+.look-tpl--forest .look-editorial-saving {
+  color: var(--champagne, #d9c7a0);
+}
+.look-tpl--forest .look-editorial-cta {
+  background: #faf8f5;
+  color: var(--tpl-forest);
+  border-color: var(--brass);
+}
+.look-tpl-forest-art {
+  position: absolute;
+  inset: auto 0 0 auto;
+  width: 7rem;
+  height: 1rem;
+  overflow: hidden;
+  pointer-events: none;
+}
+.look-tpl-forest-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The existing transparent botanical artwork supplies organic edges; no
+   circles crop an opaque photograph into a supposed cutout. */
+.look-tpl--cutout {
+  padding-inline: clamp(1.5rem, 5cqw, 4rem);
+}
+.look-tpl-cut-leaf {
+  position: absolute;
+  pointer-events: none;
+  width: clamp(5rem, 9cqw, 9rem);
+  opacity: 0.28;
+  z-index: 0;
+}
+.look-tpl-cut-leaf img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.look-tpl-cut-leaf--start {
+  inset: auto auto -1rem -2rem;
+  transform: rotate(-12deg);
+}
+.look-tpl-cut-leaf--end {
+  inset: -1rem -2rem auto auto;
+  transform: rotate(175deg);
+}
+
+/* Couture: the necklace appears once on the lead sheet; the two supporting
+   pieces appear once on staggered sheets with visible, linked captions. */
+.look-tpl-cout-stage {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1rem;
+}
+.look-tpl-cout-sheet,
+.look-tpl-cout-ruby {
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+}
+.look-tpl-cout-sheet {
+  inset: 0 1rem 1rem 0;
+  background: var(--tpl-paper);
+  border: 1px solid var(--tpl-hair);
+}
+.look-tpl-cout-ruby {
+  inset: 0 0 auto auto;
+  height: 30%;
+  width: 10%;
+  background: var(--tpl-ruby);
+}
+.look-tpl-cout-main {
+  align-self: center;
+  min-width: 0;
+  background: transparent;
+}
+.look-tpl-cout-support {
+  display: grid;
+  gap: 1rem;
+  padding-top: 2rem;
+  min-width: 0;
+}
+.look-tpl-cout-card {
+  display: grid;
+  gap: 0.4rem;
+  padding: 0.65rem;
+  background: transparent;
+  border: 1px solid var(--tpl-hair);
+  text-decoration: none;
+  color: inherit;
+  min-width: 0;
+}
+.look-tpl-cout-card:nth-child(2) {
+  margin-inline-start: 0.75rem;
+}
+.look-tpl-cout-card-img {
+  display: block;
+  position: relative;
+  aspect-ratio: 1;
+}
+.look-tpl-cout-card-img img {
+  object-fit: contain;
+}
+.look-tpl--couture :is(.look-jewelry-image, .look-jewelry-photo, .look-tpl-cout-card-img) img {
+  mix-blend-mode: multiply;
+}
+.look-tpl-cout-card-name {
+  font:
+    500 1rem/1.35 var(--font-display),
+    Georgia,
+    serif;
+  overflow-wrap: anywhere;
+}
+.look-tpl-cout-card-price {
+  font:
+    0.9375rem/1.4 var(--font-ui),
+    sans-serif;
+}
+.look-tpl--couture .look-tpl-title {
+  font-style: italic;
+}
+.look-tpl-cout-stage--photo {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@container look-row (max-width: 51.99rem) {
+  .look-tpl {
+    padding: 1.5rem 1rem;
+  }
+  .look-tpl .look-tpl-spread {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "heading" "visual" "purchase";
+    gap: 1.25rem;
+  }
+  .look-tpl .look-tpl-title {
+    font-size: clamp(2rem, 9cqw, 3.5rem);
+    max-width: 100%;
+  }
+  .look-tpl .look-tpl-desc {
+    margin-bottom: 1rem;
+  }
+  .look-tpl-index {
+    letter-spacing: 0.08em;
+  }
+  .look-tpl .look-editorial-cta {
+    width: 100%;
+    justify-content: center;
+  }
+  .look-tpl--botanical .look-tpl-visual {
+    padding: 0.65rem;
+  }
+  .look-tpl-branch {
+    width: 3rem;
+    opacity: 0.5;
+  }
+  .look-tpl--runway .look-tpl-heading {
+    padding-top: 0;
+  }
+  .look-tpl-collage-ruby {
+    width: 12%;
+    height: 22%;
+    inset-inline-end: -9%;
+  }
+  .look-tpl-collage-cream {
+    width: 20%;
+    inset-block-start: -10%;
+  }
+  .look-tpl--botanical-atelier {
+    padding-inline-start: 1.25rem;
+  }
+  .look-tpl-botanical-panel {
+    width: 0.4rem;
+  }
+  .look-tpl-cut-leaf {
+    width: 4.5rem;
+    opacity: 0.18;
+  }
+  .look-tpl-cut-leaf--start {
+    inset-block-end: 0;
+  }
+  .look-tpl--forest {
+    padding: 1rem;
+  }
+  .look-tpl--forest :is(.look-tpl-heading, .look-tpl-purchase) {
+    padding: 0;
+  }
+  .look-tpl--forest .look-tpl-visual {
+    padding: 0.75rem;
+  }
+  .look-tpl-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  .look-tpl-plate--lead {
+    grid-column: 1 / -1;
+  }
+  .look-tpl-plate-img {
+    height: clamp(11rem, 42cqw, 17rem);
+  }
+  .look-tpl-plate:not(.look-tpl-plate--lead) .look-tpl-plate-img {
+    height: clamp(9rem, 32cqw, 13rem);
+  }
+  .look-tpl-plate-name {
+    font-size: 1.125rem;
+  }
+  .look-tpl-cout-stage {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .look-tpl-cout-support {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    padding-top: 0;
+  }
+  .look-tpl-cout-card:nth-child(2) {
+    margin-inline-start: 0;
+    margin-top: 0.75rem;
+  }
+  .look-tpl-price {
+    font-size: 1.65rem;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .look-tpl-title a {
+    transition: color 160ms ease-out;
+  }
+  .look-tpl-title a:hover {
+    color: var(--brass);
+  }
+}
+
+/* Polished shared details retain the identity of every existing composition. */
+.look-tpl-heading,
+.look-tpl-purchase {
+  max-width: 100%;
+}
+.look-tpl-desc {
+  overflow-wrap: anywhere;
+}
+.look-tpl .look-jewelry-caption {
+  text-wrap: balance;
+}
+.look-tpl--xxl .look-tpl-heading {
+  padding-bottom: 0.25rem;
+}
+.look-tpl--botanical .look-tpl-visual::after {
+  border-color: var(--brass);
+}
+.look-tpl--collage .look-tpl-heading {
+  padding-top: 0.75rem;
+}
+.look-tpl--atelier .look-tpl-rule {
+  width: 4rem;
+}
+.look-tpl--runway .look-tpl-rule {
+  width: 5rem;
+}
+.look-tpl--collector .look-tpl-price {
+  max-width: 100%;
+}
+.look-tpl--botanical-atelier .look-tpl-rule {
+  background: var(--tpl-forest);
+}
+.look-tpl--forest .look-tpl-rule {
+  background: var(--champagne);
+}
+.look-tpl--cutout .look-tpl-rule {
+  width: 4rem;
+}
+.look-tpl--couture .look-tpl-cout-card {
+  border-color: var(--tpl-hair);
+}
+
+/* Bold editions use the same catalogue parts and one price/savings group.
+   Decorative surfaces stay behind the neutral product planes. */
+.look-tpl--modern-collage-bold .look-tpl-spread,
+.look-tpl--couture-bold .look-tpl-spread {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.85fr);
+  grid-template-areas: "heading visual" "purchase visual";
+}
+.look-tpl--modern-collage-bold .look-tpl-title,
+.look-tpl--couture-bold .look-tpl-title {
+  font-size: clamp(3rem, 7cqw, 7rem);
+  max-width: 10ch;
+  line-height: 0.98;
+}
+.look-tpl--modern-collage-bold {
+  padding-block: clamp(2rem, 4cqw, 4rem);
+}
+/* Blend the complete photo layer with the ornaments beneath it. Blending
+   only the img is trapped inside the visual's stacking context. */
+.look-tpl--modern-collage-bold .look-tpl-spread {
+  z-index: auto;
+}
+.look-tpl--modern-collage-bold .look-tpl-visual {
+  position: relative;
+  z-index: 1;
+  mix-blend-mode: multiply;
+  padding: clamp(1rem, 2cqw, 2rem) 0 0;
+}
+.look-tpl--modern-collage-bold .look-jewelry--composed {
+  position: relative;
+  z-index: 1;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) minmax(0, 0.9fr);
+  gap: 0.5rem;
+  align-items: end;
+}
+.look-tpl--modern-collage-bold .look-jewelry-product {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+  padding: 0.25rem;
+  border: 0;
+  overflow: visible;
+}
+.look-tpl--modern-collage-bold .look-jewelry-image {
+  background: transparent;
+  overflow: visible;
+}
+.look-tpl--modern-collage-bold .look-jewelry-image img {
+  background: transparent;
+  mix-blend-mode: multiply;
+  filter: saturate(1.05) contrast(1.04);
+}
+.look-tpl--modern-collage-bold .look-jewelry-product:nth-child(1) {
+  margin-inline-end: 0.5rem;
+}
+.look-tpl--modern-collage-bold .look-jewelry-product:nth-child(2) {
+  margin-top: 4.5rem;
+  margin-inline: 0.5rem;
+}
+.look-tpl--modern-collage-bold .look-jewelry-product:nth-child(3) {
+  margin-top: 7rem;
+  margin-inline-start: 0.5rem;
+}
+.look-bold-disc,
+.look-bold-semicircle {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+}
+.look-bold-disc {
+  width: 34%;
+  aspect-ratio: 1;
+  inset: 1rem auto auto 28%;
+  border: 1px solid color-mix(in srgb, var(--tpl-hair) 80%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--tpl-paper) 85%, transparent);
+}
+.look-bold-semicircle {
+  width: 30%;
+  aspect-ratio: 1;
+  inset: auto -8% -14% auto;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--tpl-ruby) 82%, transparent);
+  border: 1px solid color-mix(in srgb, var(--brass) 72%, transparent);
+}
+.look-tpl--modern-collage-bold .look-tpl-branch {
+  width: 7rem;
+  opacity: 0.55;
+  z-index: 0;
+}
+
+/* The Runway's burgundy band and outlined word cross behind the necklace;
+   captions and purchase information sit on their own readable white planes. */
+.look-tpl--runway-bold {
+  padding-block: clamp(2rem, 4cqw, 4rem);
+}
+.look-tpl--runway-bold .look-tpl-spread {
+  grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr);
+}
+.look-bold-runway-band {
+  position: absolute;
+  z-index: 0;
+  inset: 0 auto 0 0;
+  width: 29%;
+  background: var(--tpl-ruby);
+  pointer-events: none;
+}
+.look-bold-runway-word {
+  position: absolute;
+  inset: 0 auto auto 1%;
+  margin: 0;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--tpl-hair);
+  font:
+    500 clamp(5rem, 18cqw, 18rem)/1 var(--font-display),
+    Georgia,
+    serif;
+  letter-spacing: -0.05em;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+.look-tpl--runway-bold :is(.look-tpl-heading, .look-tpl-purchase) {
+  background: transparent;
+  padding-inline: 1rem;
+}
+.look-tpl--runway-bold .look-tpl-heading {
+  padding-top: 1rem;
+}
+.look-tpl--runway-bold .look-tpl-purchase {
+  padding-bottom: 1rem;
+}
+.look-tpl--runway-bold .look-tpl-title {
+  font-size: clamp(2.5rem, 5.5cqw, 5.5rem);
+}
+.look-tpl--runway-bold .look-jewelry-product {
+  background: transparent;
+  padding: 0.75rem;
+}
+.look-tpl--runway-bold .look-jewelry-product--lead {
+  margin-top: -1rem;
+  border-block-end: 1px solid var(--brass);
+}
+.look-tpl--runway-bold .look-jewelry-product:not(.look-jewelry-product--lead) {
+  margin-top: 9rem;
+}
+
+/* Forest: an arched lead plane and oval supporting planes, kept separate from
+   the ivory text on green. The photographs are contained and never clipped. */
+.look-tpl--forest-bold {
+  background: var(--tpl-forest);
+  --tpl-ink: #faf8f5;
+  color: var(--tpl-ink);
+}
+.look-tpl--forest-bold .look-tpl-spread {
+  z-index: auto;
+}
+.look-tpl--forest-bold :is(.look-jewelry-image, .look-jewelry-photo) img {
+  mix-blend-mode: multiply;
+}
+.look-tpl--forest-bold .look-tpl-title {
+  font-size: clamp(2.5rem, 5.5cqw, 5.5rem);
+}
+.look-tpl--forest-bold :is(.look-tpl-index, .look-tpl-desc, .look-tpl-price s) {
+  color: #faf8f5;
+}
+.look-tpl--forest-bold .look-editorial-saving {
+  color: var(--champagne);
+}
+.look-tpl--forest-bold .look-editorial-cta {
+  color: var(--tpl-forest);
+  background: #faf8f5;
+  border-color: var(--brass);
+}
+.look-tpl--forest-bold .look-jewelry-product {
+  background: transparent;
+  color: var(--midnight);
+  border: 1px solid transparent;
+  padding: 0.75rem;
+  border-radius: 45% 45% 0 0;
+}
+.look-tpl--forest-bold .look-jewelry-product--lead {
+  border-radius: 48% 48% 0 0;
+  padding-top: 2rem;
+}
+.look-tpl--forest-bold .look-jewelry-image {
+  background: transparent;
+}
+.look-tpl--forest-bold .look-jewelry-product:not(.look-jewelry-product--lead) {
+  border-radius: 50%;
+  padding-block: 1.5rem;
+}
+.look-tpl--forest-bold .look-jewelry-caption {
+  padding-inline: 0.25rem;
+}
+.look-bold-forest-botanical {
+  position: absolute;
+  inset: auto 0 0 auto;
+  z-index: 0;
+  pointer-events: none;
+  width: 10rem;
+  opacity: 0.15;
+}
+.look-bold-forest-botanical img {
+  width: 100%;
+  height: auto;
+}
+
+/* Couture: three independently linked cards, slight overlap, a large italic
+   heading and two restrained ribbons. Prices stay in the shared purchase area. */
+.look-tpl--couture-bold .look-tpl-title {
+  font-style: italic;
+}
+.look-tpl--couture-bold .look-jewelry--composed {
+  gap: 0;
+  align-items: center;
+  padding: 1rem;
+}
+.look-tpl--couture-bold .look-jewelry-product {
+  position: relative;
+  border: 1px solid var(--tpl-hair);
+  padding: 0.75rem;
+  background: transparent;
+  margin-inline: -0.4rem;
+}
+.look-tpl--couture-bold .look-jewelry-product:nth-child(1) {
+  transform: rotate(-3deg);
+  z-index: 1;
+}
+.look-tpl--couture-bold .look-jewelry-product:nth-child(2) {
+  margin-top: 4rem;
+  z-index: 2;
+}
+.look-tpl--couture-bold .look-jewelry-product:nth-child(3) {
+  transform: rotate(3deg);
+  margin-top: 7rem;
+  z-index: 3;
+}
+.look-bold-couture-ruby,
+.look-bold-couture-olive {
+  position: absolute;
+  z-index: 0;
+  height: 1.5rem;
+  width: 56%;
+  inset-inline-end: 0;
+  pointer-events: none;
+}
+.look-bold-couture-ruby {
+  inset-block-start: 16%;
+  background: var(--tpl-ruby);
+  transform: rotate(-2deg);
+}
+.look-bold-couture-olive {
+  inset-block-start: 22%;
+  background: var(--tpl-forest);
+  transform: rotate(1deg);
+}
+.look-tpl--couture-bold .look-editorial-saving {
+  border-radius: 50%;
+  padding: 0.75rem;
+}
+
+@container look-row (max-width: 51.99rem) {
+  .look-tpl--modern-collage-bold .look-tpl-spread,
+  .look-tpl--runway-bold .look-tpl-spread,
+  .look-tpl--forest-bold .look-tpl-spread,
+  .look-tpl--couture-bold .look-tpl-spread {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "heading" "visual" "purchase";
+    gap: 1.25rem;
+  }
+  .look-tpl--modern-collage-bold .look-tpl-title,
+  .look-tpl--runway-bold .look-tpl-title,
+  .look-tpl--forest-bold .look-tpl-title,
+  .look-tpl--couture-bold .look-tpl-title {
+    font-size: clamp(2.25rem, 10cqw, 3.5rem);
+    max-width: 100%;
+    line-height: 1.05;
+  }
+  .look-tpl--modern-collage-bold .look-jewelry-product,
+  .look-tpl--runway-bold .look-jewelry-product,
+  .look-tpl--couture-bold .look-jewelry-product {
+    margin: 0;
+    transform: none;
+  }
+  .look-bold-disc {
+    width: 55%;
+    inset: 20% auto auto 22%;
+  }
+  .look-bold-semicircle {
+    width: 16%;
+    inset-inline-end: -10%;
+  }
+  .look-tpl--modern-collage-bold .look-tpl-branch {
+    width: 3rem;
+    opacity: 0.3;
+  }
+  .look-bold-runway-band {
+    width: 0.75rem;
+  }
+  .look-bold-runway-word {
+    display: none;
+  }
+  .look-tpl--runway-bold :is(.look-tpl-heading, .look-tpl-purchase) {
+    padding: 0;
+  }
+  .look-tpl--runway-bold .look-jewelry-product:not(.look-jewelry-product--lead),
+  .look-tpl--modern-collage-bold .look-jewelry-product:nth-child(2),
+  .look-tpl--modern-collage-bold .look-jewelry-product:nth-child(3),
+  .look-tpl--couture-bold .look-jewelry-product:nth-child(2),
+  .look-tpl--couture-bold .look-jewelry-product:nth-child(3) {
+    margin-top: 0;
+  }
+  .look-tpl--couture-bold .look-jewelry--composed {
+    padding: 0;
+    gap: 0.75rem;
+  }
+  .look-bold-couture-ruby,
+  .look-bold-couture-olive {
+    width: 0.4rem;
+    height: 25%;
+    inset-inline-end: 0;
+    transform: none;
+  }
+  .look-bold-couture-ruby {
+    inset-block-start: 25%;
+  }
+  .look-bold-couture-olive {
+    inset-block-start: 52%;
+  }
+  .look-bold-forest-botanical {
+    width: 5rem;
+    opacity: 0.1;
+  }
+  .look-tpl--forest-bold .look-jewelry-product:not(.look-jewelry-product--lead) {
+    border-radius: 2rem;
+    padding-block: 0.75rem;
+  }
+  .look-tpl--couture-bold .look-editorial-saving {
+    border-radius: 0;
+    padding: 0.35rem 0.5rem;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .look-tpl .look-jewelry-product .look-jewelry-caption {
+    transition: color 160ms ease-out;
+  }
+  .look-tpl .look-jewelry-product:hover .look-jewelry-caption {
+    color: var(--brass);
+  }
+}

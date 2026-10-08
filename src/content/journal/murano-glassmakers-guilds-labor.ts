@@ -30,8 +30,8 @@ export const muranoGlassmakersAndLabor: Article = {
     "history of glass bead making",
   ],
   hero: {
-    kind: "product",
-    productSlug: "bracciale-fiore-di-onice-1c6c6e",
+    kind: "file",
+    src: "/blog/IMG_3204.JPG",
     alt: "Handmade Murano glass bracelet with a dark floral bead",
     altIt: "Bracciale artigianale in vetro di Murano con una perla floreale scura",
     rights: { credit: "Perla Murano Glass", license: "own-photography" },

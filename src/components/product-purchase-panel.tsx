@@ -68,7 +68,7 @@ export function ProductPurchasePanel({
       </div>
 
       {showBuyNow && (
-        <BuyNowButton product={product} label={dict.buyNow} quantity={quantity} className="mt-3" />
+        <BuyNowButton product={product} label={dict.buyNow} quantity={quantity} className="mt-3 opt-buy-now" />
       )}
 
       <WishlistButton {...wishlist} />

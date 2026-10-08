@@ -1,0 +1,1344 @@
+{
+  "id": "new-2026-10",
+  "name": "Nuova collezione — ottobre 2026",
+  "nameEn": "New collection — October 2026",
+  "sourceFolder": "new",
+  "currency": "EUR",
+  "status": "draft",
+  "products": [
+    {
+      "name": "Orecchini Medaglioni Rosa e Sabbia",
+      "nameEn": "Rose and Sand Medallions Earrings",
+      "slug": "orecchini-medaglioni-rosa-e-sabbia-ottobre-2026",
+      "sku": "PMG-OCT26-001",
+      "kind": "earrings",
+      "categorySlug": "orecchini-in-vetro-di-murano",
+      "color": "pink",
+      "description": "Perle ovali color sabbia sotto piccoli elementi rosa, con ganci argentati. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Sand-coloured oval beads below small rose elements, with silver-tone hooks. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.15.jpeg",
+          "url": "/products/new-2026-10/orecchini-medaglioni-rosa-e-sabbia-ottobre-2026-1.jpg",
+          "altText": "Orecchini Medaglioni Rosa e Sabbia — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": "medaglioni-rosa"
+    },
+    {
+      "name": "Bracciale Medaglioni Turchesi",
+      "nameEn": "Turquoise Medallions Bracelet",
+      "slug": "bracciale-medaglioni-turchesi-ottobre-2026",
+      "sku": "PMG-OCT26-002",
+      "kind": "bracelet",
+      "categorySlug": "bracciali-in-vetro-di-murano",
+      "color": "turquoise",
+      "description": "Perle ovali azzurre e tonde turchesi, alternate a piccoli dettagli chiari. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Azure oval and turquoise round beads alternating with small pale details. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.15(1).jpeg",
+          "url": "/products/new-2026-10/bracciale-medaglioni-turchesi-ottobre-2026-1.jpg",
+          "altText": "Bracciale Medaglioni Turchesi — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": "medaglioni-turchesi"
+    },
+    {
+      "name": "Bracciale Medaglioni Rosa e Sabbia",
+      "nameEn": "Rose and Sand Medallions Bracelet",
+      "slug": "bracciale-medaglioni-rosa-e-sabbia-ottobre-2026",
+      "sku": "PMG-OCT26-003",
+      "kind": "bracelet",
+      "categorySlug": "bracciali-in-vetro-di-murano",
+      "color": "pink",
+      "description": "Perle ovali color sabbia alternate a perle rosa, con piccoli dettagli chiari. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Sand-coloured oval beads alternating with rose beads and small pale details. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.15(2).jpeg",
+          "url": "/products/new-2026-10/bracciale-medaglioni-rosa-e-sabbia-ottobre-2026-1.jpg",
+          "altText": "Bracciale Medaglioni Rosa e Sabbia — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": "medaglioni-rosa"
+    },
+    {
+      "name": "Collana Medaglioni Rosa e Sabbia",
+      "nameEn": "Rose and Sand Medallions Necklace",
+      "slug": "collana-medaglioni-rosa-e-sabbia-ottobre-2026",
+      "sku": "PMG-OCT26-004",
+      "kind": "necklace",
+      "categorySlug": "collane-in-vetro-di-murano",
+      "color": "pink",
+      "description": "Perle ovali color sabbia e perle rosa lungo un filo decorato da piccoli elementi chiari. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Sand-coloured oval beads and rose beads on a strand accented with small pale elements. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.15(3).jpeg",
+          "url": "/products/new-2026-10/collana-medaglioni-rosa-e-sabbia-ottobre-2026-1.jpg",
+          "altText": "Collana Medaglioni Rosa e Sabbia — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        },
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.15(4).jpeg",
+          "url": "/products/new-2026-10/collana-medaglioni-rosa-e-sabbia-ottobre-2026-2.jpg",
+          "altText": "Collana Medaglioni Rosa e Sabbia — vista 2",
+          "position": 1,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": "medaglioni-rosa"
+    },
+    {
+      "name": "Collana Medaglioni Turchesi",
+      "nameEn": "Turquoise Medallions Necklace",
+      "slug": "collana-medaglioni-turchesi-ottobre-2026",
+      "sku": "PMG-OCT26-006",
+      "kind": "necklace",
+      "categorySlug": "collane-in-vetro-di-murano",
+      "color": "turquoise",
+      "description": "Perle ovali azzurre e perle tonde turchesi con piccoli dettagli chiari tra una perla e l’altra. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Azure oval beads and round turquoise beads with small pale details between them. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.15(5).jpeg",
+          "url": "/products/new-2026-10/collana-medaglioni-turchesi-ottobre-2026-1.jpg",
+          "altText": "Collana Medaglioni Turchesi — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        },
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.15(6).jpeg",
+          "url": "/products/new-2026-10/collana-medaglioni-turchesi-ottobre-2026-2.jpg",
+          "altText": "Collana Medaglioni Turchesi — vista 2",
+          "position": 1,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": "medaglioni-turchesi"
+    },
+    {
+      "name": "Orecchini Medaglioni Turchesi",
+      "nameEn": "Turquoise Medallions Earrings",
+      "slug": "orecchini-medaglioni-turchesi-ottobre-2026",
+      "sku": "PMG-OCT26-008",
+      "kind": "earrings",
+      "categorySlug": "orecchini-in-vetro-di-murano",
+      "color": "turquoise",
+      "description": "Due elementi tondi sovrapposti, turchese sopra e azzurro sotto, con ganci argentati. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Two stacked round elements, turquoise above and azure below, with silver-tone hooks. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.15(7).jpeg",
+          "url": "/products/new-2026-10/orecchini-medaglioni-turchesi-ottobre-2026-1.jpg",
+          "altText": "Orecchini Medaglioni Turchesi — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": "medaglioni-turchesi"
+    },
+    {
+      "name": "Orecchini Quadrati Miele",
+      "nameEn": "Honey Squares Earrings",
+      "slug": "orecchini-quadrati-miele-ottobre-2026",
+      "sku": "PMG-OCT26-009",
+      "kind": "earrings",
+      "categorySlug": "orecchini-in-vetro-di-murano",
+      "color": "gold",
+      "description": "Pendenti quadrati giallo miele, sormontati da piccole perle tonde e sospesi a ganci argentati. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Honey yellow square drops topped with small round beads and suspended from silver-tone hooks. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.15(8).jpeg",
+          "url": "/products/new-2026-10/orecchini-quadrati-miele-ottobre-2026-1.jpg",
+          "altText": "Orecchini Quadrati Miele — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": null
+    },
+    {
+      "name": "Bracciale Quadrati Miele",
+      "nameEn": "Honey Squares Bracelet",
+      "slug": "bracciale-quadrati-miele-ottobre-2026",
+      "sku": "PMG-OCT26-020",
+      "kind": "bracelet",
+      "categorySlug": "bracciali-in-vetro-di-murano",
+      "color": "gold",
+      "description": "Piccoli elementi quadrati giallo miele sul davanti e sottili sezioni curve ai lati, con chiusura argentata. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Small honey yellow square elements at the front and slender curved sections at the sides, with a silver-tone clasp. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.16(10).jpeg",
+          "url": "/products/new-2026-10/bracciale-quadrati-miele-ottobre-2026-1.jpg",
+          "altText": "Bracciale Quadrati Miele — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": null
+    },
+    {
+      "name": "Orecchini Quadrati Acqua",
+      "nameEn": "Aqua Squares Earrings",
+      "slug": "orecchini-quadrati-acqua-ottobre-2026",
+      "sku": "PMG-OCT26-010",
+      "kind": "earrings",
+      "categorySlug": "orecchini-in-vetro-di-murano",
+      "color": "blue",
+      "description": "Pendenti quadrati azzurro acqua, sormontati da piccole perle tonde e sospesi a ganci argentati. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Aqua blue square drops topped with small round beads and suspended from silver-tone hooks. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.16.jpeg",
+          "url": "/products/new-2026-10/orecchini-quadrati-acqua-ottobre-2026-1.jpg",
+          "altText": "Orecchini Quadrati Acqua — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": null
+    },
+    {
+      "name": "Bracciale Quadrati Acqua",
+      "nameEn": "Aqua Squares Bracelet",
+      "slug": "bracciale-quadrati-acqua-ottobre-2026",
+      "sku": "PMG-OCT26-017",
+      "kind": "bracelet",
+      "categorySlug": "bracciali-in-vetro-di-murano",
+      "color": "blue",
+      "description": "Piccoli elementi quadrati azzurro acqua sul davanti e sottili sezioni curve ai lati, con chiusura argentata. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Small aqua blue square elements at the front and slender curved sections at the sides, with a silver-tone clasp. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.16(7).jpeg",
+          "url": "/products/new-2026-10/bracciale-quadrati-acqua-ottobre-2026-1.jpg",
+          "altText": "Bracciale Quadrati Acqua — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": null
+    },
+    {
+      "name": "Orecchini Quadrati Neve",
+      "nameEn": "Snow Squares Earrings",
+      "slug": "orecchini-quadrati-neve-ottobre-2026",
+      "sku": "PMG-OCT26-011",
+      "kind": "earrings",
+      "categorySlug": "orecchini-in-vetro-di-murano",
+      "color": "white",
+      "description": "Pendenti quadrati bianco, sormontati da piccole perle tonde e sospesi a ganci argentati. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "White square drops topped with small round beads and suspended from silver-tone hooks. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.16(1).jpeg",
+          "url": "/products/new-2026-10/orecchini-quadrati-neve-ottobre-2026-1.jpg",
+          "altText": "Orecchini Quadrati Neve — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": null
+    },
+    {
+      "name": "Bracciale Quadrati Neve",
+      "nameEn": "Snow Squares Bracelet",
+      "slug": "bracciale-quadrati-neve-ottobre-2026",
+      "sku": "PMG-OCT26-018",
+      "kind": "bracelet",
+      "categorySlug": "bracciali-in-vetro-di-murano",
+      "color": "white",
+      "description": "Piccoli elementi quadrati bianco sul davanti e sottili sezioni curve ai lati, con chiusura argentata. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Small white square elements at the front and slender curved sections at the sides, with a silver-tone clasp. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.16(8).jpeg",
+          "url": "/products/new-2026-10/bracciale-quadrati-neve-ottobre-2026-1.jpg",
+          "altText": "Bracciale Quadrati Neve — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": null
+    },
+    {
+      "name": "Orecchini Quadrati Cobalto",
+      "nameEn": "Cobalt Squares Earrings",
+      "slug": "orecchini-quadrati-cobalto-ottobre-2026",
+      "sku": "PMG-OCT26-012",
+      "kind": "earrings",
+      "categorySlug": "orecchini-in-vetro-di-murano",
+      "color": "blue",
+      "description": "Pendenti quadrati blu cobalto, sormontati da piccole perle tonde e sospesi a ganci argentati. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Cobalt blue square drops topped with small round beads and suspended from silver-tone hooks. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.16(2).jpeg",
+          "url": "/products/new-2026-10/orecchini-quadrati-cobalto-ottobre-2026-1.jpg",
+          "altText": "Orecchini Quadrati Cobalto — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": null
+    },
+    {
+      "name": "Bracciale Quadrati Cobalto",
+      "nameEn": "Cobalt Squares Bracelet",
+      "slug": "bracciale-quadrati-cobalto-ottobre-2026",
+      "sku": "PMG-OCT26-019",
+      "kind": "bracelet",
+      "categorySlug": "bracciali-in-vetro-di-murano",
+      "color": "blue",
+      "description": "Piccoli elementi quadrati blu cobalto sul davanti e sottili sezioni curve ai lati, con chiusura argentata. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Small cobalt blue square elements at the front and slender curved sections at the sides, with a silver-tone clasp. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.16(9).jpeg",
+          "url": "/products/new-2026-10/bracciale-quadrati-cobalto-ottobre-2026-1.jpg",
+          "altText": "Bracciale Quadrati Cobalto — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": null
+    },
+    {
+      "name": "Orecchini Quadrati Notte",
+      "nameEn": "Night Squares Earrings",
+      "slug": "orecchini-quadrati-notte-ottobre-2026",
+      "sku": "PMG-OCT26-013",
+      "kind": "earrings",
+      "categorySlug": "orecchini-in-vetro-di-murano",
+      "color": "black",
+      "description": "Pendenti quadrati nero, sormontati da piccole perle tonde e sospesi a ganci argentati. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Black square drops topped with small round beads and suspended from silver-tone hooks. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.16(3).jpeg",
+          "url": "/products/new-2026-10/orecchini-quadrati-notte-ottobre-2026-1.jpg",
+          "altText": "Orecchini Quadrati Notte — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": null
+    },
+    {
+      "name": "Bracciale Quadrati Notte",
+      "nameEn": "Night Squares Bracelet",
+      "slug": "bracciale-quadrati-notte-ottobre-2026",
+      "sku": "PMG-OCT26-021",
+      "kind": "bracelet",
+      "categorySlug": "bracciali-in-vetro-di-murano",
+      "color": "black",
+      "description": "Piccoli elementi quadrati nero sul davanti e sottili sezioni curve ai lati, con chiusura argentata. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Small black square elements at the front and slender curved sections at the sides, with a silver-tone clasp. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.16(11).jpeg",
+          "url": "/products/new-2026-10/bracciale-quadrati-notte-ottobre-2026-1.jpg",
+          "altText": "Bracciale Quadrati Notte — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": null
+    },
+    {
+      "name": "Orecchini Quadrati Rosa",
+      "nameEn": "Rose Squares Earrings",
+      "slug": "orecchini-quadrati-rosa-ottobre-2026",
+      "sku": "PMG-OCT26-014",
+      "kind": "earrings",
+      "categorySlug": "orecchini-in-vetro-di-murano",
+      "color": "pink",
+      "description": "Pendenti quadrati rosa cipria, sormontati da piccole perle tonde e sospesi a ganci argentati. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Blush pink square drops topped with small round beads and suspended from silver-tone hooks. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.16(4).jpeg",
+          "url": "/products/new-2026-10/orecchini-quadrati-rosa-ottobre-2026-1.jpg",
+          "altText": "Orecchini Quadrati Rosa — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": null
+    },
+    {
+      "name": "Bracciale Quadrati Rosa",
+      "nameEn": "Rose Squares Bracelet",
+      "slug": "bracciale-quadrati-rosa-ottobre-2026",
+      "sku": "PMG-OCT26-022",
+      "kind": "bracelet",
+      "categorySlug": "bracciali-in-vetro-di-murano",
+      "color": "pink",
+      "description": "Piccoli elementi quadrati rosa cipria sul davanti e sottili sezioni curve ai lati, con chiusura argentata. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Small blush pink square elements at the front and slender curved sections at the sides, with a silver-tone clasp. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.17.jpeg",
+          "url": "/products/new-2026-10/bracciale-quadrati-rosa-ottobre-2026-1.jpg",
+          "altText": "Bracciale Quadrati Rosa — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": null
+    },
+    {
+      "name": "Orecchini Quadrati Rosso",
+      "nameEn": "Red Squares Earrings",
+      "slug": "orecchini-quadrati-rosso-ottobre-2026",
+      "sku": "PMG-OCT26-015",
+      "kind": "earrings",
+      "categorySlug": "orecchini-in-vetro-di-murano",
+      "color": "red",
+      "description": "Pendenti quadrati rosso, sormontati da piccole perle tonde e sospesi a ganci argentati. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Red square drops topped with small round beads and suspended from silver-tone hooks. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.16(5).jpeg",
+          "url": "/products/new-2026-10/orecchini-quadrati-rosso-ottobre-2026-1.jpg",
+          "altText": "Orecchini Quadrati Rosso — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": null
+    },
+    {
+      "name": "Bracciale Quadrati Rosso",
+      "nameEn": "Red Squares Bracelet",
+      "slug": "bracciale-quadrati-rosso-ottobre-2026",
+      "sku": "PMG-OCT26-023",
+      "kind": "bracelet",
+      "categorySlug": "bracciali-in-vetro-di-murano",
+      "color": "red",
+      "description": "Piccoli elementi quadrati rosso sul davanti e sottili sezioni curve ai lati, con chiusura argentata. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Small red square elements at the front and slender curved sections at the sides, with a silver-tone clasp. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.17(1).jpeg",
+          "url": "/products/new-2026-10/bracciale-quadrati-rosso-ottobre-2026-1.jpg",
+          "altText": "Bracciale Quadrati Rosso — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": null
+    },
+    {
+      "name": "Orecchini Quadrati Verde",
+      "nameEn": "Green Squares Earrings",
+      "slug": "orecchini-quadrati-verde-ottobre-2026",
+      "sku": "PMG-OCT26-016",
+      "kind": "earrings",
+      "categorySlug": "orecchini-in-vetro-di-murano",
+      "color": "green",
+      "description": "Pendenti quadrati verde turchese, sormontati da piccole perle tonde e sospesi a ganci argentati. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Turquoise green square drops topped with small round beads and suspended from silver-tone hooks. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.16(6).jpeg",
+          "url": "/products/new-2026-10/orecchini-quadrati-verde-ottobre-2026-1.jpg",
+          "altText": "Orecchini Quadrati Verde — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": null
+    },
+    {
+      "name": "Bracciale Quadrati Verde",
+      "nameEn": "Green Squares Bracelet",
+      "slug": "bracciale-quadrati-verde-ottobre-2026",
+      "sku": "PMG-OCT26-024",
+      "kind": "bracelet",
+      "categorySlug": "bracciali-in-vetro-di-murano",
+      "color": "green",
+      "description": "Piccoli elementi quadrati verde turchese sul davanti e sottili sezioni curve ai lati, con chiusura argentata. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Small turquoise green square elements at the front and slender curved sections at the sides, with a silver-tone clasp. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.17(2).jpeg",
+          "url": "/products/new-2026-10/bracciale-quadrati-verde-ottobre-2026-1.jpg",
+          "altText": "Bracciale Quadrati Verde — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": null
+    },
+    {
+      "name": "Bracciale Arabeschi Sabbia e Nero",
+      "nameEn": "Sand and Black Arabesques Bracelet",
+      "slug": "bracciale-arabeschi-sabbia-e-nero-ottobre-2026",
+      "sku": "PMG-OCT26-025",
+      "kind": "bracelet",
+      "categorySlug": "bracciali-in-vetro-di-murano",
+      "color": "multicolor",
+      "description": "Perle color sabbia e nere con un elemento centrale decorato da un motivo a ricciolo. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Sand-coloured and black beads with a central element decorated with a swirling motif. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.17(3).jpeg",
+          "url": "/products/new-2026-10/bracciale-arabeschi-sabbia-e-nero-ottobre-2026-1.jpg",
+          "altText": "Bracciale Arabeschi Sabbia e Nero — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": "arabeschi-sabbia"
+    },
+    {
+      "name": "Collana Arabeschi Turchese e Corallo",
+      "nameEn": "Turquoise and Coral Arabesques Necklace",
+      "slug": "collana-arabeschi-turchese-e-corallo-ottobre-2026",
+      "sku": "PMG-OCT26-026",
+      "kind": "necklace",
+      "categorySlug": "collane-in-vetro-di-murano",
+      "color": "multicolor",
+      "description": "Perle turchesi e rosso corallo, con grandi elementi decorati da motivi a ricciolo sul davanti. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Turquoise and coral-red beads with large swirling patterned elements at the front. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.17(9).jpeg",
+          "url": "/products/new-2026-10/collana-arabeschi-turchese-e-corallo-ottobre-2026-1.jpg",
+          "altText": "Collana Arabeschi Turchese e Corallo — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        },
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.17(4).jpeg",
+          "url": "/products/new-2026-10/collana-arabeschi-turchese-e-corallo-ottobre-2026-2.jpg",
+          "altText": "Collana Arabeschi Turchese e Corallo — vista 2",
+          "position": 1,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": "arabeschi-turchese"
+    },
+    {
+      "name": "Collana Arabeschi Sabbia e Nero",
+      "nameEn": "Sand and Black Arabesques Necklace",
+      "slug": "collana-arabeschi-sabbia-e-nero-ottobre-2026",
+      "sku": "PMG-OCT26-027",
+      "kind": "necklace",
+      "categorySlug": "collane-in-vetro-di-murano",
+      "color": "multicolor",
+      "description": "Perle color sabbia e nere con elementi a ricciolo sul davanti e piccoli dettagli ambrati. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Sand-coloured and black beads with swirling elements at the front and small amber-coloured details. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.17(11).jpeg",
+          "url": "/products/new-2026-10/collana-arabeschi-sabbia-e-nero-ottobre-2026-1.jpg",
+          "altText": "Collana Arabeschi Sabbia e Nero — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        },
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.17(5).jpeg",
+          "url": "/products/new-2026-10/collana-arabeschi-sabbia-e-nero-ottobre-2026-2.jpg",
+          "altText": "Collana Arabeschi Sabbia e Nero — vista 2",
+          "position": 1,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": "arabeschi-sabbia"
+    },
+    {
+      "name": "Orecchini Arabeschi Sabbia e Nero",
+      "nameEn": "Sand and Black Arabesques Earrings",
+      "slug": "orecchini-arabeschi-sabbia-e-nero-ottobre-2026",
+      "sku": "PMG-OCT26-028",
+      "kind": "earrings",
+      "categorySlug": "orecchini-in-vetro-di-murano",
+      "color": "multicolor",
+      "description": "Pendenti tondi color crema e nero, decorati da bande e riccioli, con ganci argentati. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Cream and black round drops decorated with bands and swirls, with silver-tone hooks. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.17(6).jpeg",
+          "url": "/products/new-2026-10/orecchini-arabeschi-sabbia-e-nero-ottobre-2026-1.jpg",
+          "altText": "Orecchini Arabeschi Sabbia e Nero — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": "arabeschi-sabbia"
+    },
+    {
+      "name": "Orecchini Arabeschi Turchese e Corallo",
+      "nameEn": "Turquoise and Coral Arabesques Earrings",
+      "slug": "orecchini-arabeschi-turchese-e-corallo-ottobre-2026",
+      "sku": "PMG-OCT26-029",
+      "kind": "earrings",
+      "categorySlug": "orecchini-in-vetro-di-murano",
+      "color": "multicolor",
+      "description": "Pendenti tondi decorati da riccioli turchesi e rosso corallo, con ganci argentati. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Round drops decorated with turquoise and coral-red swirls, with silver-tone hooks. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.17(7).jpeg",
+          "url": "/products/new-2026-10/orecchini-arabeschi-turchese-e-corallo-ottobre-2026-1.jpg",
+          "altText": "Orecchini Arabeschi Turchese e Corallo — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": "arabeschi-turchese"
+    },
+    {
+      "name": "Collana Arabeschi Turchese e Corallo Lunga",
+      "nameEn": "Long Turquoise and Coral Arabesques Necklace",
+      "slug": "collana-arabeschi-turchese-e-corallo-lunga-ottobre-2026",
+      "sku": "PMG-OCT26-030",
+      "kind": "necklace",
+      "categorySlug": "collane-in-vetro-di-murano",
+      "color": "multicolor",
+      "description": "Una composizione allungata di perle turchesi e rosso corallo, con elementi decorati da riccioli. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "An elongated arrangement of turquoise and coral-red beads, including elements decorated with swirls. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.17(8).jpeg",
+          "url": "/products/new-2026-10/collana-arabeschi-turchese-e-corallo-lunga-ottobre-2026-1.jpg",
+          "altText": "Collana Arabeschi Turchese e Corallo Lunga — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": null
+    },
+    {
+      "name": "Collana Arabeschi Sabbia e Nero Lunga",
+      "nameEn": "Long Sand and Black Arabesques Necklace",
+      "slug": "collana-arabeschi-sabbia-e-nero-lunga-ottobre-2026",
+      "sku": "PMG-OCT26-032",
+      "kind": "necklace",
+      "categorySlug": "collane-in-vetro-di-murano",
+      "color": "multicolor",
+      "description": "Una composizione allungata con perle color sabbia, nere e decorate da riccioli, alternate a piccoli dettagli chiari. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "An elongated arrangement of sand-coloured, black and swirling patterned beads, alternating with small pale details. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.17(10).jpeg",
+          "url": "/products/new-2026-10/collana-arabeschi-sabbia-e-nero-lunga-ottobre-2026-1.jpg",
+          "altText": "Collana Arabeschi Sabbia e Nero Lunga — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": null
+    },
+    {
+      "name": "Orecchini Turchese e Corallo",
+      "nameEn": "Turquoise and Coral Earrings",
+      "slug": "orecchini-turchese-e-corallo-ottobre-2026",
+      "sku": "PMG-OCT26-034",
+      "kind": "earrings",
+      "categorySlug": "orecchini-in-vetro-di-murano",
+      "color": "multicolor",
+      "description": "Piccole perle rosso corallo sopra grandi perle turchesi, con ganci argentati. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Small coral-red beads above large turquoise beads, with silver-tone hooks. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.18.jpeg",
+          "url": "/products/new-2026-10/orecchini-turchese-e-corallo-ottobre-2026-1.jpg",
+          "altText": "Orecchini Turchese e Corallo — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": null
+    },
+    {
+      "name": "Orecchini Sabbia e Notte",
+      "nameEn": "Sand and Night Earrings",
+      "slug": "orecchini-sabbia-e-notte-ottobre-2026",
+      "sku": "PMG-OCT26-035",
+      "kind": "earrings",
+      "categorySlug": "orecchini-in-vetro-di-murano",
+      "color": "multicolor",
+      "description": "Piccole perle nere sopra grandi perle color sabbia, con ganci argentati. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Small black beads above large sand-coloured beads, with silver-tone hooks. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.18(1).jpeg",
+          "url": "/products/new-2026-10/orecchini-sabbia-e-notte-ottobre-2026-1.jpg",
+          "altText": "Orecchini Sabbia e Notte — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": null
+    },
+    {
+      "name": "Bracciale Arabeschi Turchese e Corallo",
+      "nameEn": "Turquoise and Coral Arabesques Bracelet",
+      "slug": "bracciale-arabeschi-turchese-e-corallo-ottobre-2026",
+      "sku": "PMG-OCT26-036",
+      "kind": "bracelet",
+      "categorySlug": "bracciali-in-vetro-di-murano",
+      "color": "multicolor",
+      "description": "Perle turchesi e rosso corallo con un elemento centrale decorato da riccioli. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Turquoise and coral-red beads with a central element decorated with swirls. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.18(2).jpeg",
+          "url": "/products/new-2026-10/bracciale-arabeschi-turchese-e-corallo-ottobre-2026-1.jpg",
+          "altText": "Bracciale Arabeschi Turchese e Corallo — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": "arabeschi-turchese"
+    },
+    {
+      "name": "Orecchini Sfere Notte",
+      "nameEn": "Night Spheres Earrings",
+      "slug": "orecchini-sfere-notte-ottobre-2026",
+      "sku": "PMG-OCT26-037",
+      "kind": "earrings",
+      "categorySlug": "orecchini-in-vetro-di-murano",
+      "color": "black",
+      "description": "Piccoli pendenti tondi neri dall’aspetto luminoso, con ganci argentati. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Small lustrous black round drops with silver-tone hooks. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.18(3).jpeg",
+          "url": "/products/new-2026-10/orecchini-sfere-notte-ottobre-2026-1.jpg",
+          "altText": "Orecchini Sfere Notte — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": "sfere-notte"
+    },
+    {
+      "name": "Orecchini Sfere Rosso",
+      "nameEn": "Red Spheres Earrings",
+      "slug": "orecchini-sfere-rosso-ottobre-2026",
+      "sku": "PMG-OCT26-038",
+      "kind": "earrings",
+      "categorySlug": "orecchini-in-vetro-di-murano",
+      "color": "red",
+      "description": "Piccoli pendenti tondi rossi con ganci dorati. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Small red round drops with gold-tone hooks. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.18(4).jpeg",
+          "url": "/products/new-2026-10/orecchini-sfere-rosso-ottobre-2026-1.jpg",
+          "altText": "Orecchini Sfere Rosso — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": "sfere-rosso"
+    },
+    {
+      "name": "Bracciale Sfere Notte",
+      "nameEn": "Night Spheres Bracelet",
+      "slug": "bracciale-sfere-notte-ottobre-2026",
+      "sku": "PMG-OCT26-039",
+      "kind": "bracelet",
+      "categorySlug": "bracciali-in-vetro-di-murano",
+      "color": "black",
+      "description": "Perle tonde nere riunite sul davanti, con sezioni sottili nere e chiusura argentata. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Black round beads gathered at the front, with slender black sections and a silver-tone clasp. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.18(5).jpeg",
+          "url": "/products/new-2026-10/bracciale-sfere-notte-ottobre-2026-1.jpg",
+          "altText": "Bracciale Sfere Notte — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        },
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.18(6).jpeg",
+          "url": "/products/new-2026-10/bracciale-sfere-notte-ottobre-2026-2.jpg",
+          "altText": "Bracciale Sfere Notte — vista 2",
+          "position": 1,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": "sfere-notte"
+    },
+    {
+      "name": "Bracciale Sfere Rosso",
+      "nameEn": "Red Spheres Bracelet",
+      "slug": "bracciale-sfere-rosso-ottobre-2026",
+      "sku": "PMG-OCT26-041",
+      "kind": "bracelet",
+      "categorySlug": "bracciali-in-vetro-di-murano",
+      "color": "red",
+      "description": "Perle tonde rosse riunite sul davanti, con sezioni sottili rosse e chiusura dorata. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Red round beads gathered at the front, with slender red sections and a gold-tone clasp. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.18(7).jpeg",
+          "url": "/products/new-2026-10/bracciale-sfere-rosso-ottobre-2026-1.jpg",
+          "altText": "Bracciale Sfere Rosso — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        },
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.18(8).jpeg",
+          "url": "/products/new-2026-10/bracciale-sfere-rosso-ottobre-2026-2.jpg",
+          "altText": "Bracciale Sfere Rosso — vista 2",
+          "position": 1,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": "sfere-rosso"
+    },
+    {
+      "name": "Collana Sfere Notte",
+      "nameEn": "Night Spheres Necklace",
+      "slug": "collana-sfere-notte-ottobre-2026",
+      "sku": "PMG-OCT26-043",
+      "kind": "necklace",
+      "categorySlug": "collane-in-vetro-di-murano",
+      "color": "black",
+      "description": "Perle tonde nere disposte lungo la parte anteriore di un filo nero, con chiusura argentata. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Black round beads arranged along the front of a black strand, with a silver-tone clasp. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.18(9).jpeg",
+          "url": "/products/new-2026-10/collana-sfere-notte-ottobre-2026-1.jpg",
+          "altText": "Collana Sfere Notte — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        },
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.18(10).jpeg",
+          "url": "/products/new-2026-10/collana-sfere-notte-ottobre-2026-2.jpg",
+          "altText": "Collana Sfere Notte — vista 2",
+          "position": 1,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": "sfere-notte"
+    },
+    {
+      "name": "Collana Sfere Rosso",
+      "nameEn": "Red Spheres Necklace",
+      "slug": "collana-sfere-rosso-ottobre-2026",
+      "sku": "PMG-OCT26-045",
+      "kind": "necklace",
+      "categorySlug": "collane-in-vetro-di-murano",
+      "color": "red",
+      "description": "Perle tonde rosse disposte lungo la parte anteriore di un filo rosso, con chiusura dorata. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Red round beads arranged along the front of a red strand, with a gold-tone clasp. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.18(11).jpeg",
+          "url": "/products/new-2026-10/collana-sfere-rosso-ottobre-2026-1.jpg",
+          "altText": "Collana Sfere Rosso — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        },
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.18(12).jpeg",
+          "url": "/products/new-2026-10/collana-sfere-rosso-ottobre-2026-2.jpg",
+          "altText": "Collana Sfere Rosso — vista 2",
+          "position": 1,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": "sfere-rosso"
+    },
+    {
+      "name": "Orecchini Foglie Laguna",
+      "nameEn": "Lagoon Leaves Earrings",
+      "slug": "orecchini-foglie-laguna-ottobre-2026",
+      "sku": "PMG-OCT26-047",
+      "kind": "earrings",
+      "categorySlug": "orecchini-in-vetro-di-murano",
+      "color": "multicolor",
+      "description": "Pendenti ovali verdi con motivi gialli e scuri, sospesi a piccoli ganci. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Green oval drops with yellow and dark patterns, suspended from small hooks. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.19.jpeg",
+          "url": "/products/new-2026-10/orecchini-foglie-laguna-ottobre-2026-1.jpg",
+          "altText": "Orecchini Foglie Laguna — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": null
+    },
+    {
+      "name": "Collana Foglie Laguna",
+      "nameEn": "Lagoon Leaves Necklace",
+      "slug": "collana-foglie-laguna-ottobre-2026",
+      "sku": "PMG-OCT26-048",
+      "kind": "necklace",
+      "categorySlug": "collane-in-vetro-di-murano",
+      "color": "multicolor",
+      "description": "Perle verdi e chiare alternate a elementi ovali decorati, su un filo scuro. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Green and pale beads alternating with decorated oval elements on a dark strand. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.19(1).jpeg",
+          "url": "/products/new-2026-10/collana-foglie-laguna-ottobre-2026-1.jpg",
+          "altText": "Collana Foglie Laguna — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": null
+    },
+    {
+      "name": "Orecchini Perle Salvia",
+      "nameEn": "Sage Pearls Earrings",
+      "slug": "orecchini-perle-salvia-ottobre-2026",
+      "sku": "PMG-OCT26-049",
+      "kind": "earrings",
+      "categorySlug": "orecchini-in-vetro-di-murano",
+      "color": "green",
+      "description": "Perle tonde verde salvia sotto elementi chiari, sospese a cerchi argentati. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Round sage-green beads below pale elements, suspended from silver-tone hoops. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.19(2).jpeg",
+          "url": "/products/new-2026-10/orecchini-perle-salvia-ottobre-2026-1.jpg",
+          "altText": "Orecchini Perle Salvia — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": "perle-salvia"
+    },
+    {
+      "name": "Bracciale Perle Rosa",
+      "nameEn": "Rose Pearls Bracelet",
+      "slug": "bracciale-perle-rosa-ottobre-2026",
+      "sku": "PMG-OCT26-050",
+      "kind": "bracelet",
+      "categorySlug": "bracciali-in-vetro-di-murano",
+      "color": "pink",
+      "description": "Perle tonde rosa di dimensioni diverse riunite sul davanti, con chiusura argentata. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Round pink beads of different sizes gathered at the front, with a silver-tone clasp. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.19(3).jpeg",
+          "url": "/products/new-2026-10/bracciale-perle-rosa-ottobre-2026-1.jpg",
+          "altText": "Bracciale Perle Rosa — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": "perle-rosa"
+    },
+    {
+      "name": "Bracciale Perle Salvia",
+      "nameEn": "Sage Pearls Bracelet",
+      "slug": "bracciale-perle-salvia-ottobre-2026",
+      "sku": "PMG-OCT26-051",
+      "kind": "bracelet",
+      "categorySlug": "bracciali-in-vetro-di-murano",
+      "color": "green",
+      "description": "Perle tonde verde salvia di dimensioni diverse riunite sul davanti, con chiusura argentata. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Round sage-green beads of different sizes gathered at the front, with a silver-tone clasp. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.19(4).jpeg",
+          "url": "/products/new-2026-10/bracciale-perle-salvia-ottobre-2026-1.jpg",
+          "altText": "Bracciale Perle Salvia — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": "perle-salvia"
+    },
+    {
+      "name": "Collana Perle Rosa",
+      "nameEn": "Rose Pearls Necklace",
+      "slug": "collana-perle-rosa-ottobre-2026",
+      "sku": "PMG-OCT26-052",
+      "kind": "necklace",
+      "categorySlug": "collane-in-vetro-di-murano",
+      "color": "pink",
+      "description": "Perle tonde rosa di dimensioni diverse, alternate a piccoli dettagli rosa lungo il filo. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Round pink beads of different sizes alternating with small pink details along the strand. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.19(5).jpeg",
+          "url": "/products/new-2026-10/collana-perle-rosa-ottobre-2026-1.jpg",
+          "altText": "Collana Perle Rosa — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": "perle-rosa"
+    },
+    {
+      "name": "Collana Perle Salvia",
+      "nameEn": "Sage Pearls Necklace",
+      "slug": "collana-perle-salvia-ottobre-2026",
+      "sku": "PMG-OCT26-053",
+      "kind": "necklace",
+      "categorySlug": "collane-in-vetro-di-murano",
+      "color": "green",
+      "description": "Perle tonde verde salvia di dimensioni diverse, alternate a piccoli dettagli verdi lungo il filo. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Round sage-green beads of different sizes alternating with small green details along the strand. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.19(6).jpeg",
+          "url": "/products/new-2026-10/collana-perle-salvia-ottobre-2026-1.jpg",
+          "altText": "Collana Perle Salvia — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": "perle-salvia"
+    },
+    {
+      "name": "Orecchini Perle Rosa",
+      "nameEn": "Rose Pearls Earrings",
+      "slug": "orecchini-perle-rosa-ottobre-2026",
+      "sku": "PMG-OCT26-054",
+      "kind": "earrings",
+      "categorySlug": "orecchini-in-vetro-di-murano",
+      "color": "pink",
+      "description": "Perle tonde rosa sotto elementi chiari, sospese a cerchi argentati. Un dettaglio di colore da indossare da solo o con i pezzi coordinati.",
+      "descriptionEn": "Round pink beads below pale elements, suspended from silver-tone hoops. Wear it on its own for a touch of colour, or pair it with coordinating pieces.",
+      "story": "Scegli questo pezzo per dare risalto ai colori del tuo abbigliamento. Per un insieme coordinato, riprendi la stessa palette con gli altri gioielli della collezione.",
+      "storyEn": "Choose this piece to bring out the colours in your outfit. For a coordinated look, echo its palette with other jewellery from the collection.",
+      "price": null,
+      "stockQty": null,
+      "currency": "EUR",
+      "images": [
+        {
+          "source": "new/WhatsApp Image 2026-10-07 at 08.55.19(7).jpeg",
+          "url": "/products/new-2026-10/orecchini-perle-rosa-ottobre-2026-1.jpg",
+          "altText": "Orecchini Perle Rosa — vista 1",
+          "position": 0,
+          "isLifestyle": false
+        }
+      ],
+      "lookKey": "perle-rosa"
+    }
+  ],
+  "looks": [
+    {
+      "id": "look-oct26-medaglioni-rosa",
+      "name": "Medaglioni Rosa e Sabbia · Ottobre 2026",
+      "productSlugs": [
+        "orecchini-medaglioni-rosa-e-sabbia-ottobre-2026",
+        "bracciale-medaglioni-rosa-e-sabbia-ottobre-2026",
+        "collana-medaglioni-rosa-e-sabbia-ottobre-2026"
+      ],
+      "discountPercent": 0
+    },
+    {
+      "id": "look-oct26-medaglioni-turchesi",
+      "name": "Medaglioni Turchesi · Ottobre 2026",
+      "productSlugs": [
+        "bracciale-medaglioni-turchesi-ottobre-2026",
+        "collana-medaglioni-turchesi-ottobre-2026",
+        "orecchini-medaglioni-turchesi-ottobre-2026"
+      ],
+      "discountPercent": 0
+    },
+    {
+      "id": "look-oct26-arabeschi-sabbia",
+      "name": "Arabeschi Sabbia e Nero · Ottobre 2026",
+      "productSlugs": [
+        "bracciale-arabeschi-sabbia-e-nero-ottobre-2026",
+        "collana-arabeschi-sabbia-e-nero-ottobre-2026",
+        "orecchini-arabeschi-sabbia-e-nero-ottobre-2026"
+      ],
+      "discountPercent": 0
+    },
+    {
+      "id": "look-oct26-arabeschi-turchese",
+      "name": "Arabeschi Turchese e Corallo · Ottobre 2026",
+      "productSlugs": [
+        "collana-arabeschi-turchese-e-corallo-ottobre-2026",
+        "orecchini-arabeschi-turchese-e-corallo-ottobre-2026",
+        "bracciale-arabeschi-turchese-e-corallo-ottobre-2026"
+      ],
+      "discountPercent": 0
+    },
+    {
+      "id": "look-oct26-sfere-notte",
+      "name": "Sfere Notte · Ottobre 2026",
+      "productSlugs": [
+        "orecchini-sfere-notte-ottobre-2026",
+        "bracciale-sfere-notte-ottobre-2026",
+        "collana-sfere-notte-ottobre-2026"
+      ],
+      "discountPercent": 0
+    },
+    {
+      "id": "look-oct26-sfere-rosso",
+      "name": "Sfere Rosso · Ottobre 2026",
+      "productSlugs": [
+        "orecchini-sfere-rosso-ottobre-2026",
+        "bracciale-sfere-rosso-ottobre-2026",
+        "collana-sfere-rosso-ottobre-2026"
+      ],
+      "discountPercent": 0
+    },
+    {
+      "id": "look-oct26-perle-salvia",
+      "name": "Perle Salvia · Ottobre 2026",
+      "productSlugs": [
+        "orecchini-perle-salvia-ottobre-2026",
+        "bracciale-perle-salvia-ottobre-2026",
+        "collana-perle-salvia-ottobre-2026"
+      ],
+      "discountPercent": 0
+    },
+    {
+      "id": "look-oct26-perle-rosa",
+      "name": "Perle Rosa · Ottobre 2026",
+      "productSlugs": [
+        "bracciale-perle-rosa-ottobre-2026",
+        "collana-perle-rosa-ottobre-2026",
+        "orecchini-perle-rosa-ottobre-2026"
+      ],
+      "discountPercent": 0
+    }
+  ]
+}

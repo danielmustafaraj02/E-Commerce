@@ -1,3 +1,10 @@
+import type { ReactNode } from "react";
+import { LayoutSection } from "@/components/layout-section";
+import { PreviewBridge } from "@/components/layout-preview-bridge-server";
+import { isLayoutPreview } from "@/lib/layout-preview-server";
+import { pageEntries } from "@/lib/page-layout-store";
+import type { CONTACT_SECTIONS } from "@/lib/page-layout";
+import { withPageMeta } from "@/lib/page-meta";
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { getStoreSettings } from "@/lib/store-settings";
@@ -9,7 +16,7 @@ import { ShelfMain } from "@/components/shelf-main";
 import { ShelfHead, ShelfBody } from "@/components/shelf-page";
 import { ContactForm } from "./contact-form";
 
-export async function generateMetadata(): Promise<Metadata> {
+async function baseMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const dict = getDictionary(locale);
   return {
@@ -22,7 +29,15 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function ContactPage() {
+export async function generateMetadata(): Promise<Metadata> {
+  return withPageMeta("/contact", await baseMetadata());
+}
+
+type ContactSectionId = (typeof CONTACT_SECTIONS)[number]["id"];
+
+export default async function ContactPage({ searchParams }: PageProps<"/contact">) {
+  const preview = await isLayoutPreview(searchParams);
+  const entries = await pageEntries("contact", { preview });
   const [settings, locale, nonce, siteKey] = await Promise.all([
     getStoreSettings(),
     getLocale(),
@@ -31,11 +46,13 @@ export default async function ContactPage() {
   ]);
   const dict = getDictionary(locale);
 
-  return (
-    <ShelfMain>
+  const sections: Record<ContactSectionId, ReactNode> = {
+    head: (
       <ShelfHead title={dict.contact.title}>
         <p className="shop-lede">{dict.contact.intro}</p>
       </ShelfHead>
+    ),
+    form: (
       <ShelfBody>
         <div className="mb-10 grid gap-4 text-sm sm:grid-cols-2">
           <div>
@@ -54,6 +71,17 @@ export default async function ContactPage() {
 
         <ContactForm dict={dict.contact} siteKey={siteKey} nonce={nonce} />
       </ShelfBody>
+    ),
+  };
+
+  return (
+    <ShelfMain>
+      {entries.map((entry) => (
+        <LayoutSection key={entry.id} entry={entry} preview={preview}>
+          {entry.custom ? null : sections[entry.id as ContactSectionId]}
+        </LayoutSection>
+      ))}
+      {preview && <PreviewBridge target="contact" />}
     </ShelfMain>
   );
 }

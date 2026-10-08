@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { Link } from "@/components/localized-link";
 import { auth } from "@/auth";
+import { LOCAL_ACCOUNTS_ENABLED, isLocalAdminAccess } from "@/lib/local-features";
+import { headers } from "next/headers";
 import { db } from "@/lib/db";
 import { CartLink } from "@/components/cart-link";
 import { CartFlyout, WishlistFlyout } from "@/components/header-flyout";
@@ -29,7 +31,7 @@ export async function Header({
   dict: Dictionary;
   social: SocialUrls;
 }) {
-  const [session, categories] = await Promise.all([
+  const [session, categories, requestHeaders] = await Promise.all([
     auth(),
     // Categories have no image of their own (see model Category in
     // prisma/schema.prisma), so each dropdown thumbnail borrows a product's
@@ -43,44 +45,47 @@ export async function Header({
     // `position: "asc"` + `createdAt: "asc"` keeps it to one image per
     // category: we ask for one product row, and Prisma returns exactly one
     // image on it.
-    db.category.findMany({
-      where: { parentId: null },
-      orderBy: { name: "asc" },
-      take: 8,
-      select: {
-        slug: true,
-        name: true,
-        nameEn: true,
-        nameFr: true,
-        nameDe: true,
-        nameAr: true,
-        nameZh: true,
-        nameRu: true,
-        nameEs: true,
-        namePt: true,
-        nameHi: true,
-        nameJa: true,
-        coverProduct: {
-          select: {
-            active: true,
-            unlisted: true,
-            images: { orderBy: { position: "asc" }, take: 1, select: { url: true } },
+    db.category
+      .findMany({
+        where: { parentId: null },
+        orderBy: { name: "asc" },
+        take: 8,
+        select: {
+          slug: true,
+          name: true,
+          nameEn: true,
+          nameFr: true,
+          nameDe: true,
+          nameAr: true,
+          nameZh: true,
+          nameRu: true,
+          nameEs: true,
+          namePt: true,
+          nameHi: true,
+          nameJa: true,
+          coverProduct: {
+            select: {
+              active: true,
+              unlisted: true,
+              images: { orderBy: { position: "asc" }, take: 1, select: { url: true } },
+            },
           },
-        },
-        products: {
-          where: { active: true, unlisted: false },
-          orderBy: [{ createdAt: "asc" }, { id: "asc" }],
-          take: 1,
-          select: {
-            images: {
-              orderBy: { position: "asc" },
-              take: 1,
-              select: { url: true },
+          products: {
+            where: { active: true, unlisted: false },
+            orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+            take: 1,
+            select: {
+              images: {
+                orderBy: { position: "asc" },
+                take: 1,
+                select: { url: true },
+              },
             },
           },
         },
-      },
-    }),
+      })
+      .catch(() => [] as never[]),
+    headers(),
   ]);
 
   // Narrow the query result to what the two nav rows need: an href, a
@@ -98,7 +103,10 @@ export async function Header({
     };
   });
 
-  const isStaff = session?.user.role === "admin" || session?.user.role === "staff";
+  const isStaff =
+    isLocalAdminAccess(requestHeaders.get("host")) ||
+    session?.user.role === "admin" ||
+    session?.user.role === "staff";
 
   const wishlistCount = session?.user?.id
     ? await db.wishlistItem.count({ where: { userId: session.user.id } })
@@ -141,14 +149,17 @@ export async function Header({
     session?.user
       ? {
           href: "/account/wishlist",
-          label:
-            wishlistCount > 0 ? `${dict.nav.wishlist} (${wishlistCount})` : dict.nav.wishlist,
+          label: wishlistCount > 0 ? `${dict.nav.wishlist} (${wishlistCount})` : dict.nav.wishlist,
           account: true,
         }
       : { href: "/wishlist", label: dict.nav.wishlist, account: true },
-    session?.user
-      ? { href: "/account", label: dict.nav.account, account: true }
-      : { href: "/login", label: dict.nav.signIn, account: true },
+    ...(LOCAL_ACCOUNTS_ENABLED
+      ? [
+          session?.user
+            ? { href: "/account", label: dict.nav.account, account: true }
+            : { href: "/login", label: dict.nav.signIn, account: true },
+        ]
+      : []),
     // The collections are NOT in this list: the menu renders them as its own
     // thumbnail rows (categories prop), so they would otherwise appear twice.
     { href: "/looks", label: dict.looks.navLabel },
@@ -161,7 +172,7 @@ export async function Header({
   // header reads as a distinct band from the page it scrolls over.
   return (
     <header
-      className="site-header relative z-40 bg-background sm:sticky sm:top-0"
+      className="site-header bg-background relative z-40 sm:sticky sm:top-0"
       /* The store chrome's face: Apple's "New York" system serif where it
          exists, with serif fallbacks elsewhere. Set on the header so every
          nav link, chip and account/cart label inherits it; descendants can
@@ -172,9 +183,8 @@ export async function Header({
           fill exactly the rest of the first screen. */}
       <HeaderHeight />
       <div className="mx-auto flex w-full max-w-7xl items-center gap-7 px-4 py-4 sm:px-6 sm:py-3.5">
-
         {/* ── Logo (far left, desktop only — mobile has its own centered logo below) ── */}
-        <Link href="/" className="hidden shrink-0 self-stretch items-center lg:flex">
+        <Link href="/" className="hidden shrink-0 items-center self-stretch lg:flex">
           <Image
             src={headerLogoSrc(logoUrl)}
             alt={storeName}
@@ -237,7 +247,7 @@ export async function Header({
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="transition-transform duration-200 ease-out group-hover:-rotate-12 group-hover:scale-125"
+                className="transition-transform duration-200 ease-out group-hover:scale-125 group-hover:-rotate-12"
                 aria-hidden="true"
               >
                 <path d="M20.8 4.6c-1.9-1.6-4.6-1.4-6.3.4L12 7.5l-2.5-2.5c-1.7-1.8-4.4-2-6.3-.4-2.1 1.8-2.2 5-.3 6.9L12 21l9.1-9.5c1.9-1.9 1.8-5.1-.3-6.9Z" />
@@ -253,55 +263,47 @@ export async function Header({
             />
           )}
           <CartFlyout label={dict.nav.cart} labels={flyoutLabels} locale={locale} />
-          {isStaff && (
-            <Link
-              href="/admin"
-              className={`${clusterLinkClass} hover:text-accent`}
-            >
+          {LOCAL_ACCOUNTS_ENABLED && isStaff && (
+            <Link href="/admin" className={`${clusterLinkClass} hover:text-accent`}>
               {dict.nav.admin}
             </Link>
           )}
-          {session?.user ? (
-            <Link
-              href="/account"
-              aria-label={dict.nav.account}
-              title={dict.nav.account}
-              className="group link-underline text-foreground hover:text-accent flex items-center"
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="transition-transform duration-200 ease-out group-hover:-translate-y-0.5 group-hover:scale-110"
-                aria-hidden="true"
-              >
-                <circle cx="12" cy="8" r="3.5" />
-                <path d="M4.5 20c1.4-4 4.2-6 7.5-6s6.1 2 7.5 6" />
-              </svg>
-            </Link>
-          ) : (
-            <>
+          {LOCAL_ACCOUNTS_ENABLED &&
+            (session?.user ? (
               <Link
-                href="/login"
-                className={`${clusterLinkClass} hover:text-accent`}
+                href="/account"
+                aria-label={dict.nav.account}
+                title={dict.nav.account}
+                className="group link-underline text-foreground hover:text-accent flex items-center"
               >
-                {dict.nav.signIn}
-              </Link>
-              <span className="hidden 2xl:inline">
-                <Link
-                  href="/register"
-                  className={`${clusterLinkClass} hover:text-accent`}
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="transition-transform duration-200 ease-out group-hover:-translate-y-0.5 group-hover:scale-110"
+                  aria-hidden="true"
                 >
-                  {dict.nav.register}
+                  <circle cx="12" cy="8" r="3.5" />
+                  <path d="M4.5 20c1.4-4 4.2-6 7.5-6s6.1 2 7.5 6" />
+                </svg>
+              </Link>
+            ) : (
+              <>
+                <Link href="/login" className={`${clusterLinkClass} hover:text-accent`}>
+                  {dict.nav.signIn}
                 </Link>
-              </span>
-            </>
-          )}
+                <span className="hidden 2xl:inline">
+                  <Link href="/register" className={`${clusterLinkClass} hover:text-accent`}>
+                    {dict.nav.register}
+                  </Link>
+                </span>
+              </>
+            ))}
         </div>
 
         {/* ── Mobile: hamburger — logo — cart, logo stays the visual focus ──
@@ -341,7 +343,6 @@ export async function Header({
             <CartLink label={dict.nav.cart} />
           </div>
         </div>
-
       </div>
     </header>
   );

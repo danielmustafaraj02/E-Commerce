@@ -20,6 +20,34 @@ const noUnsafeLinks = (text: string) =>
 const text = (max: number) =>
   z.string().trim().min(1).max(max).refine(noUnsafeLinks, "Links must start with / or https://");
 
+/** The iframe URL for a YouTube or Vimeo link, or null for anything else. */
+export function videoEmbedUrl(url: string): string | null {
+  let u: URL;
+  try {
+    u = new URL(url.trim());
+  } catch {
+    return null;
+  }
+  const host = u.hostname.replace(/^www\./, "");
+  const id = (value: string | null | undefined, pattern: RegExp) =>
+    value && pattern.test(value) ? value : null;
+  if (host === "youtu.be") {
+    const v = id(u.pathname.slice(1), /^[\w-]{11}$/);
+    return v && `https://www.youtube-nocookie.com/embed/${v}`;
+  }
+  if (host === "youtube.com" || host === "m.youtube.com") {
+    const v =
+      id(u.searchParams.get("v"), /^[\w-]{11}$/) ??
+      id(u.pathname.match(/^\/(?:embed|shorts)\/([\w-]{11})$/)?.[1], /^[\w-]{11}$/);
+    return v && `https://www.youtube-nocookie.com/embed/${v}`;
+  }
+  if (host === "vimeo.com" || host === "player.vimeo.com") {
+    const v = id(u.pathname.match(/(\d{6,})$/)?.[1], /^\d+$/);
+    return v && `https://player.vimeo.com/video/${v}`;
+  }
+  return null;
+}
+
 const imageSrc = z
   .string()
   .trim()
@@ -27,18 +55,18 @@ const imageSrc = z
   .refine((src) => /^(\/(?!\/)|https:\/\/)/.test(src), "Image must be a /path or https:// URL");
 
 export const blockSchema = z.discriminatedUnion("type", [
-  z.object({ type: z.literal("p"), text: text(4000) }),
-  z.object({ type: z.literal("h2"), text: text(200) }),
+  z.object({ type: z.literal("p"), text: text(10000) }),
+  z.object({ type: z.literal("h2"), text: text(300) }),
   z.object({ type: z.literal("h3"), text: text(200) }),
   z.object({
     type: z.literal("quote"),
-    text: text(1000),
+    text: text(2000),
     cite: z.string().trim().max(200).optional(),
   }),
   z.object({
     type: z.literal("facts"),
     title: text(120),
-    items: z.array(text(300)).min(1).max(12),
+    items: z.array(text(600)).min(1).max(20),
   }),
   z.object({
     type: z.literal("image"),
@@ -47,9 +75,23 @@ export const blockSchema = z.discriminatedUnion("type", [
     caption: z.string().trim().max(300).optional(),
   }),
   z.object({
+    type: z.literal("list"),
+    items: z.array(text(1000)).min(1).max(40),
+    ordered: z.boolean().optional(),
+  }),
+  z.object({
+    type: z.literal("video"),
+    url: z
+      .string()
+      .trim()
+      .max(500)
+      .refine((u) => videoEmbedUrl(u) !== null, "Use a YouTube or Vimeo link"),
+    caption: z.string().trim().max(300).optional(),
+  }),
+  z.object({
     type: z.literal("products"),
     title: text(120),
-    slugs: z.array(z.string().trim().min(1).max(200)).min(1).max(8),
+    slugs: z.array(z.string().trim().min(1).max(200)).min(1).max(12),
   }),
   z.object({
     type: z.literal("cta"),
@@ -61,7 +103,7 @@ export const blockSchema = z.discriminatedUnion("type", [
 /** What the admin editor stores. Images are flat here and become JournalImage
  *  blocks only in toArticle. */
 export type StoredBlock = z.infer<typeof blockSchema>;
-export const bodySchema = z.array(blockSchema).max(80);
+export const bodySchema = z.array(blockSchema).max(300);
 
 /** Tolerant read of the JSON column: invalid blocks are dropped, not thrown. */
 export function parseBody(value: unknown): StoredBlock[] {

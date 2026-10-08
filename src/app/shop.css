@@ -2599,11 +2599,13 @@ a.shop-line-name:focus-visible {
   position: relative;
   margin-top: 2.25rem;
   aspect-ratio: 4 / 5;
+  background: transparent;
 }
 .look-visual--styled {
-  border-radius: var(--radius-panel);
-  overflow: hidden;
+  border-radius: 0;
+  overflow: visible;
   aspect-ratio: 4 / 3;
+  background: transparent;
 }
 /* One full-size layer per piece, moved and scaled into its slot (from
    lib/look-composition.ts, via --mx/--my/--ms on phones and --x/--y/--s from
@@ -2617,6 +2619,7 @@ a.shop-line-name:focus-visible {
   position: absolute;
   inset: 0;
   opacity: 1;
+  background: transparent;
   transform: translate(calc((var(--cx) - 0.5) * 100%), calc((var(--cy) - 0.5) * 100%))
     scale(var(--cs));
   transition:
@@ -2639,10 +2642,12 @@ a.shop-line-name:focus-visible {
 }
 .look-visual-layer img {
   object-fit: contain;
+  background: transparent;
   filter: brightness(1.05) contrast(1.03);
 }
 .look-piece-photo img {
   mix-blend-mode: multiply;
+  background: transparent;
   filter: brightness(1.05) contrast(1.03);
 }
 .look-piece-photo img {
@@ -2769,7 +2774,7 @@ a.shop-line-name:focus-visible {
 .look-piece-photo {
   position: relative;
   aspect-ratio: 1;
-  background: var(--ground);
+  background: transparent;
 }
 .look-piece-text {
   display: flex;
@@ -4947,4 +4952,17 @@ a.look-piece-name:focus-visible {
   display: grid;
   gap: 2rem;
   max-width: 46rem;
+}
+
+/* "You might also like": the same shelf as the home page — pieces blended into
+   the ground, no gallery mount — under the same heading with its gold rule, so
+   the end of a product page reads like the rest of the site. */
+.shop-related .shelf-item-photo,
+.shop-related .shelf-item:hover .shelf-item-photo,
+.shop-related .shelf-item:has(:focus-visible) .shelf-item-photo {
+  background: var(--ivory);
+  box-shadow: none;
+}
+.shop-related .shelf-item-photo::after {
+  display: none;
 }

@@ -1,3 +1,4 @@
+import { withPageMeta } from "@/lib/page-meta";
 import type { Metadata } from "next";
 import { Link } from "@/components/localized-link";
 import { getStoreSettings } from "@/lib/store-settings";
@@ -22,7 +23,7 @@ import "./murano-faq.css";
 // Italian is the page's only language version (see lib/murano-faq.ts).
 const CANONICAL = `/${MURANO_FAQ_LOCALE}${MURANO_FAQ_PATH}`;
 
-export function generateMetadata(): Metadata {
+function baseMetadata(): Metadata {
   return {
     title: copy.metaTitle,
     description: copy.metaDescription,
@@ -37,6 +38,10 @@ export function generateMetadata(): Metadata {
       locale: "it_IT",
     },
   };
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withPageMeta("/murano-faq", await baseMetadata());
 }
 
 export default async function MuranoFaqPage() {

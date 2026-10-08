@@ -1,8 +1,15 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
-import { defaultLocale, LOCALE_COOKIE, splitLocalePrefix, type Locale } from "./lib/i18n/locale-constants";
+import {
+  defaultLocale,
+  LOCALE_COOKIE,
+  splitLocalePrefix,
+  type Locale,
+} from "./lib/i18n/locale-constants";
 import { detectLocale } from "./lib/i18n/detect-locale";
+import { LOCAL_ACCOUNTS_ENABLED, isLocalAdminAccess } from "./lib/local-features";
+import { requestUrl } from "./lib/request-url";
 
 // Coarse-grained gate only. Every admin route/API handler must also check
 // `role === "admin"` itself — proxy does not run for Server Functions, so it
@@ -50,6 +57,14 @@ const STATIC_FILE_RE = /\/[^/]+\.[a-z0-9]+$/i;
 
 export default async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const incomingUrl = requestUrl(request);
+  const localAdmin = isLocalAdminAccess(request.headers.get("host"));
+  const publicPath = splitLocalePrefix(pathname).rest;
+  if (
+    !LOCAL_ACCOUNTS_ENABLED &&
+    /^\/(?:admin|account|login|register|forgot-password|reset-password)(?:\/|$)/.test(publicPath)
+  )
+    return withSecurityHeaders(new NextResponse(null, { status: 404 }));
   const unlocalized = UNLOCALIZED_PATH_RE.test(pathname);
 
   // Locale now lives in the URL. A request with no valid /xx prefix (a bare
@@ -71,7 +86,7 @@ export default async function proxy(request: NextRequest) {
         request.cookies.get(LOCALE_COOKIE)?.value,
         request.headers.get("accept-language") ?? undefined
       );
-      const target = request.nextUrl.clone();
+      const target = new URL(incomingUrl);
       target.pathname = `/${preferred}${pathname}`;
       return withSecurityHeaders(NextResponse.redirect(target, 308));
     }
@@ -85,21 +100,24 @@ export default async function proxy(request: NextRequest) {
   // the plain "authjs.session-token" cookie instead of the
   // "__Secure-authjs.session-token" one NextAuth actually issues in
   // production — silently failing to find a perfectly valid session.
-  const token = await getToken({
-    req: request,
-    secret: process.env.AUTH_SECRET,
-    secureCookie: process.env.NODE_ENV === "production",
-  });
+  const token =
+    LOCAL_ACCOUNTS_ENABLED && !localAdmin
+      ? await getToken({
+          req: request,
+          secret: process.env.AUTH_SECRET,
+          secureCookie: process.env.NODE_ENV === "production",
+        })
+      : null;
   const role = token?.role as string | undefined;
 
-  if (logicalPathname.startsWith("/admin")) {
+  if (logicalPathname.startsWith("/admin") && !localAdmin) {
     const issuedAt = typeof token?.iat === "number" ? token.iat : 0;
     const sessionTooOld = Date.now() / 1000 - issuedAt > ADMIN_SESSION_MAX_AGE_SECONDS;
 
     if ((role !== "admin" && role !== "staff") || sessionTooOld) {
       // Admin is unlocalized, and so is the login it bounces to here —
       // staff sign-in doesn't need per-visitor language detection.
-      const loginUrl = new URL(`/${defaultLocale}/login`, request.url);
+      const loginUrl = new URL(`/${defaultLocale}/login`, incomingUrl);
       loginUrl.searchParams.set("callbackUrl", logicalPathname);
       return withSecurityHeaders(NextResponse.redirect(loginUrl));
     }
@@ -109,20 +127,24 @@ export default async function proxy(request: NextRequest) {
     // auth.ts's jwt callback), so this deliberately sends them to set it up
     // rather than silently letting a not-yet-enrolled admin session through.
     if (!token?.mfaEnabled) {
-      const mfaUrl = new URL(`/${defaultLocale}/account/mfa`, request.url);
+      const mfaUrl = new URL(`/${defaultLocale}/account/mfa`, incomingUrl);
       mfaUrl.searchParams.set("required", "1");
       return withSecurityHeaders(NextResponse.redirect(mfaUrl));
     }
   }
 
   if (logicalPathname.startsWith("/account") && !token) {
-    const loginUrl = new URL(`/${locale}/login`, request.url);
+    const loginUrl = new URL(`/${locale}/login`, incomingUrl);
     loginUrl.searchParams.set("callbackUrl", `/${locale}${logicalPathname}`);
     return withSecurityHeaders(NextResponse.redirect(loginUrl));
   }
 
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
   const isDev = process.env.NODE_ENV === "development";
+  // Hot reload uses a WebSocket; 'self' does not cover ws: in every browser.
+  const devSocketOrigin = isDev
+    ? `${incomingUrl.protocol === "https:" ? "wss:" : "ws:"}//${incomingUrl.host}`
+    : "";
 
   // Express Checkout (Apple Pay/Google Pay via @stripe/react-stripe-js,
   // src/components/express-checkout-button.tsx) is the one place this app
@@ -147,13 +169,14 @@ export default async function proxy(request: NextRequest) {
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
     img-src 'self' https: data:;
     font-src 'self' data: https://fonts.gstatic.com;
-    connect-src 'self' https://api.stripe.com https://m.stripe.network;
-    frame-src https://js.stripe.com https://hooks.stripe.com;
+    connect-src 'self' https://api.stripe.com https://m.stripe.network${isDev ? ` ${devSocketOrigin}` : ""};
+    frame-src https://js.stripe.com https://hooks.stripe.com https://www.youtube-nocookie.com https://player.vimeo.com https://www.google.com/maps;
+    media-src 'self' https://*.public.blob.vercel-storage.com;
     object-src 'none';
     base-uri 'self';
     form-action 'self';
     frame-ancestors 'none';
-    upgrade-insecure-requests;
+    ${isDev ? "" : "upgrade-insecure-requests;"}
   `
     .replace(/\s{2,}/g, " ")
     .trim();
@@ -167,7 +190,7 @@ export default async function proxy(request: NextRequest) {
     ? NextResponse.next({ request: { headers: requestHeaders } })
     : NextResponse.rewrite(
         (() => {
-          const url = request.nextUrl.clone();
+          const url = new URL(incomingUrl);
           url.pathname = logicalPathname;
           return url;
         })(),

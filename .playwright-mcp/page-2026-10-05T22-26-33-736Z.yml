@@ -1,0 +1,387 @@
+- generic [active] [ref=f6e1]:
+  - link "Skip to main content" [ref=f6e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=f6e3]:
+    - generic [ref=f6e4]:
+      - link [ref=f6e5] [cursor=pointer]:
+        - /url: /en
+        - img "Perla Murano Glass" [ref=f6e6]
+      - navigation [ref=f6e7]:
+        - button "Products" [ref=f6e9] [cursor=pointer]
+        - link "Looks" [ref=f6e13] [cursor=pointer]:
+          - /url: /en/looks
+        - link "About us" [ref=f6e14] [cursor=pointer]:
+          - /url: /en/about
+      - generic [ref=f6e16]:
+        - button "Search" [ref=f6e17] [cursor=pointer]
+        - search [aria-hidden] [ref=f6e21]:
+          - button [ref=f6e27] [cursor=pointer]
+      - generic [ref=f6e30]:
+        - button "English" [ref=f6e32] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f6e33]: 🇬🇧
+          - text: English
+        - link "Wishlist" [ref=f6e37] [cursor=pointer]:
+          - /url: /en/wishlist
+        - link "Cart" [ref=f6e41] [cursor=pointer]:
+          - /url: /en/cart
+        - link "Sign in" [ref=f6e46] [cursor=pointer]:
+          - /url: /en/login
+  - main [ref=f6e48]:
+    - generic [ref=f6e50]:
+      - link "← Earrings" [ref=f6e51] [cursor=pointer]:
+        - /url: /en/category/orecchini-in-vetro-di-murano
+      - generic [ref=f6e52]:
+        - generic [ref=f6e54]:
+          - generic [ref=f6e55]:
+            - button "Onyx Pebble Earrings — handmade Murano glass jewelry 1" [ref=f6e56] [cursor=pointer]
+            - button "Onyx Pebble Earrings — handmade Murano glass jewelry 2" [ref=f6e57] [cursor=pointer]
+            - button "Onyx Pebble Earrings — handmade Murano glass jewelry 3" [ref=f6e58] [cursor=pointer]
+          - 'button "View larger: Onyx Pebble Earrings — handmade Murano glass jewelry" [ref=f6e59]':
+            - img "Onyx Pebble Earrings — handmade Murano glass jewelry" [ref=f6e60]
+        - generic [ref=f6e61]:
+          - paragraph [ref=f6e62]: Glass · Handmade in Italy · Lightweight
+          - heading "Onyx Pebble Earrings" [level=1] [ref=f6e63]
+          - paragraph [ref=f6e64]:
+            - text: 90,00 €80,00 €
+            - generic [ref=f6e65]: "-11%"
+            - text: VAT/IVA included
+          - paragraph [ref=f6e66]: In stock
+          - paragraph [ref=f6e67]:
+            - generic [ref=f6e68]: "Size: About 4 cm drop"
+            - generic [ref=f6e69]: Color:Black
+          - generic [ref=f6e71]:
+            - generic [ref=f6e72]:
+              - generic [ref=f6e73]:
+                - button "Decrease quantity" [disabled]: −
+                - generic [ref=f6e74]: "1"
+                - button "Increase quantity" [ref=f6e75] [cursor=pointer]: +
+              - button "Add this piece to cart" [ref=f6e76] [cursor=pointer]
+            - button "Buy this piece now" [ref=f6e78] [cursor=pointer]
+            - button "Add to wishlist" [ref=f6e81] [cursor=pointer]
+            - paragraph [ref=f6e85]:
+              - generic [ref=f6e86]: Estimated delivery
+              - generic [ref=f6e87]: October 20 – November 1
+              - generic [ref=f6e88]: 14–26 days from your order
+              - generic [ref=f6e89]: Estimate, not a guarantee
+            - generic [ref=f6e90]:
+              - generic [ref=f6e91]:
+                - generic [ref=f6e92]: Shipping to
+                - generic [ref=f6e93]:
+                  - combobox "Shipping to" [ref=f6e94] [cursor=pointer]
+                  - button [aria-hidden] [ref=f6e95] [cursor=pointer]
+              - paragraph [ref=f6e98]
+          - paragraph [ref=f6e100]: "A hematite bead and an oval Murano glass bead mottled in black and white hang from a silver-tone lever back: a smaller, simpler variant of our Night Spots Earrings, for anyone who prefers a more compact handmade earring. The bead still comes from the same murrina technique, colored glass rods fused and sliced into cross-sections: only the scale changes, not the care needed in choosing each individual slice of glass."
+          - list [ref=f6e102]:
+            - listitem [ref=f6e103]: Handmade in Murano
+            - listitem [ref=f6e106]: Secure checkout
+            - listitem [ref=f6e109]: Tracked shipping
+            - listitem [ref=f6e112]: 14-day right of withdrawal
+          - generic [ref=f6e115]:
+            - generic [ref=f6e116]: We accept
+            - generic [ref=f6e117]:
+              - img "Visa" [ref=f6e118]:
+                - generic [ref=f6e119]: VISA
+              - img "Mastercard" [ref=f6e120]
+              - img "Apple Pay" [ref=f6e124]:
+                - generic [ref=f6e127]: Pay
+              - img "Google Pay" [ref=f6e128]
+              - img "Klarna" [ref=f6e130]
+              - img "Amazon Pay" [ref=f6e132]:
+                - generic [ref=f6e133]: amazon pay
+              - img "Satispay" [ref=f6e136]
+              - img "Bancontact" [ref=f6e139]
+              - img "MB WAY" [ref=f6e143]:
+                - generic [ref=f6e144]: MB
+                - generic [ref=f6e145]: WAY
+              - img "EPS" [ref=f6e146]:
+                - generic [ref=f6e147]: eps
+          - generic [ref=f6e154]:
+            - strong [ref=f6e155]: A handmade Murano glass gift to remember
+            - text: Made by hand in Italy, beautifully presented and ready to give.
+            - link "Not sure this is the one? Try our Gift Finder" [ref=f6e156] [cursor=pointer]:
+              - /url: /en/gift-finder
+          - link "Make it a gift Add a personalised gift card for 5,00 € Your message will be beautifully printed and included inside your Perla package. Personalise your gift" [ref=f6e160] [cursor=pointer]:
+            - /url: /en/personalised-gift-card
+            - generic [ref=f6e161]: Make it a gift
+            - generic [ref=f6e162]: Add a personalised gift card for 5,00 €
+            - generic [ref=f6e163]: Your message will be beautifully printed and included inside your Perla package.
+            - generic [ref=f6e164]:
+              - text: Personalise your gift
+              - generic [aria-hidden] [ref=f6e165]: →
+          - generic [ref=f6e166]:
+            - group [ref=f6e167]:
+              - generic "Shipping & returns +" [ref=f6e168] [cursor=pointer]
+            - group [ref=f6e169]:
+              - generic "Care +" [ref=f6e170] [cursor=pointer]
+            - group [ref=f6e171]:
+              - generic "Murano Glass Guide +" [ref=f6e172] [cursor=pointer]
+          - generic [ref=f6e174]:
+            - generic [ref=f6e175]: Share
+            - link "WhatsApp" [ref=f6e176] [cursor=pointer]:
+              - /url: https://wa.me/?text=Onyx%20Pebble%20Earrings%20https%3A%2F%2Fperlamuranoglass.com%2Fproducts%2Forecchini-sassolino-di-onice-6bae0d
+            - link "Facebook" [ref=f6e177] [cursor=pointer]:
+              - /url: https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fperlamuranoglass.com%2Fproducts%2Forecchini-sassolino-di-onice-6bae0d
+            - link "X" [ref=f6e178] [cursor=pointer]:
+              - /url: https://twitter.com/intent/tweet?text=Onyx%20Pebble%20Earrings&url=https%3A%2F%2Fperlamuranoglass.com%2Fproducts%2Forecchini-sassolino-di-onice-6bae0d
+            - button "Copy link" [ref=f6e179] [cursor=pointer]
+    - generic [ref=f6e181]:
+      - img "The perfect gift" [ref=f6e183]
+      - generic [ref=f6e184]:
+        - paragraph [ref=f6e185]: The perfect gift
+        - heading "More than a jewel, a lasting emotion." [level=2] [ref=f6e186]
+        - paragraph [ref=f6e187]: Handmade in Italy from authentic Murano glass, each piece has its own colour and character—an original alternative to a mass-produced gift. It arrives in our signature gift box, ready for a birthday, anniversary, Mother's Day, or a thoughtful thank-you. Choose it for someone special, or as a lasting keepsake for yourself.
+        - link "Discover our gift packaging" [ref=f6e188] [cursor=pointer]:
+          - /url: "#gift-packaging"
+        - list [ref=f6e191]:
+          - listitem [ref=f6e192]: Handmade with authentic Murano glass
+          - listitem [ref=f6e198]: Signature gift box, ready to give
+          - listitem [ref=f6e201]: A distinctive piece with its own character
+    - generic [ref=f6e206]:
+      - generic [ref=f6e207]:
+        - heading "The story behind this piece" [level=2] [ref=f6e208]
+        - paragraph [ref=f6e209]: These are a smaller, simpler variant of our Night Spots earrings, for anyone who prefers a more compact handmade earring for daily wear. The bead still comes from the same murrina technique, colored glass rods fused and sliced into cross-sections — only the scale changes, not the care needed in choosing each individual slice of glass. A simple gift, right for anyone trying Murano glass jewelry for the first time. Handmade in Murano, Italy.
+        - link "Discover the story behind Murano glass" [ref=f6e210] [cursor=pointer]:
+          - /url: /en/blog/history-of-murano-glass
+          - text: Discover the story behind Murano glass →
+      - generic [ref=f6e212]:
+        - generic [ref=f6e213]:
+          - paragraph [ref=f6e214]: Information / FAQ
+          - heading "Before you choose." [level=2] [ref=f6e215]
+        - generic [ref=f6e216]:
+          - generic [ref=f6e218]:
+            - heading [level=3] [ref=f6e220]:
+              - button "Is this real Murano glass?" [ref=f6e221] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f6e222]: "01"
+            - heading [level=3] [ref=f6e226]:
+              - button "How much does shipping cost?" [ref=f6e227] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f6e228]: "02"
+            - heading [level=3] [ref=f6e232]:
+              - button "How long does shipping take?" [ref=f6e233] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f6e234]: "03"
+            - heading [level=3] [ref=f6e238]:
+              - button "Can I return or exchange my order?" [ref=f6e239] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f6e240]: "04"
+            - heading [level=3] [ref=f6e244]:
+              - button "Where is my jewelry made and shipped from?" [ref=f6e245] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f6e246]: "05"
+            - heading [level=3] [ref=f6e250]:
+              - button "Does it come gift-wrapped?" [ref=f6e251] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f6e252]: "06"
+            - button "More questions" [ref=f6e255] [cursor=pointer]
+          - paragraph [ref=f6e256]:
+            - text: Still have a question?
+            - link "Contact us" [ref=f6e257] [cursor=pointer]:
+              - /url: /en/contact
+              - text: Contact us →
+    - generic [ref=f6e259]:
+      - heading "The Murano Journal" [level=2] [ref=f6e260]
+      - list [ref=f6e261]:
+        - listitem [ref=f6e262]:
+          - 'link "Things to Do in Murano: A Slower Island Guide" [ref=f6e263] [cursor=pointer]':
+            - /url: /en/blog/things-to-do-in-murano
+            - figure [ref=f6e264]:
+              - img "Handmade red Murano glass necklace photographed by Perla Murano Glass" [ref=f6e266]
+        - listitem [ref=f6e268]:
+          - link "How to Recognize Authentic Murano Glass" [ref=f6e269] [cursor=pointer]:
+            - /url: /en/blog/how-to-recognize-authentic-murano-glass
+            - figure [ref=f6e270]:
+              - img "Brightly painted houses along a canal on Burano, in the Venetian lagoon" [ref=f6e272]
+    - generic [ref=f6e276]:
+      - generic [ref=f6e278]:
+        - generic [ref=f6e281]:
+          - figure [ref=f6e283]:
+            - paragraph [ref=f6e284]: Perla Murano Glass
+            - generic [ref=f6e286]:
+              - paragraph [ref=f6e287]: For Sofia
+              - paragraph [ref=f6e288]: A little piece of Venice, just for you.
+              - paragraph [ref=f6e289]: With love, Marco
+            - paragraph [aria-hidden] [ref=f6e290]: Murano · Venezia
+          - generic [aria-hidden]:
+            - figure
+        - button "See the back" [ref=f6e292] [cursor=pointer]
+      - generic [ref=f6e295]:
+        - heading "Give them a little piece of Venice." [level=2] [ref=f6e296]
+        - paragraph [ref=f6e297]: Now make it personal.
+        - paragraph [ref=f6e298]: Add a personalised Perla gift card for just 5,00 €. Choose one of our elegant messages or write your own, pick your favourite font, and create a message made especially for them.
+        - link "Create Your Gift Message" [ref=f6e299] [cursor=pointer]:
+          - /url: /en/personalised-gift-card
+          - text: Create Your Gift Message
+          - generic [aria-hidden] [ref=f6e300]: →
+    - generic [ref=f6e302]:
+      - heading "You might also like" [level=2] [ref=f6e303]
+      - list [ref=f6e304]:
+        - listitem [ref=f6e305]:
+          - generic:
+            - img "Rose Petal Earrings — handmade Murano glass jewelry"
+            - 'button "Add this piece to cart: Rose Petal Earrings" [ref=f6e306] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=f6e312]:
+            - link "Rose Petal Earrings" [ref=f6e313] [cursor=pointer]:
+              - /url: /en/products/orecchini-petalo-di-rosa-e081a0
+              - text: Rose Petal Earrings
+              - generic [aria-hidden] [ref=f6e314]: →
+          - generic [ref=f6e315]: 80,00 €
+        - listitem [ref=f6e316]:
+          - generic:
+            - img "Ruby Drop Earrings — handmade Murano glass jewelry"
+            - 'button "Add this piece to cart: Ruby Drop Earrings" [ref=f6e317] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=f6e323]:
+            - link "Ruby Drop Earrings" [ref=f6e324] [cursor=pointer]:
+              - /url: /en/products/orecchini-goccia-di-rubino-9ad623
+              - text: Ruby Drop Earrings
+              - generic [aria-hidden] [ref=f6e325]: →
+          - generic [ref=f6e326]: 80,00 €
+        - listitem [ref=f6e327]:
+          - generic:
+            - img "Ice Drop Earrings — handmade Murano glass jewelry"
+            - 'button "Add this piece to cart: Ice Drop Earrings" [ref=f6e328] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=f6e334]:
+            - link "Ice Drop Earrings" [ref=f6e335] [cursor=pointer]:
+              - /url: /en/products/orecchini-goccia-di-ghiaccio-51362e
+              - text: Ice Drop Earrings
+              - generic [aria-hidden] [ref=f6e336]: →
+          - generic [ref=f6e337]: 80,00 €
+        - listitem [ref=f6e338]:
+          - generic:
+            - img "Pastel Garden Earrings — handmade Murano glass jewelry"
+            - 'button "Add this piece to cart: Pastel Garden Earrings" [ref=f6e339] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=f6e345]:
+            - link "Pastel Garden Earrings" [ref=f6e346] [cursor=pointer]:
+              - /url: /en/products/orecchini-giardino-pastello-d650a2
+              - text: Pastel Garden Earrings
+              - generic [aria-hidden] [ref=f6e347]: →
+          - generic [ref=f6e348]: 80,00 €
+  - contentinfo [ref=f6e349]:
+    - generic [ref=f6e350]:
+      - generic [ref=f6e352]:
+        - heading "Discover the world of Murano glass" [level=2] [ref=f6e353]
+        - paragraph [ref=f6e354]: Stories, craftsmanship and inspiration from Venice.
+        - link "Explore the journal" [ref=f6e355] [cursor=pointer]:
+          - /url: /en/blog
+          - text: Explore the journal
+          - generic [aria-hidden] [ref=f6e356]: →
+      - generic [ref=f6e358]:
+        - heading "A little more Murano, occasionally." [level=2] [ref=f6e359]
+        - paragraph [ref=f6e360]: New collections, stories and special offers, thoughtfully shared.
+        - generic [ref=f6e362]:
+          - textbox "Stay in the loop" [ref=f6e363]:
+            - /placeholder: you@example.com
+          - button "Get updates" [ref=f6e364] [cursor=pointer]
+        - paragraph [ref=f6e365]: Your details stay private. Unsubscribe anytime.
+    - generic [ref=f6e369]:
+      - generic [ref=f6e370]:
+        - generic [ref=f6e371]:
+          - heading "Shop" [level=2] [ref=f6e372]:
+            - button "Shop"
+          - region "Shop" [ref=f6e373]:
+            - list [ref=f6e374]:
+              - listitem [ref=f6e375]:
+                - link "All products" [ref=f6e376] [cursor=pointer]:
+                  - /url: /en/products
+              - listitem [ref=f6e377]:
+                - link "Bracelets" [ref=f6e378] [cursor=pointer]:
+                  - /url: /en/category/bracciali-in-vetro-di-murano
+              - listitem [ref=f6e379]:
+                - link "Necklaces" [ref=f6e380] [cursor=pointer]:
+                  - /url: /en/category/collane-in-vetro-di-murano
+              - listitem [ref=f6e381]:
+                - link "Earrings" [ref=f6e382] [cursor=pointer]:
+                  - /url: /en/category/orecchini-in-vetro-di-murano
+              - listitem [ref=f6e383]:
+                - 'link "Gift Finder: Find the Perfect Murano Glass Gift" [ref=f6e384] [cursor=pointer]':
+                  - /url: /en/gift-finder
+              - listitem [ref=f6e385]:
+                - link "Digital gift voucher" [ref=f6e386] [cursor=pointer]:
+                  - /url: /en/gift-card
+              - listitem [ref=f6e387]:
+                - link "Personalised Gift Card" [ref=f6e388] [cursor=pointer]:
+                  - /url: /en/personalised-gift-card
+        - generic [ref=f6e389]:
+          - heading "About Perla" [level=2] [ref=f6e390]:
+            - button "About Perla"
+          - region "About Perla" [ref=f6e391]:
+            - list [ref=f6e392]:
+              - listitem [ref=f6e393]:
+                - link "About us" [ref=f6e394] [cursor=pointer]:
+                  - /url: /en/about
+              - listitem [ref=f6e395]:
+                - link "Murano Glass Guide" [ref=f6e396] [cursor=pointer]:
+                  - /url: /en/murano-glass
+              - listitem [ref=f6e397]:
+                - link "The Murano Journal" [ref=f6e398] [cursor=pointer]:
+                  - /url: /en/blog
+        - generic [ref=f6e399]:
+          - heading "Customer care" [level=2] [ref=f6e400]:
+            - button "Customer care"
+          - region "Customer care" [ref=f6e401]:
+            - list [ref=f6e402]:
+              - listitem [ref=f6e403]:
+                - link "Contact us" [ref=f6e404] [cursor=pointer]:
+                  - /url: /en/contact
+              - listitem [ref=f6e405]:
+                - link "Returns & Refunds" [ref=f6e406] [cursor=pointer]:
+                  - /url: /en/legal/returns
+              - listitem [ref=f6e407]:
+                - link "perlamuranoglass@gmail.com" [ref=f6e408] [cursor=pointer]:
+                  - /url: mailto:perlamuranoglass@gmail.com
+      - list [ref=f6e409]:
+        - listitem [ref=f6e410]:
+          - generic [ref=f6e413]: Handcrafted in Murano
+        - listitem [ref=f6e414]:
+          - generic [ref=f6e418]: Secure checkout
+        - listitem [ref=f6e419]:
+          - generic [ref=f6e423]: Gift-ready packaging
+        - listitem [ref=f6e424]:
+          - generic [ref=f6e429]: Shipping from Italy
+      - paragraph [ref=f6e430]: Complimentary shipping across Italy & Europe · USA & Canada 30 € · Rest of World 40 €
+    - generic [ref=f6e431]:
+      - navigation "Social media" [ref=f6e432]:
+        - list [ref=f6e433]:
+          - listitem [ref=f6e434]:
+            - link "Instagram" [ref=f6e435] [cursor=pointer]:
+              - /url: https://www.instagram.com/venetianmuranoglass/
+          - listitem [ref=f6e440]:
+            - link "Facebook" [ref=f6e441] [cursor=pointer]:
+              - /url: https://www.facebook.com/venetianmuranoglass
+          - listitem [ref=f6e444]:
+            - link "TikTok" [ref=f6e445] [cursor=pointer]:
+              - /url: https://www.tiktok.com/@venetian.murano.g
+          - listitem [ref=f6e449]:
+            - link "YouTube" [ref=f6e450] [cursor=pointer]:
+              - /url: https://www.youtube.com/@venetianmuranoglass
+          - listitem [ref=f6e454]:
+            - link "LinkedIn" [ref=f6e455] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/venetian-murano-glass
+      - generic [ref=f6e460]:
+        - generic [ref=f6e461]: We accept
+        - generic [ref=f6e462]:
+          - img "Visa" [ref=f6e463]:
+            - generic [ref=f6e464]: VISA
+          - img "Mastercard" [ref=f6e465]
+          - img "Apple Pay" [ref=f6e469]:
+            - generic [ref=f6e472]: Pay
+          - img "Google Pay" [ref=f6e473]
+      - navigation "Legal" [ref=f6e475]:
+        - list [ref=f6e476]:
+          - listitem [ref=f6e477]:
+            - link "Privacy Policy" [ref=f6e478] [cursor=pointer]:
+              - /url: /en/legal/privacy
+          - listitem [ref=f6e479]:
+            - link "Terms & Conditions" [ref=f6e480] [cursor=pointer]:
+              - /url: /en/legal/terms
+          - listitem [ref=f6e481]:
+            - link "Cookie Policy" [ref=f6e482] [cursor=pointer]:
+              - /url: /en/legal/cookies
+      - paragraph [ref=f6e483]: © 2026 Perla Murano Glass. All rights reserved.
+      - paragraph [ref=f6e484]:
+        - generic [ref=f6e485]: Perla Murano Glass
+  - button "Open Next.js Dev Tools" [ref=f6e499] [cursor=pointer]:
+    - generic [ref=f6e502]:
+      - text: Compiling
+      - generic [ref=f6e503]:
+        - generic [ref=f6e504]: .
+        - generic [ref=f6e505]: .
+        - generic [ref=f6e506]: .

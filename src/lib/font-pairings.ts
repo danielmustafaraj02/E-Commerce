@@ -117,7 +117,124 @@ export const FONT_PAIRINGS: FontPairing[] = [
     style: "Sophisticated · Artistic · Editorial",
     bestFor: "Luxury coaches, authors, creative directors",
   },
+  {
+    id: "lora-nunitosans",
+    heading: "Lora",
+    body: "Nunito Sans",
+    style: "Warm · Readable · Friendly",
+    bestFor: "Craft shops, homeware, gift boutiques",
+  },
+  {
+    id: "cinzel-jost",
+    heading: "Cinzel",
+    body: "Jost",
+    style: "Classical · Inscriptional · Refined",
+    bestFor: "Jewellery, heritage and artisan brands",
+  },
+  {
+    id: "spectral-karla",
+    heading: "Spectral",
+    body: "Karla",
+    style: "Literary · Calm · Natural",
+    bestFor: "Wellness, slow-living and book-minded brands",
+  },
+  {
+    id: "crimsonpro-worksans",
+    heading: "Crimson Pro",
+    body: "Work Sans",
+    style: "Bookish · Warm · Editorial",
+    bestFor: "Stationery, lifestyle and storytelling shops",
+  },
+  {
+    id: "sourceserif-sourcesans",
+    heading: "Source Serif 4",
+    body: "Source Sans 3",
+    style: "Neutral · Trustworthy · Clear",
+    bestFor: "Established shops that want to feel dependable",
+  },
+  {
+    id: "cormorant-montserrat",
+    heading: "Cormorant",
+    body: "Montserrat",
+    style: "Elegant · Clean · Fashion-forward",
+    bestFor: "Fashion, jewellery and beauty",
+  },
+  {
+    id: "notoserifdisplay-jakarta",
+    heading: "Noto Serif Display",
+    body: "Plus Jakarta Sans",
+    style: "Modern luxury · Crisp · Confident",
+    bestFor: "Premium and design-led brands",
+  },
+  {
+    id: "syne-inter",
+    heading: "Syne",
+    body: "Inter",
+    style: "Bold · Artistic · Contemporary",
+    bestFor: "Creative studios, galleries, concept stores",
+  },
+  {
+    id: "spacegrotesk-plexsans",
+    heading: "Space Grotesk",
+    body: "IBM Plex Sans",
+    style: "Technical · Modern · Studio",
+    bestFor: "Design objects and modern accessories",
+  },
+  {
+    id: "josefin-nunitosans",
+    heading: "Josefin Sans",
+    body: "Nunito Sans",
+    style: "Vintage · Art deco · Light",
+    bestFor: "Vintage-inspired and retro-glam brands",
+  },
+  {
+    id: "bitter-librefranklin",
+    heading: "Bitter",
+    body: "Libre Franklin",
+    style: "Sturdy · Honest · Workshop",
+    bestFor: "Makers, outdoor and utility brands",
+  },
+  {
+    id: "vollkorn-hanken",
+    heading: "Vollkorn",
+    body: "Hanken Grotesk",
+    style: "Rustic · Warm · Artisan",
+    bestFor: "Handmade goods, food and home",
+  },
+  {
+    id: "alegreya-figtree",
+    heading: "Alegreya",
+    body: "Figtree",
+    style: "Humanist · Handcrafted · Friendly",
+    bestFor: "Artisan and handmade shops",
+  },
+  {
+    id: "literata-albertsans",
+    heading: "Literata",
+    body: "Albert Sans",
+    style: "Quiet · Modern · Editorial",
+    bestFor: "Minimal shops with a literary tone",
+  },
+  {
+    id: "epilogue-plexserif",
+    heading: "Epilogue",
+    body: "IBM Plex Serif",
+    style: "Fashion-forward · Editorial · Sans over serif",
+    bestFor: "Contemporary fashion and accessories",
+  },
+  {
+    id: "zilla-rubik",
+    heading: "Zilla Slab",
+    body: "Rubik",
+    style: "Friendly · Sturdy · Playful",
+    bestFor: "Workshops, kids' and gift brands",
+  },
 ];
+
+/** Every family a pairing can use, A to Z: what the per-role pickers offer. */
+export const FONT_FAMILIES = [...new Set(FONT_PAIRINGS.flatMap((p) => [p.heading, p.body]))].sort(
+  (a, b) => a.localeCompare(b)
+);
 
 /** The pairing whose two families match what is saved, if any. */
 export function findPairing(heading?: string | null, body?: string | null) {
@@ -125,9 +242,7 @@ export function findPairing(heading?: string | null, body?: string | null) {
   const b = (body ?? "").trim().toLowerCase();
   if (!h && !b) return null;
   return (
-    FONT_PAIRINGS.find(
-      (p) => p.heading.toLowerCase() === h && p.body.toLowerCase() === b
-    ) ?? null
+    FONT_PAIRINGS.find((p) => p.heading.toLowerCase() === h && p.body.toLowerCase() === b) ?? null
   );
 }
 

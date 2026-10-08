@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist_Mono } from "next/font/google";
 import { homeFontClasses } from "./home-fonts";
 import { siteStyleVars } from "@/lib/site-style";
+import { getBlockThemeCss } from "@/lib/block-theme-store";
 import { googleFontsHref } from "@/lib/font-pairings";
 import { getStoreSettings } from "@/lib/store-settings";
 import { ogLocale, ogAlternateLocales } from "@/lib/hreflang";
@@ -112,6 +113,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   );
 
   const googleFontsUrl = googleFontsHref(settings.fontHeading, settings.fontBody);
+  const blockThemeCss = await getBlockThemeCss();
 
   return (
     <html
@@ -132,6 +134,8 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       }
     >
       <head>
+        {/* Admin > Settings > Block styles: one look per builder block type. */}
+        {blockThemeCss && <style dangerouslySetInnerHTML={{ __html: blockThemeCss }} />}
         {/* The admin's chosen font pairing, when one is set. Nothing is
             requested while the store is on its bundled faces, and only
             families from the catalogue in lib/font-pairings.ts can ever

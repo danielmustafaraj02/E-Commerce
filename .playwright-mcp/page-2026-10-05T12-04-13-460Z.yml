@@ -1,0 +1,668 @@
+- generic [active] [ref=e1]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - link [ref=e5] [cursor=pointer]:
+        - /url: /en
+        - img "Perla Murano Glass" [ref=e6]
+      - navigation [ref=e7]:
+        - button "Products" [ref=e9] [cursor=pointer]
+        - link "Looks" [ref=e13] [cursor=pointer]:
+          - /url: /en/looks
+        - link "About us" [ref=e14] [cursor=pointer]:
+          - /url: /en/about
+      - generic [ref=e16]:
+        - button "Search" [ref=e17] [cursor=pointer]
+        - search [aria-hidden] [ref=e21]:
+          - button [ref=e27] [cursor=pointer]
+      - generic [ref=e30]:
+        - button "English" [ref=e32] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e33]: 🇬🇧
+          - text: English
+        - link "Wishlist" [ref=e37] [cursor=pointer]:
+          - /url: /en/wishlist
+        - link "Cart" [ref=e41] [cursor=pointer]:
+          - /url: /en/cart
+        - link "Sign in" [ref=e46] [cursor=pointer]:
+          - /url: /en/login
+  - main [ref=e48]:
+    - generic [ref=e49]:
+      - button "Play the film" [ref=e51] [cursor=pointer]
+      - generic:
+        - button "Discover the jewel"
+      - generic [ref=e59]:
+        - heading "Perla Murano Glass" [level=1] [ref=e60]
+        - paragraph [ref=e69]:
+          - generic [ref=e70]: Murano glass jewelry, assembled by hand. One bead at a time.
+        - generic:
+          - link "Explore Murano jewelry":
+            - /url: /en/products
+            - text: Explore Murano jewelry
+            - generic [aria-hidden]: →
+    - generic [ref=e86]:
+      - region "Necklaces" [ref=e87]:
+        - generic [ref=e89]:
+          - paragraph [aria-hidden] [ref=e90]:
+            - generic [ref=e91]: "01"
+            - generic [ref=e92]: /
+            - generic [ref=e93]: "03"
+          - heading "Necklaces" [level=2] [ref=e94]
+          - paragraph [ref=e95]: Colour and light, made to wear.
+          - link "Explore necklaces" [ref=e96] [cursor=pointer]:
+            - /url: /en/category/collane-in-vetro-di-murano
+            - text: Explore necklaces
+            - generic [aria-hidden] [ref=e97]: →
+      - region "Bracelets" [ref=e98]:
+        - generic [ref=e100]:
+          - paragraph [aria-hidden] [ref=e101]:
+            - generic [ref=e102]: "02"
+            - generic [ref=e103]: /
+            - generic [ref=e104]: "03"
+          - heading "Bracelets" [level=2] [ref=e105]
+          - paragraph [ref=e106]: A detail that follows every gesture.
+          - link "Explore bracelets" [ref=e107] [cursor=pointer]:
+            - /url: /en/category/bracciali-in-vetro-di-murano
+            - text: Explore bracelets
+            - generic [aria-hidden] [ref=e108]: →
+      - region "Earrings" [ref=e109]:
+        - generic [ref=e111]:
+          - paragraph [aria-hidden] [ref=e112]:
+            - generic [ref=e113]: "03"
+            - generic [ref=e114]: /
+            - generic [ref=e115]: "03"
+          - heading "Earrings" [level=2] [ref=e116]
+          - paragraph [ref=e117]: Small accents, new light.
+          - link "Explore earrings" [ref=e118] [cursor=pointer]:
+            - /url: /en/category/orecchini-in-vetro-di-murano
+            - text: Explore earrings
+            - generic [aria-hidden] [ref=e119]: →
+    - generic [ref=e120]:
+      - heading "Our community favourites" [level=2] [ref=e124]
+      - generic [ref=e125]:
+        - list [ref=e127]:
+          - listitem [ref=e128]:
+            - link [aria-hidden] [ref=e130] [cursor=pointer]:
+              - /url: /en/products/bracciale-avvolto-chiaro-di-luna-07cf09
+          - listitem [ref=e132]:
+            - link [aria-hidden] [ref=e134] [cursor=pointer]:
+              - /url: /en/products/bracciale-avvolto-quarzo-rosa-f4920c
+          - listitem [ref=e136]:
+            - link [aria-hidden] [ref=e138] [cursor=pointer]:
+              - /url: /en/products/bracciale-avvolto-polvere-di-stelle-f1788c
+          - listitem [ref=e140]:
+            - link [aria-hidden] [ref=e142] [cursor=pointer]:
+              - /url: /en/products/bracciale-bolle-di-cielo-bee6fa
+          - listitem [ref=e144]:
+            - link [aria-hidden] [ref=e146] [cursor=pointer]:
+              - /url: /en/products/orecchini-giardino-pastello-d650a2
+          - listitem [ref=e148]:
+            - link [aria-hidden] [ref=e150] [cursor=pointer]:
+              - /url: /en/products/bracciale-avvolto-salvia-e-oro-fec6dc
+          - listitem [ref=e152]:
+            - link [aria-hidden] [ref=e154] [cursor=pointer]:
+              - /url: /en/products/bracciale-caraibi-88bfe3
+          - listitem [ref=e156]:
+            - link [aria-hidden] [ref=e158] [cursor=pointer]:
+              - /url: /en/products/orecchini-blu-profondo-fa4c96
+          - listitem [ref=e160]:
+            - link [aria-hidden] [ref=e162] [cursor=pointer]:
+              - /url: /en/products/bracciale-avvolto-egeo-6bbcaa
+          - listitem [ref=e164]:
+            - link [aria-hidden] [ref=e166] [cursor=pointer]:
+              - /url: /en/products/collana-acquamarina-98782c
+          - listitem [ref=e168]:
+            - link [aria-hidden] [ref=e170] [cursor=pointer]:
+              - /url: /en/products/bracciale-avvolto-chiaro-di-luna-07cf09
+          - listitem [ref=e172]:
+            - link [aria-hidden] [ref=e174] [cursor=pointer]:
+              - /url: /en/products/bracciale-avvolto-quarzo-rosa-f4920c
+          - listitem [ref=e176]:
+            - link [aria-hidden] [ref=e178] [cursor=pointer]:
+              - /url: /en/products/bracciale-avvolto-polvere-di-stelle-f1788c
+          - listitem [ref=e180]:
+            - link [aria-hidden] [ref=e182] [cursor=pointer]:
+              - /url: /en/products/bracciale-bolle-di-cielo-bee6fa
+          - listitem [ref=e184]:
+            - link [aria-hidden] [ref=e186] [cursor=pointer]:
+              - /url: /en/products/orecchini-giardino-pastello-d650a2
+          - listitem [ref=e188]:
+            - link [aria-hidden] [ref=e190] [cursor=pointer]:
+              - /url: /en/products/bracciale-avvolto-salvia-e-oro-fec6dc
+          - listitem [ref=e192]:
+            - link [aria-hidden] [ref=e194] [cursor=pointer]:
+              - /url: /en/products/bracciale-caraibi-88bfe3
+          - listitem [ref=e196]:
+            - link [aria-hidden] [ref=e198] [cursor=pointer]:
+              - /url: /en/products/orecchini-blu-profondo-fa4c96
+          - listitem [ref=e200]:
+            - link [aria-hidden] [ref=e202] [cursor=pointer]:
+              - /url: /en/products/bracciale-avvolto-egeo-6bbcaa
+          - listitem [ref=e204]:
+            - link [aria-hidden] [ref=e206] [cursor=pointer]:
+              - /url: /en/products/collana-acquamarina-98782c
+        - button "Previous" [ref=e208] [cursor=pointer]: ←
+        - button "Next" [ref=e209] [cursor=pointer]: →
+        - tablist "Slides" [ref=e210]:
+          - tab [selected] [ref=e211] [cursor=pointer]
+          - tab [ref=e212] [cursor=pointer]
+          - tab [ref=e213] [cursor=pointer]
+          - tab [ref=e214] [cursor=pointer]
+          - tab [ref=e215] [cursor=pointer]
+          - tab [ref=e216] [cursor=pointer]
+          - tab [ref=e217] [cursor=pointer]
+          - tab [ref=e218] [cursor=pointer]
+          - tab [ref=e219] [cursor=pointer]
+          - tab [ref=e220] [cursor=pointer]
+    - generic [ref=e222]:
+      - heading "Our looks" [level=2] [ref=e225]
+      - generic [ref=e226]:
+        - article [ref=e227]:
+          - generic [ref=e228]:
+            - link [aria-hidden] [ref=e229] [cursor=pointer]:
+              - /url: /en/looks/cmufb34rk0001mr50aijnmag6
+            - generic [ref=e233] [cursor=pointer]
+            - generic [ref=e234] [cursor=pointer]
+            - generic [ref=e235] [cursor=pointer]
+            - generic [aria-hidden]:
+              - generic:
+                - generic: "01"
+                - generic: Necklace
+            - generic [aria-hidden]:
+              - generic:
+                - generic: "02"
+                - generic: Bracelet
+            - generic [aria-hidden]:
+              - generic:
+                - generic: "03"
+                - generic: Earrings
+            - generic [aria-hidden]:
+              - generic: 15%
+              - generic: save
+          - generic [ref=e236]:
+            - paragraph [aria-hidden] [ref=e237]:
+              - generic [ref=e238]: "01"
+              - generic [aria-hidden] [ref=e239]: /
+              - generic [ref=e240]: In this look
+            - heading [level=3] [ref=e241]:
+              - link "Rosso Rubino" [ref=e242] [cursor=pointer]:
+                - /url: /en/looks/cmufb34rk0001mr50aijnmag6
+            - paragraph [ref=e244]: Ruby red, across three pieces. Wear them together for a coordinated look, or let one take the lead.
+            - paragraph [ref=e245]:
+              - generic [ref=e246]: 221,00 €
+              - generic [ref=e247]: 260,00 €
+              - generic [ref=e248]: Save 15%
+            - link "See the pieces in this look" [ref=e249] [cursor=pointer]:
+              - /url: /en/looks/cmufb34rk0001mr50aijnmag6
+              - text: See the pieces in this look
+              - generic [aria-hidden] [ref=e250]: →
+        - article [ref=e251]:
+          - generic [ref=e252]:
+            - link [aria-hidden] [ref=e253] [cursor=pointer]:
+              - /url: /en/looks/cmufb34020000mr50jyx29cqy
+            - generic [ref=e257] [cursor=pointer]
+            - generic [ref=e258] [cursor=pointer]
+            - generic [ref=e259] [cursor=pointer]
+            - generic [aria-hidden]:
+              - generic:
+                - generic: "01"
+                - generic: Necklace
+            - generic [aria-hidden]:
+              - generic:
+                - generic: "02"
+                - generic: Bracelet
+            - generic [aria-hidden]:
+              - generic:
+                - generic: "03"
+                - generic: Earrings
+            - generic [aria-hidden]:
+              - generic: 15%
+              - generic: save
+          - generic [ref=e260]:
+            - paragraph [aria-hidden] [ref=e261]:
+              - generic [ref=e262]: "02"
+              - generic [aria-hidden] [ref=e263]: /
+              - generic [ref=e264]: In this look
+            - heading [level=3] [ref=e265]:
+              - link "Rosa e Salvia" [ref=e266] [cursor=pointer]:
+                - /url: /en/looks/cmufb34020000mr50jyx29cqy
+            - paragraph [ref=e268]: Soft pink and sage green, in balance. Wear the three together, or choose a single accent for every day.
+            - paragraph [ref=e269]:
+              - generic [ref=e270]: 238,00 €
+              - generic [ref=e271]: 280,00 €
+              - generic [ref=e272]: Save 15%
+            - link "See the pieces in this look" [ref=e273] [cursor=pointer]:
+              - /url: /en/looks/cmufb34020000mr50jyx29cqy
+              - text: See the pieces in this look
+              - generic [aria-hidden] [ref=e274]: →
+      - paragraph [ref=e275]:
+        - link "All looks" [ref=e276] [cursor=pointer]:
+          - /url: /en/looks
+          - text: All looks →
+    - generic [ref=e278]:
+      - generic [ref=e280]:
+        - generic [ref=e281]:
+          - heading "New arrivals" [level=2] [ref=e282]
+          - paragraph [ref=e283]: New colours, new details.
+        - link "All products" [ref=e284] [cursor=pointer]:
+          - /url: /en/products
+      - list [ref=e285]:
+        - listitem [ref=e286]:
+          - generic:
+            - img "Onyx Pebble Earrings — handmade Murano glass jewelry"
+            - generic: "-11%"
+            - 'button "Add this piece to cart: Onyx Pebble Earrings" [ref=e287] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=e293]:
+            - link "Onyx Pebble Earrings" [ref=e294] [cursor=pointer]:
+              - /url: /en/products/orecchini-sassolino-di-onice-6bae0d
+              - text: Onyx Pebble Earrings
+              - generic [aria-hidden] [ref=e295]: →
+          - generic [ref=e296]:
+            - generic [ref=e297]: 90,00 €
+            - text: 80,00 €
+        - listitem [ref=e298]:
+          - generic:
+            - img "Rose Petal Earrings — handmade Murano glass jewelry"
+            - 'button "Add this piece to cart: Rose Petal Earrings" [ref=e299] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=e305]:
+            - link "Rose Petal Earrings" [ref=e306] [cursor=pointer]:
+              - /url: /en/products/orecchini-petalo-di-rosa-e081a0
+              - text: Rose Petal Earrings
+              - generic [aria-hidden] [ref=e307]: →
+          - generic [ref=e308]: 80,00 €
+        - listitem [ref=e309]:
+          - generic:
+            - img "Ruby Drop Earrings — handmade Murano glass jewelry"
+            - 'button "Add this piece to cart: Ruby Drop Earrings" [ref=e310] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=e316]:
+            - link "Ruby Drop Earrings" [ref=e317] [cursor=pointer]:
+              - /url: /en/products/orecchini-goccia-di-rubino-9ad623
+              - text: Ruby Drop Earrings
+              - generic [aria-hidden] [ref=e318]: →
+          - generic [ref=e319]: 80,00 €
+        - listitem [ref=e320]:
+          - generic:
+            - img "Ice Drop Earrings — handmade Murano glass jewelry"
+            - 'button "Add this piece to cart: Ice Drop Earrings" [ref=e321] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=e327]:
+            - link "Ice Drop Earrings" [ref=e328] [cursor=pointer]:
+              - /url: /en/products/orecchini-goccia-di-ghiaccio-51362e
+              - text: Ice Drop Earrings
+              - generic [aria-hidden] [ref=e329]: →
+          - generic [ref=e330]: 80,00 €
+        - listitem [ref=e331]:
+          - generic:
+            - img "Pastel Garden Earrings — handmade Murano glass jewelry"
+            - 'button "Add this piece to cart: Pastel Garden Earrings" [ref=e332] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=e338]:
+            - link "Pastel Garden Earrings" [ref=e339] [cursor=pointer]:
+              - /url: /en/products/orecchini-giardino-pastello-d650a2
+              - text: Pastel Garden Earrings
+              - generic [aria-hidden] [ref=e340]: →
+          - generic [ref=e341]: 80,00 €
+        - listitem [ref=e342]:
+          - generic:
+            - img "Mint Leaf Earrings — handmade Murano glass jewelry"
+            - 'button "Add this piece to cart: Mint Leaf Earrings" [ref=e343] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=e349]:
+            - link "Mint Leaf Earrings" [ref=e350] [cursor=pointer]:
+              - /url: /en/products/orecchini-foglia-di-menta-9c749a
+              - text: Mint Leaf Earrings
+              - generic [aria-hidden] [ref=e351]: →
+          - generic [ref=e352]: 80,00 €
+        - listitem [ref=e353]:
+          - generic:
+            - img "Deep Blue Earrings — handmade Murano glass jewelry"
+            - 'button "Add this piece to cart: Deep Blue Earrings" [ref=e354] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=e360]:
+            - link "Deep Blue Earrings" [ref=e361] [cursor=pointer]:
+              - /url: /en/products/orecchini-blu-profondo-fa4c96
+              - text: Deep Blue Earrings
+              - generic [aria-hidden] [ref=e362]: →
+          - generic [ref=e363]: 80,00 €
+        - listitem [ref=e364]:
+          - generic:
+            - img "Faceted Turquoise Necklace — handmade Murano glass jewelry"
+            - 'button "Add this piece to cart: Faceted Turquoise Necklace" [ref=e365] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=e371]:
+            - link "Faceted Turquoise Necklace" [ref=e372] [cursor=pointer]:
+              - /url: /en/products/collana-turchese-sfaccettato-8e4504
+              - text: Faceted Turquoise Necklace
+              - generic [aria-hidden] [ref=e373]: →
+          - generic [ref=e374]: 120,00 €
+    - generic [ref=e377]:
+      - generic [ref=e378]:
+        - generic [ref=e379]:
+          - heading "Selected pieces, special prices." [level=2] [ref=e380]
+          - paragraph [ref=e381]: Discover a selection of handmade Murano glass jewelry at special prices, available while supplies last.
+        - link "Shop special-price pieces →" [ref=e382] [cursor=pointer]:
+          - /url: /en/products?sale=1
+      - list [ref=e383]:
+        - listitem [ref=e384]:
+          - generic:
+            - img "Onyx Pebble Earrings — handmade Murano glass jewelry"
+            - generic: "-11%"
+            - 'button "Add this piece to cart: Onyx Pebble Earrings" [ref=e385] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=e391]:
+            - link "Onyx Pebble Earrings" [ref=e392] [cursor=pointer]:
+              - /url: /en/products/orecchini-sassolino-di-onice-6bae0d
+              - text: Onyx Pebble Earrings
+              - generic [aria-hidden] [ref=e393]: →
+          - generic [ref=e394]:
+            - generic [ref=e395]: 90,00 €
+            - text: 80,00 €
+        - listitem [ref=e396]:
+          - generic:
+            - img "Starry Night Necklace — handmade Murano glass jewelry"
+            - generic: "-10%"
+            - 'button "Add this piece to cart: Starry Night Necklace" [ref=e397] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=e403]:
+            - link "Starry Night Necklace" [ref=e404] [cursor=pointer]:
+              - /url: /en/products/collana-notte-stellata-92b5fd
+              - text: Starry Night Necklace
+              - generic [aria-hidden] [ref=e405]: →
+          - generic [ref=e406]:
+            - generic [ref=e407]: 100,00 €
+            - text: 90,00 €
+        - listitem [ref=e408]:
+          - generic:
+            - img "Caribbean Bracelet — handmade Murano glass jewelry"
+            - generic: "-6%"
+            - 'button "Add this piece to cart: Caribbean Bracelet" [ref=e409] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=e415]:
+            - link "Caribbean Bracelet" [ref=e416] [cursor=pointer]:
+              - /url: /en/products/bracciale-caraibi-88bfe3
+              - text: Caribbean Bracelet
+              - generic [aria-hidden] [ref=e417]: →
+          - generic [ref=e418]:
+            - generic [ref=e419]: 80,00 €
+            - text: 75,00 €
+        - listitem [ref=e420]:
+          - generic:
+            - img "Rose Quartz Wrap Bracelet — handmade Murano glass jewelry"
+            - generic: "-6%"
+            - 'button "Add this piece to cart: Rose Quartz Wrap Bracelet" [ref=e421] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=e427]:
+            - link "Rose Quartz Wrap Bracelet" [ref=e428] [cursor=pointer]:
+              - /url: /en/products/bracciale-avvolto-quarzo-rosa-f4920c
+              - text: Rose Quartz Wrap Bracelet
+              - generic [aria-hidden] [ref=e429]: →
+          - generic [ref=e430]:
+            - generic [ref=e431]: 80,00 €
+            - text: 75,00 €
+    - generic [ref=e433]:
+      - article [ref=e434]:
+        - generic [ref=e435]:
+          - heading "Seven centuries of unbroken craft" [level=2] [ref=e436]
+          - paragraph [ref=e437]: Every piece leaves Murano shaped by a maestro who learned the trade from whoever came before, using the same furnace gestures since the 14th century. No mold, no machine — just breath and hands.
+          - link "View the piece" [ref=e438] [cursor=pointer]:
+            - /url: /en/products/bracciale-avvolto-salvia-e-oro-fec6dc
+            - text: View the piece
+            - generic [aria-hidden] [ref=e439]: →
+        - link [aria-hidden] [ref=e441] [cursor=pointer]:
+          - /url: /en/products/bracciale-avvolto-salvia-e-oro-fec6dc
+      - article [ref=e442]:
+        - generic [ref=e443]:
+          - heading "Each piece exists only once" [level=2] [ref=e444]
+          - paragraph [ref=e445]: Handmade glass cannot be perfectly repeated. The colour gradients, the inclusions and the swirls in your piece are uniquely yours — never mass-produced, never duplicated.
+          - link "View the piece" [ref=e446] [cursor=pointer]:
+            - /url: /en/products/bracciale-caraibi-88bfe3
+            - text: View the piece
+            - generic [aria-hidden] [ref=e447]: →
+        - link [aria-hidden] [ref=e449] [cursor=pointer]:
+          - /url: /en/products/bracciale-caraibi-88bfe3
+      - article [ref=e450]:
+        - generic [ref=e451]:
+          - heading "A living cultural heritage" [level=2] [ref=e452]
+          - paragraph [ref=e453]: Murano glassmakers carry UNESCO recognition. When you wear a piece, you carry a tradition that Venice has guarded for over seven hundred years.
+          - link "View the piece" [ref=e454] [cursor=pointer]:
+            - /url: /en/products/orecchini-blu-profondo-fa4c96
+            - text: View the piece
+            - generic [aria-hidden] [ref=e455]: →
+        - link [aria-hidden] [ref=e457] [cursor=pointer]:
+          - /url: /en/products/orecchini-blu-profondo-fa4c96
+    - generic [ref=e460]:
+      - generic [ref=e461]:
+        - paragraph [ref=e462]: Information / FAQ
+        - heading "Before you choose." [level=2] [ref=e463]
+        - paragraph [ref=e464]: The answers that make choosing easy.
+        - link "Contact us" [ref=e465] [cursor=pointer]:
+          - /url: /en/contact
+          - text: Contact us
+          - generic [aria-hidden] [ref=e466]: →
+      - generic [ref=e469]:
+        - heading [level=3] [ref=e471]:
+          - button "Is this real Murano glass?" [ref=e472] [cursor=pointer]:
+            - generic [aria-hidden] [ref=e473]: "01"
+        - heading [level=3] [ref=e477]:
+          - button "How much does shipping cost?" [ref=e478] [cursor=pointer]:
+            - generic [aria-hidden] [ref=e479]: "02"
+        - heading [level=3] [ref=e483]:
+          - button "How long does shipping take?" [ref=e484] [cursor=pointer]:
+            - generic [aria-hidden] [ref=e485]: "03"
+        - heading [level=3] [ref=e489]:
+          - button "Can I return or exchange my order?" [ref=e490] [cursor=pointer]:
+            - generic [aria-hidden] [ref=e491]: "04"
+        - heading [level=3] [ref=e495]:
+          - button "Where is my jewelry made and shipped from?" [ref=e496] [cursor=pointer]:
+            - generic [aria-hidden] [ref=e497]: "05"
+        - heading [level=3] [ref=e501]:
+          - button "Does it come gift-wrapped?" [ref=e502] [cursor=pointer]:
+            - generic [aria-hidden] [ref=e503]: "06"
+        - button "More questions" [ref=e506] [cursor=pointer]
+    - generic [ref=e509]:
+      - paragraph [ref=e510]: 5 questions · about 5 minutes
+      - link "Not sure what to choose? Find the perfect Murano gift" [ref=e511] [cursor=pointer]:
+        - /url: /en/gift-finder
+      - paragraph [ref=e515]: Tell us who it’s for, the occasion, their style, your budget and the kind of jewellery. We’ll match you with real Murano pieces in stock.
+    - region [ref=e516]:
+      - generic [ref=e517]:
+        - generic [ref=e518]:
+          - generic [ref=e519]:
+            - heading "The Murano Journal" [level=2] [ref=e520]
+            - paragraph [ref=e521]: Stories of Venetian glass, craftsmanship and the art of giving.
+          - link "Explore the Journal" [ref=e522] [cursor=pointer]:
+            - /url: /en/blog
+            - text: Explore the Journal
+            - generic [aria-hidden] [ref=e523]: →
+        - list [ref=e524]:
+          - listitem [ref=e525]:
+            - article [ref=e526]:
+              - link [aria-hidden] [ref=e527] [cursor=pointer]:
+                - /url: /en/blog/history-of-murano-glass
+                - figure [ref=e528]
+              - generic [ref=e531]:
+                - paragraph [ref=e532]: History · 1/6
+                - heading [level=3] [ref=e533]:
+                  - 'link "Murano Glass, Part I: How the Island Became Its Home" [ref=e534] [cursor=pointer]':
+                    - /url: /en/blog/history-of-murano-glass
+                - paragraph [ref=e535]: 3 min read
+                - paragraph [ref=e536]: "A source-led history of Murano glass: what the 1291 decree did, what medieval glass can tell us, and why the island was not the craft’s starting point."
+                - 'link "Read more: Murano Glass, Part I: How the Island Became Its Home" [ref=e537] [cursor=pointer]':
+                  - /url: /en/blog/history-of-murano-glass
+                  - text: Read more
+                  - generic [aria-hidden] [ref=e538]: →
+          - listitem [ref=e539]:
+            - article [ref=e540]:
+              - link [aria-hidden] [ref=e541] [cursor=pointer]:
+                - /url: /en/blog/murano-glass-materials-cristallo-lattimo
+                - figure [ref=e542]
+              - generic [ref=e545]:
+                - paragraph [ref=e546]: Craft · 2/6
+                - heading [level=3] [ref=e547]:
+                  - 'link "Murano Glass, Part II: Cristallo, Lattimo and the Material" [ref=e548] [cursor=pointer]':
+                    - /url: /en/blog/murano-glass-materials-cristallo-lattimo
+                - paragraph [ref=e549]: 3 min read
+                - paragraph [ref=e550]: A material-led guide to Murano cristallo and lattimo, historic recipes, glass chemistry and why Venetian cristallo is not modern lead crystal.
+                - 'link "Read more: Murano Glass, Part II: Cristallo, Lattimo and the Material" [ref=e551] [cursor=pointer]':
+                  - /url: /en/blog/murano-glass-materials-cristallo-lattimo
+                  - text: Read more
+                  - generic [aria-hidden] [ref=e552]: →
+          - listitem [ref=e553]:
+            - article [ref=e554]:
+              - link [aria-hidden] [ref=e555] [cursor=pointer]:
+                - /url: /en/blog/murano-glassmaking-techniques-filigrana-murrine
+                - figure [ref=e556]
+              - generic [ref=e559]:
+                - paragraph [ref=e560]: Craft · 3/6
+                - heading [level=3] [ref=e561]:
+                  - 'link "Murano Glass, Part III: Filigrana, Reticello and Murrine" [ref=e562] [cursor=pointer]':
+                    - /url: /en/blog/murano-glassmaking-techniques-filigrana-murrine
+                - paragraph [ref=e563]: 3 min read
+                - paragraph [ref=e564]: Learn how filigrana, reticello, rosetta and murrine are made, what their names describe, and how Murano techniques changed across centuries.
+                - 'link "Read more: Murano Glass, Part III: Filigrana, Reticello and Murrine" [ref=e565] [cursor=pointer]':
+                  - /url: /en/blog/murano-glassmaking-techniques-filigrana-murrine
+                  - text: Read more
+                  - generic [aria-hidden] [ref=e566]: →
+    - generic [ref=e568]:
+      - generic [ref=e569]:
+        - heading "Get 10% off your first order" [level=2] [ref=e570]
+        - paragraph [ref=e571]: Subscribe and use code WELCOME10 at checkout. You'll also get new pieces and the occasional offer, straight to your inbox.
+        - generic [ref=e573]:
+          - textbox "Stay in the loop" [ref=e574]:
+            - /placeholder: you@example.com
+          - button "Get 10% off" [ref=e575] [cursor=pointer]
+      - generic [aria-hidden] [ref=e576]: −10%
+  - contentinfo [ref=e577]:
+    - generic [ref=e578]:
+      - generic [ref=e580]:
+        - heading "Discover the world of Murano glass" [level=2] [ref=e581]
+        - paragraph [ref=e582]: Stories, craftsmanship and inspiration from Venice.
+        - link "Explore the journal" [ref=e583] [cursor=pointer]:
+          - /url: /en/blog
+          - text: Explore the journal
+          - generic [aria-hidden] [ref=e584]: →
+      - generic [ref=e586]:
+        - heading "A little more Murano, occasionally." [level=2] [ref=e587]
+        - paragraph [ref=e588]: New collections, stories and special offers, thoughtfully shared.
+        - generic [ref=e590]:
+          - textbox "Stay in the loop" [ref=e591]:
+            - /placeholder: you@example.com
+          - button "Get updates" [ref=e592] [cursor=pointer]
+        - paragraph [ref=e593]: Your details stay private. Unsubscribe anytime.
+    - generic [ref=e597]:
+      - generic [ref=e598]:
+        - generic [ref=e599]:
+          - heading "Shop" [level=2] [ref=e600]:
+            - button "Shop"
+          - region "Shop" [ref=e601]:
+            - list [ref=e602]:
+              - listitem [ref=e603]:
+                - link "All products" [ref=e604] [cursor=pointer]:
+                  - /url: /en/products
+              - listitem [ref=e605]:
+                - link "Bracelets" [ref=e606] [cursor=pointer]:
+                  - /url: /en/category/bracciali-in-vetro-di-murano
+              - listitem [ref=e607]:
+                - link "Necklaces" [ref=e608] [cursor=pointer]:
+                  - /url: /en/category/collane-in-vetro-di-murano
+              - listitem [ref=e609]:
+                - link "Earrings" [ref=e610] [cursor=pointer]:
+                  - /url: /en/category/orecchini-in-vetro-di-murano
+              - listitem [ref=e611]:
+                - 'link "Gift Finder: Find the Perfect Murano Glass Gift" [ref=e612] [cursor=pointer]':
+                  - /url: /en/gift-finder
+              - listitem [ref=e613]:
+                - link "Digital gift voucher" [ref=e614] [cursor=pointer]:
+                  - /url: /en/gift-card
+              - listitem [ref=e615]:
+                - link "Personalised Gift Card" [ref=e616] [cursor=pointer]:
+                  - /url: /en/personalised-gift-card
+        - generic [ref=e617]:
+          - heading "About Perla" [level=2] [ref=e618]:
+            - button "About Perla"
+          - region "About Perla" [ref=e619]:
+            - list [ref=e620]:
+              - listitem [ref=e621]:
+                - link "About us" [ref=e622] [cursor=pointer]:
+                  - /url: /en/about
+              - listitem [ref=e623]:
+                - link "Murano Glass Guide" [ref=e624] [cursor=pointer]:
+                  - /url: /en/murano-glass
+              - listitem [ref=e625]:
+                - link "The Murano Journal" [ref=e626] [cursor=pointer]:
+                  - /url: /en/blog
+        - generic [ref=e627]:
+          - heading "Customer care" [level=2] [ref=e628]:
+            - button "Customer care"
+          - region "Customer care" [ref=e629]:
+            - list [ref=e630]:
+              - listitem [ref=e631]:
+                - link "Contact us" [ref=e632] [cursor=pointer]:
+                  - /url: /en/contact
+              - listitem [ref=e633]:
+                - link "Returns & Refunds" [ref=e634] [cursor=pointer]:
+                  - /url: /en/legal/returns
+              - listitem [ref=e635]:
+                - link "perlamuranoglass@gmail.com" [ref=e636] [cursor=pointer]:
+                  - /url: mailto:perlamuranoglass@gmail.com
+      - list [ref=e637]:
+        - listitem [ref=e638]:
+          - generic [ref=e641]: Handcrafted in Murano
+        - listitem [ref=e642]:
+          - generic [ref=e646]: Secure checkout
+        - listitem [ref=e647]:
+          - generic [ref=e651]: Gift-ready packaging
+        - listitem [ref=e652]:
+          - generic [ref=e657]: Shipping from Italy
+      - paragraph [ref=e658]: Complimentary shipping across Italy & Europe · USA & Canada 30 € · Rest of World 40 €
+    - generic [ref=e659]:
+      - navigation "Social media" [ref=e660]:
+        - list [ref=e661]:
+          - listitem [ref=e662]:
+            - link "Instagram" [ref=e663] [cursor=pointer]:
+              - /url: https://www.instagram.com/venetianmuranoglass/
+          - listitem [ref=e668]:
+            - link "Facebook" [ref=e669] [cursor=pointer]:
+              - /url: https://www.facebook.com/venetianmuranoglass
+          - listitem [ref=e672]:
+            - link "TikTok" [ref=e673] [cursor=pointer]:
+              - /url: https://www.tiktok.com/@venetian.murano.g
+          - listitem [ref=e677]:
+            - link "YouTube" [ref=e678] [cursor=pointer]:
+              - /url: https://www.youtube.com/@venetianmuranoglass
+          - listitem [ref=e682]:
+            - link "LinkedIn" [ref=e683] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/venetian-murano-glass
+      - generic [ref=e688]:
+        - generic [ref=e689]: We accept
+        - generic [ref=e690]:
+          - img "Visa" [ref=e691]:
+            - generic [ref=e692]: VISA
+          - img "Mastercard" [ref=e693]
+          - img "Apple Pay" [ref=e697]:
+            - generic [ref=e700]: Pay
+          - img "Google Pay" [ref=e701]
+      - navigation "Legal" [ref=e703]:
+        - list [ref=e704]:
+          - listitem [ref=e705]:
+            - link "Privacy Policy" [ref=e706] [cursor=pointer]:
+              - /url: /en/legal/privacy
+          - listitem [ref=e707]:
+            - link "Terms & Conditions" [ref=e708] [cursor=pointer]:
+              - /url: /en/legal/terms
+          - listitem [ref=e709]:
+            - link "Cookie Policy" [ref=e710] [cursor=pointer]:
+              - /url: /en/legal/cookies
+      - paragraph [ref=e711]: © 2026 Perla Murano Glass. All rights reserved.
+      - paragraph [ref=e712]:
+        - generic [ref=e713]: Perla Murano Glass
+  - button "Open Next.js Dev Tools" [ref=e727] [cursor=pointer]:
+    - generic [ref=e730]:
+      - text: Compiling
+      - generic [ref=e731]:
+        - generic [ref=e732]: .
+        - generic [ref=e733]: .
+        - generic [ref=e734]: .

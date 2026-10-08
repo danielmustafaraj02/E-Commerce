@@ -1,9 +1,28 @@
 import type { NextConfig } from "next";
 import { imageRemotePatterns } from "./src/lib/image-hosts";
+import { existsSync } from "node:fs";
+import { resolve } from "node:path";
+import { privatePaths } from "./scripts/private-paths.mjs";
 
 const isProd = process.env.NODE_ENV === "production";
+const localAuth = resolve(process.cwd(), ".local-only/src/auth.ts");
+const localAccounts = !isProd && existsSync(localAuth);
+if (isProd && privatePaths.some((path) => existsSync(resolve(process.cwd(), path)))) {
+  throw new Error(
+    "Private local routes are present. Use npm run build to exclude them before compiling production."
+  );
+}
 
 const nextConfig: NextConfig = {
+  // Prevent the response adapter from changing preserved 127.0.0.1 rewrite
+  // targets back to localhost and turning them into external requests.
+  skipProxyUrlNormalize: true,
+  env: { NEXT_PUBLIC_LOCAL_ACCOUNTS: String(localAccounts) },
+  typescript: {
+    // Next resolves TypeScript paths before webpack aliases. Keep the exact
+    // local mappings in the private tsconfig so both bundlers select them.
+    tsconfigPath: localAccounts ? ".local-only/tsconfig.json" : "tsconfig.json",
+  },
   images: {
     // An allowlist, not `**`: see src/lib/image-hosts.ts for why, and for how
     // to add another host.

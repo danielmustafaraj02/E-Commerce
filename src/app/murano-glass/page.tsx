@@ -1,3 +1,4 @@
+import { withPageMeta } from "@/lib/page-meta";
 import { siteBaseUrl } from "@/lib/site-url";
 import { Link } from "@/components/localized-link";
 import type { Metadata } from "next";
@@ -35,7 +36,7 @@ const GUIDE_ART_CAPTIONS: Record<Locale, { furnace: string }> = {
 // row of distinct steps at a glance, not one flat brand-colored repeat.
 const STEP_NUMBER_COLORS = ["bg-accent/10 text-accent-deep"];
 
-export async function generateMetadata(): Promise<Metadata> {
+async function baseMetadata(): Promise<Metadata> {
   const [settings, locale] = await Promise.all([getStoreSettings(), getLocale()]);
   const content = getMuranoGuideContent(locale);
   const image = ogImage(settings);
@@ -59,6 +60,10 @@ export async function generateMetadata(): Promise<Metadata> {
       images: image ? [image] : undefined,
     },
   };
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withPageMeta("/murano-glass", await baseMetadata());
 }
 
 export default async function MuranoGlassGuidePage() {

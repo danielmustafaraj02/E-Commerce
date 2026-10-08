@@ -8,13 +8,15 @@ import "../app/shop.css";
 export function ShelfMain({
   children,
   className = "",
+  as: Element = "main",
 }: {
   children: ReactNode;
   className?: string;
+  as?: "main" | "div";
 }) {
   return (
-    <main className={`shelf flex flex-1 flex-col ${homeFontClasses} ${className}`}>
+    <Element className={`shelf flex flex-1 flex-col ${homeFontClasses} ${className}`}>
       {children}
-    </main>
+    </Element>
   );
 }

@@ -1,0 +1,8 @@
+- generic [ref=f3e5]:
+  - heading "Perla Murano Glass" [level=2] [ref=f3e6]: Pe
+  - generic [ref=f3e8]:
+    - paragraph:
+      - emphasis
+  - paragraph [ref=f3e9]:
+    - link "Scopri i gioielli →" [ref=f3e10] [cursor=pointer]:
+      - /url: /products

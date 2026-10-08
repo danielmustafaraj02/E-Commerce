@@ -168,6 +168,20 @@ export function PopularCarousel({ products }: { products: PopularProduct[] }) {
                   </Link>
                 </div>
               </div>
+              {/* The editorial caption: number, name and price, always shown,
+                  as under a photograph in a magazine. */}
+              <Link
+                href={`/products/${product.slug}`}
+                className="popular-caption"
+                tabIndex={-1}
+                aria-hidden="true"
+              >
+                <span className="popular-caption-index">
+                  {String(((((i - CLONE) % products.length) + products.length) % products.length) + 1).padStart(2, "0")}
+                </span>
+                <span className="popular-caption-name">{product.name}</span>
+                <span className="popular-caption-price">{product.price}</span>
+              </Link>
             </li>
           ))}
         </ul>

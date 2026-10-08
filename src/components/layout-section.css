@@ -1,0 +1,304 @@
+@media (max-width: 47.99rem) {
+  .layout-hide-mobile {
+    display: none !important;
+  }
+}
+@media (min-width: 48rem) {
+  .layout-hide-desktop {
+    display: none !important;
+  }
+}
+.custom-section {
+  width: 100%;
+}
+.custom-section img,
+.custom-section video,
+.custom-section iframe {
+  max-width: 100%;
+}
+.custom-section-inner {
+  max-width: 72rem;
+  margin-inline: auto;
+  padding: 2.5rem 1.25rem;
+}
+/* A design set to "full width": edge to edge, no frame of its own (the
+   section's own content inside it brings its own column). */
+.custom-section-inner--full {
+  max-width: none;
+  padding: 0;
+}
+
+/* Entrance animations (AnimateOnView): visible by default, hidden only while
+   a below-the-fold section waits to scroll into view. */
+.lay-anim {
+  transition:
+    opacity var(--lay-dur, 0.75s) ease var(--lay-delay, 0s),
+    transform var(--lay-dur, 0.75s) cubic-bezier(0.2, 0.7, 0.2, 1) var(--lay-delay, 0s),
+    filter var(--lay-dur, 0.75s) ease var(--lay-delay, 0s),
+    clip-path var(--lay-dur, 0.75s) cubic-bezier(0.2, 0.7, 0.2, 1) var(--lay-delay, 0s);
+}
+.lay-anim.lay-wait {
+  opacity: 0;
+}
+.lay-anim-fade-up.lay-wait {
+  transform: translateY(2.5rem);
+}
+.lay-anim-slide-left.lay-wait {
+  transform: translateX(-4rem);
+}
+.lay-anim-slide-right.lay-wait {
+  transform: translateX(4rem);
+}
+.lay-anim-zoom.lay-wait {
+  transform: scale(0.92);
+}
+.lay-anim-fade-down.lay-wait {
+  transform: translateY(-2.5rem);
+}
+.lay-anim-shrink.lay-wait {
+  transform: scale(1.12);
+}
+.lay-anim-blur.lay-wait {
+  filter: blur(12px);
+}
+.lay-anim-wipe.lay-wait {
+  opacity: 1;
+  clip-path: inset(0 100% 0 0);
+}
+.lay-anim-rotate.lay-wait {
+  transform: rotate(-4deg) translateY(1.5rem);
+}
+.lay-anim-skew-rise.lay-wait {
+  transform: translateY(5rem) skewY(6deg);
+}
+.lay-anim-flip.lay-wait {
+  transform: perspective(900px) rotateX(35deg);
+  transform-origin: 50% 100%;
+}
+@media (prefers-reduced-motion: reduce) {
+  .lay-anim {
+    transition: none;
+  }
+  .lay-anim.lay-wait {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    clip-path: none;
+  }
+}
+
+/* Section backgrounds: a looping video and/or colour overlay behind the content. */
+.lay-bg-layers {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.lay-bg-layers > * {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.lay-bg-video {
+  object-fit: cover;
+}
+.lay-has-bg > :not(.lay-bg-layers) {
+  position: relative;
+  z-index: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .lay-bg-video {
+    display: none;
+  }
+}
+
+/* Small screens: gentler slides (no sideways overflow), no background video
+   (saves data and battery; the section's background image shows instead), and
+   parallax only where it works (it breaks on iOS). */
+@media (max-width: 47.99rem) {
+  .lay-anim-slide-left.lay-wait {
+    transform: translateX(-1.25rem);
+  }
+  .lay-anim-slide-right.lay-wait {
+    transform: translateX(1.25rem);
+  }
+  .lay-bg-video {
+    display: none;
+  }
+}
+.lay-anim-slide-left,
+.lay-anim-slide-right {
+  overflow-x: clip;
+}
+@media (hover: hover) and (min-width: 64rem) {
+  .lay-parallax {
+    background-attachment: fixed;
+  }
+}
+
+/* Display options of the product page's "Photos and buy box" (page-layout.ts,
+   PRODUCT_TOP_OPTIONS): each choice is a data-opt-* attribute on the section,
+   so changing one restyles the page, and the live preview, at once. */
+[data-opt-back-link="off"] .shop-back,
+[data-opt-thumbs="off"] .shop-gallery-thumbs,
+[data-opt-value-row="off"] .shop-value-row,
+[data-opt-specs="off"] .shop-product-specs,
+[data-opt-buy-now="off"] .opt-buy-now,
+[data-opt-delivery="off"] .shop-delivery-estimate,
+[data-opt-ship-to="off"] .shop-ship-to,
+[data-opt-trust="off"] .opt-trust,
+[data-opt-payments="off"] .shop-pdp-payments {
+  display: none !important;
+}
+[data-opt-title-size="large"] .shop-product-title {
+  font-size: clamp(2.4rem, 5vw, 3.6rem) !important;
+  line-height: 1.05 !important;
+}
+[data-opt-title-size="small"] .shop-product-title {
+  font-size: clamp(1.5rem, 3vw, 2rem) !important;
+}
+@media (min-width: 56rem) {
+  [data-opt-gallery="right"] .shop-product-grid {
+    grid-template-columns: minmax(25rem, 0.9fr) minmax(0, 1.3fr);
+  }
+  [data-opt-gallery="right"] .shop-product-grid > .shop-gallery {
+    order: 2;
+  }
+}
+
+/* Scroll animations of builder blocks. Every animation is a function of one
+   progress value, --bm-p (0 hidden, 1 shown): the runtime flips it with a
+   transition (play once, or replay when scrolling back) or sets it straight
+   from the scroll position (scrub). Without scripting, or with reduced
+   motion, it stays at 1 and the block is simply shown. */
+@property --bm-p {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .bld-an {
+    --bm-p: 0;
+    transition: --bm-p var(--bm-dur, 0.8s) var(--bm-ease, cubic-bezier(0.2, 0.7, 0.2, 1))
+      var(--bm-del, 0s);
+  }
+  .bld-an.bld-in {
+    --bm-p: 1;
+  }
+  .bld-an.bld-scrub {
+    transition: none;
+  }
+}
+[data-bm="fade"] {
+  opacity: var(--bm-p);
+}
+[data-bm="rise"] {
+  opacity: var(--bm-p);
+  translate: 0 calc((1 - var(--bm-p)) * 2.5rem);
+}
+[data-bm="drop"] {
+  opacity: var(--bm-p);
+  translate: 0 calc((1 - var(--bm-p)) * -2.5rem);
+}
+[data-bm="slide-left"] {
+  opacity: var(--bm-p);
+  translate: calc((1 - var(--bm-p)) * -4rem) 0;
+}
+[data-bm="slide-right"] {
+  opacity: var(--bm-p);
+  translate: calc((1 - var(--bm-p)) * 4rem) 0;
+}
+[data-bm="zoom"] {
+  opacity: var(--bm-p);
+  scale: calc(0.82 + 0.18 * var(--bm-p));
+}
+[data-bm="shrink"] {
+  opacity: var(--bm-p);
+  scale: calc(1.25 - 0.25 * var(--bm-p));
+}
+[data-bm="blur"] {
+  opacity: var(--bm-p);
+  filter: blur(calc((1 - var(--bm-p)) * 12px));
+}
+[data-bm="wipe"] {
+  clip-path: inset(0 calc((1 - var(--bm-p)) * 100%) 0 0);
+}
+[data-bm="rotate"] {
+  opacity: var(--bm-p);
+  rotate: calc((1 - var(--bm-p)) * -8deg);
+  translate: 0 calc((1 - var(--bm-p)) * 1.5rem);
+}
+[data-bm="skew-rise"] {
+  opacity: var(--bm-p);
+  transform: translateY(calc((1 - var(--bm-p)) * 7rem)) skewY(calc((1 - var(--bm-p)) * 10deg));
+}
+[data-bm="flip"] {
+  opacity: var(--bm-p);
+  transform: perspective(900px) rotateX(calc((1 - var(--bm-p)) * 70deg));
+  transform-origin: 50% 100%;
+}
+
+/* Looping animations: the block's content moves, so the wrapper stays free for
+   hover effects and scroll animations. */
+@keyframes bld-float {
+  50% {
+    transform: translateY(-0.6rem);
+  }
+}
+@keyframes bld-pulse {
+  50% {
+    transform: scale(1.05);
+  }
+}
+@keyframes bld-sway {
+  25% {
+    transform: rotate(2deg);
+  }
+  75% {
+    transform: rotate(-2deg);
+  }
+}
+@keyframes bld-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes bld-shine {
+  50% {
+    filter: brightness(1.18) saturate(1.1);
+  }
+}
+.bld-idle-float > * {
+  animation: bld-float 4s ease-in-out infinite;
+}
+.bld-idle-pulse > * {
+  animation: bld-pulse 2.6s ease-in-out infinite;
+}
+.bld-idle-sway > * {
+  animation: bld-sway 5s ease-in-out infinite;
+  transform-origin: 50% 0;
+}
+.bld-idle-spin > * {
+  animation: bld-spin 24s linear infinite;
+}
+.bld-idle-shine > * {
+  animation: bld-shine 3.5s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .bld-idle > * {
+    animation: none;
+  }
+}
+/* Scroll parallax: the runtime sets --bld-par (px) from the block's place on screen. */
+.bld-par > * {
+  translate: 0 var(--bld-par, 0px);
+}
+
+/* A veil that fades from one side keeps text readable on a wide screen; on a
+   phone the text spans the whole width, so the veil covers it evenly. */
+@media (max-width: 47.99rem) {
+  .lay-bg-overlay[data-fade] {
+    background: color-mix(in srgb, var(--ov) 80%, transparent) !important;
+  }
+}

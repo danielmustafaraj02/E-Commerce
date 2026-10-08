@@ -1,4 +1,5 @@
 "use client";
+import { LOCAL_ACCOUNTS_ENABLED } from "@/lib/local-features";
 
 import { EmptyShelf } from "@/components/empty-shelf";
 import { Link } from "@/components/localized-link";
@@ -96,12 +97,14 @@ export function GuestWishlistClient({
               ))}
             </ul>
 
-            <p className="text-foreground/60 mt-8 text-sm">
-              {wishlistDict.guestSyncNote}{" "}
-              <Link href="/login?callbackUrl=/wishlist" className="shelf-link">
-                {wishlistDict.signInToSync}
-              </Link>
-            </p>
+            {LOCAL_ACCOUNTS_ENABLED && (
+              <p className="text-foreground/60 mt-8 text-sm">
+                {wishlistDict.guestSyncNote}{" "}
+                <Link href="/login?callbackUrl=/wishlist" className="shelf-link">
+                  {wishlistDict.signInToSync}
+                </Link>
+              </p>
+            )}
           </>
         )}
       </ShelfBody>

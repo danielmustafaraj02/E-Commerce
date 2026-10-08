@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modern Collage Bold Mock</title>
+    <style>
+      :root {
+        --paper: #f3efe9;
+        --paper-2: #ece6df;
+        --ink: #1d382d;
+        --rose: #d48d8f;
+        --rose-deep: #b86168;
+        --sage: #aab7a1;
+        --sage-deep: #6b7e6a;
+        --pearl: #d8d1ca;
+        --metal: #d6d2ce;
+        --gold: #d5b285;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: #f3f0eb;
+        font-family: Georgia, "Times New Roman", serif;
+        color: var(--ink);
+      }
+
+      .stage {
+        width: min(1220px, 92vw);
+        min-height: 760px;
+        background: transparent;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .mock {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1.05fr 1.35fr;
+        min-height: 760px;
+        background: transparent;
+      }
+
+      .copy {
+        padding: 72px 46px 40px 60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .eyebrow {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 15px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: rgba(29, 56, 45, 0.7);
+        margin-bottom: 16px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(4rem, 5vw, 7rem);
+        line-height: 0.92;
+        font-weight: 700;
+        letter-spacing: -0.06em;
+      }
+
+      .rule {
+        width: 68px;
+        height: 1px;
+        background: rgba(29, 56, 45, 0.4);
+        margin: 28px 0 22px;
+      }
+
+      .desc {
+        max-width: 410px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 18px;
+        line-height: 1.5;
+        color: rgba(29, 56, 45, 0.8);
+        margin-bottom: 20px;
+      }
+
+      .price {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        margin: 8px 0 28px;
+        font-size: 22px;
+      }
+
+      .price strong {
+        font-size: 40px;
+        letter-spacing: -0.04em;
+      }
+
+      .price s {
+        font-size: 22px;
+        color: rgba(29, 56, 45, 0.56);
+      }
+
+      .badge {
+        display: inline-flex;
+        align-self: flex-start;
+        border: 1px solid rgba(184, 97, 104, 0.7);
+        color: rgba(184, 97, 104, 0.95);
+        padding: 9px 18px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 15px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin: 6px 0 24px;
+      }
+
+      .cta {
+        width: 100%;
+        max-width: 430px;
+        height: 62px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 18px 0 26px;
+        background: linear-gradient(180deg, #1d382d, #18372d);
+        color: #f3efe9;
+        border: none;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        box-shadow: 0 10px 20px rgba(18, 36, 30, 0.08);
+      }
+
+      .visual {
+        position: relative;
+        padding: 48px 18px 30px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .disc {
+        position: absolute;
+        width: 62%;
+        aspect-ratio: 1;
+        border: 1px solid rgba(36, 54, 48, 0.2);
+        border-radius: 50%;
+        background: rgba(243, 239, 233, 0.8);
+        left: 26%;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .branch {
+        position: absolute;
+        right: 6%;
+        top: 8%;
+        width: 230px;
+        height: 440px;
+        opacity: 0.55;
+        transform: rotate(12deg);
+      }
+
+      .branch svg {
+        width: 100%;
+        height: 100%;
+        stroke: rgba(29, 56, 45, 0.38);
+        fill: none;
+        stroke-linecap: round;
+      }
+
+      .jewelry {
+        position: relative;
+        width: 100%;
+        max-width: 690px;
+        min-height: 680px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+      }
+
+      .piece {
+        position: absolute;
+        display: block;
+      }
+
+      .piece--necklace {
+        left: 22%;
+        top: 32%;
+        width: 420px;
+        height: 220px;
+      }
+
+      .piece--bracelet {
+        right: 15%;
+        top: 46%;
+        width: 300px;
+        height: 180px;
+      }
+
+      .piece--earrings {
+        right: 1%;
+        top: 50%;
+        width: 180px;
+        height: 180px;
+      }
+
+      .piece-label {
+        position: absolute;
+        font-family: Georgia, serif;
+        font-size: 18px;
+        line-height: 1.2;
+        color: rgba(29, 56, 45, 0.9);
+        white-space: pre-line;
+        text-align: center;
+      }
+
+      .piece--necklace .piece-label {
+        bottom: -52px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 270px;
+      }
+
+      .piece--bracelet .piece-label {
+        bottom: -44px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 240px;
+      }
+
+      .piece--earrings .piece-label {
+        bottom: -44px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 200px;
+      }
+
+      .tag {
+        position: absolute;
+        right: 4%;
+        bottom: 7%;
+        background: rgba(170, 45, 66, 0.9);
+        border-radius: 50% 50% 0 50%;
+        width: 270px;
+        height: 175px;
+        z-index: 1;
+      }
+
+      svg {
+        display: block;
+        overflow: visible;
+      }
+
+      @media (max-width: 900px) {
+        .mock {
+          grid-template-columns: 1fr;
+        }
+
+        .copy {
+          padding: 36px 22px 12px 22px;
+        }
+
+        .visual {
+          min-height: 560px;
+          padding: 0 20px 20px;
+        }
+
+        .disc {
+          width: 82%;
+          left: 9%;
+        }
+
+        .piece--necklace {
+          left: 18%;
+          top: 28%;
+          width: 360px;
+        }
+
+        .piece--bracelet {
+          right: 7%;
+          top: 48%;
+          width: 260px;
+        }
+
+        .piece--earrings {
+          right: 4%;
+          top: 54%;
+          width: 150px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="stage">
+      <div class="mock">
+        <div class="copy">
+          <div class="eyebrow">12 / I GIOIELLI DEL LOOK</div>
+          <h1>Rosa e<br />Salvia</h1>
+          <div class="rule"></div>
+          <div class="desc">
+            Rosa e verde salvia, in equilibrio.<br />
+            Indossa i tre gioielli insieme<br />
+            oppure scegli un solo dettaglio<br />
+            per ogni giorno.
+          </div>
+          <div class="price">
+            <strong>238,00 €</strong>
+            <s>280,00 €</s>
+          </div>
+          <div class="badge">Risparmi il 15%</div>
+          <button class="cta">
+            <span>Guarda i gioielli del look</span>
+            <span>→</span>
+          </button>
+        </div>
+
+        <div class="visual">
+          <div class="disc" aria-hidden="true"></div>
+          <div class="branch" aria-hidden="true">
+            <svg viewBox="0 0 220 420" xmlns="http://www.w3.org/2000/svg">
+              <g stroke-width="1.3" opacity="0.9">
+                <path d="M120 20 C155 70, 110 110, 150 160 S155 250, 120 330"/>
+                <path d="M115 30 C80 90, 115 130, 70 170 S77 245, 90 320"/>
+                <path d="M117 44 C150 105, 125 140, 160 185 S142 245, 118 300"/>
+                <path d="M120 128 C150 150, 160 182, 147 210"/>
+                <path d="M118 170 C95 190, 78 218, 86 250"/>
+                <path d="M121 212 C138 232, 152 254, 145 280"/>
+              </g>
+            </svg>
+          </div>
+
+          <div class="jewelry" aria-label="Jewellery arrangement">
+            <div class="piece piece--necklace">
+              <svg viewBox="0 0 420 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M25 95 C90 45, 120 54, 154 90 C172 108, 184 105, 205 90 C225 76, 245 76, 260 90 C285 110, 305 108, 325 90 C353 65, 380 65, 392 96" fill="none" stroke="#c49a95" stroke-width="4"/>
+                <path d="M68 118 C106 58, 128 70, 178 100 C208 118, 214 132, 235 118 C255 105, 276 92, 295 108 C316 123, 331 116, 356 100" fill="none" stroke="#b5b1aa" stroke-width="3"/>
+                <g fill="#d7b6b6" stroke="#9d7a7d" stroke-width="1.2">
+                  <circle cx="62" cy="126" r="11"/>
+                  <circle cx="92" cy="112" r="10"/>
+                  <circle cx="125" cy="98" r="11"/>
+                  <circle cx="162" cy="96" r="12"/>
+                  <circle cx="196" cy="103" r="11"/>
+                  <circle cx="227" cy="105" r="11"/>
+                  <circle cx="261" cy="110" r="10"/>
+                  <circle cx="295" cy="117" r="11"/>
+                  <circle cx="328" cy="115" r="11"/>
+                  <circle cx="360" cy="114" r="10"/>
+                </g>
+                <g fill="#9aa998" stroke="#697c6d" stroke-width="1.2">
+                  <circle cx="74" cy="145" r="10"/>
+                  <circle cx="112" cy="126" r="10"/>
+                  <circle cx="146" cy="110" r="11"/>
+                  <circle cx="184" cy="112" r="10"/>
+                  <circle cx="221" cy="122" r="11"/>
+                  <circle cx="251" cy="124" r="10"/>
+                  <circle cx="284" cy="130" r="10"/>
+                  <circle cx="318" cy="129" r="10"/>
+                </g>
+                <g fill="#d7d1cf" stroke="#8a8a86" stroke-width="1.2">
+                  <circle cx="90" cy="170" r="9"/>
+                  <circle cx="122" cy="149" r="9"/>
+                  <circle cx="160" cy="144" r="10"/>
+                  <circle cx="202" cy="145" r="9"/>
+                  <circle cx="238" cy="151" r="10"/>
+                  <circle cx="278" cy="156" r="9"/>
+                  <circle cx="312" cy="155" r="10"/>
+                </g>
+                <g fill="none" stroke="#d7b9b9" stroke-width="2">
+                  <path d="M50 103 Q185 40 350 103"/>
+                </g>
+              </svg>
+              <div class="piece-label">Collana Perla Rosa Antico</div>
+            </div>
+
+            <div class="piece piece--bracelet">
+              <svg viewBox="0 0 300 190" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M36 96 C78 42, 148 25, 211 44 C249 54, 266 72, 272 95 C272 120, 246 133, 206 137 C126 145, 89 126, 36 96 Z" fill="none" stroke="#d3b4b8" stroke-width="4"/>
+                <g fill="#d7d1cf" stroke="#80817d" stroke-width="1.2">
+                  <circle cx="62" cy="101" r="11"/>
+                  <circle cx="92" cy="82" r="10"/>
+                  <circle cx="122" cy="72" r="10"/>
+                  <circle cx="152" cy="72" r="10"/>
+                  <circle cx="182" cy="80" r="11"/>
+                  <circle cx="212" cy="92" r="11"/>
+                  <circle cx="238" cy="104" r="10"/>
+                </g>
+                <g fill="#9aa998" stroke="#5d7362" stroke-width="1.2">
+                  <circle cx="78" cy="125" r="9"/>
+                  <circle cx="112" cy="116" r="10"/>
+                  <circle cx="148" cy="112" r="10"/>
+                  <circle cx="184" cy="114" r="10"/>
+                  <circle cx="220" cy="117" r="10"/>
+                </g>
+                <g fill="#d7b7bd" stroke="#8c6f72" stroke-width="1.2">
+                  <circle cx="94" cy="150" r="9"/>
+                  <circle cx="134" cy="142" r="9"/>
+                  <circle cx="174" cy="146" r="10"/>
+                  <circle cx="209" cy="148" r="9"/>
+                </g>
+              </svg>
+              <div class="piece-label">Bracciale Polvere<br />d'Oro Rosa</div>
+            </div>
+
+            <div class="piece piece--earrings">
+              <svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <g fill="none" stroke="#b9afa6" stroke-width="2.3">
+                  <path d="M42 62 C35 82, 38 98, 54 111"/>
+                  <path d="M90 65 C98 82, 96 103, 82 116"/>
+                  <path d="M132 62 C144 79, 143 96, 123 115"/>
+                </g>
+                <g fill="#d7b4b8" stroke="#8e6970" stroke-width="1.2">
+                  <circle cx="54" cy="118" r="12"/>
+                  <circle cx="82" cy="124" r="12"/>
+                  <circle cx="124" cy="120" r="12"/>
+                </g>
+                <g fill="#9aa998" stroke="#5d7163" stroke-width="1.2">
+                  <circle cx="54" cy="146" r="10"/>
+                  <circle cx="82" cy="150" r="10"/>
+                  <circle cx="124" cy="146" r="10"/>
+                </g>
+              </svg>
+              <div class="piece-label">Orecchini<br />Giardino Pastello</div>
+            </div>
+          </div>
+
+          <div class="tag" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

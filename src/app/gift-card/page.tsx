@@ -1,3 +1,4 @@
+import { withPageMeta } from "@/lib/page-meta";
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { auth } from "@/auth";
@@ -15,7 +16,7 @@ import "./gift-card.css";
 
 const PATH = "/gift-card";
 
-export async function generateMetadata(): Promise<Metadata> {
+async function baseMetadata(): Promise<Metadata> {
   const [locale, settings] = await Promise.all([getLocale(), getStoreSettings()]);
   const copy = getGiftVoucherCopy(locale);
   return {
@@ -31,6 +32,10 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
     },
   };
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withPageMeta("/gift-card", await baseMetadata());
 }
 
 export default async function GiftVoucherPage() {

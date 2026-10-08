@@ -1,0 +1,38 @@
+- main [ref=f4e2]:
+  - generic [ref=f4e5]:
+    - region "Collane" [ref=f4e6]:
+      - generic [ref=f4e8]:
+        - paragraph [aria-hidden] [ref=f4e9]:
+          - generic [ref=f4e10]: "01"
+          - generic [ref=f4e11]: /
+          - generic [ref=f4e12]: "03"
+        - heading "Collane" [level=2] [ref=f4e13]
+        - paragraph [ref=f4e14]: Colore e luce, da indossare.
+        - link "Scopri le collane" [ref=f4e15] [cursor=pointer]:
+          - /url: /it/category/collane-in-vetro-di-murano
+          - text: Scopri le collane
+          - generic [aria-hidden] [ref=f4e16]: →
+    - region "Bracciali" [ref=f4e17]:
+      - generic [ref=f4e19]:
+        - paragraph [aria-hidden] [ref=f4e20]:
+          - generic [ref=f4e21]: "02"
+          - generic [ref=f4e22]: /
+          - generic [ref=f4e23]: "03"
+        - heading "Bracciali" [level=2] [ref=f4e24]
+        - paragraph [ref=f4e25]: Un dettaglio che accompagna ogni gesto.
+        - link "Scopri i bracciali" [ref=f4e26] [cursor=pointer]:
+          - /url: /it/category/bracciali-in-vetro-di-murano
+          - text: Scopri i bracciali
+          - generic [aria-hidden] [ref=f4e27]: →
+    - region "Orecchini" [ref=f4e28]:
+      - generic [ref=f4e30]:
+        - paragraph [aria-hidden] [ref=f4e31]:
+          - generic [ref=f4e32]: "03"
+          - generic [ref=f4e33]: /
+          - generic [ref=f4e34]: "03"
+        - heading "Orecchini" [level=2] [ref=f4e35]
+        - paragraph [ref=f4e36]: Piccoli accenti, nuova luce.
+        - link "Scopri gli orecchini" [ref=f4e37] [cursor=pointer]:
+          - /url: /it/category/orecchini-in-vetro-di-murano
+          - text: Scopri gli orecchini
+          - generic [aria-hidden] [ref=f4e38]: →

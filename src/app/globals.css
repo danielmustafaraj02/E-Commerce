@@ -2,6 +2,17 @@
 /* The brand palette — every colour in the site comes from these five. */
 @import "./palette.css";
 
+/* Local pages are intentionally Git-ignored, so Tailwind needs explicit
+   sources. Public build preparation removes these files before compilation. */
+@source "./admin";
+@source "./account";
+@source "./login";
+@source "./register";
+@source "./forgot-password";
+@source "./reset-password";
+@source "../components/admin-nav.tsx";
+@source "../components/auth-card.tsx";
+
 :root {
   color-scheme: light;
   /* Every brand token below is DERIVED from the five palette colours in

@@ -1,4 +1,4 @@
-import { articleLanguages, articlePath } from "@/lib/journal";
+import { articleLanguages, articlePath, articleTranslationLocales } from "@/lib/journal";
 import { getAllArticles } from "@/lib/journal/db-articles";
 import { MURANO_FAQ_LOCALE, MURANO_FAQ_PATH } from "@/lib/murano-faq";
 import type { MetadataRoute } from "next";
@@ -83,20 +83,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }));
   });
 
-  // Articles have English source copy and selected Italian translations. Each
-  // translated version is a separate URL with a reciprocal two-language set.
+  // Articles have English source copy and optional translations. Each
+  // translated version is a separate URL, all sharing one hreflang set.
   const articles = allArticles.flatMap((article) => {
     const paths = articleLanguages(article);
     const languages = Object.fromEntries(
       Object.entries(paths).map(([locale, path]) => [locale, `${base}${path}`])
     );
-    return (article.translations?.it ? (["en", "it"] as const) : (["en"] as const)).map(
-      (locale) => ({
-        url: `${base}${articlePath(article.slug, locale)}`,
-        lastModified: new Date(article.updated ?? article.published),
-        alternates: { languages },
-      })
-    );
+    return (["en", ...articleTranslationLocales(article)] as const).map((locale) => ({
+      url: `${base}${articlePath(article.slug, locale)}`,
+      lastModified: new Date(article.updated ?? article.published),
+      alternates: { languages },
+    }));
   });
 
   // The Murano questions page is Italian only, the same way.

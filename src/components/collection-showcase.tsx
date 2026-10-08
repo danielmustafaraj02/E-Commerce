@@ -12,6 +12,7 @@ import {
   readingProgress,
   sectionHeight,
 } from "@/lib/showcase-timeline";
+import { showcaseRoot, type ShowcaseScroll } from "@/lib/showcase-options";
 import "./collection-showcase.css";
 
 /* The per-scene mobile rail. Duplicated markup (not a CSS move) so the DOM
@@ -50,8 +51,7 @@ function SceneRail({
             onClick={() => onSelect(index)}
           />
         </div>
-      ))
-      }
+      ))}
     </nav>
   );
 }
@@ -65,6 +65,8 @@ export type ShowcaseItem = {
   cta: string;
   /** Which part of the sequence this scene occupies. */
   scene: "necklace" | "bracelet" | "earrings";
+  /** Which side the text sits on; absent = alternating. */
+  side?: "left" | "right";
 };
 
 /**
@@ -96,6 +98,7 @@ export type ShowcaseItem = {
 /** The custom properties written per scene, all cleared on teardown. */
 const SCENE_PROPS = [
   "--scene-y",
+  "--scene-scale",
   "--image-opacity",
   "--copy-opacity",
   "--copy-reveal",
@@ -114,12 +117,19 @@ const COPY_SIDE: Record<ShowcaseItem["scene"], "left" | "right"> = {
 export function CollectionShowcase({
   items,
   railLabel = "Collection progress",
+  options,
 }: {
   items: ShowcaseItem[];
   /** Accessible name for the progress rail's landmark. */
   railLabel?: string;
+  /** Scroll behaviour and look chosen in the visual editor. */
+  options?: ShowcaseScroll;
 }) {
   const rootRef = useRef<HTMLDivElement>(null);
+  const root = showcaseRoot(options);
+  /* Read by the scroll effect through a ref, so a change of option re-runs it. */
+  const unit = root.unit;
+  const transition = root.transition;
 
   /* Scroll so that scene `index` sits at its reading position: the exact offset
      the timeline itself puts it at, computed from the same helper the animation
@@ -158,9 +168,7 @@ export function CollectionShowcase({
 
     /* Cached once: the element list does not change while the effect is alive,
        so the per-frame work is a plain loop over plain objects. */
-    const entries = Array.from(
-      root.querySelectorAll<HTMLElement>("[data-scene]"),
-    ).map((scene) => ({
+    const entries = Array.from(root.querySelectorAll<HTMLElement>("[data-scene]")).map((scene) => ({
       scene,
       copy: scene.querySelector<HTMLElement>("[data-scene-copy]"),
       /* The per-scene mobile rail fades and yields interactivity with its
@@ -172,9 +180,7 @@ export function CollectionShowcase({
     if (entries.length < 2) return;
 
     /* The progress rail's bullets and its fill, cached with everything else. */
-    const railFills = Array.from(
-      root.querySelectorAll<HTMLElement>(".showcase-rail-fill"),
-    );
+    const railFills = Array.from(root.querySelectorAll<HTMLElement>(".showcase-rail-fill"));
     /* Every bullet in the section — the one stage-level rail AND the per-scene
        mobile rows, which carry the same three dots. Each is paired with the
        SCENE INDEX IT STANDS FOR, read from its own data-rail-item attribute.
@@ -185,9 +191,9 @@ export function CollectionShowcase({
        gave the stage rail's dots the indices 9, 10 and 11. Compared against a
        scene index of 0…2 those are always "upcoming", which is why the desktop
        rail rendered three identical empty dots and nothing was ever active. */
-    const railItems = Array.from(
-      root.querySelectorAll<HTMLElement>("[data-rail-item]"),
-    ).map((item) => ({ item, index: Number(item.dataset.railItem) }));
+    const railItems = Array.from(root.querySelectorAll<HTMLElement>("[data-rail-item]")).map(
+      (item) => ({ item, index: Number(item.dataset.railItem) })
+    );
 
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let raf = 0;
@@ -226,7 +232,7 @@ export function CollectionShowcase({
          its address bar) only re-reads the frames. */
       if (reshaped) {
         if (measure()) {
-          root.style.height = `${sectionHeight(entries.length, stageHeight)}px`;
+          root.style.height = `${sectionHeight(entries.length, stageHeight, unit)}px`;
           /* The section just changed height, so the start offset moved too. */
           measure();
         }
@@ -242,20 +248,23 @@ export function CollectionShowcase({
        without rebuilding the timeline: only the origin is re-read. */
     let bodyRO = 0;
     let lastBodyH = 0;
-    const bodyObserver = typeof ResizeObserver !== "undefined" ? new ResizeObserver((entries) => {
-      const h = entries[0]?.contentRect.height ?? 0;
-      if (h === lastBodyH) return;
-      lastBodyH = h;
-      if (!active) return;
-      if (bodyRO) return;
-      bodyRO = requestAnimationFrame(() => {
-        bodyRO = 0;
-        if (!active) return;
-        measureChrome();
-        measure();
-        schedule();
-      });
-    }) : null;
+    const bodyObserver =
+      typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver((entries) => {
+            const h = entries[0]?.contentRect.height ?? 0;
+            if (h === lastBodyH) return;
+            lastBodyH = h;
+            if (!active) return;
+            if (bodyRO) return;
+            bodyRO = requestAnimationFrame(() => {
+              bodyRO = 0;
+              if (!active) return;
+              measureChrome();
+              measure();
+              schedule();
+            });
+          })
+        : null;
 
     /* Coalesces chrome re-measurements onto one frame: a click can land during
        the same frame as a scroll, and measuring is a layout read. */
@@ -345,7 +354,7 @@ export function CollectionShowcase({
       const band = (content ?? stage).getBoundingClientRect();
       let inset = 0;
       for (const el of document.querySelectorAll<HTMLElement>(
-        ".btn-primary.fixed, .fixed.inset-x-0",
+        ".btn-primary.fixed, .fixed.inset-x-0"
       )) {
         const cs = getComputedStyle(el);
         if (cs.position !== "fixed" || cs.display === "none") continue;
@@ -354,10 +363,7 @@ export function CollectionShowcase({
         if (rect.right <= band.left || rect.left >= band.right) continue;
         inset = Math.max(inset, window.innerHeight - rect.top);
       }
-      root.style.setProperty(
-        "--showcase-measured-inset",
-        `${Math.ceil(inset + 12)}px`,
-      );
+      root.style.setProperty("--showcase-measured-inset", `${Math.ceil(inset + 12)}px`);
     };
 
     /* Cached geometry, re-measured only when the viewport RESHAPES.
@@ -386,8 +392,7 @@ export function CollectionShowcase({
 
       /* The scroll position at which the stage first docks: the section's top
          reaches the stage's sticky offset. */
-      startScroll =
-        root.getBoundingClientRect().top + window.scrollY - stickyTop;
+      startScroll = root.getBoundingClientRect().top + window.scrollY - stickyTop;
       return true;
     };
 
@@ -411,9 +416,11 @@ export function CollectionShowcase({
       const nextReading = activeScene(progress, entries.length);
 
       entries.forEach(({ scene, copy, sceneRail }, index) => {
-        const frame = getSceneFrame(progress, index, entries.length, distance);
+        const frame = getSceneFrame(progress, index, entries.length, distance, transition);
 
         scene.style.setProperty("--scene-y", `${frame.y.toFixed(1)}px`);
+        if (frame.scale !== undefined)
+          scene.style.setProperty("--scene-scale", frame.scale.toFixed(3));
         scene.style.setProperty("--image-opacity", frame.imageOpacity.toFixed(3));
         scene.style.setProperty("--copy-opacity", frame.copyOpacity.toFixed(3));
         /* The text's own travel, mirrored from its opacity so it finishes moving
@@ -459,11 +466,7 @@ export function CollectionShowcase({
 
       railItems.forEach(({ item, index }) => {
         const state =
-          index === nextReading
-            ? "active"
-            : index < nextReading
-              ? "passed"
-              : "upcoming";
+          index === nextReading ? "active" : index < nextReading ? "passed" : "upcoming";
         item.dataset.state = state;
         /* aria-current moves with the active state, so assistive tech sees the
            same information the visuals do. */
@@ -512,7 +515,7 @@ export function CollectionShowcase({
          scenes scrolling under the sticky header, text stacked, no rail.
          The section height derives from the stage height alone, so setting
          it first is always valid. */
-      root.style.height = `${sectionHeight(entries.length, stageHeight)}px`;
+      root.style.height = `${sectionHeight(entries.length, stageHeight, unit)}px`;
       if (!measure()) {
         root.style.removeProperty("height");
         root.removeAttribute("data-scene-live");
@@ -603,10 +606,15 @@ export function CollectionShowcase({
       stage.removeEventListener("touchend", onTouchEnd);
       disable();
     };
-  }, [items]);
+  }, [items, unit, transition]);
 
   return (
-    <div className="showcase" ref={rootRef}>
+    <div
+      className="showcase"
+      ref={rootRef}
+      {...root.attrs}
+      style={root.vars as React.CSSProperties}
+    >
       <div className="showcase-stage">
         {/* The scene content column. Every scene lives inside this wrapper, so
             the stage can lay out `piece | content | rail` as real grid columns:
@@ -640,16 +648,14 @@ export function CollectionShowcase({
               <div
                 className="showcase-copy"
                 data-scene-copy
-                data-side={COPY_SIDE[item.scene]}
+                data-side={item.side ?? COPY_SIDE[item.scene]}
               >
                 {/* The editorial index. Decorative numbering, not content:
                     the position is already conveyed by the progress rail's
                     aria-current, so this is hidden from assistive tech rather
                     than read out as a second, competing count. */}
                 <p className="showcase-index" aria-hidden="true">
-                  <span className="showcase-index-current">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
+                  <span className="showcase-index-current">{String(i + 1).padStart(2, "0")}</span>
                   <span className="showcase-index-sep">/</span>
                   <span className="showcase-index-total">
                     {String(items.length).padStart(2, "0")}

@@ -1,0 +1,9 @@
+- generic [ref=f2e3]:
+  - generic [ref=f2e4]:
+    - heading "Title A" [level=2] [ref=f2e6]
+    - paragraph [ref=f2e9]: Some body text goes here to fill space.
+    - generic [ref=f2e10]: Empty image block
+  - generic [ref=f2e12]:
+    - heading "Title B" [level=2] [ref=f2e15]
+    - paragraph [ref=f2e18]: Right column text.
+    - generic "Drag to change the column widths · double-click for equal columns" [ref=f2e19]

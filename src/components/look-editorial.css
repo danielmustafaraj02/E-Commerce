@@ -1,11 +1,13 @@
 .looks-editorial-list {
+  container: look-row / inline-size;
+  min-width: 0;
   display: grid;
 }
 .looks-editorial-intro {
   max-width: 44rem;
   margin: 1.5rem auto 3.5rem;
   font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+  font-size: clamp(1.2rem, 1.8cqw, 1.5rem);
   line-height: 1.65;
   text-align: center;
   color: var(--ink-soft);
@@ -17,11 +19,12 @@
   --look-line: color-mix(in srgb, var(--ink) 45%, transparent);
   display: grid;
   grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
-  gap: clamp(2.5rem, 6vw, 7rem);
+  gap: clamp(2.5rem, 6cqw, 7rem);
   align-items: center;
-  padding-block: clamp(4rem, 8vw, 7rem);
+  padding-block: clamp(4rem, 8cqw, 7rem);
   /* The old top hairline (which read as a stray line under the section
      heading) is gone — the rows separate by whitespace alone. */
+  background: transparent;
   opacity: 1;
   transform: none;
 }
@@ -29,9 +32,15 @@
   [data-reveal="true"] .look-editorial {
     animation: section-fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
-  .look-editorial:nth-child(1) { animation-delay: 0.1s; }
-  .look-editorial:nth-child(2) { animation-delay: 0.2s; }
-  .look-editorial:nth-child(3) { animation-delay: 0.3s; }
+  .look-editorial:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+  .look-editorial:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .look-editorial:nth-child(3) {
+    animation-delay: 0.3s;
+  }
 }
 .look-editorial-zoom {
   position: relative;
@@ -115,19 +124,20 @@
     will-change: opacity;
   }
 }
-/* The photograph sits directly on the page: the panel keeps the ground colour
-   (not white), so the jewellery melts into the section instead of floating in
-   a box that reads as a pasted card. */
+/* White image planes preserve the catalogue photo colours and reflections. */
 .look-editorial-visual {
   position: relative;
   display: block;
   width: 100%;
   aspect-ratio: 1 / 1.12;
   min-width: 0;
-  background: none;
+  background: transparent;
+  mix-blend-mode: normal;
+  isolation: isolate;
 }
 .look-editorial-visual img {
   object-fit: contain;
+  background: transparent;
 }
 
 /* The image is the first beat: it settles in before the text choreography
@@ -174,11 +184,7 @@
   z-index: 10;
   /* Centred on the piece and a little below its middle (where the old card
      sat), then clamped so it can never run out of the frame and be clipped. */
-  left: clamp(
-    calc(var(--card-w) / 2),
-    calc(var(--piece-x) * 100%),
-    calc(100% - var(--card-w) / 2)
-  );
+  left: clamp(calc(var(--card-w) / 2), calc(var(--piece-x) * 100%), calc(100% - var(--card-w) / 2));
   top: clamp(
     0px,
     calc((var(--piece-y) + var(--piece-size) * 0.1) * 100%),
@@ -277,7 +283,9 @@
   border: 2px solid color-mix(in srgb, var(--champagne) 80%, transparent);
   background: var(--ivory);
   cursor: pointer;
-  transition: border-color 0.15s, transform 0.15s;
+  transition:
+    border-color 0.15s,
+    transform 0.15s;
 }
 .look-single-piece:hover .look-single-piece-thumb,
 .look-single-piece:focus-within .look-single-piece-thumb {
@@ -293,7 +301,7 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  width: min(15rem, 80vw);
+  width: min(15rem, 80cqw);
   height: 8.5rem;
   padding: 1.1rem 1.25rem;
   border: 1px solid color-mix(in srgb, var(--champagne) 70%, transparent);
@@ -359,6 +367,75 @@
 .look-editorial-copy {
   max-width: 31rem;
   padding-block: 1rem;
+}
+
+[data-opt-look-accent="sage"] .look-editorial {
+  --accent: #5c7a6d;
+  --accent-deep: #456155;
+  --look-line: color-mix(in srgb, var(--accent) 52%, transparent);
+}
+[data-opt-look-accent="gold"] .look-editorial {
+  --accent: #b5935d;
+  --accent-deep: #8f6d37;
+  --look-line: color-mix(in srgb, var(--accent) 56%, transparent);
+}
+[data-opt-look-accent="rose"] .look-editorial {
+  --accent: #b76d7a;
+  --accent-deep: #91515f;
+  --look-line: color-mix(in srgb, var(--accent) 54%, transparent);
+}
+[data-opt-look-accent="midnight"] .look-editorial {
+  --accent: #1d3b4d;
+  --accent-deep: #122c3d;
+  --look-line: color-mix(in srgb, var(--accent) 50%, transparent);
+}
+
+[data-opt-look-density="airy"] .look-editorial {
+  --look-row-gap: clamp(2.5rem, 5cqw, 5rem);
+  --look-copy-space: clamp(1.5rem, 3cqw, 2.5rem);
+}
+[data-opt-look-density="compact"] .look-editorial {
+  --look-row-gap: clamp(1.25rem, 2.5cqw, 2.5rem);
+  --look-copy-space: 0.9rem;
+}
+[data-opt-look-density="airy"] .look-editorial-copy,
+[data-opt-look-density="compact"] .look-editorial-copy {
+  gap: var(--look-copy-space);
+}
+[data-opt-look-density="airy"] .look-editorial-cta,
+[data-opt-look-density="compact"] .look-editorial-cta {
+  margin-top: var(--look-copy-space);
+}
+[data-opt-look-text-align="center"] .look-editorial-copy {
+  text-align: center;
+}
+[data-opt-look-text-align="center"] .look-editorial-price {
+  justify-content: center;
+}
+[data-opt-look-text-align="center"] .look-editorial-cta {
+  margin-inline: auto;
+}
+[data-opt-look-text-align="left"] .look-editorial-copy {
+  text-align: left;
+}
+[data-opt-look-cta="subtle"] .look-editorial-cta {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid transparent;
+  border-bottom-color: var(--look-line);
+  border-radius: 0;
+  padding-inline: 0;
+  min-height: 0;
+  letter-spacing: 0.12em;
+}
+[data-opt-look-cta="subtle"] .look-editorial-cta:hover:not(:disabled) {
+  background: transparent;
+  color: var(--accent-deep);
+  border-bottom-color: var(--accent-deep);
+}
+[data-opt-look-cta="bold"] .look-editorial-cta {
+  padding-inline: 2.2rem;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
 /* The editorial index: "01 / IN THIS LOOK ————". Tabular figures so the
@@ -501,7 +578,7 @@
   /* Down from a 4.5rem ceiling: the copy column is the narrower half of the
      row and now carries a rule and its indent too, so the old maximum broke
      a two-word look name across two lines at every desktop width. */
-  font-size: clamp(2.25rem, 3.1vw, 3.5rem);
+  font-size: clamp(2.25rem, 3.1cqw, 3.5rem);
   font-weight: 400;
   line-height: 1.06;
   letter-spacing: -0.025em;
@@ -619,19 +696,19 @@
   outline: 2px solid var(--ink);
   outline-offset: 5px;
 }
-@media (min-width: 52rem) {
+@container look-row (min-width: 52rem) {
   /* A single hairline between the composition and the copy, on whichever side
      the copy sits — the rows alternate. It replaces nothing and adds no box:
      one rule, the same token the rest of the page divides with. */
   .look-editorial-copy {
     border-inline-start: 1px solid var(--look-line);
-    padding-inline-start: clamp(2.5rem, 4vw, 4.5rem);
+    padding-inline-start: clamp(2.5rem, 4cqw, 4.5rem);
   }
   .look-editorial:nth-child(even) .look-editorial-copy {
     border-inline-start: 0;
     border-inline-end: 1px solid var(--look-line);
     padding-inline-start: 0;
-    padding-inline-end: clamp(2.5rem, 4vw, 4.5rem);
+    padding-inline-end: clamp(2.5rem, 4cqw, 4.5rem);
   }
 
   .look-editorial:nth-child(even) .look-editorial-zoom {
@@ -646,7 +723,7 @@
     grid-row: 1;
   }
 }
-@media (max-width: 51.99rem) {
+@container look-row (max-width: 51.99rem) {
   .look-editorial {
     grid-template-columns: minmax(0, 1fr);
     gap: 1.75rem;
@@ -685,5 +762,410 @@
   .looks-editorial-intro {
     text-align: start;
     margin-bottom: 2rem;
+  }
+}
+/* ─────────────────────────────────────────────────────────────────────────────
+   Look row styles — the five choices in Admin > Page layout > Looks > Options.
+
+   Every variant below is the SAME content (photo, numbered pieces, eyebrow,
+   title, rule, description, price, button) laid out five different ways. They
+   are selected with `data-opt-look-style` on the section, which the admin sets
+   from the Options tab, so the page's default (no attribute) stays the layout
+   that shipped.
+
+   The attribute lands on the section wrapper (see optionAttributes in
+   lib/section-style.ts), so each rule is scoped to that wrapper and never
+   reaches the storefront's other look rows on /looks, which use the same
+   component with no option set.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* ── 1. Alternating — the photo side flips every other row ───────────────────
+   The page already flips even rows, so this variant is mostly "keep it, but
+   make the flip unmistakable": a wider photo, and the divider always on the
+   side the copy sits. */
+[data-opt-look-style="alternating"] .look-editorial {
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  gap: clamp(2.5rem, 5cqw, 6rem);
+}
+[data-opt-look-style="alternating"] .look-editorial-visual {
+  aspect-ratio: 1 / 1;
+}
+
+/* ── 2. Stacked — copy over a wide photo ─────────────────────────────────────
+   One column: the image becomes a wide banner and the copy sits under it,
+   centred, so a row reads like a magazine spread rather than a product row. */
+[data-opt-look-style="stacked"] .look-editorial {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  justify-items: center;
+  padding-block: clamp(3rem, 6cqw, 5rem);
+}
+[data-opt-look-style="stacked"] .look-editorial-zoom {
+  width: 100%;
+  max-width: none;
+  order: 1;
+}
+[data-opt-look-style="stacked"] .look-editorial-visual {
+  aspect-ratio: 16 / 9;
+}
+[data-opt-look-style="stacked"] .look-editorial-copy {
+  order: 2;
+  max-width: 44rem;
+  margin-top: clamp(1.75rem, 3cqw, 2.75rem);
+  text-align: center;
+  /* No side rule: the copy is under the photo, not beside it. */
+  border-inline: 0;
+  padding-inline: 0;
+}
+[data-opt-look-style="stacked"] .look-editorial-index {
+  justify-content: center;
+}
+/* The eyebrow's trailing rule would run to the far edge of a centred column. */
+[data-opt-look-style="stacked"] .look-editorial-index::after {
+  display: none;
+}
+[data-opt-look-style="stacked"] .look-editorial-title-rule {
+  margin-inline: auto;
+}
+[data-opt-look-style="stacked"] .look-editorial-price {
+  justify-content: center;
+}
+[data-opt-look-style="stacked"] .look-editorial-cta {
+  margin-inline: auto;
+}
+
+/* ── 3. Minimal — photo above a quiet caption ────────────────────────────────
+   The most restrained: no eyebrow, no rule, no description. The name and the
+   price carry the row, with the button reduced to a text link. */
+[data-opt-look-style="minimal"] .look-editorial {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  justify-items: center;
+  padding-block: clamp(2.5rem, 5cqw, 4.5rem);
+}
+[data-opt-look-style="minimal"] .look-editorial-zoom {
+  width: 100%;
+  max-width: 30rem;
+  order: 1;
+}
+[data-opt-look-style="minimal"] .look-editorial-visual {
+  aspect-ratio: 1 / 1.15;
+}
+[data-opt-look-style="minimal"] .look-editorial-copy {
+  order: 2;
+  max-width: 30rem;
+  margin-top: 1.75rem;
+  text-align: center;
+  border-inline: 0;
+  padding-inline: 0;
+}
+[data-opt-look-style="minimal"] .look-editorial-index,
+[data-opt-look-style="minimal"] .look-editorial-title-rule,
+[data-opt-look-style="minimal"] .look-editorial-description {
+  display: none;
+}
+[data-opt-look-style="minimal"] .look-editorial-title {
+  font-size: clamp(1.35rem, 2cqw, 1.75rem);
+}
+[data-opt-look-style="minimal"] .look-editorial-price {
+  justify-content: center;
+  margin-top: 0.75rem;
+}
+/* The button becomes a quiet underlined link — the row's only affordance.
+   `.shelf` is repeated so this beats home.css's `.shelf .btn-primary` (which
+   is a class + a class, the same weight as one attribute + one class — the
+   later rule would otherwise win and put the green pill back). */
+.shelf [data-opt-look-style="minimal"] .look-editorial-cta {
+  display: inline-flex;
+  margin-top: 1.25rem;
+  min-height: 0;
+  padding: 0;
+  background: none;
+  color: var(--ink);
+  border: 0;
+  border-bottom: 1px solid var(--look-line);
+  border-radius: 0;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.shelf [data-opt-look-style="minimal"] .look-editorial-cta:hover:not(:disabled) {
+  background: none;
+  color: var(--brass-deep);
+  border-bottom-color: var(--brass-deep);
+  transform: none;
+}
+[data-opt-look-style="minimal"] .look-editorial-disc-badge {
+  display: none;
+}
+
+/* ── 4. Framed — copy in a panel beside the photo ────────────────────────────
+   The copy gets a real surface: a tinted panel with a hairline, lifted off the
+   page, so the row reads as a card rather than a magazine spread. */
+[data-opt-look-style="framed"] .look-editorial {
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: clamp(2rem, 4cqw, 4rem);
+  align-items: stretch;
+}
+[data-opt-look-style="framed"] .look-editorial-visual {
+  aspect-ratio: 1 / 1.05;
+}
+[data-opt-look-style="framed"] .look-editorial-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: none;
+  padding: clamp(2rem, 3.5cqw, 3.25rem);
+  border: 1px solid var(--look-line);
+  border-radius: var(--radius-panel, 12px);
+  background: color-mix(in srgb, var(--ink) 3%, var(--ivory));
+  /* The panel replaces the hairline divider. */
+  border-inline-start-width: 1px;
+  padding-inline-start: clamp(2rem, 3.5cqw, 3.25rem);
+}
+[data-opt-look-style="framed"] .look-editorial:nth-child(even) .look-editorial-copy {
+  border-inline: 1px solid var(--look-line);
+  padding-inline: clamp(2rem, 3.5cqw, 3.25rem);
+}
+[data-opt-look-style="framed"] .look-editorial-cta {
+  align-self: flex-start;
+}
+
+/* ── 5. Editorial — the layout the page shipped with ─────────────────────────
+   This is the default, so it needs no rule: with no attribute the base styles
+   above apply untouched. Stated here only so the five choices are visible in
+   one place, and so an admin who picks "Editorial" explicitly (which stores the
+   value and therefore DOES set the attribute) still gets the shipped layout. */
+[data-opt-look-style="editorial"] .look-editorial {
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+}
+
+/* Below the side-by-side breakpoint every variant is a single column, so the
+   rules that only make sense beside a photo are dropped here. */
+@container look-row (max-width: 51.99rem) {
+  [data-opt-look-style="stacked"] .look-editorial-copy,
+  [data-opt-look-style="minimal"] .look-editorial-copy,
+  [data-opt-look-style="framed"] .look-editorial-copy {
+    margin-top: 1.75rem;
+    padding-inline: 0;
+    border-inline: 0;
+    background: none;
+  }
+  [data-opt-look-style="stacked"] .look-editorial,
+  [data-opt-look-style="minimal"] .look-editorial,
+  [data-opt-look-style="framed"] .look-editorial {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  /* A centred eyebrow with no trailing rule is already handled above; the
+     framed panel's padding would otherwise indent a full-width column. */
+  [data-opt-look-style="framed"] .look-editorial-copy {
+    padding: 0;
+  }
+}
+
+/* Shared row refinement; neutral photo planes retain the source colours. */
+.look-editorial {
+  min-width: 0;
+}
+.look-editorial-title {
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+.look-editorial-description {
+  font-family: var(--font-ui), sans-serif;
+  font-size: 1rem;
+  line-height: 1.75;
+}
+.look-editorial-visual {
+  background: transparent;
+  mix-blend-mode: normal;
+}
+.look-editorial-piece {
+  mix-blend-mode: normal;
+}
+@container look-row (max-width: 51.99rem) {
+  .look-editorial {
+    padding-inline: 1rem;
+  }
+  .look-editorial-title {
+    font-size: clamp(2rem, 9cqw, 3.75rem);
+  }
+  .look-editorial-piece-tag {
+    display: none;
+  }
+}
+
+/* Linked catalogue compositions. White photo planes retain original glass
+   opacity, reflections and metal tones without filters or background blending. */
+.look-jewelry {
+  min-width: 0;
+}
+.look-jewelry--composed {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr) minmax(0, 0.85fr);
+  align-items: center;
+  gap: 0.75rem;
+}
+.look-jewelry-product {
+  display: grid;
+  gap: 0.6rem;
+  min-width: 0;
+  min-height: 44px;
+  color: var(--midnight);
+  text-decoration: none;
+}
+.look-jewelry-image {
+  position: relative;
+  display: block;
+  height: clamp(12rem, 24cqw, 24rem);
+  background: transparent;
+}
+.look-jewelry-product--lead .look-jewelry-image {
+  height: clamp(16rem, 32cqw, 32rem);
+}
+.look-jewelry-image img,
+.look-jewelry-photo img {
+  object-fit: contain;
+  mix-blend-mode: normal;
+  filter: none;
+  background: transparent;
+}
+.look-jewelry-caption {
+  font:
+    500 1rem/1.4 var(--font-display),
+    Georgia,
+    serif;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.look-jewelry--lead {
+  grid-template-columns: minmax(0, 1fr);
+}
+.look-jewelry-photo {
+  display: block;
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: transparent;
+}
+.look-jewelry-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem 1rem;
+  padding: 0;
+  margin: 0.75rem 0 0;
+  list-style: none;
+}
+.look-jewelry-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 1rem;
+  text-underline-offset: 4px;
+}
+.look-jewelry :is(a, button):focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 3px;
+}
+
+.look-editorial {
+  grid-template-areas: "visual heading" "visual purchase";
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  column-gap: clamp(1.5rem, 3cqw, 3rem);
+  row-gap: 0;
+  padding: clamp(1.5rem, 3cqw, 3rem);
+  background: transparent;
+}
+.look-editorial-heading {
+  grid-area: heading;
+  align-self: end;
+  min-width: 0;
+}
+.look-editorial-zoom {
+  grid-area: visual;
+}
+.look-editorial-copy {
+  grid-area: purchase;
+  align-self: start;
+  border: 0;
+  padding-inline: 0;
+}
+.look-editorial-heading .look-editorial-title {
+  font-size: clamp(2.25rem, 4.5cqw, 4.5rem);
+  line-height: 1.05;
+}
+.look-editorial-heading .look-editorial-index {
+  font-size: 0.8125rem;
+  letter-spacing: 0.1em;
+}
+.look-editorial-copy .look-editorial-saving {
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+}
+.look-editorial-copy .look-editorial-price {
+  flex-wrap: wrap;
+  gap: 0.5rem 0.8rem;
+}
+.look-editorial-copy .look-editorial-cta {
+  margin-top: 0;
+  min-height: 44px;
+}
+.look-editorial:nth-child(even) {
+  grid-template-areas: "heading visual" "purchase visual";
+}
+.look-editorial:nth-child(even) .look-editorial-zoom {
+  grid-area: visual;
+}
+.look-editorial:nth-child(even) .look-editorial-copy {
+  grid-area: purchase;
+}
+.look-editorial:nth-child(even) .look-editorial-copy {
+  padding-inline: 0;
+  border: 0;
+}
+[data-opt-look-style="stacked"] .look-editorial,
+[data-opt-look-style="minimal"] .look-editorial {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "heading" "visual" "purchase";
+  row-gap: 1.25rem;
+}
+[data-opt-look-style="stacked"] .look-editorial-copy,
+[data-opt-look-style="minimal"] .look-editorial-copy {
+  margin-top: 0;
+}
+@container look-row (max-width: 51.99rem) {
+  .look-editorial,
+  .look-editorial:nth-child(even),
+  [data-opt-look-style] .look-editorial {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "heading" "visual" "purchase";
+    gap: 1.25rem;
+    padding: 1.5rem 1rem;
+  }
+  .look-editorial-heading .look-editorial-title {
+    font-size: clamp(2rem, 9cqw, 3.5rem);
+  }
+  .look-editorial-copy .look-editorial-description {
+    margin: 0 0 1rem;
+  }
+  .look-jewelry--composed {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    align-items: start;
+  }
+  .look-jewelry-product--lead {
+    grid-column: 1 / -1;
+  }
+  .look-jewelry-image {
+    height: clamp(9rem, 32cqw, 13rem);
+  }
+  .look-jewelry-product--lead .look-jewelry-image {
+    height: clamp(15rem, 50cqw, 21rem);
+  }
+  .look-jewelry--lead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .look-jewelry-photo {
+    aspect-ratio: 1;
   }
 }

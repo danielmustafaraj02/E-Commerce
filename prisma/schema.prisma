@@ -888,8 +888,71 @@ model JournalPost {
   // those products' pages.
   products Product[] @relation("JournalPostProducts")
 
+  // Copy in the other languages (everything except English, and Italian which
+  // lives in translationIt above).
+  translations JournalPostTranslation[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([published, publishedAt])
 }
+
+model JournalPostTranslation {
+  id          String      @id @default(cuid())
+  postId      String
+  post        JournalPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  locale      String // a Locale other than "en" / "it"
+  title       String
+  seoTitle    String?
+  description String
+  intro       String
+  heroAlt     String?
+  body        Json        @default("[]")
+
+  @@unique([postId, locale])
+}
+
+// Search-engine title/description (and share image) overrides for any page, in
+// any language. `key` is the page's path ("/about", "/products") or an entity
+// ("product:<slug>", "category:<slug>", "look:<id>", "legal:<slug>"). Edited
+// in Admin > Overview > Page metadata and on each product/category/look page;
+// applied by withPageMeta in src/lib/page-meta.ts. A missing row means the
+// page's built-in metadata.
+model PageMeta {
+  id          String   @id @default(cuid())
+  key         String
+  locale      String
+  title       String?
+  description String?
+  ogImageUrl  String?
+  noindex     Boolean  @default(false)
+  updatedAt   DateTime @updatedAt
+
+  @@unique([key, locale])
+}
+
+// Section designs saved from Admin > Settings > Page layout > (a section), so
+// they can be reused on any page next to the built-in templates. `doc` is
+// { builder: BuilderDoc, style?: SectionStyle } (src/lib/section-builder.ts),
+// re-validated on every read. A missing table just means no saved templates.
+model SectionTemplate {
+  id          String   @id @default(cuid())
+  name        String
+  description String   @default("")
+  doc         Json
+  createdAt   DateTime @default(now())
+}
+
+// Section layouts for the pages other than the home and product pages (those
+// two live on StoreSettings): About, Contact, Looks, Journal, Category pages
+// and All products. `target` is the page's id; `layout` is the same
+// [{ id, visible, … }] list the home page uses (src/lib/page-layout.ts). A
+// missing table or row just means the page's built-in layout.
+model PageLayout {
+  id        String   @id @default(cuid())
+  target    String   @unique
+  layout    Json
+  updatedAt DateTime @updatedAt
+}
+

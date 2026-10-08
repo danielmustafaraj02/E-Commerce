@@ -9,6 +9,9 @@ import { DEFAULT_COLORS, type ColorRole } from "@/lib/site-style";
  * the most saturated remaining colour the accent, and the secondary text and
  * the border are mixed from those so they sit on the same ramp.
  *
+ * The second group (Lagoon & Mist onwards) was written for this shop's kind of
+ * store (jewellery, gifts, handmade) and checked the same way.
+ *
  * Every palette here was CHECKED, not just converted: each one clears WCAG AA
  * on text over background, text over surface, secondary text over background
  * and the label on the primary button, and 3:1 on the accent. Of the 42
@@ -163,7 +166,248 @@ export const COLOR_PALETTES: ColorPalette[] = [
       colorAccent: "#6b0f1a",
       colorBorder: "#a9b3ab",
     },
-  },];
+  },
+  {
+    id: "lagoon-mist",
+    name: "Lagoon & Mist",
+    note: "Airy white with lagoon teal",
+    colors: {
+      colorBackground: "#f7fbfa",
+      colorSurface: "#e1efee",
+      colorText: "#0f2f35",
+      colorTextMuted: "#4d6a70",
+      colorPrimary: "#0f4c5c",
+      colorOnPrimary: "#ffffff",
+      colorAccent: "#1b7f8c",
+      colorBorder: "#cfe3e1",
+    },
+  },
+  {
+    id: "rosegold-plum",
+    name: "Rose Gold & Plum",
+    note: "Blush ground, plum type, rose-gold accent",
+    colors: {
+      colorBackground: "#fdf6f3",
+      colorSurface: "#f4e1da",
+      colorText: "#3b2326",
+      colorTextMuted: "#7a5a5d",
+      colorPrimary: "#7a3e48",
+      colorOnPrimary: "#ffffff",
+      colorAccent: "#a85f6b",
+      colorBorder: "#ead3cb",
+    },
+  },
+  {
+    id: "emerald-cream",
+    name: "Emerald & Cream",
+    note: "Cream ground with deep emerald",
+    colors: {
+      colorBackground: "#fbf8f1",
+      colorSurface: "#eae3d2",
+      colorText: "#10281f",
+      colorTextMuted: "#4f6359",
+      colorPrimary: "#0b5d3b",
+      colorOnPrimary: "#ffffff",
+      colorAccent: "#0f7a4d",
+      colorBorder: "#d9d1bd",
+    },
+  },
+  {
+    id: "terracotta-linen",
+    name: "Terracotta & Linen",
+    note: "Linen ground with baked terracotta",
+    colors: {
+      colorBackground: "#faf5ee",
+      colorSurface: "#e9e4d3",
+      colorText: "#3a2a20",
+      colorTextMuted: "#6c5a4c",
+      colorPrimary: "#8c4a2f",
+      colorOnPrimary: "#ffffff",
+      colorAccent: "#b85d36",
+      colorBorder: "#dfd6c3",
+    },
+  },
+  {
+    id: "lavender-mist",
+    name: "Lavender Mist",
+    note: "Soft lilac ground, indigo type",
+    colors: {
+      colorBackground: "#faf8fd",
+      colorSurface: "#ece6f5",
+      colorText: "#2a2140",
+      colorTextMuted: "#62597a",
+      colorPrimary: "#4b3b7a",
+      colorOnPrimary: "#ffffff",
+      colorAccent: "#7054b8",
+      colorBorder: "#dcd3ec",
+    },
+  },
+  {
+    id: "champagne-noir",
+    name: "Champagne & Noir",
+    note: "Champagne ground, black type, antique gold",
+    colors: {
+      colorBackground: "#fbf7ef",
+      colorSurface: "#efe5d0",
+      colorText: "#1c1a17",
+      colorTextMuted: "#5d574b",
+      colorPrimary: "#1c1a17",
+      colorOnPrimary: "#f7f1e3",
+      colorAccent: "#8a6d1f",
+      colorBorder: "#e3d8bf",
+    },
+  },
+  {
+    id: "coastal-blue",
+    name: "Coastal Blue",
+    note: "Sea-spray white with marine blue",
+    colors: {
+      colorBackground: "#f6fafd",
+      colorSurface: "#e2eef7",
+      colorText: "#0e2238",
+      colorTextMuted: "#4a6178",
+      colorPrimary: "#1d4e89",
+      colorOnPrimary: "#ffffff",
+      colorAccent: "#2a6fb0",
+      colorBorder: "#cfe0ee",
+    },
+  },
+  {
+    id: "burgundy-blush",
+    name: "Burgundy & Blush",
+    note: "Pale blush ground, burgundy and wine",
+    colors: {
+      colorBackground: "#fdf7f7",
+      colorSurface: "#f3dede",
+      colorText: "#3a1018",
+      colorTextMuted: "#7a4a52",
+      colorPrimary: "#6d1a2b",
+      colorOnPrimary: "#ffffff",
+      colorAccent: "#a32a44",
+      colorBorder: "#ebcfd2",
+    },
+  },
+  {
+    id: "forest-moss",
+    name: "Forest & Moss",
+    note: "Pale moss ground, forest green",
+    colors: {
+      colorBackground: "#f6f8f2",
+      colorSurface: "#e3e9d6",
+      colorText: "#1d2a17",
+      colorTextMuted: "#55664a",
+      colorPrimary: "#2f4a24",
+      colorOnPrimary: "#ffffff",
+      colorAccent: "#4d7a2c",
+      colorBorder: "#d3dcc2",
+    },
+  },
+  {
+    id: "sunset-amber",
+    name: "Sunset Amber",
+    note: "Warm ivory with amber and burnt orange",
+    colors: {
+      colorBackground: "#fffaf2",
+      colorSurface: "#fbe9cf",
+      colorText: "#3a2208",
+      colorTextMuted: "#7a5a2c",
+      colorPrimary: "#8a4b08",
+      colorOnPrimary: "#ffffff",
+      colorAccent: "#b35f08",
+      colorBorder: "#f0d9b4",
+    },
+  },
+  {
+    id: "graphite-mint",
+    name: "Graphite & Mint",
+    note: "Cool white, graphite type, mint accent",
+    colors: {
+      colorBackground: "#f8faf9",
+      colorSurface: "#e4ece9",
+      colorText: "#1e2a28",
+      colorTextMuted: "#566562",
+      colorPrimary: "#26403b",
+      colorOnPrimary: "#ffffff",
+      colorAccent: "#2a7f69",
+      colorBorder: "#d4dfdb",
+    },
+  },
+  {
+    id: "pearl-slate",
+    name: "Pearl & Slate",
+    note: "Pearl grey with slate and periwinkle",
+    colors: {
+      colorBackground: "#f9f9fb",
+      colorSurface: "#e8e9ef",
+      colorText: "#23252e",
+      colorTextMuted: "#5d6070",
+      colorPrimary: "#3a3f58",
+      colorOnPrimary: "#ffffff",
+      colorAccent: "#5f6ea0",
+      colorBorder: "#d9dbe4",
+    },
+  },
+  {
+    id: "poppy-ink",
+    name: "Poppy & Ink",
+    note: "Warm white, ink type, poppy red",
+    colors: {
+      colorBackground: "#fffdf8",
+      colorSurface: "#f6ead9",
+      colorText: "#15181f",
+      colorTextMuted: "#55596a",
+      colorPrimary: "#15181f",
+      colorOnPrimary: "#ffffff",
+      colorAccent: "#c93a25",
+      colorBorder: "#ece0cc",
+    },
+  },
+  {
+    id: "olive-linen",
+    name: "Olive & Linen",
+    note: "Linen ground with olive and moss",
+    colors: {
+      colorBackground: "#faf8f2",
+      colorSurface: "#ebe7d6",
+      colorText: "#2b2a1c",
+      colorTextMuted: "#67654f",
+      colorPrimary: "#5a5a2a",
+      colorOnPrimary: "#ffffff",
+      colorAccent: "#737326",
+      colorBorder: "#ddd8c0",
+    },
+  },
+  {
+    id: "turquoise-coral",
+    name: "Turquoise & Coral",
+    note: "Fresh white, deep turquoise, coral accent",
+    colors: {
+      colorBackground: "#f7fcfc",
+      colorSurface: "#dff1f0",
+      colorText: "#10343a",
+      colorTextMuted: "#4c6f74",
+      colorPrimary: "#0e6b73",
+      colorOnPrimary: "#ffffff",
+      colorAccent: "#c9503a",
+      colorBorder: "#c9e2e0",
+    },
+  },
+  {
+    id: "ocean-sand",
+    name: "Ocean & Sand",
+    note: "Sand ground with deep ocean blue",
+    colors: {
+      colorBackground: "#fbf9f4",
+      colorSurface: "#e8e1d1",
+      colorText: "#0d2b3e",
+      colorTextMuted: "#4b6172",
+      colorPrimary: "#14506e",
+      colorOnPrimary: "#ffffff",
+      colorAccent: "#1e7a99",
+      colorBorder: "#d8d0bd",
+    },
+  },
+];
 
 /* ── Palettes the admin saved themselves ──────────────────────────────────
    Stored on the settings row as JSON. They behave exactly like the built-in
@@ -219,9 +463,7 @@ export function findPalette(
 ) {
   const keys = Object.keys(DEFAULT_COLORS) as ColorRole[];
   const same = (p: Record<ColorRole, string>) =>
-    keys.every(
-      (k) => (colors[k] ?? "").trim().toLowerCase() === p[k].toLowerCase()
-    );
+    keys.every((k) => (colors[k] ?? "").trim().toLowerCase() === p[k].toLowerCase());
   /* The admin's own palettes are searched first: if a saved palette happens
      to match a bundled one, the one they named is the one to show. */
   return custom.find((p) => same(p.colors)) ?? COLOR_PALETTES.find((p) => same(p.colors)) ?? null;

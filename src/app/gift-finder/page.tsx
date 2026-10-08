@@ -1,3 +1,4 @@
+import { withPageMeta } from "@/lib/page-meta";
 import type { Metadata } from "next";
 import { db } from "@/lib/db";
 import { getStoreSettings, ogImage } from "@/lib/store-settings";
@@ -16,7 +17,7 @@ import "./gift-finder.css";
 // The Gift Finder stylist flow — see src/lib/gift-finder.ts for the scoring
 // this page's candidate list feeds into (all scoring runs client-side; this
 // page's only job is to load the real, currently-available catalog once).
-export async function generateMetadata(): Promise<Metadata> {
+async function baseMetadata(): Promise<Metadata> {
   const [settings, locale] = await Promise.all([getStoreSettings(), getLocale()]);
   const dict = getDictionary(locale).giftFinder;
   const canonical = "/gift-finder";
@@ -36,6 +37,10 @@ export async function generateMetadata(): Promise<Metadata> {
       images: image ? [{ url: image }] : undefined,
     },
   };
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withPageMeta("/gift-finder", await baseMetadata());
 }
 
 export default async function GiftFinderPage() {

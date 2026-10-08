@@ -1,3 +1,4 @@
+import { withPageMeta } from "@/lib/page-meta";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
@@ -7,7 +8,7 @@ import { hreflangAlternates, localizedCanonical } from "@/lib/hreflang";
 import { ShelfMain } from "@/components/shelf-main";
 import { ShelfHead, ShelfBody } from "@/components/shelf-page";
 
-export async function generateMetadata({ params }: PageProps<"/legal/[slug]">): Promise<Metadata> {
+async function baseMetadata({ params }: PageProps<"/legal/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const page = await db.legalPage.findUnique({
     where: { slug },
@@ -24,6 +25,10 @@ export async function generateMetadata({ params }: PageProps<"/legal/[slug]">): 
       languages: hreflangAlternates(canonical),
     },
   };
+}
+
+export async function generateMetadata(props: Parameters<typeof baseMetadata>[0]): Promise<Metadata> {
+  return withPageMeta(`legal:${(await props.params).slug}`, await baseMetadata(props));
 }
 
 // Meta description from the page's own opening text. Skips a short leading

@@ -1,3 +1,4 @@
+import { withPageMeta } from "@/lib/page-meta";
 import type { Metadata } from "next";
 import { Link } from "@/components/localized-link";
 import { notFound } from "next/navigation";
@@ -31,7 +32,7 @@ async function load() {
   return { settings, locale, content, price, fill };
 }
 
-export async function generateMetadata(): Promise<Metadata> {
+async function baseMetadata(): Promise<Metadata> {
   const [{ settings, content, fill }, locale] = await Promise.all([load(), getLocale()]);
   if (!settings.giftCardEnabled) return {};
   const description = fill(content.metaDescription);
@@ -56,6 +57,10 @@ export async function generateMetadata(): Promise<Metadata> {
       images: [image],
     },
   };
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return withPageMeta("/personalised-gift-card", await baseMetadata());
 }
 
 export default async function PersonalisedGiftCardPage() {

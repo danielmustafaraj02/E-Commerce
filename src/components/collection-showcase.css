@@ -73,9 +73,7 @@
      necklace with a wide empty band beside them. */
   --showcase-piece-halfmax: clamp(9rem, 20.5vw, 17.5rem);
   --showcase-copy-gap: clamp(1.5rem, 3vw, 3rem);
-  --showcase-copy-inset: calc(
-    var(--showcase-piece-halfmax) + var(--showcase-copy-gap)
-  );
+  --showcase-copy-inset: calc(var(--showcase-piece-halfmax) + var(--showcase-copy-gap));
   /* The measure: 28–34 characters per line. `ch` is the font's own digit
      width, so this tracks the responsive type sizes rather than fighting them. */
   --showcase-measure: 33ch;
@@ -83,7 +81,7 @@
      ever draws: the wrapping category label BESIDE its dot, the 44px hit area,
      the active dot's ring and its focus outline, plus the required 32px gap to
      the content. Sized for the longest localised label wrapping to two lines. */
-    --showcase-rail-col: clamp(9rem, 14vw, 12rem);
+  --showcase-rail-col: clamp(9rem, 14vw, 12rem);
   /* The minimum clear space between the rail and the scene content. */
   --showcase-rail-gap: 32px;
 
@@ -111,9 +109,7 @@
      top padding and the measured bottom clearance (floating checkout, cookie
      sheet). This is the cap that makes the piece fill the space below the
      navbar without ever reaching into it or under the checkout button. */
-  --showcase-piece-fit: calc(
-    var(--showcase-stage-h) - var(--showcase-bottom-inset) - 1.5rem
-  );
+  --showcase-piece-fit: calc(var(--showcase-stage-h) - var(--showcase-bottom-inset) - 1.5rem);
 }
 
 .showcase[data-scene-live] .showcase-stage {
@@ -128,8 +124,7 @@
      the stage: with only a right-hand rail reserved, the content column would be
      pushed left of centre by half the rail's width. Content sits in the middle
      1fr, so its midpoint is the stage's midpoint. */
-  grid-template-columns:
-    var(--showcase-rail-col) minmax(0, 1fr) var(--showcase-rail-col);
+  grid-template-columns: var(--showcase-rail-col) minmax(0, 1fr) var(--showcase-rail-col);
   align-items: center;
 }
 
@@ -172,7 +167,7 @@
   justify-items: center;
   /* No horizontal padding: the copy's own insets are measured against this box. */
   padding: clamp(1rem, 3vh, 2rem) 0 var(--showcase-bottom-inset);
-  transform: translate3d(0, var(--scene-y, 0px), 0);
+  transform: translate3d(0, var(--scene-y, 0px), 0) scale(var(--scene-scale, 1));
   pointer-events: none;
 }
 
@@ -224,7 +219,7 @@
    alpha bounding box of the piece within the frame):
 
      piece      file         piece fills   W      H
-     necklace   1023x1537    895x1068      87%    69%
+     necklace   1024x1536    970x1241      95%    81%
      bracelet   1023x1537    696x781       68%    51%
      earrings   1164x1351    505x935       43%    69%
 
@@ -253,7 +248,7 @@
    piece's edge exactly on the box's edge — and every value here stays inside
    that bound, so no zoom can ever clip the jewellery:
 
-     necklace  1.10 of a 1.149 ceiling
+     necklace  1.00 of a 1.053 ceiling (current photo fills 95% of width)
      bracelet  1.37 of a 1.471 ceiling
      earrings  1.10 of a 1.449 ceiling  */
 
@@ -294,9 +289,9 @@
   --showcase-piece-ratio: 1023 / 1537;
   --showcase-piece-ratio-num: 1023;
   --showcase-piece-ratio-den: 1537;
-  --showcase-piece-fill-w: 0.87;
-  --showcase-piece-fill-h: 0.69;
-  --showcase-piece-zoom: 1.1;
+  --showcase-piece-fill-w: 0.95;
+  --showcase-piece-fill-h: 0.81;
+  --showcase-piece-zoom: 1;
 }
 
 .showcase-scene[data-placement="bracelet"] {
@@ -367,11 +362,7 @@
 
      With one property there is nothing left to drop: `transform: none`
      cancels the whole placement, which is what those rules mean. */
-  transform: translate3d(
-    calc(var(--copy-slide, 0px) * (1 - var(--copy-reveal, 1))),
-    -50%,
-    0
-  );
+  transform: translate3d(calc(var(--copy-slide, 0px) * (1 - var(--copy-reveal, 1))), -50%, 0);
 }
 
 .showcase[data-scene-live] .showcase-figure {
@@ -388,10 +379,7 @@
    INSIDE the column instead of widening it and pushing the layout. */
 .showcase[data-scene-live] .showcase-copy[data-side="left"],
 .showcase[data-scene-live] .showcase-copy[data-side="right"] {
-  width: min(
-    var(--showcase-measure),
-    max(11rem, calc(50% - var(--showcase-copy-inset)))
-  );
+  width: min(var(--showcase-measure), max(11rem, calc(50% - var(--showcase-copy-inset))));
   min-width: 0;
 }
 
@@ -502,8 +490,7 @@
      inside the animated scene: nothing overlaps, and the transforms stay on
      the scene wrapper without destroying spacing. */
   .showcase[data-scene-live] .showcase-scene {
-    grid-template-columns:
-      var(--showcase-rail-col) minmax(0, 1fr) var(--showcase-rail-col);
+    grid-template-columns: var(--showcase-rail-col) minmax(0, 1fr) var(--showcase-rail-col);
     /* Both rows size to their content and the PAIR is centred in the stage,
        rather than the piece taking a 1fr row and being centred inside that.
        With a 1fr row the slack all landed between the photograph and the
@@ -698,7 +685,7 @@
   display: none;
 }
 
-  /* THE RAIL IS A GRID COLUMN, NOT AN OVERLAY: it occupies the right-hand
+/* THE RAIL IS A GRID COLUMN, NOT AN OVERLAY: it occupies the right-hand
      reserved track, and everything it draws lives inside it.
      :not(.showcase-rail-scene) matters: the per-scene mobile rail ALSO carries
      the .showcase-rail class, and without the exclusion this rule would
@@ -774,10 +761,8 @@
     max-width: max(
       11rem,
       calc(
-        var(--showcase-axis) -
-          var(--showcase-piece-height) * var(--showcase-piece-ratio-num) /
-          var(--showcase-piece-ratio-den) / 2 - var(--showcase-copy-gap) -
-          var(--showcase-copy-left)
+        var(--showcase-axis) - var(--showcase-piece-height) * var(--showcase-piece-ratio-num) /
+          var(--showcase-piece-ratio-den) / 2 - var(--showcase-copy-gap) - var(--showcase-copy-left)
       )
     );
     text-align: left;
@@ -789,7 +774,9 @@
      left (100% - axis = 36%) so the whole group mirrors rather than only the
      text moving while the image stays put. `:has()` lets the scene itself drive
      the figure's position from the copy's data-side attribute. */
-  .showcase[data-scene-live] .showcase-scene:has(.showcase-copy[data-side="right"]) .showcase-figure {
+  .showcase[data-scene-live]
+    .showcase-scene:has(.showcase-copy[data-side="right"])
+    .showcase-figure {
     left: calc(100% - var(--showcase-axis));
   }
 
@@ -804,10 +791,8 @@
     max-width: max(
       11rem,
       calc(
-        var(--showcase-axis) -
-          var(--showcase-piece-height) * var(--showcase-piece-ratio-num) /
-          var(--showcase-piece-ratio-den) / 2 - var(--showcase-copy-gap) -
-          var(--showcase-copy-left)
+        var(--showcase-axis) - var(--showcase-piece-height) * var(--showcase-piece-ratio-num) /
+          var(--showcase-piece-ratio-den) / 2 - var(--showcase-copy-gap) - var(--showcase-copy-left)
       )
     );
   }
@@ -1199,14 +1184,24 @@
 }
 
 @keyframes swipe-hint-fade {
-  0%   { opacity: 1; }
-  70%  { opacity: 1; }
-  100% { opacity: 0; }
+  0% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 @keyframes swipe-arrow-pulse {
-  0%   { opacity: 1; }
-  100% { opacity: 0.25; }
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.25;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1338,5 +1333,210 @@
   .showcase[data-scene-live] .showcase-copy[data-side="right"] {
     position: static;
     transform: none;
+  }
+}
+
+/* ── Options set in the visual editor (Collections animation block) ───────────
+   Each is opt-in through an attribute on the section's root, so the default
+   look above is untouched when none is set. The hiding rules are !important
+   because the layout rules above show these parts with more specific
+   selectors per breakpoint. */
+.showcase[data-no-rail] .showcase-rail {
+  display: none !important;
+}
+.showcase[data-no-counter] .showcase-index {
+  display: none !important;
+}
+.showcase[data-no-cta] .showcase-cta {
+  display: none !important;
+}
+.showcase[data-no-text] .showcase-description {
+  display: none !important;
+}
+.showcase[data-no-hint] .showcase-swipe-hint {
+  display: none !important;
+}
+.showcase[data-colors],
+.showcase[data-colors] .showcase-stage {
+  background: var(--sc-bg, var(--ivory));
+}
+.showcase[data-colors] .showcase-title {
+  color: var(--sc-title, var(--ink));
+}
+.showcase[data-colors] .showcase-description,
+.showcase[data-colors] .showcase-index {
+  color: var(--sc-text, var(--ink-muted));
+}
+.showcase[data-colors] .showcase-cta {
+  background: var(--sc-accent, var(--midnight));
+  border-color: var(--sc-accent, var(--midnight));
+  color: var(--sc-accent-text, var(--ivory));
+}
+.showcase[data-colors] .showcase-rail-fill {
+  background: var(--sc-accent, var(--midnight));
+}
+.showcase[data-colors] .showcase-rail-item {
+  color: var(--sc-accent, var(--midnight));
+}
+
+/* ── Editorial pass: the same language as the "why Murano" rows below ───────
+   A large pale numeral, a gold rule under the name, the line set as an italic
+   display sentence, and each piece standing on a soft colour block offset
+   behind it — the block fades and travels with its piece. */
+.showcase-index {
+  align-items: flex-end;
+}
+.showcase-index-current {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(3rem, 5vw, 4.75rem);
+  font-weight: 400;
+  line-height: 0.8;
+  letter-spacing: -0.02em;
+  color: color-mix(in srgb, var(--gold, var(--brass)) 60%, transparent);
+}
+.showcase-title::after {
+  content: "";
+  display: block;
+  width: 3.25rem;
+  height: 1px;
+  margin-top: clamp(1rem, 2.2vh, 1.5rem);
+  background: var(--gold, var(--brass));
+}
+.showcase-copy[data-side="right"] .showcase-title::after {
+  margin-inline-start: auto;
+}
+.showcase-description {
+  font-family: var(--font-display), Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.15rem, 1.5vw, 1.4rem);
+  line-height: 1.45;
+}
+.showcase-figure {
+  isolation: isolate;
+}
+.showcase-figure::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 12% -10% -4% 10%;
+  background: color-mix(in srgb, var(--champagne) 55%, var(--ivory));
+}
+.showcase-scene:has(.showcase-copy[data-side="right"]) .showcase-figure::before {
+  inset: 12% 10% -4% -10%;
+}
+@media (max-width: 51.99rem) {
+  .showcase-figure::before {
+    inset: 14% 4% -2% 4%;
+  }
+}
+/* The studio photographs are white-backed: multiplied inside the figure's own
+   group, the white takes the block's colour and the piece sits on it. */
+.showcase-figure .showcase-image {
+  mix-blend-mode: multiply;
+}
+.showcase-figure::before {
+  background: color-mix(in srgb, var(--champagne) 80%, var(--ivory));
+}
+
+/* Compositions chosen in Page layout; the scroll geometry stays shared. */
+.showcase[data-showcase-style="minimal"] .showcase-figure::before {
+  display: none;
+}
+.showcase[data-showcase-style="minimal"] .showcase-index {
+  opacity: 0.5;
+}
+.showcase[data-showcase-style="minimal"] .showcase-title::after {
+  display: none;
+}
+.showcase[data-showcase-style="minimal"] .showcase-description {
+  font-family: var(--font-ui), sans-serif;
+  font-style: normal;
+  font-size: 1rem;
+}
+.showcase[data-showcase-style="classical"] .showcase-figure::before {
+  inset: 0;
+  background: var(--sc-bg, var(--ivory));
+  border: 1px solid var(--brass);
+  outline: 1px solid var(--rule);
+  outline-offset: 0.5rem;
+}
+.showcase[data-showcase-style="classical"] .showcase-title {
+  font-style: italic;
+  font-weight: 400;
+}
+.showcase[data-showcase-style="classical"] .showcase-index-current {
+  font-size: 2.5rem;
+}
+.showcase[data-showcase-style="arched"] .showcase-figure::before {
+  inset: 0 -5% -3%;
+  background: color-mix(in srgb, var(--champagne) 45%, var(--ivory));
+  border: 1px solid var(--rule);
+  border-radius: 50% 50% 0 0;
+}
+.showcase[data-showcase-style="arched"] .showcase-description {
+  font-style: normal;
+}
+.showcase[data-showcase-style="bold"] .showcase-figure::before {
+  inset: 8% -8%;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--sc-accent, var(--brass)) 35%, var(--ivory));
+}
+.showcase[data-showcase-style="bold"] .showcase-title {
+  font-weight: 600;
+  letter-spacing: -0.05em;
+}
+.showcase[data-showcase-style="bold"] .showcase-index-current {
+  color: var(--sc-title, var(--midnight));
+}
+.showcase[data-showcase-style="bold"] .showcase-title::after {
+  height: 3px;
+  width: 4rem;
+}
+
+/* Studio and couture keep the jewellery's shared axis and accessible rails. */
+.showcase[data-showcase-style="studio"] .showcase-figure::before {
+  inset: 0;
+  background: var(--sc-bg, var(--ivory));
+  border: 1px solid var(--rule);
+}
+.showcase[data-showcase-style="studio"] .showcase-title::after {
+  width: 2rem;
+}
+.showcase[data-showcase-style="studio"] .showcase-index-current {
+  font-size: clamp(2rem, 3vw, 3rem);
+}
+.showcase[data-showcase-style="studio"] .showcase-description {
+  font-family: var(--font-ui), sans-serif;
+  font-style: normal;
+  font-size: 0.9375rem;
+  line-height: 1.7;
+}
+.showcase[data-showcase-style="couture"] .showcase-figure::before {
+  inset: 8% -6% -2% 6%;
+  background: color-mix(in srgb, var(--champagne) 35%, var(--ivory));
+  border: 1px solid var(--brass);
+}
+.showcase[data-showcase-style="couture"] .showcase-figure::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -3% 8% 8% -3%;
+  border: 1px solid var(--rule);
+  pointer-events: none;
+}
+.showcase[data-showcase-style="couture"] .showcase-title {
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.025em;
+}
+.showcase[data-showcase-style="couture"] .showcase-index-current {
+  font-size: clamp(2.5rem, 4vw, 4rem);
+}
+@media (max-width: 51.99rem) {
+  .showcase[data-showcase-style="couture"] .showcase-figure::before {
+    inset: 5% 0 -2% 3%;
+  }
+  .showcase[data-showcase-style="couture"] .showcase-figure::after {
+    inset: -2% 5% 6% 0;
   }
 }

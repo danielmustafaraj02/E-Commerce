@@ -1,6 +1,11 @@
+import { withPageMeta } from "@/lib/page-meta";
 import { Fragment, type CSSProperties, type ReactNode } from "react";
 import { applyHomeCopy, parseHomeCopy } from "@/lib/home-copy";
-import { HOME_SECTIONS, visibleOrder, type HomeSectionId } from "@/lib/page-layout";
+import { HOME_SECTIONS, resolveLayout, visibleEntries, withEditorialExamples, type HomeSectionId } from "@/lib/page-layout";
+import { templateBody } from "@/lib/page-templates";
+import { LayoutSection } from "@/components/layout-section";
+import { PreviewBridge } from "@/components/layout-preview-bridge-server";
+import { isLayoutPreview } from "@/lib/layout-preview-server";
 import Image from "next/image";
 import { HeroTypingSequence } from "@/components/hero-typing-sequence";
 import { HeroVideo } from "@/components/hero-video";
@@ -34,7 +39,7 @@ import { chosenBySlot, pickReasonProducts } from "@/lib/murano-reasons";
 import { db } from "@/lib/db";
 
 import { getAllLooks } from "@/lib/look-data";
-import { LookEditorial } from "@/components/look-editorial";
+import { LookRow } from "@/components/look-editorial";
 import { getLookPageCopy, getLookEditorialDescription } from "@/lib/i18n/look-page-copy";
 import { JournalPreview } from "@/components/journal/journal-preview";
 import { homeFontClasses } from "./home-fonts";
@@ -45,7 +50,7 @@ import "./home.css";
 // homepage is the single highest-authority URL on the site, so it shouldn't
 // be the one page whose <title>/description fall through to the root
 // layout's bare store name and generic "Shop at {storeName}" default.
-export async function generateMetadata(): Promise<Metadata> {
+async function baseMetadata(): Promise<Metadata> {
   const [settings, locale] = await Promise.all([getStoreSettings(), getLocale()]);
   const dict = getDictionary(locale);
 
@@ -95,6 +100,10 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+export async function generateMetadata(): Promise<Metadata> {
+  return withPageMeta("/", await baseMetadata());
+}
+
 // The number of pieces shown per shelf: one row at the widest layout.
 const SHELF_SIZE = 4;
 // New arrivals fill two rows of four (the loader fetches 8); on phones the CSS
@@ -111,7 +120,8 @@ const COLLECTION_ORDER = ["collane", "bracciali", "orecchini"];
 // the caret's handoff reads as a pause between sentences, not a race.
 const LEDE_PICKUP_PAUSE_MS = 450;
 
-export default async function Home() {
+export default async function Home({ searchParams }: PageProps<"/">) {
+  const preview = await isLayoutPreview(searchParams);
   const [
     settings,
     locale,
@@ -178,7 +188,114 @@ export default async function Home() {
     addedLabel: dict.product.added,
   };
 
+  // The five editorial examples ship on the page already, as ordinary custom
+  // sections, so the admin can see them in context and delete each one on its
+  // own. `withEditorialExamples` only fills in examples the saved layout does
+  // not already mention, so a deleted one stays deleted (see page-layout.ts).
+  // Always use resolveLayout (not visibleEntries) here so that hidden tombstones
+  // for deleted editorial sections reach withEditorialExamples — if they are
+  // filtered out first, the seed guard never sees them and re-injects the
+  // deleted section on every render. Visible filtering happens after.
+  const storedEntries = resolveLayout(settings.homeLayout, HOME_SECTIONS);
+  // The chosen Look layout (Admin > Page layout > Looks > Options), read from the
+  // stored entry: `homeSections` is a static map, and the Looks section's design
+  // depends on this one value. Both this and `storedEntries` above MUST be
+  // declared before `homeSections`: that object literal is evaluated where it is
+  // written, so its `looks:` value reads this binding while the map is being
+  // built. Declared afterwards they were in the temporal dead zone, and the
+  // resulting "Cannot access 'lookStyle' before initialization" surfaced as the
+  // storefront's error boundary.
+  const lookStyle = storedEntries.find((e) => e.id === "looks")?.options?.lookStyle;
+
   const homeSections: Record<HomeSectionId, ReactNode> = {
+    hero: (
+        <section
+          className="shelf-hero"
+          style={{ "--hero-accent": HERO_ACCENT } as CSSProperties}
+        >
+          {/* Both files carry no audio track at all, so there is nothing to
+              mute and no volume control to offer. The component handles a
+              refused autoplay, reduced motion and pause/resume. */}
+          <HeroVideo
+            className="shelf-hero-video"
+            poster="/hero/hero-atelier-poster.jpg"
+            sources={[
+              { src: "/hero/hero-atelier.webm", type: "video/webm" },
+              { src: "/hero/hero-atelier.mp4", type: "video/mp4" },
+            ]}
+            playLabel={dict.home.heroVideoPlay}
+          />
+          {/* The piece worn in the film, linked to its own page. Rendered only
+              when that product is really on sale and has a photo — see
+              HERO_VIDEO_PRODUCT_SLUG in lib/homepage-data.ts. */}
+          {heroProduct && heroProduct.images[0] && (
+            <HeroVideoProduct
+              href={`/products/${heroProduct.slug}`}
+              name={localizedName(heroProduct, locale)}
+              imageUrl={heroProduct.images[0].url}
+              price={formatMoney(heroProduct.price, settings.defaultCurrency, locale)}
+              compareAtPrice={
+                heroProduct.compareAtPrice && heroProduct.compareAtPrice > heroProduct.price
+                  ? formatMoney(heroProduct.compareAtPrice, settings.defaultCurrency, locale)
+                  : undefined
+              }
+              labels={{
+                eyebrow: dict.home.heroProductEyebrow,
+                cta: dict.home.heroProductCta,
+                open: dict.home.heroProductOpen,
+                close: dict.home.heroProductClose,
+              }}
+            />
+          )}
+          {/* The legibility veil, a real element: the ::before pseudo-element on
+              this hero silently stopped painting in one browser build, so the
+              wash moved onto a node that cannot fail. Above the film (z -1),
+              below the copy column. */}
+          <div className="shelf-hero-veil" aria-hidden="true" />
+          <div className="shelf-wrap">
+            <div className="shelf-hero-grid">
+              <div className="shelf-hero-copy">
+                {/* Place names, the same in every language. */}
+                <p className="shelf-eyebrow shelf-hero-eyebrow">Murano · Venezia</p>
+                <HeroTypingSequence
+                  title={settings.storeName}
+                  subtitle={dict.home.heroSubtitle}
+                  locale={locale}
+                  cta={
+                    <Link href="/products" className="shelf-button">
+                      {dict.home.heroCta}
+                      <span aria-hidden="true" className="shelf-button-arrow">
+                        →
+                      </span>
+                    </Link>
+                  }
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+    ),
+    // The collections showcase: a scroll-driven sequence. The stage pins and
+    // the page's own scroll carries it from the necklace (centred) through
+    // the bracelet (copy left) to the earrings (copy right); after the last
+    // one the stage releases and normal scrolling resumes.
+    showcase: (
+        <CollectionShowcase
+          items={editorialCollections.map((category, i) => {
+            const scene = SHOWCASE_SCENE_ORDER[i] ?? "necklace";
+            return {
+              id: category.id,
+              href: `/category/${category.slug}`,
+              name: localizedName(category, locale),
+              image: category.image!.url,
+              description: showcaseCopy.scenes[scene].description,
+              cta: showcaseCopy.scenes[scene].cta,
+              scene,
+            };
+          })}
+        />
+    ),
+
     popular: popularProducts.length >= 3 && (
         <section className="shelf-section shelf-section--popular">
           <div className="shelf-wrap">
@@ -238,7 +355,8 @@ export default async function Home() {
                   arrive, in order, and then hold still. */}
               <EditorialReveal>
                 {looks.map((look, index) => (
-                  <LookEditorial
+                  <LookRow
+                    style={lookStyle}
                     index={index}
                     key={look.id}
                     look={look}
@@ -408,100 +526,22 @@ export default async function Home() {
       </section>
 ),
   };
-  const homeOrder = visibleOrder(settings.homeLayout, HOME_SECTIONS) as HomeSectionId[];
 
+  const homeEntries = withEditorialExamples(storedEntries, (templateId) =>
+    templateBody(templateId)
+  ).filter((entry) => preview || entry.visible);
 
   // The design (app/home.css) is scoped to `.shelf`: the glass is the only
   // saturated thing on the page, and the product photos are blended straight
   // into the ground instead of sitting in cards.
   return (
     <main className={`shelf shelf-home flex flex-1 flex-col ${homeFontClasses}`}>
-      <section
-        className="shelf-hero"
-        style={{ "--hero-accent": HERO_ACCENT } as CSSProperties}
-      >
-        {/* Both files carry no audio track at all, so there is nothing to
-            mute and no volume control to offer. The component handles a
-            refused autoplay, reduced motion and pause/resume. */}
-        <HeroVideo
-          className="shelf-hero-video"
-          poster="/hero/hero-atelier-poster.jpg"
-          sources={[
-            { src: "/hero/hero-atelier.webm", type: "video/webm" },
-            { src: "/hero/hero-atelier.mp4", type: "video/mp4" },
-          ]}
-          playLabel={dict.home.heroVideoPlay}
-        />
-        {/* The piece worn in the film, linked to its own page. Rendered only
-            when that product is really on sale and has a photo — see
-            HERO_VIDEO_PRODUCT_SLUG in lib/homepage-data.ts. */}
-        {heroProduct && heroProduct.images[0] && (
-          <HeroVideoProduct
-            href={`/products/${heroProduct.slug}`}
-            name={localizedName(heroProduct, locale)}
-            imageUrl={heroProduct.images[0].url}
-            price={formatMoney(heroProduct.price, settings.defaultCurrency, locale)}
-            compareAtPrice={
-              heroProduct.compareAtPrice && heroProduct.compareAtPrice > heroProduct.price
-                ? formatMoney(heroProduct.compareAtPrice, settings.defaultCurrency, locale)
-                : undefined
-            }
-            labels={{
-              eyebrow: dict.home.heroProductEyebrow,
-              cta: dict.home.heroProductCta,
-              open: dict.home.heroProductOpen,
-              close: dict.home.heroProductClose,
-            }}
-          />
-        )}
-        {/* The legibility veil, a real element: the ::before pseudo-element on
-            this hero silently stopped painting in one browser build, so the
-            wash moved onto a node that cannot fail. Above the film (z -1),
-            below the copy column. */}
-        <div className="shelf-hero-veil" aria-hidden="true" />
-        <div className="shelf-wrap">
-          <div className="shelf-hero-grid">
-            <div className="shelf-hero-copy">
-              <HeroTypingSequence
-                title={settings.storeName}
-                subtitle={dict.home.heroSubtitle}
-                locale={locale}
-                cta={
-                  <Link href="/products" className="shelf-button">
-                    {dict.home.heroCta}
-                    <span aria-hidden="true" className="shelf-button-arrow">
-                      →
-                    </span>
-                  </Link>
-                }
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* The collections showcase: a scroll-driven sequence. The stage pins and
-          the page's own scroll carries it from the necklace (centred) through
-          the bracelet (copy left) to the earrings (copy right); after the last
-          one the stage releases and normal scrolling resumes. */}
-      <CollectionShowcase
-        items={editorialCollections.map((category, i) => {
-          const scene = SHOWCASE_SCENE_ORDER[i] ?? "necklace";
-          return {
-            id: category.id,
-            href: `/category/${category.slug}`,
-            name: localizedName(category, locale),
-            image: category.image!.url,
-            description: showcaseCopy.scenes[scene].description,
-            cta: showcaseCopy.scenes[scene].cta,
-            scene,
-          };
-        })}
-      />
-
-      {homeOrder.map((id) => (
-        <Fragment key={id}>{homeSections[id]}</Fragment>
+      {homeEntries.map((entry) => (
+        <LayoutSection key={entry.id} entry={entry} preview={preview}>
+          {entry.custom ? null : homeSections[entry.id as HomeSectionId]}
+        </LayoutSection>
       ))}
+      {preview && <PreviewBridge target="home" />}
     </main>
   );
 }

@@ -44,6 +44,8 @@ export const smooth = (value: number) => value * value * (3 - 2 * value);
 export type SceneFrame = {
   /** Vertical offset in pixels: negative as a scene leaves, positive as it arrives. */
   y: number;
+  /** Only for the "zoom" transition: the scene's scale (1 = normal). */
+  scale?: number;
   imageOpacity: number;
   copyOpacity: number;
 };
@@ -71,8 +73,23 @@ export const SCROLL_PER_UNIT = 0.5;
 
 /** How tall the showcase section should be, in pixels: the stage itself plus
  *  SCROLL_PER_UNIT stage-heights of scroll per timeline unit. */
-export const sectionHeight = (count: number, stageHeight: number) =>
-  (1 + timelineLength(count) * SCROLL_PER_UNIT) * stageHeight;
+export const sectionHeight = (
+  count: number,
+  stageHeight: number,
+  /** Scroll per unit, as a fraction of the stage height (the editor can change it). */
+  perUnit: number = SCROLL_PER_UNIT
+) => (1 + timelineLength(count) * perUnit) * stageHeight;
+
+/** The range the editor allows for the scroll distance per unit. */
+export const SCROLL_PER_UNIT_RANGE = { min: 0.25, max: 1.5 } as const;
+export const clampPerUnit = (value: unknown): number =>
+  typeof value === "number" && Number.isFinite(value)
+    ? Math.min(SCROLL_PER_UNIT_RANGE.max, Math.max(SCROLL_PER_UNIT_RANGE.min, value))
+    : SCROLL_PER_UNIT;
+
+/** How the scenes change: "slide" travels (the default), "fade" cross-fades the
+ *  pictures in place, "zoom" cross-fades while the picture grows or shrinks. */
+export type SceneTransition = "slide" | "fade" | "zoom";
 
 /**
  * ── THE ONE TIMELINE ────────────────────────────────────────────────────────
@@ -174,10 +191,13 @@ export function getSceneFrame(
   index: number,
   count: number,
   distance: number,
+  transition: SceneTransition = "slide"
 ): SceneFrame {
   const timeline = clamp01(progress) * (2 * count - 1);
+  const slide = transition === "slide";
 
   let y = 0;
+  let scale = 1;
   let imageOpacity = 1;
   let copyOpacity = 1;
 
@@ -186,8 +206,14 @@ export function getSceneFrame(
     const arrival = timeline - (2 * index - 1);
     const movement = smooth(segment(arrival, MOVE_START, MOVE_END));
 
-    y = distance * (1 - movement);
-    imageOpacity = segment(arrival, MOVE_START, IMAGE_IN_END);
+    if (slide) {
+      y = distance * (1 - movement);
+      imageOpacity = segment(arrival, MOVE_START, IMAGE_IN_END);
+    } else {
+      /* Cross-fade in place: the picture arrives over the whole movement. */
+      imageOpacity = movement;
+      scale = 0.86 + 0.14 * movement;
+    }
     copyOpacity = smooth(segment(arrival, COPY_IN_START, 1));
   }
 
@@ -196,12 +222,19 @@ export function getSceneFrame(
     const departure = timeline - (2 * index + 1);
     const movement = smooth(segment(departure, MOVE_START, MOVE_END));
 
-    y -= distance * movement;
-    imageOpacity *= 1 - segment(departure, IMAGE_OUT_START, MOVE_END);
+    if (slide) {
+      y -= distance * movement;
+      imageOpacity *= 1 - segment(departure, IMAGE_OUT_START, MOVE_END);
+    } else {
+      imageOpacity *= 1 - movement;
+      scale *= 1 + 0.14 * movement;
+    }
     copyOpacity *= 1 - smooth(segment(departure, 0, MOVE_START));
   }
 
-  return { y, imageOpacity, copyOpacity };
+  return transition === "zoom"
+    ? { y, scale, imageOpacity, copyOpacity }
+    : { y, imageOpacity, copyOpacity };
 }
 
 /** True when the scene's copy is fully present, and therefore the scene is the

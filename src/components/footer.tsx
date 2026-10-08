@@ -65,22 +65,26 @@ export async function Footer({
   giftCardEnabled: boolean;
 }) {
   const [categories, featured] = await Promise.all([
-    db.category.findMany({
-      where: { parentId: null },
-      orderBy: { name: "asc" },
-      take: 6,
-    }),
+    db.category
+      .findMany({
+        where: { parentId: null },
+        orderBy: { name: "asc" },
+        take: 6,
+      })
+      .catch(() => [] as never[]),
     // The piece shown beside "Discover the world of Murano glass".
-    db.product.findUnique({
-      where: { slug: FOOTER_PRODUCT_SLUG },
-      select: {
-        images: {
-          take: 1,
-          orderBy: { position: "asc" },
-          select: { url: true },
+    db.product
+      .findUnique({
+        where: { slug: FOOTER_PRODUCT_SLUG },
+        select: {
+          images: {
+            take: 1,
+            orderBy: { position: "asc" },
+            select: { url: true },
+          },
         },
-      },
-    }),
+      })
+      .catch(() => null),
   ]);
   const featuredImage = featured?.images[0]?.url ?? "/hero/handmade-red-murano-glass-necklace.jpg";
   const f = dict.footer;

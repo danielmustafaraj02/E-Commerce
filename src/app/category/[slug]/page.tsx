@@ -1,3 +1,10 @@
+import type { ReactNode } from "react";
+import { LayoutSection } from "@/components/layout-section";
+import { PreviewBridge } from "@/components/layout-preview-bridge-server";
+import { isLayoutPreview } from "@/lib/layout-preview-server";
+import { pageEntries } from "@/lib/page-layout-store";
+import type { CATEGORY_SECTIONS } from "@/lib/page-layout";
+import { withPageMeta } from "@/lib/page-meta";
 import { siteBaseUrl } from "@/lib/site-url";
 import { cache } from "react";
 import type { Metadata } from "next";
@@ -35,7 +42,7 @@ const getCategory = cache((slug: string) =>
   db.category.findUnique({ where: { slug }, include: { children: true } })
 );
 
-export async function generateMetadata({
+async function baseMetadata({
   params,
   searchParams,
 }: PageProps<"/category/[slug]">): Promise<Metadata> {
@@ -124,10 +131,20 @@ export async function generateMetadata({
   };
 }
 
+export async function generateMetadata(
+  props: Parameters<typeof baseMetadata>[0]
+): Promise<Metadata> {
+  return withPageMeta(`category:${(await props.params).slug}`, await baseMetadata(props));
+}
+
+type CategorySectionId = (typeof CATEGORY_SECTIONS)[number]["id"];
+
 export default async function CategoryPage({
   params,
   searchParams,
 }: PageProps<"/category/[slug]">) {
+  const preview = await isLayoutPreview(searchParams);
+  const entries = await pageEntries("category", { preview });
   const { slug } = await params;
   const raw = await searchParams;
   const single = (value: string | string[] | undefined) => {
@@ -251,18 +268,8 @@ export default async function CategoryPage({
         }
       : null;
 
-  return (
-    <main className={`shelf flex flex-1 flex-col ${homeFontClasses}`}>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: toSafeJsonLd(breadcrumbJsonLd) }}
-      />
-      {itemListJsonLd && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: toSafeJsonLd(itemListJsonLd) }}
-        />
-      )}
+  const sections: Record<CategorySectionId, ReactNode> = {
+    head: (
       <header className="shop-head">
         <div className="shelf-wrap shelf-wrap--wide">
           <h1 className="shop-title">{categoryName}</h1>
@@ -296,67 +303,91 @@ export default async function CategoryPage({
           </nav>
         </div>
       </header>
-
-      <div className="shelf-wrap shelf-wrap--wide shop-layout">
-        <ProductFilterPanel
-          dict={dict.products}
-          showCategory={false}
-          filters={filters}
-          priceMin={priceMin}
-          priceMax={priceMax}
-          currency={settings.defaultCurrency}
-          locale={settings.defaultLocale}
-          clearHref={`/category/${category.slug}`}
-          priceLabels={{
-            min: dict.feedback.minPriceLabel,
-            max: dict.feedback.maxPriceLabel,
-          }}
-        />
-
-        <section className="shop-results">
-          {products.length === 0 ? (
-            <p className="shelf-note">
-              {total === 0 &&
-              filters.page === 1 &&
-              !filters.minPrice &&
-              !filters.maxPrice &&
-              !filters.inStock &&
-              !filters.color?.length
-                ? dict.products.noProductsInCategory
-                : dict.products.noResults}
-            </p>
-          ) : (
-            <ul className="shop-grid">
-              {products.map((product) => (
-                <ShelfItem
-                  key={product.slug}
-                  product={localizedCardProduct(product, uiLocale)}
-                  locale={settings.defaultLocale}
-                  outOfStockLabel={dict.product.outOfStock}
-                  quickAddLabel={dict.product.addToCart}
-                  addedLabel={dict.product.added}
-                  sizes="(min-width: 40rem) 20vw, 50vw"
-                />
-              ))}
-            </ul>
-          )}
-
-          <Pagination
-            totalPages={totalPages}
-            currentPage={filters.page}
-            buildHref={buildPageHref}
-            label={dict.feedback.paginationLabel}
+    ),
+    list: (
+      <>
+        <div className="shelf-wrap shelf-wrap--wide shop-layout">
+          <ProductFilterPanel
+            dict={dict.products}
+            showCategory={false}
+            filters={filters}
+            priceMin={priceMin}
+            priceMax={priceMax}
+            currency={settings.defaultCurrency}
+            locale={settings.defaultLocale}
+            clearHref={`/category/${category.slug}`}
+            priceLabels={{
+              min: dict.feedback.minPriceLabel,
+              max: dict.feedback.maxPriceLabel,
+            }}
           />
 
-          {filters.page === 1 && copy && (
-            <section className="shop-copy">
-              {paragraphs(copy).map((text, index) => (
-                <p key={index}>{text}</p>
-              ))}
-            </section>
-          )}
-        </section>
-      </div>
+          <section className="shop-results">
+            {products.length === 0 ? (
+              <p className="shelf-note">
+                {total === 0 &&
+                filters.page === 1 &&
+                !filters.minPrice &&
+                !filters.maxPrice &&
+                !filters.inStock &&
+                !filters.color?.length
+                  ? dict.products.noProductsInCategory
+                  : dict.products.noResults}
+              </p>
+            ) : (
+              <ul className="shop-grid">
+                {products.map((product) => (
+                  <ShelfItem
+                    key={product.slug}
+                    product={localizedCardProduct(product, uiLocale)}
+                    locale={settings.defaultLocale}
+                    outOfStockLabel={dict.product.outOfStock}
+                    quickAddLabel={dict.product.addToCart}
+                    addedLabel={dict.product.added}
+                    sizes="(min-width: 40rem) 20vw, 50vw"
+                  />
+                ))}
+              </ul>
+            )}
+
+            <Pagination
+              totalPages={totalPages}
+              currentPage={filters.page}
+              buildHref={buildPageHref}
+              label={dict.feedback.paginationLabel}
+            />
+
+            {filters.page === 1 && copy && (
+              <section className="shop-copy">
+                {paragraphs(copy).map((text, index) => (
+                  <p key={index}>{text}</p>
+                ))}
+              </section>
+            )}
+          </section>
+        </div>
+      </>
+    ),
+  };
+
+  return (
+    <main className={`shelf flex flex-1 flex-col ${homeFontClasses}`}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toSafeJsonLd(breadcrumbJsonLd) }}
+      />
+      {itemListJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: toSafeJsonLd(itemListJsonLd) }}
+        />
+      )}
+      {entries.map((entry) => (
+        <LayoutSection key={entry.id} entry={entry} preview={preview}>
+          {entry.custom ? null : sections[entry.id as CategorySectionId]}
+        </LayoutSection>
+      ))}
+      {preview && <PreviewBridge target="category" />}
     </main>
   );
 }

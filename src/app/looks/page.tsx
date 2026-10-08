@@ -1,3 +1,10 @@
+import type { ReactNode } from "react";
+import { LayoutSection } from "@/components/layout-section";
+import { PreviewBridge } from "@/components/layout-preview-bridge-server";
+import { isLayoutPreview } from "@/lib/layout-preview-server";
+import { pageEntries } from "@/lib/page-layout-store";
+import type { LOOKS_SECTIONS } from "@/lib/page-layout";
+import { withPageMeta } from "@/lib/page-meta";
 import type { Metadata } from "next";
 import { getStoreSettings, ogImage } from "@/lib/store-settings";
 import { getLocale } from "@/lib/i18n/locale";
@@ -10,11 +17,11 @@ import { COMPOSED_LOOK_DISCOUNT_PERCENT } from "@/lib/looks";
 import type { FaqItem } from "@/lib/faq";
 import { ShelfMain } from "@/components/shelf-main";
 import { ShelfHead, ShelfBody } from "@/components/shelf-page";
-import { LookEditorial } from "@/components/look-editorial";
+import { LookRow } from "@/components/look-editorial";
 import { ComposePromo } from "@/components/compose-promo";
 import { FaqSection } from "@/components/faq-section";
 
-export async function generateMetadata(): Promise<Metadata> {
+async function baseMetadata(): Promise<Metadata> {
   const [settings, locale] = await Promise.all([getStoreSettings(), getLocale()]);
   const dict = getDictionary(locale).looks;
   const image = ogImage(settings);
@@ -34,28 +41,42 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function LooksPage() {
+export async function generateMetadata(): Promise<Metadata> {
+  return withPageMeta("/looks", await baseMetadata());
+}
+
+type LooksSectionId = (typeof LOOKS_SECTIONS)[number]["id"];
+
+export default async function LooksPage({ searchParams }: PageProps<"/looks">) {
+  const preview = await isLayoutPreview(searchParams);
+  const entries = await pageEntries("looks", { preview });
   const [settings, locale] = await Promise.all([getStoreSettings(), getLocale()]);
   const dict = getDictionary(locale);
   const looks = await getAllLooks(locale);
   const copy = getLookPageCopy(locale);
+  // The chosen Look layout for this page (Admin > Page layout > Looks >
+  // Options), read from the page's own `list` entry.
+  const listStyle = entries.find((e) => e.id === "list")?.options?.lookStyle;
   const faqItems: FaqItem[] = copy.listingFaq.map((item) => ({
     ...item,
     answer: applyTemplate(item.answer, { composed: COMPOSED_LOOK_DISCOUNT_PERCENT }),
   }));
 
-  return (
-    <ShelfMain>
+  const sections: Record<LooksSectionId, ReactNode> = {
+    head: (
       <ShelfHead title={dict.looks.title} width="full">
         <p className="shop-lede">{copy.editorialIntro}</p>
       </ShelfHead>
+    ),
+    list: (
       <ShelfBody width="full">
         {looks.length === 0 ? (
           <p className="look-grid-empty">{dict.looks.empty}</p>
         ) : (
           <div className="looks-editorial-list">
             {looks.map((look, i) => (
-              <LookEditorial
+              <LookRow
+                style={listStyle}
                 index={i}
                 heading="h2"
                 key={look.id}
@@ -109,6 +130,17 @@ export default async function LooksPage() {
           </>
         )}
       </ShelfBody>
+    ),
+  };
+
+  return (
+    <ShelfMain>
+      {entries.map((entry) => (
+        <LayoutSection key={entry.id} entry={entry} preview={preview}>
+          {entry.custom ? null : sections[entry.id as LooksSectionId]}
+        </LayoutSection>
+      ))}
+      {preview && <PreviewBridge target="looks" />}
     </ShelfMain>
   );
 }

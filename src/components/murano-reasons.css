@@ -234,6 +234,7 @@
 }
 
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .mr-row[data-reveal="false"] .mr-index,
   .mr-row[data-reveal="false"] .mr-title,
   .mr-row[data-reveal="false"] .mr-title-rule,
   .mr-row[data-reveal="false"] .mr-body,
@@ -242,6 +243,7 @@
     opacity: 0;
   }
 
+  .mr-row[data-reveal="true"] .mr-index,
   .mr-row[data-reveal="true"] .mr-title,
   .mr-row[data-reveal="true"] .mr-title-rule,
   .mr-row[data-reveal="true"] .mr-body,
@@ -298,5 +300,66 @@
     width: 100%;
     max-width: 38rem;
     justify-self: center;
+  }
+}
+
+/* ── Editorial pass: the index and the rule, like the collections above ───── */
+.mr-index {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4em;
+  margin: 0 0 clamp(0.9rem, 2vh, 1.3rem);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--midnight) 70%, transparent);
+}
+.mr-index-sep,
+.mr-index-total {
+  color: color-mix(in srgb, var(--ink) 38%, transparent);
+  letter-spacing: 0.14em;
+}
+.mr-title {
+  font-size: clamp(2.1rem, 3.4vw, 3rem);
+}
+.mr-title-rule {
+  display: block;
+  width: 3.25rem;
+  height: 1px;
+  margin-top: 1.25rem;
+  background: var(--gold, var(--brass));
+}
+
+/* The index as a large, pale display numeral; the piece sits on a soft
+   colour block offset behind it, alternating with the rows. */
+.mr-index {
+  align-items: flex-end;
+}
+.mr-index-current {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(3.25rem, 5.5vw, 5rem);
+  font-weight: 400;
+  line-height: 0.8;
+  letter-spacing: -0.02em;
+  color: color-mix(in srgb, var(--gold, var(--brass)) 60%, transparent);
+}
+.mr-visual {
+  isolation: isolate;
+}
+.mr-visual::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 10% 14% -5% -5%;
+  background: color-mix(in srgb, var(--champagne) 55%, var(--ivory));
+}
+.mr-row--img-left .mr-visual::before {
+  inset: 10% -5% -5% 14%;
+}
+@media (max-width: 51.99rem) {
+  .mr-visual::before {
+    inset: 12% 8% -4% -2%;
   }
 }

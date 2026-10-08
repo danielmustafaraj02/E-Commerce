@@ -1,0 +1,807 @@
+- generic [active] [ref=f14e1]:
+  - link "Vai al contenuto principale" [ref=f14e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=f14e3]:
+    - generic [ref=f14e4]:
+      - link [ref=f14e5] [cursor=pointer]:
+        - /url: /it
+        - img "Perla Murano Glass" [ref=f14e6]
+      - navigation [ref=f14e7]:
+        - button "Prodotti" [ref=f14e9] [cursor=pointer]
+        - link "Look" [ref=f14e13] [cursor=pointer]:
+          - /url: /it/looks
+        - link "Chi siamo" [ref=f14e14] [cursor=pointer]:
+          - /url: /it/about
+      - generic [ref=f14e16]:
+        - button "Cerca" [ref=f14e17] [cursor=pointer]
+        - search [aria-hidden] [ref=f14e21]:
+          - button [ref=f14e27] [cursor=pointer]
+      - generic [ref=f14e30]:
+        - button "Italiano" [ref=f14e32] [cursor=pointer]:
+          - generic [aria-hidden] [ref=f14e33]: 🇮🇹
+          - text: Italiano
+        - link "Preferiti" [ref=f14e37] [cursor=pointer]:
+          - /url: /it/wishlist
+        - link "Carrello" [ref=f14e41] [cursor=pointer]:
+          - /url: /it/cart
+        - link "Accedi" [ref=f14e46] [cursor=pointer]:
+          - /url: /it/login
+  - main [ref=f14e48]:
+    - generic [ref=f14e52]:
+      - heading "Perla Murano Glass" [level=2] [ref=f14e54]
+      - paragraph [ref=f14e57]:
+        - emphasis [ref=f14e58]: Gioielli in vetro di Murano, assemblati a mano. Una perla alla volta.
+      - paragraph [ref=f14e59]:
+        - link "Scopri i gioielli →" [ref=f14e60] [cursor=pointer]:
+          - /url: /products
+      - paragraph [ref=f14e63]: Write something here.
+    - generic [ref=f14e74]:
+      - region "Collane" [ref=f14e75]:
+        - generic [ref=f14e77]:
+          - paragraph [aria-hidden] [ref=f14e78]:
+            - generic [ref=f14e79]: "01"
+            - generic [ref=f14e80]: /
+            - generic [ref=f14e81]: "03"
+          - heading "Collane" [level=2] [ref=f14e82]
+          - paragraph [ref=f14e83]: Colore e luce, da indossare.
+          - link "Scopri le collane" [ref=f14e84] [cursor=pointer]:
+            - /url: /it/category/collane-in-vetro-di-murano
+            - text: Scopri le collane
+            - generic [aria-hidden] [ref=f14e85]: →
+      - region "Bracciali" [ref=f14e86]:
+        - generic [ref=f14e88]:
+          - paragraph [aria-hidden] [ref=f14e89]:
+            - generic [ref=f14e90]: "02"
+            - generic [ref=f14e91]: /
+            - generic [ref=f14e92]: "03"
+          - heading "Bracciali" [level=2] [ref=f14e93]
+          - paragraph [ref=f14e94]: Un dettaglio che accompagna ogni gesto.
+          - link "Scopri i bracciali" [ref=f14e95] [cursor=pointer]:
+            - /url: /it/category/bracciali-in-vetro-di-murano
+            - text: Scopri i bracciali
+            - generic [aria-hidden] [ref=f14e96]: →
+      - region "Orecchini" [ref=f14e97]:
+        - generic [ref=f14e99]:
+          - paragraph [aria-hidden] [ref=f14e100]:
+            - generic [ref=f14e101]: "03"
+            - generic [ref=f14e102]: /
+            - generic [ref=f14e103]: "03"
+          - heading "Orecchini" [level=2] [ref=f14e104]
+          - paragraph [ref=f14e105]: Piccoli accenti, nuova luce.
+          - link "Scopri gli orecchini" [ref=f14e106] [cursor=pointer]:
+            - /url: /it/category/orecchini-in-vetro-di-murano
+            - text: Scopri gli orecchini
+            - generic [aria-hidden] [ref=f14e107]: →
+    - generic [ref=f14e108]:
+      - heading "I preferiti della community" [level=2] [ref=f14e112]
+      - generic [ref=f14e113]:
+        - list [ref=f14e115]:
+          - listitem [ref=f14e116]:
+            - link [aria-hidden] [ref=f14e118] [cursor=pointer]:
+              - /url: /it/products/collana-notte-stellata-92b5fd
+          - listitem [ref=f14e120]:
+            - link [aria-hidden] [ref=f14e122] [cursor=pointer]:
+              - /url: /it/products/collana-arcobaleno-216e66
+          - listitem [ref=f14e124]:
+            - link [aria-hidden] [ref=f14e126] [cursor=pointer]:
+              - /url: /it/products/orecchini-goccia-di-ghiaccio-51362e
+          - listitem [ref=f14e128]:
+            - link [aria-hidden] [ref=f14e130] [cursor=pointer]:
+              - /url: /it/products/orecchini-sassolino-di-onice-6bae0d
+          - listitem [ref=f14e132]:
+            - link [aria-hidden] [ref=f14e134] [cursor=pointer]:
+              - /url: /it/products/bracciale-avvolto-egeo-6bbcaa
+          - listitem [ref=f14e136]:
+            - link [aria-hidden] [ref=f14e138] [cursor=pointer]:
+              - /url: /it/products/orecchini-goccia-di-rubino-9ad623
+          - listitem [ref=f14e140]:
+            - link [aria-hidden] [ref=f14e142] [cursor=pointer]:
+              - /url: /it/products/collana-onde-di-smeraldo-143dbf
+          - listitem [ref=f14e144]:
+            - link [aria-hidden] [ref=f14e146] [cursor=pointer]:
+              - /url: /it/products/collana-fiamma-scarlatta-17effb
+          - listitem [ref=f14e148]:
+            - link [aria-hidden] [ref=f14e150] [cursor=pointer]:
+              - /url: /it/products/collana-fiore-notturno-15492b
+          - listitem [ref=f14e152]:
+            - link [aria-hidden] [ref=f14e154] [cursor=pointer]:
+              - /url: /it/products/bracciale-avvolto-polvere-di-stelle-f1788c
+          - listitem [ref=f14e156]:
+            - link [aria-hidden] [ref=f14e158] [cursor=pointer]:
+              - /url: /it/products/collana-notte-stellata-92b5fd
+          - listitem [ref=f14e160]:
+            - link [aria-hidden] [ref=f14e162] [cursor=pointer]:
+              - /url: /it/products/collana-arcobaleno-216e66
+          - listitem [ref=f14e164]:
+            - link [aria-hidden] [ref=f14e166] [cursor=pointer]:
+              - /url: /it/products/orecchini-goccia-di-ghiaccio-51362e
+          - listitem [ref=f14e168]:
+            - link [aria-hidden] [ref=f14e170] [cursor=pointer]:
+              - /url: /it/products/orecchini-sassolino-di-onice-6bae0d
+          - listitem [ref=f14e172]:
+            - link [aria-hidden] [ref=f14e174] [cursor=pointer]:
+              - /url: /it/products/bracciale-avvolto-egeo-6bbcaa
+          - listitem [ref=f14e176]:
+            - link [aria-hidden] [ref=f14e178] [cursor=pointer]:
+              - /url: /it/products/orecchini-goccia-di-rubino-9ad623
+          - listitem [ref=f14e180]:
+            - link [aria-hidden] [ref=f14e182] [cursor=pointer]:
+              - /url: /it/products/collana-onde-di-smeraldo-143dbf
+          - listitem [ref=f14e184]:
+            - link [aria-hidden] [ref=f14e186] [cursor=pointer]:
+              - /url: /it/products/collana-fiamma-scarlatta-17effb
+          - listitem [ref=f14e188]:
+            - link [aria-hidden] [ref=f14e190] [cursor=pointer]:
+              - /url: /it/products/collana-fiore-notturno-15492b
+          - listitem [ref=f14e192]:
+            - link [aria-hidden] [ref=f14e194] [cursor=pointer]:
+              - /url: /it/products/bracciale-avvolto-polvere-di-stelle-f1788c
+        - button "Previous" [ref=f14e196] [cursor=pointer]: ←
+        - button "Next" [ref=f14e197] [cursor=pointer]: →
+        - tablist "Slides" [ref=f14e198]:
+          - tab [selected] [ref=f14e199] [cursor=pointer]
+          - tab [ref=f14e200] [cursor=pointer]
+          - tab [ref=f14e201] [cursor=pointer]
+          - tab [ref=f14e202] [cursor=pointer]
+          - tab [ref=f14e203] [cursor=pointer]
+          - tab [ref=f14e204] [cursor=pointer]
+          - tab [ref=f14e205] [cursor=pointer]
+          - tab [ref=f14e206] [cursor=pointer]
+          - tab [ref=f14e207] [cursor=pointer]
+          - tab [ref=f14e208] [cursor=pointer]
+    - generic [ref=f14e210]:
+      - heading "I nostri look" [level=2] [ref=f14e213]
+      - generic [ref=f14e214]:
+        - article [ref=f14e215]:
+          - generic [ref=f14e216]:
+            - link [aria-hidden] [ref=f14e217] [cursor=pointer]:
+              - /url: /it/looks/cmufb34rk0001mr50aijnmag6
+            - generic [ref=f14e221] [cursor=pointer]
+            - generic [ref=f14e222] [cursor=pointer]
+            - generic [ref=f14e223] [cursor=pointer]
+            - generic [aria-hidden]:
+              - generic:
+                - generic: "01"
+                - generic: Collana
+            - generic [aria-hidden]:
+              - generic:
+                - generic: "02"
+                - generic: Bracciale
+            - generic [aria-hidden]:
+              - generic:
+                - generic: "03"
+                - generic: Orecchini
+            - generic [aria-hidden]:
+              - generic: 15%
+              - generic: save
+          - generic [ref=f14e224]:
+            - paragraph [aria-hidden] [ref=f14e225]:
+              - generic [ref=f14e226]: "01"
+              - generic [aria-hidden] [ref=f14e227]: /
+              - generic [ref=f14e228]: I gioielli del look
+            - heading [level=3] [ref=f14e229]:
+              - link "Rosso Rubino" [ref=f14e230] [cursor=pointer]:
+                - /url: /it/looks/cmufb34rk0001mr50aijnmag6
+            - paragraph [ref=f14e232]: Il rosso rubino, in tre gioielli. Indossali insieme per un look coordinato, oppure lascia protagonista un solo pezzo.
+            - paragraph [ref=f14e233]:
+              - generic [ref=f14e234]: 221,00 €
+              - generic [ref=f14e235]: 260,00 €
+              - generic [ref=f14e236]: Risparmi il 15%
+            - link "Guarda i gioielli del look" [ref=f14e237] [cursor=pointer]:
+              - /url: /it/looks/cmufb34rk0001mr50aijnmag6
+              - text: Guarda i gioielli del look
+              - generic [aria-hidden] [ref=f14e238]: →
+        - article [ref=f14e239]:
+          - generic [ref=f14e240]:
+            - link [aria-hidden] [ref=f14e241] [cursor=pointer]:
+              - /url: /it/looks/cmufb34020000mr50jyx29cqy
+            - generic [ref=f14e245] [cursor=pointer]
+            - generic [ref=f14e246] [cursor=pointer]
+            - generic [ref=f14e247] [cursor=pointer]
+            - generic [aria-hidden]:
+              - generic:
+                - generic: "01"
+                - generic: Collana
+            - generic [aria-hidden]:
+              - generic:
+                - generic: "02"
+                - generic: Bracciale
+            - generic [aria-hidden]:
+              - generic:
+                - generic: "03"
+                - generic: Orecchini
+            - generic [aria-hidden]:
+              - generic: 15%
+              - generic: save
+          - generic [ref=f14e248]:
+            - paragraph [aria-hidden] [ref=f14e249]:
+              - generic [ref=f14e250]: "02"
+              - generic [aria-hidden] [ref=f14e251]: /
+              - generic [ref=f14e252]: I gioielli del look
+            - heading [level=3] [ref=f14e253]:
+              - link "Rosa e Salvia" [ref=f14e254] [cursor=pointer]:
+                - /url: /it/looks/cmufb34020000mr50jyx29cqy
+            - paragraph [ref=f14e256]: Rosa e verde salvia, in equilibrio. Indossa i tre gioielli insieme, oppure scegli un solo dettaglio per ogni giorno.
+            - paragraph [ref=f14e257]:
+              - generic [ref=f14e258]: 238,00 €
+              - generic [ref=f14e259]: 280,00 €
+              - generic [ref=f14e260]: Risparmi il 15%
+            - link "Guarda i gioielli del look" [ref=f14e261] [cursor=pointer]:
+              - /url: /it/looks/cmufb34020000mr50jyx29cqy
+              - text: Guarda i gioielli del look
+              - generic [aria-hidden] [ref=f14e262]: →
+      - paragraph [ref=f14e263]:
+        - link "Tutti i look" [ref=f14e264] [cursor=pointer]:
+          - /url: /it/looks
+          - text: Tutti i look →
+    - generic [ref=f14e266]:
+      - generic [ref=f14e268]:
+        - generic [ref=f14e269]:
+          - heading "Nuovi arrivi" [level=2] [ref=f14e270]
+          - paragraph [ref=f14e271]: Nuovi colori, nuovi dettagli.
+        - link "Tutti i prodotti" [ref=f14e272] [cursor=pointer]:
+          - /url: /it/products
+      - list [ref=f14e273]:
+        - listitem [ref=f14e274]:
+          - generic:
+            - img "Orecchini Sassolino di Onice — gioiello artigianale in vetro di Murano"
+            - generic: "-11%"
+            - 'button "Aggiungi questo gioiello: Orecchini Sassolino di Onice" [ref=f14e275] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=f14e281]:
+            - link "Orecchini Sassolino di Onice" [ref=f14e282] [cursor=pointer]:
+              - /url: /it/products/orecchini-sassolino-di-onice-6bae0d
+              - text: Orecchini Sassolino di Onice
+              - generic [aria-hidden] [ref=f14e283]: →
+          - generic [ref=f14e284]:
+            - generic [ref=f14e285]: 90,00 €
+            - text: 80,00 €
+        - listitem [ref=f14e286]:
+          - generic:
+            - img "Orecchini Petalo di Rosa — gioiello artigianale in vetro di Murano"
+            - 'button "Aggiungi questo gioiello: Orecchini Petalo di Rosa" [ref=f14e287] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=f14e293]:
+            - link "Orecchini Petalo di Rosa" [ref=f14e294] [cursor=pointer]:
+              - /url: /it/products/orecchini-petalo-di-rosa-e081a0
+              - text: Orecchini Petalo di Rosa
+              - generic [aria-hidden] [ref=f14e295]: →
+          - generic [ref=f14e296]: 80,00 €
+        - listitem [ref=f14e297]:
+          - generic:
+            - img "Orecchini Goccia di Rubino — gioiello artigianale in vetro di Murano"
+            - 'button "Aggiungi questo gioiello: Orecchini Goccia di Rubino" [ref=f14e298] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=f14e304]:
+            - link "Orecchini Goccia di Rubino" [ref=f14e305] [cursor=pointer]:
+              - /url: /it/products/orecchini-goccia-di-rubino-9ad623
+              - text: Orecchini Goccia di Rubino
+              - generic [aria-hidden] [ref=f14e306]: →
+          - generic [ref=f14e307]: 80,00 €
+        - listitem [ref=f14e308]:
+          - generic:
+            - img "Orecchini Goccia di Ghiaccio — gioiello artigianale in vetro di Murano"
+            - 'button "Aggiungi questo gioiello: Orecchini Goccia di Ghiaccio" [ref=f14e309] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=f14e315]:
+            - link "Orecchini Goccia di Ghiaccio" [ref=f14e316] [cursor=pointer]:
+              - /url: /it/products/orecchini-goccia-di-ghiaccio-51362e
+              - text: Orecchini Goccia di Ghiaccio
+              - generic [aria-hidden] [ref=f14e317]: →
+          - generic [ref=f14e318]: 80,00 €
+        - listitem [ref=f14e319]:
+          - generic:
+            - img "Orecchini Giardino Pastello — gioiello artigianale in vetro di Murano"
+            - 'button "Aggiungi questo gioiello: Orecchini Giardino Pastello" [ref=f14e320] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=f14e326]:
+            - link "Orecchini Giardino Pastello" [ref=f14e327] [cursor=pointer]:
+              - /url: /it/products/orecchini-giardino-pastello-d650a2
+              - text: Orecchini Giardino Pastello
+              - generic [aria-hidden] [ref=f14e328]: →
+          - generic [ref=f14e329]: 80,00 €
+        - listitem [ref=f14e330]:
+          - generic:
+            - img "Orecchini Foglia di Menta — gioiello artigianale in vetro di Murano"
+            - 'button "Aggiungi questo gioiello: Orecchini Foglia di Menta" [ref=f14e331] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=f14e337]:
+            - link "Orecchini Foglia di Menta" [ref=f14e338] [cursor=pointer]:
+              - /url: /it/products/orecchini-foglia-di-menta-9c749a
+              - text: Orecchini Foglia di Menta
+              - generic [aria-hidden] [ref=f14e339]: →
+          - generic [ref=f14e340]: 80,00 €
+        - listitem [ref=f14e341]:
+          - generic:
+            - img "Orecchini Blu Profondo — gioiello artigianale in vetro di Murano"
+            - 'button "Aggiungi questo gioiello: Orecchini Blu Profondo" [ref=f14e342] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=f14e348]:
+            - link "Orecchini Blu Profondo" [ref=f14e349] [cursor=pointer]:
+              - /url: /it/products/orecchini-blu-profondo-fa4c96
+              - text: Orecchini Blu Profondo
+              - generic [aria-hidden] [ref=f14e350]: →
+          - generic [ref=f14e351]: 80,00 €
+        - listitem [ref=f14e352]:
+          - generic:
+            - img "Collana Turchese Sfaccettato — gioiello artigianale in vetro di Murano"
+            - 'button "Aggiungi questo gioiello: Collana Turchese Sfaccettato" [ref=f14e353] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=f14e359]:
+            - link "Collana Turchese Sfaccettato" [ref=f14e360] [cursor=pointer]:
+              - /url: /it/products/collana-turchese-sfaccettato-8e4504
+              - text: Collana Turchese Sfaccettato
+              - generic [aria-hidden] [ref=f14e361]: →
+          - generic [ref=f14e362]: 120,00 €
+    - generic [ref=f14e365]:
+      - generic [ref=f14e366]:
+        - generic [ref=f14e367]:
+          - heading "Pezzi selezionati, prezzi speciali." [level=2] [ref=f14e368]
+          - paragraph [ref=f14e369]: Scopri una selezione di gioielli in vetro di Murano fatti a mano a prezzi speciali, disponibili fino a esaurimento scorte.
+        - link "Acquista i gioielli in offerta →" [ref=f14e370] [cursor=pointer]:
+          - /url: /it/products?sale=1
+      - list [ref=f14e371]:
+        - listitem [ref=f14e372]:
+          - generic:
+            - img "Orecchini Sassolino di Onice — gioiello artigianale in vetro di Murano"
+            - generic: "-11%"
+            - 'button "Aggiungi questo gioiello: Orecchini Sassolino di Onice" [ref=f14e373] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=f14e379]:
+            - link "Orecchini Sassolino di Onice" [ref=f14e380] [cursor=pointer]:
+              - /url: /it/products/orecchini-sassolino-di-onice-6bae0d
+              - text: Orecchini Sassolino di Onice
+              - generic [aria-hidden] [ref=f14e381]: →
+          - generic [ref=f14e382]:
+            - generic [ref=f14e383]: 90,00 €
+            - text: 80,00 €
+        - listitem [ref=f14e384]:
+          - generic:
+            - img "Collana Notte Stellata — gioiello artigianale in vetro di Murano"
+            - generic: "-10%"
+            - 'button "Aggiungi questo gioiello: Collana Notte Stellata" [ref=f14e385] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=f14e391]:
+            - link "Collana Notte Stellata" [ref=f14e392] [cursor=pointer]:
+              - /url: /it/products/collana-notte-stellata-92b5fd
+              - text: Collana Notte Stellata
+              - generic [aria-hidden] [ref=f14e393]: →
+          - generic [ref=f14e394]:
+            - generic [ref=f14e395]: 100,00 €
+            - text: 90,00 €
+        - listitem [ref=f14e396]:
+          - generic:
+            - img "Bracciale Caraibi — gioiello artigianale in vetro di Murano"
+            - generic: "-6%"
+            - 'button "Aggiungi questo gioiello: Bracciale Caraibi" [ref=f14e397] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=f14e403]:
+            - link "Bracciale Caraibi" [ref=f14e404] [cursor=pointer]:
+              - /url: /it/products/bracciale-caraibi-88bfe3
+              - text: Bracciale Caraibi
+              - generic [aria-hidden] [ref=f14e405]: →
+          - generic [ref=f14e406]:
+            - generic [ref=f14e407]: 80,00 €
+            - text: 75,00 €
+        - listitem [ref=f14e408]:
+          - generic:
+            - img "Bracciale Avvolto Quarzo Rosa — gioiello artigianale in vetro di Murano"
+            - generic: "-6%"
+            - 'button "Aggiungi questo gioiello: Bracciale Avvolto Quarzo Rosa" [ref=f14e409] [cursor=pointer]'
+            - status
+          - heading [level=3] [ref=f14e415]:
+            - link "Bracciale Avvolto Quarzo Rosa" [ref=f14e416] [cursor=pointer]:
+              - /url: /it/products/bracciale-avvolto-quarzo-rosa-f4920c
+              - text: Bracciale Avvolto Quarzo Rosa
+              - generic [aria-hidden] [ref=f14e417]: →
+          - generic [ref=f14e418]:
+            - generic [ref=f14e419]: 80,00 €
+            - text: 75,00 €
+    - generic [ref=f14e421]:
+      - article [ref=f14e422]:
+        - generic [ref=f14e423]:
+          - heading "Settecento anni di artigianato ininterrotto" [level=2] [ref=f14e424]
+          - paragraph [ref=f14e425]: Ogni pezzo lascia Murano plasmato da un maestro che ha imparato il mestiere da chi lo ha preceduto, con gli stessi gesti da forno del XIV secolo. Nessuno stampo, nessuna macchina — solo soffio e mani.
+          - link "Vedi il pezzo" [ref=f14e426] [cursor=pointer]:
+            - /url: /it/products/orecchini-goccia-di-rubino-9ad623
+            - text: Vedi il pezzo
+            - generic [aria-hidden] [ref=f14e427]: →
+        - link [aria-hidden] [ref=f14e429] [cursor=pointer]:
+          - /url: /it/products/orecchini-goccia-di-rubino-9ad623
+      - article [ref=f14e430]:
+        - generic [ref=f14e431]:
+          - heading "Ogni pezzo esiste una sola volta" [level=2] [ref=f14e432]
+          - paragraph [ref=f14e433]: Il vetro fatto a mano non può essere riprodotto alla perfezione. I degradé di colore, le inclusioni e i vortici del tuo pezzo sono unicamente tuoi — mai prodotto in serie, mai duplicato.
+          - link "Vedi il pezzo" [ref=f14e434] [cursor=pointer]:
+            - /url: /it/products/collana-onde-di-smeraldo-143dbf
+            - text: Vedi il pezzo
+            - generic [aria-hidden] [ref=f14e435]: →
+        - link [aria-hidden] [ref=f14e437] [cursor=pointer]:
+          - /url: /it/products/collana-onde-di-smeraldo-143dbf
+      - article [ref=f14e438]:
+        - generic [ref=f14e439]:
+          - heading "Un patrimonio culturale vivo" [level=2] [ref=f14e440]
+          - paragraph [ref=f14e441]: I maestri vetrai di Murano godono del riconoscimento UNESCO. Quando indossi un pezzo, porti con te una tradizione che Venezia custodisce da oltre settecento anni.
+          - link "Vedi il pezzo" [ref=f14e442] [cursor=pointer]:
+            - /url: /it/products/collana-fiamma-scarlatta-17effb
+            - text: Vedi il pezzo
+            - generic [aria-hidden] [ref=f14e443]: →
+        - link [aria-hidden] [ref=f14e445] [cursor=pointer]:
+          - /url: /it/products/collana-fiamma-scarlatta-17effb
+    - generic [ref=f14e448]:
+      - generic [ref=f14e449]:
+        - paragraph [ref=f14e450]: Informazioni / FAQ
+        - heading "Prima di scegliere." [level=2] [ref=f14e451]
+        - paragraph [ref=f14e452]: Le risposte per scegliere con serenità.
+        - link "Contattaci" [ref=f14e453] [cursor=pointer]:
+          - /url: /it/contact
+          - text: Contattaci
+          - generic [aria-hidden] [ref=f14e454]: →
+      - generic [ref=f14e457]:
+        - heading [level=3] [ref=f14e459]:
+          - button "È vero vetro di Murano?" [ref=f14e460] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f14e461]: "01"
+        - heading [level=3] [ref=f14e465]:
+          - button "Quanto costa la spedizione?" [ref=f14e466] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f14e467]: "02"
+        - heading [level=3] [ref=f14e471]:
+          - button "Quanto tempo richiede la spedizione?" [ref=f14e472] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f14e473]: "03"
+        - heading [level=3] [ref=f14e477]:
+          - button "Posso restituire o cambiare il mio ordine?" [ref=f14e478] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f14e479]: "04"
+        - heading [level=3] [ref=f14e483]:
+          - button "Dove vengono realizzati e da dove vengono spediti i gioielli?" [ref=f14e484] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f14e485]: "05"
+        - heading [level=3] [ref=f14e489]:
+          - button "Arriva confezionato come regalo?" [ref=f14e490] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f14e491]: "06"
+        - button "Altre domande" [ref=f14e494] [cursor=pointer]
+    - generic [ref=f14e497]:
+      - paragraph [ref=f14e498]: 5 domande · circa 5 minuti
+      - link "Non sai cosa scegliere? Trova il regalo di Murano perfetto" [ref=f14e499] [cursor=pointer]:
+        - /url: /it/gift-finder
+      - paragraph [ref=f14e503]: "Dicci per chi è, l’occasione, lo stile, il budget e il tipo di gioiello: ti abbineremo pezzi in vetro di Murano davvero disponibili."
+    - region [ref=f14e504]:
+      - generic [ref=f14e505]:
+        - generic [ref=f14e506]:
+          - generic [ref=f14e507]:
+            - heading "Storie di Murano" [level=2] [ref=f14e508]
+            - paragraph [ref=f14e509]: Storie di vetro veneziano, artigianalità e arte del dono.
+          - link "Scopri le storie" [ref=f14e510] [cursor=pointer]:
+            - /url: /it/blog
+            - text: Scopri le storie
+            - generic [aria-hidden] [ref=f14e511]: →
+        - list [ref=f14e512]:
+          - listitem [ref=f14e513]:
+            - article [ref=f14e514]:
+              - link [aria-hidden] [ref=f14e515] [cursor=pointer]:
+                - /url: /it/blog/history-of-murano-glass
+                - figure [ref=f14e516]
+              - generic [ref=f14e519]:
+                - paragraph [ref=f14e520]: Storia · 1/6
+                - heading [level=3] [ref=f14e521]:
+                  - 'link "Vetro di Murano, I: perché il vetro arrivò sull’isola" [ref=f14e522] [cursor=pointer]':
+                    - /url: /it/blog/history-of-murano-glass
+                - paragraph [ref=f14e523]: 3 min di lettura
+                - paragraph [ref=f14e524]: "Una storia documentata del vetro di Murano: cosa stabilì il decreto del 1291, cosa rivela il vetro medievale e perché l’isola non fu l’inizio dell’arte vetraria."
+                - 'link "Leggi di più: Vetro di Murano, I: perché il vetro arrivò sull’isola" [ref=f14e525] [cursor=pointer]':
+                  - /url: /it/blog/history-of-murano-glass
+                  - text: Leggi di più
+                  - generic [aria-hidden] [ref=f14e526]: →
+          - listitem [ref=f14e527]:
+            - article [ref=f14e528]:
+              - link [aria-hidden] [ref=f14e529] [cursor=pointer]:
+                - /url: /it/blog/murano-glass-materials-cristallo-lattimo
+                - figure [ref=f14e530]
+              - generic [ref=f14e533]:
+                - paragraph [ref=f14e534]: Tecnica · 2/6
+                - heading [level=3] [ref=f14e535]:
+                  - 'link "Vetro di Murano, II: cristallo, lattimo e materia" [ref=f14e536] [cursor=pointer]':
+                    - /url: /it/blog/murano-glass-materials-cristallo-lattimo
+                - paragraph [ref=f14e537]: 3 min di lettura
+                - paragraph [ref=f14e538]: Una guida a cristallo e lattimo muranesi, alle ricette storiche e alla chimica del vetro. Il cristallo veneziano non è il moderno cristallo al piombo.
+                - 'link "Leggi di più: Vetro di Murano, II: cristallo, lattimo e materia" [ref=f14e539] [cursor=pointer]':
+                  - /url: /it/blog/murano-glass-materials-cristallo-lattimo
+                  - text: Leggi di più
+                  - generic [aria-hidden] [ref=f14e540]: →
+          - listitem [ref=f14e541]:
+            - article [ref=f14e542]:
+              - link [aria-hidden] [ref=f14e543] [cursor=pointer]:
+                - /url: /it/blog/murano-glassmaking-techniques-filigrana-murrine
+                - figure [ref=f14e544]
+              - generic [ref=f14e547]:
+                - paragraph [ref=f14e548]: Tecnica · 3/6
+                - heading [level=3] [ref=f14e549]:
+                  - 'link "Vetro di Murano, III: filigrana, reticello e murrine" [ref=f14e550] [cursor=pointer]':
+                    - /url: /it/blog/murano-glassmaking-techniques-filigrana-murrine
+                - paragraph [ref=f14e551]: 3 min di lettura
+                - paragraph [ref=f14e552]: Come si realizzano filigrana, reticello, rosetta e murrine, cosa descrivono i loro nomi e come le tecniche muranesi sono cambiate nei secoli.
+                - 'link "Leggi di più: Vetro di Murano, III: filigrana, reticello e murrine" [ref=f14e553] [cursor=pointer]':
+                  - /url: /it/blog/murano-glassmaking-techniques-filigrana-murrine
+                  - text: Leggi di più
+                  - generic [aria-hidden] [ref=f14e554]: →
+    - generic [ref=f14e556]:
+      - generic [ref=f14e557]:
+        - heading "Ottieni il 10% di sconto sul tuo primo ordine" [level=2] [ref=f14e558]
+        - paragraph [ref=f14e559]: Iscriviti e usa il codice WELCOME10 al checkout. Riceverai anche nuovi pezzi e offerte occasionali, direttamente nella tua email.
+        - generic [ref=f14e561]:
+          - textbox "Resta aggiornato" [ref=f14e562]:
+            - /placeholder: tu@esempio.com
+          - button "Ottieni il 10%" [ref=f14e563] [cursor=pointer]
+      - generic [aria-hidden] [ref=f14e564]: −10%
+    - generic [ref=f14e568]:
+      - paragraph [ref=f14e571]: Your text here.
+      - generic [ref=f14e573]:
+        - list [ref=f14e575]:
+          - listitem [ref=f14e576]:
+            - link [aria-hidden] [ref=f14e578] [cursor=pointer]:
+              - /url: /it/products/collana-notte-stellata-92b5fd
+          - listitem [ref=f14e580]:
+            - link [aria-hidden] [ref=f14e582] [cursor=pointer]:
+              - /url: /it/products/collana-arcobaleno-216e66
+          - listitem [ref=f14e584]:
+            - link [aria-hidden] [ref=f14e586] [cursor=pointer]:
+              - /url: /it/products/orecchini-goccia-di-ghiaccio-51362e
+          - listitem [ref=f14e588]:
+            - link [aria-hidden] [ref=f14e590] [cursor=pointer]:
+              - /url: /it/products/orecchini-sassolino-di-onice-6bae0d
+          - listitem [ref=f14e592]:
+            - link [aria-hidden] [ref=f14e594] [cursor=pointer]:
+              - /url: /it/products/bracciale-avvolto-egeo-6bbcaa
+          - listitem [ref=f14e596]:
+            - link [aria-hidden] [ref=f14e598] [cursor=pointer]:
+              - /url: /it/products/orecchini-goccia-di-rubino-9ad623
+          - listitem [ref=f14e600]:
+            - link [aria-hidden] [ref=f14e602] [cursor=pointer]:
+              - /url: /it/products/collana-onde-di-smeraldo-143dbf
+          - listitem [ref=f14e604]:
+            - link [aria-hidden] [ref=f14e606] [cursor=pointer]:
+              - /url: /it/products/collana-fiamma-scarlatta-17effb
+          - listitem [ref=f14e608]:
+            - link [aria-hidden] [ref=f14e610] [cursor=pointer]:
+              - /url: /it/products/collana-fiore-notturno-15492b
+          - listitem [ref=f14e612]:
+            - link [aria-hidden] [ref=f14e614] [cursor=pointer]:
+              - /url: /it/products/bracciale-avvolto-polvere-di-stelle-f1788c
+          - listitem [ref=f14e616]:
+            - link [aria-hidden] [ref=f14e618] [cursor=pointer]:
+              - /url: /it/products/collana-notte-stellata-92b5fd
+          - listitem [ref=f14e620]:
+            - link [aria-hidden] [ref=f14e622] [cursor=pointer]:
+              - /url: /it/products/collana-arcobaleno-216e66
+          - listitem [ref=f14e624]:
+            - link [aria-hidden] [ref=f14e626] [cursor=pointer]:
+              - /url: /it/products/orecchini-goccia-di-ghiaccio-51362e
+          - listitem [ref=f14e628]:
+            - link [aria-hidden] [ref=f14e630] [cursor=pointer]:
+              - /url: /it/products/orecchini-sassolino-di-onice-6bae0d
+          - listitem [ref=f14e632]:
+            - link [aria-hidden] [ref=f14e634] [cursor=pointer]:
+              - /url: /it/products/bracciale-avvolto-egeo-6bbcaa
+          - listitem [ref=f14e636]:
+            - link [aria-hidden] [ref=f14e638] [cursor=pointer]:
+              - /url: /it/products/orecchini-goccia-di-rubino-9ad623
+          - listitem [ref=f14e640]:
+            - link [aria-hidden] [ref=f14e642] [cursor=pointer]:
+              - /url: /it/products/collana-onde-di-smeraldo-143dbf
+          - listitem [ref=f14e644]:
+            - link [aria-hidden] [ref=f14e646] [cursor=pointer]:
+              - /url: /it/products/collana-fiamma-scarlatta-17effb
+          - listitem [ref=f14e648]:
+            - link [aria-hidden] [ref=f14e650] [cursor=pointer]:
+              - /url: /it/products/collana-fiore-notturno-15492b
+          - listitem [ref=f14e652]:
+            - link [aria-hidden] [ref=f14e654] [cursor=pointer]:
+              - /url: /it/products/bracciale-avvolto-polvere-di-stelle-f1788c
+        - button "Previous" [ref=f14e656] [cursor=pointer]: ←
+        - button "Next" [ref=f14e657] [cursor=pointer]: →
+        - tablist "Slides" [ref=f14e658]:
+          - tab [selected] [ref=f14e659] [cursor=pointer]
+          - tab [ref=f14e660] [cursor=pointer]
+          - tab [ref=f14e661] [cursor=pointer]
+          - tab [ref=f14e662] [cursor=pointer]
+          - tab [ref=f14e663] [cursor=pointer]
+          - tab [ref=f14e664] [cursor=pointer]
+          - tab [ref=f14e665] [cursor=pointer]
+          - tab [ref=f14e666] [cursor=pointer]
+          - tab [ref=f14e667] [cursor=pointer]
+          - tab [ref=f14e668] [cursor=pointer]
+      - separator [ref=f14e670]
+    - heading "Overlap text and photo" [level=2] [ref=f14e676]
+    - generic [ref=f14e682]:
+      - heading "A title in big letters" [level=2] [ref=f14e683]
+      - heading "By your name" [level=4] [ref=f14e685]
+      - paragraph [ref=f14e687]: One or two lines that tell people what the story is about.
+    - generic [ref=f14e704]:
+      - heading "A simple" [level=3] [ref=f14e706]
+      - heading "Layout" [level=2] [ref=f14e708]
+      - paragraph [ref=f14e711]: A few lines about the picture, set in a block that overlaps it.
+    - generic [ref=f14e714]:
+      - generic [ref=f14e715]:
+        - heading "01" [level=2] [ref=f14e717]
+        - heading "Chapter title" [level=4] [ref=f14e719]
+      - generic [ref=f14e720]:
+        - blockquote [ref=f14e721]:
+          - paragraph [ref=f14e722]: A memorable line that sets the mood for this chapter.
+          - text: Someone wise
+        - paragraph [ref=f14e724]: Your text goes here. Add as many paragraphs as the chapter needs.
+    - generic [ref=f14e728]:
+      - paragraph [ref=f14e729]:
+        - generic [ref=f14e731]: Murano · Venezia
+      - heading "Chi siamo" [level=1] [ref=f14e733]
+      - paragraph [ref=f14e736]: Abbiamo creato Perla Murano Glass per portare gioielli autentici in vetro di Murano soffiato a mano a chi non può visitare di persona le fornaci. Ogni pezzo è realizzato con tecniche tramandate da sette secoli sull'isola di Murano, spedito direttamente da Venezia.
+    - generic [ref=f14e740]:
+      - paragraph [ref=f14e741]:
+        - generic [ref=f14e743]: Murano · Venezia
+      - heading "Chi siamo" [level=1] [ref=f14e745]
+      - paragraph [ref=f14e748]: Abbiamo creato Perla Murano Glass per portare gioielli autentici in vetro di Murano soffiato a mano a chi non può visitare di persona le fornaci. Ogni pezzo è realizzato con tecniche tramandate da sette secoli sull'isola di Murano, spedito direttamente da Venezia.
+    - generic [ref=f14e752]:
+      - paragraph [ref=f14e753]:
+        - generic [ref=f14e755]: Murano · Venezia
+      - heading "Chi siamo" [level=1] [ref=f14e757]
+      - paragraph [ref=f14e760]: Abbiamo creato Perla Murano Glass per portare gioielli autentici in vetro di Murano soffiato a mano a chi non può visitare di persona le fornaci. Ogni pezzo è realizzato con tecniche tramandate da sette secoli sull'isola di Murano, spedito direttamente da Venezia.
+    - generic [ref=f14e764]:
+      - paragraph [ref=f14e765]:
+        - generic [ref=f14e767]: Murano · Venezia
+      - heading "Chi siamo" [level=1] [ref=f14e769]
+      - paragraph [ref=f14e772]: Abbiamo creato Perla Murano Glass per portare gioielli autentici in vetro di Murano soffiato a mano a chi non può visitare di persona le fornaci. Ogni pezzo è realizzato con tecniche tramandate da sette secoli sull'isola di Murano, spedito direttamente da Venezia.
+    - generic [ref=f14e776]:
+      - paragraph [ref=f14e777]:
+        - generic [ref=f14e779]: Murano · Venezia
+      - heading "Chi siamo" [level=1] [ref=f14e781]
+      - paragraph [ref=f14e784]: Abbiamo creato Perla Murano Glass per portare gioielli autentici in vetro di Murano soffiato a mano a chi non può visitare di persona le fornaci. Ogni pezzo è realizzato con tecniche tramandate da sette secoli sull'isola di Murano, spedito direttamente da Venezia.
+    - generic [ref=f14e788]:
+      - paragraph [ref=f14e789]:
+        - generic [ref=f14e791]: Murano · Venezia
+      - heading "Chi siamo" [level=1] [ref=f14e793]
+      - paragraph [ref=f14e796]: Abbiamo creato Perla Murano Glass per portare gioielli autentici in vetro di Murano soffiato a mano a chi non può visitare di persona le fornaci. Ogni pezzo è realizzato con tecniche tramandate da sette secoli sull'isola di Murano, spedito direttamente da Venezia.
+  - contentinfo [ref=f14e797]:
+    - generic [ref=f14e798]:
+      - generic [ref=f14e800]:
+        - heading "Scopri il mondo del vetro di Murano" [level=2] [ref=f14e801]
+        - paragraph [ref=f14e802]: Storie, artigianalità e ispirazione da Venezia.
+        - link "Scopri le storie" [ref=f14e803] [cursor=pointer]:
+          - /url: /it/blog
+          - text: Scopri le storie
+          - generic [aria-hidden] [ref=f14e804]: →
+      - generic [ref=f14e806]:
+        - heading "Un po' più di Murano, ogni tanto." [level=2] [ref=f14e807]
+        - paragraph [ref=f14e808]: Nuove collezioni, storie e offerte speciali, condivise con cura.
+        - generic [ref=f14e810]:
+          - textbox "Resta aggiornato" [ref=f14e811]:
+            - /placeholder: tu@esempio.com
+          - button "Ricevi novità" [ref=f14e812] [cursor=pointer]
+        - paragraph [ref=f14e813]: I tuoi dati restano riservati. Puoi disiscriverti quando vuoi.
+    - generic [ref=f14e817]:
+      - generic [ref=f14e818]:
+        - generic [ref=f14e819]:
+          - heading "Negozio" [level=2] [ref=f14e820]:
+            - button "Negozio" [expanded]
+          - region "Negozio" [ref=f14e821]:
+            - list [ref=f14e822]:
+              - listitem [ref=f14e823]:
+                - link "Tutti i prodotti" [ref=f14e824] [cursor=pointer]:
+                  - /url: /it/products
+              - listitem [ref=f14e825]:
+                - link "Bracciali" [ref=f14e826] [cursor=pointer]:
+                  - /url: /it/category/bracciali-in-vetro-di-murano
+              - listitem [ref=f14e827]:
+                - link "Collane" [ref=f14e828] [cursor=pointer]:
+                  - /url: /it/category/collane-in-vetro-di-murano
+              - listitem [ref=f14e829]:
+                - link "Orecchini" [ref=f14e830] [cursor=pointer]:
+                  - /url: /it/category/orecchini-in-vetro-di-murano
+              - listitem [ref=f14e831]:
+                - 'link "Trova Regalo: il regalo perfetto in vetro di Murano" [ref=f14e832] [cursor=pointer]':
+                  - /url: /it/gift-finder
+              - listitem [ref=f14e833]:
+                - link "Buono regalo digitale" [ref=f14e834] [cursor=pointer]:
+                  - /url: /it/gift-card
+              - listitem [ref=f14e835]:
+                - link "Biglietto regalo personalizzato" [ref=f14e836] [cursor=pointer]:
+                  - /url: /it/personalised-gift-card
+        - generic [ref=f14e837]:
+          - heading "Chi è Perla" [level=2] [ref=f14e838]:
+            - button "Chi è Perla" [expanded]
+          - region "Chi è Perla" [ref=f14e839]:
+            - list [ref=f14e840]:
+              - listitem [ref=f14e841]:
+                - link "Chi siamo" [ref=f14e842] [cursor=pointer]:
+                  - /url: /it/about
+              - listitem [ref=f14e843]:
+                - link "Guida al Vetro di Murano" [ref=f14e844] [cursor=pointer]:
+                  - /url: /it/murano-glass
+              - listitem [ref=f14e845]:
+                - link "Domande su Murano" [ref=f14e846] [cursor=pointer]:
+                  - /url: /it/murano-faq
+              - listitem [ref=f14e847]:
+                - link "Storie di Murano" [ref=f14e848] [cursor=pointer]:
+                  - /url: /it/blog
+        - generic [ref=f14e849]:
+          - heading "Assistenza clienti" [level=2] [ref=f14e850]:
+            - button "Assistenza clienti" [expanded]
+          - region "Assistenza clienti" [ref=f14e851]:
+            - list [ref=f14e852]:
+              - listitem [ref=f14e853]:
+                - link "Contattaci" [ref=f14e854] [cursor=pointer]:
+                  - /url: /it/contact
+              - listitem [ref=f14e855]:
+                - link "Resi e Rimborsi" [ref=f14e856] [cursor=pointer]:
+                  - /url: /it/legal/returns
+              - listitem [ref=f14e857]:
+                - link "perlamuranoglass@gmail.com" [ref=f14e858] [cursor=pointer]:
+                  - /url: mailto:perlamuranoglass@gmail.com
+      - list [ref=f14e859]:
+        - listitem [ref=f14e860]:
+          - generic [ref=f14e863]: Lavorato a mano a Murano
+        - listitem [ref=f14e864]:
+          - generic [ref=f14e868]: Pagamento sicuro
+        - listitem [ref=f14e869]:
+          - generic [ref=f14e873]: Pronto da regalare
+        - listitem [ref=f14e874]:
+          - generic [ref=f14e879]: Spedito dall'Italia
+      - paragraph [ref=f14e880]: Spedizione omaggio in Italia ed Europa · USA e Canada 30 € · Resto del mondo 40 €
+    - generic [ref=f14e881]:
+      - navigation "Social network" [ref=f14e882]:
+        - list [ref=f14e883]:
+          - listitem [ref=f14e884]:
+            - link "Instagram" [ref=f14e885] [cursor=pointer]:
+              - /url: https://www.instagram.com/venetianmuranoglass/
+          - listitem [ref=f14e890]:
+            - link "Facebook" [ref=f14e891] [cursor=pointer]:
+              - /url: https://www.facebook.com/venetianmuranoglass
+          - listitem [ref=f14e894]:
+            - link "TikTok" [ref=f14e895] [cursor=pointer]:
+              - /url: https://www.tiktok.com/@venetian.murano.g
+          - listitem [ref=f14e899]:
+            - link "YouTube" [ref=f14e900] [cursor=pointer]:
+              - /url: https://www.youtube.com/@venetianmuranoglass
+          - listitem [ref=f14e904]:
+            - link "LinkedIn" [ref=f14e905] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/venetian-murano-glass
+      - generic [ref=f14e910]:
+        - generic [ref=f14e911]: Accettiamo
+        - generic [ref=f14e912]:
+          - img "Visa" [ref=f14e913]:
+            - generic [ref=f14e914]: VISA
+          - img "Mastercard" [ref=f14e915]
+          - img "Apple Pay" [ref=f14e919]:
+            - generic [ref=f14e922]: Pay
+          - img "Google Pay" [ref=f14e923]
+      - navigation "Note legali" [ref=f14e925]:
+        - list [ref=f14e926]:
+          - listitem [ref=f14e927]:
+            - link "Informativa sulla Privacy" [ref=f14e928] [cursor=pointer]:
+              - /url: /it/legal/privacy
+          - listitem [ref=f14e929]:
+            - link "Termini e Condizioni" [ref=f14e930] [cursor=pointer]:
+              - /url: /it/legal/terms
+          - listitem [ref=f14e931]:
+            - link "Cookie Policy" [ref=f14e932] [cursor=pointer]:
+              - /url: /it/legal/cookies
+      - paragraph [ref=f14e933]: © 2026 Perla Murano Glass. Tutti i diritti riservati.
+      - paragraph [ref=f14e934]:
+        - generic [ref=f14e935]: Perla Murano Glass
+  - generic [ref=f14e948] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=f14e949]
+    - generic [ref=f14e953]:
+      - button "Open issues overlay" [ref=f14e954]:
+        - generic [ref=f14e955]:
+          - generic [aria-hidden] [ref=f14e956]: "1"
+          - generic [ref=f14e957]: "2"
+        - generic [ref=f14e958]:
+          - text: Issue
+          - generic [aria-hidden] [ref=f14e959]: s
+      - button "Collapse issues badge" [ref=f14e960]
+  - alert [ref=f14e963]
+  - generic [ref=f14e965]:
+    - paragraph [ref=f14e966]:
+      - text: Utilizziamo cookie essenziali per far funzionare questo sito, e cookie facoltativi di analisi/marketing solo con il tuo consenso. Consulta la nostra
+      - link "Cookie Policy" [ref=f14e967] [cursor=pointer]:
+        - /url: /it/legal/cookies
+      - text: .
+    - generic [ref=f14e968]:
+      - button "Accetta tutti" [ref=f14e969] [cursor=pointer]
+      - button "Rifiuta non essenziali" [ref=f14e970] [cursor=pointer]
+      - button "Personalizza" [ref=f14e971] [cursor=pointer]

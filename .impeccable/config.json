@@ -35,6 +35,15 @@
         "value": "${encodeuricomponent(pairing.heading",
         "createdAt": "2026-10-01T22:29:55.732Z",
         "reason": "Admin Site style preview loads the Google family the admin picked at runtime, so it cannot be a fixed DESIGN.md family; admin UI, not storefront type. User asked for the font-pairing dropdown."
+      },
+      {
+        "rule": "gradient-text",
+        "value": "*",
+        "files": [
+          "src/lib/block-theme.ts"
+        ],
+        "createdAt": "2026-10-05T22:34:20.335Z",
+        "reason": "Claude: star rating partial fill via background-clip, same technique as existing .bld-stars in section-builder.ts; not decorative text"
       }
     ]
   }

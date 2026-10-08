@@ -44,11 +44,13 @@ function ReasonRow({
   product,
   reason,
   index,
+  count,
   viewLabel,
 }: {
   product: ReasonsProduct;
   reason: Reason;
   index: number;
+  count: number;
   viewLabel: string;
 }) {
   const [rowRef, revealed] = useRevealed();
@@ -74,6 +76,13 @@ function ReasonRow({
       className={`mr-row ${imageRight ? "mr-row--img-right" : "mr-row--img-left"}`}
     >
       <div className="mr-copy">
+        {/* The editorial index, as in the collections above: decorative, the
+            rows are already in order. */}
+        <p className="mr-index" aria-hidden="true">
+          <span className="mr-index-current">{String(index + 1).padStart(2, "0")}</span>
+          <span className="mr-index-sep">/</span>
+          <span className="mr-index-total">{String(count).padStart(2, "0")}</span>
+        </p>
         <h2 className="mr-title">{reason.title}</h2>
         <span className="mr-title-rule" aria-hidden="true" />
         <p className="mr-body">{reason.body}</p>
@@ -144,6 +153,7 @@ export function MuranoReasons({
           product={product}
           reason={reasons[i]}
           index={i}
+          count={count}
           viewLabel={viewLabel}
         />
       ))}

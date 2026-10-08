@@ -1,3 +1,10 @@
+import type { ReactNode } from "react";
+import { LayoutSection } from "@/components/layout-section";
+import { PreviewBridge } from "@/components/layout-preview-bridge-server";
+import { isLayoutPreview } from "@/lib/layout-preview-server";
+import { pageEntries } from "@/lib/page-layout-store";
+import type { ABOUT_SECTIONS } from "@/lib/page-layout";
+import { withPageMeta } from "@/lib/page-meta";
 import { Link } from "@/components/localized-link";
 import Image from "next/image";
 import type { Metadata } from "next";
@@ -11,7 +18,7 @@ import { ShelfMain } from "@/components/shelf-main";
 import { ShelfBody } from "@/components/shelf-page";
 import { AboutGondolaArt } from "@/components/about-gondola-art";
 
-export async function generateMetadata(): Promise<Metadata> {
+async function baseMetadata(): Promise<Metadata> {
   const [settings, locale] = await Promise.all([getStoreSettings(), getLocale()]);
   const dict = getDictionary(locale);
   // A specific, keyword-carrying description (rather than the generic
@@ -37,7 +44,10 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: dict.about.title,
     description,
-    alternates: { canonical: localizedCanonical(locale, "/about"), languages: hreflangAlternates("/about") },
+    alternates: {
+      canonical: localizedCanonical(locale, "/about"),
+      languages: hreflangAlternates("/about"),
+    },
     openGraph: {
       title: dict.about.title,
       description,
@@ -53,7 +63,15 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function AboutPage() {
+export async function generateMetadata(): Promise<Metadata> {
+  return withPageMeta("/about", await baseMetadata());
+}
+
+type AboutSectionId = (typeof ABOUT_SECTIONS)[number]["id"];
+
+export default async function AboutPage({ searchParams }: PageProps<"/about">) {
+  const preview = await isLayoutPreview(searchParams);
+  const entries = await pageEntries("about", { preview });
   const [settings, locale] = await Promise.all([getStoreSettings(), getLocale()]);
   const dict = getDictionary(locale);
 
@@ -69,8 +87,8 @@ export default async function AboutPage() {
     { title: dict.home.whyReturns, body: dict.home.whyReturnsBody },
   ];
 
-  return (
-    <ShelfMain className="about-page">
+  const sections: Record<AboutSectionId, ReactNode> = {
+    hero: (
       <section className="about-hero">
         <Image
           src="/blog/burano-colorful-houses-canal.jpg"
@@ -89,6 +107,8 @@ export default async function AboutPage() {
           </Reveal>
         </div>
       </section>
+    ),
+    body: (
       <ShelfBody width="lg" editorial airy>
         <Reveal>
           <AnimatedHeading as="h2" text={dict.about.heritageTitle} className="shop-h2-plain" />
@@ -159,7 +179,18 @@ export default async function AboutPage() {
           {dict.about.friendsOutro}
         </p>
       </ShelfBody>
-      <AboutGondolaArt />
+    ),
+    art: <AboutGondolaArt />,
+  };
+
+  return (
+    <ShelfMain className="about-page">
+      {entries.map((entry) => (
+        <LayoutSection key={entry.id} entry={entry} preview={preview}>
+          {entry.custom ? null : sections[entry.id as AboutSectionId]}
+        </LayoutSection>
+      ))}
+      {preview && <PreviewBridge target="about" />}
     </ShelfMain>
   );
 }
