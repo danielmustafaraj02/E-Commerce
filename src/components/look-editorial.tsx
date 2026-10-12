@@ -88,8 +88,6 @@ export const EDITORIAL_TEMPLATES: Record<
   "couture-bold": LookCoutureBold,
 };
 
-export { EDITORIAL_TEMPLATE_IDS } from "@/lib/look-templates";
-
 /**
  * Renders a look in the chosen style.
  *

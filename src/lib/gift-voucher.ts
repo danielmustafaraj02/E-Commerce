@@ -20,8 +20,6 @@ export const giftVoucherPurchaseSchema = z.object({
   turnstileToken: z.string().max(4096).optional(),
 });
 
-export type GiftVoucherPurchase = z.infer<typeof giftVoucherPurchaseSchema>;
-
 // createGiftVoucherCode / normalizeGiftVoucherCode moved to
 // @/lib/gift-voucher-codes (the node:crypto half of a gift voucher's
 // definition) — see that file for why.

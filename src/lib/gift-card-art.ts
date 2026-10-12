@@ -7,9 +7,6 @@ export const CARD_INK = "#123d43";
 export const CARD_GOLD = "#b89a62";
 export const CARD_STOCK = "#fdfbf6";
 
-// Sticker width as a share of the card's width.
-export const STICKER_SIZE = 0.12;
-
 type Layer = { d: string; fill: string; stroke?: string };
 
 // Each motif is drawn on a 24×24 grid.

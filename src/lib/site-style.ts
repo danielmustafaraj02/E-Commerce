@@ -61,13 +61,6 @@ export const DEFAULT_COLORS: Record<ColorRole, string> = {
   colorBorder: "#ecebe6",
 };
 
-export const DEFAULT_FONTS = {
-  /* The bundled faces. Empty means "use the role's own webfont", which is
-     what --font-heading / --font-body resolve to in globals.css. */
-  fontHeading: "",
-  fontBody: "",
-} as const;
-
 export type SiteStyle = Partial<Record<ColorRole, string | null>> & {
   fontHeading?: string | null;
   fontBody?: string | null;
