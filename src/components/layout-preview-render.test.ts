@@ -8,7 +8,7 @@ import { renderToString } from "react-dom/server";
 import { LayoutPreviewBridge } from "./layout-preview-bridge";
 import { LayoutSection } from "./layout-section";
 import { HOME_SECTIONS, resolveLayout } from "@/lib/page-layout";
-import { SECTION_TEMPLATES } from "@/lib/section-builder";
+import { SECTION_TEMPLATES } from "@/lib/section-templates";
 
 describe("preview mode rendering", () => {
   it("renders the bridge and every kind of section on the server", () => {

@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { parseStyle, type SectionStyle } from "@/lib/page-layout";
-import { parseBuilder, type BuilderDoc, type SectionTemplate } from "@/lib/section-builder";
+import { parseBuilder, type BuilderDoc } from "@/lib/section-builder";
+import { type SectionTemplate } from "@/lib/section-templates";
 
 /** A template the admin saved from one of their own sections. */
 export type SavedTemplate = SectionTemplate & { saved: true; style?: SectionStyle };

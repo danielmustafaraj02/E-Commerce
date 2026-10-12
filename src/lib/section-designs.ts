@@ -1,11 +1,7 @@
 import { videoEmbedUrl } from "@/lib/video-embed";
 import { JEWELLERY_STYLES } from "./jewellery-styles";
-import {
-  parseBuilder,
-  type BuilderBlock,
-  type BuilderDoc,
-  type SectionTemplate,
-} from "./section-builder";
+import { parseBuilder, type BuilderBlock, type BuilderDoc } from "./section-builder";
+import { type SectionTemplate } from "@/lib/section-templates";
 import type { LayoutEntry, PageTarget, SectionMeta, SectionStyle } from "./page-layout";
 
 export type SectionDesign = SectionTemplate & { styleOnly: boolean; style: SectionStyle };

@@ -1,12 +1,8 @@
 import { JEWELLERY_STYLES } from "./jewellery-styles";
 import { createSectionDesigns } from "./section-designs";
 import { ARTICLE_SECTIONS, SECTIONS_BY_TARGET, type PageTarget } from "@/lib/page-layout";
-import {
-  SECTION_TEMPLATES,
-  type BuilderBlock,
-  type BuilderDoc,
-  type SectionTemplate,
-} from "@/lib/section-builder";
+import { SECTION_TEMPLATES, type SectionTemplate } from "@/lib/section-templates";
+import { type BuilderBlock, type BuilderDoc } from "@/lib/section-builder";
 
 /**
  * The site, section by section, as editable designs.

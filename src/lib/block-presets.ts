@@ -1,4 +1,5 @@
-import { copyLook, parseBuilder, type BlockLookCopy } from "@/lib/section-builder";
+import { copyLook, type BlockLookCopy } from "@/lib/section-builder-editing";
+import { parseBuilder } from "@/lib/section-builder";
 
 /** Saved looks for blocks ("Gold button", "Soft card"): a name and the block's
  *  style, effect and animations. Stored as JSON and re-validated through the

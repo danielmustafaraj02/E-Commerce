@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { applyBlockDrop, blockHtml, compileBuilder, parseBuilder } from "./section-builder";
+import { applyBlockDrop } from "@/lib/section-builder-editing";
+import { blockHtml, compileBuilder, parseBuilder } from "./section-builder";
 import { canvasViewport } from "./canvas-viewport";
 
 const doc = (blocks: unknown[], second?: unknown[]) =>

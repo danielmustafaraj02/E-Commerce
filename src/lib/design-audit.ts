@@ -1,5 +1,6 @@
 import { contrastRatio } from "@/lib/site-style";
-import type { BlockPos, BuilderBlock, BuilderDoc } from "@/lib/section-builder";
+import type { BlockPos } from "@/lib/section-builder-editing";
+import type { BuilderBlock, BuilderDoc } from "@/lib/section-builder";
 
 /**
  * Checks a builder design for things that make it hard to use (accessibility)

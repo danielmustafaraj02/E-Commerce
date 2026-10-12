@@ -1,21 +1,23 @@
 import { describe, expect, it } from "vitest";
+import { SECTION_TEMPLATES } from "@/lib/section-templates";
 import {
-  SECTION_TEMPLATES,
   applyBlockDrop,
   duplicateBlock,
-  builderNeedsRuntime,
-  compileBuilder,
-  guiElementsCss,
   freshBlock,
   getRawField,
-  inlineHtml,
   insertBlock,
   isSingleLineField,
   moveBlock,
-  parseBuilder,
   patchBlockStyle,
   setColumnWidths,
   setRawField,
+} from "@/lib/section-builder-editing";
+import {
+  builderNeedsRuntime,
+  compileBuilder,
+  guiElementsCss,
+  inlineHtml,
+  parseBuilder,
 } from "./section-builder";
 import { sanitizeSectionHtml } from "./custom-section";
 import { ALL_TEMPLATES, PAGE_TEMPLATES } from "./page-templates";
