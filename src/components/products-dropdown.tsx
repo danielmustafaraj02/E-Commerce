@@ -21,7 +21,6 @@ export function ProductsDropdown({
   viewAllLabel,
   eyebrow,
   viewAllHref = "/products",
-  locale,
 }: {
   categories: CategoryLink[];
   label: string;
@@ -29,8 +28,6 @@ export function ProductsDropdown({
   /** The editorial kicker above the list — "Explore the collections". */
   eyebrow?: string;
   viewAllHref?: string;
-  locale?: string;
-  signedIn?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);

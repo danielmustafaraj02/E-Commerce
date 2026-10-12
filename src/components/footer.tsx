@@ -106,11 +106,6 @@ export async function Footer({
     { key: "gift", label: f.trustGift },
     { key: "shipping", label: f.trustShipping },
   ] as const;
-  const hasPayments =
-    payments.cards ||
-    payments.paypal ||
-    payments.bankTransfer ||
-    (payments.stripeMethods?.length ?? 0) > 0;
 
   return (
     <footer className={`site-footer ${homeFontClasses}`}>

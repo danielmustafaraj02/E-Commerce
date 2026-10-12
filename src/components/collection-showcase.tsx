@@ -767,6 +767,9 @@ export function CollectionShowcase({
       stage.removeEventListener("touchend", onTouchEnd);
       disable();
     };
+    // scrollToScene reads only refs and `items`, which is listed; adding the
+    // function itself would re-run this setup on every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, unit, transition]);
 
   return (

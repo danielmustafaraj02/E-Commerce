@@ -29,6 +29,12 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Not application code: vendored agent skills, private local source moved
+    // aside for public builds, and git-ignored scratch/report scripts.
+    ".claude/**",
+    ".local-only/**",
+    "reports/**",
+    "tmp/**",
   ]),
 ]);
 

@@ -1,7 +1,7 @@
 import { withPageMeta } from "@/lib/page-meta";
-import { Fragment, type CSSProperties, type ReactNode } from "react";
+import { type CSSProperties, type ReactNode } from "react";
 import { applyHomeCopy, parseHomeCopy } from "@/lib/home-copy";
-import { HOME_SECTIONS, resolveLayout, visibleEntries, withEditorialExamples, type HomeSectionId } from "@/lib/page-layout";
+import { HOME_SECTIONS, resolveLayout, withEditorialExamples, type HomeSectionId } from "@/lib/page-layout";
 import { getSharedLookOptions } from "@/lib/page-layout-store";
 import { showcasePieces } from "@/lib/showcase-pieces";
 import { homeValueFaq } from "@/lib/i18n/home-values-copy";
@@ -10,7 +10,6 @@ import { templateBody } from "@/lib/page-templates";
 import { LayoutSection } from "@/components/layout-section";
 import { PreviewBridge } from "@/components/layout-preview-bridge-server";
 import { isLayoutPreview } from "@/lib/layout-preview-server";
-import Image from "next/image";
 import { HeroTypingSequence } from "@/components/hero-typing-sequence";
 import { HeroVideo } from "@/components/hero-video";
 import { HeroVideoProduct } from "@/components/hero-video-product";
@@ -21,11 +20,10 @@ import { formatMoney } from "@/lib/format";
 import { getHomepageData } from "@/lib/homepage-data";
 import { getLocale, type Locale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-import { localizedName, localizedDescription, localizedCardProduct } from "@/lib/product-i18n";
+import { localizedName, localizedCardProduct } from "@/lib/product-i18n";
 import { hreflangAlternates, localizedCanonical } from "@/lib/hreflang";
 import { fitTitle } from "@/lib/seo-text";
 import { truncateAtWord } from "@/lib/text";
-import { CatalogImage } from "@/components/catalog-image";
 import { ShelfItem } from "@/components/shelf-item";
 import { Reveal } from "@/components/reveal";
 import { ShelfStagger } from "@/components/shelf-stagger";
@@ -120,9 +118,6 @@ const HERO_ACCENT = "var(--brass)";
 
 const COLLECTION_ORDER = ["collane", "bracciali", "orecchini"];
 
-// A short breath between the store name finishing and the lede starting, so
-// the caret's handoff reads as a pause between sentences, not a race.
-const LEDE_PICKUP_PAUSE_MS = 450;
 
 export default async function Home({ searchParams }: PageProps<"/">) {
   const preview = await isLayoutPreview(searchParams);

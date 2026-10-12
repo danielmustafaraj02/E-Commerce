@@ -210,8 +210,6 @@ export async function Header({
             label={dict.nav.products}
             viewAllLabel={dict.nav.viewAll}
             eyebrow={dict.nav.collectionsEyebrow}
-            locale={locale}
-            signedIn={Boolean(session?.user)}
           />
           <Link href={NEW_COLLECTION.path} className={navChipClass}>
             {getNewCollectionCopy(locale).nav}
