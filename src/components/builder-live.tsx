@@ -8,16 +8,13 @@ import { localizedName, localizedCardProduct } from "@/lib/product-i18n";
 import { getStoreSettings } from "@/lib/store-settings";
 import { getShowcaseCopy, SHOWCASE_SCENE_ORDER } from "@/lib/i18n/showcase-copy";
 import { getAllLooks } from "@/lib/look-data";
-import { getLookPageCopy, getLookEditorialDescription } from "@/lib/i18n/look-page-copy";
 import { buildFaq } from "@/lib/faq";
 import { getShippingFacts } from "@/lib/shipping-banner";
 import { Link } from "@/components/localized-link";
 import { ShelfItem } from "@/components/shelf-item";
 import { PopularCarousel } from "@/components/popular-carousel";
-import { EditorialReveal } from "@/components/editorial-reveal";
-import { LookRow } from "@/components/look-editorial";
+import { LooksEditorialList } from "@/components/looks-editorial-list";
 import { getSharedLookOptions } from "@/lib/page-layout-store";
-import { optionAttributes } from "@/lib/section-style";
 import { CollectionShowcase } from "@/components/collection-showcase";
 import { showcasePieces } from "@/lib/showcase-pieces";
 import { CatalogImage } from "@/components/catalog-image";
@@ -98,38 +95,14 @@ export async function LiveBlock({ block }: { block: Extract<BuilderBlock, { type
         getSharedLookOptions(),
       ]);
       if (looks.length === 0) return null;
-      const lookCopy = getLookPageCopy(locale);
       return (
-        <>
-          <div className="looks-editorial-list" data-editorial-root {...optionAttributes(lookOptions)}>
-            <EditorialReveal>
-              {looks.map((look, index) => (
-                <LookRow
-                  style={lookOptions.lookStyle}
-                  index={index}
-                  key={look.id}
-                  look={look}
-                  locale={settings.defaultLocale}
-                  labels={{
-                    view: dict.looks.viewLook,
-                    save: dict.look.save,
-                    pieces: dict.looks.pieces,
-                    description: getLookEditorialDescription(look.name, locale),
-                    included: lookCopy.editorialIncluded,
-                    viewPiece: lookCopy.viewPiece,
-                    price: lookCopy.editorialPrice,
-                    kinds: dict.giftFinder.preference,
-                  }}
-                />
-              ))}
-            </EditorialReveal>
-          </div>
-          <p className="shelf-looks-more">
-            <Link href="/looks" className="shelf-link">
-              {dict.looks.allLooks} <span aria-hidden="true">→</span>
-            </Link>
-          </p>
-        </>
+        <LooksEditorialList
+          looks={looks}
+          options={lookOptions}
+          dict={dict}
+          locale={locale}
+          catalogLocale={settings.defaultLocale}
+        />
       );
     }
 

@@ -5,7 +5,6 @@ import { HOME_SECTIONS, resolveLayout, withEditorialExamples, type HomeSectionId
 import { getSharedLookOptions } from "@/lib/page-layout-store";
 import { showcasePieces } from "@/lib/showcase-pieces";
 import { homeValueFaq } from "@/lib/i18n/home-values-copy";
-import { optionAttributes } from "@/lib/section-style";
 import { templateBody } from "@/lib/page-templates";
 import { LayoutSection } from "@/components/layout-section";
 import { PreviewBridge } from "@/components/layout-preview-bridge-server";
@@ -27,7 +26,6 @@ import { truncateAtWord } from "@/lib/text";
 import { ShelfItem } from "@/components/shelf-item";
 import { Reveal } from "@/components/reveal";
 import { ShelfStagger } from "@/components/shelf-stagger";
-import { EditorialReveal } from "@/components/editorial-reveal";
 import { getShowcaseCopy, SHOWCASE_SCENE_ORDER } from "@/lib/i18n/showcase-copy";
 import { CollectionShowcase } from "@/components/collection-showcase";
 import { showcaseReasons as getShowcaseReasons } from "@/lib/showcase-reasons";
@@ -39,8 +37,7 @@ import { GiftFinderArrow } from "@/components/gift-finder-arrow";
 import { PopularCarousel } from "@/components/popular-carousel";
 
 import { getAllLooks } from "@/lib/look-data";
-import { LookRow } from "@/components/look-editorial";
-import { getLookPageCopy, getLookEditorialDescription } from "@/lib/i18n/look-page-copy";
+import { LooksEditorialList } from "@/components/looks-editorial-list";
 import { JournalPreview } from "@/components/journal/journal-preview";
 import { homeFontClasses } from "./home-fonts";
 import "./home.css";
@@ -129,7 +126,6 @@ export default async function Home({ searchParams }: PageProps<"/">) {
   // Staff overrides from Admin > Settings > Page text, per language.
   const dict = applyHomeCopy(getDictionary(locale), parseHomeCopy(settings.homeCopy)[locale]);
   const looks = await getAllLooks(locale, 3);
-  const lookCopy = getLookPageCopy(locale);
   const showcaseCopy = getShowcaseCopy(locale);
   const showcaseReasons = getShowcaseReasons(dict.home);
   const editorialCollections = COLLECTION_ORDER.flatMap((prefix) => {
@@ -173,17 +169,13 @@ export default async function Home({ searchParams }: PageProps<"/">) {
   // filtered out first, the seed guard never sees them and re-injects the
   // deleted section on every render. Visible filtering happens after.
   const storedEntries = resolveLayout(settings.homeLayout, HOME_SECTIONS);
-  // The chosen Look layout (Admin > Page layout > Looks > Options), read from the
-  // stored entry: `homeSections` is a static map, and the Looks section's design
-  // depends on this one value. Both this and `storedEntries` above MUST be
-  // declared before `homeSections`: that object literal is evaluated where it is
-  // written, so its `looks:` value reads this binding while the map is being
-  // built. Declared afterwards they were in the temporal dead zone, and the
-  // resulting "Cannot access 'lookStyle' before initialization" surfaced as the
-  // storefront's error boundary.
-  // One look template for the home page and the Looks page (Page layout > Looks).
+  // The chosen Look layout (Admin > Page layout > Looks > Options), one template
+  // for the home page and the Looks page. Both this and `storedEntries` above
+  // MUST be declared before `homeSections`: that object literal is evaluated
+  // where it is written, so its `looks:` value reads this binding while the map
+  // is being built. Declared afterwards they were in the temporal dead zone,
+  // which surfaced as the storefront's error boundary.
   const lookOptions = await getSharedLookOptions();
-  const lookStyle = lookOptions.lookStyle;
 
   // The product in each showcase scene's hover card (the one whose photo it shows).
   const showcaseCardPieces = await showcasePieces(
@@ -338,42 +330,13 @@ export default async function Home({ searchParams }: PageProps<"/">) {
             </div>
           </div>
           {looks.length > 0 && (
-            <div className="looks-editorial-list" data-editorial-root {...optionAttributes(lookOptions)}>
-              {/* One controller for the whole list: it arms the scroll-in
-                  sequence. The scroll-linked parallax drift that used to run
-                  alongside it is gone — three elements of a row sliding past
-                  each other at three different rates read as a carousel
-                  effect, not as an editorial page. The rows now simply
-                  arrive, in order, and then hold still. */}
-              <EditorialReveal>
-                {looks.map((look, index) => (
-                  <LookRow
-                    style={lookStyle}
-                    index={index}
-                    key={look.id}
-                    look={look}
-                    locale={settings.defaultLocale}
-                    labels={{
-                    view: dict.looks.viewLook,
-                    save: dict.look.save,
-                    pieces: dict.looks.pieces,
-                    description: getLookEditorialDescription(look.name, locale),
-                    included: lookCopy.editorialIncluded,
-                    viewPiece: lookCopy.viewPiece,
-                    price: lookCopy.editorialPrice,
-                    kinds: dict.giftFinder.preference,
-                  }}
-                />
-                ))}
-              </EditorialReveal>
-            </div>
-          )}
-          {looks.length > 0 && (
-            <p className="shelf-looks-more">
-              <Link href="/looks" className="shelf-link">
-                {dict.looks.allLooks} <span aria-hidden="true">→</span>
-              </Link>
-            </p>
+            <LooksEditorialList
+              looks={looks}
+              options={lookOptions}
+              dict={dict}
+              locale={locale}
+              catalogLocale={settings.defaultLocale}
+            />
           )}
         </div>
       </section>

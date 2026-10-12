@@ -11,7 +11,7 @@ import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { hreflangAlternates, localizedCanonical } from "@/lib/hreflang";
 import { getAllLooks } from "@/lib/look-data";
-import { getLookPageCopy, getLookEditorialDescription } from "@/lib/i18n/look-page-copy";
+import { getLookPageCopy, lookRowLabels } from "@/lib/i18n/look-page-copy";
 import { applyTemplate } from "@/lib/i18n/format";
 import { COMPOSED_LOOK_DISCOUNT_PERCENT } from "@/lib/looks";
 import type { FaqItem } from "@/lib/faq";
@@ -83,16 +83,7 @@ export default async function LooksPage({ searchParams }: PageProps<"/looks">) {
                 look={look}
                 locale={settings.defaultLocale}
                 priority={i === 0}
-                labels={{
-                  view: dict.looks.viewLook,
-                  save: dict.look.save,
-                  pieces: dict.looks.pieces,
-                  description: getLookEditorialDescription(look.name, locale),
-                  included: copy.editorialIncluded,
-                    viewPiece: copy.viewPiece,
-                  price: copy.editorialPrice,
-                  kinds: dict.giftFinder.preference,
-                }}
+                labels={lookRowLabels(look.name, dict, locale)}
               />
             ))}
           </div>

@@ -1,4 +1,5 @@
 import type { Locale } from "./locale";
+import type { Dictionary } from "./dictionaries";
 
 // Copy for the looks listing and the sections under one look: the reasons,
 // questions, piece details and "learn more" links. Italian and English only
@@ -240,4 +241,25 @@ export function getLookEditorialDescription(name: string, locale: Locale): strin
   return (
     description?.[locale === "it" ? "it" : "en"] ?? getLookPageCopy(locale).editorialDescription
   );
+}
+
+/** The labels one look row (components/look-editorial.tsx LookRow) shows, in
+ *  the visitor's language. Shared by the home page, the Looks page and the
+ *  page builder's live "looks" block. */
+export function lookRowLabels(
+  lookName: string,
+  dict: Pick<Dictionary, "looks" | "look" | "giftFinder">,
+  locale: Locale
+) {
+  const copy = getLookPageCopy(locale);
+  return {
+    view: dict.looks.viewLook,
+    save: dict.look.save,
+    pieces: dict.looks.pieces,
+    description: getLookEditorialDescription(lookName, locale),
+    included: copy.editorialIncluded,
+    viewPiece: copy.viewPiece,
+    price: copy.editorialPrice,
+    kinds: dict.giftFinder.preference,
+  };
 }
