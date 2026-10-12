@@ -13,16 +13,15 @@ import {
   GIFT_CARD_EMAIL_MAX,
   GIFT_CARD_STICKERS,
   GIFT_CARD_STICKER_MAX,
-  giftCardLines,
   type GiftCardBack,
   type GiftCardFont,
-  type GiftCardSticker,
-} from "@/lib/gift-card";
+} from "@/lib/gift-card-options";
+import { giftCardLines } from "@/lib/gift-card-lines";
 import { GIFT_CARD_FONT_FAMILY } from "@/lib/gift-card-fonts";
 import { BACK_ART } from "@/lib/gift-card-art";
 import { applyTemplate } from "@/lib/i18n/format";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
-import type { GiftCard } from "@/lib/gift-card";
+import type { GiftCard, GiftCardSticker } from "@/lib/gift-card";
 import "./gift-card.css";
 
 type DesignerProps = { dict: Dictionary["giftCard"]; price: string; brand: string };

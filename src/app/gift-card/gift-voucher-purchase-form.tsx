@@ -5,7 +5,7 @@ import { FormAlert } from "@/components/form-alert";
 import { TurnstileWidget } from "@/components/turnstile-widget";
 import { useLocalizedRouter } from "@/components/localized-link";
 import { formatMoney } from "@/lib/format";
-import { GIFT_VOUCHER_AMOUNTS } from "@/lib/gift-voucher";
+import { GIFT_VOUCHER_AMOUNTS } from "@/lib/gift-voucher-amounts";
 import type { GiftVoucherCopy } from "@/lib/gift-voucher-copy";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 

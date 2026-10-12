@@ -1,9 +1,11 @@
 import { z } from "zod";
+import {
+  GIFT_VOUCHER_AMOUNTS,
+  GIFT_VOUCHER_MESSAGE_MAX,
+  GIFT_VOUCHER_NAME_MAX,
+} from "@/lib/gift-voucher-amounts";
 
-export const GIFT_VOUCHER_AMOUNTS = [10_000, 20_000, 50_000] as const;
-export const GIFT_VOUCHER_CURRENCY = "EUR";
-export const GIFT_VOUCHER_MESSAGE_MAX = 240;
-export const GIFT_VOUCHER_NAME_MAX = 60;
+export * from "@/lib/gift-voucher-amounts";
 
 export const giftVoucherPurchaseSchema = z.object({
   amount: z

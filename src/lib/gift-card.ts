@@ -1,29 +1,22 @@
 import { z } from "zod";
+import {
+  GIFT_CARD_BACKS,
+  GIFT_CARD_EMAIL_MAX,
+  GIFT_CARD_FONTS,
+  GIFT_CARD_MESSAGE_MAX,
+  GIFT_CARD_NAME_MAX,
+  GIFT_CARD_STICKERS,
+  GIFT_CARD_STICKER_MAX,
+  type GiftCardBack,
+} from "@/lib/gift-card-options";
 
 export { giftCardLines } from "@/lib/gift-card-lines";
+export * from "@/lib/gift-card-options";
 
 // The personalised gift card add-on: a digital card, bought only together with
 // an order and emailed to the recipient once that order is paid. Shared by the
 // designer page, the cart, checkout validation, order creation, the email, the
 // card's own page and the admin order page, so the limits and the text agree.
-
-export const GIFT_CARD_FONTS = ["serif", "script", "classic", "modern", "handwritten"] as const;
-export type GiftCardFont = (typeof GIFT_CARD_FONTS)[number];
-
-export const GIFT_CARD_MESSAGE_MAX = 200;
-export const GIFT_CARD_NAME_MAX = 40;
-export const GIFT_CARD_EMAIL_MAX = 254;
-
-// Little printed motifs the customer drags onto the front, at most three so
-// the message stays the point. Positions are the motif's centre as a
-// percentage of the card's width and height, so they print the same at any size.
-export const GIFT_CARD_STICKERS = ["heart", "pearl", "star", "sparkle", "flower", "moon"] as const;
-export type GiftCardStickerIcon = (typeof GIFT_CARD_STICKERS)[number];
-export const GIFT_CARD_STICKER_MAX = 3;
-
-// The colour of the stock on the back, which carries the Perla logo.
-export const GIFT_CARD_BACKS = ["ivory", "lagoon", "ruby", "blush"] as const;
-export type GiftCardBack = (typeof GIFT_CARD_BACKS)[number];
 
 const stickerSchema = z.object({
   icon: z.enum(GIFT_CARD_STICKERS),
