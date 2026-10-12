@@ -981,13 +981,10 @@
     transform: translateX(0);
   }
 }
-/* The h1 and the lede are excluded here — both play their own typing reveal
-   (see components/typing-title.tsx) instead of the whole-line rise every other
-   child gets, so typed copy doesn't get two competing entrance motions (the
-   lede used to rise in at a fixed 2100ms while its typing had already begun,
-   which made the words appear mid-sentence and left its caret riding an
-   invisible line). */
-.shelf-hero-copy > *:not(h1):not(.typing-title) {
+/* The h1 is excluded here — it plays its own typing reveal instead of the
+   whole-line rise every other child gets, so typed copy doesn't get two
+   competing entrance motions. */
+.shelf-hero-copy > *:not(h1) {
   animation: hero-rise 0.78s cubic-bezier(0.2, 0.75, 0.3, 1) both;
 }
 /* The subtitle, CTA and note wait for the name to be written before they

@@ -928,19 +928,6 @@ const en = {
     backHome: "Back to home",
     browseProducts: "Browse products",
   },
-  journey: {
-    title: "Your Murano Journey",
-    welcomeBack: "Welcome Back",
-    welcomeBackSub: "Continue where you left off",
-    subOne: "A piece that caught your eye",
-    subMany: "Pieces that caught your eye",
-    seenLabel: "Viewed",
-    cta: "Explore all pieces",
-    relatedTitle: "You might also love",
-    emptyTitle: "Begin Your Journey",
-    emptyBody: "Pieces you look at will appear here, so you can find them again.",
-    emptyCta: "Browse the collection",
-  },
   cookieConsent: {
     message:
       "We use essential cookies to run this site, and optional analytics/marketing cookies only with your consent. See our",
@@ -1877,19 +1864,6 @@ const it: Dictionary = {
     body: "La pagina che stai cercando non esiste o potrebbe essere stata spostata.",
     backHome: "Torna alla home",
     browseProducts: "Sfoglia i prodotti",
-  },
-  journey: {
-    title: "Il tuo viaggio a Murano",
-    welcomeBack: "Bentornato",
-    welcomeBackSub: "Continua da dove avevi lasciato",
-    subOne: "Un pezzo che ha catturato la tua attenzione",
-    subMany: "Pezzi che hanno catturato la tua attenzione",
-    seenLabel: "Visto",
-    cta: "Esplora tutti i pezzi",
-    relatedTitle: "Potrebbe piacerti anche",
-    emptyTitle: "Inizia il tuo viaggio",
-    emptyBody: "I gioielli che guardi compariranno qui, così potrai ritrovarli.",
-    emptyCta: "Sfoglia la collezione",
   },
   cookieConsent: {
     message:
@@ -2834,20 +2808,6 @@ const fr: Dictionary = {
     backHome: "Retour à l'accueil",
     browseProducts: "Parcourir les produits",
   },
-  journey: {
-    title: "Votre voyage à Murano",
-    welcomeBack: "Bon retour",
-    welcomeBackSub: "Reprenez là où vous vous êtes arrêté",
-    subOne: "Une pièce qui a retenu votre attention",
-    subMany: "Des pièces qui ont retenu votre attention",
-    seenLabel: "Vu",
-    cta: "Explorer toutes les pièces",
-    relatedTitle: "Vous pourriez aussi aimer",
-    emptyTitle: "Commencez votre voyage",
-    emptyBody:
-      "Explorez notre collection et découvrez des pièces en verre de Murano faites à la main.",
-    emptyCta: "Parcourir la collection",
-  },
   cookieConsent: {
     message:
       "Nous utilisons des cookies essentiels pour faire fonctionner ce site, et des cookies facultatifs d'analyse/marketing uniquement avec votre consentement. Consultez notre",
@@ -3787,19 +3747,6 @@ const de: Dictionary = {
     backHome: "Zurück zur Startseite",
     browseProducts: "Produkte durchstöbern",
   },
-  journey: {
-    title: "Ihre Murano-Reise",
-    welcomeBack: "Willkommen zurück",
-    welcomeBackSub: "Machen Sie dort weiter, wo Sie aufgehört haben",
-    subOne: "Ein Stück, das Ihnen ins Auge gefallen ist",
-    subMany: "Stücke, die Ihnen ins Auge gefallen sind",
-    seenLabel: "Angesehen",
-    cta: "Alle Stücke entdecken",
-    relatedTitle: "Das könnte Ihnen auch gefallen",
-    emptyTitle: "Beginnen Sie Ihre Reise",
-    emptyBody: "Entdecken Sie unsere Kollektion handgefertigter Murano-Glaskunstwerke.",
-    emptyCta: "Kollektion durchstöbern",
-  },
   cookieConsent: {
     message:
       "Wir verwenden essenzielle Cookies, um diese Website zu betreiben, sowie optionale Analyse-/Marketing-Cookies nur mit Ihrer Zustimmung. Siehe unsere",
@@ -4701,19 +4648,6 @@ const ar: Dictionary = {
     backHome: "العودة إلى الصفحة الرئيسية",
     browseProducts: "تصفّح المنتجات",
   },
-  journey: {
-    title: "رحلتك في مورانو",
-    welcomeBack: "مرحبًا بعودتك",
-    welcomeBackSub: "تابع من حيث توقفت",
-    subOne: "قطعة لفتت انتباهك",
-    subMany: "قطع لفتت انتباهك",
-    seenLabel: "تمت المشاهدة",
-    cta: "استكشف جميع القطع",
-    relatedTitle: "قد يعجبك أيضًا",
-    emptyTitle: "ابدأ رحلتك",
-    emptyBody: "استكشف مجموعتنا واكتشف قطعًا يدوية الصنع من زجاج مورانو.",
-    emptyCta: "تصفّح المجموعة",
-  },
   cookieConsent: {
     message:
       "نستخدم ملفات تعريف ارتباط أساسية لتشغيل هذا الموقع، وملفات تعريف ارتباط اختيارية للتحليلات والتسويق بموافقتك فقط. راجع",
@@ -5591,19 +5525,6 @@ const zh: Dictionary = {
     body: "您要查找的页面不存在，或可能已被移动。",
     backHome: "返回首页",
     browseProducts: "浏览商品",
-  },
-  journey: {
-    title: "您的穆拉诺之旅",
-    welcomeBack: "欢迎回来",
-    welcomeBackSub: "从上次浏览的地方继续",
-    subOne: "吸引您目光的作品",
-    subMany: "吸引您目光的作品",
-    seenLabel: "已浏览",
-    cta: "探索所有作品",
-    relatedTitle: "您可能还喜欢",
-    emptyTitle: "开始您的旅程",
-    emptyBody: "探索我们的系列，发现手工制作的穆拉诺玻璃艺术品。",
-    emptyCta: "浏览系列",
   },
   cookieConsent: {
     message:
@@ -6538,20 +6459,6 @@ const ru: Dictionary = {
     backHome: "На главную",
     browseProducts: "Смотреть товары",
   },
-  journey: {
-    title: "Ваше путешествие в Мурано",
-    welcomeBack: "С возвращением",
-    welcomeBackSub: "Продолжите с того места, где остановились",
-    subOne: "Изделие, которое привлекло ваше внимание",
-    subMany: "Изделия, которые привлекли ваше внимание",
-    seenLabel: "Просмотрено",
-    cta: "Смотреть все изделия",
-    relatedTitle: "Вам также может понравиться",
-    emptyTitle: "Начните своё путешествие",
-    emptyBody:
-      "Исследуйте нашу коллекцию и откройте для себя изделия ручной работы из муранского стекла.",
-    emptyCta: "Смотреть коллекцию",
-  },
   cookieConsent: {
     message:
       "Мы используем обязательные cookie-файлы для работы сайта, а также необязательные аналитические/маркетинговые cookie, только с вашего согласия. См. нашу",
@@ -7483,19 +7390,6 @@ const es: Dictionary = {
     body: "La página que buscas no existe o puede haber sido movida.",
     backHome: "Volver al inicio",
     browseProducts: "Explorar productos",
-  },
-  journey: {
-    title: "Tu viaje a Murano",
-    welcomeBack: "Bienvenido de nuevo",
-    welcomeBackSub: "Continúa donde lo dejaste",
-    subOne: "Una pieza que llamó tu atención",
-    subMany: "Piezas que llamaron tu atención",
-    seenLabel: "Visto",
-    cta: "Explorar todas las piezas",
-    relatedTitle: "También te podría gustar",
-    emptyTitle: "Comienza tu viaje",
-    emptyBody: "Explora nuestra colección y descubre piezas de vidrio de Murano hechas a mano.",
-    emptyCta: "Explorar la colección",
   },
   cookieConsent: {
     message:
@@ -8431,19 +8325,6 @@ const pt: Dictionary = {
     backHome: "Voltar ao início",
     browseProducts: "Explorar produtos",
   },
-  journey: {
-    title: "A sua viagem a Murano",
-    welcomeBack: "Bem-vindo de volta",
-    welcomeBackSub: "Continue de onde parou",
-    subOne: "Uma peça que chamou a sua atenção",
-    subMany: "Peças que chamaram a sua atenção",
-    seenLabel: "Visto",
-    cta: "Explorar todas as peças",
-    relatedTitle: "Também poderá gostar",
-    emptyTitle: "Comece a sua viagem",
-    emptyBody: "Explore a nossa coleção e descubra peças de vidro de Murano feitas à mão.",
-    emptyCta: "Explorar a coleção",
-  },
   cookieConsent: {
     message:
       "Utilizamos cookies essenciais para o funcionamento deste site, e cookies opcionais de análise/marketing apenas com o seu consentimento. Consulte a nossa",
@@ -9365,19 +9246,6 @@ const hi: Dictionary = {
     body: "जिस पेज को आप खोज रहे हैं वह मौजूद नहीं है या शायद स्थानांतरित कर दिया गया हो।",
     backHome: "होम पर वापस जाएं",
     browseProducts: "उत्पाद ब्राउज़ करें",
-  },
-  journey: {
-    title: "आपकी मुरानो यात्रा",
-    welcomeBack: "वापसी पर स्वागत है",
-    welcomeBackSub: "जहां आपने छोड़ा था वहीं से जारी रखें",
-    subOne: "एक टुकड़ा जिसने आपका ध्यान खींचा",
-    subMany: "टुकड़े जिन्होंने आपका ध्यान खींचा",
-    seenLabel: "देखा गया",
-    cta: "सभी टुकड़े देखें",
-    relatedTitle: "आपको यह भी पसंद आ सकता है",
-    emptyTitle: "अपनी यात्रा शुरू करें",
-    emptyBody: "हमारे संग्रह को देखें और हस्तनिर्मित मुरानो कांच के टुकड़ों की खोज करें।",
-    emptyCta: "संग्रह ब्राउज़ करें",
   },
   cookieConsent: {
     message:
@@ -10309,19 +10177,6 @@ const ja: Dictionary = {
     body: "お探しのページは存在しないか、移動した可能性があります。",
     backHome: "ホームに戻る",
     browseProducts: "商品を見る",
-  },
-  journey: {
-    title: "あなたのムラーノの旅",
-    welcomeBack: "おかえりなさい",
-    welcomeBackSub: "前回の続きからどうぞ",
-    subOne: "目に留まった作品",
-    subMany: "目に留まった作品たち",
-    seenLabel: "閲覧済み",
-    cta: "すべての作品を見る",
-    relatedTitle: "こちらもおすすめ",
-    emptyTitle: "旅を始めましょう",
-    emptyBody: "コレクションを探索して、手作りのムラーノガラス作品をご覧ください。",
-    emptyCta: "コレクションを見る",
   },
   cookieConsent: {
     message:
