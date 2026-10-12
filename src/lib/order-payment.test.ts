@@ -4,7 +4,8 @@ import { applyPaidToOrder } from "./order-payment";
 
 const findUnique = vi.fn();
 const update = vi.fn();
-const tx = { order: { findUnique, update } } as unknown as Prisma.TransactionClient;
+const updateMany = vi.fn();
+const tx = { order: { findUnique, update, updateMany } } as unknown as Prisma.TransactionClient;
 
 function order(status: string, overrides: Record<string, unknown> = {}) {
   return { id: "o1", status, total: 5167, currency: "EUR", user: null, ...overrides };
@@ -12,6 +13,7 @@ function order(status: string, overrides: Record<string, unknown> = {}) {
 
 beforeEach(() => {
   vi.resetAllMocks();
+  updateMany.mockResolvedValue({ count: 1 });
 });
 
 describe("applyPaidToOrder", () => {
@@ -21,7 +23,34 @@ describe("applyPaidToOrder", () => {
     const result = await applyPaidToOrder(tx, { orderNumber: "ORD-1" });
 
     expect(result.outcome).toBe("paid");
-    expect(update).toHaveBeenCalledWith({ where: { id: "o1" }, data: { status: "paid" } });
+    // Only while still pending: a concurrent cancellation must win.
+    expect(updateMany).toHaveBeenCalledWith({
+      where: { id: "o1", status: "pending" },
+      data: { status: "paid" },
+    });
+  });
+
+  it("lets a cancellation that committed after the read win (no paid order with released stock)", async () => {
+    findUnique
+      .mockResolvedValueOnce(order("pending"))
+      .mockResolvedValueOnce({ status: "cancelled" });
+    updateMany.mockResolvedValue({ count: 0 });
+
+    const result = await applyPaidToOrder(tx, { orderNumber: "ORD-1" });
+
+    expect(result.outcome).toBe("paid_after_cancel");
+    expect(update).not.toHaveBeenCalled();
+  });
+
+  it("treats another settlement that got there first as already settled", async () => {
+    findUnique
+      .mockResolvedValueOnce(order("pending"))
+      .mockResolvedValueOnce({ status: "paid" });
+    updateMany.mockResolvedValue({ count: 0 });
+
+    const result = await applyPaidToOrder(tx, { orderNumber: "ORD-1" });
+
+    expect(result.outcome).toBe("already_settled");
   });
 
   it("accepts a matching collected amount (currency compared case-insensitively)", async () => {
@@ -47,6 +76,7 @@ describe("applyPaidToOrder", () => {
 
     expect(result.outcome).toBe("amount_mismatch");
     expect(update).not.toHaveBeenCalled();
+    expect(updateMany).not.toHaveBeenCalled();
   });
 
   it("refuses to mark paid when the currency differs", async () => {
@@ -60,6 +90,7 @@ describe("applyPaidToOrder", () => {
 
     expect(result.outcome).toBe("amount_mismatch");
     expect(update).not.toHaveBeenCalled();
+    expect(updateMany).not.toHaveBeenCalled();
   });
 
   it("reports money arriving for a cancelled order without reinstating it", async () => {
@@ -69,6 +100,7 @@ describe("applyPaidToOrder", () => {
 
     expect(result.outcome).toBe("paid_after_cancel");
     expect(update).not.toHaveBeenCalled();
+    expect(updateMany).not.toHaveBeenCalled();
   });
 
   it.each(["paid", "shipped", "delivered"])(
@@ -80,6 +112,7 @@ describe("applyPaidToOrder", () => {
 
       expect(result.outcome).toBe("already_settled");
       expect(update).not.toHaveBeenCalled();
+    expect(updateMany).not.toHaveBeenCalled();
     }
   );
 

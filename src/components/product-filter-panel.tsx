@@ -36,6 +36,8 @@ export function ProductFilterPanel({
   locale,
   clearHref,
   priceLabels,
+  prices,
+  rangeLabels,
 }: {
   dict: Dictionary["products"];
   categories?: Category[];
@@ -59,6 +61,10 @@ export function ProductFilterPanel({
   clearHref: string;
   // Accessible names for the two ends of the price slider.
   priceLabels: { min: string; max: string };
+  /** Every price in the current selection (euros), for the price chart. */
+  prices?: number[];
+  /** "1 piece in this range" / "{n} pieces in this range". */
+  rangeLabels?: { one: string; many: string };
 }) {
   const hasActiveFilters = Boolean(
     (showCategory && filters.category?.length) ||
@@ -70,7 +76,7 @@ export function ProductFilterPanel({
 
   return (
     <aside
-      className="pf w-full shrink-0 sm:sticky sm:top-24 sm:w-72 sm:self-start"
+      className="pf w-full shrink-0 sm:w-72 sm:self-start"
     >
       <div className="pf-card">
         <input
@@ -162,6 +168,8 @@ export function ProductFilterPanel({
               separatorLabel={dict.priceRangeSeparator}
               minLabel={priceLabels.min}
               maxLabel={priceLabels.max}
+              prices={prices}
+              rangeLabels={rangeLabels}
             />
           </div>
 

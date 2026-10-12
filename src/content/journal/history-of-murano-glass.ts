@@ -27,7 +27,7 @@ export const historyOfMuranoGlass: Article = {
   ],
   hero: {
     kind: "file",
-    src: "/blog/venice-canal-bridge-gondola-lion-flag.jpg",
+    src: "/blog/venice-canal-bridge-gondola-lion-flag.webp",
     alt: "A Venice canal with a brick bridge and the red-and-gold flag of the Lion of Saint Mark",
     altIt: "Un canale veneziano con un ponte in mattoni e la bandiera rosso-oro del Leone di San Marco",
     rights: OWN_PHOTO,

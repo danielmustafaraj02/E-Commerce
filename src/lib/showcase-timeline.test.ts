@@ -389,3 +389,34 @@ describe("scroll distance and transition styles", () => {
     }
   });
 });
+
+describe("morph transition", () => {
+  const distance = 1000;
+  // Three scenes: reading 0 over [0, 0.2], transition 0→1 over [0.2, 0.4].
+  const at = (unit: number) => unit / 5;
+
+  it("keeps a reading scene still, whole and full size", () => {
+    const frame = getSceneFrame(at(0.5), 0, 3, distance, "morph");
+    expect(frame).toEqual({ y: 0, pieceScale: 1, imageOpacity: 1, copyOpacity: 1 });
+  });
+
+  it("drifts only a few percent of the stage, never a full screen", () => {
+    for (let unit = 0; unit <= 5; unit += 0.05) {
+      for (let index = 0; index < 3; index += 1) {
+        const { y } = getSceneFrame(at(unit), index, 3, distance, "morph");
+        expect(Math.abs(y)).toBeLessThanOrEqual(distance * 0.045 + 1e-9);
+      }
+    }
+  });
+
+  it("dissolves the outgoing piece before the incoming one is fully in, with a short overlap", () => {
+    const mid = at(1.5);
+    const out = getSceneFrame(mid, 0, 3, distance, "morph");
+    const incoming = getSceneFrame(mid, 1, 3, distance, "morph");
+    expect(out.imageOpacity).toBeGreaterThan(0);
+    expect(incoming.imageOpacity).toBeGreaterThan(0);
+    expect(out.copyOpacity).toBe(0);
+    expect(incoming.copyOpacity).toBe(0);
+    expect(incoming.pieceScale).toBeLessThan(1);
+  });
+});

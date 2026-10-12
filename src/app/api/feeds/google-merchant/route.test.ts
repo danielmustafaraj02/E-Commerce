@@ -72,9 +72,9 @@ describe("Google Merchant feed", () => {
   it("lists extra photos as additional_image_link, all absolute", async () => {
     const xml = await feed();
 
-    expect(xml).toContain("<g:image_link>https://shop.test/products/main.png</g:image_link>");
+    expect(xml).toContain("<g:image_link>https://shop.test/products/main.webp</g:image_link>");
     expect(xml).toContain(
-      "<g:additional_image_link>https://shop.test/products/detail.png</g:additional_image_link>"
+      "<g:additional_image_link>https://shop.test/products/detail.webp</g:additional_image_link>"
     );
     expect(xml).toContain(
       "<g:additional_image_link>https://cdn.test/worn.jpg</g:additional_image_link>"

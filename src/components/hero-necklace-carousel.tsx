@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { publicImageSrc } from "@/lib/public-image";
 import { Link } from "@/components/localized-link";
 import { ImageLightbox } from "@/components/image-lightbox";
 
@@ -78,7 +79,7 @@ export function HeroNecklaceCarousel({
         {slides.map((slide, i) => (
           <Image
             key={slide.src}
-            src={slide.src}
+            src={publicImageSrc(slide.src)}
             alt={i === index ? slide.alt : ""}
             aria-hidden={i === index ? undefined : true}
             fill
@@ -175,7 +176,7 @@ export function HeroNecklaceCarousel({
               aria-current={i === index ? "true" : undefined}
               onClick={() => setIndex(i)}
             >
-              <Image src={slide.src} alt="" fill sizes="64px" quality={70} />
+              <Image src={publicImageSrc(slide.src)} alt="" fill sizes="64px" quality={70} />
             </button>
           ))}
         </div>

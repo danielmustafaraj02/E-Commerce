@@ -27,12 +27,14 @@ import {
   seriesArticles,
 } from "@/lib/journal";
 import { findArticle } from "@/lib/journal/db-articles";
+import { houseOpening, openingPartProps } from "@/lib/journal/opening";
 import type { Source } from "@/lib/journal/types";
 import { getJournalProducts } from "@/lib/journal/products";
 import { ArticleBody, InlineText } from "@/components/journal/article-body";
 import { JournalImage, journalImageSrc } from "@/components/journal/journal-image";
 import { homeFontClasses } from "@/app/home-fonts";
 import { categoryLabel, formatArticleDate } from "../journal-shared";
+import { shareImageUrl } from "@/lib/optimized-image";
 import "../../home.css";
 import "../journal.css";
 import "../article-opening.css";
@@ -50,7 +52,8 @@ export async function generateMetadata({ params }: PageProps<"/blog/[slug]">): P
     getJournalProducts(articleProductSlugs(source)),
   ]);
   const article = localizeArticle(source, uiLocale);
-  const image = journalImageSrc(article.hero, products);
+  const hero = journalImageSrc(article.hero, products);
+  const image = hero ? shareImageUrl(hero) : null;
   const canonical = articlePath(article.slug, article.contentLocale);
   const languages = articleLanguages(source);
   const available = ["en", ...articleTranslationLocales(source)] as Locale[];
@@ -124,6 +127,11 @@ export default async function JournalArticlePage({
   const base = siteBaseUrl(settings);
   const url = `${base}${articlePath(article.slug, article.contentLocale)}`;
   const heroSrc = journalImageSrc(article.hero, products);
+  // One house opening for every article (see HOUSE_OPENING).
+  const { template: opening, layout: openingLayout } = houseOpening(
+    article.openingTemplate,
+    article.openingLayout
+  );
   const credit = (c: string) => applyTemplate(j.photoCredit, { credit: c });
 
   const jsonLd = [
@@ -164,8 +172,20 @@ export default async function JournalArticlePage({
 
   const sections: Record<ArticleSectionId, ReactNode> = {
     head: (
-      <div className="journal-opening" data-has-image={!!heroSrc}>
-        <header className="journal-article-head">
+      <div className="journal-opening-wrap">
+      <div className="journal-opening" data-has-image={!!heroSrc} data-opening={opening}
+        data-text={openingLayout?.text}
+        {...(openingLayout?.shade !== undefined && {
+          "data-shade": "",
+          style: { "--o-shade": `${openingLayout.shade}%` } as React.CSSProperties,
+        })}
+      >
+        <header
+          className="journal-article-head"
+          data-gui-native-element="article-head"
+          {...openingPartProps(openingLayout, "head")}
+        >
+          <span className="journal-gui-eyebrow" data-gui-native-element="article-breadcrumb">{j.title} / {categoryLabel(j, article.category)}</span>
           <nav aria-label="Breadcrumb" className="journal-breadcrumb" lang={uiLocale}>
             <Link href="/blog">{j.title}</Link>
             <span aria-hidden="true">/</span>
@@ -181,8 +201,19 @@ export default async function JournalArticlePage({
               {article.contentLocale === "it" ? "di" : "of"} {article.series.total}
             </p>
           )}
-          <h1 lang={article.contentLocale}>{article.title}</h1>
-          <p className="journal-card-meta" lang={uiLocale}>
+          <h1
+            lang={article.contentLocale}
+            data-gui-native-element="article-title"
+            {...openingPartProps(openingLayout, "title")}
+          >
+            {article.title}
+          </h1>
+          <p
+            className="journal-card-meta"
+            lang={uiLocale}
+            data-gui-native-element="article-meta"
+            {...openingPartProps(openingLayout, "meta")}
+          >
             {applyTemplate(j.minRead, { n: readingMinutes(article) })} ·{" "}
             {applyTemplate(j.published, {
               date: formatArticleDate(article.published, article.contentLocale),
@@ -210,9 +241,14 @@ export default async function JournalArticlePage({
           sizes="(min-width: 64rem) 60rem, 100vw"
           priority
           className="journal-hero"
+          figureProps={{
+            "data-gui-native-element": "article-image",
+            ...openingPartProps(openingLayout, "image"),
+          }}
           creditLabel={credit}
           locale={article.contentLocale}
         />
+      </div>
       </div>
     ),
     body: (

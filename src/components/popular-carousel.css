@@ -1,7 +1,7 @@
 /* ─────────────────────────────────────────────
    Popular products carousel
    Editorial style — ivory background, 3 cards visible,
-   no frames, hover popup, auto-scroll.
+   no frames, editorial captions, swipe and arrow navigation.
    ───────────────────────────────────────────── */
 
 .popular-carousel {
@@ -18,19 +18,17 @@
 @media (min-width: 64rem) { .popular-carousel { --pop-visible: 4; } }
 @media (min-width: 80rem) { .popular-carousel { --pop-visible: 5; } }
 
-/* Phone: one card at a time, narrower rail, smaller arrows */
+/* Phone: one piece at a time, with a reserved gutter for each arrow. Two
+   side by side left each one too small to see the glass. */
 @media (max-width: 35.999rem) {
-  .popular-carousel { --pop-pad: 2.75rem; }
-  .popular-btn { width: 2.25rem; height: 2.25rem; }
-  .popular-btn--prev { inset-inline-start: 0.25rem; }
-  .popular-btn--next { inset-inline-end: 0.25rem; }
+  .popular-carousel { --pop-visible: 1; --pop-pad: 2.75rem; }
 }
 
 /* ── Viewport & track ── */
 
 .popular-viewport {
   /* clip-x hides the sliding track without creating a scroll container;
-     visible-y lets the hover popup escape below the track edge. */
+     visible-y keeps the captions clear of the track edge. */
   overflow-x: clip;
   overflow-y: visible;
   width: 100%;
@@ -71,12 +69,14 @@
   position: absolute;
   inset: 0;
   overflow: hidden;
+  /* A quiet tile: the photos' off-white grounds multiply into it, so every
+     piece sits on the same warm square instead of its own pale box. */
+  background: color-mix(in srgb, var(--champagne) 38%, var(--ivory));
 }
 
 .popular-card-media {
   position: absolute;
   inset: 0;
-  transition: transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 .popular-card-media img {
   object-fit: contain;
@@ -85,84 +85,22 @@
   scale: 1.12;
 }
 
+/* The hover zoom goes on the image itself. A transform on the wrapper makes it
+   an isolated group, so the photo's multiply blend no longer reaches the tile
+   behind it and its white ground shows. */
+.popular-card-media img {
+  transition: scale 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
 @media (hover: hover) {
-  .popular-card-inner:hover .popular-card-media {
-    transform: scale(1.04);
+  .popular-card-inner:hover .popular-card-media img {
+    scale: 1.17;
   }
-}
-
-/* ── Popup card ── */
-
-.popular-card-popup {
-  position: absolute;
-  /* Centered horizontally, just above centre of the card */
-  inset-block-start: 55%;
-  inset-inline-start: 50%;
-  translate: -50% 0;
-  z-index: 10;
-  width: max-content;
-  max-width: min(18rem, 90%);
-  padding: 1rem 1.25rem;
-  border: 1px solid color-mix(in srgb, var(--champagne) 70%, transparent);
-  border-radius: 4px;
-  background: var(--ivory);
-  color: var(--midnight);
-  box-shadow:
-    0 2px 4px rgb(var(--onyx-rgb) / 6%),
-    0 12px 32px rgb(var(--onyx-rgb) / 14%);
-  pointer-events: none;
-  /* Closed */
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(8px);
-  transition:
-    opacity 0.22s var(--ease-out-soft),
-    transform 0.22s var(--ease-out-soft),
-    visibility 0s linear 0.22s;
-}
-.popular-card-popup[data-open="true"] {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-  transition-delay: 0s;
-  pointer-events: auto;
-}
-
-.popular-popup-name {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: 1rem;
-  line-height: 1.3;
-  color: var(--midnight);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.popular-popup-price {
-  margin: 0.3rem 0 0;
-  font-family: var(--font-ui);
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--midnight);
-}
-
-.popular-popup-link {
-  display: inline-block;
-  margin-top: 0.5rem;
-  font-family: var(--font-ui);
-  font-size: 0.82rem;
-  color: var(--brass-deep);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-.popular-popup-link:hover {
-  color: var(--midnight);
 }
 
 /* ── Prev / Next buttons ── */
 
 .popular-btn {
+  appearance: none;
   position: absolute;
   top: 50%;
   translate: 0 -50%;
@@ -170,35 +108,84 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  border-radius: 50%;
-  border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
-  background: var(--ivory);
+  width: 3.125rem;
+  height: 3.125rem;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border-radius: 0;
+  border: 1px solid color-mix(in srgb, var(--brass) 30%, var(--hairline));
+  background: transparent;
   color: var(--midnight);
-  font-size: 1rem;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgb(var(--onyx-rgb) / 8%);
+  box-shadow: none;
+  touch-action: manipulation;
   transition:
-    background 0.18s,
-    border-color 0.18s,
-    opacity 0.18s;
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
 }
-.popular-btn:hover {
-  background: var(--midnight);
-  border-color: var(--midnight);
-  color: var(--ivory);
+.popular-btn svg {
+  display: block;
+  width: 1.75rem;
+  height: 1.125rem;
+  transition: transform 0.3s ease;
+}
+@media (hover: hover) {
+  .popular-btn:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--champagne) 35%, var(--ivory));
+    border-color: color-mix(in srgb, var(--brass) 70%, var(--hairline));
+    color: var(--brass-deep);
+  }
+  .popular-btn:hover:not(:disabled) svg {
+    transform: translateX(var(--pop-arrow-shift));
+  }
+}
+.popular-btn:active:not(:disabled) {
+  background: color-mix(in srgb, var(--champagne) 55%, var(--ivory));
+  border-color: var(--brass);
+  color: var(--brass-deep);
+}
+.popular-btn:focus-visible {
+  outline: 2px solid var(--brass-deep);
+  outline-offset: 3px;
 }
 .popular-btn:disabled {
   opacity: 0.3;
   cursor: default;
 }
+/* Centre the arrows on the photo row rather than on photos plus captions. */
+@media (min-width: 48rem) {
+  .popular-btn { top: 30%; }
+}
 .popular-btn--prev {
-  /* Sits just inside the side padding, overlapping the edge of the first card */
-  inset-inline-start: 0.25rem;
+  --pop-arrow-shift: -2px;
+  inset-inline-start: 0.5rem;
 }
 .popular-btn--next {
-  inset-inline-end: 0.25rem;
+  --pop-arrow-shift: 2px;
+  inset-inline-end: 0.5rem;
+}
+@media (max-width: 35.999rem) {
+  .popular-btn {
+    width: 44px;
+    height: 44px;
+  }
+  .popular-btn--prev {
+    inset-inline-start: 0;
+  }
+  .popular-btn--next {
+    inset-inline-end: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .popular-btn,
+  .popular-btn svg {
+    transition: none;
+  }
+  .popular-btn:hover:not(:disabled) svg {
+    transform: none;
+  }
 }
 
 /* ── Dot indicators ── */
@@ -206,51 +193,68 @@
 .popular-dots {
   display: flex;
   justify-content: center;
-  gap: 0.5rem;
-  margin-block-start: 1.5rem;
-  padding-block-end: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-block-start: 1rem;
   /* Break out of the carousel's side padding so dots centre on the full width */
   margin-inline: calc(-1 * var(--pop-pad));
 }
 
+/* The dot stays small; the button around it is a full 44px touch target. */
 .popular-dot {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 2.75rem;
+  border: none;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+}
+.popular-dot::before {
+  content: "";
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  border: none;
-  padding: 0;
   background: color-mix(in srgb, var(--ink) 25%, transparent);
-  cursor: pointer;
   transition: background 0.2s, transform 0.2s;
 }
-.popular-dot[data-active="true"] {
+.popular-dot[data-active="true"]::before {
   background: var(--midnight);
   transform: scale(1.5);
 }
-
+/* 2rem wide on touch: ten dots fit one row on a
+   375px phone, and each target stays well above WCAG's 24px minimum. */
+@media (pointer: coarse) {
+  .popular-dot {
+    width: 2rem;
+  }
+}
+.popular-dot:focus-visible {
+  outline: 2px solid var(--midnight);
+  outline-offset: -4px;
+  border-radius: 999px;
+}
 /* ── Editorial pass: captions and a gallery rhythm ─────────────────────────
    Every piece carries a small numbered caption, and every other piece sits a
    little lower, so the row reads like a magazine spread rather than a strip. */
 .popular-card-wrap {
   padding-bottom: 3rem;
 }
-@media (min-width: 48rem) {
-  .popular-card-wrap:nth-child(even) {
-    transform: translateY(2.25rem);
-  }
-}
 .popular-caption {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  column-gap: 0.6rem;
-  row-gap: 0.15rem;
-  margin-top: 0.9rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 0.35rem;
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid color-mix(in srgb, var(--brass) 35%, transparent);
   color: var(--midnight);
   text-decoration: none;
 }
 .popular-caption-index {
+  /* The running number only restated the card's order; it read as a
+     section counter and was the page's smallest text. */
+  display: none;
   grid-row: span 2;
   font-family: var(--font-ui), system-ui, sans-serif;
   font-size: 0.68rem;
@@ -262,23 +266,71 @@
 }
 .popular-caption-name {
   font-family: var(--font-display), Georgia, serif;
-  font-size: 1rem;
+  font-size: 1.0625rem;
   line-height: 1.25;
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   line-clamp: 2;
-  min-height: 2.5em;
 }
 .popular-caption-price {
   font-family: var(--font-ui), system-ui, sans-serif;
-  font-size: 0.82rem;
-  color: var(--ink-soft, var(--ink-muted));
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--brass-deep, var(--ink-soft));
+}
+@media (max-width: 47.99rem) {
+  .popular-card-wrap {
+    padding-inline: 0.375rem;
+    padding-bottom: 1.5rem;
+  }
+  .popular-card-inner {
+    padding-bottom: 150%;
+  }
+  .popular-caption {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 0.35rem;
+    margin-top: 0.75rem;
+    padding-top: 0.625rem;
+  }
+  .popular-caption-name {
+    font-size: 0.9375rem;
+    line-height: 1.3;
+    min-height: 2.6em;
+    overflow-wrap: anywhere;
+  }
+  .popular-caption-price {
+    font-size: 0.8125rem;
+  }
 }
 @media (hover: hover) {
   .popular-caption:hover .popular-caption-name {
     text-decoration: underline;
     text-underline-offset: 3px;
+  }
+}
+
+/* Blend the entire transformed track with the section, including photo whites. */
+.popular-carousel { mix-blend-mode: multiply; background: transparent; }
+
+/* One piece per view on a phone: a frame a little taller than square (not the
+   2-up 150%, which would fill the screen) and the caption centred under it. */
+@media (max-width: 35.999rem) {
+  .popular-card-inner {
+    padding-bottom: 112%;
+  }
+  .popular-caption {
+    justify-items: center;
+    text-align: center;
+  }
+  .popular-caption-name {
+    font-size: 1.15rem;
+    min-height: 0;
+  }
+  .popular-caption-price {
+    font-size: 0.875rem;
   }
 }

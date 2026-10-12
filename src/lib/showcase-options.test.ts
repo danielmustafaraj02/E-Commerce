@@ -3,6 +3,8 @@ import {
   parseSceneOverride,
   parseShowcaseScroll,
   showcaseRoot,
+  showcaseImageVars,
+  showcaseElementVars,
   SHOWCASE_STYLES,
 } from "./showcase-options";
 import { parseBuilder } from "./section-builder";
@@ -79,5 +81,42 @@ describe("showcase options", () => {
     expect(root.unit).toBe(1);
     expect(root.transition).toBe("slide");
     expect(showcaseRoot().unit).toBe(0.5);
+  });
+});
+
+describe("collection picture sizing", () => {
+  it("preserves scene geometry through saved builder parsing", () => {
+    const doc = parseBuilder({ columns: 1, cells: [[{ type: "showcase", scenes: {
+      necklace: { imageScale: 140, imageX: -15, imageY: 10 },
+    } }]] });
+    const block = doc!.cells[0][0];
+    expect(block.type).toBe("showcase");
+    if (block.type !== "showcase") return;
+    expect(showcaseImageVars(block.scenes?.necklace)).toEqual({
+      "--sc-image-scale": "1.4", "--sc-image-x": "-15%", "--sc-image-y": "10%",
+    });
+    expect(showcaseImageVars()).toEqual({
+      "--sc-image-scale": "1", "--sc-image-x": "0%", "--sc-image-y": "0%",
+    });
+  });
+  it("clamps sizes and positions and rejects non-finite input", () => {
+    expect(parseSceneOverride({ imageScale: 999, imageX: -999, imageY: NaN })).toMatchObject({
+      imageScale: 250, imageX: -50, imageY: undefined,
+    });
+  });
+});
+
+it("preserves the optional full-screen mode", () => {
+  const options = parseShowcaseScroll({ fullScreen: true });
+  expect(options?.fullScreen).toBe(true);
+  expect(showcaseRoot(options).attrs).toHaveProperty("data-full-screen", "");
+  expect(showcaseRoot(parseShowcaseScroll({ fullScreen: false })).attrs).not.toHaveProperty("data-full-screen");
+});
+
+it("preserves independent geometry for every editable scene element", () => {
+  const scene = parseSceneOverride({ titleScale: 140, titleX: 25, descriptionY: -20, counterScale: 80, buttonX: 10 });
+  expect(showcaseElementVars(scene)).toMatchObject({
+    "--sc-title-scale": "1.4", "--sc-title-x": "25%", "--sc-description-y": "-20%",
+    "--sc-counter-scale": "0.8", "--sc-button-x": "10%",
   });
 });

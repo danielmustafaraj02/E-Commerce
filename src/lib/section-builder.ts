@@ -1,6 +1,8 @@
 import { videoEmbedUrl } from "@/lib/journal/article-schema";
 import { safeColor, safeImageUrl, safeVideoUrl } from "@/lib/custom-section";
+import { optimizedImageUrl, optimizedSrcSet } from "@/lib/optimized-image";
 import type { SectionStyle } from "@/lib/page-layout";
+import { publicImageSrc } from "@/lib/public-image";
 import { parseTranslations, type BlockTranslations } from "@/lib/builder-i18n";
 import {
   SHOWCASE_SCENES,
@@ -202,6 +204,8 @@ export type BlockStyle = {
   font?: "heading" | "body";
   /** Text size, percent of normal (50–400). */
   scale?: number;
+  /** Rotate the whole block in degrees (−180–180). */
+  rotate?: number;
 };
 
 /** Looping animations a block can play while it is on screen. */
@@ -328,7 +332,13 @@ type BlockCore =
       ratio?: "portrait" | "square" | "landscape";
       /** Picture blended into the page (jewellery on white) instead of a photo. */
       blend?: boolean;
+      /** Background behind the piece; unset means transparent. */
+      imageBackground?: string;
+      imageScale?: number;
+      imageX?: number;
+      imageY?: number;
       /** A small card on the picture (shown on hover; always on phones). */
+      showCaption?: boolean;
       cardTitle?: string;
       cardPrice?: string;
       cardCta?: string;
@@ -368,6 +378,8 @@ export type BuilderBlock = BlockCore & {
   ghost?: boolean;
   /** Blocks with the same name are selected and moved together. */
   group?: string;
+  /** Per-element position/size/rotation adjustments for a native (original) section. */
+  guiElements?: Record<string, { x?: number; y?: number; w?: number; h?: number; rotate?: number }>;
   /** Wording per language (used instead of the main text for that language). */
   tr?: BlockTranslations;
 };
@@ -400,6 +412,16 @@ export type BuilderDoc = {
     gap?: number;
     /** Text size on phones, percent of normal (60–140). */
     fontScale?: number;
+    /** "overlay": the column holding the image or video fills the section as
+     *  a background and the other columns sit on top of it, on the side they
+     *  occupy on computers. Absent = columns stack. */
+    layout?: "overlay";
+    /** Overlay only: where the text sits vertically (default bottom). */
+    overlayAlign?: "top" | "center" | "bottom";
+    /** Overlay only: darkening over the media, percent (0–90, default 45). */
+    overlayShade?: number;
+    /** Overlay only: section height on phones, % of the screen (40–100, default 80). */
+    overlayHeight?: number;
   };
   cells: BuilderBlock[][];
 };
@@ -476,6 +498,10 @@ function parseBlockStyle(value: unknown): BlockStyle | undefined {
       typeof v.scale === "number" && Number.isFinite(v.scale) && v.scale !== 100
         ? Math.round(num(v.scale, 50, 400, 100))
         : undefined,
+    rotate:
+      typeof v.rotate === "number" && Number.isFinite(v.rotate) && v.rotate !== 0
+        ? Math.round(num(v.rotate, -180, 180, 0))
+        : undefined,
     w:
       typeof v.w === "number" && Number.isFinite(v.w)
         ? Math.round(num(v.w, 10, 200, 100) * 10) / 10
@@ -486,6 +512,34 @@ function parseBlockStyle(value: unknown): BlockStyle | undefined {
         : undefined,
   };
   return Object.values(style).some((x) => x !== undefined) ? style : undefined;
+}
+
+function parseGuiElements(value: unknown): BuilderBlock["guiElements"] {
+  if (!value || typeof value !== "object") return undefined;
+  const out: NonNullable<BuilderBlock["guiElements"]> = {};
+  for (const [key, raw] of Object.entries(value as Record<string, unknown>).slice(0, 40)) {
+    if (!/^[\w-]{1,80}$/.test(key) || !raw || typeof raw !== "object") continue;
+    const v = raw as Record<string, unknown>;
+    const n = (name: string, lo: number, hi: number) => typeof v[name] === "number" && Number.isFinite(v[name]) ? Math.max(lo, Math.min(hi, v[name] as number)) : undefined;
+    const item = { x: n("x", -100, 100), y: n("y", -100, 100), w: n("w", 25, 200), h: n("h", 25, 200), rotate: n("rotate", -180, 180) };
+    if (Object.values(item).some((x) => x !== undefined)) out[key] = item;
+  }
+  return Object.keys(out).length ? out : undefined;
+}
+
+/** Public CSS for the moves, resizes and rotations made with the visual editor
+ *  on the elements of a section's own content. Keys are the element's
+ *  `data-gui-native-element` name or its distinctive class; index-only keys
+ *  ("element-3") cannot be matched outside the editor and are skipped. */
+export function guiElementsCss(elements: BuilderBlock["guiElements"]): string {
+  return Object.entries(parseGuiElements(elements) ?? {})
+    .filter(([key]) => /^[a-z]/i.test(key) && !/^element-\d+$/.test(key))
+    .map(
+      ([key, v]) =>
+        // Variables first, so the editor's live values win while dragging.
+        `:is([data-gui-native-element="${key}"],.${key}){transform:translate(var(--gui-x,${v.x ?? 0}%),var(--gui-y,${v.y ?? 0}%)) rotate(var(--gui-rotate,${v.rotate ?? 0}deg)) scale(var(--gui-w,${(v.w ?? 100) / 100}),var(--gui-h,${(v.h ?? 100) / 100}));transform-origin:center}`
+    )
+    .join("\n");
 }
 
 function parseBlock(value: unknown): BuilderBlock | null {
@@ -512,6 +566,7 @@ function parseBlock(value: unknown): BuilderBlock | null {
     ...(b.locked === true && { locked: true }),
     ...(b.ghost === true && { ghost: true }),
     ...(group && { group }),
+    ...((parseGuiElements(b.guiElements)) ? { guiElements: parseGuiElements(b.guiElements) } : {}),
     ...(style && { style }),
     ...(effect && { effect }),
     ...(hide && { hide }),
@@ -690,6 +745,11 @@ function parseCore(value: unknown): BlockCore | null {
         side: b.side === "left" ? "left" : "right",
         ratio: b.ratio === "square" || b.ratio === "landscape" ? b.ratio : undefined,
         blend: b.blend === true ? true : undefined,
+        imageBackground: safeColor(b.imageBackground),
+        imageScale: b.imageScale === undefined ? undefined : num(b.imageScale, 25, 200, 100),
+        imageX: b.imageX === undefined ? undefined : num(b.imageX, -50, 50, 0),
+        imageY: b.imageY === undefined ? undefined : num(b.imageY, -50, 50, 0),
+        showCaption: b.showCaption === true ? true : undefined,
         cardTitle: str(b.cardTitle, 80) || undefined,
         cardPrice: str(b.cardPrice, 40) || undefined,
         cardCta: str(b.cardCta, 40) || undefined,
@@ -733,6 +793,16 @@ function parseMobile(value: unknown, columns: number): BuilderDoc["mobile"] {
     fontScale:
       typeof m.fontScale === "number" && Number.isFinite(m.fontScale)
         ? Math.round(num(m.fontScale, 60, 140, 100))
+        : undefined,
+    layout: m.layout === "overlay" && columns === 2 ? ("overlay" as const) : undefined,
+    overlayAlign: (["top", "center", "bottom"] as const).find((a) => a === m.overlayAlign),
+    overlayShade:
+      typeof m.overlayShade === "number" && Number.isFinite(m.overlayShade)
+        ? Math.round(num(m.overlayShade, 0, 90, 45))
+        : undefined,
+    overlayHeight:
+      typeof m.overlayHeight === "number" && Number.isFinite(m.overlayHeight)
+        ? Math.round(num(m.overlayHeight, 40, 100, 80))
         : undefined,
   };
   return Object.values(mobile).some((x) => x !== undefined) ? mobile : undefined;
@@ -847,6 +917,19 @@ const FIELD_MARKS: Record<string, [classPrefix: string, field: string][]> = {
 
 function markFields(html: string, type: string): string {
   let out = html;
+  if (type === "story") {
+    for (const [selector, field] of [[".bld-story-eyebrow", "eyebrow"], [".bld-story-title", "title"], [".bld-story-text", "text"], [".bld-story-cta", "cta"], [".bld-story-card-title", "cardTitle"], [".bld-story-card-price", "cardPrice"]]) {
+      const at = out.indexOf(`class="${selector.slice(1)}`);
+      if (at < 0) continue;
+      const nameEnd = out.indexOf(" ", out.lastIndexOf("<", at));
+      if (nameEnd > 0 && nameEnd < at) out = `${out.slice(0, nameEnd)} data-bi-field="${field}"${out.slice(nameEnd)}`;
+      else if (out[at + `class="${selector.slice(1)}`.length] === '"') {
+        const end = at + `class="${selector.slice(1)}`.length;
+        out = `${out.slice(0, end)} data-bi-field="${field}"${out.slice(end)}`;
+      }
+    }
+    return out;
+  }
   for (const [prefix, field] of FIELD_MARKS[type] ?? []) {
     const at = out.indexOf(`class="${prefix}`);
     if (at < 0) continue;
@@ -886,10 +969,16 @@ function blockFrame(block: BuilderBlock, position: number) {
     );
   if (st?.h !== undefined || block.type === "shape")
     layout.push(`${media ? "height" : "min-height"}:${st?.h ?? 8}rem`);
+  // Lets the rule in compileBuilder restore this height over a design's
+  // "fill the column" CSS (e.g. the full-bleed hero).
+  if (media && st?.h !== undefined) layout.push(`--bld-h:${st.h}rem`);
   if (st?.mx !== undefined) layout.push(`--mx:${st.mx}%`);
   if (st?.my !== undefined) layout.push(`--my:${st.my}rem`);
   if (st?.mw !== undefined) layout.push(`--mw:${st.mw}%`);
   if (st?.mh !== undefined) layout.push(`--mh:${st.mh}rem`);
+  if (st?.rotate !== undefined) layout.push(`--bld-rotate:${st.rotate}deg`);
+  if (block.type === "showcase" && st?.h !== undefined)
+    layout.push(`--showcase-frame-height:${st.h}rem`);
   const layoutClass = [
     st && (st.x !== undefined || st.y !== undefined) ? "bld-moved" : "",
     st?.mx !== undefined ? "bld-mx" : "",
@@ -907,7 +996,7 @@ function blockFrame(block: BuilderBlock, position: number) {
   // background-color underneath the layer.
   if (st?.bg) look.push(`${hasLayer ? "background-color" : "background"}:${st.bg}`);
   if (st?.bgImage) {
-    look.push(`background-image:url("${st.bgImage}")`);
+    look.push(`background-image:url("${backgroundUrl(st.bgImage)}")`);
     look.push(`background-size:${st.bgFit ?? "cover"}`);
     look.push("background-position:center");
     look.push("background-repeat:no-repeat");
@@ -916,7 +1005,7 @@ function blockFrame(block: BuilderBlock, position: number) {
   }
   if (st?.overlayColor && hasLayer)
     look.push(
-      `background-image:linear-gradient(color-mix(in srgb,${st.overlayColor} ${st.overlayStrength ?? 40}%,transparent),color-mix(in srgb,${st.overlayColor} ${st.overlayStrength ?? 40}%,transparent))${st.bgImage ? `,url("${st.bgImage}")` : `,linear-gradient(${st.gradAngle ?? 135}deg,${st.gradFrom},${st.gradTo})`}`
+      `background-image:linear-gradient(color-mix(in srgb,${st.overlayColor} ${st.overlayStrength ?? 40}%,transparent),color-mix(in srgb,${st.overlayColor} ${st.overlayStrength ?? 40}%,transparent))${st.bgImage ? `,url("${backgroundUrl(st.bgImage)}")` : `,linear-gradient(${st.gradAngle ?? 135}deg,${st.gradFrom},${st.gradTo})`}`
     );
   if (st?.opacity !== undefined) look.push(`opacity:${st.opacity / 100}`);
   if (st?.pad !== undefined) look.push(`padding:${st.pad}rem`);
@@ -925,9 +1014,11 @@ function blockFrame(block: BuilderBlock, position: number) {
   if (st?.shadow) look.push(`box-shadow:${SHADOWS[st.shadow]}`);
   if (st?.font) look.push(`font-family:var(--font-${st.font})`);
   if (st?.scale) look.push(`font-size:${st.scale}%`);
+  if (st?.rotate !== undefined) layout.push(`--bld-rotate:${st.rotate}deg`);
   const motion = block.motion ? motionParts(block.motion, position) : null;
   const classes = [
     "bld-b",
+    block.type === "showcase" ? "bld-showcase-frame" : "",
     media ? "bld-media-frame" : "",
     block.effect ? `bld-fx bld-fx-${block.effect}` : "",
     block.hide ? `bld-hide-${block.hide}` : "",
@@ -942,6 +1033,7 @@ function blockFrame(block: BuilderBlock, position: number) {
   const attrs: Record<string, string> = {
     ...motion?.attrs,
     ...(block.parallax ? { "data-bld-par": String(block.parallax) } : {}),
+    ...(block.guiElements && { "data-gui-elements": JSON.stringify(block.guiElements) }),
   };
   return { layout, layoutClass, look, classes, attrs, vars: motion?.vars ?? "", media };
 }
@@ -949,6 +1041,7 @@ function blockFrame(block: BuilderBlock, position: number) {
 const needsWrap = (block: BuilderBlock) =>
   !!(
     block.type === "shape" ||
+    block.type === "showcase" ||
     block.style ||
     block.effect ||
     block.hide ||
@@ -958,16 +1051,35 @@ const needsWrap = (block: BuilderBlock) =>
     block.sticky
   );
 
+/** The fraction of the page width that column `c` takes on computers. */
+export function columnShare(doc: BuilderDoc, c: number): number {
+  const widths =
+    doc.widths?.length === doc.columns ? doc.widths : Array<number>(doc.columns).fill(1);
+  const total = widths.reduce((sum, w) => sum + w, 0);
+  return total > 0 ? (widths[c] ?? 1) / total : 1;
+}
+
 /** One block, wrapped when it has its own style, effect or animation. In edit
- *  mode every block also gets a draggable frame carrying its position. */
-export function blockHtml(block: BuilderBlock, edit = false, col = 0, idx = 0): string {
-  let inner = coreHtml(block);
+ *  mode every block also gets a draggable frame carrying its position.
+ *  `share`: the fraction of the page width its column takes on computers,
+ *  which sizes its pictures on the site. */
+export function blockHtml(
+  block: BuilderBlock,
+  edit = false,
+  col = 0,
+  idx = 0,
+  share = 1
+): string {
+  let inner = coreHtml(block, edit ? undefined : share);
   const f = needsWrap(block) ? blockFrame(block, col * 25 + idx) : null;
   // Button appearance belongs to the clickable element, not its full-width row.
   if (block.type === "button" && f?.look.length)
     inner = inner.replace(/(<a class="bld-btn [^"]+")/, `$1 style="${f.look.join(";")}"`);
   if (edit) inner = inner ? markFields(inner, block.type) : "";
-  const attr = (decls: string[]) => (decls.length ? ` style="${decls.join(";")}"` : "");
+  // Escaped: declarations carry quoted url("…") backgrounds and optimizer
+  // addresses with "&".
+  const attr = (decls: string[]) =>
+    decls.length ? ` style="${escapeHtml(decls.join(";"))}"` : "";
   if (inner && f) {
     const outerLook = block.type === "button" ? [] : f.look;
     const decls = edit
@@ -990,7 +1102,7 @@ export function blockHtml(block: BuilderBlock, edit = false, col = 0, idx = 0): 
   ]
     .filter(Boolean)
     .join(" ");
-  return `<div class="${frameClass}" data-bi="${col}:${idx}" data-bt="${block.type}"${block.group ? ` data-grp="${block.group}"` : ""} draggable="${block.locked ? "false" : "true"}"${attr(f?.layout ?? [])}>\n${body}\n</div>`;
+  return `<div class="${frameClass}" data-bi="${col}:${idx}" data-bt="${block.type}"${block.group ? ` data-grp="${block.group}"` : ""}${block.guiElements ? ` data-gui-elements="${escapeHtml(JSON.stringify(block.guiElements))}"` : ""} draggable="${block.locked ? "false" : "true"}"${attr(f?.layout ?? [])}>\n${body}\n</div>`;
 }
 
 /** Blocks that show live site data (rendered by BuilderView on the site). */
@@ -1058,7 +1170,21 @@ const BLOCK_NAMES: Record<BuilderBlock["type"], string> = {
 
 const fmtNumber = (n: number) => new Intl.NumberFormat("en-US").format(n);
 
-function coreHtml(block: BlockCore): string {
+/** A block background picture, through the image optimizer (a full-width size). */
+const backgroundUrl = (src: string) => optimizedImageUrl(src, 1920);
+
+/** An <img>'s address. On the site: a srcset of optimized sizes, with `sizes`
+ *  from the share of the page width the picture spans on computers (full
+ *  width below `stackBelow`, where columns stack). In the editor (`share`
+ *  undefined): the plain address, which the canvas swaps in place. */
+function imageSource(src: string, share: number | undefined, stackBelow = "47.99rem") {
+  const srcset = share === undefined ? undefined : optimizedSrcSet(src);
+  if (share === undefined || !srcset) return `src="${escapeHtml(publicImageSrc(src))}"`;
+  const vw = Math.min(100, Math.max(10, Math.ceil(share * 100)));
+  return `src="${escapeHtml(optimizedImageUrl(src, 1200))}" srcset="${escapeHtml(srcset)}" sizes="(max-width:${stackBelow}) 100vw, ${vw}vw"`;
+}
+
+function coreHtml(block: BlockCore, share?: number): string {
   switch (block.type) {
     case "heading": {
       const tag = block.h1 ? "h1" : block.size === "s" ? "h4" : block.size === "m" ? "h3" : "h2";
@@ -1071,7 +1197,7 @@ function coreHtml(block: BlockCore): string {
     case "image": {
       const src = safeImageUrl(block.src);
       return src
-        ? `<img class="bld-img${block.rounded ? " bld-round" : ""}" src="${escapeHtml(src)}" alt="${escapeHtml(block.alt)}"${block.fit ? ` style="object-fit:${block.fit}"` : ""} loading="lazy">`
+        ? `<img class="bld-img${block.rounded ? " bld-round" : ""}" ${imageSource(src, share)} alt="${escapeHtml(block.alt)}"${block.fit ? ` style="object-fit:${block.fit}"` : ""} loading="lazy" decoding="async">`
         : "";
     }
     case "button":
@@ -1169,18 +1295,26 @@ function coreHtml(block: BlockCore): string {
       return `<div class="bld-live" data-bld-live="${block.type}" data-bld-label="${LIVE_LABELS[block.type]}"></div>`;
     case "story": {
       const ratio = block.ratio ?? "portrait";
+      const background = safeColor(block.imageBackground);
+      const mediaCss = [
+        background ? `background:${background}` : "",
+        `--story-scale:${num(block.imageScale, 25, 200, 100) / 100}`,
+        `--story-x:${num(block.imageX, -50, 50, 0)}%`,
+        `--story-y:${num(block.imageY, -50, 50, 0)}%`,
+      ].filter(Boolean).join(";");
+      const mediaStyle = ` style="${escapeHtml(mediaCss)}"`;
       const link = block.href && safeLink(block.href) ? block.href : "";
       const cardLink = block.cardHref ?? link;
       const card =
         block.cardTitle || block.cardPrice
-          ? `<figcaption class="bld-story-card">${block.cardTitle ? `<span class="bld-story-card-title">${inlineHtml(block.cardTitle)}</span>` : ""}${block.cardPrice ? `<span class="bld-story-card-price">${escapeHtml(block.cardPrice)}</span>` : ""}${cardLink && block.cardCta ? `<a class="bld-story-card-link" href="${escapeHtml(cardLink)}">${inlineHtml(block.cardCta)} <span aria-hidden="true">↗</span></a>` : ""}</figcaption>`
+          ? `<figcaption class="bld-story-card"${block.showCaption ? "" : " data-popup"}>${block.cardTitle ? `<span class="bld-story-card-title">${inlineHtml(block.cardTitle)}</span>` : ""}${block.cardPrice ? `<span class="bld-story-card-price">${escapeHtml(block.cardPrice)}</span>` : ""}${cardLink && block.cardCta ? `<a class="bld-story-card-link" href="${escapeHtml(cardLink)}">${inlineHtml(block.cardCta)} <span aria-hidden="true">↗</span></a>` : ""}</figcaption>`
           : "";
       const img = block.src
-        ? `<img class="bld-story-img" src="${escapeHtml(block.src)}" alt="${escapeHtml(block.alt)}" loading="lazy">`
+        ? `<img class="bld-story-img" ${imageSource(block.src, share === undefined ? undefined : share / 2, "51.99rem")} alt="${escapeHtml(block.alt)}" loading="lazy" decoding="async">`
         : `<span class="bld-story-empty">Add a picture</span>`;
       return `<article class="bld-story bld-story--img-${block.side}" data-ratio="${ratio}"${block.blend ? " data-blend" : ""}>
-<div class="bld-story-copy">${block.eyebrow ? `<p class="bld-story-eyebrow">${inlineHtml(block.eyebrow)}</p>` : ""}<h2 class="shelf-heading bld-story-title">${inlineHtml(block.title)}</h2><span class="bld-story-rule" aria-hidden="true"></span>${block.text.trim() ? `<div class="bld-story-text">${paragraphs(block.text)}</div>` : ""}${block.cta && link ? `<a class="btn-primary btn-arrow bld-story-cta" href="${escapeHtml(link)}">${inlineHtml(block.cta)}<span class="btn-arrow-glyph" aria-hidden="true">→</span></a>` : ""}</div>
-<figure class="bld-story-visual">${link ? `<a class="bld-story-media" href="${escapeHtml(link)}" tabindex="-1" aria-hidden="true">${img}</a>` : `<span class="bld-story-media">${img}</span>`}${card}</figure>
+<div class="bld-story-copy">${block.eyebrow ? `<p class="bld-story-eyebrow">${inlineHtml(block.eyebrow)}</p>` : ""}<h2 class="shelf-heading bld-story-title">${inlineHtml(block.title)}</h2><span class="bld-story-rule" aria-hidden="true"></span>${block.text.trim() ? `<div class="bld-story-text">${paragraphs(block.text)}</div>` : ""}${block.cta && link ? `<a class="bld-story-cta" href="${escapeHtml(link)}">${inlineHtml(block.cta)}<span class="bld-story-arrow" aria-hidden="true">↗</span></a>` : ""}</div>
+<figure class="bld-story-visual">${link ? `<a class="bld-story-media"${mediaStyle} href="${escapeHtml(link)}" tabindex="-1" aria-hidden="true">${img}</a>` : `<span class="bld-story-media"${mediaStyle}>${img}</span>`}${card}</figure>
 </article>`;
     }
     case "faq": {
@@ -1220,9 +1354,62 @@ function mobileCss(doc: BuilderDoc): string {
   const rules: string[] = [];
   if (m.gap !== undefined) rules.push(`.bld{gap:${m.gap}rem}`);
   if (m.fontScale !== undefined) rules.push(`.bld{font-size:${m.fontScale}%}`);
-  if (m.reverse) rules.push(`.bld{display:flex;flex-direction:column-reverse}`);
+  const overlay = overlayCss(doc);
+  if (m.reverse && !overlay) rules.push(`.bld{display:flex;flex-direction:column-reverse}`);
+  if (overlay) rules.push(overlay);
   for (const i of m.hide ?? []) rules.push(`.bld-col:nth-child(${i + 1}){display:none}`);
   return rules.length ? `@media (max-width:47.99rem){${rules.join("")}}` : "";
+}
+
+const BACKGROUND_MEDIA = new Set(["image", "video"]);
+
+/** The column that becomes the phone background in overlay mode: the first
+ *  one holding an image or video. -1 when there is none (overlay is skipped). */
+export function overlayMediaColumn(doc: BuilderDoc): number {
+  // Two columns only: a second text column would land on top of the first.
+  if (doc.mobile?.layout !== "overlay" || doc.columns !== 2) return -1;
+  return doc.cells.findIndex((cell) => cell.some((b) => BACKGROUND_MEDIA.has(b.type)));
+}
+
+/** Phone rules for overlay mode (already inside the phone media query). */
+function overlayCss(doc: BuilderDoc): string {
+  const media = overlayMediaColumn(doc);
+  if (media < 0) return "";
+  const m = doc.mobile!;
+  const shade = (m.overlayShade ?? 45) / 100;
+  const vertical = { top: "start", center: "center", bottom: "end" }[m.overlayAlign ?? "bottom"];
+  const fade = m.overlayAlign === "top" ? "to bottom" : "to top";
+  const mc = `.bld-col:nth-child(${media + 1})`;
+  const rules = [
+    `.bld{display:grid;grid-template-columns:minmax(0,1fr);grid-template-areas:"stack";gap:0;min-height:${m.overlayHeight ?? 80}svh;align-items:stretch}`,
+    // The reset clears the computer layout's divider gap; the text column
+    // re-declares its own gutter below with !important so it is not lost.
+    `.bld-col{grid-area:stack;min-width:0;border:0!important;padding-inline-start:0!important}`,
+    `.bld-col::before{display:none}`,
+    `${mc}{position:relative;z-index:0;display:flex;flex-direction:column;overflow:hidden}`,
+    `${mc}>*{flex:1 1 auto;margin:0!important;width:100%!important;max-width:none!important;min-height:0!important;height:auto!important;position:relative!important;left:0!important;top:0!important;transform:none!important}`,
+    `${mc}>*:not(:has(:is(img,video,iframe))):not(:is(img,video,iframe)){display:none}`,
+    `${mc} :is(.bld-img,.bld-video,img,video,iframe){position:absolute;inset:0;width:100%!important;height:100%!important;aspect-ratio:auto;object-fit:cover;border-radius:0}`,
+    shade > 0
+      ? // The wash holds its full strength under the copy (the text column
+        // covers roughly the lower half) and only then lets go, so a long
+        // lede over moving footage stays legible to its last line.
+        `${mc}::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(${fade},rgb(0 0 0/${shade}),rgb(0 0 0/${shade}) 35%,rgb(0 0 0/${Math.round(shade * 30) / 100}) 75%,transparent)}`
+      : "",
+  ];
+  doc.cells.forEach((_, c) => {
+    if (c === media) return;
+    // Text keeps the side it occupies on computers.
+    const side = c < media ? "start" : "end";
+    rules.push(
+      `.bld-col:nth-child(${c + 1}){position:relative;z-index:1;align-self:${vertical};justify-self:${side};text-align:${side};max-width:min(100%,32rem);box-sizing:border-box;padding:clamp(1.25rem,6vw,2rem)!important;padding-bottom:max(clamp(1.25rem,6vw,2rem),env(safe-area-inset-bottom))!important;color:#fff;text-shadow:0 1px 12px rgb(0 0 0/.35)}`,
+      `.bld-col:nth-child(${c + 1}) :is(.bld-btn-row,.bld-eyebrow){justify-content:flex-${side}}`,
+      // Over a phone-height film every line pushes the button further down;
+      // a reading line-height keeps the copy and its action on one screen.
+      `.bld-col:nth-child(${c + 1}) p{line-height:1.55}`
+    );
+  });
+  return rules.filter(Boolean).join("");
 }
 
 /** The editorial story row: the site's own "why Murano" rows, as a block. */
@@ -1239,9 +1426,9 @@ const STORY_CSS = [
   `.bld-story-cta{min-height:3.25rem;padding-inline:2rem;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;text-decoration:none}`,
   `.bld-story-visual{grid-area:visual;position:relative;margin:0;min-width:0}`,
   `.bld-story-media{display:block;overflow:hidden;aspect-ratio:4/5}.bld-story[data-ratio="square"] .bld-story-media{aspect-ratio:1/1}.bld-story[data-ratio="landscape"] .bld-story-media{aspect-ratio:4/3}`,
-  `.bld-story-img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .65s cubic-bezier(.16,1,.3,1)}`,
+  `.bld-story-img{display:block;width:100%;height:100%;object-fit:cover;transform:translate(var(--story-x,0%),var(--story-y,0%)) scale(var(--story-scale,1));transition:transform .2s ease}`,
   `.bld-story[data-blend] .bld-story-img{object-fit:contain;mix-blend-mode:multiply}`,
-  `@media (hover:hover) and (pointer:fine){.bld-story-visual:hover .bld-story-img{transform:scale(1.03)}}`,
+  `@media (hover:hover) and (pointer:fine){.bld-story-visual:hover .bld-story-img{transform:translate(var(--story-x,0%),var(--story-y,0%)) scale(calc(var(--story-scale,1) * 1.03))}}`,
   `.bld-story-card{position:absolute;z-index:3;left:50%;bottom:8%;box-sizing:border-box;width:min(15rem,calc(100% - 1rem));display:flex;flex-direction:column;gap:.3rem;padding:1.1rem 1.25rem;border:1px solid color-mix(in srgb,var(--champagne,#d9c9a8) 70%,transparent);border-radius:var(--radius-panel,0);background:var(--ivory,#fff);color:var(--midnight,#1f3d34);box-shadow:0 2px 4px rgb(0 0 0/6%),0 12px 32px rgb(0 0 0/14%);opacity:0;visibility:hidden;transform:translate(-50%,8px);transition:opacity .22s ease,transform .22s ease,visibility 0s linear .22s}`,
   `.bld-story-visual:hover .bld-story-card,.bld-story-visual:focus-within .bld-story-card{opacity:1;visibility:visible;transform:translate(-50%,0);transition-delay:0s}`,
   `@media (hover:none){.bld-story-card{opacity:1;visibility:visible;transform:translate(-50%,0)}}`,
@@ -1251,6 +1438,41 @@ const STORY_CSS = [
   `.bld-story-empty{display:flex;align-items:center;justify-content:center;height:100%;border:1px dashed rgba(127,127,127,.5);font:13px system-ui,sans-serif;color:#777}`,
   `.bld-col>.bld-story:first-child,.bld-col>.bld-s:first-child>.bld-story{padding-top:0}.bld-col>.bld-story:last-child,.bld-col>.bld-s:last-child>.bld-story{padding-bottom:0}`,
   `@media (max-width:51.99rem){.bld-story,.bld-story--img-left,.bld-story--img-right{grid-template-columns:minmax(0,1fr);grid-template-areas:"visual" "copy";gap:1.75rem}.bld-story-copy{max-width:none;padding-inline:0!important}.bld-story-card{bottom:4%}.bld-story-text{max-width:none}}`,
+  `.bld{counter-reset:story-spread}.bld-story{counter-increment:story-spread;border-top:1px solid color-mix(in srgb,currentColor 22%,transparent);gap:clamp(2rem,5vw,5rem);padding-block:clamp(2.5rem,5vw,4.5rem)}`,
+  `.bld-story-copy::before{content:counter(story-spread,decimal-leading-zero);display:block;margin-bottom:1.5rem;font-family:var(--font-display),Georgia,serif;font-size:1.4rem;font-style:italic;line-height:1;color:var(--ink-soft,inherit)}`,
+  `.bld-story .bld-story-title{font-size:clamp(2.25rem,3.8vw,3.9rem);max-width:15ch;line-height:1.04;letter-spacing:-.035em}`,
+  `.bld-story .bld-story-rule{width:3rem;margin-top:1.4rem;background:currentColor;opacity:.35}`,
+  `.bld-story .bld-story-text{font-size:.95rem;line-height:1.8;max-width:35ch;margin-block:1.4rem 1.75rem}`,
+  `.bld-story .bld-story-cta{display:inline-flex;align-items:center;justify-content:space-between;gap:2.5rem;min-height:2.75rem;padding:0;border:0;border-bottom:1px solid currentColor;background:transparent;color:inherit;font-family:var(--font-ui),sans-serif;font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;border-radius:0;box-shadow:none}.bld-story-cta:hover{opacity:.65}.bld-story-arrow{font-size:1.1rem;letter-spacing:0}`,
+  `.bld-story-media{background:transparent}.bld-story[data-blend] .bld-story-img{padding:clamp(1rem,3vw,2.5rem);box-sizing:border-box}`,
+  `.bld-story .bld-story-card{position:static;display:flex;flex-direction:row;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:.5rem 1rem;width:100%;padding:1rem 0 0;margin-top:1rem;border:0;border-top:1px solid color-mix(in srgb,currentColor 22%,transparent);border-radius:0;background:transparent;color:inherit;box-shadow:none;opacity:1;visibility:visible;transform:none;transition:none}`,
+  `.bld-story .bld-story-card-title{font-family:var(--font-ui),sans-serif;font-size:.7rem;line-height:1.5;letter-spacing:.03em;display:block;flex:1;min-width:0}.bld-story .bld-story-card-price{font-size:.75rem;font-weight:400}.bld-story .bld-story-card-link{margin:0;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;color:inherit}`,
+  `@media(min-width:52rem){.bld-story--img-right{grid-template-columns:minmax(0,1fr) minmax(0,1.2fr)}.bld-story--img-left{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}.bld-story--img-right .bld-story-copy{align-self:start;padding-top:2rem}.bld-story--img-left .bld-story-visual{width:88%}.bld-story--img-left .bld-story-title{font-style:italic}}`,
+  `@media(max-width:51.99rem){.bld-story,.bld-story--img-left,.bld-story--img-right{grid-template-columns:minmax(0,1fr);grid-template-areas:"copy" "visual";gap:2rem}.bld-story .bld-story-title{font-size:clamp(2rem,8vw,3rem);max-width:18ch}.bld-story .bld-story-text{max-width:40ch}.bld-story-copy::before{margin-bottom:1rem}.bld-story-visual{max-width:32rem;width:100%;justify-self:center}}`,
+  // ── Magazine spread: a chapter numeral, drop cap, plate behind the photo,
+  // asymmetric columns that mirror row to row, and a caption under the photo.
+  `.bld-story{position:relative;border-top:0;padding-block:clamp(2.5rem,5vw,5rem)}`,
+  `.bld-story+.bld-story::before,.bld-s+.bld-s>.bld-story::before{content:"";position:absolute;top:0;left:50%;width:min(12rem,30%);height:1px;background:currentColor;opacity:.25;transform:translateX(-50%)}`,
+  `.bld-story-copy::before{content:counter(story-spread,decimal-leading-zero);display:block;margin:0 0 -.15em;font-family:var(--font-display),Georgia,serif;font-size:clamp(4.5rem,9vw,8.5rem);font-style:italic;font-weight:400;line-height:.9;letter-spacing:-.04em;color:color-mix(in srgb,var(--gold,var(--brass,#b08d57)) 45%,transparent)}`,
+  `.bld-story .bld-story-eyebrow{display:flex;align-items:center;gap:.8rem;margin:0 0 1.25rem;font-size:.66rem;letter-spacing:.28em}.bld-story .bld-story-eyebrow::after{content:"";flex:0 0 3rem;height:1px;background:currentColor;opacity:.4}`,
+  `.bld-story .bld-story-title{position:relative;z-index:1;font-size:clamp(2.4rem,4.6vw,4.6rem);max-width:12ch;line-height:.98;letter-spacing:-.04em}`,
+  `.bld-story .bld-story-rule{display:none}`,
+  `.bld-story .bld-story-text{position:relative;margin-block:1.75rem 2rem;padding-inline-start:1.25rem;border-inline-start:1px solid color-mix(in srgb,currentColor 25%,transparent);font-size:1rem;line-height:1.85;max-width:34ch}`,
+  `.bld-story .bld-story-text p:first-child::first-letter{float:left;margin:.1em .06em 0 0;font-family:var(--font-display),Georgia,serif;font-size:3.6em;line-height:.8;color:var(--gold,var(--brass,#b08d57))}`,
+  `.bld-story-visual{isolation:isolate}`,
+  // A smaller, square photo plate, centred in its column.
+  `@media(min-width:52rem){.bld-story .bld-story-visual,.bld-story--img-left .bld-story-visual{width:min(100%,28rem);justify-self:center}}`,
+  `.bld-story .bld-story-media{aspect-ratio:1/1}`,
+  // The plate sits evenly round the photo, so the piece is centred on it.
+  `.bld-story-visual::before{content:"";position:absolute;z-index:-1;inset:-4%;background:color-mix(in srgb,var(--champagne,#e8dcc4) 55%,transparent)}`,
+  `.bld-story .bld-story-media{background:transparent}.bld-story .bld-story-img{mix-blend-mode:multiply}`,
+  `.bld-story .bld-story-card{font-style:italic}`,
+  `@media(min-width:52rem){.bld-story--img-right{grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr)}.bld-story--img-left{grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr)}.bld-story .bld-story-copy{align-self:end;padding-top:0;padding-bottom:clamp(1rem,4vw,4rem)}.bld-story--img-right .bld-story-copy{margin-inline-end:-4rem}.bld-story--img-left .bld-story-copy{margin-inline-start:-4rem}.bld-story--img-left .bld-story-visual{width:min(100%,28rem);justify-self:center}.bld-story--img-left .bld-story-title{font-style:normal}.bld-story:nth-of-type(even) .bld-story-title,.bld-s:nth-of-type(even)>.bld-story .bld-story-title{font-style:italic}}`,
+  // Not "always shown": a hover card over the photo on pointer devices; on
+  // touch screens it stays a caption under the photo.
+  `@media(hover:hover) and (pointer:fine){.bld-story .bld-story-card[data-popup]{position:absolute;z-index:3;left:50%;bottom:6%;display:flex;flex-direction:column;align-items:flex-start;gap:.25rem;box-sizing:border-box;width:max-content;max-width:min(16rem,calc(100% - 2rem));margin:0;padding:1rem 1.2rem;border:1px solid color-mix(in srgb,var(--champagne,#d9c9a8) 70%,transparent);background:var(--ivory,#fff);color:var(--midnight,#2b1f28);font-style:normal;box-shadow:0 2px 4px rgb(0 0 0/6%),0 14px 32px rgb(0 0 0/14%);opacity:0;visibility:hidden;transform:translate(-50%,8px);transition:opacity .2s ease,transform .2s ease,visibility 0s linear .2s}.bld-story-visual:hover .bld-story-card[data-popup],.bld-story-visual:focus-within .bld-story-card[data-popup]{opacity:1;visibility:visible;transform:translate(-50%,0);transition-delay:0s}.bld-story .bld-story-card[data-popup] .bld-story-card-title{flex:none;font:500 1rem/1.3 var(--font-display),Georgia,serif;letter-spacing:0}.bld-story .bld-story-card[data-popup] .bld-story-card-price{font:600 .9rem/1.3 var(--font-ui),sans-serif}.bld-story .bld-story-card[data-popup] .bld-story-card-link{margin-top:.35rem;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--brass-deep,var(--brass,#8a6a3a))}}`,
+  `@media(max-width:51.99rem){.bld-story,.bld-story--img-left,.bld-story--img-right{grid-template-areas:"visual" "copy";gap:2.25rem}.bld-story-copy::before{font-size:clamp(3.5rem,18vw,5rem)}.bld-story .bld-story-title{font-size:clamp(2.1rem,9vw,3rem)}.bld-story-visual::before{inset:-3%}.bld-story .bld-story-text{max-width:none}}`,
+
 ].join("");
 
 /** The document as HTML + CSS (the CSS is scoped later, like any section CSS). */
@@ -1265,7 +1487,7 @@ export function compileBuilder(
       .map(
         (cell, c) =>
           `<div class="bld-col"${edit ? ` data-bi-col="${c}"` : ""}>\n${cell
-            .map((block, i) => blockHtml(block, edit, c, i))
+            .map((block, i) => blockHtml(block, edit, c, i, columnShare(doc, c)))
             .filter(Boolean)
             .join("\n")}\n</div>`
       )
@@ -1288,14 +1510,14 @@ export function compileBuilder(
       : "",
     // Drawn-in lines: the divider is a pseudo-element that grows from the top.
     rule && doc.drawLines
-      ? `@media (min-width:48rem){.bld-col{position:relative}.bld-col+.bld-col{padding-inline-start:${doc.gap}rem}.bld-col+.bld-col::before{content:"";position:absolute;inset-block:0;inset-inline-start:0;border-inline-start:${rule} ${color};transform-origin:top;transition:transform 1.1s cubic-bezier(.2,.7,.2,1)}.bld.bld-wait .bld-col::before{transform:scaleY(0)}}`
+      ? `@media (min-width:48rem){.bld-col{position:relative}.bld-col+.bld-col{padding-inline-start:${doc.gap}rem}.bld-col+.bld-col::before{content:"";position:absolute;inset-block:0;inset-inline-start:0;border-inline-start:${rule} ${color};transform-origin:top;transition:transform 1.1s cubic-bezier(.2,.7,.2,1)}.bld.bld-wait .bld-col::before{transform:scaleY(0)}.bld.bld-drawing .bld-col::before{transform:scaleY(var(--bld-draw,1));transition:none}}`
       : "",
     rule
       ? `@media (max-width:47.99rem){.bld-col+.bld-col{border-top:${rule} ${color};padding-top:${doc.gap}rem}}`
       : "",
     `.bld-col>*:first-child{margin-top:0}.bld-col>*:last-child{margin-bottom:0}`,
-    `.bld-h{margin:0 0 .6em}.bld-h-s{font-size:1.1em}.bld-h-m{font-size:1.5em}.bld-h-l{font-size:clamp(1.6em,6vw,2.1em)}.bld-h-xl{font-size:clamp(2em,9vw,3.2em);line-height:1.05}.bld-h,.bld-text,.bld-quote,.bld-icon-title,.bld-icon-text{overflow-wrap:break-word}`,
-    `.bld-b{max-width:100%;min-width:0;box-sizing:border-box}.bld-media-frame{overflow:hidden}.bld-media-frame>.bld-img,.bld-media-frame>.bld-video-file{border-radius:inherit}@media (max-width:47.99rem){.bld-moved{left:0!important;top:0!important}.bld-mx{left:var(--mx)!important}.bld-my{top:var(--my)!important}.bld-mw{width:var(--mw)!important;margin-inline:auto}.bld-mh{min-height:var(--mh)!important}.bld-fit.bld-mh{height:var(--mh)!important}.bld-sticky{position:static!important}}.bld-fit{overflow:hidden}.bld-fit img,.bld-fit video,.bld-fit iframe{display:block;width:100%;height:100%;object-fit:cover}`,
+    `.bld-h{margin:0 0 .6em}.bld-h-s{font-size:1.1em}.bld-h-m{font-size:1.5em}.bld-h-l{font-size:clamp(1.6em,6vw,2.1em)}.bld-h-xl{font-size:clamp(2.4em,11vw,4.6em);line-height:1.02;letter-spacing:-.01em;text-wrap:balance}.bld-h,.bld-text,.bld-quote,.bld-icon-title,.bld-icon-text{overflow-wrap:break-word}`,
+    `.bld-b{max-width:100%;min-width:0;box-sizing:border-box}.bld-media-frame{overflow:hidden}.bld-media-frame>.bld-img,.bld-media-frame>.bld-video-file{border-radius:inherit}@media (max-width:47.99rem){.bld-moved{left:0!important;top:0!important}.bld-mx{left:var(--mx)!important}.bld-my{top:var(--my)!important}.bld-mw{width:var(--mw)!important;margin-inline:auto}.bld-mh{min-height:var(--mh)!important}.bld-fit.bld-mh{height:var(--mh)!important}.bld-sticky{position:static!important}}.bld-fit{overflow:hidden}@media (min-width:48rem){:is(.bld-col>.bld-fit,.bld-col>.bld-e:has(>.bld-fit))[style*="--bld-h"]{flex:0 0 auto!important;height:var(--bld-h)!important}}.bld-fit img,.bld-fit video,.bld-fit iframe{display:block;width:100%;height:100%;object-fit:cover}`,
     `.bld-text p{margin:0 0 1em}.bld-img{display:block;width:100%;height:auto}.bld-fit>.bld-img{object-fit:contain}.bld-round{border-radius:.75rem}`,
     `.bld-btn-row{margin:1.25rem 0}.bld-btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;box-sizing:border-box;max-width:100%;min-height:2.75rem;padding:.8rem 1.6rem;text-decoration:none;border:1px solid currentColor;font-weight:500;line-height:1.4;text-align:center;overflow-wrap:anywhere}.bld-btn:focus-visible{outline:2px solid var(--site-accent);outline-offset:4px}`,
     `.bld-btn-solid{background:var(--site-primary);color:var(--site-on-primary);border-color:var(--site-primary)}.bld-btn-solid:hover{filter:brightness(.93)}`,
@@ -1307,7 +1529,7 @@ export function compileBuilder(
     `.bld-video{display:block;width:100%;aspect-ratio:16/9;border:0}`,
     `.bld-hr[data-bld-draw],.bld-vline[data-bld-draw]{transition:transform .9s cubic-bezier(.2,.7,.2,1)}.bld-hr[data-bld-draw]{transform-origin:left center}.bld-vline[data-bld-draw]{transform-origin:top center}.bld-hr[data-bld-draw].bld-wait{transform:scaleX(0)}.bld-vline[data-bld-draw].bld-wait{transform:scaleY(0)}`,
     `@media (prefers-reduced-motion:reduce){[data-bld-draw],.bld-col::before{transition:none!important}.bld-wait{transform:none!important}}`,
-    `.bld-b{display:block}`,
+    `.bld-b{display:block}.bld-showcase-frame,[data-bi][data-bt="showcase"]{width:100%}@media(max-width:47.99rem){.bld-showcase-frame.bld-mh,[data-bi][data-bt="showcase"].bld-mh{--showcase-frame-height:var(--mh)}}`,
     `.bld-fx{transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s ease}`,
     // Hover effects only where there is a real hover (not sticky on touch screens).
     `@media (hover:hover){.bld-fx-lift:hover{transform:translateY(-6px);box-shadow:0 14px 30px rgba(0,0,0,.18)}.bld-fx-tilt:hover{transform:perspective(700px) rotateX(2deg) rotateY(-4deg) scale(1.02)}.bld-fx-glow:hover{box-shadow:0 0 0 3px rgba(255,255,255,.6),0 0 28px 6px currentColor}.bld-fx-zoom:hover img{transform:scale(1.08)}.bld-fx-zoom:not(:has(img)):hover{transform:scale(1.04)}}`,
@@ -1362,6 +1584,8 @@ export type SectionTemplate = {
   id: string;
   name: string;
   description: string;
+  /** Reserved numbered slot for per-section templates. */
+  slot?: number;
   doc: BuilderDoc;
   /** Section style the template brings with it (background film, spacing…). */
   style?: SectionStyle;
@@ -2223,12 +2447,19 @@ const SINGLE_LINE = new Set([
   "eyebrow.number",
   "countdown.label",
   "quote.text",
+  "story.eyebrow",
+  "story.title",
+  "story.cta",
+  "story.cardTitle",
+  "story.cardPrice",
 ]);
 export const isSingleLineField = (type: string, field: string) =>
   SINGLE_LINE.has(`${type}.${field}`);
 
 /** The raw (markup-syntax) text of a block's editable field. */
 export function getRawField(block: BuilderBlock, field: string): string | undefined {
+  if (block.type === "story" && field === "cardTitle") return block.cardTitle;
+  if (block.type === "story" && field === "cardPrice") return block.cardPrice;
   const value = (block as Record<string, unknown>)[field];
   return typeof value === "string" ? value : undefined;
 }
@@ -2243,7 +2474,12 @@ export function setRawField(
   if (!block || getRawField(block, field) === undefined) return doc;
   const cells = doc.cells.map((cell, c) =>
     c === pos.col
-      ? cell.map((b, i) => (i === pos.idx ? ({ ...b, [field]: value } as BuilderBlock) : b))
+      ? cell.map((b, i) => {
+          if (i !== pos.idx) return b;
+          if (b.type === "story" && field === "cardTitle") return { ...b, cardTitle: value };
+          if (b.type === "story" && field === "cardPrice") return { ...b, cardPrice: value };
+          return { ...b, [field]: value } as BuilderBlock;
+        })
       : cell
   );
   return { ...doc, cells };
@@ -2279,6 +2515,7 @@ export function patchBlockStyle(
 
 /** CSS for the canvas only: outlines, drop markers, the text being edited. */
 export const CANVAS_CSS = `
+.bld-b[style*="--bld-rotate"]{transform:rotate(var(--bld-rotate))}
 .bld-e{position:relative;min-width:0;box-sizing:border-box;cursor:grab;outline:1px dashed transparent;outline-offset:3px;transition:outline-color .15s}
 .bld-e:hover{outline-color:rgba(21,66,48,.55)}
 .bld-e.bld-sel{outline:2px solid #154230}
@@ -2286,6 +2523,16 @@ export const CANVAS_CSS = `
 .bld-rz{position:absolute;z-index:5;background:#154230;border:2px solid #fff;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.35)}
 .bld-rz-r{top:50%;right:-8px;width:12px;height:32px;margin-top:-16px;cursor:ew-resize}
 .bld-rz-b{left:50%;bottom:-8px;height:12px;width:32px;margin-left:-16px;cursor:ns-resize}
+.bld-scene-element{outline:1px dashed transparent;outline-offset:3px}
+.bld-scene-element:hover{outline-color:rgba(21,66,48,.55)}
+.bld-scene-element.bld-scene-selected{outline:2px solid #154230}
+.bld-scene-control{display:none;z-index:50;touch-action:none}
+.bld-scene-element:hover>.bld-scene-control,.bld-scene-selected>.bld-scene-control{display:block}
+.bld-scene-element:hover>.bld-rz-m,.bld-scene-selected>.bld-rz-m{display:flex}
+.showcase-figure>.bld-rz-r,.bld-story-visual>.bld-rz-r{right:4px}
+.showcase-figure>.bld-rz-b,.bld-story-visual>.bld-rz-b{bottom:4px}
+.showcase-figure>.bld-rz-c,.bld-story-visual>.bld-rz-c{right:4px;bottom:4px}
+.showcase-figure>.bld-rz-m,.bld-story-visual>.bld-rz-m{top:4px;left:4px}
 .bld-col{position:relative}
 .bld-an{--bm-p:1}
 body.bld-playing .bld-an{--bm-p:0;transition:--bm-p var(--bm-dur,.8s) var(--bm-ease,cubic-bezier(.2,.7,.2,1)) var(--bm-del,0s)}
@@ -2301,9 +2548,9 @@ body:not(.bld-playing) .bld-idle>*{animation:none!important}
 .bld-ctx hr{border:0;border-top:1px solid #ddd;margin:3px 0}
 .bld-gap{position:fixed;z-index:9;pointer-events:none;background:rgba(255,45,135,.9);color:#fff;font:10px/1 system-ui,sans-serif;padding:2px 4px;border-radius:3px;transform:translate(-50%,-50%)}
 .bld-multi{outline:2px solid #154230!important;outline-offset:3px}
-.bld-guide{position:fixed;z-index:9;pointer-events:none;background:#a6824a}
-.bld-guide-v{top:0;bottom:0;width:1px;margin-left:-.5px}
-.bld-guide-h{left:0;right:0;height:1px;margin-top:-.5px}
+.bld-guide{position:fixed;z-index:9;pointer-events:none}
+.bld-guide-v{top:0;bottom:0;width:0;border-left:1px dashed #e11d48;margin-left:-.5px}
+.bld-guide-h{left:0;right:0;height:0;border-top:1px dashed #e11d48;margin-top:-.5px}
 .bld-cz{position:absolute;z-index:4;top:0;bottom:0;left:-9px;width:18px;cursor:col-resize;display:none}
 .bld-cz::after{content:"";position:absolute;top:0;bottom:0;left:8px;width:2px;background:#154230;opacity:0;transition:opacity .15s}
 .bld-cz:hover::after,.bld-cz.bld-cz-on::after{opacity:1}
@@ -2311,6 +2558,12 @@ body:not(.bld-playing) .bld-idle>*{animation:none!important}
 @media (min-width:48rem){.bld-cz{display:block}}
 .bld-rz-m{top:-8px;left:-8px;width:22px;height:22px;cursor:move;display:flex;align-items:center;justify-content:center;color:#fff;font:14px/1 system-ui,sans-serif}
 .bld-rz-c{right:-8px;bottom:-8px;width:16px;height:16px;cursor:nwse-resize}
+.bld-rz-t{top:-26px;left:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;transform:translateX(-50%);cursor:alias;color:#fff;font:15px/1 system-ui,sans-serif}
+.bld-gui-element{position:relative;outline:1px dashed transparent;outline-offset:3px;cursor:move;touch-action:none}
+.bld-gui-element:hover,.bld-gui-selected{outline:2px solid #154230!important;outline-offset:3px}
+.bld-gui-element>.bld-gui-handle{z-index:50;display:none;touch-action:none}
+.bld-gui-element:hover>.bld-gui-handle,.bld-gui-selected>.bld-gui-handle{display:flex}
+.bld-gui-tip{position:absolute;z-index:99;right:2px;top:2px;padding:2px 6px;border-radius:4px;background:#111;color:white;font:11px system-ui,sans-serif;pointer-events:none}
 .bld-rz-tip{position:absolute;z-index:6;right:4px;top:4px;padding:2px 6px;border-radius:4px;background:#111;color:#fff;font:11px system-ui,sans-serif;pointer-events:none}
 .bld-e [data-bi-field]{cursor:text}
 .bld-e a{cursor:text}

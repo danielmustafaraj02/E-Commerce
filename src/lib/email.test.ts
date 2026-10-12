@@ -3,6 +3,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => ({
   send: vi.fn(),
   findOrder: vi.fn(),
+  claimCard: vi.fn(),
+  findCardOrder: vi.fn(),
+  updateOrder: vi.fn(),
   logoUrl: null as string | null,
   captureError: vi.fn(),
 }));
@@ -12,7 +15,16 @@ vi.mock("resend", () => ({
     emails = { send: mocks.send };
   },
 }));
-vi.mock("@/lib/db", () => ({ db: { order: { findUnique: mocks.findOrder } } }));
+vi.mock("@/lib/db", () => ({
+  db: {
+    order: {
+      findUnique: mocks.findOrder,
+      updateMany: mocks.claimCard,
+      findUniqueOrThrow: mocks.findCardOrder,
+      update: mocks.updateOrder,
+    },
+  },
+}));
 vi.mock("@/lib/rate-limit", () => ({ rateLimit: async () => ({ success: true }) }));
 vi.mock("@/lib/monitoring", () => ({ captureError: mocks.captureError }));
 vi.mock("@/lib/store-settings", () => ({
@@ -38,7 +50,7 @@ vi.mock("@/lib/i18n/locale", async (importOriginal) => ({
   },
 }));
 
-import { sendOrderStatusEmail, sendPasswordChangedEmail } from "./email";
+import { sendGiftCardEmail, sendOrderStatusEmail, sendPasswordChangedEmail } from "./email";
 
 const order = {
   orderNumber: "ORD-1",
@@ -61,6 +73,63 @@ function stored(locale: string | null) {
 beforeEach(() => {
   vi.clearAllMocks();
   mocks.logoUrl = null;
+  // No digital gift card on the order unless a test says so.
+  mocks.claimCard.mockResolvedValue({ count: 0 });
+});
+
+describe("sendGiftCardEmail", () => {
+  const cardOrder = {
+    locale: "it",
+    giftCardMessage: "Un piccolo pezzo di Venezia, per te.",
+    giftCardRecipient: "Sofia",
+    giftCardSender: "Marco",
+    giftCardRecipientEmail: "sofia@example.com",
+    giftCardToken: "tok_abcdefghijklmnopqrstuv",
+    giftCardBack: "lagoon",
+  };
+
+  it("emails the card to its recipient, in the order's language, with the link that opens it", async () => {
+    mocks.claimCard.mockResolvedValue({ count: 1 });
+    mocks.findCardOrder.mockResolvedValue(cardOrder);
+
+    await sendGiftCardEmail("ORD-1");
+
+    const sent = mocks.send.mock.calls[0][0];
+    expect(sent.to).toBe("sofia@example.com");
+    expect(sent.subject).toBe("Marco ti ha inviato un biglietto");
+    expect(sent.html).toContain("Un piccolo pezzo di Venezia, per te.");
+    expect(sent.html).toContain("https://example.com/it/card/tok_abcdefghijklmnopqrstuv");
+    expect(sent.text).toContain("Per Sofia");
+  });
+
+  it("sends nothing when the card is already sent or the order has none", async () => {
+    await sendGiftCardEmail("ORD-1");
+
+    expect(mocks.claimCard).toHaveBeenCalledWith(
+      expect.objectContaining({ where: expect.objectContaining({ giftCardSentAt: null }) })
+    );
+    expect(mocks.send).not.toHaveBeenCalled();
+  });
+
+  it("releases the claim when the email does not go out, so a later status email retries", async () => {
+    mocks.claimCard.mockResolvedValue({ count: 1 });
+    mocks.findCardOrder.mockResolvedValue(cardOrder);
+    mocks.send.mockResolvedValue({ error: { message: "rejected", name: "validation_error" } });
+
+    await expect(sendGiftCardEmail("ORD-1")).rejects.toThrow();
+    expect(mocks.updateOrder).toHaveBeenCalledWith({
+      where: { orderNumber: "ORD-1" },
+      data: { giftCardSentAt: null },
+    });
+  });
+
+  it("goes out with the paid-order email", async () => {
+    mocks.findOrder.mockResolvedValue(stored("en"));
+
+    await sendOrderStatusEmail(order);
+
+    expect(mocks.claimCard).toHaveBeenCalledTimes(1);
+  });
 });
 
 describe("sendOrderStatusEmail", () => {
@@ -94,7 +163,7 @@ describe("sendOrderStatusEmail", () => {
     const html: string = mocks.send.mock.calls[0][0].html;
     expect(html).toContain('src="https://example.com/logo.png"');
     expect(html).toContain(
-      'src="https://example.com/_next/image?url=%2Fproducts%2Fbracelets%2Fonyx.png&amp;w=128&amp;q=75"'
+      'src="https://example.com/_next/image?url=%2Fproducts%2Fbracelets%2Fonyx.webp&amp;w=128&amp;q=75"'
     );
     expect(html).not.toMatch(/src="\//);
   });

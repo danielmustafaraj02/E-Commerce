@@ -55,8 +55,8 @@ export const BACK_ART: Record<GiftCardBack, { stock: string; ink: string; edge: 
 };
 
 // Transparent Perla logo (from public/logo.png), tinted on the back.
-export const LOGO_MARK_SRC = "/gift-card/perla-logo-mark.png";
+export const LOGO_MARK_SRC = "/gift-card/perla-logo-mark.webp";
 
 // A picture of the card, front and back, used for link previews and in the
 // page's Product structured data.
-export const GIFT_CARD_IMAGE = "/gift-card/personalised-gift-card.jpg";
+export const GIFT_CARD_IMAGE = "/gift-card/personalised-gift-card.webp";

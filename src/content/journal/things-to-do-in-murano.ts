@@ -18,7 +18,7 @@ export const thingsToDoInMurano: Article = {
   ],
   hero: {
     kind: "file",
-    src: "/hero/handmade-red-murano-glass-necklace.jpg",
+    src: "/hero/handmade-red-murano-glass-necklace.webp",
     alt: "Handmade red Murano glass necklace photographed by Perla Murano Glass",
     rights: OWN_PHOTO,
   },

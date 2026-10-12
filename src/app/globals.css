@@ -651,6 +651,52 @@ button:not(:disabled),
   }
 }
 
+/* Scroll-linked motion. Where the browser has scroll timelines, every
+   entrance on the site follows the scroll instead of playing on a timer: a
+   piece moves in as it comes up the screen, holds still once it is in place,
+   and plays backwards if you scroll back up past it. Browsers without scroll
+   timelines keep the timed reveals; reduced motion gets neither.
+
+   --scroll-in is the shared travel: the entrance starts as the element peeks
+   over the bottom edge of the screen and is complete 40vh of scrolling later,
+   whatever the element's size (an `entry` percentage would make a one-line
+   label snap in and a tall section crawl). A staggered row offsets each item
+   by --scroll-step instead of an animation-delay, which a scroll timeline
+   ignores. Nothing animated this way may sit in the last 40vh of a page, or
+   it could never finish: the footer's lower half stays still.
+
+   The component stylesheets add their own @supports blocks after their timed
+   rules, so the same selector wins there; the [data-reveal] wrappers that
+   opt out of the shared fade say so with `animation: none` next to their
+   `transition: none`. */
+:root {
+  --scroll-in: entry 0% entry 40vh;
+  --scroll-step: 5vh;
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-reveal] {
+      transition: none;
+      animation: fade-up linear backwards;
+      animation-timeline: view();
+      animation-range: var(--scroll-in);
+    }
+    [data-reveal] .category-card {
+      animation: card-in linear both;
+      animation-timeline: view();
+      animation-range: var(--scroll-in);
+    }
+    /* Section headings further down a page write themselves in, word by
+       word, as they come up (the page's own h1 keeps its timed entrance: it
+       is on screen from the first frame, so there is no scroll to follow). */
+    h2 > .word-in {
+      animation: word-in linear backwards;
+      animation-timeline: view();
+      animation-range: entry calc(var(--word-i, 0) * 1.5vh) entry calc(20vh + var(--word-i, 0) * 1.5vh);
+    }
+  }
+}
+
 /* Underline-grow hover for header/footer text links: a single ::after bar
    scaled from 0 so it reads as "drawing in" rather than a hard color swap. */
 .link-underline {
@@ -1535,6 +1581,26 @@ button:not(:disabled),
   }
   to {
     transform: translate(6%, 8%) scale(1.12);
+  }
+}
+/* With scroll timelines the glass light drifts with the page instead of a
+   clock: it starts moving the moment you scroll and has finished when the
+   hero has left the screen. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-glass-bg {
+      view-timeline: --hero-glass block;
+    }
+    .hero-glass-bg::before,
+    .hero-glass-bg::after,
+    .hero-glass-bg span {
+      animation: hero-drift linear backwards;
+      animation-timeline: --hero-glass;
+      animation-range: exit 0% exit 100%;
+    }
+    .hero-glass-bg::after {
+      animation-direction: reverse;
+    }
   }
 }
 

@@ -118,7 +118,7 @@ describe("HTML override on built-in sections", () => {
         { id: "faq", visible: true, html: "<p>mine</p>" },
         { id: "looks", visible: true, html: "   " },
         { id: "custom-abc123", visible: true, html: "<b>x</b>", custom: { name: "c", html: "<i>y</i>", css: "" } },
-        { id: "reasons", visible: true, html: "a".repeat(70000) },
+        { id: "journal", visible: true, html: "a".repeat(70000) },
       ],
       HOME_SECTIONS
     );
@@ -126,7 +126,7 @@ describe("HTML override on built-in sections", () => {
     expect(by.faq.html).toBe("<p>mine</p>");
     expect(by.looks.html).toBeUndefined();
     expect(by["custom-abc123"].html).toBeUndefined();
-    expect(by.reasons.html).toHaveLength(60000);
+    expect(by.journal.html).toHaveLength(60000);
   });
 });
 

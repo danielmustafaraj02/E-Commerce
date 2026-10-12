@@ -1,8 +1,10 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { GiftCard } from "@/lib/gift-card";
+import { MAX_CART_QUANTITY } from "@/lib/cart-limits";
 
-export const MAX_CART_QUANTITY = 10;
+// One limit for the cart page and the server (lib/cart-limits.ts).
+export { MAX_CART_QUANTITY };
 export const CART_ITEM_ADDED_EVENT = "cart:item-added";
 
 // Display-only snapshot. Price/stock here is never trusted at checkout —
@@ -55,21 +57,39 @@ export const useCartStore = create<CartState>()(
           window.dispatchEvent(new Event(CART_ITEM_ADDED_EVENT));
         }
       },
+      // The gift card is sold only with an order, so it leaves with the last piece.
       removeItem: (productId) =>
-        set((state) => ({ items: state.items.filter((i) => i.productId !== productId) })),
+        set((state) => withCardRule(state.items.filter((i) => i.productId !== productId))),
       setQuantity: (productId, quantity) =>
-        set((state) => ({
-          items:
+        set((state) =>
+          withCardRule(
             quantity <= 0
               ? state.items.filter((i) => i.productId !== productId)
               : state.items.map((i) =>
                   i.productId === productId
                     ? { ...i, quantity: Math.min(quantity, MAX_CART_QUANTITY) }
                     : i
-                ),
-        })),
+                )
+          )
+        ),
       clear: () => set({ items: [], giftCard: null }),
     }),
-    { name: "cart" }
+    {
+      name: "cart",
+      // v1: the card became digital and needs the recipient's email; a card
+      // saved before that is dropped, and the customer designs it again.
+      version: 1,
+      migrate: (persisted, version) => {
+        const state = persisted as Partial<CartState>;
+        if (version < 1 && state.giftCard && !state.giftCard.recipientEmail) {
+          return { ...state, giftCard: null } as CartState;
+        }
+        return state as CartState;
+      },
+    }
   )
 );
+
+function withCardRule(items: CartItem[]): Partial<CartState> {
+  return items.length === 0 ? { items, giftCard: null } : { items };
+}

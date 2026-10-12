@@ -2,7 +2,8 @@ import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
 import { bundleDiscounts } from "@/lib/looks";
 import { deriveProductType } from "@/lib/gift-finder";
-import { normalizeGiftVoucherCode } from "@/lib/gift-voucher";
+import { normalizeGiftVoucherCode } from "@/lib/gift-voucher-codes";
+import { MAX_CART_LINES, MAX_CART_QUANTITY } from "@/lib/cart-limits";
 
 // `message` stays English (logs, tests); `code` + `params` let the route return
 // the visitor's language instead (see src/lib/pricing-messages.ts).
@@ -45,19 +46,37 @@ export type QuoteInput = {
   giftCard?: boolean;
 };
 
+/**
+ * One line per product. A request may name the same product twice; priced as
+ * two lines, each subtracted that product's whole bundle saving from its tax
+ * base and each passed the stock check on its own (security audit F03), so
+ * duplicates are merged before anything is counted.
+ */
+export function mergeCartLines(items: QuoteInput["items"]): QuoteInput["items"] {
+  const quantities = new Map<string, number>();
+  for (const { productId, quantity } of items)
+    quantities.set(productId, (quantities.get(productId) ?? 0) + quantity);
+  return [...quantities].map(([productId, quantity]) => ({ productId, quantity }));
+}
+
 // Single source of truth for checkout math, used by both the live preview
 // (/api/checkout/quote) and the order-committing endpoint (/api/checkout).
 // Never trusts client-supplied prices — always re-reads product/shipping/tax
 // rows from the DB.
 export async function quoteOrder({
-  items,
+  items: requested,
   country,
   shippingMethodId,
   discountCode,
   giftVoucherCode,
   giftCard,
 }: QuoteInput) {
+  const items = mergeCartLines(requested);
   if (items.length === 0) throw new PricingError("Cart is empty", 400, "cart-empty");
+  // The same limits the cart offers (lib/cart-limits.ts); anything beyond is
+  // a hand-made request, refused before it costs any database work.
+  if (items.length > MAX_CART_LINES)
+    throw new PricingError("Too many different pieces in one order", 400);
 
   const settings = await getStoreSettings();
   // Part of the subtotal like any goods, but not reduced by discount codes.
@@ -80,7 +99,11 @@ export async function quoteOrder({
         "product-unavailable"
       );
     }
-    if (item.quantity < 1) {
+    if (
+      !Number.isInteger(item.quantity) ||
+      item.quantity < 1 ||
+      item.quantity > MAX_CART_QUANTITY
+    ) {
       throw new PricingError(`Invalid quantity for ${product.name}`, 400, "invalid-quantity", {
         name: product.name,
       });
@@ -155,7 +178,8 @@ export async function quoteOrder({
       continue;
     }
     distinctRates.add(rate);
-    const taxable = line.lineSubtotal - (bundle.byProduct[line.product.id] ?? 0);
+    // Never below zero: a negative base would turn tax into a refund.
+    const taxable = Math.max(0, line.lineSubtotal - (bundle.byProduct[line.product.id] ?? 0));
     taxAmount += settings.pricesIncludeTax
       ? Math.round((taxable * rate) / (100 + rate))
       : Math.round((taxable * rate) / 100);
@@ -205,11 +229,15 @@ export async function quoteOrder({
     if (discount.maxUses !== null && discount.usedCount >= discount.maxUses) {
       throw new PricingError("Discount code has reached its usage limit", 400, "discount-limit");
     }
-    discountAmount = discount.percentOff
-      ? Math.round((goodsTotal * discount.percentOff) / 100)
-      : discount.amountOff
-        ? Math.min(discount.amountOff, goodsTotal)
-        : 0;
+    // Capped at the goods: a discount can make them free, never negative.
+    discountAmount = Math.min(
+      goodsTotal,
+      discount.percentOff
+        ? Math.round((goodsTotal * discount.percentOff) / 100)
+        : discount.amountOff
+          ? discount.amountOff
+          : 0
+    );
     discountCodeId = discount.id;
   }
 
@@ -223,6 +251,9 @@ export async function quoteOrder({
   const total = settings.pricesIncludeTax
     ? goodsTotal - discountAmount + giftCardAmount + shippingAmount
     : goodsTotal + giftCardAmount + taxAmount - discountAmount + shippingAmount;
+  // Every part above is non-negative, so this can only mean a pricing bug. An
+  // order is never created from it (a total of 0 is created already paid).
+  if (taxAmount < 0 || total < 0) throw new Error("Order total came out negative");
 
   // A digital voucher is store credit, not a discount on taxable goods. Apply
   // it after product VAT and shipping have been calculated, and issue VAT on

@@ -2,6 +2,7 @@
 
 import { useCallback, useRef, useState } from "react";
 import Image from "next/image";
+import { publicImageSrc } from "@/lib/public-image";
 import { Link } from "@/components/localized-link";
 import type { LookPieceView } from "@/lib/look-data";
 
@@ -77,7 +78,7 @@ function LookSinglePiece({
       onBlur={hide}
     >
       <Image
-        src={piece.imageUrl!}
+        src={publicImageSrc(piece.imageUrl!)}
         alt={piece.name}
         width={48}
         height={48}

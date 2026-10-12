@@ -46,6 +46,9 @@ export type SceneFrame = {
   y: number;
   /** Only for the "zoom" transition: the scene's scale (1 = normal). */
   scale?: number;
+  /** Only for the "morph" transition: the photograph's own scale, leaving the
+   *  copy and the colour block untouched. */
+  pieceScale?: number;
   imageOpacity: number;
   copyOpacity: number;
 };
@@ -88,8 +91,18 @@ export const clampPerUnit = (value: unknown): number =>
     : SCROLL_PER_UNIT;
 
 /** How the scenes change: "slide" travels (the default), "fade" cross-fades the
- *  pictures in place, "zoom" cross-fades while the picture grows or shrinks. */
-export type SceneTransition = "slide" | "fade" | "zoom";
+ *  pictures in place, "zoom" cross-fades while the picture grows or shrinks,
+ *  "morph" dissolves one scene into the next in place: the outgoing piece fades
+ *  and swells a touch, the incoming one settles from slightly smaller, and the
+ *  whole scene drifts only a few percent of the stage instead of a full screen. */
+export type SceneTransition = "slide" | "fade" | "zoom" | "morph";
+
+/** Morph: how far a scene drifts (fraction of the travel distance), and the
+ *  windows, inside the movement, in which each picture dissolves. They overlap
+ *  briefly so the colour blocks blend into each other rather than blinking. */
+const MORPH_DRIFT = 0.045;
+const MORPH_OUT_END = 0.6;
+const MORPH_IN_START = 0.4;
 
 /**
  * ── THE ONE TIMELINE ────────────────────────────────────────────────────────
@@ -195,9 +208,11 @@ export function getSceneFrame(
 ): SceneFrame {
   const timeline = clamp01(progress) * (2 * count - 1);
   const slide = transition === "slide";
+  const morph = transition === "morph";
 
   let y = 0;
   let scale = 1;
+  let pieceScale = 1;
   let imageOpacity = 1;
   let copyOpacity = 1;
 
@@ -209,6 +224,10 @@ export function getSceneFrame(
     if (slide) {
       y = distance * (1 - movement);
       imageOpacity = segment(arrival, MOVE_START, IMAGE_IN_END);
+    } else if (morph) {
+      y = distance * MORPH_DRIFT * (1 - movement);
+      imageOpacity = smooth(segment(arrival, MOVE_START + (MOVE_END - MOVE_START) * MORPH_IN_START, MOVE_END));
+      pieceScale = 0.94 + 0.06 * movement;
     } else {
       /* Cross-fade in place: the picture arrives over the whole movement. */
       imageOpacity = movement;
@@ -225,6 +244,10 @@ export function getSceneFrame(
     if (slide) {
       y -= distance * movement;
       imageOpacity *= 1 - segment(departure, IMAGE_OUT_START, MOVE_END);
+    } else if (morph) {
+      y -= distance * MORPH_DRIFT * movement;
+      imageOpacity *= 1 - smooth(segment(departure, MOVE_START, MOVE_START + (MOVE_END - MOVE_START) * MORPH_OUT_END));
+      pieceScale *= 1 + 0.03 * movement;
     } else {
       imageOpacity *= 1 - movement;
       scale *= 1 + 0.14 * movement;
@@ -232,9 +255,9 @@ export function getSceneFrame(
     copyOpacity *= 1 - smooth(segment(departure, 0, MOVE_START));
   }
 
-  return transition === "zoom"
-    ? { y, scale, imageOpacity, copyOpacity }
-    : { y, imageOpacity, copyOpacity };
+  if (transition === "zoom") return { y, scale, imageOpacity, copyOpacity };
+  if (morph) return { y, pieceScale, imageOpacity, copyOpacity };
+  return { y, imageOpacity, copyOpacity };
 }
 
 /** True when the scene's copy is fully present, and therefore the scene is the

@@ -220,13 +220,13 @@ describe("withEditorialExamples", () => {
 });
 
 describe("look row styles", () => {
-  it("offers the same choices on the home and Looks sections", async () => {
+  it("are chosen once, on the Looks page, and the home page follows them", async () => {
     const { HOME_SECTIONS, LOOKS_SECTIONS, LOOK_OPTIONS, LOOK_STYLE_OPTION } = await import(
       "./page-layout"
     );
-    expect(HOME_SECTIONS.find((s) => s.id === "looks")?.options).toEqual(LOOK_OPTIONS);
-    // The /looks page's list carries the same option set, so the CSS rules
-    // (which key on data-opt-look-style, not on the page) serve both.
+    expect(HOME_SECTIONS.find((s) => s.id === "looks")).not.toHaveProperty("options");
+    // Only the /looks page's list carries the option set; the home page reads
+    // it (getSharedLookOptions), so both always show the same template.
     expect(LOOKS_SECTIONS.find((s) => s.id === "list")?.options).toEqual(LOOK_OPTIONS);
     expect(LOOK_STYLE_OPTION.type).toBe("choice");
     if (LOOK_STYLE_OPTION.type !== "choice") throw new Error("unreachable");
@@ -262,10 +262,12 @@ describe("look row styles", () => {
 
   it("keeps a chosen style and drops the default (so the shipped layout stays)", async () => {
     const { HOME_SECTIONS, LOOKS_SECTIONS, resolveLayout } = await import("./page-layout");
-    const stored = [{ id: "looks", visible: true, options: { lookStyle: "minimal" } }];
-    expect(resolveLayout(stored, HOME_SECTIONS).find((e) => e.id === "looks")?.options).toEqual({
-      lookStyle: "minimal",
-    });
+    // The home page no longer keeps its own copy of the look options.
+    expect(
+      resolveLayout([{ id: "looks", visible: true, options: { lookStyle: "minimal" } }], HOME_SECTIONS).find(
+        (e) => e.id === "looks"
+      )?.options
+    ).toBeUndefined();
 
     const customLookOptions = {
       lookStyle: "minimal",
@@ -275,24 +277,15 @@ describe("look row styles", () => {
       lookCta: "subtle",
     };
     expect(
-      resolveLayout(
-        [{ id: "looks", visible: true, options: customLookOptions }],
-        HOME_SECTIONS
-      ).find((e) => e.id === "looks")?.options
+      resolveLayout([{ id: "list", visible: true, options: customLookOptions }], LOOKS_SECTIONS).find(
+        (e) => e.id === "list"
+      )?.options
     ).toEqual(customLookOptions);
     // "editorial" is the first choice = the default, so it is not stored.
     expect(
-      resolveLayout(
-        [{ id: "looks", visible: true, options: { lookStyle: "editorial" } }],
-        HOME_SECTIONS
-      ).find((e) => e.id === "looks")?.options
-    ).toBeUndefined();
-    // An unknown value is refused outright.
-    expect(
-      resolveLayout(
-        [{ id: "looks", visible: true, options: { lookStyle: "nope" } }],
-        HOME_SECTIONS
-      ).find((e) => e.id === "looks")?.options
+      resolveLayout([{ id: "list", visible: true, options: { lookStyle: "editorial" } }], LOOKS_SECTIONS).find(
+        (e) => e.id === "list"
+      )?.options
     ).toBeUndefined();
 
     // The /looks page's own section behaves identically.

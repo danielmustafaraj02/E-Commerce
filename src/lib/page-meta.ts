@@ -2,6 +2,7 @@ import { cache } from "react";
 import type { Metadata } from "next";
 import { db } from "@/lib/db";
 import { getLocale } from "@/lib/i18n/locale";
+import { shareImageUrl } from "@/lib/optimized-image";
 
 /**
  * Search-engine title / description / share image overrides, edited in
@@ -35,7 +36,8 @@ export function mergePageMeta(base: Metadata, row: PageMetaRow | null): Metadata
   if (!row) return base;
   const title = row.title?.trim() || undefined;
   const description = row.description?.trim() || undefined;
-  const image = row.ogImageUrl?.trim() || undefined;
+  const ogImageUrl = row.ogImageUrl?.trim();
+  const image = ogImageUrl ? shareImageUrl(ogImageUrl) : undefined;
   if (!title && !description && !image && !row.noindex) return base;
 
   const openGraph = { ...base.openGraph } as NonNullable<Metadata["openGraph"]>;

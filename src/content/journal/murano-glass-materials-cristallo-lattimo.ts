@@ -33,7 +33,7 @@ export const muranoGlassMaterials: Article = {
   ],
   hero: {
     kind: "file",
-    src: "/hero/handmade-red-murano-glass-necklace.jpg",
+    src: "/hero/handmade-red-murano-glass-necklace.webp",
     alt: "Red and clear Murano glass beads photographed for Perla Murano Glass",
     altIt: "Perle rosse e trasparenti in vetro di Murano fotografate per Perla Murano Glass",
     rights: { credit: "Perla Murano Glass", license: "own-photography" },

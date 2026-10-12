@@ -27,6 +27,8 @@ export type LookLabels = {
   description?: string;
   included: string;
   price: string;
+  /** "View the piece": the call to action in the hover card over each piece. */
+  viewPiece?: string;
   kinds?: Record<"necklace" | "bracelet" | "earrings", string>;
 };
 
@@ -47,16 +49,23 @@ const KIND_ORDER = { necklace: 0, bracelet: 1, earrings: 2 } as const;
 /** Everything derived from a look, in one place, so no template recomputes it. */
 export function lookParts(look: LookView, labels: LookLabels, locale: string): LookParts {
   const money = (value: number) => formatMoney(value, look.pieces[0].currency, locale);
+  // The original price includes each piece's pre-sale price, so a look shows
+  // both its set discount and any product sales as one struck price and percent.
+  const originalTotal = look.pieces.reduce(
+    (sum, piece) => sum + Math.max(piece.compareAtPrice ?? piece.price, piece.price),
+    0
+  );
+  const percentOff =
+    originalTotal > look.pricing.setTotal
+      ? Math.round((1 - look.pricing.setTotal / originalTotal) * 100)
+      : 0;
   return {
     href: `/looks/${look.id}`,
     money,
     setTotal: money(look.pricing.setTotal),
-    individualTotal: money(look.pricing.individualTotal),
-    saving:
-      look.discountPercent > 0
-        ? applyTemplate(labels.save, { percent: look.discountPercent })
-        : null,
-    discountPercent: look.discountPercent,
+    individualTotal: money(originalTotal),
+    saving: percentOff > 0 ? applyTemplate(labels.save, { percent: percentOff }) : null,
+    discountPercent: percentOff,
     composed: !look.imageUrl,
     ordered: [...look.pieces]
       .map((piece, i) => ({ piece, i }))
@@ -124,6 +133,18 @@ export function LookJewelry({
                 sizes={sizes}
                 loading={priority ? "eager" : "lazy"}
               />
+              {/* Hover card (pointer devices): name, price and a call to action.
+                  Hidden from assistive tech: the link already reads as the name. */}
+              <span className="look-jewelry-pop" aria-hidden="true">
+                <span className="look-jewelry-pop-name">{piece.name}</span>
+                <span className="look-jewelry-pop-price">
+                  {piece.compareAtPrice && <s>{parts.money(piece.compareAtPrice)}</s>}
+                  {parts.money(piece.price)}
+                </span>
+                {parts.labels.viewPiece && (
+                  <span className="look-jewelry-pop-cta">{parts.labels.viewPiece} →</span>
+                )}
+              </span>
             </span>
           )}
           <span className="look-jewelry-caption">{piece.name}</span>

@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { CatalogImage } from "@/components/catalog-image";
 import { Link } from "@/components/localized-link";
+import { useScrollTimelines } from "@/lib/use-scroll-timelines";
 import "./murano-reasons.css";
 
 // True once the row has scrolled into view (and stays true). Starts false, in
@@ -11,9 +12,12 @@ import "./murano-reasons.css";
 function useRevealed() {
   const ref = useRef<HTMLElement>(null);
   const [revealed, setRevealed] = useState(false);
+  // Where scroll timelines exist the entrance follows the scroll in CSS
+  // (murano-reasons.css): nothing waits to be revealed.
+  const scrollLinked = useScrollTimelines();
   useEffect(() => {
     const node = ref.current;
-    if (!node) return;
+    if (!node || scrollLinked) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return;
@@ -24,8 +28,8 @@ function useRevealed() {
     );
     observer.observe(node);
     return () => observer.disconnect();
-  }, []);
-  return [ref, revealed] as const;
+  }, [scrollLinked]);
+  return [ref, revealed || scrollLinked] as const;
 }
 
 export type ReasonsProduct = {
@@ -86,15 +90,15 @@ function ReasonRow({
         <h2 className="mr-title">{reason.title}</h2>
         <span className="mr-title-rule" aria-hidden="true" />
         <p className="mr-body">{reason.body}</p>
-        <Link href={href} className="btn-primary btn-arrow mr-cta">
+        <Link href={href} className="mr-cta">
           {viewLabel}
-          <span className="btn-arrow-glyph" aria-hidden="true">
+          <span className="mr-cta-arrow" aria-hidden="true">
             →
           </span>
         </Link>
       </div>
 
-      <div
+      <figure
         className="mr-visual"
         onMouseEnter={showPopup}
         onMouseLeave={hidePopup}
@@ -129,7 +133,7 @@ function ReasonRow({
             <span aria-hidden="true"> ↗</span>
           </Link>
         </div>
-      </div>
+      </figure>
     </article>
   );
 }

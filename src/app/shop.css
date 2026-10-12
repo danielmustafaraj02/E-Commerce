@@ -681,6 +681,7 @@
     opacity: 1;
     transform: none;
     transition: none;
+    animation: none;
   }
   .shop-gift-reveal[data-reveal="false"] .shop-gift-photo {
     clip-path: inset(5% 4% 5% 4% round 18px);
@@ -782,6 +783,43 @@
     }
   }
 }
+/* Scroll-linked (globals.css, --scroll-in): the photo opens as it comes up,
+   the copy follows line by line, the features a step behind each other. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .shop-gift-reveal[data-reveal] .shop-gift-photo {
+      animation: shop-gift-photo-arrive linear backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45vh;
+    }
+    .shop-gift-reveal[data-reveal] .shop-gift-eyebrow,
+    .shop-gift-reveal[data-reveal] .shop-gift-headline,
+    .shop-gift-reveal[data-reveal] .shop-gift-body,
+    .shop-gift-reveal[data-reveal] .shop-gift-link {
+      animation: shop-gift-copy-arrive linear backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 30vh;
+    }
+    .shop-gift-reveal[data-reveal] .shop-gift-features {
+      animation:
+        shop-gift-feature-list-arrive linear backwards,
+        shop-gift-rule-arrive linear backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 30vh;
+    }
+    .shop-gift-reveal[data-reveal] .shop-gift-features li:nth-child(n) {
+      animation: shop-gift-feature-arrive linear backwards;
+      animation-timeline: view();
+      animation-range: entry var(--scroll-step) entry calc(30vh + var(--scroll-step));
+    }
+    .shop-gift-reveal[data-reveal] .shop-gift-features li:nth-child(2) {
+      animation-range: entry calc(2 * var(--scroll-step)) entry calc(30vh + 2 * var(--scroll-step));
+    }
+    .shop-gift-reveal[data-reveal] .shop-gift-features li:nth-child(3) {
+      animation-range: entry calc(3 * var(--scroll-step)) entry calc(30vh + 3 * var(--scroll-step));
+    }
+  }
+}
 
 /* -- Story + FAQ combined section ------------------------------------------------ */
 
@@ -807,6 +845,7 @@
     opacity: 1;
     transform: none;
     transition: none;
+    animation: none;
   }
   .shop-story-reveal[data-reveal="false"] > * {
     opacity: 0;
@@ -833,6 +872,25 @@
   @keyframes shop-story-link-arrive {
     from { opacity: 0; transform: translateY(0.65rem); }
     to { opacity: 1; transform: translateY(0); }
+  }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .shop-story-reveal[data-reveal] .shop-story-heading {
+      animation: shop-story-heading-arrive linear backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 30vh;
+    }
+    .shop-story-reveal[data-reveal] .shop-story-prose {
+      animation: shop-story-copy-arrive linear backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35vh;
+    }
+    .shop-story-reveal[data-reveal] .shop-story-link {
+      animation: shop-story-link-arrive linear backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 30vh;
+    }
   }
 }
 
@@ -1770,6 +1828,39 @@ a.shop-line-name:focus-visible {
     animation: none;
   }
 }
+/* Scroll-linked: the lagoon moves only while you scroll past it. The gondola
+   crosses from edge to edge during the scene's pass through the screen,
+   rowing and bobbing a set number of times on the way, so scrolling back up
+   rows it home again. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .about-gondola-scene {
+      view-timeline: --about-lagoon block;
+    }
+    .about-gondola-voyage,
+    .about-lagoon-water,
+    .about-lagoon-ripple,
+    .about-lagoon-ripple--two,
+    .about-gondola-boat,
+    .about-gondolier,
+    .about-gondolier-oar {
+      animation-duration: auto;
+      animation-delay: 0s;
+      animation-timeline: --about-lagoon;
+      animation-range: cover 0% cover 100%;
+    }
+    .about-gondola-voyage {
+      animation-iteration-count: 1;
+      animation-fill-mode: both;
+    }
+    .about-lagoon-water { animation-iteration-count: 4; }
+    .about-lagoon-ripple { animation-iteration-count: 3; }
+    .about-lagoon-ripple--two { animation-iteration-count: 4; }
+    .about-gondola-boat { animation-iteration-count: 5; }
+    .about-gondolier { animation-iteration-count: 6; }
+    .about-gondolier-oar { animation-iteration-count: 8; }
+  }
+}
 
 /* -- Loading, 404 and error screens ------------------------------------------- */
 
@@ -1982,7 +2073,9 @@ a.shop-line-name:focus-visible {
 
 .murano-guide-head {
   position: relative;
-  overflow: hidden;
+  /* clip, not hidden: hidden would make the header a scroll container, and
+     the scroll-linked motion inside it would follow it instead of the page. */
+  overflow: clip;
   padding-block: clamp(2.5rem, 6vw, 5.5rem);
   border-bottom: 0;
   background:
@@ -2393,6 +2486,64 @@ a.shop-line-name:focus-visible {
 @keyframes seagull-feather-shine {
   0%, 100% { opacity: 0.25; }
   50% { opacity: 0.8; }
+}
+/* Scroll-linked: each illustration moves only while it crosses the screen,
+   a set number of cycles per pass (counts differ so nothing moves in step),
+   and holds still when you stop scrolling. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .murano-gondola-scene,
+    .murano-art-scene {
+      view-timeline: --murano-scene block;
+    }
+    .gondola-boat,
+    .gondolier-body,
+    .gondolier-oar,
+    .gondola-ripple,
+    .gondola-ripple--two,
+    .venetian-gull,
+    .venetian-gull--two,
+    .venetian-gull--three,
+    .furnace-flame,
+    .furnace-worker,
+    .furnace-spark,
+    .furnace-spark--two,
+    .furnace-spark--three,
+    .seagull-body,
+    .seagull-head,
+    .seagull-tail,
+    .seagull-eye,
+    .seagull-feather-glint {
+      animation-duration: auto;
+      animation-delay: 0s;
+      animation-timeline: --murano-scene;
+      animation-range: cover 0% cover 100%;
+    }
+    .gondola-boat { animation-iteration-count: 4; }
+    .gondolier-body { animation-iteration-count: 5; }
+    .gondolier-oar { animation-iteration-count: 8; }
+    .gondola-ripple {
+      animation-iteration-count: 4;
+      animation-direction: alternate;
+    }
+    .gondola-ripple--two {
+      animation-iteration-count: 3;
+      animation-direction: alternate-reverse;
+    }
+    .venetian-gull { animation-iteration-count: 3; }
+    .venetian-gull--two { animation-iteration-count: 4; }
+    .venetian-gull--three { animation-iteration-count: 5; }
+    .furnace-flame { animation-iteration-count: 12; }
+    .furnace-worker { animation-iteration-count: 4; }
+    .furnace-spark { animation-iteration-count: 6; }
+    .furnace-spark--two { animation-iteration-count: 7; }
+    .furnace-spark--three { animation-iteration-count: 9; }
+    .seagull-body { animation-iteration-count: 4; }
+    .seagull-head { animation-iteration-count: 3; }
+    .seagull-tail { animation-iteration-count: 4; }
+    .seagull-eye { animation-iteration-count: 3; }
+    .seagull-feather-glint { animation-iteration-count: 4; }
+  }
 }
 @media (max-width: 56rem) {
   .murano-guide-hero {
@@ -2906,6 +3057,23 @@ a.look-piece-name:focus-visible {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+}
+/* Scroll-linked (globals.css, --scroll-in): the same lift, following the
+   scroll; the composition comes a step behind the text beside it. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .look-section .look-intro > *,
+    .look-section .look-details > * {
+      animation: fade-up linear backwards;
+      animation-timeline: view();
+      animation-range: var(--scroll-in);
+    }
+    .look-section .look-visual {
+      animation: fade-up linear backwards;
+      animation-timeline: view();
+      animation-range: entry var(--scroll-step) entry calc(40vh + var(--scroll-step));
+    }
   }
 }
 .look-note {
@@ -3947,6 +4115,7 @@ a.look-piece-name:focus-visible {
   opacity: 1;
   transform: none;
   transition: none;
+  animation: none;
 }
 @property --promo-n {
   syntax: "<integer>";
@@ -4011,6 +4180,47 @@ a.look-piece-name:focus-visible {
   }
   .compose-promo-reveal[data-reveal="true"] .compose-promo-cta {
     animation-delay: 0.75s;
+  }
+}
+/* Scroll-linked (globals.css): the same sequence, driven by the card's place
+   on screen. The top and left edges draw first, then the bottom and right;
+   the figure counts up as it rises; the copy follows line by line. Fill is
+   `backwards` here too, so the finished card is back on its own styles. */
+@keyframes promo-frame-draw {
+  0% {
+    background-size: 0 2px, 2px 0, 0 2px, 2px 0;
+  }
+  50% {
+    background-size: 100% 2px, 2px 100%, 0 2px, 2px 0;
+  }
+  100% {
+    background-size: 100% 2px, 2px 100%, 100% 2px, 2px 100%;
+  }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .compose-promo-reveal[data-reveal] .compose-promo::before,
+    .compose-promo-reveal[data-reveal] .compose-promo::after {
+      transition: none;
+      animation: promo-frame-draw linear backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45vh;
+    }
+    .compose-promo-reveal[data-reveal] .compose-promo-figure {
+      animation:
+        promo-rise linear backwards,
+        promo-count linear backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35vh;
+    }
+    .compose-promo-reveal[data-reveal] .compose-promo-kicker,
+    .compose-promo-reveal[data-reveal] .compose-promo-title,
+    .compose-promo-reveal[data-reveal] .compose-promo-body,
+    .compose-promo-reveal[data-reveal] .compose-promo-cta {
+      animation: promo-rise linear backwards;
+      animation-timeline: view();
+      animation-range: entry var(--scroll-step) entry calc(30vh + var(--scroll-step));
+    }
   }
 }
 /* The number is a CSS counter fed by --promo-n (set inline on the element), which
@@ -4965,4 +5175,306 @@ a.look-piece-name:focus-visible {
 }
 .shop-related .shelf-item-photo::after {
   display: none;
+}
+
+/* Buy box first: a smaller photo column, a larger name, and less space above,
+   so the price and the buy buttons sit in the first screen on a laptop. */
+.shop-product {
+  padding-top: clamp(0.75rem, 1.5vw, 1.25rem);
+}
+.shop-product-title {
+  max-width: 20ch;
+  font-size: clamp(2.2rem, 3.6vw, 3.4rem);
+}
+@media (min-width: 64rem) {
+  .shop-product-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(26rem, 1fr);
+    gap: clamp(3rem, 5vw, 6rem);
+  }
+  .shop-gallery .shop-product-photo {
+    max-height: min(calc(100svh - 12rem), 34rem);
+  }
+  .shop-product-info {
+    padding-top: 0;
+  }
+}
+/* The name lines up with the price and buttons below it, whatever generic
+   section style (e.g. "centre headings") is saved on the buy box. */
+.shop-product-info .shop-product-title {
+  text-align: start !important;
+  margin-inline: 0 !important;
+}
+
+/* ── Complete the look: a piece's card on hover ─────────────────────────────
+   Sits just below the centre of the piece's slot, with the same slot values
+   as its layer (lib/look-composition.ts). Mouse and trackpad only: on touch
+   the list beside the picture already does this job. The card is a sibling of
+   the layer, not inside it, because the layer multiplies its colours into the
+   sand and the card would be tinted with it. */
+.look-visual-slot {
+  display: contents;
+}
+.look-pop {
+  display: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .look-visual-layer {
+    pointer-events: auto;
+    cursor: default;
+  }
+  .look-pop {
+    --cx: var(--mx);
+    --cy: var(--my);
+    --cs: var(--ms);
+    position: absolute;
+    z-index: 3;
+    left: calc(var(--cx) * 100%);
+    top: calc((var(--cy) + var(--cs) * 0.4) * 100%);
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    box-sizing: border-box;
+    width: max-content;
+    max-width: min(15rem, 80%);
+    padding: 0.8rem 1.05rem;
+    border: 1px solid color-mix(in srgb, var(--champagne, #d9c9a8) 70%, transparent);
+    border-radius: 0.75rem;
+    background: var(--ivory, #fff);
+    color: var(--midnight, #2b1f28);
+    box-shadow: 0 2px 4px rgb(0 0 0 / 6%), 0 14px 32px rgb(0 0 0 / 14%);
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, 8px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+  }
+  .look-pop[data-open="true"] {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0);
+    transition-delay: 0s;
+  }
+  .look-pop-name {
+    font: 500 1rem/1.3 var(--font-display), Georgia, serif;
+  }
+  .look-pop-price {
+    font: 600 0.9rem/1.3 var(--font-ui), sans-serif;
+  }
+  .look-pop-link {
+    margin-top: 0.3rem;
+    font: 500 0.72rem/1.3 var(--font-ui), sans-serif;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--brass-deep, var(--brass, #8a6a3a));
+    text-decoration: none;
+  }
+  .look-pop-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+@media (hover: hover) and (pointer: fine) and (min-width: 40rem) {
+  .look-pop {
+    --cx: var(--x);
+    --cy: var(--y);
+    --cs: var(--s);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .look-pop {
+    transition: none;
+  }
+}
+
+/* The empty-state message covers the whole composition; while it is hidden it
+   must not swallow the pointer, or the pieces' hover cards never open. */
+.look-visual-empty:not([data-visible="true"]) {
+  pointer-events: none;
+}
+
+/* The new collection's one-line introduction under its title. */
+.shop-intro {
+  margin: 0.6rem 0 0;
+  max-width: 46ch;
+  color: var(--ink-soft, var(--ink-muted));
+  line-height: 1.6;
+}
+
+/* ── Editorial listing head (2026-10 redesign) ───────────────────────────────
+   A title with room around it, one line of introduction, and the shipping
+   facts as a small caption: nothing in the head should look clickable unless
+   it is. */
+.shop-head {
+  background: transparent;
+  padding-block: clamp(2rem, 6vw, 4rem) clamp(1.25rem, 3vw, 2rem);
+}
+.shop-title {
+  font-size: clamp(2.25rem, 5vw, 3.75rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+}
+.shop-intro {
+  margin-top: 0.85rem;
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+}
+.shop-promise {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+/* Filters beside the grid only where there is room for both (64rem+);
+   below that the grid takes the full width and filters open from a bar. */
+@media (min-width: 40rem) and (max-width: 63.99rem) {
+  .shop-layout {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.25rem;
+  }
+  .shop-layout > .pf {
+    position: static;
+    width: 100%;
+    max-height: none;
+    overflow: visible;
+  }
+}
+@media (min-width: 64rem) {
+  .shop-layout {
+    gap: clamp(2.5rem, 4vw, 4rem);
+  }
+}
+
+/* Phones: the sort choices as one swipeable row under the count, instead of
+   three ragged lines; the "Sort by" word is implied by the row itself. */
+@media (max-width: 39.99rem) {
+  .shop-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  .shop-sort {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 1.25rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    white-space: nowrap;
+    min-width: 0;
+    max-width: 100%;
+  }
+  .shop-sort::-webkit-scrollbar {
+    display: none;
+  }
+  .shop-sort-label {
+    display: none;
+  }
+  .shop-sort > ul {
+    flex-wrap: nowrap;
+    gap: 1.25rem;
+  }
+  .shop-sort > ul > li {
+    flex: none;
+  }
+}
+
+/* A lighter head: the products start sooner and the title no longer
+   dominates the first screen. */
+.shop-head {
+  padding-block: clamp(1.25rem, 3.5vw, 2.25rem) clamp(1rem, 2vw, 1.5rem);
+}
+.shop-title {
+  font-size: clamp(1.9rem, 3.2vw, 2.75rem);
+}
+.shop-intro {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+}
+.shop-promise {
+  margin-top: 0.6rem;
+}
+
+/* ── Sort as a segmented control ─────────────────────────────────────────────
+   The three orders share one thin rounded frame and the current one is filled,
+   so it reads as a switch with one position on, not as three loose links. */
+.shop-toolbar {
+  align-items: center;
+}
+.shop-sort {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.shop-sort-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 50%, transparent);
+}
+.shop-sort > ul {
+  display: flex;
+  gap: 0.15rem;
+  margin: 0;
+  padding: 0.2rem;
+  list-style: none;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ivory) 70%, transparent);
+}
+.shop-sort .shop-sort-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  padding: 0 1rem;
+  border: 0;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--ink) 72%, transparent);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.shop-sort .shop-sort-link:hover {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+}
+.shop-sort .shop-sort-link[aria-current="true"] {
+  background: var(--midnight);
+  color: var(--ivory);
+  border-bottom: 0;
+}
+.shop-sort .shop-sort-link:focus-visible {
+  outline: 2px solid var(--midnight);
+  outline-offset: 2px;
+}
+@media (max-width: 39.99rem) {
+  .shop-sort > ul {
+    flex-wrap: nowrap;
+  }
+}
+
+/* Full sort labels where there is room; short ones on phones, with the full
+   wording kept for screen readers. */
+.shop-sort-short {
+  display: none;
+}
+@media (max-width: 39.99rem) {
+  .shop-sort-full {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .shop-sort-short {
+    display: inline;
+  }
+  .shop-toolbar {
+    align-items: flex-start;
+  }
+  .shop-count {
+    text-align: start;
+  }
 }

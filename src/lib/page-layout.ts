@@ -11,6 +11,7 @@
 
 import { parseBuilder, type BuilderDoc } from "@/lib/section-builder";
 import { BOLD_TEMPLATE_IDS, EDITORIAL_TEMPLATE_META } from "@/lib/look-templates";
+import { ARTICLE_OPENING_TEMPLATES, OPENING_DESCRIPTIONS, openingNumber } from "@/lib/journal/opening";
 import {
   CUSTOM_ID_RE,
   MAX_CUSTOM_CSS,
@@ -33,6 +34,9 @@ export type SectionMeta = {
   fixed?: boolean;
   /** Display choices this section offers (see OptionDef). */
   options?: OptionDef[];
+  /** Its design is edited elsewhere (one place only); the page layout can still
+   *  move or hide it but links there instead of offering a second editor. */
+  managedIn?: { label: string; href: string };
 };
 export type CustomSection = { name: string; html: string; css: string };
 export type SectionStyle = {
@@ -93,6 +97,19 @@ export type SectionStyle = {
  *  in the live preview at once. */
 export type OptionDef =
   | { key: string; label: string; hint?: string; type: "toggle" }
+  /** A slider: stored as a number string; also exposed to CSS as --opt-<key>. */
+  | {
+      key: string;
+      label: string;
+      hint?: string;
+      type: "range";
+      min: number;
+      max: number;
+      step?: number;
+      unit: string;
+      /** The template's own value, shown when nothing is set. */
+      initial: number;
+    }
   | {
       key: string;
       label: string;
@@ -102,6 +119,23 @@ export type OptionDef =
     };
 
 export const PRODUCT_TOP_OPTIONS: OptionDef[] = [
+  { key: "photoWidth", label: "Photo column width", type: "range", min: 35, max: 70, unit: "%", initial: 58, hint: "Of the page width, on computers" },
+  { key: "columnGap", label: "Space between photos and text", type: "range", min: 1, max: 10, step: 0.5, unit: "rem", initial: 6 },
+  { key: "infoWidth", label: "Text column width", type: "range", min: 22, max: 48, unit: "rem", initial: 36 },
+  { key: "titleScale", label: "Title size", type: "range", min: 60, max: 170, step: 5, unit: "%", initial: 100 },
+  { key: "priceScale", label: "Price size", type: "range", min: 60, max: 180, step: 5, unit: "%", initial: 100 },
+  { key: "buttonHeight", label: "Button height", type: "range", min: 40, max: 76, unit: "px", initial: 56 },
+  { key: "buttonRadius", label: "Button corners", type: "range", min: 0, max: 32, unit: "px", initial: 0 },
+  {
+    key: "stick",
+    label: "Stays in view while scrolling",
+    type: "choice",
+    choices: [
+      { value: "photos", label: "The photos" },
+      { value: "info", label: "The buy box" },
+      { value: "none", label: "Nothing" },
+    ],
+  },
   {
     key: "gallery",
     label: "Photos on the",
@@ -143,6 +177,13 @@ export function parseOptions(
     const v = (value as Record<string, unknown>)[def.key];
     if (def.type === "toggle") {
       if (v === "off") out[def.key] = "off";
+    } else if (def.type === "range") {
+      const n = typeof v === "string" ? Number(v) : typeof v === "number" ? v : NaN;
+      if (Number.isFinite(n)) {
+        const step = def.step ?? 1;
+        const clamped = Math.round(Math.min(def.max, Math.max(def.min, n)) / step) * step;
+        if (clamped !== def.initial) out[def.key] = String(Math.round(clamped * 100) / 100);
+      }
     } else if (typeof v === "string" && def.choices.slice(1).some((c) => c.value === v)) {
       out[def.key] = v;
     }
@@ -288,19 +329,17 @@ export const HOME_SECTIONS = [
   {
     id: "showcase",
     label: "Collections showcase",
-    hint: "Seven compositions or a simple row, with editable collection text, photos and buttons",
+    hint: "The three collections, each telling one reason why Murano glass (seven compositions or a simple row)",
   },
   { id: "popular", label: "Community favourites", hint: "Carousel of pinned or popular pieces" },
   { id: "bestSellers", label: "Best sellers", hint: "Top-selling pieces shelf" },
   {
     id: "looks",
     label: "Looks",
-    hint: "Editorial matching sets",
-    options: [...LOOK_OPTIONS],
+    hint: "Editorial matching sets — their layout is chosen once, in Page layout › Looks, for both pages",
   },
   { id: "newArrivals", label: "New arrivals", hint: "Latest products" },
   { id: "special", label: "Special selection", hint: "Hand-picked offers" },
-  { id: "reasons", label: "Why Murano", hint: "Three reasons with pieces" },
   { id: "faq", label: "FAQ", hint: "Shipping, returns, care" },
   { id: "giftFinder", label: "Gift finder banner", hint: "Call to action to the gift finder" },
   { id: "testimonials", label: "Customer reviews", hint: "Real reviews only" },
@@ -323,7 +362,6 @@ export const PRODUCT_SECTIONS = [
   { id: "story", label: "Story & FAQ", hint: "Why this piece, and questions" },
   { id: "articles", label: "Related articles", hint: "Journal articles that feature this piece" },
   { id: "look", label: "Complete the look", hint: "Matching set pieces" },
-  { id: "giftCard", label: "Gift card ad", hint: "Personalised gift card promo" },
   { id: "related", label: "You might also like", hint: "Related products" },
 ] as const satisfies readonly SectionMeta[];
 
@@ -402,31 +440,92 @@ export const JOURNAL_SECTIONS = [
 export const ARTICLE_OPENING_OPTIONS: OptionDef[] = [
   {
     key: "articleOpening",
-    label: "Title and hero layout",
-    hint: "Classical and editorial compositions using the article's own title and photograph.",
+    label: "Title and photograph template",
+    hint: "Used by every article that doesn't pick its own template in Admin > Articles.",
+    type: "choice",
+    choices: ARTICLE_OPENING_TEMPLATES.map((id) => ({
+      value: id,
+      label: `Template ${openingNumber(id)} — ${OPENING_DESCRIPTIONS[id]}`,
+    })),
+  },
+  {
+    key: "openingScale",
+    label: "Opening size",
+    hint: "How wide the whole opening can grow on large screens.",
     type: "choice",
     choices: [
-      { value: "classic", label: "Classic — centred title above a wide photograph" },
-      { value: "framed", label: "Classical frame — cream paper, fine rules and inset photograph" },
-      { value: "split", label: "Editorial spread — title beside a tall photograph" },
-      { value: "overlap", label: "Editorial overlap — title card layered over the photograph" },
-      {
-        value: "blended",
-        label: "Blended headline — title crosses the photograph, without a card",
-      },
-      { value: "cover", label: "Magazine cover — oversized title on the photograph" },
-      { value: "portrait", label: "Classical portrait — paper title beside a framed photograph" },
-      { value: "masthead", label: "Editorial masthead — fine rules and a panoramic photograph" },
+      { value: "compact", label: "Compact" },
+      { value: "regular", label: "Regular" },
+      { value: "large", label: "Large" },
     ],
   },
+  {
+    key: "headlineScale",
+    label: "Headline size",
+    hint: "Tune the title independently of the photograph.",
+    type: "choice",
+    choices: [
+      { value: "medium", label: "Medium" },
+      { value: "small", label: "Small" },
+      { value: "large", label: "Large" },
+    ],
+  },
+  {
+    key: "openingImageShape",
+    label: "Photograph shape",
+    hint: "Overrides the shape each template gives the photograph.",
+    type: "choice",
+    choices: [
+      { value: "portrait", label: "Portrait" },
+      { value: "square", label: "Square" },
+      { value: "landscape", label: "Landscape" },
+    ],
+  },
+  {
+    key: "headlineOverlap",
+    label: "Headline overlap",
+    hint: "Template 5 only: how far the title extends across the photograph.",
+    type: "choice",
+    choices: [
+      { value: "balanced", label: "Balanced" },
+      { value: "subtle", label: "Subtle" },
+      { value: "wide", label: "Wide" },
+    ],
+  },
+  {
+    key: "openingShade",
+    label: "Photograph shading",
+    hint: "Template 5 only: the veil behind the letters.",
+    type: "choice",
+    choices: [
+      { value: "soft", label: "Soft" },
+      { value: "none", label: "None" },
+      { value: "strong", label: "Strong" },
+    ],
+  },
+  {
+    key: "openingText",
+    label: "Text over the photograph",
+    hint: "A translucent editorial panel behind the title and details. Articles can override it.",
+    type: "choice",
+    choices: [
+      { value: "template", label: "As the template designs it" },
+      { value: "panel", label: "Dark text on a translucent light panel" },
+      { value: "panel-dark", label: "White text on a translucent dark panel" },
+      { value: "invert", label: "Letters change colour where they cross the photograph" },
+    ],
+  },
+  { key: "openingBreadcrumb", label: "Breadcrumb", type: "toggle" },
+  { key: "openingSeries", label: "Series details", type: "toggle" },
+  { key: "openingMeta", label: "Reading time, dates and byline", type: "toggle" },
 ];
 
 export const ARTICLE_SECTIONS = [
   {
     id: "head",
     label: "Article title and hero",
-    hint: "Title, main photograph and article details in one composition; choose from eight layouts in Options",
-    options: ARTICLE_OPENING_OPTIONS,
+    hint: "Title, details and main photograph — designed per article in Admin > Articles",
+    managedIn: { label: "Admin › Articles", href: "/admin/articles" },
   },
   {
     id: "body",
@@ -829,7 +928,6 @@ export const HOME_PRESETS: LayoutPreset[] = [
       "popular",
       "special",
       "looks",
-      "reasons",
       "testimonials",
       "faq",
       "newsletter",
@@ -842,7 +940,6 @@ export const HOME_PRESETS: LayoutPreset[] = [
     order: [
       "hero",
       "showcase",
-      "reasons",
       "looks",
       "popular",
       "journal",
@@ -878,8 +975,8 @@ export const PRODUCT_PRESETS: LayoutPreset[] = [
   {
     id: "gifting",
     name: "Gifting",
-    description: "Lead with the gift box and gift card.",
-    order: ["top", "gift", "giftCard", "customBlocks", "story", "reviews", "look", "related"],
+    description: "Lead with the gift box.",
+    order: ["top", "gift", "customBlocks", "story", "reviews", "look", "related"],
   },
   {
     id: "lean",

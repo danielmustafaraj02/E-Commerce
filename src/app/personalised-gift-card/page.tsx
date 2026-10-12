@@ -18,6 +18,7 @@ import { ShelfHead, ShelfBody } from "@/components/shelf-page";
 import { GiftCardDesigner } from "@/components/gift-card-designer";
 import { Reveal } from "@/components/reveal";
 import { FaqAccordion } from "@/components/faq-accordion";
+import { shareImageUrl } from "@/lib/optimized-image";
 import "@/components/faq.css";
 import "./gift-card-page.css";
 
@@ -36,7 +37,7 @@ async function baseMetadata(): Promise<Metadata> {
   const [{ settings, content, fill }, locale] = await Promise.all([load(), getLocale()]);
   if (!settings.giftCardEnabled) return {};
   const description = fill(content.metaDescription);
-  const image = GIFT_CARD_IMAGE;
+  const image = shareImageUrl(GIFT_CARD_IMAGE);
   return {
     title: content.metaTitle,
     description,

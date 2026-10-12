@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useScrollTimelines } from "@/lib/use-scroll-timelines";
 
 /**
  * Fades/slides a section in when it scrolls into view. By default this runs
@@ -21,10 +22,14 @@ export function Reveal({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+  // Where scroll timelines exist the entrance follows the scroll in CSS
+  // (globals.css, "Scroll-linked motion"): nothing waits to be revealed.
+  const scrollLinked = useScrollTimelines();
 
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
+    if (scrollLinked) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -39,12 +44,12 @@ export function Reveal({
     );
     observer.observe(node);
     return () => observer.disconnect();
-  }, [repeatOnView]);
+  }, [repeatOnView, scrollLinked]);
 
   return (
     <div
       ref={ref}
-      data-reveal={visible}
+      data-reveal={visible || scrollLinked}
       style={{ "--reveal-delay": `${delayMs}ms` } as React.CSSProperties}
       className={className}
     >

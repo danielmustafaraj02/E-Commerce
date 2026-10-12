@@ -433,3 +433,208 @@ fieldset.pf-section > .pf-label {
   cursor: pointer;
   font-size: 0.95rem;
 }
+
+/* ── Clean editorial filters (2026-10 redesign) ──────────────────────────────
+   No card on wide screens: a light column of sections divided by hairlines,
+   with a small tracked heading instead of a display-size title. On phones and
+   tablets the panel is one clear bar ("Filtri" + chevron) that opens it.
+   Everything that can be clicked looks like it can: categories are pills,
+   colours are beads, the button is a real button. */
+.pf-card {
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+.pf-head {
+  min-height: 3rem;
+  padding: 0 1rem;
+  border: 1px solid var(--pf-rule);
+  border-radius: 999px;
+  gap: 0.6rem;
+}
+.pf-title {
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.pf-head-icon {
+  color: var(--pf-ink);
+}
+.pf-form::before {
+  display: none;
+}
+.pf-form {
+  margin-top: 1rem;
+}
+.pf-signature {
+  display: none;
+}
+/* Sections keep their original bottom hairline: a top border on a fieldset is
+   drawn around its legend and leaves a notched double line. */
+
+/* Categories as pills: the whole label toggles, and the selected state is
+   filled, so it reads as a choice rather than a list of text. */
+.pf-options {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+.pf-option {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  padding: 0 1rem;
+  border: 1px solid var(--pf-rule);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+.pf-option .pf-check {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.pf-option:hover {
+  border-color: var(--pf-ink);
+}
+.pf-option:has(:checked) {
+  background: var(--pf-ink);
+  border-color: var(--pf-ink);
+  color: var(--ivory);
+}
+.pf-option:has(:focus-visible) {
+  outline: 2px solid var(--pf-ink);
+  outline-offset: 2px;
+}
+.pf-submit {
+  width: 100%;
+  justify-content: center;
+  min-height: 3rem;
+}
+
+/* Phones and tablets: the bar toggles the panel; open, it reads as a sheet. */
+@media (max-width: 63.99rem) {
+  .pf-head {
+    cursor: pointer;
+    pointer-events: auto;
+  }
+  .pf-toggle {
+    display: block !important;
+  }
+  .pf-toggle--open,
+  .peer:checked ~ .pf-head .pf-toggle--closed {
+    display: none !important;
+  }
+  .peer:checked ~ .pf-head .pf-toggle--open {
+    display: block !important;
+  }
+  .pf-form {
+    display: none;
+  }
+  .peer:checked ~ .pf-form {
+    display: flex;
+    padding: 0.25rem 1rem 1rem;
+    border: 1px solid var(--pf-rule);
+    border-top: 0;
+    border-radius: 0 0 1.25rem 1.25rem;
+  }
+  .peer:checked ~ .pf-head {
+    border-radius: 1.25rem 1.25rem 0 0;
+  }
+}
+/* Wide screens: the heading is a quiet label, always open. */
+@media (min-width: 64rem) {
+  .pf-head {
+    min-height: 0;
+    padding: 0 0 0.25rem;
+    border: 0;
+    border-radius: 0;
+  }
+  .pf-form {
+    display: flex;
+  }
+}
+
+/* No scrolling inside the panel: it sits in the page at its full height, so
+   nothing is clipped (the scroll box also cut the pills' left edge) and every
+   filter is reachable with the page's own scroll. */
+@media (min-width: 40rem) {
+  .shop-layout > .pf,
+  .pf {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+}
+.pf-option {
+  min-height: 2.25rem;
+  padding: 0 0.9rem;
+  font-size: 0.9rem;
+}
+fieldset.pf-section > .pf-label {
+  padding-top: 0.8rem;
+  margin-bottom: 0.55rem;
+}
+.pf-section {
+  padding-bottom: 0.8rem;
+}
+
+/* ── Price chart ─────────────────────────────────────────────────────────────
+   A row of small bars over the slider, one per price band. They rise in on
+   load, one after another, and those inside the chosen range fill with ink as
+   the handles move, so the shopper sees where the pieces are before letting
+   go. */
+.pf-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 2.75rem;
+  margin: 0.25rem 0 -0.35rem;
+  padding: 0 0.45rem;
+}
+.pf-chart-bar {
+  flex: 1;
+  min-height: 2px;
+  height: calc(var(--h) * 100%);
+  border-radius: 3px 3px 1px 1px;
+  background: color-mix(in srgb, var(--pf-gold) 22%, transparent);
+  transform-origin: bottom;
+  transition:
+    background-color 0.25s ease,
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: pf-bar-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--i) * 30ms);
+}
+.pf-chart-bar[data-empty="true"] {
+  background: color-mix(in srgb, var(--pf-rule) 70%, transparent);
+}
+.pf-chart-bar[data-empty="false"] {
+  min-height: 8px;
+}
+.pf-chart-bar[data-on="true"] {
+  background: var(--pf-gold);
+  transform: scaleY(1.06);
+}
+@keyframes pf-bar-rise {
+  from {
+    transform: scaleY(0);
+  }
+}
+.pf-range-count {
+  margin: 0.55rem 0 0;
+  font-size: 0.8rem;
+  color: var(--pf-ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pf-chart-bar {
+    animation: none;
+    transition: background-color 0.2s ease;
+  }
+}

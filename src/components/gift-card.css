@@ -240,8 +240,31 @@
 .gc-field textarea:focus {
   border-bottom-color: var(--midnight);
 }
-.gc-field textarea[aria-invalid="true"] {
+.gc-field textarea[aria-invalid="true"],
+.gc-field input[aria-invalid="true"] {
   border-bottom-color: var(--danger, #dc2626);
+}
+/* The recipient's email sits under the two names, full width. */
+.gc-email {
+  margin-top: 1rem;
+}
+.gc-field-help {
+  color: var(--ink-soft, var(--ink-muted));
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+/* Shown instead of the button while the cart is empty. */
+.gc-cart-empty {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--brass) 40%, transparent);
+  color: var(--ink);
+  line-height: 1.55;
+}
+.gc-cart-empty a {
+  color: var(--midnight);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 .gc-counter {
   align-self: flex-end;

@@ -27,3 +27,14 @@ npm run visual:review -- --login
 ```
 
 The no-login admin implementation is stored in `.local-only/src/admin-session.ts`, excluded from Git and deployment uploads. Its public module is an inert stub. Development uses the ignored `.local-only/tsconfig.json` to map the session and sign-in modules to their private implementations; production uses the public `tsconfig.json`. Admin access without credentials is enabled only in development with private source present and a loopback Host (`localhost`, `127.0.0.1`, or `::1`). Public builds still reject private route files before compilation and have no local session implementation.
+
+## Deploying
+
+Vercel builds every push to `main`; there is no other step. The build (`npm run build`) applies pending Prisma migrations to the production database first, then compiles the public storefront and fails if any admin or account file got into it.
+
+1. Commit everything the change needs, including new files under `prisma/migrations/`. A migration left uncommitted deploys code that expects database columns that don't exist yet.
+2. `git push`.
+
+Orders, customers and everything else in `/admin` are read from the live database, so the local admin shows the same orders as the production site once its migrations are applied. If an admin page errors with "column ... does not exist", run `npx prisma migrate deploy` (it targets the database in `.env.local`) or push, and let the build apply it.
+
+Never commit database dumps, `.env*` files or internal reports; `.gitignore` excludes them.

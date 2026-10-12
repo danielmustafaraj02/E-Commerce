@@ -8,14 +8,19 @@ import { formatMoney } from "@/lib/format";
 import { applyTemplate } from "@/lib/i18n/format";
 import { QuantityStepper } from "@/components/quantity-stepper";
 import { EmptyShelf } from "@/components/empty-shelf";
-import { ExpressCheckoutButton } from "@/components/express-checkout-button";
+import dynamic from "next/dynamic";
 import { CartUndoToast, type PendingRemoval } from "@/components/cart-undo-toast";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { cartLookSummary, type PieceKind } from "@/lib/looks";
 import { trackLookEvent } from "@/lib/look-analytics";
 import type { LookView } from "@/lib/look-data";
 import { GiftCardPreview } from "@/components/gift-card-preview";
-import { giftCardLines } from "@/lib/gift-card";
+import { giftCardLines } from "@/lib/gift-card-lines";
+
+const ExpressCheckoutButton = dynamic(
+  () => import("@/components/express-checkout-button").then((m) => m.ExpressCheckoutButton),
+  { ssr: false }
+);
 
 export function CartClient({
   locale,
@@ -277,6 +282,9 @@ export function CartClient({
               <span>{giftCardOffer.dict.yourMessage}:</span> &ldquo;{giftCard.message}&rdquo;
             </p>
             <p className="cart-gift-meta">
+              <span>{giftCardOffer.dict.sendTo}:</span> {giftCard.recipientEmail}
+            </p>
+            <p className="cart-gift-meta">
               <span>{giftCardOffer.dict.fontLabel}:</span>{" "}
               {giftCardOffer.dict.fonts[giftCard.font]}
             </p>
@@ -341,7 +349,7 @@ export function CartClient({
 
       {/* The wallet sheet can't carry the card's details, so a card means
           the full checkout. */}
-      {!giftCard && (
+      {!giftCard && stripePublishableKey && (
         <ExpressCheckoutButton
           publishableKey={stripePublishableKey}
           discount={lookSummary.saving}

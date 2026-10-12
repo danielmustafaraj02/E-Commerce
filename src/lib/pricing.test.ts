@@ -19,7 +19,8 @@ const { mockDb, mockSettings } = vi.hoisted(() => ({
 vi.mock("@/lib/db", () => ({ db: mockDb }));
 vi.mock("@/lib/store-settings", () => ({ getStoreSettings: mockSettings }));
 
-const { quoteOrder, PricingError } = await import("./pricing");
+const { quoteOrder, PricingError, mergeCartLines } = await import("./pricing");
+const { MAX_CART_LINES, MAX_CART_QUANTITY } = await import("./cart-limits");
 
 const product = (overrides: Partial<Record<string, unknown>> = {}) => ({
   id: "p1",
@@ -486,5 +487,123 @@ describe("quoteOrder: personalised gift card", () => {
     // 1100 - 110 + 500 = 1490: just under the 1500 threshold.
     expect(quote.freeShipping).toBe(false);
     expect(quote.total).toBe(1100 - 110 + 500 + 500);
+  });
+});
+
+// Requests the cart page never sends, made by hand (security audit F03/F04).
+describe("hand-made carts", () => {
+  const pieces = () => [
+    product({ id: "n", price: 12000 }),
+    product({ id: "b", price: 4500 }),
+    product({ id: "e", price: 1500 }),
+  ];
+  const look = { id: "look1", discountPercent: 15, products: [{ id: "n" }, { id: "b" }, { id: "e" }] };
+
+  it("prices the same product on two lines exactly like one line", async () => {
+    // Tax-exclusive, with a look saving: where duplicated lines each used to
+    // subtract the whole saving from the tax base, driving the tax negative.
+    mockSettings.mockResolvedValue({ pricesIncludeTax: false, freeShippingThreshold: null });
+    mockDb.product.findMany.mockResolvedValue(pieces());
+    mockDb.look.findMany.mockResolvedValue([look]);
+    const rest = [
+      { productId: "b", quantity: 1 },
+      { productId: "e", quantity: 1 },
+    ];
+
+    const split = await quoteOrder({
+      items: [{ productId: "n", quantity: 1 }, ...rest, { productId: "n", quantity: 1 }],
+      country: "IT",
+      shippingMethodId: "m1",
+    });
+    const single = await quoteOrder({
+      items: [{ productId: "n", quantity: 2 }, ...rest],
+      country: "IT",
+      shippingMethodId: "m1",
+    });
+
+    expect(split.lines).toHaveLength(3);
+    expect(split.taxAmount).toBe(single.taxAmount);
+    expect(split.total).toBe(single.total);
+    expect(split.taxAmount).toBeGreaterThan(0);
+  });
+
+  it("checks stock against the merged quantity", async () => {
+    mockDb.product.findMany.mockResolvedValue([product({ stockQty: 3 })]);
+
+    await expect(
+      quoteOrder({
+        items: [
+          { productId: "p1", quantity: 2 },
+          { productId: "p1", quantity: 2 },
+        ],
+        country: "IT",
+        shippingMethodId: "m1",
+      })
+    ).rejects.toMatchObject({ status: 409, code: "low-stock" });
+  });
+
+  it("refuses more of one piece than the cart offers, even split over lines", async () => {
+    mockDb.product.findMany.mockResolvedValue([product()]);
+
+    await expect(
+      quoteOrder({
+        items: [
+          { productId: "p1", quantity: MAX_CART_QUANTITY },
+          { productId: "p1", quantity: 1 },
+        ],
+        country: "IT",
+        shippingMethodId: "m1",
+      })
+    ).rejects.toMatchObject({ status: 400, code: "invalid-quantity" });
+  });
+
+  it("refuses an oversized cart before reading the database", async () => {
+    const items = Array.from({ length: MAX_CART_LINES + 1 }, (_, i) => ({
+      productId: `p${i}`,
+      quantity: 1,
+    }));
+
+    await expect(quoteOrder({ items, country: "IT", shippingMethodId: "m1" })).rejects.toBeInstanceOf(
+      PricingError
+    );
+    expect(mockDb.product.findMany).not.toHaveBeenCalled();
+  });
+
+  it("never lets a discount make the goods cost less than nothing", async () => {
+    mockDb.product.findMany.mockResolvedValue([product({ price: 1100 })]);
+    mockDb.discountCode.findUnique.mockResolvedValue({
+      id: "d1",
+      active: true,
+      expiresAt: null,
+      maxUses: null,
+      usedCount: 0,
+      percentOff: 150,
+      amountOff: null,
+    });
+
+    const quote = await quoteOrder({
+      items: [{ productId: "p1", quantity: 1 }],
+      country: "IT",
+      shippingMethodId: "m1",
+      discountCode: "TOO-GOOD",
+    });
+
+    expect(quote.discountAmount).toBe(1100);
+    expect(quote.total).toBe(500);
+  });
+});
+
+describe("mergeCartLines", () => {
+  it("adds up repeated products and keeps the first-seen order", () => {
+    expect(
+      mergeCartLines([
+        { productId: "a", quantity: 1 },
+        { productId: "b", quantity: 2 },
+        { productId: "a", quantity: 3 },
+      ])
+    ).toEqual([
+      { productId: "a", quantity: 4 },
+      { productId: "b", quantity: 2 },
+    ]);
   });
 });

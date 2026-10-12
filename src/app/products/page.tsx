@@ -27,7 +27,7 @@ import { getGiftVoucherCopy } from "@/lib/gift-voucher-copy";
 import { getShopCopy } from "@/lib/i18n/shop-copy";
 import { applyTemplate } from "@/lib/i18n/format";
 import { getShippingBanner } from "@/lib/shipping-banner";
-import { TrustBadges } from "@/components/trust-badges";
+import { NEW_COLLECTION, getNewCollectionCopy } from "@/lib/new-collection";
 
 const PAGE_SIZE = 12;
 
@@ -45,6 +45,9 @@ const filtersSchema = z.object({
   inStock: z.enum(["1"]).optional(),
   // Only discounted pieces — the homepage "Special Selection" button.
   sale: z.enum(["1"]).optional(),
+  // Only the new collection's pieces (lib/new-collection.ts). Set by the
+  // /new-collection page itself, which renders this same listing.
+  collection: z.enum(["new"]).optional().catch(undefined),
   color: z.array(z.string()).optional(),
   page: z.coerce.number().int().positive().default(1),
 });
@@ -57,8 +60,8 @@ async function baseMetadata({ searchParams }: PageProps<"/products">): Promise<M
   ]);
   const dict = getDictionary(locale);
   const descriptionByLocale: Record<Locale, string> = {
-    en: `Browse the full ${settings.storeName} catalog: handmade Murano glass jewelry, from bracelets to necklaces and earrings.`,
-    it: `Collane, bracciali e orecchini in vetro di Murano, con perle lavorate a mano. Pezzi unici spediti dall'Italia: scopri il catalogo ${settings.storeName}.`,
+    en: `The full ${settings.storeName} collection: Murano glass necklaces, bracelets and earrings, chosen piece by piece and shipped from Italy.`,
+    it: `Tutta la collezione ${settings.storeName}: collane, bracciali e orecchini in vetro di Murano, scelti pezzo per pezzo e spediti dall'Italia.`,
     fr: `Parcourez le catalogue complet de ${settings.storeName}.`,
     de: `Durchstöbern Sie den vollständigen Katalog von ${settings.storeName}.`,
     ar: `تصفح كتالوج ${settings.storeName} الكامل.`,
@@ -151,6 +154,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
     maxPrice: single(raw.maxPrice),
     inStock: single(raw.inStock),
     sale: single(raw.sale),
+    collection: single(raw.collection),
     color: colorValues.length ? colorValues : undefined,
     sort: single(raw.sort),
     page: single(raw.page),
@@ -191,6 +195,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
     ...(filters.category?.length && { category: { slug: { in: filters.category } } }),
     ...(filters.inStock && { stockQty: { gt: 0 } }),
     ...(filters.sale && { compareAtPrice: { not: null } }),
+    ...(filters.collection === "new" && { slug: { contains: NEW_COLLECTION.slugMarker } }),
     ...(filters.color?.length && { color: { in: filters.color } }),
     ...((filters.minPrice !== undefined || filters.maxPrice !== undefined) && {
       price: {
@@ -199,6 +204,14 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
       },
     }),
   };
+
+  // Every price in the current selection, but not narrowed by the price
+  // filter itself: the chart above the price slider shows the whole spread
+  // the shopper is choosing from.
+  const { price: _priceFilter, ...withoutPrice } = where as typeof where & { price?: unknown };
+  const chartPrices = (
+    await db.product.findMany({ where: withoutPrice, select: { price: true } })
+  ).map((p) => p.price / 100);
 
   // Out-of-stock items are pushed to the end of the grid rather than left
   // wherever their creation date puts them — a dead-end "out of stock"
@@ -259,6 +272,11 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
+  /* The new collection lives at its own address; its pagination, sorting and
+     "clear filters" links stay on it (the collection is implied by the path). */
+  const newCollection = filters.collection === "new" ? getNewCollectionCopy(uiLocale) : null;
+  const basePath = newCollection ? NEW_COLLECTION.path : "/products";
+
   // Keeps every active filter; `page` is left out when it is not given, so a
   // sort link always lands back on page 1.
   const buildHref = ({ page, sort }: { page?: number; sort?: SortKey }) => {
@@ -272,13 +290,13 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
     for (const color of filters.color ?? []) params.append("color", color);
     if (sort) params.set("sort", sort);
     if (page !== undefined) params.set("page", String(page));
-    return params.size ? `/products?${params.toString()}` : "/products";
+    return params.size ? `${basePath}?${params.toString()}` : basePath;
   };
   const buildPageHref = (page: number) => buildHref({ page, sort: filters.sort });
-  const sortOptions: { key: SortKey | undefined; label: string }[] = [
-    { key: undefined, label: shopCopy.sortNewest },
-    { key: "price-asc", label: shopCopy.sortPriceAsc },
-    { key: "price-desc", label: shopCopy.sortPriceDesc },
+  const sortOptions: { key: SortKey | undefined; label: string; short: string }[] = [
+    { key: undefined, label: shopCopy.sortNewest, short: shopCopy.sortNewestShort },
+    { key: "price-asc", label: shopCopy.sortPriceAsc, short: shopCopy.sortPriceAscShort },
+    { key: "price-desc", label: shopCopy.sortPriceDesc, short: shopCopy.sortPriceDescShort },
   ];
 
   // Only for the plain, unfiltered catalog view — a search/filter result is
@@ -311,7 +329,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
   if (filters.q) clearParams.set("q", filters.q);
   if (filters.sale) clearParams.set("sale", filters.sale);
   if (filters.sort) clearParams.set("sort", filters.sort);
-  const clearHref = clearParams.size ? `/products?${clearParams.toString()}` : "/products";
+  const clearHref = clearParams.size ? `${basePath}?${clearParams.toString()}` : basePath;
 
   const sections: Record<ProductsSectionId, ReactNode> = {
     head: (
@@ -320,25 +338,28 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
           <h1 className="shop-title">
             {filters.q
               ? dict.products.resultsFor(filters.q)
-              : filters.sale
-                ? dict.home.specialSelectionTitle
-                : dict.products.allProducts}
+              : newCollection
+                ? newCollection.title
+                : filters.sale
+                  ? dict.home.specialSelectionTitle
+                  : dict.products.allProducts}
           </h1>
+          {newCollection && !filters.q && <p className="shop-intro">{newCollection.intro}</p>}
           {/* The reassurances a shopper looks for before committing, in the
               store's own already-translated copy (the product page uses the
               same strings): shipping first, since it is the strongest one.
               The full row is hidden on phones, where it would push the first
               row of pieces below the fold. */}
+          {/* One quiet line of practical facts. The ticked badge row that used
+              to sit here read like checkboxes, so it now lives only on the
+              product page, beside the buy button where it reassures. */}
           {shippingBanner && <p className="shop-promise">{shippingBanner}</p>}
-          <div className="hidden sm:block">
-            <TrustBadges trustBadgeText={settings.trustBadgeText} dict={dict.product} />
-          </div>
         </div>
       </header>
     ),
     list: (
       <>
-        {!filters.q && !filters.category?.length && !filters.sale && filters.page === 1 && (
+        {!filters.q && !filters.category?.length && !filters.sale && !newCollection && filters.page === 1 && (
           <nav
             className="shelf-wrap shelf-wrap--wide shop-chips shop-catalog-paths"
             aria-label={dict.footer.shopHeading}
@@ -383,6 +404,8 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
               min: dict.feedback.minPriceLabel,
               max: dict.feedback.maxPriceLabel,
             }}
+            prices={chartPrices}
+            rangeLabels={{ one: shopCopy.rangeOne, many: shopCopy.rangeMany }}
           />
 
           <section className="shop-results">
@@ -430,7 +453,10 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
                               aria-current={filters.sort === option.key ? "true" : undefined}
                               className="shop-sort-link"
                             >
-                              {option.label}
+                              <span className="shop-sort-full">{option.label}</span>
+                              <span className="shop-sort-short" aria-hidden="true">
+                                {option.short}
+                              </span>
                             </Link>
                           </li>
                         ))}

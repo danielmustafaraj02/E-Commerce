@@ -11,6 +11,8 @@ import { lookPricing, PAIR_DISCOUNT_PERCENT } from "@/lib/looks";
 import { lookComposition, type Slot } from "@/lib/look-composition";
 import type { LookView } from "@/lib/look-data";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
+import { getLookPageCopy } from "@/lib/i18n/look-page-copy";
+import type { Locale } from "@/lib/i18n/locale-constants";
 
 // "Complete the look" on the product page: the piece's matching set, all
 // pre-selected, priced as a set. The saving shown is computed the same way
@@ -40,6 +42,18 @@ export function CompleteTheLook({
     () => new Set(look.pieces.filter((p) => p.available).map((p) => p.productId))
   );
   const [added, setAdded] = useState(false);
+  /* Which piece's hover card is open in the composition (pointer devices). A
+     short close delay lets the pointer travel from the piece onto its card. */
+  const [hovered, setHovered] = useState<string | null>(null);
+  const closeTimer = useRef<number | undefined>(undefined);
+  const openCard = (id: string) => {
+    window.clearTimeout(closeTimer.current);
+    setHovered(id);
+  };
+  const closeCard = () => {
+    window.clearTimeout(closeTimer.current);
+    closeTimer.current = window.setTimeout(() => setHovered(null), 180);
+  };
   // Starts revealed on the server and for anyone who prefers reduced motion,
   // so the section is never hidden behind an effect that might not run.
   const [revealed, setRevealed] = useState(true);
@@ -56,7 +70,9 @@ export function CompleteTheLook({
        element for the same scroll. */
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
     let seen = false;
-    let shown = reduce.matches;
+    // Where scroll timelines exist the entrance follows the scroll in CSS
+    // (shop.css), so nothing is hidden here.
+    let shown = reduce.matches || CSS.supports("animation-timeline: view()");
     if (!shown && el.getBoundingClientRect().top > window.innerHeight) {
       // Only hide what is genuinely below the fold: anything already on
       // screen at mount stays put rather than flashing out and back in.
@@ -187,11 +203,13 @@ export function CompleteTheLook({
             <div className="look-visual" aria-hidden="true">
               {look.pieces.map((piece, i) =>
                 piece.imageUrl ? (
+                  <div key={piece.productId} className="look-visual-slot">
                   <div
-                    key={piece.productId}
                     className="look-visual-layer"
                     data-visible={placements[i].visible}
                     style={slotVars(placements[i].desktop, placements[i].mobile)}
+                    onMouseEnter={() => openCard(piece.productId)}
+                    onMouseLeave={closeCard}
                   >
                     <CatalogImage
                       src={piece.imageUrl}
@@ -203,6 +221,30 @@ export function CompleteTheLook({
                           : "(min-width: 52rem) 20vw, 45vw"
                       }
                     />
+                  </div>
+                  {/* The piece's card, on hover. Pointer devices only (CSS);
+                      the list beside the picture is the way in for keyboards,
+                      screen readers and touch, so the card's link is skipped
+                      in the tab order and the composition stays aria-hidden. */}
+                  {placements[i].visible && (
+                    <div
+                      className="look-pop"
+                      data-open={hovered === piece.productId ? "true" : undefined}
+                      style={slotVars(placements[i].desktop, placements[i].mobile)}
+                      onMouseEnter={() => openCard(piece.productId)}
+                      onMouseLeave={closeCard}
+                    >
+                      <span className="look-pop-name">{piece.name}</span>
+                      <span className="look-pop-price">
+                        {piece.available ? money(piece.price) : outOfStockLabel}
+                      </span>
+                      {piece.productId !== currentProductId && (
+                        <Link href={`/products/${piece.slug}`} className="look-pop-link" tabIndex={-1}>
+                          {getLookPageCopy(locale.slice(0, 2) as Locale).viewPiece} →
+                        </Link>
+                      )}
+                    </div>
+                  )}
                   </div>
                 ) : null
               )}

@@ -137,6 +137,16 @@
     transform: scaleX(1);
   }
 }
+/* Scroll-linked (globals.css, --scroll-in): the rule draws as the heading comes up. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-reveal] .shelf-heading-row::after {
+      animation: rule-draw linear backwards;
+      animation-timeline: view();
+      animation-range: entry 5vh entry 35vh;
+    }
+  }
+}
 /* Sections whose heading is centred keep the rule centred and short, so it
    reads as a mark under the title rather than a left-aligned margin rule. */
 .shelf-heading-row--center::after {
@@ -241,7 +251,7 @@
   color: var(--ink-soft);
 }
 .shelf-giftfinder-time {
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 0.19em;
   text-transform: uppercase;
@@ -329,6 +339,17 @@
 @keyframes giftfinder-copy-in {
   from { opacity: 0; transform: translateY(14px); }
   to { opacity: 1; transform: translateY(0); }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .shelf-giftfinder-reveal[data-reveal] .shelf-giftfinder-time,
+    .shelf-giftfinder-reveal[data-reveal] .shelf-giftfinder-link,
+    .shelf-giftfinder-reveal[data-reveal] .shelf-giftfinder-details {
+      animation: giftfinder-copy-in linear backwards;
+      animation-timeline: view();
+      animation-range: var(--scroll-in);
+    }
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .shelf-giftfinder-link,
@@ -1503,6 +1524,31 @@
   .shelf-stagger .shelf-item:nth-child(7) { animation-delay: 0.41s; }
   .shelf-stagger .shelf-item:nth-child(8) { animation-delay: 0.47s; }
 }
+/* Scroll-linked (globals.css, --scroll-in): each card follows its own place
+   on screen, so rows arrive one after another by themselves and scrolling
+   back up sends them out again. Inside a row each column is a step behind
+   the one before, which keeps the left-to-right wave. (ShelfStagger stops
+   staging its grid when scroll timelines exist.) In a horizontal carousel the
+   carousel is the cards' scroller, the timeline is inactive and the cards
+   simply stay put. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* :nth-child(n) outranks the timed per-card delays above. */
+    [data-reveal] .shelf-item:nth-child(n),
+    .shelf-stagger .shelf-item:nth-child(n) {
+      --i: 0;
+      animation: shelf-item-enter linear backwards;
+      animation-timeline: view();
+      animation-range: entry calc(var(--i) * var(--scroll-step)) entry calc(40vh + var(--i) * var(--scroll-step));
+    }
+    [data-reveal] .shelf-item:nth-child(4n + 2),
+    .shelf-stagger .shelf-item:nth-child(4n + 2) { --i: 1; }
+    [data-reveal] .shelf-item:nth-child(4n + 3),
+    .shelf-stagger .shelf-item:nth-child(4n + 3) { --i: 2; }
+    [data-reveal] .shelf-item:nth-child(4n + 4),
+    .shelf-stagger .shelf-item:nth-child(4n + 4) { --i: 3; }
+  }
+}
 .shelf-item-photo {
   position: relative;
   z-index: 1;
@@ -2025,6 +2071,7 @@
     opacity: 1;
     transform: none;
     transition: none;
+    animation: none;
   }
   .home-category-reveal[data-reveal="false"] .shelf-eyebrow,
   .home-category-reveal[data-reveal="false"] .shelf-heading {
@@ -2180,6 +2227,7 @@
     opacity: 1;
     transform: none;
     transition: none;
+    animation: none;
   }
   .home-looks-heading-reveal[data-reveal="false"] .shelf-eyebrow,
   .home-looks-heading-reveal[data-reveal="false"] .shelf-heading {
@@ -2220,6 +2268,58 @@
     }
     to {
       transform: scaleX(1);
+    }
+  }
+}
+/* Scroll-linked (globals.css): eyebrow, its rules, the heading and the gold
+   rule under it arrive in reading order as the heading comes up. On desktop
+   the categories heading already runs on its section's --cat-scroll timeline
+   above, so only phones take it from here. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .home-looks-heading-reveal[data-reveal] .shelf-eyebrow,
+    .home-looks-heading-reveal[data-reveal] .shelf-heading,
+    .home-looks-heading-reveal[data-reveal] .shelf-eyebrow::before,
+    .home-looks-heading-reveal[data-reveal] .shelf-eyebrow::after,
+    .home-looks-heading-reveal[data-reveal] .shelf-heading::after {
+      animation: home-look-copy-in linear backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 30vh;
+    }
+    .home-looks-heading-reveal[data-reveal] .shelf-eyebrow::before,
+    .home-looks-heading-reveal[data-reveal] .shelf-eyebrow::after {
+      animation-name: home-look-rule-in;
+      animation-range: entry 3vh entry 30vh;
+    }
+    .home-looks-heading-reveal[data-reveal] .shelf-heading {
+      animation-range: entry 4vh entry 34vh;
+    }
+    .home-looks-heading-reveal[data-reveal] .shelf-heading::after {
+      animation-name: home-look-rule-in;
+      animation-range: entry 10vh entry 40vh;
+    }
+    @media (max-width: 47.99rem) {
+      .home-category-reveal[data-reveal] .shelf-eyebrow,
+      .home-category-reveal[data-reveal] .shelf-heading,
+      .home-category-reveal[data-reveal] .shelf-eyebrow::before,
+      .home-category-reveal[data-reveal] .shelf-eyebrow::after,
+      .home-category-reveal[data-reveal] .shelf-heading::after {
+        animation: home-look-copy-in linear backwards;
+        animation-timeline: view();
+        animation-range: entry 0% entry 30vh;
+      }
+      .home-category-reveal[data-reveal] .shelf-eyebrow::before,
+      .home-category-reveal[data-reveal] .shelf-eyebrow::after {
+        animation-name: home-look-rule-in;
+        animation-range: entry 3vh entry 30vh;
+      }
+      .home-category-reveal[data-reveal] .shelf-heading {
+        animation-range: entry 4vh entry 34vh;
+      }
+      .home-category-reveal[data-reveal] .shelf-heading::after {
+        animation-name: home-look-rule-in;
+        animation-range: entry 10vh entry 40vh;
+      }
     }
   }
 }
@@ -2279,6 +2379,21 @@
   }
   to {
     transform: scaleX(1);
+  }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-reveal] .shelf-point:nth-child(n)::before {
+      animation: rule-open linear backwards;
+      animation-timeline: view();
+      animation-range: entry 5vh entry 35vh;
+    }
+    [data-reveal] .shelf-point:nth-child(2)::before {
+      animation-range: entry calc(5vh + var(--scroll-step)) entry calc(35vh + var(--scroll-step));
+    }
+    [data-reveal] .shelf-point:nth-child(3)::before {
+      animation-range: entry calc(5vh + 2 * var(--scroll-step)) entry calc(35vh + 2 * var(--scroll-step));
+    }
   }
 }
 .shelf-point h3 {
@@ -2370,6 +2485,21 @@
   .shelf-quote:nth-child(1) { animation-delay: 0.1s; }
   .shelf-quote:nth-child(2) { animation-delay: 0.2s; }
   .shelf-quote:nth-child(3) { animation-delay: 0.3s; }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-reveal] .shelf-quote:nth-child(n) {
+      animation: section-fade-in linear backwards;
+      animation-timeline: view();
+      animation-range: var(--scroll-in);
+    }
+    [data-reveal] .shelf-quote:nth-child(2) {
+      animation-range: entry var(--scroll-step) entry calc(40vh + var(--scroll-step));
+    }
+    [data-reveal] .shelf-quote:nth-child(3) {
+      animation-range: entry calc(2 * var(--scroll-step)) entry calc(40vh + 2 * var(--scroll-step));
+    }
+  }
 }
 .shelf-quote blockquote {
   margin: 0;
@@ -2627,6 +2757,21 @@
   from { transform: scaleX(0); }
   to   { transform: scaleX(1); }
 }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .shelf-section--popular [data-reveal] .shelf-eyebrow {
+      animation: popular-title-in linear backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35vh;
+    }
+    .shelf-section--popular [data-reveal] .shelf-eyebrow::before,
+    .shelf-section--popular [data-reveal] .shelf-eyebrow::after {
+      animation: popular-rule-in linear backwards;
+      animation-timeline: view();
+      animation-range: entry 8vh entry 38vh;
+    }
+  }
+}
 
 .shelf-section--looks {
   /* The animated editorial rows create GPU-composited stacking contexts via
@@ -2838,7 +2983,7 @@
   /* The film's poster stands in as the still backdrop, full-bleed like the
      film it replaces. */
   .shelf-home .shelf-hero {
-    background-image: url("/hero/hero-atelier-poster.jpg");
+    background-image: url("/hero/hero-atelier-poster.webp");
     background-size: cover;
     background-position: 50% 30%;
     background-repeat: no-repeat;
@@ -4323,18 +4468,32 @@
   }
 
   /* --- Product rows ------------------------------------------------------ */
-  /* The 2-up grid is kept. An earlier draft of this block also made the row a
-     horizontal scroller with snap points, which does not work: the grid lays
-     its two columns out to fit the viewport, so there is no overflow to scroll
-     and the snap points never engage. Making the cards overflow would mean
-     fixed-basis columns, which puts a name and price on a card under ~160px
-     wide. Two readable columns beats a carousel of unreadable ones, so the
-     rows simply stay a grid and only the gap is tuned. */
-  .shelf-row {
-    gap: 2.5rem 1.5rem;
+  /* Two pieces share the available width, including on narrow phones.
+     Names wrap naturally and sale prices can move onto a second line. */
+  .shelf-row,
+  .shelf-home .shelf-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.25rem 0.875rem;
   }
-  .shelf-row--two-rows {
-    gap: 3rem 1.5rem;
+  .shelf-row > .shelf-item {
+    min-width: 0;
+    row-gap: 0.45rem;
+  }
+  .shelf-row .shelf-item-name {
+    font-size: 1rem;
+    line-height: 1.3;
+  }
+  .shelf-row .shelf-item-price {
+    flex-wrap: wrap;
+    gap: 0.2rem 0.4rem;
+    font-size: 0.875rem;
+  }
+  .shelf-row .shelf-badge,
+  .shelf-row .shelf-discount-badge {
+    max-width: 100%;
+    font-size: 0.6875rem;
+    padding-inline: 0.4rem;
+    overflow-wrap: anywhere;
   }
 
   /* --- Editorial rows ---------------------------------------------------- */
@@ -4350,14 +4509,12 @@
   .shelf {
     font-size: 1rem;
   }
-  /* At two-up, a card is under 160px wide. One column is the only way the
-     product name and price both stay readable without truncating. */
-  .shelf-row {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 2.75rem;
+  .shelf-row,
+  .shelf-home .shelf-row {
+    gap: 2rem 0.75rem;
   }
-  .shelf-row > .shelf-item {
-    max-width: 22rem;
+  .shelf-row .shelf-item-name {
+    font-size: 0.9375rem;
   }
   .shelf-home .shelf-hero-grid {
     gap: 1rem;
@@ -4465,6 +4622,17 @@
       transform 0.9s var(--ease-out-soft) 0.28s;
   }
 }
+/* Scroll-linked (globals.css): the introduction follows its heading up. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .shelf-home [data-reveal] .shelf-heading-intro,
+    .shelf-home [data-reveal] .shelf-special-subtitle {
+      animation: fade-up linear backwards;
+      animation-timeline: view();
+      animation-range: entry var(--scroll-step) entry calc(35vh + var(--scroll-step));
+    }
+  }
+}
 
 /* ── Hero, editorial pass ───────────────────────────────────────────────────
    A place-name eyebrow over the name, a gold rule under it, a lede set large
@@ -4505,5 +4673,45 @@
   .shelf-home .shelf-hero-eyebrow {
     color: var(--ivory);
     text-shadow: 0 1px 10px rgb(0 0 0 / 40%);
+  }
+}
+
+/* ── The home hero fits the first screen exactly (computers) ─────────────────
+   The page-builder hero (Page layout > Hero) grew past the fold on ordinary
+   laptop screens: the block theme's loose leading (1.25 on the title, 2.0 on
+   the lede) and fixed padding made it ~1070px tall on a 937px window. On wide
+   screens it is now exactly the viewport minus the sticky header, the copy
+   tightens with the screen's height, and the film fills its column. */
+@media (min-width: 48rem) {
+  .layout-sec-hero .bld {
+    height: calc(100svh - var(--hero-header-offset, 5.75rem));
+    min-height: 32rem;
+    max-height: 64rem;
+  }
+  .layout-sec-hero .bld-col:not(:has(:is(img, video, iframe))) {
+    padding-block: clamp(1.5rem, 6svh, 4.5rem) !important;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .layout-sec-hero .bld .bld-h {
+    font-size: min(clamp(2.4em, 11vw, 4.6em), 9.5svh);
+    line-height: 1.02;
+  }
+  .layout-sec-hero .bld .bld-col p {
+    line-height: 1.6;
+  }
+  /* One row, exactly the hero's height: the builder's grid otherwise grows
+     its row to the film's own height and the film runs past the fold. */
+  .layout-sec-hero .bld {
+    grid-template-rows: minmax(0, 1fr);
+    overflow: hidden;
+  }
+  .layout-sec-hero .bld-col {
+    min-height: 0;
+  }
+  /* …unless the editor set an explicit height (.bld-fit), which wins. */
+  .layout-sec-hero .bld-col :is(.bld-media-frame:not(.bld-fit), .bld-video, video) {
+    height: 100% !important;
+    min-height: 0 !important;
   }
 }

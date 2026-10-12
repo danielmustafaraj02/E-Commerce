@@ -30,7 +30,7 @@ export type PlaceOrderInput = {
   userId?: string;
   guestEmail?: string | null;
   locale: string;
-  // The personalised card to print and pack (full checkout only).
+  // The personalised digital card, emailed once the order is paid (full checkout only).
   giftCard?: GiftCard;
 };
 
@@ -54,6 +54,12 @@ export async function resolveDefaultShippingMethodId(country: string): Promise<s
 // access to that order's PII (src/lib/orders.ts, canAccessOrder) — 8 random
 // bytes (64 bits) keeps brute-forcing it infeasible even without the rate
 // limit on the lookup page as a second layer.
+// Opens the gift card at /card/<token>. Unguessable and separate from the
+// order number, which would also open the order's address and receipt.
+export function generateGiftCardToken() {
+  return randomBytes(18).toString("base64url");
+}
+
 export function generateOrderNumber() {
   const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
   return `ORD-${date}-${randomBytes(8).toString("hex").toUpperCase()}`;
@@ -126,10 +132,27 @@ async function placeOrderOnce(input: PlaceOrderInput) {
       : await tx.address.create({ data: addressFields });
 
     if (quote.discountCodeId) {
-      await tx.discountCode.update({
-        where: { id: quote.discountCodeId },
+      // Claimed, not just counted: the limit, expiry and on-switch are checked
+      // in the same statement that takes the use, so two shoppers can't both
+      // take the last one (security audit F05).
+      const claimed = await tx.discountCode.updateMany({
+        where: {
+          id: quote.discountCodeId,
+          active: true,
+          AND: [
+            { OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }] },
+            { OR: [{ maxUses: null }, { usedCount: { lt: db.discountCode.fields.maxUses } }] },
+          ],
+        },
         data: { usedCount: { increment: 1 } },
       });
+      if (claimed.count !== 1) {
+        throw new PricingError(
+          "Discount code has reached its usage limit",
+          409,
+          "discount-limit"
+        );
+      }
     }
 
     return tx.order.create({
@@ -166,6 +189,8 @@ async function placeOrderOnce(input: PlaceOrderInput) {
             giftCardStickers: giftCard.stickers,
           }),
           giftCardBack: giftCard.back ?? null,
+          giftCardRecipientEmail: giftCard.recipientEmail,
+          giftCardToken: generateGiftCardToken(),
         }),
         addressId: address.id,
         shippingMethodId: quote.shippingMethod.id,

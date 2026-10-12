@@ -1,5 +1,6 @@
 import { after, NextResponse } from "next/server";
 import { z } from "zod";
+import { MAX_CART_LINES, MAX_CART_QUANTITY } from "@/lib/cart-limits";
 import { auth } from "@/auth";
 import { PricingError } from "@/lib/pricing";
 import { placeOrderWithRetry } from "@/lib/place-order";
@@ -18,10 +19,11 @@ const checkoutSchema = z.object({
     .array(
       z.object({
         productId: z.string().min(1),
-        quantity: z.coerce.number().int().positive(),
+        quantity: z.coerce.number().int().positive().max(MAX_CART_QUANTITY),
       })
     )
-    .min(1),
+    .min(1)
+    .max(MAX_CART_LINES),
   guestEmail: z.string().email().optional(),
   address: z
     .object({

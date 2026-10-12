@@ -15,13 +15,17 @@ import { Link } from "@/components/localized-link";
 import { ShelfItem } from "@/components/shelf-item";
 import { PopularCarousel } from "@/components/popular-carousel";
 import { EditorialReveal } from "@/components/editorial-reveal";
-import { LookEditorial } from "@/components/look-editorial";
+import { LookRow } from "@/components/look-editorial";
+import { getSharedLookOptions } from "@/lib/page-layout-store";
+import { optionAttributes } from "@/lib/section-style";
 import { CollectionShowcase } from "@/components/collection-showcase";
+import { showcasePieces } from "@/lib/showcase-pieces";
 import { CatalogImage } from "@/components/catalog-image";
 import { NewsletterSignupForm } from "@/components/newsletter-signup-form";
 import { FaqSection } from "@/components/faq-section";
 import { JournalPreview } from "@/components/journal/journal-preview";
 import type { BuilderBlock, LiveType } from "@/lib/section-builder";
+import { showcaseReasons } from "@/lib/showcase-reasons";
 
 /**
  * The live blocks of the section builder, rendered on the server with the
@@ -89,15 +93,19 @@ export async function LiveBlock({ block }: { block: Extract<BuilderBlock, { type
     }
 
     case "looks": {
-      const looks = await getAllLooks(locale, (block as Live<"looks">).count);
+      const [looks, lookOptions] = await Promise.all([
+        getAllLooks(locale, (block as Live<"looks">).count),
+        getSharedLookOptions(),
+      ]);
       if (looks.length === 0) return null;
       const lookCopy = getLookPageCopy(locale);
       return (
         <>
-          <div className="looks-editorial-list" data-editorial-root>
+          <div className="looks-editorial-list" data-editorial-root {...optionAttributes(lookOptions)}>
             <EditorialReveal>
               {looks.map((look, index) => (
-                <LookEditorial
+                <LookRow
+                  style={lookOptions.lookStyle}
                   index={index}
                   key={look.id}
                   look={look}
@@ -108,6 +116,7 @@ export async function LiveBlock({ block }: { block: Extract<BuilderBlock, { type
                     pieces: dict.looks.pieces,
                     description: getLookEditorialDescription(look.name, locale),
                     included: lookCopy.editorialIncluded,
+                    viewPiece: lookCopy.viewPiece,
                     price: lookCopy.editorialPrice,
                     kinds: dict.giftFinder.preference,
                   }}
@@ -213,22 +222,33 @@ export async function LiveBlock({ block }: { block: Extract<BuilderBlock, { type
           </ul>
         );
       }
-      return (
-        <CollectionShowcase
-          options={(block as Live<"showcase">).scroll}
-          items={collections.map((category, i) => {
+      const reasons = showcaseReasons(dict.home);
+      const items = collections.map((category, i) => {
             const scene = SHOWCASE_SCENE_ORDER[i] ?? "necklace";
+            const own = overrides[scene];
             return {
+              ...overrides[scene],
               id: category.id,
               href: overrides[scene]?.href ?? `/category/${category.slug}`,
               name: overrides[scene]?.name ?? localizedName(category, locale),
               image: overrides[scene]?.image ?? category.image!.url,
               side: overrides[scene]?.side,
+              imageScale: overrides[scene]?.imageScale,
+              imageX: overrides[scene]?.imageX,
+              imageY: overrides[scene]?.imageY,
               description: overrides[scene]?.description ?? copy.scenes[scene].description,
               cta: overrides[scene]?.cta ?? copy.scenes[scene].cta,
+              // A heading or text written for this scene in the editor wins over
+              // the reason, so nothing typed there is silently replaced.
+              reason: own?.name || own?.description ? undefined : reasons[scene],
               scene,
             };
-          })}
+          });
+      const pieces = await showcasePieces(items, locale, settings.defaultLocale);
+      return (
+        <CollectionShowcase
+          options={(block as Live<"showcase">).scroll}
+          items={items.map((item, i) => ({ ...item, piece: pieces[i] }))}
         />
       );
     }

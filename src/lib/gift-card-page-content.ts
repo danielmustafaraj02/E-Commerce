@@ -1,4 +1,5 @@
-// Long-form content for /personalised-gift-card (below the designer): why a
+// Long-form content for /personalised-gift-card (below the designer), for the
+// digital card emailed once the order is paid: why a
 // few words matter, who the card is for with ideas of what to write,
 // occasions, how it works, tips and the FAQ. Kept apart from
 // lib/i18n/dictionaries.ts like lib/murano-guide-content.ts, since it is
@@ -35,14 +36,14 @@ export type GiftCardPageContent = {
 const en: GiftCardPageContent = {
   metaTitle: "Personalised Gift Card with Your Message",
   metaDescription:
-    "Add a personalised gift card to your Murano glass jewelry for {price}: your message, your typeface, little hearts or pearls, printed and packed with the gift.",
+    "Add a personalised digital gift card to your Murano glass jewelry order for {price}: your message, your typeface and motifs, emailed once the order is paid.",
   h1: "Personalised Gift Card",
-  lede: "Your words, printed on a card and tucked inside the package with their Murano glass jewelry. Choose one of our messages or write your own, pick a typeface, add up to three little motifs and choose the colour of the back, all for {price}.",
+  lede: "Your words on a card we email to them as soon as your order is paid. Choose one of our messages or write your own, pick a typeface, add up to three little motifs and choose the colour of the back, all for {price}, added to your order.",
   whyTitle: "Why a few words make the gift",
   whyParagraphs: [
     "A piece of Murano glass jewelry is shaped by hand, bead by bead, from glass made on an island a few minutes by boat from Venice. It is beautiful on its own. But what turns a beautiful thing into a gift someone remembers is knowing that you chose it for them, and why.",
-    "That is what the card is for. When they open the box, before they even lift the necklace or the earrings, they read your words, in the typeface you picked, with their name at the top. The jewelry says Venice; the card says you.",
-    "And long after the wrapping is gone, the card stays: in a jewelry box, tucked into a mirror frame, between the pages of a book. A small, lasting record of the moment.",
+    "That is what the card is for. It reaches them by email, often before the parcel does: your words, in the typeface you picked, with their name at the top. The jewelry says Venice; the card says you.",
+    "And long after the wrapping is gone, the card is still there: one tap on the link in their email opens it again, front and back, whenever they want to read it.",
   ],
   lovedTitle: "Why people love receiving one",
   lovedPoints: [
@@ -56,11 +57,11 @@ const en: GiftCardPageContent = {
     },
     {
       title: "It travels when you can't",
-      body: "Far apart for a birthday or an anniversary? Send the jewelry directly to them. The card arrives inside the package, so your message is there when they open it, even if you can't be.",
+      body: "Far apart for a birthday or an anniversary? Send the jewelry directly to them. The card lands in their inbox as soon as the order is paid, so your message reaches them even if you can't.",
     },
     {
       title: "It is made only once",
-      body: "Every card is printed for a single order, with your message, your typeface, your motifs and your choice of back. No two are the same.",
+      body: "Every card is made for a single order, with your message, your typeface, your motifs and your choice of back. No two are the same.",
     },
   ],
   forWhomTitle: "Who it's for, and what you might write",
@@ -115,19 +116,19 @@ const en: GiftCardPageContent = {
   howSteps: [
     {
       title: "Design it",
-      body: "Add their name and yours, choose a message or write your own, pick one of five typefaces, add up to three motifs and choose the colour of the back. The preview shows what we will print.",
+      body: "Add their name and yours, their email, choose a message or write your own, pick one of five typefaces, add up to three motifs and choose the colour of the back. The preview shows exactly what they will see.",
     },
     {
       title: "Add it to your order",
       body: "The card goes into your cart for {price}, alongside the jewelry you choose. You can edit it from the cart until you pay.",
     },
     {
-      title: "We print it and pack it",
-      body: "Your card is printed especially for your order and placed inside your Perla package, with the jewelry.",
+      title: "We email it",
+      body: "As soon as your order is paid, we email the card to the address you entered, with a link that opens it in full.",
     },
     {
       title: "They open it",
-      body: "Ship it to yourself to give in person, or straight to them: either way, the card travels with the gift.",
+      body: "They read your words on their phone or computer, turn the card over, and can open it again whenever they like. The jewelry follows by post.",
     },
   ],
   tipsTitle: "A few tips for your message",
@@ -141,7 +142,7 @@ const en: GiftCardPageContent = {
   faq: [
     {
       question: "How much does the personalised gift card cost?",
-      answer: "{price}, added once to your order. That includes the printed card, your message, your typeface, up to three motifs and the colour of the back.",
+      answer: "{price}, added once to your order. That includes the digital card, your message, your typeface, up to three motifs and the colour of the back.",
     },
     {
       question: "Can I write my own message?",
@@ -153,11 +154,11 @@ const en: GiftCardPageContent = {
     },
     {
       question: "What is on the back of the card?",
-      answer: "The Perla logo, printed on the colour you choose: ivory, lagoon teal, Venetian red or blush pink.",
+      answer: "The Perla logo, on the colour you choose: ivory, lagoon teal, Venetian red or blush pink.",
     },
     {
-      question: "Can I send the gift directly to them?",
-      answer: "Yes. Enter their address at checkout and the card travels inside the package with the jewelry, so your message is there when they open it.",
+      question: "How and when does the card reach them?",
+      answer: "By email, at the address you enter when you design it, as soon as your order is paid. The email has a link that opens the card in full, front and back.",
     },
     {
       question: "Can I change the card after adding it to my cart?",
@@ -166,6 +167,10 @@ const en: GiftCardPageContent = {
     {
       question: "Does the card show a price?",
       answer: "No. The card carries only your message, the names you entered, your motifs and the Perla logo.",
+    },
+    {
+      question: "Can I buy the card on its own?",
+      answer: "No. The digital card is a small extra for an order: add at least one piece of jewelry to your cart, then add the card.",
     },
   ],
   ctaTitle: "Ready to write yours?",
@@ -177,14 +182,14 @@ const en: GiftCardPageContent = {
 const it: GiftCardPageContent = {
   metaTitle: "Biglietto regalo personalizzato con dedica",
   metaDescription:
-    "Aggiungi ai tuoi gioielli in vetro di Murano un biglietto personalizzato a {price}: la tua dedica, il tuo carattere, piccoli cuori o perle, stampato e messo nel pacco.",
+    "Aggiungi al tuo ordine di gioielli in vetro di Murano un biglietto digitale personalizzato a {price}: la tua dedica, il tuo carattere, piccoli cuori o perle, inviato per email appena l'ordine è pagato.",
   h1: "Biglietto regalo personalizzato",
-  lede: "Le tue parole, stampate su un biglietto e inserite nel pacco insieme ai gioielli in vetro di Murano. Scegli uno dei nostri messaggi o scrivi il tuo, scegli un carattere, aggiungi fino a tre piccoli simboli e il colore del retro, tutto a {price}.",
+  lede: "Le tue parole su un biglietto che inviamo per email appena l'ordine è pagato. Scegli uno dei nostri messaggi o scrivi il tuo, scegli un carattere, aggiungi fino a tre piccoli simboli e il colore del retro, tutto a {price}, aggiunto all'ordine.",
   whyTitle: "Perché poche parole fanno il regalo",
   whyParagraphs: [
     "Un gioiello in vetro di Murano è modellato a mano, perla dopo perla, con il vetro di un'isola a pochi minuti di barca da Venezia. È bello già così. Ma ciò che trasforma una cosa bella in un regalo che si ricorda è sapere che l'hai scelta tu, per lei o per lui, e perché.",
-    "A questo serve il biglietto. Quando aprono la scatola, prima ancora di prendere la collana o gli orecchini, leggono le tue parole, nel carattere che hai scelto, con il loro nome in alto. Il gioiello parla di Venezia; il biglietto parla di te.",
-    "E molto dopo che la carta da regalo è sparita, il biglietto resta: in un portagioie, infilato nella cornice di uno specchio, tra le pagine di un libro. Un piccolo ricordo che dura nel tempo.",
+    "A questo serve il biglietto. Arriva per email, spesso prima del pacco: le tue parole, nel carattere che hai scelto, con il suo nome in alto. Il gioiello parla di Venezia; il biglietto parla di te.",
+    "E molto dopo che la carta da regalo è sparita, il biglietto resta: basta un tocco sul link nell'email per riaprirlo, fronte e retro, ogni volta che vuole rileggerlo.",
   ],
   lovedTitle: "Perché è così bello riceverlo",
   lovedPoints: [
@@ -198,11 +203,11 @@ const it: GiftCardPageContent = {
     },
     {
       title: "Arriva dove tu non puoi",
-      body: "Lontani per un compleanno o un anniversario? Spedisci il gioiello direttamente a lei o a lui. Il biglietto è dentro il pacco, così il tuo messaggio c'è quando lo aprono, anche se tu non puoi esserci.",
+      body: "Lontani per un compleanno o un anniversario? Spedisci il gioiello direttamente a lui o a lei. Il biglietto arriva nella sua casella email appena l'ordine è pagato, così le tue parole lo raggiungono anche se tu non puoi.",
     },
     {
       title: "Viene fatto una sola volta",
-      body: "Ogni biglietto è stampato per un solo ordine, con il tuo messaggio, il tuo carattere, i tuoi simboli e il retro che hai scelto. Non ce ne sono due uguali.",
+      body: "Ogni biglietto è creato per un solo ordine, con il tuo messaggio, il tuo carattere, i tuoi simboli e il retro che hai scelto. Non ce ne sono due uguali.",
     },
   ],
   forWhomTitle: "Per chi è, e cosa potresti scrivere",
@@ -257,19 +262,19 @@ const it: GiftCardPageContent = {
   howSteps: [
     {
       title: "Crealo",
-      body: "Aggiungi il suo nome e il tuo, scegli un messaggio o scrivi il tuo, scegli uno dei cinque caratteri, aggiungi fino a tre simboli e il colore del retro. L'anteprima mostra ciò che stamperemo.",
+      body: "Aggiungi il suo nome e il tuo, la sua email, scegli un messaggio o scrivi il tuo, scegli uno dei cinque caratteri, aggiungi fino a tre simboli e il colore del retro. L'anteprima mostra esattamente ciò che vedrà.",
     },
     {
       title: "Aggiungilo all'ordine",
       body: "Il biglietto va nel carrello a {price}, insieme ai gioielli che scegli. Puoi modificarlo dal carrello fino al pagamento.",
     },
     {
-      title: "Lo stampiamo e lo imballiamo",
-      body: "Il tuo biglietto viene stampato appositamente per il tuo ordine e inserito nella confezione Perla, insieme ai gioielli.",
+      title: "Lo inviamo per email",
+      body: "Appena l'ordine è pagato, inviamo il biglietto all'indirizzo che hai indicato, con un link che lo apre per intero.",
     },
     {
       title: "Lo aprono",
-      body: "Spediscilo a te per consegnarlo di persona, o direttamente a chi lo riceve: in entrambi i casi il biglietto viaggia con il regalo.",
+      body: "Legge le tue parole sul telefono o sul computer, gira il biglietto e può riaprirlo quando vuole. Il gioiello arriva per posta.",
     },
   ],
   tipsTitle: "Qualche consiglio per la dedica",
@@ -283,7 +288,7 @@ const it: GiftCardPageContent = {
   faq: [
     {
       question: "Quanto costa il biglietto regalo personalizzato?",
-      answer: "{price}, aggiunto una sola volta all'ordine. Comprende il biglietto stampato, il tuo messaggio, il carattere, fino a tre simboli e il colore del retro.",
+      answer: "{price}, aggiunto una sola volta all'ordine. Comprende il biglietto digitale, il tuo messaggio, il carattere, fino a tre simboli e il colore del retro.",
     },
     {
       question: "Posso scrivere un messaggio mio?",
@@ -295,11 +300,11 @@ const it: GiftCardPageContent = {
     },
     {
       question: "Cosa c'è sul retro del biglietto?",
-      answer: "Il logo Perla, stampato sul colore che scegli: avorio, laguna, rosso veneziano o rosa cipria.",
+      answer: "Il logo Perla, sul colore che scegli: avorio, laguna, rosso veneziano o rosa cipria.",
     },
     {
-      question: "Posso spedire il regalo direttamente a chi lo riceve?",
-      answer: "Sì. Inserisci il suo indirizzo al checkout e il biglietto viaggia dentro il pacco con i gioielli, così il tuo messaggio c'è quando lo apre.",
+      question: "Come e quando arriva il biglietto?",
+      answer: "Per email, all'indirizzo che inserisci quando lo crei, appena l'ordine è pagato. L'email contiene un link che apre il biglietto per intero, fronte e retro.",
     },
     {
       question: "Posso modificare il biglietto dopo averlo aggiunto al carrello?",
@@ -308,6 +313,10 @@ const it: GiftCardPageContent = {
     {
       question: "Sul biglietto compare il prezzo?",
       answer: "No. Il biglietto riporta solo il tuo messaggio, i nomi che hai inserito, i tuoi simboli e il logo Perla.",
+    },
+    {
+      question: "Posso acquistare solo il biglietto?",
+      answer: "No. Il biglietto digitale è un piccolo extra di un ordine: aggiungi almeno un gioiello al carrello, poi aggiungi il biglietto.",
     },
   ],
   ctaTitle: "Pronto a scrivere il tuo?",
@@ -319,14 +328,14 @@ const it: GiftCardPageContent = {
 const fr: GiftCardPageContent = {
   metaTitle: "Carte cadeau personnalisée avec votre message",
   metaDescription:
-    "Ajoutez à vos bijoux en verre de Murano une carte personnalisée pour {price} : votre message, votre police, de petits cœurs ou perles, imprimée et glissée dans le colis.",
+    "Ajoutez à votre commande de bijoux en verre de Murano une carte cadeau numérique personnalisée pour {price} : votre message, votre police, des cœurs ou des perles, envoyée par e-mail une fois la commande payée.",
   h1: "Carte cadeau personnalisée",
-  lede: "Vos mots, imprimés sur une carte et glissés dans le colis avec les bijoux en verre de Murano. Choisissez l'un de nos messages ou écrivez le vôtre, une police, jusqu'à trois petits motifs et la couleur du verso, le tout pour {price}.",
+  lede: "Vos mots sur une carte que nous lui envoyons par e-mail dès que votre commande est payée. Choisissez l'un de nos messages ou écrivez le vôtre, une police, jusqu'à trois motifs et la couleur du verso, le tout pour {price}, ajouté à votre commande.",
   whyTitle: "Pourquoi quelques mots font le cadeau",
   whyParagraphs: [
     "Un bijou en verre de Murano est façonné à la main, perle après perle, avec le verre d'une île à quelques minutes de bateau de Venise. Il est beau en soi. Mais ce qui transforme un bel objet en un cadeau dont on se souvient, c'est de savoir que vous l'avez choisi pour cette personne, et pourquoi.",
-    "C'est à cela que sert la carte. En ouvrant la boîte, avant même de soulever le collier ou les boucles d'oreilles, on lit vos mots, dans la police que vous avez choisie, avec son prénom en haut. Le bijou raconte Venise ; la carte vous raconte, vous.",
-    "Et bien après que le papier cadeau a disparu, la carte reste : dans une boîte à bijoux, glissée dans le cadre d'un miroir, entre les pages d'un livre. Une petite trace durable du moment.",
+    "C'est à cela que sert la carte. Elle arrive par e-mail, souvent avant le colis : vos mots, dans la police que vous avez choisie, avec son prénom en haut. Le bijou dit Venise ; la carte dit vous.",
+    "Et longtemps après que l'emballage a disparu, la carte est toujours là : un clic sur le lien de l'e-mail suffit pour la rouvrir, recto et verso, chaque fois qu'on veut la relire.",
   ],
   lovedTitle: "Pourquoi on aime tant la recevoir",
   lovedPoints: [
@@ -340,11 +349,11 @@ const fr: GiftCardPageContent = {
     },
     {
       title: "Elle voyage quand vous ne pouvez pas",
-      body: "Loin l'un de l'autre pour un anniversaire ? Envoyez le bijou directement à la personne. La carte est dans le colis : votre message est là quand elle l'ouvre, même si vous ne pouvez pas l'être.",
+      body: "Loin l'un de l'autre pour un anniversaire ? Envoyez le bijou directement chez la personne. La carte arrive dans sa boîte mail dès que la commande est payée, pour que vos mots lui parviennent même si vous ne pouvez pas être là.",
     },
     {
       title: "Elle n'est faite qu'une fois",
-      body: "Chaque carte est imprimée pour une seule commande, avec votre message, votre police, vos motifs et le verso de votre choix. Aucune n'est identique.",
+      body: "Chaque carte est créée pour une seule commande, avec votre message, votre police, vos motifs et le verso choisi. Il n'y en a pas deux pareilles.",
     },
   ],
   forWhomTitle: "Pour qui, et quoi écrire",
@@ -399,19 +408,19 @@ const fr: GiftCardPageContent = {
   howSteps: [
     {
       title: "Créez-la",
-      body: "Ajoutez son prénom et le vôtre, choisissez un message ou écrivez le vôtre, l'une des cinq polices, jusqu'à trois motifs et la couleur du verso. L'aperçu montre ce que nous imprimerons.",
+      body: "Ajoutez son prénom et le vôtre, son e-mail, choisissez un message ou écrivez le vôtre, l'une des cinq polices, jusqu'à trois motifs et la couleur du verso. L'aperçu montre exactement ce qu'elle verra.",
     },
     {
       title: "Ajoutez-la à votre commande",
       body: "La carte rejoint votre panier pour {price}, avec les bijoux que vous choisissez. Vous pouvez la modifier depuis le panier jusqu'au paiement.",
     },
     {
-      title: "Nous l'imprimons et l'emballons",
-      body: "Votre carte est imprimée spécialement pour votre commande et placée dans votre colis Perla, avec les bijoux.",
+      title: "Nous l'envoyons par e-mail",
+      body: "Dès que votre commande est payée, nous envoyons la carte à l'adresse indiquée, avec un lien qui l'ouvre en entier.",
     },
     {
       title: "La personne l'ouvre",
-      body: "Faites-vous livrer pour l'offrir en main propre, ou livrez directement la personne : dans les deux cas, la carte voyage avec le cadeau.",
+      body: "Elle lit vos mots sur son téléphone ou son ordinateur, retourne la carte et peut la rouvrir quand elle veut. Le bijou suit par la poste.",
     },
   ],
   tipsTitle: "Quelques conseils pour votre message",
@@ -425,7 +434,7 @@ const fr: GiftCardPageContent = {
   faq: [
     {
       question: "Combien coûte la carte cadeau personnalisée ?",
-      answer: "{price}, ajoutés une seule fois à votre commande. Ce prix comprend la carte imprimée, votre message, la police, jusqu'à trois motifs et la couleur du verso.",
+      answer: "{price}, ajouté une seule fois à votre commande. Cela comprend la carte numérique, votre message, votre police, jusqu'à trois motifs et la couleur du verso.",
     },
     {
       question: "Puis-je écrire mon propre message ?",
@@ -437,11 +446,11 @@ const fr: GiftCardPageContent = {
     },
     {
       question: "Qu'y a-t-il au verso de la carte ?",
-      answer: "Le logo Perla, imprimé sur la couleur de votre choix : ivoire, lagune, rouge vénitien ou rose poudré.",
+      answer: "Le logo Perla, sur la couleur de votre choix : ivoire, bleu lagune, rouge vénitien ou rose poudré.",
     },
     {
-      question: "Puis-je envoyer le cadeau directement à la personne ?",
-      answer: "Oui. Saisissez son adresse lors du paiement : la carte voyage dans le colis avec les bijoux, et votre message est là quand elle l'ouvre.",
+      question: "Comment et quand la carte arrive-t-elle ?",
+      answer: "Par e-mail, à l'adresse que vous indiquez en la créant, dès que votre commande est payée. L'e-mail contient un lien qui ouvre la carte en entier, recto et verso.",
     },
     {
       question: "Puis-je modifier la carte après l'avoir ajoutée au panier ?",
@@ -450,6 +459,10 @@ const fr: GiftCardPageContent = {
     {
       question: "Le prix figure-t-il sur la carte ?",
       answer: "Non. La carte ne porte que votre message, les prénoms saisis, vos motifs et le logo Perla.",
+    },
+    {
+      question: "Puis-je acheter uniquement la carte ?",
+      answer: "Non. La carte numérique est un petit plus d'une commande : ajoutez au moins un bijou à votre panier, puis la carte.",
     },
   ],
   ctaTitle: "Prêt à écrire la vôtre ?",
@@ -461,14 +474,14 @@ const fr: GiftCardPageContent = {
 const de: GiftCardPageContent = {
   metaTitle: "Personalisierte Grußkarte mit Ihrer Botschaft",
   metaDescription:
-    "Legen Sie Ihrem Muranoglas-Schmuck für {price} eine personalisierte Grußkarte bei: Ihre Botschaft, Ihre Schrift, kleine Herzen oder Perlen, gedruckt und mit ins Paket gelegt.",
+    "Ergänzen Sie Ihre Bestellung mit Schmuck aus Muranoglas um eine personalisierte digitale Grußkarte für {price}: Ihre Botschaft, Ihre Schrift, kleine Herzen oder Perlen, per E-Mail versandt, sobald die Bestellung bezahlt ist.",
   h1: "Personalisierte Grußkarte",
-  lede: "Ihre Worte, auf eine Karte gedruckt und zusammen mit dem Muranoglas-Schmuck ins Paket gelegt. Wählen Sie eine unserer Botschaften oder schreiben Sie Ihre eigene, wählen Sie eine Schrift, bis zu drei kleine Motive und die Farbe der Rückseite, alles für {price}.",
+  lede: "Ihre Worte auf einer Karte, die wir per E-Mail senden, sobald Ihre Bestellung bezahlt ist. Wählen Sie eine unserer Botschaften oder schreiben Sie Ihre eigene, wählen Sie eine Schrift, bis zu drei Motive und die Farbe der Rückseite, alles für {price} zu Ihrer Bestellung.",
   whyTitle: "Warum ein paar Worte das Geschenk ausmachen",
   whyParagraphs: [
     "Ein Schmuckstück aus Muranoglas wird von Hand geformt, Perle für Perle, aus Glas von einer Insel wenige Bootsminuten von Venedig entfernt. Es ist schon für sich allein schön. Doch was aus etwas Schönem ein Geschenk macht, an das man sich erinnert, ist das Wissen, dass Sie es ausgesucht haben, und warum.",
-    "Dafür ist die Karte da. Beim Öffnen der Schachtel, noch bevor die Kette oder die Ohrringe herausgenommen werden, liest man Ihre Worte, in der von Ihnen gewählten Schrift, mit dem eigenen Namen ganz oben. Der Schmuck erzählt von Venedig; die Karte erzählt von Ihnen.",
-    "Und lange nachdem das Geschenkpapier verschwunden ist, bleibt die Karte: in einer Schmuckschatulle, im Rahmen eines Spiegels, zwischen den Seiten eines Buches. Eine kleine, bleibende Erinnerung an diesen Moment.",
+    "Dafür ist die Karte da. Sie kommt per E-Mail, oft noch vor dem Paket: Ihre Worte, in der Schrift, die Sie gewählt haben, mit dem Namen ganz oben. Der Schmuck erzählt von Venedig; die Karte von Ihnen.",
+    "Und lange nachdem das Geschenkpapier verschwunden ist, bleibt die Karte: Ein Klick auf den Link in der E-Mail öffnet sie wieder, Vorder- und Rückseite, wann immer man sie lesen möchte.",
   ],
   lovedTitle: "Warum man sie so gern bekommt",
   lovedPoints: [
@@ -482,11 +495,11 @@ const de: GiftCardPageContent = {
     },
     {
       title: "Sie reist, wenn Sie es nicht können",
-      body: "Zum Geburtstag oder Jahrestag weit voneinander entfernt? Senden Sie den Schmuck direkt an die beschenkte Person. Die Karte liegt im Paket, und Ihre Botschaft ist da, wenn es geöffnet wird, auch wenn Sie es nicht sein können.",
+      body: "Zum Geburtstag oder Jahrestag weit voneinander entfernt? Senden Sie den Schmuck direkt dorthin. Die Karte landet im Postfach, sobald die Bestellung bezahlt ist, damit Ihre Worte ankommen, auch wenn Sie nicht dabei sein können.",
     },
     {
       title: "Sie entsteht nur ein einziges Mal",
-      body: "Jede Karte wird für eine einzige Bestellung gedruckt, mit Ihrer Botschaft, Ihrer Schrift, Ihren Motiven und der Rückseite Ihrer Wahl. Keine gleicht der anderen.",
+      body: "Jede Karte entsteht für eine einzige Bestellung, mit Ihrer Botschaft, Ihrer Schrift, Ihren Motiven und der gewählten Rückseite. Keine gleicht der anderen.",
     },
   ],
   forWhomTitle: "Für wen sie ist, und was Sie schreiben könnten",
@@ -541,19 +554,19 @@ const de: GiftCardPageContent = {
   howSteps: [
     {
       title: "Gestalten",
-      body: "Tragen Sie den Namen der beschenkten Person und Ihren ein, wählen Sie eine Botschaft oder schreiben Sie Ihre eigene, eine von fünf Schriften, bis zu drei Motive und die Farbe der Rückseite. Die Vorschau zeigt, was wir drucken.",
+      body: "Fügen Sie beide Namen und die E-Mail-Adresse hinzu, wählen Sie eine Botschaft oder schreiben Sie Ihre eigene, eine von fünf Schriften, bis zu drei Motive und die Farbe der Rückseite. Die Vorschau zeigt genau, was ankommt.",
     },
     {
       title: "Zur Bestellung hinzufügen",
       body: "Die Karte kommt für {price} in Ihren Warenkorb, zusammen mit dem Schmuck Ihrer Wahl. Bis zur Zahlung können Sie sie im Warenkorb bearbeiten.",
     },
     {
-      title: "Wir drucken und verpacken sie",
-      body: "Ihre Karte wird eigens für Ihre Bestellung gedruckt und mit dem Schmuck in Ihr Perla-Paket gelegt.",
+      title: "Wir senden sie per E-Mail",
+      body: "Sobald Ihre Bestellung bezahlt ist, senden wir die Karte an die angegebene Adresse, mit einem Link, der sie vollständig öffnet.",
     },
     {
-      title: "Das Paket wird geöffnet",
-      body: "Lassen Sie es an sich selbst liefern, um es persönlich zu überreichen, oder direkt an die beschenkte Person: In beiden Fällen reist die Karte mit dem Geschenk.",
+      title: "Die Karte wird geöffnet",
+      body: "Ihre Worte werden auf dem Handy oder Computer gelesen, die Karte umgedreht und jederzeit wieder geöffnet. Der Schmuck folgt per Post.",
     },
   ],
   tipsTitle: "Ein paar Tipps für Ihre Botschaft",
@@ -567,7 +580,7 @@ const de: GiftCardPageContent = {
   faq: [
     {
       question: "Was kostet die personalisierte Grußkarte?",
-      answer: "{price}, einmal pro Bestellung. Darin enthalten sind die gedruckte Karte, Ihre Botschaft, die Schrift, bis zu drei Motive und die Farbe der Rückseite.",
+      answer: "{price}, einmal pro Bestellung. Enthalten sind die digitale Karte, Ihre Botschaft, Ihre Schrift, bis zu drei Motive und die Farbe der Rückseite.",
     },
     {
       question: "Kann ich eine eigene Botschaft schreiben?",
@@ -579,11 +592,11 @@ const de: GiftCardPageContent = {
     },
     {
       question: "Was steht auf der Rückseite der Karte?",
-      answer: "Das Perla-Logo, gedruckt auf der Farbe Ihrer Wahl: Elfenbein, Lagunenblau, Venezianisch Rot oder Zartrosa.",
+      answer: "Das Perla-Logo, in der Farbe Ihrer Wahl: Elfenbein, Lagunenblau, Venezianisch Rot oder Zartrosa.",
     },
     {
-      question: "Kann ich das Geschenk direkt an die beschenkte Person senden?",
-      answer: "Ja. Geben Sie an der Kasse deren Adresse ein: Die Karte reist im Paket mit dem Schmuck, und Ihre Botschaft ist da, wenn es geöffnet wird.",
+      question: "Wie und wann kommt die Karte an?",
+      answer: "Per E-Mail an die Adresse, die Sie beim Gestalten angeben, sobald Ihre Bestellung bezahlt ist. Die E-Mail enthält einen Link, der die Karte vollständig öffnet, Vorder- und Rückseite.",
     },
     {
       question: "Kann ich die Karte ändern, nachdem ich sie in den Warenkorb gelegt habe?",
@@ -592,6 +605,10 @@ const de: GiftCardPageContent = {
     {
       question: "Steht auf der Karte ein Preis?",
       answer: "Nein. Die Karte trägt nur Ihre Botschaft, die eingegebenen Namen, Ihre Motive und das Perla-Logo.",
+    },
+    {
+      question: "Kann ich nur die Karte kaufen?",
+      answer: "Nein. Die digitale Karte ist ein kleines Extra zu einer Bestellung: Legen Sie mindestens ein Schmuckstück in den Warenkorb und fügen Sie dann die Karte hinzu.",
     },
   ],
   ctaTitle: "Bereit, Ihre zu schreiben?",
@@ -603,14 +620,14 @@ const de: GiftCardPageContent = {
 const es: GiftCardPageContent = {
   metaTitle: "Tarjeta regalo personalizada con tu mensaje",
   metaDescription:
-    "Añade a tus joyas de vidrio de Murano una tarjeta personalizada por {price}: tu mensaje, tu tipografía, pequeños corazones o perlas, impresa y dentro del paquete.",
+    "Añade a tu pedido de joyas de cristal de Murano una tarjeta regalo digital personalizada por {price}: tu mensaje, tu tipografía, corazones o perlas, enviada por email en cuanto se pague el pedido.",
   h1: "Tarjeta regalo personalizada",
-  lede: "Tus palabras, impresas en una tarjeta y guardadas en el paquete junto a las joyas de vidrio de Murano. Elige uno de nuestros mensajes o escribe el tuyo, una tipografía, hasta tres pequeños motivos y el color del reverso, todo por {price}.",
+  lede: "Tus palabras en una tarjeta que enviamos por email en cuanto se paga tu pedido. Elige uno de nuestros mensajes o escribe el tuyo, elige tipografía, añade hasta tres motivos y el color del reverso, todo por {price} añadido a tu pedido.",
   whyTitle: "Por qué unas pocas palabras hacen el regalo",
   whyParagraphs: [
     "Una joya de vidrio de Murano se modela a mano, cuenta a cuenta, con vidrio de una isla a pocos minutos en barco de Venecia. Ya es bonita por sí sola. Pero lo que convierte algo bonito en un regalo que se recuerda es saber que tú lo elegiste para esa persona, y por qué.",
-    "Para eso está la tarjeta. Al abrir la caja, antes incluso de sacar el collar o los pendientes, leen tus palabras, en la tipografía que elegiste, con su nombre arriba. La joya habla de Venecia; la tarjeta habla de ti.",
-    "Y mucho después de que el papel de regalo haya desaparecido, la tarjeta se queda: en un joyero, en el marco de un espejo, entre las páginas de un libro. Un pequeño recuerdo duradero del momento.",
+    "Para eso está la tarjeta. Llega por email, a menudo antes que el paquete: tus palabras, con la tipografía que elegiste y su nombre arriba. La joya habla de Venecia; la tarjeta habla de ti.",
+    "Y mucho después de que desaparezca el envoltorio, la tarjeta sigue ahí: un toque en el enlace del email la vuelve a abrir, por delante y por detrás, siempre que quiera releerla.",
   ],
   lovedTitle: "Por qué encanta recibirla",
   lovedPoints: [
@@ -624,11 +641,11 @@ const es: GiftCardPageContent = {
     },
     {
       title: "Viaja cuando tú no puedes",
-      body: "¿Lejos para un cumpleaños o un aniversario? Envía la joya directamente a esa persona. La tarjeta va dentro del paquete, así que tu mensaje está ahí cuando lo abre, aunque tú no puedas estar.",
+      body: "¿Lejos en un cumpleaños o un aniversario? Envía la joya directamente a su casa. La tarjeta llega a su bandeja de entrada en cuanto se paga el pedido, así tus palabras le llegan aunque tú no puedas.",
     },
     {
       title: "Se hace una sola vez",
-      body: "Cada tarjeta se imprime para un único pedido, con tu mensaje, tu tipografía, tus motivos y el reverso que elijas. No hay dos iguales.",
+      body: "Cada tarjeta se crea para un solo pedido, con tu mensaje, tu tipografía, tus motivos y el reverso que elijas. No hay dos iguales.",
     },
   ],
   forWhomTitle: "Para quién es, y qué podrías escribir",
@@ -683,19 +700,19 @@ const es: GiftCardPageContent = {
   howSteps: [
     {
       title: "Diséñala",
-      body: "Añade su nombre y el tuyo, elige un mensaje o escribe el tuyo, una de las cinco tipografías, hasta tres motivos y el color del reverso. La vista previa muestra lo que imprimiremos.",
+      body: "Añade su nombre y el tuyo, su email, elige un mensaje o escribe el tuyo, una de las cinco tipografías, hasta tres motivos y el color del reverso. La vista previa muestra exactamente lo que verá.",
     },
     {
       title: "Añádela a tu pedido",
       body: "La tarjeta va a tu carrito por {price}, junto a las joyas que elijas. Puedes editarla desde el carrito hasta que pagues.",
     },
     {
-      title: "La imprimimos y la empaquetamos",
-      body: "Tu tarjeta se imprime especialmente para tu pedido y se coloca dentro de tu paquete Perla, con las joyas.",
+      title: "La enviamos por email",
+      body: "En cuanto se paga tu pedido, enviamos la tarjeta a la dirección que indicaste, con un enlace que la abre entera.",
     },
     {
       title: "Lo abren",
-      body: "Envíalo a tu dirección para entregarlo en persona, o directamente a esa persona: en ambos casos, la tarjeta viaja con el regalo.",
+      body: "Lee tus palabras en el móvil o el ordenador, gira la tarjeta y puede volver a abrirla cuando quiera. La joya llega por correo.",
     },
   ],
   tipsTitle: "Algunos consejos para tu mensaje",
@@ -709,7 +726,7 @@ const es: GiftCardPageContent = {
   faq: [
     {
       question: "¿Cuánto cuesta la tarjeta regalo personalizada?",
-      answer: "{price}, añadido una sola vez a tu pedido. Incluye la tarjeta impresa, tu mensaje, la tipografía, hasta tres motivos y el color del reverso.",
+      answer: "{price}, una sola vez por pedido. Incluye la tarjeta digital, tu mensaje, tu tipografía, hasta tres motivos y el color del reverso.",
     },
     {
       question: "¿Puedo escribir mi propio mensaje?",
@@ -721,11 +738,11 @@ const es: GiftCardPageContent = {
     },
     {
       question: "¿Qué hay en el reverso de la tarjeta?",
-      answer: "El logotipo de Perla, impreso sobre el color que elijas: marfil, laguna, rojo veneciano o rosa empolvado.",
+      answer: "El logo de Perla, en el color que elijas: marfil, verde laguna, rojo veneciano o rosa empolvado.",
     },
     {
-      question: "¿Puedo enviar el regalo directamente a esa persona?",
-      answer: "Sí. Introduce su dirección al pagar y la tarjeta viaja dentro del paquete con las joyas, así que tu mensaje está ahí cuando lo abre.",
+      question: "¿Cómo y cuándo llega la tarjeta?",
+      answer: "Por email, a la dirección que indicas al diseñarla, en cuanto se paga tu pedido. El email incluye un enlace que abre la tarjeta entera, por delante y por detrás.",
     },
     {
       question: "¿Puedo cambiar la tarjeta después de añadirla al carrito?",
@@ -734,6 +751,10 @@ const es: GiftCardPageContent = {
     {
       question: "¿Aparece el precio en la tarjeta?",
       answer: "No. La tarjeta lleva solo tu mensaje, los nombres que escribiste, tus motivos y el logotipo de Perla.",
+    },
+    {
+      question: "¿Puedo comprar solo la tarjeta?",
+      answer: "No. La tarjeta digital es un pequeño extra de un pedido: añade al menos una joya al carrito y después la tarjeta.",
     },
   ],
   ctaTitle: "¿Listo para escribir la tuya?",
@@ -745,14 +766,14 @@ const es: GiftCardPageContent = {
 const pt: GiftCardPageContent = {
   metaTitle: "Cartão de oferta personalizado com a sua mensagem",
   metaDescription:
-    "Junte às suas joias em vidro de Murano um cartão personalizado por {price}: a sua mensagem, o seu tipo de letra, pequenos corações ou pérolas, impresso e na embalagem.",
+    "Adicione à sua encomenda de joias de vidro de Murano um cartão de oferta digital personalizado por {price}: a sua mensagem, o seu tipo de letra, corações ou pérolas, enviado por email assim que a encomenda for paga.",
   h1: "Cartão de oferta personalizado",
-  lede: "As suas palavras, impressas num cartão e colocadas na embalagem com as joias em vidro de Murano. Escolha uma das nossas mensagens ou escreva a sua, um tipo de letra, até três pequenos motivos e a cor do verso, tudo por {price}.",
+  lede: "As suas palavras num cartão que enviamos por email assim que a encomenda for paga. Escolha uma das nossas mensagens ou escreva a sua, escolha o tipo de letra, até três motivos e a cor do verso, tudo por {price}, adicionado à encomenda.",
   whyTitle: "Porque é que poucas palavras fazem o presente",
   whyParagraphs: [
     "Uma joia em vidro de Murano é moldada à mão, conta a conta, com vidro de uma ilha a poucos minutos de barco de Veneza. Já é bonita por si só. Mas o que transforma algo bonito num presente inesquecível é saber que foi escolhido a pensar nessa pessoa, e porquê.",
-    "É para isso que serve o cartão. Ao abrir a caixa, antes mesmo de pegar no colar ou nos brincos, a pessoa lê as suas palavras, no tipo de letra que escolheu, com o nome dela no topo. A joia fala de Veneza; o cartão fala de si.",
-    "E muito depois de o papel de embrulho desaparecer, o cartão fica: numa caixa de joias, entalado na moldura de um espelho, entre as páginas de um livro. Uma pequena recordação duradoura do momento.",
+    "É para isso que serve o cartão. Chega por email, muitas vezes antes da encomenda: as suas palavras, no tipo de letra que escolheu, com o nome no topo. A joia fala de Veneza; o cartão fala de si.",
+    "E muito depois de o embrulho desaparecer, o cartão continua lá: um toque no link do email volta a abri-lo, frente e verso, sempre que quiser relê-lo.",
   ],
   lovedTitle: "Porque é tão bom recebê-lo",
   lovedPoints: [
@@ -766,11 +787,11 @@ const pt: GiftCardPageContent = {
     },
     {
       title: "Viaja quando não pode ir",
-      body: "Longe para um aniversário? Envie a joia diretamente à pessoa. O cartão vai dentro da embalagem, por isso a sua mensagem está lá quando a abrir, mesmo que não possa estar.",
+      body: "Longe num aniversário? Envie a joia diretamente para a pessoa. O cartão chega à caixa de correio assim que a encomenda for paga, para que as suas palavras cheguem mesmo que não possa estar lá.",
     },
     {
       title: "É feito uma só vez",
-      body: "Cada cartão é impresso para uma única encomenda, com a sua mensagem, o seu tipo de letra, os seus motivos e o verso que escolher. Não há dois iguais.",
+      body: "Cada cartão é criado para uma única encomenda, com a sua mensagem, o seu tipo de letra, os seus motivos e o verso escolhido. Não há dois iguais.",
     },
   ],
   forWhomTitle: "Para quem é, e o que pode escrever",
@@ -825,19 +846,19 @@ const pt: GiftCardPageContent = {
   howSteps: [
     {
       title: "Crie-o",
-      body: "Escreva o nome da pessoa e o seu, escolha uma mensagem ou escreva a sua, um dos cinco tipos de letra, até três motivos e a cor do verso. A pré-visualização mostra o que vamos imprimir.",
+      body: "Adicione o nome da pessoa e o seu, o email dela, escolha uma mensagem ou escreva a sua, um dos cinco tipos de letra, até três motivos e a cor do verso. A pré-visualização mostra exatamente o que vai ver.",
     },
     {
       title: "Junte-o à encomenda",
       body: "O cartão vai para o seu carrinho por {price}, com as joias que escolher. Pode editá-lo a partir do carrinho até pagar.",
     },
     {
-      title: "Imprimimo-lo e embalamo-lo",
-      body: "O seu cartão é impresso especialmente para a sua encomenda e colocado na sua embalagem Perla, com as joias.",
+      title: "Enviamo-lo por email",
+      body: "Assim que a encomenda for paga, enviamos o cartão para o endereço indicado, com um link que o abre por inteiro.",
     },
     {
       title: "A pessoa abre-o",
-      body: "Envie-o para a sua morada para o entregar pessoalmente, ou diretamente à pessoa: em qualquer dos casos, o cartão viaja com o presente.",
+      body: "Lê as suas palavras no telemóvel ou no computador, vira o cartão e pode abri-lo de novo quando quiser. A joia segue pelo correio.",
     },
   ],
   tipsTitle: "Algumas dicas para a sua mensagem",
@@ -851,7 +872,7 @@ const pt: GiftCardPageContent = {
   faq: [
     {
       question: "Quanto custa o cartão de oferta personalizado?",
-      answer: "{price}, acrescentado uma só vez à encomenda. Inclui o cartão impresso, a sua mensagem, o tipo de letra, até três motivos e a cor do verso.",
+      answer: "{price}, uma única vez por encomenda. Inclui o cartão digital, a sua mensagem, o tipo de letra, até três motivos e a cor do verso.",
     },
     {
       question: "Posso escrever a minha própria mensagem?",
@@ -863,11 +884,11 @@ const pt: GiftCardPageContent = {
     },
     {
       question: "O que há no verso do cartão?",
-      answer: "O logótipo da Perla, impresso na cor que escolher: marfim, laguna, vermelho veneziano ou rosa-pálido.",
+      answer: "O logótipo Perla, na cor que escolher: marfim, verde laguna, vermelho veneziano ou rosa-claro.",
     },
     {
-      question: "Posso enviar o presente diretamente à pessoa?",
-      answer: "Sim. Indique a morada dela ao finalizar a compra e o cartão viaja dentro da embalagem com as joias, por isso a sua mensagem está lá quando a abrir.",
+      question: "Como e quando chega o cartão?",
+      answer: "Por email, para o endereço que indicar ao criá-lo, assim que a encomenda for paga. O email tem um link que abre o cartão por inteiro, frente e verso.",
     },
     {
       question: "Posso alterar o cartão depois de o pôr no carrinho?",
@@ -876,6 +897,10 @@ const pt: GiftCardPageContent = {
     {
       question: "O cartão mostra o preço?",
       answer: "Não. O cartão tem apenas a sua mensagem, os nomes que escreveu, os seus motivos e o logótipo da Perla.",
+    },
+    {
+      question: "Posso comprar só o cartão?",
+      answer: "Não. O cartão digital é um pequeno extra de uma encomenda: adicione pelo menos uma joia ao carrinho e depois o cartão.",
     },
   ],
   ctaTitle: "Pronto para escrever o seu?",
@@ -887,14 +912,14 @@ const pt: GiftCardPageContent = {
 const ru: GiftCardPageContent = {
   metaTitle: "Именная открытка с вашим посланием",
   metaDescription:
-    "Добавьте к украшениям из муранского стекла именную открытку за {price}: ваше послание, ваш шрифт, маленькие сердца или жемчужины, напечатанная и вложенная в посылку.",
+    "Добавьте к заказу украшений из муранского стекла именную электронную открытку за {price}: ваше послание, ваш шрифт, сердечки или жемчужины, отправим по почте сразу после оплаты.",
   h1: "Именная открытка к подарку",
-  lede: "Ваши слова, напечатанные на открытке и вложенные в посылку вместе с украшением из муранского стекла. Выберите одно из наших посланий или напишите своё, шрифт, до трёх маленьких узоров и цвет оборота, всё за {price}.",
+  lede: "Ваши слова на открытке, которую мы отправим по электронной почте сразу после оплаты заказа. Выберите одно из наших посланий или напишите своё, выберите шрифт, до трёх мотивов и цвет оборота, всё за {price} к вашему заказу.",
   whyTitle: "Почему несколько слов делают подарок",
   whyParagraphs: [
     "Украшение из муранского стекла создаётся вручную, бусина за бусиной, из стекла с острова в нескольких минутах на лодке от Венеции. Оно прекрасно само по себе. Но красивую вещь превращает в подарок, который запомнится, знание того, что его выбрали именно вы, и почему.",
-    "Для этого и нужна открытка. Открыв коробку, ещё до того как взять в руки колье или серьги, человек читает ваши слова, набранные выбранным вами шрифтом, со своим именем вверху. Украшение рассказывает о Венеции; открытка рассказывает о вас.",
-    "И спустя долгое время после того, как обёртка исчезнет, открытка останется: в шкатулке, за рамой зеркала, между страницами книги. Маленькое напоминание об этом моменте.",
+    "Для этого и нужна открытка. Она приходит по электронной почте, часто раньше посылки: ваши слова, вашим шрифтом, с именем получателя вверху. Украшение говорит о Венеции; открытка — о вас.",
+    "И даже когда упаковка давно исчезла, открытка остаётся: одно нажатие на ссылку в письме открывает её снова, с лицевой и оборотной стороны, когда захочется перечитать.",
   ],
   lovedTitle: "Почему её так приятно получать",
   lovedPoints: [
@@ -908,11 +933,11 @@ const ru: GiftCardPageContent = {
     },
     {
       title: "Она приедет, даже если вы не можете",
-      body: "Вы далеко в день рождения или годовщину? Отправьте украшение прямо получателю. Открытка лежит в посылке, и ваше послание будет рядом, когда её откроют, даже если вас рядом нет.",
+      body: "Далеко друг от друга в день рождения или годовщину? Отправьте украшение прямо получателю. Открытка придёт на почту сразу после оплаты заказа, и ваши слова дойдут, даже если вы не сможете приехать.",
     },
     {
       title: "Она создаётся один раз",
-      body: "Каждая открытка печатается для одного заказа, с вашим посланием, шрифтом, узорами и выбранным оборотом. Двух одинаковых не бывает.",
+      body: "Каждая открытка создаётся для одного заказа: с вашим посланием, шрифтом, мотивами и выбранным оборотом. Двух одинаковых не бывает.",
     },
   ],
   forWhomTitle: "Для кого она, и что можно написать",
@@ -967,19 +992,19 @@ const ru: GiftCardPageContent = {
   howSteps: [
     {
       title: "Создайте её",
-      body: "Укажите имя получателя и своё, выберите послание или напишите своё, один из пяти шрифтов, до трёх узоров и цвет оборота. Предпросмотр показывает, что мы напечатаем.",
+      body: "Добавьте оба имени и email получателя, выберите послание или напишите своё, один из пяти шрифтов, до трёх мотивов и цвет оборота. Превью показывает именно то, что увидит получатель.",
     },
     {
       title: "Добавьте к заказу",
       body: "Открытка попадает в корзину за {price} вместе с выбранными украшениями. До оплаты её можно изменить в корзине.",
     },
     {
-      title: "Мы печатаем и упаковываем",
-      body: "Ваша открытка печатается специально для вашего заказа и вкладывается в посылку Perla вместе с украшениями.",
+      title: "Мы отправляем её по почте",
+      body: "Сразу после оплаты заказа мы отправляем открытку на указанный адрес со ссылкой, которая открывает её полностью.",
     },
     {
       title: "Её открывают",
-      body: "Отправьте посылку себе, чтобы вручить лично, или прямо получателю: в любом случае открытка едет вместе с подарком.",
+      body: "Получатель читает ваши слова на телефоне или компьютере, переворачивает открытку и может открыть её снова в любое время. Украшение приходит по почте.",
     },
   ],
   tipsTitle: "Несколько советов для послания",
@@ -993,7 +1018,7 @@ const ru: GiftCardPageContent = {
   faq: [
     {
       question: "Сколько стоит именная открытка?",
-      answer: "{price}, один раз за заказ. В цену входят напечатанная открытка, ваше послание, шрифт, до трёх узоров и цвет оборота.",
+      answer: "{price}, один раз за заказ. Сюда входят электронная открытка, ваше послание, шрифт, до трёх мотивов и цвет оборота.",
     },
     {
       question: "Можно написать своё послание?",
@@ -1005,11 +1030,11 @@ const ru: GiftCardPageContent = {
     },
     {
       question: "Что на обороте открытки?",
-      answer: "Логотип Perla, напечатанный на выбранном вами цвете: слоновая кость, лагуна, венецианский красный или пудрово-розовый.",
+      answer: "Логотип Perla на выбранном вами цвете: слоновая кость, лагуна, венецианский красный или пудрово-розовый.",
     },
     {
-      question: "Можно отправить подарок прямо получателю?",
-      answer: "Да. Укажите его адрес при оформлении заказа, и открытка поедет в посылке вместе с украшением, так что ваше послание будет рядом, когда её откроют.",
+      question: "Как и когда приходит открытка?",
+      answer: "По электронной почте на адрес, который вы укажете при создании, сразу после оплаты заказа. В письме есть ссылка, открывающая открытку полностью, с обеих сторон.",
     },
     {
       question: "Можно изменить открытку после добавления в корзину?",
@@ -1018,6 +1043,10 @@ const ru: GiftCardPageContent = {
     {
       question: "Указана ли на открытке цена?",
       answer: "Нет. На открытке только ваше послание, указанные имена, ваши узоры и логотип Perla.",
+    },
+    {
+      question: "Можно купить только открытку?",
+      answer: "Нет. Электронная открытка — небольшое дополнение к заказу: сначала добавьте в корзину хотя бы одно украшение, затем открытку.",
     },
   ],
   ctaTitle: "Готовы написать свою?",
@@ -1029,14 +1058,14 @@ const ru: GiftCardPageContent = {
 const ar: GiftCardPageContent = {
   metaTitle: "بطاقة إهداء مخصصة برسالتك",
   metaDescription:
-    "أضف إلى مجوهرات زجاج مورانو بطاقة إهداء مخصصة مقابل {price}: رسالتك وخطك وقلوب أو لآلئ صغيرة، تُطبع وتوضع داخل الطرد مع الهدية.",
+    "أضف إلى طلب مجوهرات زجاج مورانو بطاقة إهداء رقمية مخصصة مقابل {price}: رسالتك وخطك وقلوب أو لآلئ صغيرة، تُرسل بالبريد الإلكتروني فور دفع الطلب.",
   h1: "بطاقة إهداء مخصصة",
-  lede: "كلماتك مطبوعة على بطاقة وموضوعة داخل الطرد مع مجوهرات زجاج مورانو. اختر إحدى رسائلنا أو اكتب رسالتك، واختر الخط، وأضف حتى ثلاثة رموز صغيرة ولون الوجه الخلفي، كل ذلك مقابل {price}.",
+  lede: "كلماتك على بطاقة نرسلها بالبريد الإلكتروني فور دفع طلبك. اختر إحدى رسائلنا أو اكتب رسالتك، واختر الخط، وأضف حتى ثلاثة رموز ولون الوجه الخلفي، كل ذلك مقابل {price} يضاف إلى طلبك.",
   whyTitle: "لماذا تصنع بضع كلمات الهدية",
   whyParagraphs: [
     "تُشكَّل قطعة مجوهرات زجاج مورانو باليد، حبة بعد حبة، من زجاج جزيرة تبعد دقائق بالقارب عن البندقية. إنها جميلة بحد ذاتها. لكن ما يحوّل الشيء الجميل إلى هدية لا تُنسى هو معرفة أنك اخترته لهذا الشخص، ولماذا.",
-    "لهذا وُجدت البطاقة. عند فتح العلبة، وحتى قبل رفع القلادة أو الأقراط، تُقرأ كلماتك بالخط الذي اخترته، واسم من تحب في أعلاها. المجوهرات تحكي عن البندقية؛ والبطاقة تحكي عنك.",
-    "وبعد أن يختفي ورق التغليف بوقت طويل، تبقى البطاقة: في علبة المجوهرات، أو على إطار مرآة، أو بين صفحات كتاب. ذكرى صغيرة تدوم للحظة.",
+    "هذا ما وُجدت البطاقة من أجله. تصل بالبريد الإلكتروني، وغالبًا قبل الطرد: كلماتك بالخط الذي اخترته، واسمه في الأعلى. المجوهرات تحكي عن البندقية؛ والبطاقة تحكي عنك.",
+    "وبعد زوال الغلاف بوقت طويل، تبقى البطاقة: نقرة واحدة على الرابط في البريد تعيد فتحها، بوجهيها، كلما أراد قراءتها.",
   ],
   lovedTitle: "لماذا يحب الناس تلقيها",
   lovedPoints: [
@@ -1050,11 +1079,11 @@ const ar: GiftCardPageContent = {
     },
     {
       title: "تسافر حين لا تستطيع",
-      body: "بعيد في عيد ميلاد أو ذكرى؟ أرسل المجوهرات مباشرة إليه. البطاقة داخل الطرد، فتكون رسالتك حاضرة عند فتحه، حتى لو لم تستطع الحضور.",
+      body: "بعيدان في عيد ميلاد أو ذكرى؟ أرسل المجوهرات إليه مباشرة. تصل البطاقة إلى بريده فور دفع الطلب، فتبلغه كلماتك حتى لو لم تستطع الحضور.",
     },
     {
       title: "تُصنع مرة واحدة فقط",
-      body: "تُطبع كل بطاقة لطلب واحد، برسالتك وخطك ورموزك والوجه الخلفي الذي تختاره. لا تتشابه بطاقتان.",
+      body: "كل بطاقة تُصنع لطلب واحد، برسالتك وخطك ورموزك والوجه الخلفي الذي اخترته. لا توجد بطاقتان متطابقتان.",
     },
   ],
   forWhomTitle: "لمن هي، وماذا يمكن أن تكتب",
@@ -1108,19 +1137,19 @@ const ar: GiftCardPageContent = {
   howSteps: [
     {
       title: "صمّمها",
-      body: "أضف اسمه واسمك، واختر رسالة أو اكتب رسالتك، وأحد الخطوط الخمسة، وحتى ثلاثة رموز ولون الوجه الخلفي. تُظهر المعاينة ما سنطبعه.",
+      body: "أضف اسمه واسمك وبريده الإلكتروني، واختر رسالة أو اكتب رسالتك، واختر أحد الخطوط الخمسة، وأضف حتى ثلاثة رموز ولون الوجه الخلفي. تُظهر المعاينة ما سيراه بالضبط.",
     },
     {
       title: "أضفها إلى طلبك",
       body: "تُضاف البطاقة إلى سلتك مقابل {price} مع المجوهرات التي تختارها. يمكنك تعديلها من السلة حتى الدفع.",
     },
     {
-      title: "نطبعها ونغلّفها",
-      body: "تُطبع بطاقتك خصيصًا لطلبك وتوضع داخل طرد Perla مع المجوهرات.",
+      title: "نرسلها بالبريد الإلكتروني",
+      body: "فور دفع طلبك، نرسل البطاقة إلى العنوان الذي أدخلته، مع رابط يفتحها كاملة.",
     },
     {
       title: "يفتحها",
-      body: "أرسلها إلى عنوانك لتسلمها بنفسك، أو مباشرة إلى من تحب: في الحالتين تسافر البطاقة مع الهدية.",
+      body: "يقرأ كلماتك على هاتفه أو حاسوبه، ويقلب البطاقة، ويمكنه فتحها متى شاء. وتصل المجوهرات بالبريد.",
     },
   ],
   tipsTitle: "بعض النصائح لرسالتك",
@@ -1134,7 +1163,7 @@ const ar: GiftCardPageContent = {
   faq: [
     {
       question: "كم تكلف بطاقة الإهداء المخصصة؟",
-      answer: "{price}، تُضاف مرة واحدة إلى طلبك. يشمل ذلك البطاقة المطبوعة ورسالتك والخط وحتى ثلاثة رموز ولون الوجه الخلفي.",
+      answer: "{price}، يضاف مرة واحدة إلى طلبك. ويشمل البطاقة الرقمية ورسالتك والخط وحتى ثلاثة رموز ولون الوجه الخلفي.",
     },
     {
       question: "هل يمكنني كتابة رسالتي الخاصة؟",
@@ -1146,11 +1175,11 @@ const ar: GiftCardPageContent = {
     },
     {
       question: "ماذا يوجد على الوجه الخلفي للبطاقة؟",
-      answer: "شعار Perla مطبوعًا على اللون الذي تختاره: عاجي أو أزرق البحيرة أو أحمر بندقي أو وردي فاتح.",
+      answer: "شعار Perla على اللون الذي تختاره: العاجي أو أزرق البحيرة أو الأحمر البندقي أو الوردي الفاتح.",
     },
     {
-      question: "هل يمكنني إرسال الهدية مباشرة إلى المستلم؟",
-      answer: "نعم. أدخل عنوانه عند الدفع، وستسافر البطاقة داخل الطرد مع المجوهرات، فتكون رسالتك حاضرة عند فتحه.",
+      question: "كيف ومتى تصل البطاقة؟",
+      answer: "بالبريد الإلكتروني إلى العنوان الذي تدخله عند تصميمها، فور دفع طلبك. يحتوي البريد على رابط يفتح البطاقة كاملة بوجهيها.",
     },
     {
       question: "هل يمكنني تغيير البطاقة بعد إضافتها إلى السلة؟",
@@ -1159,6 +1188,10 @@ const ar: GiftCardPageContent = {
     {
       question: "هل يظهر السعر على البطاقة؟",
       answer: "لا. تحمل البطاقة رسالتك والأسماء التي أدخلتها ورموزك وشعار Perla فقط.",
+    },
+    {
+      question: "هل يمكنني شراء البطاقة وحدها؟",
+      answer: "لا. البطاقة الرقمية إضافة صغيرة إلى طلب: أضف قطعة واحدة على الأقل إلى سلتك، ثم أضف البطاقة.",
     },
   ],
   ctaTitle: "هل أنت مستعد لكتابة بطاقتك؟",
@@ -1170,14 +1203,14 @@ const ar: GiftCardPageContent = {
 const zh: GiftCardPageContent = {
   metaTitle: "个性化礼品卡：写下您的寄语",
   metaDescription:
-    "为您的穆拉诺玻璃首饰加一张个性化礼品卡，仅需 {price}：您的寄语、您选的字体、小爱心或珍珠图案，印制后随礼物放入包裹。",
+    "为您的穆拉诺玻璃饰品订单添加 {price} 的个性化电子礼品卡：您的寄语、您的字体、小爱心或珍珠图案，订单付款后通过电子邮件发送。",
   h1: "个性化礼品卡",
-  lede: "您的话语，印在卡片上，随穆拉诺玻璃首饰一起放进包裹。选择我们的寄语或亲自撰写，挑选字体，添加最多三个小图案，并选择背面的颜色，全部只需 {price}。",
+  lede: "您的话语写在一张卡片上，订单付款后我们立即通过电子邮件发送给对方。选择我们的寄语或亲自撰写，挑选字体，添加最多三个小图案并选择背面颜色，随订单仅需 {price}。",
   whyTitle: "为什么几句话就能成就一份礼物",
   whyParagraphs: [
     "每件穆拉诺玻璃首饰都是手工制作，一颗珠子接一颗珠子，所用的玻璃来自距威尼斯仅几分钟船程的小岛。它本身就很美。但让美好的物件成为令人难忘的礼物的，是知道这是您为对方挑选的，以及为什么。",
-    "这正是卡片的意义。打开盒子时，甚至在拿起项链或耳环之前，对方会先读到您的话语，用您挑选的字体印着，最上方是他们的名字。首饰讲述威尼斯；卡片讲述您。",
-    "在包装纸早已不见之后，卡片依然留着：放在首饰盒里、夹在镜框边、藏在书页间。那一刻的小小纪念，长久留存。",
+    "这正是卡片的意义。它通过电子邮件送达，往往比包裹更早：您的话语，用您挑选的字体，顶部写着对方的名字。饰品讲述威尼斯；卡片讲述您。",
+    "包装纸早已不在，卡片依然还在：点一下邮件中的链接，就能随时重新打开，正反两面都能看到。",
   ],
   lovedTitle: "为什么人们喜欢收到它",
   lovedPoints: [
@@ -1191,11 +1224,11 @@ const zh: GiftCardPageContent = {
     },
     {
       title: "您到不了，它替您到",
-      body: "生日或纪念日无法相聚？把首饰直接寄给对方。卡片就在包裹里，对方打开时，您的寄语就在身边，即使您不在。",
+      body: "生日或纪念日无法相聚？把饰品直接寄给对方。订单付款后卡片即刻送达对方邮箱，即使您不在身边，心意也能抵达。",
     },
     {
       title: "独一无二",
-      body: "每张卡片只为一个订单印制，带着您的寄语、字体、图案和背面颜色。没有两张是相同的。",
+      body: "每张卡片都为一个订单而制作，带有您的寄语、字体、图案和所选背面。没有两张是相同的。",
     },
   ],
   forWhomTitle: "送给谁，以及可以写什么",
@@ -1239,19 +1272,19 @@ const zh: GiftCardPageContent = {
   howSteps: [
     {
       title: "设计卡片",
-      body: "填写对方和您的名字，选择寄语或亲自撰写，从五种字体中挑选一种，添加最多三个图案并选择背面颜色。预览即为我们将印制的样子。",
+      body: "填写对方和您的名字以及对方的邮箱，选择寄语或亲自撰写，从五种字体中挑选一种，添加最多三个图案并选择背面颜色。预览即对方将看到的样子。",
     },
     {
       title: "加入订单",
       body: "卡片以 {price} 加入购物车，与您挑选的首饰一起。付款前都可以在购物车中修改。",
     },
     {
-      title: "我们印制并包装",
-      body: "您的卡片专为您的订单印制，与首饰一起放入 Perla 包裹。",
+      title: "通过电子邮件发送",
+      body: "订单付款后，我们会立即将卡片发送到您填写的邮箱，并附上可完整打开卡片的链接。",
     },
     {
-      title: "对方拆开包裹",
-      body: "寄给自己亲手送出，或直接寄给对方：无论哪种方式，卡片都随礼物同行。",
+      title: "对方打开卡片",
+      body: "对方在手机或电脑上阅读您的话语，翻转卡片，并可随时再次打开。饰品随后邮寄送达。",
     },
   ],
   tipsTitle: "写寄语的小建议",
@@ -1265,7 +1298,7 @@ const zh: GiftCardPageContent = {
   faq: [
     {
       question: "个性化礼品卡多少钱？",
-      answer: "{price}，每个订单只需添加一次。价格包含印制的卡片、您的寄语、字体、最多三个图案和背面颜色。",
+      answer: "{price}，每个订单只收一次。包括电子卡片、您的寄语、字体、最多三个图案以及背面颜色。",
     },
     {
       question: "可以写自己的寄语吗？",
@@ -1277,11 +1310,11 @@ const zh: GiftCardPageContent = {
     },
     {
       question: "卡片背面是什么？",
-      answer: "Perla 标志，印在您选择的颜色上：象牙白、泻湖蓝、威尼斯红或淡粉。",
+      answer: "Perla 标志，配以您选择的颜色：象牙白、泻湖蓝绿、威尼斯红或腮红粉。",
     },
     {
-      question: "可以把礼物直接寄给对方吗？",
-      answer: "可以。结账时填写对方的地址，卡片会和首饰一起放在包裹里，对方打开时就能看到您的寄语。",
+      question: "卡片如何、何时送达？",
+      answer: "订单付款后，通过电子邮件发送到您设计时填写的邮箱。邮件中的链接可完整打开卡片的正反两面。",
     },
     {
       question: "加入购物车后还能修改卡片吗？",
@@ -1290,6 +1323,10 @@ const zh: GiftCardPageContent = {
     {
       question: "卡片上会显示价格吗？",
       answer: "不会。卡片上只有您的寄语、您填写的名字、您的图案和 Perla 标志。",
+    },
+    {
+      question: "可以单独购买卡片吗？",
+      answer: "不可以。电子卡片是订单的小小附加项：请先将至少一件饰品加入购物车，再添加卡片。",
     },
   ],
   ctaTitle: "准备好写下您的寄语了吗？",
@@ -1301,14 +1338,14 @@ const zh: GiftCardPageContent = {
 const hi: GiftCardPageContent = {
   metaTitle: "आपके संदेश वाला व्यक्तिगत उपहार कार्ड",
   metaDescription:
-    "अपने मुरानो ग्लास गहनों के साथ {price} में व्यक्तिगत उपहार कार्ड जोड़ें: आपका संदेश, आपका फ़ॉन्ट, छोटे दिल या मोती, छपा हुआ और उपहार के साथ पैकेज में।",
+    "अपने मुरानो ग्लास गहनों के ऑर्डर में {price} का व्यक्तिगत डिजिटल उपहार कार्ड जोड़ें: आपका संदेश, आपका फ़ॉन्ट, छोटे दिल या मोती, ऑर्डर का भुगतान होते ही ईमेल से भेजा जाता है।",
   h1: "व्यक्तिगत उपहार कार्ड",
-  lede: "आपके शब्द, एक कार्ड पर छपे और मुरानो ग्लास गहनों के साथ पैकेज में रखे हुए। हमारे संदेशों में से कोई चुनें या अपना लिखें, फ़ॉन्ट चुनें, तीन तक छोटे चिह्न जोड़ें और पीछे का रंग चुनें, सब कुछ {price} में।",
+  lede: "आपके शब्द एक कार्ड पर, जिसे हम ऑर्डर का भुगतान होते ही ईमेल करते हैं। हमारे संदेशों में से चुनें या अपना लिखें, फ़ॉन्ट चुनें, तीन तक छोटे चिह्न जोड़ें और पीछे का रंग चुनें, सब कुछ {price} में, आपके ऑर्डर के साथ।",
   whyTitle: "कुछ शब्द उपहार को खास क्यों बनाते हैं",
   whyParagraphs: [
     "मुरानो ग्लास का हर गहना हाथ से बनाया जाता है, मनका दर मनका, वेनिस से नाव से कुछ ही मिनट दूर एक द्वीप के काँच से। यह अपने आप में सुंदर है। लेकिन किसी सुंदर चीज़ को यादगार उपहार बनाता है यह जानना कि आपने इसे उनके लिए चुना, और क्यों।",
-    "कार्ड इसी के लिए है। डिब्बा खोलते ही, हार या झुमके उठाने से भी पहले, वे आपके शब्द पढ़ते हैं, आपके चुने फ़ॉन्ट में, सबसे ऊपर अपने नाम के साथ। गहना वेनिस की बात करता है; कार्ड आपकी।",
-    "और रैपिंग पेपर के गायब हो जाने के बहुत बाद भी कार्ड रहता है: गहनों के डिब्बे में, आईने के फ्रेम में, किसी किताब के पन्नों के बीच। उस पल की एक छोटी, स्थायी याद।",
+    "कार्ड इसी के लिए है। यह ईमेल से पहुँचता है, अक्सर पार्सल से पहले: आपके शब्द, आपके चुने फ़ॉन्ट में, सबसे ऊपर उनके नाम के साथ। गहना वेनिस की बात करता है; कार्ड आपकी।",
+    "और रैपिंग हटने के बहुत बाद भी कार्ड बना रहता है: ईमेल में दिए लिंक पर एक टैप से यह फिर खुल जाता है, आगे और पीछे दोनों ओर से, जब भी वे इसे पढ़ना चाहें।",
   ],
   lovedTitle: "लोग इसे पाना क्यों पसंद करते हैं",
   lovedPoints: [
@@ -1322,11 +1359,11 @@ const hi: GiftCardPageContent = {
     },
     {
       title: "जहाँ आप नहीं पहुँच सकते, यह पहुँचता है",
-      body: "जन्मदिन या सालगिरह पर दूर हैं? गहना सीधे उन्हें भेजें। कार्ड पैकेज के अंदर होता है, इसलिए जब वे उसे खोलेंगे तो आपका संदेश वहाँ होगा, भले ही आप न हों।",
+      body: "जन्मदिन या सालगिरह पर दूर हैं? गहना सीधे उन्हें भेजें। ऑर्डर का भुगतान होते ही कार्ड उनके इनबॉक्स में पहुँच जाता है, ताकि आपके शब्द उन तक पहुँचें, भले आप न पहुँच सकें।",
     },
     {
       title: "यह सिर्फ़ एक बार बनता है",
-      body: "हर कार्ड एक ही ऑर्डर के लिए छापा जाता है, आपके संदेश, फ़ॉन्ट, चिह्नों और आपके चुने पीछे के रंग के साथ। कोई दो कार्ड एक जैसे नहीं होते।",
+      body: "हर कार्ड एक ही ऑर्डर के लिए बनता है, आपके संदेश, फ़ॉन्ट, चिह्नों और चुने हुए पीछे के रंग के साथ। कोई दो एक जैसे नहीं होते।",
     },
   ],
   forWhomTitle: "यह किसके लिए है, और आप क्या लिख सकते हैं",
@@ -1380,19 +1417,19 @@ const hi: GiftCardPageContent = {
   howSteps: [
     {
       title: "इसे डिज़ाइन करें",
-      body: "उनका और अपना नाम जोड़ें, कोई संदेश चुनें या अपना लिखें, पाँच में से एक फ़ॉन्ट, तीन तक चिह्न और पीछे का रंग चुनें। प्रीव्यू दिखाता है कि हम क्या छापेंगे।",
+      body: "उनका और अपना नाम तथा उनका ईमेल जोड़ें, संदेश चुनें या अपना लिखें, पाँच में से एक फ़ॉन्ट चुनें, तीन तक चिह्न जोड़ें और पीछे का रंग चुनें। पूर्वावलोकन ठीक वही दिखाता है जो वे देखेंगे।",
     },
     {
       title: "इसे ऑर्डर में जोड़ें",
       body: "कार्ड {price} में आपकी कार्ट में जाता है, आपके चुने गहनों के साथ। भुगतान से पहले आप इसे कार्ट से बदल सकते हैं।",
     },
     {
-      title: "हम इसे छापते और पैक करते हैं",
-      body: "आपका कार्ड खास आपके ऑर्डर के लिए छापा जाता है और गहनों के साथ आपके Perla पैकेज में रखा जाता है।",
+      title: "हम इसे ईमेल करते हैं",
+      body: "ऑर्डर का भुगतान होते ही हम कार्ड आपके दिए पते पर भेजते हैं, एक लिंक के साथ जो इसे पूरा खोलता है।",
     },
     {
       title: "वे इसे खोलते हैं",
-      body: "इसे अपने पते पर मँगवाकर खुद दें, या सीधे उन्हें भेजें: दोनों ही तरह से कार्ड उपहार के साथ जाता है।",
+      body: "वे फ़ोन या कंप्यूटर पर आपके शब्द पढ़ते हैं, कार्ड पलटते हैं और जब चाहें फिर खोल सकते हैं। गहना डाक से आता है।",
     },
   ],
   tipsTitle: "आपके संदेश के लिए कुछ सुझाव",
@@ -1406,7 +1443,7 @@ const hi: GiftCardPageContent = {
   faq: [
     {
       question: "व्यक्तिगत उपहार कार्ड की कीमत क्या है?",
-      answer: "{price}, आपके ऑर्डर में एक बार जुड़ता है। इसमें छपा हुआ कार्ड, आपका संदेश, फ़ॉन्ट, तीन तक चिह्न और पीछे का रंग शामिल है।",
+      answer: "{price}, प्रति ऑर्डर एक बार। इसमें डिजिटल कार्ड, आपका संदेश, फ़ॉन्ट, तीन तक चिह्न और पीछे का रंग शामिल है।",
     },
     {
       question: "क्या मैं अपना संदेश लिख सकता हूँ?",
@@ -1418,11 +1455,11 @@ const hi: GiftCardPageContent = {
     },
     {
       question: "कार्ड के पीछे क्या होता है?",
-      answer: "Perla का लोगो, आपके चुने रंग पर छपा हुआ: हाथीदाँत, लैगून नीला, वेनिशियन लाल या हल्का गुलाबी।",
+      answer: "Perla का लोगो, आपके चुने रंग पर: हाथीदाँत, लैगून नीला-हरा, वेनिस लाल या हल्का गुलाबी।",
     },
     {
-      question: "क्या मैं उपहार सीधे उन्हें भेज सकता हूँ?",
-      answer: "हाँ। चेकआउट पर उनका पता डालें, और कार्ड गहनों के साथ पैकेज के अंदर जाएगा, ताकि खोलते समय आपका संदेश वहाँ हो।",
+      question: "कार्ड कैसे और कब पहुँचता है?",
+      answer: "ईमेल से, उस पते पर जो आप इसे बनाते समय दर्ज करते हैं, ऑर्डर का भुगतान होते ही। ईमेल में एक लिंक होता है जो कार्ड को आगे-पीछे पूरा खोलता है।",
     },
     {
       question: "क्या कार्ट में जोड़ने के बाद मैं कार्ड बदल सकता हूँ?",
@@ -1431,6 +1468,10 @@ const hi: GiftCardPageContent = {
     {
       question: "क्या कार्ड पर कीमत दिखती है?",
       answer: "नहीं। कार्ड पर सिर्फ़ आपका संदेश, आपके डाले नाम, आपके चिह्न और Perla का लोगो होता है।",
+    },
+    {
+      question: "क्या मैं केवल कार्ड खरीद सकता/सकती हूँ?",
+      answer: "नहीं। डिजिटल कार्ड ऑर्डर के साथ एक छोटा अतिरिक्त है: पहले कार्ट में कम से कम एक गहना जोड़ें, फिर कार्ड।",
     },
   ],
   ctaTitle: "अपना कार्ड लिखने के लिए तैयार हैं?",
@@ -1442,14 +1483,14 @@ const hi: GiftCardPageContent = {
 const ja: GiftCardPageContent = {
   metaTitle: "名入れメッセージカード｜あなたの言葉を添えて",
   metaDescription:
-    "ムラーノガラスのジュエリーに、{price}で名入れメッセージカードを。あなたの言葉、選んだ書体、小さなハートやパールを印刷し、ギフトと一緒にお届けします。",
+    "ムラーノガラスのアクセサリーのご注文に {price} のデジタルメッセージカードを。あなたのメッセージ、書体、小さなハートやパールを添えて、お支払い後にメールでお届けします。",
   h1: "名入れメッセージカード",
-  lede: "あなたの言葉をカードに印刷し、ムラーノガラスのジュエリーと一緒にパッケージへお入れします。メッセージを選ぶか自分で書き、書体を選び、小さなモチーフを3つまで添えて、裏面の色も選べます。すべて{price}です。",
+  lede: "ご注文のお支払いが済みしだい、メールでお届けするカードです。メッセージを選ぶか自分で書き、書体を選び、モチーフを3つまで加え、裏面の色を選べます。ご注文に {price} で追加できます。",
   whyTitle: "ひとことが、贈り物を完成させる理由",
   whyParagraphs: [
     "ムラーノガラスのジュエリーは、ヴェネツィアから船で数分の島のガラスを使い、ひと粒ずつ手作業で形づくられます。それだけでも美しいもの。けれど、美しいものを忘れられない贈り物に変えるのは、あなたがその人のために選んだこと、そしてその理由です。",
-    "そのためのカードです。箱を開けると、ネックレスやピアスを手に取るより先に、あなたの言葉が目に入ります。あなたが選んだ書体で、いちばん上には相手の名前。ジュエリーはヴェネツィアを語り、カードはあなたを語ります。",
-    "そして包装紙がなくなったずっと後も、カードは残ります。ジュエリーボックスの中に、鏡のフレームに、本のページの間に。その瞬間をとどめる、小さな思い出として。",
+    "そのためのカードです。メールで届き、多くの場合は荷物より先に着きます。選んだ書体で、一番上に相手の名前が入ったあなたの言葉。アクセサリーはヴェネツィアを、カードはあなたを伝えます。",
+    "包み紙がなくなったずっと後も、カードは残ります。メールのリンクをタップすれば、表も裏も、読み返したいときにいつでも開けます。",
   ],
   lovedTitle: "受け取った人に喜ばれる理由",
   lovedPoints: [
@@ -1463,11 +1504,11 @@ const ja: GiftCardPageContent = {
     },
     {
       title: "会えない日にも、届く",
-      body: "誕生日や記念日に離れて過ごしますか？ジュエリーを相手に直接お送りください。カードはパッケージの中にあるので、開けたときにあなたの言葉がそこにあります。あなたがその場にいられなくても。",
+      body: "誕生日や記念日に離れていても大丈夫。アクセサリーを直接お届けし、カードはお支払い後すぐに相手のメールに届くので、会えなくても言葉は届きます。",
     },
     {
       title: "世界にひとつだけ",
-      body: "カードはひとつの注文のためだけに印刷され、あなたのメッセージ、書体、モチーフ、裏面の色が入ります。同じものは二つとありません。",
+      body: "どのカードもひとつのご注文のためだけに作られます。メッセージ、書体、モチーフ、裏面の色まで、同じものはありません。",
     },
   ],
   forWhomTitle: "誰に贈る？何を書く？",
@@ -1512,19 +1553,19 @@ const ja: GiftCardPageContent = {
   howSteps: [
     {
       title: "デザインする",
-      body: "相手とあなたの名前を入れ、メッセージを選ぶか自分で書き、5つの書体からひとつ、モチーフを3つまで、裏面の色を選びます。プレビューが印刷される内容です。",
+      body: "相手とあなたの名前、相手のメールアドレスを入力し、メッセージを選ぶか書き、5つの書体から選び、モチーフを3つまで加え、裏面の色を選びます。プレビューの通りに届きます。",
     },
     {
       title: "ご注文に追加する",
       body: "カードは{price}でカートに入り、お選びのジュエリーと一緒にご注文いただけます。お支払いまではカートから編集できます。",
     },
     {
-      title: "印刷して梱包します",
-      body: "カードはご注文のためだけに印刷され、ジュエリーと一緒に Perla のパッケージにお入れします。",
+      title: "メールでお届け",
+      body: "ご注文のお支払いが済みしだい、入力されたアドレスにカード全体を開けるリンク付きでお送りします。",
     },
     {
       title: "相手が開ける",
-      body: "ご自身宛てに送って手渡しするのも、相手に直接送るのも自由です。どちらの場合も、カードは贈り物と一緒に届きます。",
+      body: "スマートフォンやパソコンであなたの言葉を読み、カードを裏返し、いつでも開き直せます。アクセサリーは郵送でお届けします。",
     },
   ],
   tipsTitle: "メッセージを書くコツ",
@@ -1538,7 +1579,7 @@ const ja: GiftCardPageContent = {
   faq: [
     {
       question: "名入れメッセージカードはいくらですか？",
-      answer: "{price}で、ご注文ごとに一度追加されます。印刷したカード、メッセージ、書体、最大3つのモチーフ、裏面の色が含まれます。",
+      answer: "{price}、ご注文ごとに一度だけ。デジタルカード、メッセージ、書体、モチーフ3つまで、裏面の色が含まれます。",
     },
     {
       question: "自分でメッセージを書けますか？",
@@ -1550,11 +1591,11 @@ const ja: GiftCardPageContent = {
     },
     {
       question: "カードの裏面には何が入りますか？",
-      answer: "Perla のロゴが、お選びの色に印刷されます：アイボリー、ラグーン、ヴェネツィアンレッド、ブラッシュピンク。",
+      answer: "お選びいただいた色に Perla のロゴ：アイボリー、ラグーンティール、ヴェネツィアンレッド、ブラッシュピンク。",
     },
     {
-      question: "贈り物を相手に直接送れますか？",
-      answer: "はい。お支払い時に相手のご住所を入力すれば、カードはジュエリーと一緒にパッケージに入って届き、開けたときにあなたのメッセージがそこにあります。",
+      question: "カードはいつ、どのように届きますか？",
+      answer: "ご注文のお支払いが済みしだい、作成時に入力したアドレスへメールでお届けします。メールのリンクから表裏ともにカードを開けます。",
     },
     {
       question: "カートに入れた後でカードを変更できますか？",
@@ -1563,6 +1604,10 @@ const ja: GiftCardPageContent = {
     {
       question: "カードに価格は記載されますか？",
       answer: "いいえ。カードに入るのは、メッセージ、入力したお名前、モチーフ、Perla のロゴだけです。",
+    },
+    {
+      question: "カードだけを購入できますか？",
+      answer: "いいえ。デジタルカードはご注文に添える小さなオプションです。まずアクセサリーを1点以上カートに入れてから、カードを追加してください。",
     },
   ],
   ctaTitle: "あなたの言葉を書いてみませんか？",

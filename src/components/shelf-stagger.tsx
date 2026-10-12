@@ -32,6 +32,9 @@ export function ShelfStagger({
     const root = ref.current;
     if (!root) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // Where scroll timelines exist the cards follow the scroll in CSS
+    // (home.css), so there is nothing to stage.
+    if (CSS.supports("animation-timeline: view()")) return;
 
     // Stage only when the grid is entirely below the fold at load; anything
     // already on screen must never blink away.

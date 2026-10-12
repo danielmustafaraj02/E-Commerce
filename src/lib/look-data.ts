@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import type { Locale } from "@/lib/i18n/locale";
 import {
+  catalogDisplayName,
   localizedDescription,
   localizedName,
   localizedStory,
@@ -17,6 +18,8 @@ export type LookPieceView = {
   slug: string;
   name: string;
   price: number;
+  /** The price before a sale, when the product is on sale. */
+  compareAtPrice?: number;
   currency: string;
   imageUrl: string | null;
   imageAlt: string;
@@ -64,6 +67,9 @@ function toLookViews(looks: LookRow[], locale: Locale): LookView[] {
           slug: product.slug,
           name,
           price: product.price,
+          ...(product.compareAtPrice && product.compareAtPrice > product.price
+            ? { compareAtPrice: product.compareAtPrice }
+            : {}),
           currency: product.currency,
           imageUrl: product.images[0]?.url ?? null,
           imageAlt: productImageAlt(name, locale),
@@ -73,7 +79,7 @@ function toLookViews(looks: LookRow[], locale: Locale): LookView[] {
       });
       return {
         id: look.id,
-        name: look.name,
+        name: catalogDisplayName(look.name),
         imageUrl: look.imageUrl,
         discountPercent: look.discountPercent,
         pieces,

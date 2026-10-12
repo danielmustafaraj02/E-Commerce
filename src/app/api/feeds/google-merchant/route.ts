@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
 import { localizedName, localizedDescription } from "@/lib/product-i18n";
 import { absoluteUrl } from "@/lib/json-ld";
+import { publicImageSrc } from "@/lib/public-image";
 import { siteBaseUrl } from "@/lib/site-url";
 import {
   MAX_ADDITIONAL_IMAGES,
@@ -55,8 +56,10 @@ export async function GET(request: Request) {
       const availability = product.stockQty > 0 ? "in stock" : "out of stock";
       // Product images can be a relative path (self-hosted under /public) or
       // an admin-pasted absolute URL — Google requires fully-qualified links.
+      // Named by their current .webp files: Merchant Center rejects an image
+      // whose extension doesn't match its format.
       const [mainImage, ...extraImages] = product.images.map((image) =>
-        absoluteUrl(image.url, base)
+        absoluteUrl(publicImageSrc(image.url), base)
       );
       const googleCategory = googleProductCategory(product.category);
       const material = productMaterial(product.category);

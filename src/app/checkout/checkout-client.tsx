@@ -99,7 +99,7 @@ export function CheckoutClient({
   nonce?: string;
   dict: Dictionary["checkout"];
   // The personalised gift card add-on, while the store offers it.
-  giftCardOffer: { productName: string; printedNote: string } | null;
+  giftCardOffer: { productName: string; deliveryNote: string } | null;
 }) {
   const voucherCopy = getGiftVoucherCopy(uiLocale);
   const router = useLocalizedRouter();
@@ -653,7 +653,7 @@ export function CheckoutClient({
                     <span>{formatMoney(quote.total, quote.currency, locale)}</span>
                   </div>
                   {quote.giftCardAmount > 0 && giftCardOffer && (
-                    <p className="checkout-gift-note">{giftCardOffer.printedNote}</p>
+                    <p className="checkout-gift-note">{giftCardOffer.deliveryNote}</p>
                   )}
                 </div>
               )}

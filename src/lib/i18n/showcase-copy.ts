@@ -30,16 +30,16 @@ export const SHOWCASE_SCENE_ORDER: readonly ShowcaseScene[] = [
 const en = {
   scenes: {
     necklace: {
-      description: "Colour and light, made to wear.",
-      cta: "Explore necklaces",
+      description: "Worn close to the face, where the colour of the glass meets your own.",
+      cta: "See the necklaces",
     },
     bracelet: {
-      description: "A detail that follows every gesture.",
-      cta: "Explore bracelets",
+      description: "Colour and texture gathered around the wrist, moving with every gesture.",
+      cta: "See the bracelets",
     },
     earrings: {
-      description: "Small accents, new light.",
-      cta: "Explore earrings",
+      description: "Light enough for a whole day, with a flash of colour each time you turn your head.",
+      cta: "See the earrings",
     },
   },
 };
@@ -47,16 +47,16 @@ const en = {
 const it: typeof en = {
   scenes: {
     necklace: {
-      description: "Colore e luce, da indossare.",
-      cta: "Scopri le collane",
+      description: "Si porta vicino al viso, dove il colore del vetro incontra il tuo.",
+      cta: "Guarda le collane",
     },
     bracelet: {
-      description: "Un dettaglio che accompagna ogni gesto.",
-      cta: "Scopri i bracciali",
+      description: "Colore e materia raccolti intorno al polso, in movimento a ogni gesto.",
+      cta: "Guarda i bracciali",
     },
     earrings: {
-      description: "Piccoli accenti, nuova luce.",
-      cta: "Scopri gli orecchini",
+      description: "Leggeri per un giorno intero, con un lampo di colore ogni volta che ti volti.",
+      cta: "Guarda gli orecchini",
     },
   },
 };

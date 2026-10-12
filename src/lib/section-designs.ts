@@ -1,3 +1,4 @@
+import { videoEmbedUrl } from "./journal/article-schema";
 import { JEWELLERY_STYLES } from "./jewellery-styles";
 import {
   parseBuilder,
@@ -45,9 +46,6 @@ export function createSectionDesigns(
   const native = !!section.fixed || base.cells.flat().some((b) => LIVE.has(b.type));
   return JEWELLERY_STYLES.map((direction, index) => {
     const dark = direction.id === "palazzo-evening";
-    const center = ["maison-perla", "quiet-atelier", "gallery-no-10", "sculpture-studio"].includes(
-      direction.id
-    );
     const surface = [
       "venetian-archive",
       "botanical-muse",
@@ -57,6 +55,10 @@ export function createSectionDesigns(
     const bg = dark ? "var(--site-primary)" : surface ? "var(--site-surface)" : "var(--site-bg)";
     const fg = dark ? "var(--site-on-primary)" : "var(--site-text)";
     let doc = native ? single([{ type: "original" }], 0) : structuredClone(base);
+    const nativeContent = base.cells.flat().find((block) => block.type === "original");
+    const nativeTransforms = nativeContent?.type === "original" ? nativeContent.guiElements : undefined;
+    if (native && doc.cells[0]?.[0]?.type === "original" && nativeTransforms)
+      doc.cells[0][0] = { type: "original", guiElements: structuredClone(nativeTransforms) };
     if (!native) {
       const content = doc.cells.flat();
       if (
@@ -70,85 +72,9 @@ export function createSectionDesigns(
         delete clean.motion;
         if ("typing" in clean) delete clean.typing;
         if ("afterTyping" in clean) delete clean.afterTyping;
-        if (
-          clean.type === "heading" ||
-          clean.type === "text" ||
-          clean.type === "button" ||
-          clean.type === "eyebrow"
-        )
-          clean.align = center ? "center" : "left";
-        if (clean.type === "heading") clean.size = direction.id === "quiet-atelier" ? "l" : "xl";
-        clean.style = { ...clean.style, color: fg };
-        if (clean.type === "image")
-          clean.style = {
-            ...clean.style,
-            color: undefined,
-            h: 30,
-            mh: 20,
-            radius: direction.radius,
-          };
-        if (clean.type === "button") {
-          clean.look = ["quiet-atelier", "venetian-archive", "gallery-no-10"].includes(direction.id)
-            ? "outline"
-            : "solid";
-          clean.style = {
-            radius: Math.min(direction.radius, 0.4),
-            color:
-              clean.look === "outline"
-                ? fg
-                : dark
-                  ? "var(--site-primary)"
-                  : "var(--site-on-primary)",
-            ...(clean.look === "solid"
-              ? { bg: dark ? "var(--site-on-primary)" : "var(--site-primary)" }
-              : {}),
-          };
-        }
-        if (clean.type === "video") clean.style = { h: 30, mh: 20, radius: direction.radius };
         return clean;
       });
-      const media = blocks.filter((b) => b.type === "image" || b.type === "video");
-      const copy = blocks.filter((b) => b.type !== "image" && b.type !== "video");
-      if (
-        media.length &&
-        !["quiet-atelier", "sculpture-studio", "gallery-no-10"].includes(direction.id)
-      ) {
-        const mediaFirst = ["botanical-muse", "modern-heirloom"].includes(direction.id);
-        doc = {
-          columns: 2,
-          gap: direction.gap,
-          divider:
-            direction.id === "venetian-archive" || direction.id === "the-editorial"
-              ? "thin"
-              : "none",
-          dividerColor: "var(--site-accent)",
-          valign: "center",
-          widths:
-            direction.id === "the-editorial"
-              ? [1.25, 0.75]
-              : direction.id === "venetian-archive"
-                ? [0.8, 1.2]
-                : direction.id === "couture-papers"
-                  ? [1.1, 0.9]
-                  : [1, 1],
-          mobile: { gap: 2, ...(mediaFirst ? { reverse: true } : {}) },
-          cells: mediaFirst ? [media, copy] : [copy, media],
-        };
-      } else if (base.columns > 1 && !media.length && direction.id === "gallery-no-10") {
-        doc = {
-          ...structuredClone(base),
-          gap: 3,
-          divider: "thin",
-          dividerColor: "var(--site-accent)",
-        };
-      } else {
-        doc = single(
-          media.length && (direction.id === "gallery-no-10" || direction.id === "sculpture-studio")
-            ? [...media, ...copy]
-            : blocks,
-          direction.id === "quiet-atelier" ? 2.5 : 1.5
-        );
-      }
+      return composeDesign(page, section, index, blocks);
     }
     if (section.id === "showcase") {
       const treatments = [
@@ -183,6 +109,17 @@ export function createSectionDesigns(
       );
     }
     const familyCss = familyRules(page, section.id, index);
+    // The collections showcase brings its own typography and composition:
+    // generic heading/card recipes would only pull its text off its edge.
+    if (section.id === "showcase")
+      return {
+        id: `section-${page}-${section.id}-${direction.id}`,
+        name: direction.name,
+        description: `${section.label} · ${direction.note}`,
+        styleOnly: !!section.fixed,
+        doc: parseBuilder(doc)!,
+        style: { bg, color: fg, padTop: 0, padBottom: 0, css: `.showcase-title{text-wrap:balance}.showcase-description{text-wrap:pretty}` },
+      };
     const recipes = [
       `${HEADINGS}{text-align:center} ${CARDS}{border-bottom:1px solid var(--site-accent);padding-bottom:1.5rem} ${GRIDS}{gap:2.5rem}`,
       `${HEADINGS}{max-width:30ch;margin-inline:auto;text-align:center} ${CARDS}{background:transparent;box-shadow:none;border:0} ${GRIDS}{gap:3rem}`,
@@ -246,5 +183,218 @@ export function applySectionDesign(entry: LayoutEntry, design: SectionDesign): L
     ...entry,
     style: structuredClone(design.style),
     ...(!design.styleOnly ? { builder, html: undefined } : {}),
+  };
+}
+
+// ---- Composed designs for content sections ---------------------------------
+// Ten distinct compositions of a section's own blocks (headings, text, buttons,
+// images, video). Colours come from the section, never the blocks, so text
+// stays readable when a phone layout puts it over the photo.
+
+type Archetype = {
+  name: string;
+  note: string;
+  /** Edge to edge: the photo meets the screen edges and fills the height. */
+  bleed?: boolean;
+  /** Width of the content column, rem; the background always spans the page. */
+  measure?: number;
+  /** Builds the composition; media/copy are the section's own blocks. */
+  build: (media: BuilderBlock[], copy: BuilderBlock[]) => { doc: BuilderDoc; style: SectionStyle };
+};
+
+const DARK: SectionStyle = { bg: "var(--site-primary)", color: "var(--site-on-primary)" };
+const SURFACE: SectionStyle = { bg: "var(--site-surface)", color: "var(--site-text)" };
+const PLAIN: SectionStyle = { bg: "var(--site-bg)", color: "var(--site-text)" };
+
+const tune = (
+  blocks: BuilderBlock[],
+  opts: { align?: "left" | "center"; heading?: "l" | "xl"; button?: "solid" | "outline"; rule?: boolean; media?: { h?: number; fit?: "cover" | "contain" } }
+): BuilderBlock[] =>
+  blocks.map((block) => {
+    const b = structuredClone(block);
+    if (opts.align && (b.type === "heading" || b.type === "text" || b.type === "button" || b.type === "eyebrow"))
+      b.align = opts.align;
+    if (b.type === "heading" && opts.heading) {
+      b.size = opts.heading;
+      if (opts.rule) b.rule = "gold";
+    }
+    if (b.type === "button" && opts.button) b.look = opts.button;
+    if (b.type === "image" && opts.media?.fit) b.fit = opts.media.fit;
+    if ((b.type === "image" || b.type === "video") && opts.media?.h)
+      b.style = { ...b.style, h: opts.media.h, mh: Math.min(opts.media.h, 22) };
+    if (b.style?.color) b.style = { ...b.style, color: undefined };
+    return b;
+  });
+
+const split = (
+  cells: BuilderBlock[][],
+  widths: number[],
+  mobile: BuilderDoc["mobile"],
+  extra: Partial<BuilderDoc> = {}
+): BuilderDoc => ({
+  columns: cells.length as 2 | 3,
+  gap: 4,
+  divider: "none",
+  valign: "center",
+  widths,
+  mobile,
+  cells,
+  ...extra,
+});
+
+/** On phones: the photo fills the screen and the text sits on it. */
+const OVERLAY: BuilderDoc["mobile"] = { layout: "overlay", overlayShade: 50, overlayHeight: 85 };
+
+export const ARCHETYPES: Archetype[] = [
+  {
+    name: "Split",
+    bleed: true,
+    note: "Text on the left, photo on the right. On phones the photo becomes the background with the text on it.",
+    build: (media, copy) => ({
+      doc: split([tune(copy, { align: "left", heading: "xl" }), tune(media, { media: { h: 34, fit: "cover" } })], [1, 1.1], OVERLAY),
+      style: { ...PLAIN, padTop: 4, padBottom: 4 },
+    }),
+  },
+  {
+    name: "Split, photo first",
+    bleed: true,
+    note: "Photo on the left, text on the right. On phones the photo becomes the background with the text on it.",
+    build: (media, copy) => ({
+      doc: split([tune(media, { media: { h: 34, fit: "cover" } }), tune(copy, { align: "left", heading: "xl" })], [1.15, 1], OVERLAY),
+      style: { ...PLAIN, padTop: 4, padBottom: 4 },
+    }),
+  },
+  {
+    name: "Centred",
+    measure: 64,
+    note: "Everything centred, with a wide photo below the text. Stacks naturally on phones.",
+    build: (media, copy) => ({
+      doc: single([...tune(copy, { align: "center", heading: "xl" }), ...tune(media, { media: { h: 28, fit: "cover" } })], 2),
+      style: { ...PLAIN, padTop: 5, padBottom: 5, align: "center" },
+    }),
+  },
+  {
+    name: "Cover",
+    measure: 72,
+    note: "The photo or video fills the whole section and the text sits on it, darkened for reading.",
+    build: (media, copy) => {
+      const image = media.find((b) => b.type === "image");
+      // Only a video file can play as a background; a YouTube/Vimeo link stays a block.
+      const video = media.find((b) => b.type === "video" && !videoEmbedUrl(b.url));
+      if (!image && !video)
+        return {
+          doc: single([...tune(copy, { align: "left", heading: "xl" }), ...tune(media, { media: { h: 30 } })], 1.5),
+          style: { ...DARK, padTop: 6, padBottom: 6 },
+        };
+      return {
+        doc: single(tune(copy, { align: "left", heading: "xl" }), 1.5),
+        style: {
+          color: "#fff",
+          padTop: 8,
+          padBottom: 8,
+          ...(image?.type === "image" ? { bgImage: image.src, bgFit: "cover" as const } : {}),
+          ...(video?.type === "video" ? { bgVideo: video.url } : {}),
+          overlayColor: "#000",
+          overlayStrength: 45,
+        },
+      };
+    },
+  },
+  {
+    name: "Editorial",
+    measure: 88,
+    note: "A wide headline column with a fine rule and a narrower photo. Stacks on phones, text first.",
+    build: (media, copy) => ({
+      doc: split([tune(copy, { align: "left", heading: "xl", rule: true }), tune(media, { media: { h: 30, fit: "cover" } })], [1.4, 0.6], { gap: 2 }, { divider: "thin", dividerColor: "var(--site-accent)", gap: 3 }),
+      style: { ...PLAIN, padTop: 5, padBottom: 5 },
+    }),
+  },
+  {
+    name: "Card",
+    measure: 52,
+    note: "Photo on top and centred text, on a soft surface. Compact and calm on every screen.",
+    build: (media, copy) => ({
+      doc: single([...tune(media, { media: { h: 22, fit: "cover" } }), ...tune(copy, { align: "center", heading: "l" })], 1.5),
+      style: { ...SURFACE, padTop: 4, padBottom: 4, radius: 1, align: "center" },
+    }),
+  },
+  {
+    name: "Night",
+    bleed: true,
+    note: "Dark background, light text beside the photo. On phones the photo becomes the background.",
+    build: (media, copy) => ({
+      doc: split([tune(copy, { align: "left", heading: "xl", button: "outline" }), tune(media, { media: { h: 34, fit: "cover" } })], [1, 1.1], OVERLAY),
+      style: { ...DARK, padTop: 5, padBottom: 5 },
+    }),
+  },
+  {
+    name: "Minimal",
+    measure: 46,
+    note: "Mostly typography: a large headline, generous space and a quiet link-style button.",
+    build: (media, copy) => ({
+      doc: single([...tune(copy, { align: "left", heading: "l", button: "outline" }), ...tune(media, { media: { h: 20, fit: "contain" } })], 2.5),
+      style: { ...PLAIN, padTop: 7, padBottom: 7 },
+    }),
+  },
+  {
+    name: "Gallery",
+    measure: 80,
+    note: "The photo shown whole, never cropped, beside the text on a pale surface. Stacks on phones, photo first.",
+    build: (media, copy) => ({
+      doc: split([tune(media, { media: { h: 32, fit: "contain" } }), tune(copy, { align: "left", heading: "l", rule: true })], [1.2, 1], { gap: 2 }),
+      style: { ...SURFACE, padTop: 5, padBottom: 5 },
+    }),
+  },
+  {
+    name: "Framed",
+    measure: 80,
+    note: "Fine rules above and below, text and photo separated by a hairline. Stacks on phones, text first.",
+    build: (media, copy) => ({
+      doc: split([tune(copy, { align: "left", heading: "l", button: "outline" }), tune(media, { media: { h: 28, fit: "cover" } })], [1, 1], { gap: 2 }, { divider: "thin", dividerColor: "var(--site-accent)" }),
+      style: { ...PLAIN, padTop: 4, padBottom: 4, borderTop: true, borderBottom: true },
+    }),
+  },
+];
+
+function composeDesign(
+  page: PageTarget,
+  section: SectionMeta,
+  index: number,
+  blocks: BuilderBlock[]
+): SectionDesign {
+  const archetype = ARCHETYPES[index % ARCHETYPES.length];
+  const media = blocks.filter((b) => b.type === "image" || b.type === "video");
+  const copy = blocks.filter((b) => b.type !== "image" && b.type !== "video");
+  // Without a photo, the layouts that need one become a single text column.
+  const titles = copy.filter((b) => b.type === "heading" || b.type === "eyebrow");
+  const rest = copy.filter((b) => b.type !== "heading" && b.type !== "eyebrow");
+  const { doc, style } = media.length
+    ? archetype.build(media, copy)
+    : index % ARCHETYPES.length === 1 && titles.length && rest.length
+      ? // Text only: headline on the left, words and button on the right.
+        {
+          doc: split([tune(titles, { align: "left", heading: "xl" }), tune(rest, { align: "left" })], [1, 1.2], { gap: 1.5 }, { valign: "top" }),
+          style: archetype.build([], copy).style,
+        }
+      : { doc: single(tune(copy, { align: index === 2 || index === 5 ? "center" : "left", heading: index === 7 ? "l" : "xl" }), index % ARCHETYPES.length === 1 ? 3 : 1.5), style: archetype.build([], copy).style };
+  const base = `.bld-h{text-wrap:balance}.bld-text{text-wrap:pretty;line-height:1.75}.bld-btn{min-height:2.75rem}@media(max-width:47.99rem){.bld-btn{width:100%}}`;
+  const bleed = archetype.bleed && media.length > 0;
+  // Edge to edge on computers: the photo column fills the full height and
+  // reaches the screen edge; the text column keeps a comfortable padding.
+  const bleedCss = `@media(min-width:48rem){.bld{gap:0;min-height:min(88svh,58rem);align-items:stretch}.bld-col{display:flex;flex-direction:column;justify-content:center}.bld-col:has(:is(img,video,iframe)){justify-content:stretch}.bld-col:has(:is(img,video,iframe))>*{flex:1 1 auto;height:auto!important;min-height:0!important;margin:0!important;max-width:none!important;border-radius:0!important}.bld-col :is(.bld-img,.bld-video,img,video){width:100%;height:100%!important;aspect-ratio:auto;object-fit:cover}.bld-col:not(:has(:is(img,video,iframe))){padding:clamp(2.5rem,6vw,6rem) clamp(1.5rem,6vw,6rem);max-width:40rem;box-sizing:border-box}.bld-col:first-child:not(:has(:is(img,video,iframe))){margin-inline-start:auto}}@media(max-width:47.99rem){.bld-col:not(:has(:is(img,video,iframe))){padding-inline:1.25rem}}`;
+  const measureCss = archetype.measure ? `.bld{max-width:${archetype.measure}rem;margin-inline:auto}` : "";
+  const css = base + (bleed ? bleedCss : measureCss);
+  if (bleed) {
+    doc.width = "full";
+    style.padTop = 0;
+    style.padBottom = 0;
+  }
+  return {
+    id: `section-${page}-${section.id}-${archetype.name.toLowerCase().replace(/[^a-z]+/g, "-")}`,
+    name: archetype.name,
+    description: `${archetype.name} — ${archetype.note}`,
+    styleOnly: false,
+    doc: parseBuilder(doc)!,
+    style: { ...style, css },
   };
 }

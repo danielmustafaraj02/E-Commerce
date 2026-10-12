@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { NEW_COLLECTION, getNewCollectionCopy } from "@/lib/new-collection";
 import { Link } from "@/components/localized-link";
 import { auth } from "@/auth";
 import { LOCAL_ACCOUNTS_ENABLED, isLocalAdminAccess } from "@/lib/local-features";
@@ -162,6 +163,7 @@ export async function Header({
       : []),
     // The collections are NOT in this list: the menu renders them as its own
     // thumbnail rows (categories prop), so they would otherwise appear twice.
+    { href: NEW_COLLECTION.path, label: getNewCollectionCopy(locale).nav },
     { href: "/looks", label: dict.looks.navLabel },
     { href: "/about", label: dict.footer.about, secondary: true },
   ];
@@ -191,6 +193,8 @@ export async function Header({
             width={284}
             height={168}
             sizes="108px"
+            // The logo is often the largest thing painted first (LCP): no lazy loading.
+            loading="eager"
             fetchPriority="high"
             className="h-16 w-auto object-contain mix-blend-multiply"
           />
@@ -209,6 +213,9 @@ export async function Header({
             locale={locale}
             signedIn={Boolean(session?.user)}
           />
+          <Link href={NEW_COLLECTION.path} className={navChipClass}>
+            {getNewCollectionCopy(locale).nav}
+          </Link>
           <Link href="/looks" className={navChipClass}>
             {dict.looks.navLabel}
           </Link>
@@ -335,6 +342,7 @@ export async function Header({
               width={284}
               height={168}
               sizes="101px"
+              loading="eager"
               fetchPriority="high"
               className="h-15 w-auto object-contain mix-blend-multiply"
             />

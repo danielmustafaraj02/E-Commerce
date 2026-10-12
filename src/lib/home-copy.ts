@@ -34,12 +34,32 @@ export const HOME_COPY_FIELDS: HomeCopyField[] = [
   { key: "home.specialSelectionCta", label: "Special selection link", group: "Shelves" },
   { key: "look.kicker", label: "Looks eyebrow", group: "Looks" },
   { key: "looks.title", label: "Looks title", group: "Looks" },
-  { key: "home.muranoReason1Title", label: "Reason 1 title", group: "Why Murano" },
+  // The three reasons head the collections showcase scenes (see
+  // lib/showcase-reasons.ts for which scene tells which).
+  { key: "home.muranoReason1Title", label: "Reason 1 title (bracelets scene)", group: "Why Murano" },
   { key: "home.muranoReason1Body", label: "Reason 1 text", group: "Why Murano", multiline: true },
-  { key: "home.muranoReason2Title", label: "Reason 2 title", group: "Why Murano" },
+  {
+    key: "home.muranoReason1Short",
+    label: "Reason 1 text on phones (shorter)",
+    group: "Why Murano",
+    multiline: true,
+  },
+  { key: "home.muranoReason2Title", label: "Reason 2 title (necklaces scene)", group: "Why Murano" },
   { key: "home.muranoReason2Body", label: "Reason 2 text", group: "Why Murano", multiline: true },
-  { key: "home.muranoReason3Title", label: "Reason 3 title", group: "Why Murano" },
+  {
+    key: "home.muranoReason2Short",
+    label: "Reason 2 text on phones (shorter)",
+    group: "Why Murano",
+    multiline: true,
+  },
+  { key: "home.muranoReason3Title", label: "Reason 3 title (earrings scene)", group: "Why Murano" },
   { key: "home.muranoReason3Body", label: "Reason 3 text", group: "Why Murano", multiline: true },
+  {
+    key: "home.muranoReason3Short",
+    label: "Reason 3 text on phones (shorter)",
+    group: "Why Murano",
+    multiline: true,
+  },
   {
     key: "giftFinder.homeCtaTime",
     label: "Gift finder banner: small line",

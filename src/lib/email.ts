@@ -16,6 +16,10 @@ import { getGiftVoucherCopy } from "@/lib/gift-voucher-copy";
 import { formatMoney } from "@/lib/format";
 import { locales, type Locale } from "@/lib/i18n/locale-constants";
 import type { GiftVoucher } from "@prisma/client";
+import { getDictionary } from "@/lib/i18n/dictionaries";
+import { giftCardLines } from "@/lib/gift-card-lines";
+import { parseGiftCardBack } from "@/lib/gift-card";
+import { BACK_ART, CARD_GOLD, CARD_INK, CARD_STOCK } from "@/lib/gift-card-art";
 
 // Resend's free plan caps out at 100/day — this stops just short of that
 // account-wide ceiling so a traffic spike (or a bug looping order-status
@@ -28,6 +32,7 @@ const DAILY_EMAIL_CAP = 80;
 // key this logs instead of throwing, so the rest of the app keeps working
 // in dev and the gap is obvious rather than silent. Checks the DB (Admin >
 // Settings > Integrations) first, falling back to env vars of the same name.
+// Resolves to whether the email actually went out.
 export async function sendEmail(input: {
   to: string;
   subject: string;
@@ -47,7 +52,7 @@ export async function sendEmail(input: {
     console.warn(
       `[email] Resend is not configured — skipping email to ${input.to}: ${input.subject}`
     );
-    return;
+    return false;
   }
 
   const { success } = await rateLimit("email:daily-cap", DAILY_EMAIL_CAP, 24 * 60 * 60 * 1000);
@@ -55,7 +60,7 @@ export async function sendEmail(input: {
     console.warn(
       `[email] Daily cap of ${DAILY_EMAIL_CAP} emails reached — skipping email to ${input.to}: ${input.subject}`
     );
-    return;
+    return false;
   }
 
   const resend = new Resend(apiKey);
@@ -80,7 +85,9 @@ export async function sendEmail(input: {
       subject: input.subject,
       resendErrorName: error.name,
     });
+    return false;
   }
+  return true;
 }
 
 const KNOWN_ORDER_STATUSES = new Set<OrderStatus>([
@@ -217,6 +224,11 @@ export async function sendGiftVoucherEmail(voucher: GiftVoucher, locale?: string
   await sendEmail({ to: voucher.recipientEmail, subject, html, text });
 }
 
+// Every path that settles an order (card and PayPal webhooks, the PayPal
+// return, free orders, an admin marking it paid) sends this email, so the
+// digital gift card rides along from here and needs no hook of its own.
+const SETTLED_STATUSES = new Set(["paid", "processing", "shipped", "delivered"]);
+
 export async function sendOrderStatusEmail(order: {
   orderNumber: string;
   status: string;
@@ -224,6 +236,11 @@ export async function sendOrderStatusEmail(order: {
   guestEmail: string | null;
   user: { email: string } | null;
 }) {
+  if (SETTLED_STATUSES.has(order.status)) {
+    await sendGiftCardEmail(order.orderNumber).catch((error) =>
+      captureError(error, { scope: "gift-card-email", orderNumber: order.orderNumber })
+    );
+  }
   const to = order.user?.email ?? order.guestEmail;
   if (!to) return;
 
@@ -243,6 +260,7 @@ export async function sendOrderStatusEmail(order: {
       createdAt: true,
       giftVoucherPurchaseAmount: true,
       giftVoucherRedeemedAmount: true,
+      giftCardAmount: true,
       items: {
         select: {
           productName: true,
@@ -311,6 +329,16 @@ export async function sendOrderStatusEmail(order: {
             },
           ]
         : []),
+      ...(fullOrder?.giftCardAmount
+        ? [
+            {
+              name: getDictionary(lang as Locale).giftCard.productName,
+              quantity: 1,
+              unitPrice: fullOrder.giftCardAmount,
+              imageUrl: null,
+            },
+          ]
+        : []),
       ...(fullOrder?.giftVoucherRedeemedAmount
         ? [
             {
@@ -366,4 +394,62 @@ export async function sendOrderAndGiftVoucherEmails(
     );
   }
   await Promise.all(sends);
+}
+
+// The digital gift card, emailed to its recipient once the order is paid.
+// Claimed by setting giftCardSentAt first, so two settle paths racing (a
+// webhook and the PayPal return) send it once; released again if the send
+// throws, so a later status email retries it.
+export async function sendGiftCardEmail(orderNumber: string) {
+  const claimed = await db.order.updateMany({
+    where: {
+      orderNumber,
+      giftCardAmount: { gt: 0 },
+      giftCardRecipientEmail: { not: null },
+      giftCardToken: { not: null },
+      giftCardSentAt: null,
+    },
+    data: { giftCardSentAt: new Date() },
+  });
+  if (claimed.count !== 1) return;
+
+  try {
+    const order = await db.order.findUniqueOrThrow({ where: { orderNumber } });
+    const settings = await getStoreSettings();
+    const lang: Locale = (locales as readonly string[]).includes(order.locale ?? "")
+      ? (order.locale as Locale)
+      : "en";
+    const dict = getDictionary(lang).giftCard;
+    const sender =
+      (order.giftCardSender ?? "").replace(/[\r\n\t]+/g, " ").trim() || settings.storeName;
+    const cardUrl = `${siteBaseUrl(settings)}/${lang}/card/${order.giftCardToken}`;
+    const lines = giftCardLines(
+      {
+        message: order.giftCardMessage ?? "",
+        recipient: order.giftCardRecipient ?? undefined,
+        sender: order.giftCardSender ?? undefined,
+      },
+      dict
+    );
+    const back = BACK_ART[parseGiftCardBack(order.giftCardBack)];
+    const subject = dict.emailSubject.replace("{sender}", sender);
+    const intro = dict.emailIntro.replace("{sender}", sender);
+    // The message is the card's largest line; "For …" and "With love, …" frame it.
+    const message = (order.giftCardMessage ?? "").trim();
+    const cardLines = lines
+      .map((line, i) => {
+        const isMessage = line === message;
+        return `<p style="margin:${i === 0 ? 0 : 16}px 0 0;font-family:Georgia,serif;font-size:${isMessage ? 22 : 15}px;line-height:1.5;color:${CARD_INK};${isMessage ? "font-style:italic;" : "letter-spacing:0.5px;"}">${escapeEmailHtml(line)}</p>`;
+      })
+      .join("");
+    const html = `<!doctype html><html><body style="margin:0;background:#f4f0e7;color:#123d43;font-family:Arial,sans-serif"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="padding:32px 12px"><tr><td align="center"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px"><tr><td style="padding:0 0 22px;text-align:center"><p style="margin:0 0 10px;color:#8a7147;font-size:11px;letter-spacing:3px;text-transform:uppercase">${escapeEmailHtml(settings.storeName)} · MURANO</p><p style="margin:0;color:#435654;line-height:1.7">${escapeEmailHtml(intro)}</p></td></tr><tr><td style="background:${back.stock};padding:14px;border:1px solid ${back.edge}"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:${CARD_STOCK};border:1px solid ${CARD_GOLD}"><tr><td style="padding:46px 34px;text-align:center">${cardLines}</td></tr></table></td></tr><tr><td style="padding:28px 0 0;text-align:center"><a href="${escapeEmailHtml(cardUrl)}" style="display:inline-block;padding:13px 22px;background:#123d43;color:#fff;text-decoration:none;font-size:11px;letter-spacing:1.5px;text-transform:uppercase">${escapeEmailHtml(dict.emailButton)}</a><p style="margin:22px 0 0;color:#687775;font-size:12px;line-height:1.7">${escapeEmailHtml(dict.emailFooter)}</p></td></tr></table></td></tr></table></body></html>`;
+    const text = [intro, "", ...lines, "", `${dict.emailButton}: ${cardUrl}`, "", dict.emailFooter].join(
+      "\n"
+    );
+    const sent = await sendEmail({ to: order.giftCardRecipientEmail!, subject, html, text });
+    if (!sent) throw new Error("Gift card email was not sent");
+  } catch (error) {
+    await db.order.update({ where: { orderNumber }, data: { giftCardSentAt: null } });
+    throw error;
+  }
 }

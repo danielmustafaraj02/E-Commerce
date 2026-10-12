@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { publicImageSrc } from "@/lib/public-image";
 import { Link } from "@/components/localized-link";
 import { useRef, useState, useEffect, useCallback } from "react";
 import "./products-dropdown.css";
@@ -129,7 +130,7 @@ export function ProductsDropdown({
               {cat.imageUrl ? (
                 <span className="pd-thumb" aria-hidden="true">
                   <Image
-                    src={cat.imageUrl}
+                    src={publicImageSrc(cat.imageUrl)}
                     alt=""
                     fill
                     /* The plate is a 3rem ≈ 48px square, and the 0.9s hover

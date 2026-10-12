@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useSyncExternalStore, type KeyboardEvent, type PointerEvent } from "react";
-import { useLocalizedRouter } from "@/components/localized-link";
+import { Link, useLocalizedRouter } from "@/components/localized-link";
 import { GiftCardBackFace, GiftCardPreview, StickerArt } from "@/components/gift-card-preview";
 import { GiftCardFlip } from "@/components/gift-card-3d";
 import { useCartStore } from "@/lib/cart-store";
@@ -10,6 +10,7 @@ import {
   GIFT_CARD_FONTS,
   GIFT_CARD_MESSAGE_MAX,
   GIFT_CARD_NAME_MAX,
+  GIFT_CARD_EMAIL_MAX,
   GIFT_CARD_STICKERS,
   GIFT_CARD_STICKER_MAX,
   giftCardLines,
@@ -28,6 +29,9 @@ type DesignerProps = { dict: Dictionary["giftCard"]; price: string; brand: strin
 
 const noopSubscribe = () => () => {};
 
+// A light check before the card goes to the cart; checkout validates it properly.
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
 // The personalised card designer. The saved card (for "Edit" from the cart)
 // lives only in the browser, so the first render matches the server's empty
 // form and the form is remounted with the saved card once running client-side.
@@ -38,8 +42,18 @@ export function GiftCardDesigner(props: DesignerProps) {
     () => false
   );
   const saved = useCartStore((state) => state.giftCard);
+  const itemCount = useCartStore((state) => state.items.length);
   const initial = inBrowser ? saved : null;
-  return <DesignerForm key={initial ? "saved" : "new"} initial={initial} {...props} />;
+  return (
+    <DesignerForm
+      key={initial ? "saved" : "new"}
+      initial={initial}
+      // The card is sold only with an order: until the cart holds a piece it
+      // can be designed but not added. Unknown on the server, so not blocked there.
+      cartEmpty={inBrowser && itemCount === 0}
+      {...props}
+    />
+  );
 }
 
 // Where a new motif lands: the first free corner, clear of the message.
@@ -63,8 +77,14 @@ function nextSpot(stickers: GiftCardSticker[]): [number, number] {
 }
 
 // Every field redraws the preview as it changes; "Add" stores the card with
-// the cart (checkout charges it).
-function DesignerForm({ dict, price, brand, initial }: DesignerProps & { initial: GiftCard | null }) {
+// the cart (checkout charges it, and it is emailed once the order is paid).
+function DesignerForm({
+  dict,
+  price,
+  brand,
+  initial,
+  cartEmpty,
+}: DesignerProps & { initial: GiftCard | null; cartEmpty: boolean }) {
   const router = useLocalizedRouter();
   const setGiftCard = useCartStore((state) => state.setGiftCard);
   const saved = initial;
@@ -78,12 +98,14 @@ function DesignerForm({ dict, price, brand, initial }: DesignerProps & { initial
   const [custom, setCustom] = useState(initial?.messageType === "custom" ? initial.message : "");
   const [recipient, setRecipient] = useState(initial?.recipient ?? "");
   const [sender, setSender] = useState(initial?.sender ?? "");
+  const [recipientEmail, setRecipientEmail] = useState(initial?.recipientEmail ?? "");
   const [font, setFont] = useState<GiftCardFont>(initial?.font ?? "serif");
   const [stickers, setStickers] = useState<GiftCardSticker[]>(initial?.stickers ?? []);
   const [back, setBack] = useState<GiftCardBack>(initial?.back ?? "ivory");
   const [showBack, setShowBack] = useState(false);
   const [selected, setSelected] = useState<number | null>(null);
   const [error, setError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
 
   const message = messageType === "preset" ? preset : custom;
   const lines = giftCardLines(
@@ -109,15 +131,17 @@ function DesignerForm({ dict, price, brand, initial }: DesignerProps & { initial
   };
 
   const add = () => {
-    if (!message.trim()) {
-      setError(true);
-      return;
-    }
+    const email = recipientEmail.trim().toLowerCase();
+    const emailOk = EMAIL_PATTERN.test(email);
+    setError(!message.trim());
+    setEmailError(!emailOk);
+    if (!message.trim() || !emailOk || cartEmpty) return;
     setGiftCard({
       messageType,
       message: message.trim(),
       recipient: recipient.trim() || undefined,
       sender: sender.trim() || undefined,
+      recipientEmail: email,
       font,
       stickers,
       back,
@@ -195,6 +219,26 @@ function DesignerForm({ dict, price, brand, initial }: DesignerProps & { initial
               />
             </label>
           </div>
+          <label className="gc-field gc-email">
+            <span>{dict.recipientEmailLabel}</span>
+            <input
+              type="email"
+              inputMode="email"
+              autoComplete="off"
+              value={recipientEmail}
+              maxLength={GIFT_CARD_EMAIL_MAX}
+              placeholder={dict.recipientEmailPlaceholder}
+              aria-invalid={emailError || undefined}
+              aria-describedby="gc-email-help"
+              onChange={(e) => {
+                setRecipientEmail(e.target.value);
+                if (emailError) setEmailError(false);
+              }}
+            />
+            <small id="gc-email-help" className="gc-field-help">
+              {dict.recipientEmailHelp}
+            </small>
+          </label>
         </section>
 
         <section className="gc-step">
@@ -388,10 +432,22 @@ function DesignerForm({ dict, price, brand, initial }: DesignerProps & { initial
               {dict.emptyError}
             </p>
           )}
-          <button type="button" className="btn-primary gc-add-button" onClick={add}>
-            {saved ? dict.update : applyTemplate(dict.add, { price })}
-          </button>
-          <p className="gc-note">{dict.printedNote}</p>
+          {emailError && (
+            <p className="gc-error" role="alert">
+              {dict.emailError}
+            </p>
+          )}
+          {cartEmpty ? (
+            <p className="gc-cart-empty">
+              {dict.needsOrder}{" "}
+              <Link href="/products">{dict.needsOrderCta}</Link>
+            </p>
+          ) : (
+            <button type="button" className="btn-primary gc-add-button" onClick={add}>
+              {saved ? dict.update : applyTemplate(dict.add, { price })}
+            </button>
+          )}
+          <p className="gc-note">{dict.deliveryNote}</p>
         </div>
       </div>
     </div>

@@ -2,6 +2,7 @@ import { cache } from "react";
 import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
 import {
+  LOOKS_SECTIONS,
   SECTIONS_BY_TARGET,
   resolveLayout,
   visibleEntries,
@@ -43,3 +44,11 @@ export async function pageEntries(
   if (target !== "home") return resolved;
   return withEditorialExamples(resolved, (templateId) => templateBody(templateId));
 }
+
+/** The look layout and tuning (style, accent, density, alignment, button) as
+ *  chosen in Page layout > Looks: the one place they are set. The home page's
+ *  Looks section follows it, so both pages always show the same template. */
+export const getSharedLookOptions = cache(async (): Promise<Record<string, string>> => {
+  const entries = resolveLayout(await getStoredLayout("looks"), LOOKS_SECTIONS);
+  return entries.find((entry) => entry.id === "list")?.options ?? {};
+});

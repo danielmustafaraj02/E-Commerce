@@ -2,6 +2,7 @@ import { sanitizeSectionHtml } from "@/lib/custom-section";
 import {
   blockHtml,
   blockWrap,
+  columnShare,
   isLiveBlock,
   type BuilderBlock,
   type BuilderDoc,
@@ -12,10 +13,13 @@ import { LiveBlock } from "./builder-live";
 function BlockView({
   block,
   position,
+  share,
   slot,
 }: {
   block: BuilderBlock;
   position: number;
+  /** The fraction of the page width its column takes on computers. */
+  share: number;
   slot?: ReactNode;
 }) {
   if (isLiveBlock(block)) {
@@ -30,7 +34,7 @@ function BlockView({
       <div className="bld-s">{live}</div>
     );
   }
-  const html = blockHtml(block, false, Math.floor(position / 25), position % 25);
+  const html = blockHtml(block, false, Math.floor(position / 25), position % 25, share);
   return html ? (
     <div className="bld-s" dangerouslySetInnerHTML={{ __html: sanitizeSectionHtml(html) }} />
   ) : null;
@@ -51,7 +55,13 @@ export function BuilderView({ doc, slot }: { doc: BuilderDoc; slot?: ReactNode }
       {doc.cells.map((cell, c) => (
         <div className="bld-col" key={c}>
           {cell.map((block, i) => (
-            <BlockView key={i} block={block} position={c * 25 + i} slot={slot} />
+            <BlockView
+              key={i}
+              block={block}
+              position={c * 25 + i}
+              share={columnShare(doc, c)}
+              slot={slot}
+            />
           ))}
         </div>
       ))}

@@ -150,7 +150,7 @@ export function LookBotanicalAtelier(props: LookTemplateProps) {
       props={props}
       className="look-tpl--botanical-atelier"
       ornament={
-        <BotanicalArt className="look-tpl-botanical-panel" src="/decor/botanical-leaves.jpg" />
+        <BotanicalArt className="look-tpl-botanical-panel" src="/decor/botanical-leaves.webp" />
       }
     />
   );
@@ -160,7 +160,7 @@ export function LookForestEditorial(props: LookTemplateProps) {
     <Spread
       props={props}
       className="look-tpl--forest"
-      ornament={<BotanicalArt className="look-tpl-forest-art" src="/decor/botanical-seeds.jpg" />}
+      ornament={<BotanicalArt className="look-tpl-forest-art" src="/decor/botanical-seeds.webp" />}
     />
   );
 }
@@ -173,11 +173,11 @@ export function LookBotanicalCutout(props: LookTemplateProps) {
         <>
           <BotanicalArt
             className="look-tpl-cut-leaf look-tpl-cut-leaf--start"
-            src="/decor/botanical-cutout.png"
+            src="/decor/botanical-cutout.webp"
           />
           <BotanicalArt
             className="look-tpl-cut-leaf look-tpl-cut-leaf--end"
-            src="/decor/botanical-cutout.png"
+            src="/decor/botanical-cutout.webp"
           />
         </>
       }
@@ -267,7 +267,7 @@ export function LookForestBold(props: LookTemplateProps) {
       props={props}
       className="look-tpl--forest-bold"
       ornament={
-        <BotanicalArt className="look-bold-forest-botanical" src="/decor/botanical-cutout.png" />
+        <BotanicalArt className="look-bold-forest-botanical" src="/decor/botanical-cutout.webp" />
       }
     />
   );

@@ -89,6 +89,7 @@ export default async function LooksPage({ searchParams }: PageProps<"/looks">) {
                   pieces: dict.looks.pieces,
                   description: getLookEditorialDescription(look.name, locale),
                   included: copy.editorialIncluded,
+                    viewPiece: copy.viewPiece,
                   price: copy.editorialPrice,
                   kinds: dict.giftFinder.preference,
                 }}

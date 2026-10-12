@@ -1,11 +1,14 @@
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import { CatalogImage } from "@/components/catalog-image";
+import { publicImageSrc } from "@/lib/public-image";
 import type { JournalImage as JournalImageData } from "@/lib/journal/types";
 import type { JournalProductMap } from "@/lib/journal/products";
 
 export function journalImageSrc(image: JournalImageData, products: JournalProductMap) {
-  if (image.kind === "file") return image.src;
-  return products.get(image.productSlug)?.images[0]?.url ?? null;
+  const src =
+    image.kind === "file" ? image.src : products.get(image.productSlug)?.images[0]?.url;
+  return src ? publicImageSrc(src) : null;
 }
 
 // An article image with its caption and, where the licence needs one, credit.
@@ -15,6 +18,7 @@ export function JournalImage({
   sizes,
   priority = false,
   className = "",
+  figureProps,
   creditLabel,
   locale,
 }: {
@@ -23,6 +27,8 @@ export function JournalImage({
   sizes: string;
   priority?: boolean;
   className?: string;
+  /** Extra attributes for the <figure> (data-* markers, inline CSS variables). */
+  figureProps?: { style?: Record<string, string> } & Record<`data-${string}`, string>;
   creditLabel: (credit: string) => string;
   locale?: string;
 }) {
@@ -35,7 +41,11 @@ export function JournalImage({
   const loadingProps = priority ? ({ loading: "eager", fetchPriority: "high" } as const) : {};
 
   return (
-    <figure className={`journal-figure ${className}`}>
+    <figure
+      {...figureProps}
+      style={figureProps?.style as CSSProperties | undefined}
+      className={`journal-figure ${className}`}
+    >
       <div className="journal-figure-frame">
         {image.kind === "file" && src.startsWith("/") ? (
           <Image src={src} alt={alt} fill sizes={sizes} {...loadingProps} />

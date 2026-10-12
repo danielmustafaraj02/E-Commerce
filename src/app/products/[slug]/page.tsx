@@ -18,6 +18,8 @@ import {
 } from "@/lib/page-layout";
 import type { Metadata } from "next";
 import { ProductGallery } from "@/components/product-gallery";
+import { PRODUCT_PACKAGING_IMAGE } from "@/lib/product-packaging";
+import { productGalleryImages } from "@/lib/product-gallery-images";
 import { CatalogImage } from "@/components/catalog-image";
 import { Link } from "@/components/localized-link";
 import { notFound } from "next/navigation";
@@ -50,7 +52,6 @@ import { deliveryEstimateText } from "@/lib/delivery-estimate";
 import { ShareButtons } from "@/components/share-buttons";
 import { ShelfItem } from "@/components/shelf-item";
 import { Reveal } from "@/components/reveal";
-import { GiftCardAd } from "@/components/gift-card-ad";
 import { homeFontClasses } from "@/app/home-fonts";
 import "../../home.css";
 import "../../shop.css";
@@ -68,6 +69,8 @@ import { GiftFinderArrow } from "@/components/gift-finder-arrow";
 import { PaymentIcons } from "@/components/payment-icons";
 import { getStripePaymentMethods, isStripeConfigured } from "@/lib/stripe";
 import { isPaypalConfigured } from "@/lib/paypal";
+import { shareImageUrl } from "@/lib/optimized-image";
+import { publicImageSrc } from "@/lib/public-image";
 
 // Small single-use icons for the gift sections below — same stroke
 // convention (1.8, round caps/joins, currentColor) as the existing icons in
@@ -230,7 +233,8 @@ async function baseMetadata({ params }: PageProps<"/products/[slug]">): Promise<
       product.stockQty > 0 ? dict.home.shopNow : dict.product.outOfStock
     }`,
   });
-  const image = product.images[0]?.url;
+  const cover = product.images[0]?.url;
+  const image = cover ? shareImageUrl(cover) : undefined;
 
   return {
     title,
@@ -367,7 +371,7 @@ export default async function ProductDetailPage({
     name,
     description: description || undefined,
     sku: product.sku,
-    image: product.images.map((image) => absoluteUrl(image.url, base)),
+    image: product.images.map((image) => absoluteUrl(publicImageSrc(image.url), base)),
     brand: { "@type": "Brand", name: settings.storeName },
     ...(categoryName ? { category: categoryName } : {}),
     ...(material ? { material } : {}),
@@ -451,7 +455,11 @@ export default async function ProductDetailPage({
 
           <div className="shop-product-grid">
             <ProductGallery
-              images={product.images}
+              images={
+                product.slug === "payment-test-1-eur"
+                  ? product.images
+                  : productGalleryImages(product.images)
+              }
               alt={productImageAlt(name, uiLocale)}
               zoomLabels={{
                 open: dict.nav.zoomImage,
@@ -626,25 +634,6 @@ export default async function ProductDetailPage({
                 </span>
               </div>
 
-              {settings.giftCardEnabled && (
-                <Link href="/personalised-gift-card" className="shop-gift-card-offer">
-                  <span className="shop-gift-card-offer-kicker">{dict.giftCard.pdpTitle}</span>
-                  <span className="shop-gift-card-offer-line">
-                    {applyTemplate(dict.giftCard.pdpLine, {
-                      price: formatMoney(
-                        settings.giftCardPrice,
-                        settings.defaultCurrency,
-                        settings.defaultLocale
-                      ),
-                    })}
-                  </span>
-                  <span className="shop-gift-card-offer-body">{dict.giftCard.pdpBody}</span>
-                  <span className="shop-gift-card-offer-cta">
-                    {dict.giftCard.pdpCta} <span aria-hidden="true">→</span>
-                  </span>
-                </Link>
-              )}
-
               {/* Secondary information grouped instead of many small lines of
                   equal weight: each opens on demand. */}
               <div className="shop-info-details">
@@ -691,7 +680,7 @@ export default async function ProductDetailPage({
         <Reveal className="shelf-wrap shop-gift-section shop-gift-reveal" repeatOnView>
           <div className="shop-gift-photo">
             <CatalogImage
-              src="/products/orecchini-in-vetro-di-murano/orecchini-goccia-di-rubino-3.png"
+              src={PRODUCT_PACKAGING_IMAGE}
               alt={dict.product.giftSectionEyebrow}
               fill
               sizes="(min-width: 40rem) 45vw, 100vw"
@@ -825,19 +814,6 @@ export default async function ProductDetailPage({
         dict={dict.look}
         outOfStockLabel={dict.product.outOfStock}
       />
-    ),
-    giftCard: settings.giftCardEnabled && (
-      <Reveal>
-        <GiftCardAd
-          dict={dict.giftCard}
-          brand={settings.storeName}
-          price={formatMoney(
-            settings.giftCardPrice,
-            settings.defaultCurrency,
-            settings.defaultLocale
-          )}
-        />
-      </Reveal>
     ),
     related: relatedProducts.length > 0 && (
       <section className="shelf-section shelf-section--sand shop-related">

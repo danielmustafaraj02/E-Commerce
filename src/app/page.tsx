@@ -2,6 +2,10 @@ import { withPageMeta } from "@/lib/page-meta";
 import { Fragment, type CSSProperties, type ReactNode } from "react";
 import { applyHomeCopy, parseHomeCopy } from "@/lib/home-copy";
 import { HOME_SECTIONS, resolveLayout, visibleEntries, withEditorialExamples, type HomeSectionId } from "@/lib/page-layout";
+import { getSharedLookOptions } from "@/lib/page-layout-store";
+import { showcasePieces } from "@/lib/showcase-pieces";
+import { homeValueFaq } from "@/lib/i18n/home-values-copy";
+import { optionAttributes } from "@/lib/section-style";
 import { templateBody } from "@/lib/page-templates";
 import { LayoutSection } from "@/components/layout-section";
 import { PreviewBridge } from "@/components/layout-preview-bridge-server";
@@ -28,15 +32,13 @@ import { ShelfStagger } from "@/components/shelf-stagger";
 import { EditorialReveal } from "@/components/editorial-reveal";
 import { getShowcaseCopy, SHOWCASE_SCENE_ORDER } from "@/lib/i18n/showcase-copy";
 import { CollectionShowcase } from "@/components/collection-showcase";
+import { showcaseReasons as getShowcaseReasons } from "@/lib/showcase-reasons";
 import { NewsletterSignupForm } from "@/components/newsletter-signup-form";
 import { FaqSection } from "@/components/faq-section";
 import { buildFaq } from "@/lib/faq";
 import { getShippingFacts } from "@/lib/shipping-banner";
 import { GiftFinderArrow } from "@/components/gift-finder-arrow";
 import { PopularCarousel } from "@/components/popular-carousel";
-import { MuranoReasons } from "@/components/murano-reasons";
-import { chosenBySlot, pickReasonProducts } from "@/lib/murano-reasons";
-import { db } from "@/lib/db";
 
 import { getAllLooks } from "@/lib/look-data";
 import { LookRow } from "@/components/look-editorial";
@@ -55,8 +57,10 @@ async function baseMetadata(): Promise<Metadata> {
   const dict = getDictionary(locale);
 
   const titleCandidatesByLocale: Record<Locale, string[]> = {
-    en: ["Murano Glass Jewelry, Handmade in Venice, Italy", "Murano Glass Jewelry"],
-    it: ["Gioielli in Vetro di Murano, Fatti a Mano a Venezia", "Gioielli in Vetro di Murano"],
+    // English and Italian name the three collections rather than claim the
+    // pieces are handmade in Venice: Perla curates from several makers.
+    en: ["Murano Glass Jewelry: Necklaces, Bracelets & Earrings", "Murano Glass Jewelry"],
+    it: ["Gioielli in Vetro di Murano: Collane, Bracciali e Orecchini", "Gioielli in Vetro di Murano"],
     fr: ["Bijoux en Verre de Murano, Faits Main à Venise", "Bijoux en Verre de Murano"],
     de: ["Muranoglas-Schmuck, Handgefertigt in Venedig", "Muranoglas-Schmuck"],
     ar: ["مجوهرات زجاج مورانو، صناعة يدوية في البندقية", "مجوهرات زجاج مورانو"],
@@ -132,31 +136,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
   const looks = await getAllLooks(locale, 3);
   const lookCopy = getLookPageCopy(locale);
   const showcaseCopy = getShowcaseCopy(locale);
-  // The pieces beside the "why Murano" reasons: the one staff chose for each row
-  // in Admin > Settings, and the homepage's popular pieces for any row left on
-  // Automatic. A chosen piece that has since been unpublished, hidden or lost
-  // its photo is treated as not chosen, not shown broken.
-  // `?? []`: the column is new, and until its migration has been applied (and the
-  // dev server restarted) the settings row simply does not carry it.
-  const chosenReasonIds = settings.muranoReasonProductIds ?? [];
-  const chosenReasonProducts = chosenReasonIds.some(Boolean)
-    ? chosenBySlot(
-        await db.product.findMany({
-          where: {
-            id: { in: chosenReasonIds.filter(Boolean) },
-            active: true,
-            unlisted: false,
-            images: { some: {} },
-          },
-          include: { images: { take: 1, orderBy: { position: "asc" } } },
-        }),
-        chosenReasonIds
-      )
-    : [];
-  const reasonProducts = pickReasonProducts(
-    chosenReasonProducts,
-    popularProducts.filter((product) => product.images[0])
-  );
+  const showcaseReasons = getShowcaseReasons(dict.home);
   const editorialCollections = COLLECTION_ORDER.flatMap((prefix) => {
     const category = categoriesWithImage.find((item) => item.slug.startsWith(prefix));
     return category?.image ? [category] : [];
@@ -175,11 +155,12 @@ export default async function Home({ searchParams }: PageProps<"/">) {
 
   // The FAQ answers restate the site's own settings: shipping figures come
   // from the shipping zones (lib/shipping-banner.ts), not fixed text.
-  const faq = buildFaq(
+  // Values first (why these pieces, why here), then the practical answers.
+  const faq = [...homeValueFaq(locale), ...buildFaq(
     dict,
     await getShippingFacts(settings.defaultCurrency, settings.defaultLocale),
     settings.contactEmail
-  );
+  )];
 
   const shelfProps = {
     locale: settings.defaultLocale,
@@ -205,7 +186,16 @@ export default async function Home({ searchParams }: PageProps<"/">) {
   // built. Declared afterwards they were in the temporal dead zone, and the
   // resulting "Cannot access 'lookStyle' before initialization" surfaced as the
   // storefront's error boundary.
-  const lookStyle = storedEntries.find((e) => e.id === "looks")?.options?.lookStyle;
+  // One look template for the home page and the Looks page (Page layout > Looks).
+  const lookOptions = await getSharedLookOptions();
+  const lookStyle = lookOptions.lookStyle;
+
+  // The product in each showcase scene's hover card (the one whose photo it shows).
+  const showcaseCardPieces = await showcasePieces(
+    editorialCollections.map((category) => ({ image: category.image!.url })),
+    locale,
+    settings.defaultLocale
+  );
 
   const homeSections: Record<HomeSectionId, ReactNode> = {
     hero: (
@@ -218,7 +208,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
               refused autoplay, reduced motion and pause/resume. */}
           <HeroVideo
             className="shelf-hero-video"
-            poster="/hero/hero-atelier-poster.jpg"
+            poster="/hero/hero-atelier-poster.webp"
             sources={[
               { src: "/hero/hero-atelier.webm", type: "video/webm" },
               { src: "/hero/hero-atelier.mp4", type: "video/mp4" },
@@ -284,12 +274,14 @@ export default async function Home({ searchParams }: PageProps<"/">) {
           items={editorialCollections.map((category, i) => {
             const scene = SHOWCASE_SCENE_ORDER[i] ?? "necklace";
             return {
+              piece: showcaseCardPieces[i],
               id: category.id,
               href: `/category/${category.slug}`,
               name: localizedName(category, locale),
               image: category.image!.url,
               description: showcaseCopy.scenes[scene].description,
               cta: showcaseCopy.scenes[scene].cta,
+              reason: showcaseReasons[scene],
               scene,
             };
           })}
@@ -314,6 +306,11 @@ export default async function Home({ searchParams }: PageProps<"/">) {
                 price: formatMoney(p.price, settings.defaultCurrency, locale),
                 imageUrl: p.images[0].url,
               }))}
+            labels={{
+              slides: dict.home.popularTitle,
+              previous: dict.home.previousSlide,
+              next: dict.home.nextSlide,
+            }}
           />
         </section>
       ),
@@ -346,7 +343,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
             </div>
           </div>
           {looks.length > 0 && (
-            <div className="looks-editorial-list" data-editorial-root>
+            <div className="looks-editorial-list" data-editorial-root {...optionAttributes(lookOptions)}>
               {/* One controller for the whole list: it arms the scroll-in
                   sequence. The scroll-linked parallax drift that used to run
                   alongside it is gone — three elements of a row sliding past
@@ -367,6 +364,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
                     pieces: dict.looks.pieces,
                     description: getLookEditorialDescription(look.name, locale),
                     included: lookCopy.editorialIncluded,
+                    viewPiece: lookCopy.viewPiece,
                     price: lookCopy.editorialPrice,
                     kinds: dict.giftFinder.preference,
                   }}
@@ -438,26 +436,6 @@ export default async function Home({ searchParams }: PageProps<"/">) {
               </ul>
             </Reveal>
           </div>
-        </section>
-      ),
-    reasons: reasonProducts.length > 0 && (
-        <section className="shelf-section shelf-section--reasons">
-          <MuranoReasons
-            products={reasonProducts.map((product) => ({
-              slug: product.slug,
-              name: localizedName(product, locale),
-              // The store's own number format, like every other price on this
-              // page's shelves and looks ("80,00 €"), not the interface language's.
-              price: formatMoney(product.price, settings.defaultCurrency, settings.defaultLocale),
-              imageUrl: product.images[0].url,
-            }))}
-            reasons={[
-              { title: dict.home.muranoReason1Title, body: dict.home.muranoReason1Body },
-              { title: dict.home.muranoReason2Title, body: dict.home.muranoReason2Body },
-              { title: dict.home.muranoReason3Title, body: dict.home.muranoReason3Body },
-            ]}
-            viewLabel={lookCopy.viewPiece}
-          />
         </section>
       ),
     faq: (

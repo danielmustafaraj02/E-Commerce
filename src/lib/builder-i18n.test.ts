@@ -88,6 +88,7 @@ describe("story and original blocks", () => {
             alt: "A necklace",
             side: "left",
             blend: true,
+            showCaption: true,
             cardTitle: "Necklace",
             cardPrice: "80,00 €",
             cardCta: "View",

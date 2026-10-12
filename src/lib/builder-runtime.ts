@@ -1,7 +1,8 @@
 /**
- * The little bit of JavaScript the builder's counter and countdown blocks need
- * (their HTML already shows the final number / target date, so nothing depends
- * on this running). Idempotent: each element is initialised once.
+ * The little bit of JavaScript the builder's blocks need: scroll motion,
+ * counters, drawn lines, typing and countdowns (their HTML already shows the
+ * final state, so nothing depends on this running). Everything that animates
+ * follows the scroll. Idempotent: each element is initialised once.
  */
 
 const fmt = new Intl.NumberFormat("en-US");
@@ -10,18 +11,70 @@ function reducedMotion() {
   return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
 }
 
-function animateCount(el: HTMLElement, target: number) {
-  if (reducedMotion() || target <= 0) return;
-  const start = performance.now();
-  const duration = 1600;
-  el.textContent = "0";
-  const tick = (now: number) => {
-    const t = Math.min(1, (now - start) / duration);
-    const eased = 1 - Math.pow(1 - t, 3);
-    el.textContent = fmt.format(Math.round(target * eased));
-    if (t < 1) requestAnimationFrame(tick);
+/**
+ * How far an element has come up the screen, 0 to 1: 0 as its top reaches the
+ * bottom edge, 1 once it has travelled half a screen. `lead` (a share of the
+ * screen) starts it later. The end is capped at where the page can actually
+ * scroll to, so a block just above the footer still finishes.
+ */
+function scrollProgress(el: HTMLElement, lead = 0) {
+  const vh = window.innerHeight;
+  const top = el.getBoundingClientRect().top;
+  const maxScroll = document.documentElement.scrollHeight - vh;
+  const topAtEnd = top - (maxScroll - window.scrollY);
+  const from = vh * (0.95 - lead);
+  const to = Math.min(from - 1, Math.max(vh * (0.45 - lead), topAtEnd));
+  return Math.min(1, Math.max(0, (from - top) / (from - to)));
+}
+
+/** Runs `update` once now and then on every scroll or resize frame. */
+function onScrollFrame(update: () => void) {
+  let queued = false;
+  const queue = () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => {
+      queued = false;
+      update();
+    });
   };
-  requestAnimationFrame(tick);
+  window.addEventListener("scroll", queue, { passive: true });
+  window.addEventListener("resize", queue, { passive: true });
+  update();
+}
+
+/** Counters count up with the scroll: the number follows the block's place
+ *  on screen, so scrolling back up counts it down again. */
+function initCounters(root: ParentNode) {
+  const els = [...root.querySelectorAll<HTMLElement>("[data-bld-count]:not([data-bld-init])")];
+  els.forEach((el) => (el.dataset.bldInit = "1"));
+  const counted = els.filter((el) => Number(el.dataset.bldCount) > 0);
+  if (counted.length === 0 || reducedMotion()) return;
+  onScrollFrame(() => {
+    for (const el of counted) {
+      const eased = 1 - Math.pow(1 - scrollProgress(el), 3);
+      el.textContent = fmt.format(Math.round(Number(el.dataset.bldCount) * eased));
+    }
+  });
+}
+
+/** Lines that draw themselves in, at the pace of the scroll: dividers grow
+ *  across, column rules grow down. */
+function initDrawnLines(root: ParentNode) {
+  const els = [...root.querySelectorAll<HTMLElement>("[data-bld-draw]:not([data-bld-init])")];
+  els.forEach((el) => (el.dataset.bldInit = "1"));
+  if (els.length === 0 || reducedMotion()) return;
+  for (const el of els) {
+    if (el.classList.contains("bld")) el.classList.add("bld-drawing");
+    else el.style.transition = "none";
+  }
+  onScrollFrame(() => {
+    for (const el of els) {
+      const p = scrollProgress(el).toFixed(3);
+      if (el.classList.contains("bld")) el.style.setProperty("--bld-draw", p);
+      else el.style.transform = el.classList.contains("bld-vline") ? `scaleY(${p})` : `scaleX(${p})`;
+    }
+  });
 }
 
 function runCountdown(el: HTMLElement) {
@@ -113,76 +166,28 @@ function initTyping(root: ParentNode) {
 }
 
 /**
- * Scroll animations. Blocks carrying data-bm start hidden (CSS) and are shown
- * by flipping a class: once, or again every time you scroll back to them
- * ("toggle": they leave when you scroll back up past them). Blocks that enter
- * together play in sequence: by their order number, then reading order, each
- * one a step (the design's stagger) after the previous. "scrub" blocks have
- * their progress set straight from their place on screen.
+ * Scroll animations. Every block carrying data-bm follows the scroll: its
+ * progress (--bm-p, 0 hidden to 1 shown) is set straight from its place on
+ * screen, so it moves in as it comes up and plays backwards when you scroll
+ * back past it. The design's per-block delay still counts, as a later start
+ * (one second is a fifth of the screen). Older designs saved "once" or
+ * "replay"; they scrub too now, so the whole site moves the same way.
  */
-const orderOf = (el: HTMLElement) => Number(el.dataset.bmOrder ?? 100);
-
 function initMotion(root: ParentNode) {
   const all = [...root.querySelectorAll<HTMLElement>("[data-bm]:not([data-bm-init])")];
   if (all.length === 0) return;
   all.forEach((el) => (el.dataset.bmInit = "1"));
-  if (reducedMotion() || typeof IntersectionObserver === "undefined") {
+  if (reducedMotion()) {
     all.forEach((el) => el.classList.add("bld-in"));
     return;
   }
-  const scrub = all.filter((el) => el.dataset.bmMode === "scrub");
-  const timed = all.filter((el) => el.dataset.bmMode !== "scrub");
-
-  const io = new IntersectionObserver(
-    (entries) => {
-      const entering = entries
-        .filter((e) => e.isIntersecting)
-        .map((e) => e.target as HTMLElement)
-        .sort(
-          (a, b) =>
-            orderOf(a) - orderOf(b) ||
-            (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1)
-        );
-      entering.forEach((el, i) => {
-        const step = Number(el.closest<HTMLElement>(".bld")?.dataset.bmStagger ?? 150);
-        el.style.setProperty("--bm-del", `${Number(el.dataset.bmDelay ?? 0) + i * step}ms`);
-        el.classList.add("bld-in");
-        if (el.dataset.bmMode !== "toggle") io.unobserve(el);
-      });
-      for (const e of entries) {
-        const el = e.target as HTMLElement;
-        // Leaves only when you scroll back up past it, not when it scrolls off the top.
-        if (!e.isIntersecting && el.dataset.bmMode === "toggle" && e.boundingClientRect.top > 0) {
-          el.style.setProperty("--bm-del", "0ms");
-          el.classList.remove("bld-in");
-        }
-      }
-    },
-    { rootMargin: "0px 0px -8% 0px" }
-  );
-  timed.forEach((el) => io.observe(el));
-
-  if (scrub.length) {
-    let queued = false;
-    const update = () => {
-      queued = false;
-      const vh = window.innerHeight;
-      for (const el of scrub) {
-        const top = el.getBoundingClientRect().top;
-        const p = Math.min(1, Math.max(0, (vh * 0.95 - top) / (vh * 0.5)));
-        el.style.setProperty("--bm-p", String(Math.round(p * 1000) / 1000));
-      }
-    };
-    const queue = () => {
-      if (!queued) {
-        queued = true;
-        requestAnimationFrame(update);
-      }
-    };
-    window.addEventListener("scroll", queue, { passive: true });
-    window.addEventListener("resize", queue, { passive: true });
-    update();
-  }
+  all.forEach((el) => el.classList.add("bld-scrub"));
+  onScrollFrame(() => {
+    for (const el of all) {
+      const lead = Math.min(0.4, Number(el.dataset.bmDelay ?? 0) / 5000);
+      el.style.setProperty("--bm-p", String(Math.round(scrollProgress(el, lead) * 1000) / 1000));
+    }
+  });
 }
 
 /** Parallax: each block's content drifts against or with the scroll. */
@@ -191,9 +196,7 @@ function initParallax(root: ParentNode) {
   const els = [...root.querySelectorAll<HTMLElement>("[data-bld-par]:not([data-bm-par])")];
   if (els.length === 0) return;
   els.forEach((el) => (el.dataset.bmPar = "1"));
-  let queued = false;
-  const update = () => {
-    queued = false;
+  onScrollFrame(() => {
     const vh = window.innerHeight;
     for (const el of els) {
       const r = el.getBoundingClientRect();
@@ -202,60 +205,15 @@ function initParallax(root: ParentNode) {
       const px = (offset * Number(el.dataset.bldPar)) / 100;
       el.style.setProperty("--bld-par", `${Math.round(px)}px`);
     }
-  };
-  const queue = () => {
-    if (!queued) {
-      queued = true;
-      requestAnimationFrame(update);
-    }
-  };
-  window.addEventListener("scroll", queue, { passive: true });
-  window.addEventListener("resize", queue, { passive: true });
-  update();
+  });
 }
 
 export function initBuilderRuntime(root: ParentNode = document) {
   initParallax(root);
   initMotion(root);
   initTyping(root);
-  const observer =
-    typeof IntersectionObserver === "undefined"
-      ? null
-      : new IntersectionObserver(
-          (entries) => {
-            for (const entry of entries) {
-              if (!entry.isIntersecting) continue;
-              const el = entry.target as HTMLElement;
-              observer?.unobserve(el);
-              animateCount(el, Number(el.dataset.bldCount));
-            }
-          },
-          { threshold: 0.4 }
-        );
-
-  root.querySelectorAll<HTMLElement>("[data-bld-count]:not([data-bld-init])").forEach((el) => {
-    el.dataset.bldInit = "1";
-    if (observer) observer.observe(el);
-  });
-  // Lines that draw themselves in: hidden (scaled to 0) until they are seen.
-  if (!reducedMotion() && typeof IntersectionObserver !== "undefined") {
-    const draw = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-          const el = entry.target as HTMLElement;
-          draw.unobserve(el);
-          el.classList.remove("bld-wait");
-        }
-      },
-      { threshold: 0.3 }
-    );
-    root.querySelectorAll<HTMLElement>("[data-bld-draw]:not([data-bld-init])").forEach((el) => {
-      el.dataset.bldInit = "1";
-      el.classList.add("bld-wait");
-      draw.observe(el);
-    });
-  }
+  initCounters(root);
+  initDrawnLines(root);
   root.querySelectorAll<HTMLElement>("[data-bld-countdown]:not([data-bld-init])").forEach((el) => {
     el.dataset.bldInit = "1";
     runCountdown(el);

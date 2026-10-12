@@ -44,6 +44,33 @@
         ],
         "createdAt": "2026-10-05T22:34:20.335Z",
         "reason": "Claude: star rating partial fill via background-clip, same technique as existing .bld-stars in section-builder.ts; not decorative text"
+      },
+      {
+        "rule": "gradient-text",
+        "value": "*",
+        "files": [
+          "src/lib/section-builder.ts"
+        ],
+        "createdAt": "2026-10-10T19:31:36.431Z",
+        "reason": "Claude: .bld-stars uses background-clip:text to fill star ratings to the review score (data, not decoration)"
+      },
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "src/lib/section-builder.ts"
+        ],
+        "createdAt": "2026-10-10T21:30:49.839Z",
+        "reason": "Claude: src comes from imageSource() interpolated into the <img> template; detector cannot see it"
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "src/components/hero-concepts/hero-concepts.css"
+        ],
+        "createdAt": "2026-10-12T20:27:59.802Z",
+        "reason": "Claude: L279 is the CSS-triangle play icon (.hc-hold-play, zero-size box with border-block transparent + border-inline-start), not a card accent border"
       }
     ]
   }

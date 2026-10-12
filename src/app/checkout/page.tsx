@@ -63,7 +63,7 @@ export default async function CheckoutPage() {
             settings.giftCardEnabled
               ? {
                   productName: dict.giftCard.productName,
-                  printedNote: dict.giftCard.printedNote,
+                  deliveryNote: dict.giftCard.deliveryNote,
                 }
               : null
           }

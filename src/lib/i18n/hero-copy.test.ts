@@ -16,8 +16,8 @@ describe("mobile hero copy", () => {
     });
   }
 
-  it("says Authentic Murano Glass in English", () => {
-    expect(getDictionary("en").home.heroTagline).toBe("Authentic Murano Glass");
+  it("says Murano glass, made by hand, in English", () => {
+    expect(getDictionary("en").home.heroTagline).toBe("Murano glass, worn every day");
     expect(getDictionary("en").home.shopCollection).toBe("Shop Collection");
   });
 });

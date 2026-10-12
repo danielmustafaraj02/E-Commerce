@@ -17,7 +17,7 @@ export const howToCareForMuranoGlassJewelry: Article = {
   ],
   hero: {
     kind: "file",
-    src: "/about/venice-moored-gondolas.jpg",
+    src: "/about/venice-moored-gondolas.webp",
     alt: "Gondolas moored along a quiet canal in Venice",
     rights: OWN_PHOTO,
   },

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { MAX_CART_LINES, MAX_CART_QUANTITY } from "@/lib/cart-limits";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { PricingError } from "@/lib/pricing";
@@ -25,8 +26,14 @@ import { pricingMessage } from "@/lib/pricing-messages";
 // limiting still applies.
 const expressCheckoutSchema = z.object({
   items: z
-    .array(z.object({ productId: z.string().min(1), quantity: z.coerce.number().int().positive() }))
-    .min(1),
+    .array(
+      z.object({
+        productId: z.string().min(1),
+        quantity: z.coerce.number().int().positive().max(MAX_CART_QUANTITY),
+      })
+    )
+    .min(1)
+    .max(MAX_CART_LINES),
   guestEmail: z.string().email().optional(),
   address: z
     .object({

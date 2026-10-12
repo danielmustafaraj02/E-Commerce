@@ -97,7 +97,7 @@ describe("ten styles of every page section", () => {
         [
           {
             type: "showcase",
-            scenes: { necklace: { name: "Our necklaces", image: "/hero/hero-atelier-poster.jpg" } },
+            scenes: { necklace: { name: "Our necklaces", image: "/hero/hero-atelier-poster.webp" } },
           },
         ],
       ],
@@ -110,7 +110,7 @@ describe("ten styles of every page section", () => {
     expect(block.type).toBe("showcase");
     if (block.type === "showcase") {
       expect(block.scenes?.necklace?.name).toBe("Our necklaces");
-      expect(block.scenes?.necklace?.image).toBe("/hero/hero-atelier-poster.jpg");
+      expect(block.scenes?.necklace?.image).toBe("/hero/hero-atelier-poster.webp");
       expect(block.layout).toBe("row");
     }
   });
@@ -123,5 +123,58 @@ describe("ten styles of every page section", () => {
     result.style!.bg = "#fff";
     expect(design.doc.cells[0].length).toBeGreaterThan(result.builder!.cells[0].length);
     expect(design.style.bg).not.toBe("#fff");
+  });
+});
+
+describe("composed designs for content sections", () => {
+  const section = { id: "story", label: "Story", hint: "" };
+  const source = {
+    id: "s",
+    name: "s",
+    description: "",
+    doc: parseBuilder({
+      columns: 1,
+      cells: [[
+        { type: "heading", text: "Title", size: "m", style: { color: "#123456" } },
+        { type: "text", text: "Words" },
+        { type: "button", text: "Go", href: "/", look: "solid" },
+        { type: "image", src: "/a.jpg", alt: "" },
+      ]],
+    })!,
+  };
+  const designs = createSectionDesigns("about", section, source);
+
+  it("are ten distinct named compositions", () => {
+    expect(designs.map((d) => d.name)).toEqual([
+      "Split", "Split, photo first", "Centred", "Cover", "Editorial",
+      "Card", "Night", "Minimal", "Gallery", "Framed",
+    ]);
+  });
+
+  it("put the photo behind the text on phones for the split layouts", () => {
+    for (const i of [0, 1, 6]) {
+      expect(designs[i].doc.mobile?.layout).toBe("overlay");
+      expect(compileBuilder(designs[i].doc).css).toContain('grid-template-areas:"stack"');
+    }
+  });
+
+  it("run the split layouts edge to edge, and never narrow the background", () => {
+    for (const i of [0, 1, 6]) {
+      expect(designs[i].doc.width).toBe("full");
+      expect(designs[i].style).toMatchObject({ padTop: 0, padBottom: 0 });
+      expect(designs[i].style.css).toContain("min-height:min(88svh,58rem)");
+    }
+    for (const d of designs) expect(d.style.maxWidth, d.name).toBeUndefined();
+    expect(designs[2].style.css).toContain(".bld{max-width:64rem;margin-inline:auto}");
+  });
+
+  it("make the photo the section background for Cover", () => {
+    expect(designs[3].style.bgImage).toBe("/a.jpg");
+    expect(designs[3].doc.cells.flat().some((b) => b.type === "image")).toBe(false);
+  });
+
+  it("let colours come from the section, so text stays readable over photos", () => {
+    for (const d of designs)
+      for (const b of d.doc.cells.flat()) expect(b.style?.color, d.name).toBeUndefined();
   });
 });

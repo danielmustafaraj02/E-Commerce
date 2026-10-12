@@ -361,3 +361,40 @@
     to { opacity: 1; transform: translateX(0); }
   }
 }
+/* Scroll-linked (globals.css, --scroll-in): each heading, paragraph, card,
+   chip, step and question arrives as it comes up the screen; items in a row
+   are a step behind each other. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .gcp-reveal[data-reveal] :is(.shelf-heading, .gcp-prose p, .gcp-intro, .gcp-occasions-title, .gcp-steps li, .gcp-tips li, .gcp-cta p, .gcp-cta-actions a):nth-child(n),
+    .gcp-reveal[data-reveal] .gcp-tips h2 {
+      animation: gcp-content-arrive linear backwards;
+      animation-timeline: view();
+      animation-range: var(--scroll-in);
+    }
+    .gcp-reveal[data-reveal] :is(.gcp-loved li, .gcp-people li, .gcp-tips):nth-child(n) {
+      animation: gcp-card-arrive linear backwards;
+      animation-timeline: view();
+      animation-range: var(--scroll-in);
+    }
+    .gcp-reveal[data-reveal] .gcp-occasions li:nth-child(n) {
+      animation: gcp-chip-arrive linear backwards;
+      animation-timeline: view();
+      animation-range: var(--scroll-in);
+    }
+    .gcp-reveal[data-reveal] .faq-item:nth-child(n) {
+      animation: gcp-faq-arrive linear backwards;
+      animation-timeline: view();
+      animation-range: var(--scroll-in);
+    }
+    .gcp-reveal[data-reveal] :is(.gcp-loved li, .gcp-people li, .gcp-occasions li, .gcp-cta-actions a):nth-child(2) {
+      animation-range: entry var(--scroll-step) entry calc(40vh + var(--scroll-step));
+    }
+    .gcp-reveal[data-reveal] :is(.gcp-loved li, .gcp-people li, .gcp-occasions li, .gcp-cta-actions a):nth-child(3) {
+      animation-range: entry calc(2 * var(--scroll-step)) entry calc(40vh + 2 * var(--scroll-step));
+    }
+    .gcp-reveal[data-reveal] :is(.gcp-loved li, .gcp-people li, .gcp-occasions li, .gcp-cta-actions a):nth-child(4) {
+      animation-range: entry calc(3 * var(--scroll-step)) entry calc(40vh + 3 * var(--scroll-step));
+    }
+  }
+}

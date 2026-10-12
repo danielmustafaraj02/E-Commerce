@@ -33,7 +33,7 @@ export const venetianGlassBeads: Article = {
   ],
   hero: {
     kind: "file",
-    src: "/blog/venice-gondoliers-canal-golden-light.jpg",
+    src: "/blog/venice-gondoliers-canal-golden-light.webp",
     alt: "Venice canal at evening, a view of the lagoon city whose glass beads travelled through global trade",
     altIt: "Canale veneziano al tramonto, nella città lagunare da cui le perle di vetro viaggiavano lungo le rotte commerciali",
     rights: OWN_PHOTO,

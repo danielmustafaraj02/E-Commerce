@@ -91,7 +91,7 @@ export default async function AboutPage({ searchParams }: PageProps<"/about">) {
     hero: (
       <section className="about-hero">
         <Image
-          src="/blog/burano-colorful-houses-canal.jpg"
+          src="/blog/burano-colorful-houses-canal.webp"
           alt={dict.about.heritageImageAlt}
           fill
           preload

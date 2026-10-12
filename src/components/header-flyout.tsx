@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { publicImageSrc } from "@/lib/public-image";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@/components/localized-link";
 import { useCartStore, type CartItem } from "@/lib/cart-store";
@@ -155,7 +156,7 @@ function Thumb({ src, name }: { src: string | null; name: string }) {
   }
   return (
     <span className="hf-thumb" aria-hidden="true">
-      <Image src={src} alt="" fill sizes="56px" quality={95} className="object-cover" />
+      <Image src={publicImageSrc(src)} alt="" fill sizes="56px" quality={95} className="object-cover" />
       <span className="hf-sr">{name}</span>
     </span>
   );

@@ -39,7 +39,13 @@ export function AnimatedHeading({
           <span
             key={i}
             className="word-in inline-block"
-            style={{ "--word-delay": `${delay}ms` } as CSSProperties}
+            style={
+              {
+                "--word-delay": `${delay}ms`,
+                // The scroll-linked version (globals.css) staggers by position instead.
+                "--word-i": Math.min(wordIndex, MAX_DELAY_MS / STEP_MS),
+              } as CSSProperties
+            }
           >
             {part}
           </span>

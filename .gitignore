@@ -110,3 +110,26 @@ next-env.d.ts
 /src/lib/admin-nav.test.ts
 /src/lib/require-admin.ts
 /src/lib/require-admin.test.ts
+
+# Local browser-automation logs and screenshots (also keeps Tailwind from rescanning them)
+/.playwright-mcp/
+
+# Database dumps/backups — may contain customer data; never commit
+*.dump
+*.sql.gz
+/local-db-backup-*
+
+# Internal audit/QA reports and design critiques — they describe weaknesses
+# of the live site, so they stay off the public repo
+/*_REPORT.md
+/*_AUDIT.md
+/docs/security-audit.md
+/.impeccable/critique/
+
+# Raw source media and scratch files (supplier photos, phone videos, probes);
+# the shipped, processed images live in public/
+/new/
+/img/
+/tmp/
+/*.mp4
+/test-dropdown.mjs

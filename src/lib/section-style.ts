@@ -1,3 +1,4 @@
+import { optimizedImageUrl } from "@/lib/optimized-image";
 import type { SectionStyle } from "@/lib/page-layout";
 
 /** True when the section needs the layer element (video and/or overlay). */
@@ -42,7 +43,8 @@ export function sectionInlineStyle(style?: SectionStyle): Record<string, string>
   if (!style) return css;
   if (style.bg) css.background = style.bg;
   if (style.bgImage) {
-    css.backgroundImage = `url("${style.bgImage}")`;
+    // Through the image optimizer, at a full-width size.
+    css.backgroundImage = `url("${optimizedImageUrl(style.bgImage, 1920)}")`;
     css.backgroundSize =
       style.bgFit === "custom" ? `${style.bgScale ?? 100}% auto` : (style.bgFit ?? "cover");
     css.backgroundPosition = `${style.bgPositionX ?? 50}% ${style.bgPositionY ?? 50}%`;
@@ -64,6 +66,11 @@ export function sectionInlineStyle(style?: SectionStyle): Record<string, string>
   if (style.color) css.color = style.color;
   if (style.align) css.textAlign = style.align;
   if (style.maxWidth !== undefined) {
+    // Auto side margins on a flex child disable cross-axis stretching.
+    // Pinned/absolute content has no intrinsic width, so max-width alone can
+    // shrink the entire section (and its preview) to a vertical strip.
+    css.width = "100%";
+    css.boxSizing = "border-box";
     css.maxWidth = `${style.maxWidth}rem`;
     css.marginInline = "auto";
   }
@@ -81,6 +88,15 @@ export function sectionInlineStyle(style?: SectionStyle): Record<string, string>
 
 /** A section's display options as data attributes (`backLink: "off"` becomes
  *  `data-opt-back-link="off"`), which the page's CSS reacts to. */
+/** Number-valued options (sliders) as CSS variables: --opt-<kebab-key>. */
+export function optionVars(options?: Record<string, string>): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const [key, value] of Object.entries(options ?? {}))
+    if (/^-?\d+(\.\d+)?$/.test(value))
+      out[`--opt-${key.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)}`] = value;
+  return out;
+}
+
 export function optionAttributes(options?: Record<string, string>): Record<string, string> {
   const out: Record<string, string> = {};
   for (const [key, value] of Object.entries(options ?? {})) {

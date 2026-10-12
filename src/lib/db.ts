@@ -67,6 +67,13 @@ const TRANSIENT_CODES = new Set([
   "P2024",
   "P2028",
   "P2037",
+  // Prisma's pg adapter can forward native network codes with a generic
+  // invocation message, so message matching alone misses these failures.
+  "ETIMEDOUT",
+  "ECONNRESET",
+  "ECONNREFUSED",
+  "EPIPE",
+  "EAI_AGAIN",
 ]);
 const TRANSIENT_MESSAGE =
   /connection terminated|econnreset|econnrefused|etimedout|timeout exceeded when trying to connect|connection timeout|can't reach database|too many (clients|connections)|server closed the connection|terminating connection|socket hang up/i;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { localizedDescription, localizedName, localizedStory } from "./product-i18n";
+import { catalogDisplayName, localizedDescription, localizedName, localizedStory } from "./product-i18n";
 
 const product = {
   name: "Bracciale Laguna Azzurra", // Italian: the source language
@@ -58,5 +58,15 @@ describe("localizedStory", () => {
   it("falls back to Italian when English is missing, and is never undefined", () => {
     expect(localizedStory({ name: "Solo italiano", story: "Storia." }, "en")).toBe("Storia.");
     expect(localizedStory({ name: "Solo nome" }, "en")).toBe("");
+  });
+});
+
+describe("dated catalog labels", () => {
+  it.each(["Perle Rosa · Ottobre 2026", "Perle Rosa - October 2026", "Perle Rosa Ottobre 2026"])("cleans %s", (name) => {
+    expect(catalogDisplayName(name)).toBe("Perle Rosa");
+  });
+  it("cleans localized names while preserving other dates", () => {
+    expect(localizedName({ name: "Perle Rosa · Ottobre 2026", nameEn: "Pink Pearls · October 2026" }, "en")).toBe("Pink Pearls");
+    expect(catalogDisplayName("Perle Rosa · Ottobre 2025")).toBe("Perle Rosa · Ottobre 2025");
   });
 });

@@ -9,6 +9,14 @@ const en = {
   sortNewest: "Newest",
   sortPriceAsc: "Price: low to high",
   sortPriceDesc: "Price: high to low",
+  // Short forms for the phone's segmented control (the full ones stay for
+  // screen readers and wider screens).
+  sortNewestShort: "Newest",
+  // Under the price chart: how many pieces the chosen range holds.
+  rangeOne: "1 piece in this range",
+  rangeMany: "{n} pieces in this range",
+  sortPriceAscShort: "Price ↑",
+  sortPriceDescShort: "Price ↓",
   pieceCount: (n: number) => (n === 1 ? "1 piece" : `${n} pieces`),
   emptyHint: "Try removing a filter, or start from one of these.",
 };
@@ -20,6 +28,11 @@ const it: ShopCopy = {
   sortNewest: "Più recenti",
   sortPriceAsc: "Prezzo: dal più basso",
   sortPriceDesc: "Prezzo: dal più alto",
+  sortNewestShort: "Novità",
+  rangeOne: "1 gioiello in questa fascia",
+  rangeMany: "{n} gioielli in questa fascia",
+  sortPriceAscShort: "Prezzo ↑",
+  sortPriceDescShort: "Prezzo ↓",
   pieceCount: (n) => (n === 1 ? "1 gioiello" : `${n} gioielli`),
   emptyHint: "Prova a togliere un filtro, oppure parti da qui.",
 };

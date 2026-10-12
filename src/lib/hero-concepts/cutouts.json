@@ -1,0 +1,674 @@
+[
+ {
+  "slug": "bangle-cremisi-3c2860",
+  "src": "/hero/cutouts/bangle-cremisi-3c2860.dfac4f29.webp",
+  "width": 854,
+  "height": 407,
+  "contrast": 78,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-arabeschi-sabbia-e-nero-ottobre-2026",
+  "src": "/hero/cutouts/bracciale-arabeschi-sabbia-e-nero-ottobre-2026.5a762277.webp",
+  "width": 355,
+  "height": 406,
+  "contrast": 65,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-arabeschi-turchese-e-corallo-ottobre-2026",
+  "src": "/hero/cutouts/bracciale-arabeschi-turchese-e-corallo-ottobre-2026.a1e20026.webp",
+  "width": 329,
+  "height": 407,
+  "contrast": 51,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-avvolto-ambra-8b8166",
+  "src": "/hero/cutouts/bracciale-avvolto-ambra-8b8166.b0dcfc4d.webp",
+  "width": 836,
+  "height": 374,
+  "contrast": 79,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-avvolto-chiaro-di-luna-07cf09",
+  "src": "/hero/cutouts/bracciale-avvolto-chiaro-di-luna-07cf09.80f022d3.webp",
+  "width": 836,
+  "height": 395,
+  "contrast": 53,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-avvolto-egeo-6bbcaa",
+  "src": "/hero/cutouts/bracciale-avvolto-egeo-6bbcaa.6f24fed3.webp",
+  "width": 871,
+  "height": 388,
+  "contrast": 46,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-avvolto-polvere-di-stelle-f1788c",
+  "src": "/hero/cutouts/bracciale-avvolto-polvere-di-stelle-f1788c.08bfdbbd.webp",
+  "width": 839,
+  "height": 397,
+  "contrast": 46,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-avvolto-quarzo-rosa-f4920c",
+  "src": "/hero/cutouts/bracciale-avvolto-quarzo-rosa-f4920c.168cfcc8.webp",
+  "width": 895,
+  "height": 385,
+  "contrast": 52,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-avvolto-salvia-e-oro-fec6dc",
+  "src": "/hero/cutouts/bracciale-avvolto-salvia-e-oro-fec6dc.b616e671.webp",
+  "width": 857,
+  "height": 400,
+  "contrast": 51,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-boccio-di-lilla-5a445c",
+  "src": "/hero/cutouts/bracciale-boccio-di-lilla-5a445c.f67befbd.webp",
+  "width": 882,
+  "height": 896,
+  "contrast": 45,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-bolle-di-cielo-bee6fa",
+  "src": "/hero/cutouts/bracciale-bolle-di-cielo-bee6fa.f8f7042d.webp",
+  "width": 908,
+  "height": 908,
+  "contrast": 52,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-caraibi-88bfe3",
+  "src": "/hero/cutouts/bracciale-caraibi-88bfe3.c06c5db3.webp",
+  "width": 798,
+  "height": 882,
+  "contrast": 45,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-carnevale-c35a85",
+  "src": "/hero/cutouts/bracciale-carnevale-c35a85.07ef16ab.webp",
+  "width": 799,
+  "height": 763,
+  "contrast": 73,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-fiore-di-onice-1c6c6e",
+  "src": "/hero/cutouts/bracciale-fiore-di-onice-1c6c6e.257f1892.webp",
+  "width": 872,
+  "height": 912,
+  "contrast": 47,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-foresta-dorata-37b0e2",
+  "src": "/hero/cutouts/bracciale-foresta-dorata-37b0e2.015e96d3.webp",
+  "width": 870,
+  "height": 900,
+  "contrast": 53,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-fuoco-di-granato-9ff520",
+  "src": "/hero/cutouts/bracciale-fuoco-di-granato-9ff520.f30302ab.webp",
+  "width": 787,
+  "height": 844,
+  "contrast": 71,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-laguna-azzurra-5ae8cc",
+  "src": "/hero/cutouts/bracciale-laguna-azzurra-5ae8cc.b63dc17a.webp",
+  "width": 887,
+  "height": 977,
+  "contrast": 47,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-medaglioni-rosa-e-sabbia-ottobre-2026",
+  "src": "/hero/cutouts/bracciale-medaglioni-rosa-e-sabbia-ottobre-2026.9b4c0085.webp",
+  "width": 380,
+  "height": 414,
+  "contrast": 60,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-medaglioni-turchesi-ottobre-2026",
+  "src": "/hero/cutouts/bracciale-medaglioni-turchesi-ottobre-2026.7d71a254.webp",
+  "width": 348,
+  "height": 422,
+  "contrast": 47,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-perle-rosa-ottobre-2026",
+  "src": "/hero/cutouts/bracciale-perle-rosa-ottobre-2026.41a11a95.webp",
+  "width": 1036,
+  "height": 1164,
+  "contrast": 63,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-polvere-d-oro-perlato-13ecaa",
+  "src": "/hero/cutouts/bracciale-polvere-d-oro-perlato-13ecaa.4e6618d7.webp",
+  "width": 827,
+  "height": 842,
+  "contrast": 52,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-polvere-d-oro-rosa-380f82",
+  "src": "/hero/cutouts/bracciale-polvere-d-oro-rosa-380f82.594518b3.webp",
+  "width": 876,
+  "height": 885,
+  "contrast": 54,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-quadrati-cobalto-ottobre-2026",
+  "src": "/hero/cutouts/bracciale-quadrati-cobalto-ottobre-2026.52c00eeb.webp",
+  "width": 293,
+  "height": 471,
+  "contrast": 42,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-quadrati-notte-ottobre-2026",
+  "src": "/hero/cutouts/bracciale-quadrati-notte-ottobre-2026.49e106b5.webp",
+  "width": 292,
+  "height": 444,
+  "contrast": 47,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-quadrati-rosso-ottobre-2026",
+  "src": "/hero/cutouts/bracciale-quadrati-rosso-ottobre-2026.f8711138.webp",
+  "width": 296,
+  "height": 459,
+  "contrast": 69,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-quadrati-verde-ottobre-2026",
+  "src": "/hero/cutouts/bracciale-quadrati-verde-ottobre-2026.a9fd4fce.webp",
+  "width": 290,
+  "height": 410,
+  "contrast": 60,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-rame-di-mezzanotte-ca793a",
+  "src": "/hero/cutouts/bracciale-rame-di-mezzanotte-ca793a.a476dab1.webp",
+  "width": 702,
+  "height": 789,
+  "contrast": 49,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-rosa-toscana-735d23",
+  "src": "/hero/cutouts/bracciale-rosa-toscana-735d23.f5658683.webp",
+  "width": 805,
+  "height": 748,
+  "contrast": 71,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-sfere-notte-ottobre-2026",
+  "src": "/hero/cutouts/bracciale-sfere-notte-ottobre-2026.cde6f213.webp",
+  "width": 318,
+  "height": 358,
+  "contrast": 46,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "bracciale-sfere-rosso-ottobre-2026",
+  "src": "/hero/cutouts/bracciale-sfere-rosso-ottobre-2026.b3f06197.webp",
+  "width": 308,
+  "height": 396,
+  "contrast": 67,
+  "kind": "bracelet"
+ },
+ {
+  "slug": "collana-acquamarina-98782c",
+  "src": "/hero/cutouts/collana-acquamarina-98782c.8f963b9c.webp",
+  "width": 849,
+  "height": 1166,
+  "contrast": 35,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-ametista-9e7d11",
+  "src": "/hero/cutouts/collana-ametista-9e7d11.646d961b.webp",
+  "width": 909,
+  "height": 1113,
+  "contrast": 42,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-arabeschi-sabbia-e-nero-lunga-ottobre-2026",
+  "src": "/hero/cutouts/collana-arabeschi-sabbia-e-nero-lunga-ottobre-2026.7a40fe11.webp",
+  "width": 828,
+  "height": 834,
+  "contrast": 58,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-arabeschi-sabbia-e-nero-ottobre-2026",
+  "src": "/hero/cutouts/collana-arabeschi-sabbia-e-nero-ottobre-2026.15e6e25e.webp",
+  "width": 794,
+  "height": 747,
+  "contrast": 60,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-arabeschi-turchese-e-corallo-lunga-ottobre-2026",
+  "src": "/hero/cutouts/collana-arabeschi-turchese-e-corallo-lunga-ottobre-2026.13b00a48.webp",
+  "width": 641,
+  "height": 843,
+  "contrast": 54,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-arabeschi-turchese-e-corallo-ottobre-2026",
+  "src": "/hero/cutouts/collana-arabeschi-turchese-e-corallo-ottobre-2026.a3228907.webp",
+  "width": 709,
+  "height": 703,
+  "contrast": 47,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-arcobaleno-216e66",
+  "src": "/hero/cutouts/collana-arcobaleno-216e66.f0d2f65a.webp",
+  "width": 917,
+  "height": 1109,
+  "contrast": 62,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-cielo-d-estate-4cf739",
+  "src": "/hero/cutouts/collana-cielo-d-estate-4cf739.4fbb4439.webp",
+  "width": 995,
+  "height": 1061,
+  "contrast": 33,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-fiamma-scarlatta-17effb",
+  "src": "/hero/cutouts/collana-fiamma-scarlatta-17effb.652e2212.webp",
+  "width": 849,
+  "height": 1200,
+  "contrast": 66,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-fiore-notturno-15492b",
+  "src": "/hero/cutouts/collana-fiore-notturno-15492b.5f4055fe.webp",
+  "width": 901,
+  "height": 1072,
+  "contrast": 47,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-foglie-laguna-ottobre-2026",
+  "src": "/hero/cutouts/collana-foglie-laguna-ottobre-2026.9d2aa390.webp",
+  "width": 921,
+  "height": 946,
+  "contrast": 56,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-fucsia-reale-94d36e",
+  "src": "/hero/cutouts/collana-fucsia-reale-94d36e.a7d6dafe.webp",
+  "width": 944,
+  "height": 939,
+  "contrast": 62,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-gemme-miste-6e735f",
+  "src": "/hero/cutouts/collana-gemme-miste-6e735f.b2983ab9.webp",
+  "width": 897,
+  "height": 1075,
+  "contrast": 58,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-medaglioni-rosa-e-sabbia-ottobre-2026",
+  "src": "/hero/cutouts/collana-medaglioni-rosa-e-sabbia-ottobre-2026.5d6479a1.webp",
+  "width": 429,
+  "height": 447,
+  "contrast": 61,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-medaglioni-turchesi-ottobre-2026",
+  "src": "/hero/cutouts/collana-medaglioni-turchesi-ottobre-2026.a497cea9.webp",
+  "width": 393,
+  "height": 455,
+  "contrast": 50,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-notte-stellata-92b5fd",
+  "src": "/hero/cutouts/collana-notte-stellata-92b5fd.3c58db9e.webp",
+  "width": 789,
+  "height": 1090,
+  "contrast": 32,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-onde-di-smeraldo-143dbf",
+  "src": "/hero/cutouts/collana-onde-di-smeraldo-143dbf.5ecc783d.webp",
+  "width": 903,
+  "height": 1094,
+  "contrast": 43,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-papavero-70d5a3",
+  "src": "/hero/cutouts/collana-papavero-70d5a3.9b506ab9.webp",
+  "width": 828,
+  "height": 1295,
+  "contrast": 52,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-peonia-dorata-46a3de",
+  "src": "/hero/cutouts/collana-peonia-dorata-46a3de.7ee14b8d.webp",
+  "width": 1017,
+  "height": 1171,
+  "contrast": 65,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-perla-celeste-5e4eb6",
+  "src": "/hero/cutouts/collana-perla-celeste-5e4eb6.ff71aa78.webp",
+  "width": 951,
+  "height": 1066,
+  "contrast": 50,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-perla-rosa-antico-f396d8",
+  "src": "/hero/cutouts/collana-perla-rosa-antico-f396d8.e1d02b82.webp",
+  "width": 869,
+  "height": 1214,
+  "contrast": 53,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-perla-rosa-e-salvia-ca0636",
+  "src": "/hero/cutouts/collana-perla-rosa-e-salvia-ca0636.acde04bc.webp",
+  "width": 772,
+  "height": 1218,
+  "contrast": 55,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-perle-rosa-ottobre-2026",
+  "src": "/hero/cutouts/collana-perle-rosa-ottobre-2026.c28240c3.webp",
+  "width": 1009,
+  "height": 1191,
+  "contrast": 61,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-perle-salvia-ottobre-2026",
+  "src": "/hero/cutouts/collana-perle-salvia-ottobre-2026.00619def.webp",
+  "width": 1024,
+  "height": 1173,
+  "contrast": 60,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-rame-antico-85514c",
+  "src": "/hero/cutouts/collana-rame-antico-85514c.4afc2de7.webp",
+  "width": 959,
+  "height": 1067,
+  "contrast": 50,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-rubino-ff1b2a",
+  "src": "/hero/cutouts/collana-rubino-ff1b2a.7e017922.webp",
+  "width": 894,
+  "height": 1090,
+  "contrast": 72,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-sfere-notte-ottobre-2026",
+  "src": "/hero/cutouts/collana-sfere-notte-ottobre-2026.e15eb1dc.webp",
+  "width": 421,
+  "height": 507,
+  "contrast": 46,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-sfere-rosso-ottobre-2026",
+  "src": "/hero/cutouts/collana-sfere-rosso-ottobre-2026.4c443637.webp",
+  "width": 429,
+  "height": 490,
+  "contrast": 66,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-smeraldo-e-argento-a0dd26",
+  "src": "/hero/cutouts/collana-smeraldo-e-argento-a0dd26.e771bd91.webp",
+  "width": 893,
+  "height": 1108,
+  "contrast": 55,
+  "kind": "necklace"
+ },
+ {
+  "slug": "collana-turchese-sfaccettato-8e4504",
+  "src": "/hero/cutouts/collana-turchese-sfaccettato-8e4504.ec5e2a40.webp",
+  "width": 867,
+  "height": 959,
+  "contrast": 41,
+  "kind": "necklace"
+ },
+ {
+  "slug": "orecchini-arabeschi-sabbia-e-nero-ottobre-2026",
+  "src": "/hero/cutouts/orecchini-arabeschi-sabbia-e-nero-ottobre-2026.90853563.webp",
+  "width": 380,
+  "height": 339,
+  "contrast": 57,
+  "kind": "earrings"
+ },
+ {
+  "slug": "orecchini-arabeschi-turchese-e-corallo-ottobre-2026",
+  "src": "/hero/cutouts/orecchini-arabeschi-turchese-e-corallo-ottobre-2026.38e0bbc2.webp",
+  "width": 560,
+  "height": 461,
+  "contrast": 65,
+  "kind": "earrings"
+ },
+ {
+  "slug": "orecchini-blu-profondo-fa4c96",
+  "src": "/hero/cutouts/orecchini-blu-profondo-fa4c96.fe5dec44.webp",
+  "width": 534,
+  "height": 791,
+  "contrast": 49,
+  "kind": "earrings"
+ },
+ {
+  "slug": "orecchini-foglia-di-menta-9c749a",
+  "src": "/hero/cutouts/orecchini-foglia-di-menta-9c749a.f0e102b3.webp",
+  "width": 571,
+  "height": 845,
+  "contrast": 53,
+  "kind": "earrings"
+ },
+ {
+  "slug": "orecchini-foglie-laguna-ottobre-2026",
+  "src": "/hero/cutouts/orecchini-foglie-laguna-ottobre-2026.ad8b7993.webp",
+  "width": 562,
+  "height": 645,
+  "contrast": 61,
+  "kind": "earrings"
+ },
+ {
+  "slug": "orecchini-giardino-pastello-d650a2",
+  "src": "/hero/cutouts/orecchini-giardino-pastello-d650a2.bb6a9936.webp",
+  "width": 745,
+  "height": 934,
+  "contrast": 57,
+  "kind": "earrings"
+ },
+ {
+  "slug": "orecchini-goccia-di-ghiaccio-51362e",
+  "src": "/hero/cutouts/orecchini-goccia-di-ghiaccio-51362e.458ea5d6.webp",
+  "width": 762,
+  "height": 1012,
+  "contrast": 54,
+  "kind": "earrings"
+ },
+ {
+  "slug": "orecchini-goccia-di-rubino-9ad623",
+  "src": "/hero/cutouts/orecchini-goccia-di-rubino-9ad623.64ba89db.webp",
+  "width": 512,
+  "height": 942,
+  "contrast": 71,
+  "kind": "earrings"
+ },
+ {
+  "slug": "orecchini-medaglioni-rosa-e-sabbia-ottobre-2026",
+  "src": "/hero/cutouts/orecchini-medaglioni-rosa-e-sabbia-ottobre-2026.86ca7b0a.webp",
+  "width": 297,
+  "height": 469,
+  "contrast": 54,
+  "kind": "earrings"
+ },
+ {
+  "slug": "orecchini-medaglioni-turchesi-ottobre-2026",
+  "src": "/hero/cutouts/orecchini-medaglioni-turchesi-ottobre-2026.b0e4e22e.webp",
+  "width": 309,
+  "height": 483,
+  "contrast": 36,
+  "kind": "earrings"
+ },
+ {
+  "slug": "orecchini-perle-rosa-ottobre-2026",
+  "src": "/hero/cutouts/orecchini-perle-rosa-ottobre-2026.0bba9145.webp",
+  "width": 563,
+  "height": 577,
+  "contrast": 65,
+  "kind": "earrings"
+ },
+ {
+  "slug": "orecchini-perle-salvia-ottobre-2026",
+  "src": "/hero/cutouts/orecchini-perle-salvia-ottobre-2026.3cd602f2.webp",
+  "width": 578,
+  "height": 583,
+  "contrast": 65,
+  "kind": "earrings"
+ },
+ {
+  "slug": "orecchini-petalo-di-rosa-e081a0",
+  "src": "/hero/cutouts/orecchini-petalo-di-rosa-e081a0.fe001b08.webp",
+  "width": 486,
+  "height": 939,
+  "contrast": 67,
+  "kind": "earrings"
+ },
+ {
+  "slug": "orecchini-quadrati-acqua-ottobre-2026",
+  "src": "/hero/cutouts/orecchini-quadrati-acqua-ottobre-2026.08af5cfe.webp",
+  "width": 204,
+  "height": 277,
+  "contrast": 57,
+  "kind": "earrings"
+ },
+ {
+  "slug": "orecchini-quadrati-cobalto-ottobre-2026",
+  "src": "/hero/cutouts/orecchini-quadrati-cobalto-ottobre-2026.d94e99d7.webp",
+  "width": 208,
+  "height": 287,
+  "contrast": 34,
+  "kind": "earrings"
+ },
+ {
+  "slug": "orecchini-quadrati-miele-ottobre-2026",
+  "src": "/hero/cutouts/orecchini-quadrati-miele-ottobre-2026.265e8c9a.webp",
+  "width": 201,
+  "height": 275,
+  "contrast": 73,
+  "kind": "earrings"
+ },
+ {
+  "slug": "orecchini-quadrati-notte-ottobre-2026",
+  "src": "/hero/cutouts/orecchini-quadrati-notte-ottobre-2026.251806f4.webp",
+  "width": 210,
+  "height": 290,
+  "contrast": 44,
+  "kind": "earrings"
+ },
+ {
+  "slug": "orecchini-quadrati-rosso-ottobre-2026",
+  "src": "/hero/cutouts/orecchini-quadrati-rosso-ottobre-2026.54182a6e.webp",
+  "width": 211,
+  "height": 286,
+  "contrast": 66,
+  "kind": "earrings"
+ },
+ {
+  "slug": "orecchini-quadrati-verde-ottobre-2026",
+  "src": "/hero/cutouts/orecchini-quadrati-verde-ottobre-2026.d7efe973.webp",
+  "width": 206,
+  "height": 283,
+  "contrast": 50,
+  "kind": "earrings"
+ },
+ {
+  "slug": "orecchini-sabbia-e-notte-ottobre-2026",
+  "src": "/hero/cutouts/orecchini-sabbia-e-notte-ottobre-2026.e9fa6e7d.webp",
+  "width": 253,
+  "height": 313,
+  "contrast": 67,
+  "kind": "earrings"
+ },
+ {
+  "slug": "orecchini-sassolino-di-onice-6bae0d",
+  "src": "/hero/cutouts/orecchini-sassolino-di-onice-6bae0d.4b5e6ff9.webp",
+  "width": 719,
+  "height": 1047,
+  "contrast": 50,
+  "kind": "earrings"
+ },
+ {
+  "slug": "orecchini-sfere-notte-ottobre-2026",
+  "src": "/hero/cutouts/orecchini-sfere-notte-ottobre-2026.7f2be1c1.webp",
+  "width": 244,
+  "height": 226,
+  "contrast": 46,
+  "kind": "earrings"
+ },
+ {
+  "slug": "orecchini-sfere-rosso-ottobre-2026",
+  "src": "/hero/cutouts/orecchini-sfere-rosso-ottobre-2026.358a7f5a.webp",
+  "width": 239,
+  "height": 226,
+  "contrast": 75,
+  "kind": "earrings"
+ },
+ {
+  "slug": "orecchini-turchese-e-corallo-ottobre-2026",
+  "src": "/hero/cutouts/orecchini-turchese-e-corallo-ottobre-2026.b4a9c76d.webp",
+  "width": 211,
+  "height": 313,
+  "contrast": 57,
+  "kind": "earrings"
+ }
+]

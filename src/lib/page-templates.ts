@@ -63,17 +63,17 @@ const original = (): BuilderDoc => ({
 // Pieces used by the editorial rows (files that ship with the site).
 const PIECES = {
   earrings: {
-    src: "/products/orecchini-in-vetro-di-murano/orecchini-petalo-di-rosa-e081a0.png",
+    src: "/products/orecchini-in-vetro-di-murano/orecchini-petalo-di-rosa-e081a0.webp",
     href: "/products/orecchini-petalo-di-rosa-e081a0",
     name: "Orecchini Petalo di Rosa",
   },
   necklace: {
-    src: "/products/collane-in-vetro-di-murano/collana-acquamarina-98782c.png",
+    src: "/products/collane-in-vetro-di-murano/collana-acquamarina-98782c.webp",
     href: "/products/collana-acquamarina-98782c",
     name: "Collana Acquamarina",
   },
   bracelet: {
-    src: "/products/bracciali-in-vetro-di-murano/bangle-cremisi-3c2860.png",
+    src: "/products/bracciali-in-vetro-di-murano/bangle-cremisi-3c2860.webp",
     href: "/products/bangle-cremisi-3c2860",
     name: "Bangle Cremisi",
   },
@@ -111,7 +111,7 @@ const HOME: PageTemplate[] = [
       "The film fills the band; your store's name types itself out over a soft veil, then the tagline and the button.",
     style: {
       bgVideo: "/hero/hero-atelier.mp4",
-      bgImage: "/hero/hero-atelier-poster.jpg",
+      bgImage: "/hero/hero-atelier-poster.webp",
       overlayColor: "var(--site-bg)",
       overlayStrength: 90,
       overlayFade: "left",
@@ -186,7 +186,7 @@ const HOME: PageTemplate[] = [
       heading("{{store.name}}", "l", { h1: true, align: "center", rule: "gold" }),
       {
         type: "image",
-        src: "/hero/hero-atelier-poster.jpg",
+        src: "/hero/hero-atelier-poster.webp",
         alt: "",
         style: { h: 28 },
       },
@@ -220,7 +220,7 @@ const HOME: PageTemplate[] = [
     description:
       "A still photograph fills the opening behind a large ivory headline, with a dark veil for readability.",
     style: {
-      bgImage: "/hero/hero-atelier-poster.jpg",
+      bgImage: "/hero/hero-atelier-poster.webp",
       overlayColor: "#102b23",
       overlayStrength: 80,
       minHeight: 82,
@@ -264,7 +264,7 @@ const HOME: PageTemplate[] = [
         [
           {
             type: "image",
-            src: "/hero/hero-atelier-poster.jpg",
+            src: "/hero/hero-atelier-poster.webp",
             alt: "",
             style: { h: 34, mh: 26 },
           },
@@ -311,7 +311,7 @@ const HOME: PageTemplate[] = [
         [
           {
             type: "image",
-            src: "/hero/hero-atelier-poster.jpg",
+            src: "/hero/hero-atelier-poster.webp",
             alt: "",
             style: { h: 32, mh: 24 },
           },
@@ -525,22 +525,6 @@ const HOME: PageTemplate[] = [
     ),
   },
   {
-    id: "home-reasons",
-    page: "home",
-    recreates: "reasons",
-    name: "Home · Why Murano (story rows)",
-    description:
-      "Three editorial rows that alternate sides: title, gold rule, text and button beside a piece with its card.",
-    doc: single(
-      [
-        storyRow(1, PIECES.earrings, "right"),
-        storyRow(2, PIECES.necklace, "left"),
-        storyRow(3, PIECES.bracelet, "right"),
-      ],
-      { gap: 0 }
-    ),
-  },
-  {
     id: "home-faq",
     page: "home",
     recreates: "faq",
@@ -639,7 +623,7 @@ const ABOUT: PageTemplate[] = [
     description:
       "Burano's coloured houses behind a deep veil, with the label, the title and the intro.",
     style: {
-      bgImage: "/blog/burano-colorful-houses-canal.jpg",
+      bgImage: "/blog/burano-colorful-houses-canal.webp",
       overlayColor: "var(--site-primary)",
       overlayStrength: 82,
       overlayFade: "left",
@@ -685,7 +669,7 @@ const ABOUT: PageTemplate[] = [
         text: "{{about.heritageBody1}}\n\n{{about.heritageBody2}}",
         cta: "{{about.guideLinkCta}}",
         href: "/murano-glass",
-        src: "/about/venice-moored-gondolas.jpg",
+        src: "/about/venice-moored-gondolas.webp",
         alt: "Gondolas moored in Venice",
         side: "right",
         motion: { type: "rise" },
@@ -867,12 +851,6 @@ const OTHER: PageTemplate[] = [
     "related",
     "Product · You might also like (as it is)",
     "Related pieces from the same family."
-  ),
-  asItIs(
-    "product",
-    "giftCard",
-    "Product · Gift card (as it is)",
-    "The personalised gift card promotion."
   ),
   {
     id: "product-promise",
@@ -1331,5 +1309,16 @@ export function sectionStylesFor(page: PageTarget, sectionId: string) {
     page === "home" && sectionId === "hero"
       ? PAGE_TEMPLATES.find((template) => template.id === "home-hero-split")
       : recreateTemplateFor(page, sectionId);
-  return section ? createSectionDesigns(page, section, source) : [];
+  if (!section) return [];
+  // The ten built-in numbered section designs are always available, including
+  // for native-content sections whose source would otherwise be only a shell.
+  const base: PageTemplate = {
+    id: `section-${page}-${sectionId}-original`,
+    page,
+    name: section.label,
+    description: section.hint,
+    doc: source?.doc ?? original(),
+    style: source?.style,
+  };
+  return createSectionDesigns(page, section, base);
 }

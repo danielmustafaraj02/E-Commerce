@@ -3,6 +3,12 @@ import { parseStyle, resolveLayout, HOME_SECTIONS } from "./page-layout";
 import { sectionInlineStyle } from "./section-style";
 
 describe("section background controls", () => {
+  it("gives a centered section a definite width so absolute scroll scenes cannot collapse it", () => {
+    expect(sectionInlineStyle({ maxWidth: 92, padInline: 3 })).toMatchObject({
+      width: "100%", boxSizing: "border-box", maxWidth: "92rem", marginInline: "auto", paddingInline: "3rem",
+    });
+  });
+
   it("preserves custom background placement and spacing through saving", () => {
     const stored = {
       bg: "#e7e4dc",
@@ -22,7 +28,8 @@ describe("section background controls", () => {
     expect(saved).toMatchObject(stored);
     expect(sectionInlineStyle(saved)).toMatchObject({
       background: "#e7e4dc",
-      backgroundImage: 'url("/products/photo.png")',
+      // Through the image optimizer, under the photo's current WebP name.
+      backgroundImage: 'url("/_next/image?url=%2Fproducts%2Fphoto.webp&w=1920&q=75")',
       backgroundSize: "175% auto",
       backgroundPosition: "25% 80%",
       backgroundRepeat: "repeat-x",
@@ -81,5 +88,22 @@ describe("section background controls", () => {
     expect(css.backgroundPosition).toBeUndefined();
     expect(css.backgroundSize).toBeUndefined();
     expect(css.position).toBe("relative");
+  });
+});
+
+describe("slider options", () => {
+  it("become CSS variables next to their data-opt markers", async () => {
+    const { optionVars } = await import("./section-style");
+    expect(optionVars({ photoWidth: "45", gallery: "right", columnGap: "2.5" })).toEqual({
+      "--opt-photo-width": "45",
+      "--opt-column-gap": "2.5",
+    });
+  });
+
+  it("are clamped, snapped to their step and dropped at their default", async () => {
+    const { parseOptions, PRODUCT_TOP_OPTIONS } = await import("./page-layout");
+    expect(
+      parseOptions({ photoWidth: "99", columnGap: "2.3", titleScale: "100", buttonRadius: 8, stick: "info" }, PRODUCT_TOP_OPTIONS)
+    ).toEqual({ photoWidth: "70", columnGap: "2.5", buttonRadius: "8", stick: "info" });
   });
 });

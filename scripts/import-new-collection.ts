@@ -42,8 +42,8 @@ for (const product of collection.products) {
     const target = resolve(`public${image.url}`);
     if (!existsSync(target)) throw new Error(`Missing prepared asset: ${image.url}`);
     const hash = (file: string) => createHash("sha256").update(readFileSync(file)).digest("hex");
-    if (hash(image.source) !== hash(target))
-      throw new Error(`Prepared asset differs from its source: ${image.url}`);
+    if ((image.preparedSha256 ?? hash(image.source)) !== hash(target))
+      throw new Error(`Prepared asset checksum mismatch: ${image.url}`);
   }
 }
 console.log(
@@ -133,7 +133,11 @@ if (!apply) {
                   unlisted: !publish,
                   trackInventory: true,
                   categoryId: categories.get(kind),
-                  images: { create: images.map(({ source: _source, ...image }) => image) },
+                  images: {
+                    create: images.map(
+                      ({ source: _source, preparedSha256: _preparedSha256, ...image }) => image
+                    ),
+                  },
                 },
               });
               ids.set(product.slug, row.id);

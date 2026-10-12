@@ -1,14 +1,18 @@
 import { z } from "zod";
 
-// The personalised gift card add-on: a printed card packed with the order.
-// Shared by the designer page, the cart, checkout validation, order creation
-// and the admin order page, so the limits and the printed text agree.
+export { giftCardLines } from "@/lib/gift-card-lines";
+
+// The personalised gift card add-on: a digital card, bought only together with
+// an order and emailed to the recipient once that order is paid. Shared by the
+// designer page, the cart, checkout validation, order creation, the email, the
+// card's own page and the admin order page, so the limits and the text agree.
 
 export const GIFT_CARD_FONTS = ["serif", "script", "classic", "modern", "handwritten"] as const;
 export type GiftCardFont = (typeof GIFT_CARD_FONTS)[number];
 
 export const GIFT_CARD_MESSAGE_MAX = 200;
 export const GIFT_CARD_NAME_MAX = 40;
+export const GIFT_CARD_EMAIL_MAX = 254;
 
 // Little printed motifs the customer drags onto the front, at most three so
 // the message stays the point. Positions are the motif's centre as a
@@ -33,6 +37,8 @@ export const giftCardSchema = z.object({
   message: z.string().trim().min(1).max(GIFT_CARD_MESSAGE_MAX),
   recipient: z.string().trim().max(GIFT_CARD_NAME_MAX).optional(),
   sender: z.string().trim().max(GIFT_CARD_NAME_MAX).optional(),
+  // Where the card is emailed once the order is paid.
+  recipientEmail: z.string().trim().toLowerCase().email().max(GIFT_CARD_EMAIL_MAX),
   font: z.enum(GIFT_CARD_FONTS),
   // Optional: carts saved before these existed hold cards without them.
   stickers: z.array(stickerSchema).max(GIFT_CARD_STICKER_MAX).optional(),
@@ -57,17 +63,3 @@ export function parseGiftCardBack(value: string | null | undefined): GiftCardBac
     : "ivory";
 }
 
-// What gets printed, line by line, with the greeting and sign-off in the
-// customer's language ("For Sofia" / message / "With love, Marco"); the
-// templates carry a {name} placeholder so each language can place the name.
-export function giftCardLines(
-  card: Pick<GiftCard, "message" | "recipient" | "sender">,
-  labels: { forLine: string; fromLine: string }
-): string[] {
-  const fill = (template: string, name: string) => template.replace("{name}", name);
-  const lines: string[] = [];
-  if (card.recipient?.trim()) lines.push(fill(labels.forLine, card.recipient.trim()));
-  lines.push(card.message.trim());
-  if (card.sender?.trim()) lines.push(fill(labels.fromLine, card.sender.trim()));
-  return lines;
-}

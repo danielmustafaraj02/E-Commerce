@@ -194,10 +194,11 @@ describe("POST /api/checkout personalised gift card", () => {
     message: "A little piece of Venice, just for you.",
     recipient: "Sofia",
     sender: "Marco",
+    recipientEmail: "Sofia@Example.com",
     font: "script",
   };
 
-  it("asks for the card to be priced and saves what to print on the order", async () => {
+  it("asks for the card to be priced and saves what to email on the order", async () => {
     mocks.quoteOrder.mockResolvedValue({ ...quote, giftCardAmount: 500, total: 5500 });
 
     const res = await checkout({ giftCard: card });
@@ -212,6 +213,8 @@ describe("POST /api/checkout personalised gift card", () => {
         giftCardRecipient: "Sofia",
         giftCardSender: "Marco",
         giftCardFont: "script",
+        giftCardRecipientEmail: "sofia@example.com",
+        giftCardToken: expect.stringMatching(/^[\w-]{24}$/),
       })
     );
   });
@@ -241,6 +244,13 @@ describe("POST /api/checkout personalised gift card", () => {
 
     const data = mocks.orderCreated.mock.calls[0][0];
     expect(data.giftCardMessage).toBeUndefined();
+  });
+
+  it("rejects a card without a valid recipient email", async () => {
+    const { recipientEmail: _, ...noEmail } = card;
+    expect((await checkout({ giftCard: noEmail })).status).toBe(400);
+    expect((await checkout({ giftCard: { ...card, recipientEmail: "sofia" } })).status).toBe(400);
+    expect(mocks.quoteOrder).not.toHaveBeenCalled();
   });
 
   it("rejects a message longer than the card allows", async () => {

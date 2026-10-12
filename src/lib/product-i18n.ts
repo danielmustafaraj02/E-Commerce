@@ -61,13 +61,15 @@ const DESCRIPTION_FIELD: Partial<Record<Locale, keyof LocalizableProduct>> = {
   ja: "descriptionJa",
 };
 
+/** Remove the dated collection suffix from public catalog labels. */
+export function catalogDisplayName(name: string): string {
+  return name.replace(/\s*(?:[·•|–—-]\s*)?(?:ottobre|ottober|october|octobre|oktober|octubre|outubro)\s+2026\s*$/i, "").trim();
+}
+
 export function localizedName(item: LocalizableName, locale: Locale): string {
-  // Italian is the source language and lives in the plain `name` column, so it
-  // must not go through the English fallback below.
-  if (locale === "it") return item.name;
-  if (locale === "en") return item.nameEn || item.name;
   const field = NAME_FIELD[locale];
-  return (field && item[field]) || item.nameEn || item.name;
+  const name = locale === "it" ? item.name : locale === "en" ? item.nameEn || item.name : (field && item[field]) || item.nameEn || item.name;
+  return catalogDisplayName(name);
 }
 
 export function localizedDescription(product: LocalizableProduct, locale: Locale): string {
@@ -86,12 +88,14 @@ export function localizedStory(product: LocalizableProduct, locale: Locale): str
 }
 
 // Image search (Google Images, and AI engines that read alt text as a
-// signal) rewards a descriptive alt over a bare product name. "Handmade
-// Murano glass" is store-specific wording, deliberately baked in here the
-// same way as home.heroSubtitle — see that dictionary entry's comment.
+// signal) rewards a descriptive alt over a bare product name. "Murano glass"
+// is store-specific wording, deliberately baked in here the same way as
+// home.heroSubtitle. English and Italian no longer say "handmade": Perla
+// curates pieces from several makers, and that claim is not verified per
+// product (the other languages still carry it; see their translators).
 const IMAGE_ALT_SUFFIX: Record<Locale, string> = {
-  it: "gioiello artigianale in vetro di Murano",
-  en: "handmade Murano glass jewelry",
+  it: "gioiello in vetro di Murano",
+  en: "Murano glass jewelry",
   fr: "bijou artisanal en verre de Murano",
   de: "handgefertigter Schmuck aus Muranoglas",
   ar: "مجوهرات زجاج مورانو المصنوعة يدويًا",

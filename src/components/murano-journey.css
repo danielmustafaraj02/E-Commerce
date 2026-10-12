@@ -186,3 +186,14 @@
     transform: translateY(10px);
   }
 }
+/* Scroll-linked (globals.css): the cards rise with the scroll. In the
+   horizontal row on phones the row is their scroller, so they stay put. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .journey-card {
+      animation: journey-enter linear backwards;
+      animation-timeline: view();
+      animation-range: var(--scroll-in);
+    }
+  }
+}

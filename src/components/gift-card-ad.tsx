@@ -1,6 +1,7 @@
 import { Link } from "@/components/localized-link";
 import { GiftCard3D } from "@/components/gift-card-3d";
-import { giftCardLines, type GiftCardSticker } from "@/lib/gift-card";
+import { giftCardLines } from "@/lib/gift-card-lines";
+import type { GiftCardSticker } from "@/lib/gift-card";
 import { applyTemplate } from "@/lib/i18n/format";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 

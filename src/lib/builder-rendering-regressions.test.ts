@@ -39,7 +39,7 @@ describe("buttons, image frames and canvas drops", () => {
       doc([
         {
           type: "image",
-          src: "/hero/hero-atelier-poster.jpg",
+          src: "/hero/hero-atelier-poster.webp",
           alt: "Murano",
           style: { radius: 2, h: 20, mh: 14 },
         },
@@ -54,7 +54,7 @@ describe("buttons, image frames and canvas drops", () => {
     const image = doc([
       {
         type: "image",
-        src: "/hero/hero-atelier-poster.jpg",
+        src: "/hero/hero-atelier-poster.webp",
         alt: "Atelier",
         fit: "cover",
         rounded: true,

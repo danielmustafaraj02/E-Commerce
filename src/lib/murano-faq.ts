@@ -329,7 +329,7 @@ export function buildMuranoFaq(facts: MuranoFaqFacts): MuranoFaqGroup[] {
           answer: [
             "Sì, perché uniscono un valore artigianale reale a un prezzo accessibile e vanno bene per molte occasioni, dal compleanno alla festa della mamma. Ogni pezzo è fatto a mano, quindi è unico, e porta con sé la storia di Venezia.",
             facts.giftCardPrice !== null
-              ? `Da noi arrivano già nella scatola firmata, pronti da regalare, e con ${money(facts.giftCardPrice)} puoi aggiungere un biglietto con il tuo messaggio, stampato e inserito nel pacco.`
+              ? `Da noi arrivano già nella scatola firmata, pronti da regalare, e con ${money(facts.giftCardPrice)} puoi aggiungere all'ordine un biglietto digitale con il tuo messaggio, che inviamo per email a chi lo riceve appena l'ordine è pagato.`
               : "Da noi arrivano già nella scatola firmata, pronti da regalare.",
           ].join(" "),
           links:

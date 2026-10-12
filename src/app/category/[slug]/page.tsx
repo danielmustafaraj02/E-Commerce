@@ -14,6 +14,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { getStoreSettings, ogImage } from "@/lib/store-settings";
 import { getLocale, type Locale } from "@/lib/i18n/locale";
+import { getShopCopy } from "@/lib/i18n/shop-copy";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { localizedName, localizedDescription, localizedCardProduct } from "@/lib/product-i18n";
 import { firstParagraph, paragraphs, truncateAtWord } from "@/lib/text";
@@ -74,10 +75,35 @@ async function baseMetadata({
     ja: `ムラノガラスの${name}`,
   };
   const title = titleByLocale[locale];
+  // English and Italian: each of the three collections gets its own line (one
+  // template for all three made the snippets near-duplicates), and none claims
+  // the beads are shaped by hand, which is not verified for every piece.
+  const store = settings.storeName;
+  const collectionLine: Record<string, { en: string; it: string }> = {
+    collane: {
+      en: `Murano glass necklaces from ${store}: strands of glass beads worn close to the face, in colours from deep ruby to soft sage, each chosen on its own.`,
+      it: `Collane in vetro di Murano di ${store}: fili di perle di vetro da portare vicino al viso, dal rosso rubino al verde salvia, scelte una a una.`,
+    },
+    bracciali: {
+      en: `Murano glass bracelets from ${store}: colour and texture gathered around the wrist, glass beads that move with every gesture.`,
+      it: `Bracciali in vetro di Murano di ${store}: colore e materia intorno al polso, perle di vetro che si muovono a ogni gesto.`,
+    },
+    orecchini: {
+      en: `Murano glass earrings from ${store}: light to wear, with a small flash of colour each time you turn your head.`,
+      it: `Orecchini in vetro di Murano di ${store}: leggeri da portare, con un lampo di colore ogni volta che ti volti.`,
+    },
+  };
+  const collection = Object.entries(collectionLine).find(([prefix]) =>
+    category.slug.startsWith(prefix)
+  )?.[1];
   const descriptionByLocale: Record<Locale, string> = {
-    en: `Murano glass ${name.toLowerCase()} with beads shaped by hand, one at a time. Shipped from Italy in a gift-ready box: explore the ${settings.storeName} collection.`,
+    en:
+      collection?.en ??
+      `Murano glass ${name.toLowerCase()} from ${store}, chosen piece by piece and shipped from Italy in a gift box.`,
     // No article before the name: "i/le/gli" depends on the category's gender.
-    it: `${name} in vetro di Murano, con perle lavorate a mano una per una. Spedizione dall'Italia in una scatola regalo: scopri la collezione ${settings.storeName}.`,
+    it:
+      collection?.it ??
+      `${name} in vetro di Murano: una selezione di ${store}, spedita dall'Italia in confezione regalo.`,
     fr: `Découvrez les ${name.toLowerCase()} en verre de Murano fait main de ${settings.storeName}, filtrables par prix et disponibilité.`,
     de: `Entdecken Sie handgefertigte ${name.toLowerCase()} aus Muranoglas von ${settings.storeName}, filterbar nach Preis und Verfügbarkeit.`,
     ar: `تسوق ${name} يدوية الصنع من زجاج مورانو في ${settings.storeName}، قابلة للتصفية حسب السعر والتوفر.`,
@@ -175,6 +201,7 @@ export default async function CategoryPage({
 
   if (!category) notFound();
   const dict = getDictionary(uiLocale);
+  const shopCopy = getShopCopy(uiLocale);
   const categoryName = localizedName(category, uiLocale);
   const copy = localizedDescription(category, uiLocale);
 
@@ -195,7 +222,11 @@ export default async function CategoryPage({
   // See src/app/products/page.tsx for why this doesn't just add stockQty
   // to the Prisma orderBy — pushes out-of-stock items to the end of the
   // grid instead of leaving them wherever createdAt puts them.
-  const [allMatchingIds, priceBounds] = await Promise.all([
+  // Every price in the current selection, but not narrowed by the price
+  // filter itself: the chart above the price slider shows the whole spread
+  // the shopper is choosing from (as on /products).
+  const { price: _priceFilter, ...withoutPrice } = where as typeof where & { price?: unknown };
+  const [allMatchingIds, priceBounds, chartRows] = await Promise.all([
     db.product.findMany({
       where,
       orderBy: { createdAt: "desc" },
@@ -206,7 +237,9 @@ export default async function CategoryPage({
       _min: { price: true },
       _max: { price: true },
     }),
+    db.product.findMany({ where: withoutPrice, select: { price: true } }),
   ]);
+  const chartPrices = chartRows.map((p) => p.price / 100);
   const sortedIds = [...allMatchingIds].sort(
     (a, b) => Number(b.stockQty > 0) - Number(a.stockQty > 0)
   );
@@ -320,6 +353,8 @@ export default async function CategoryPage({
               min: dict.feedback.minPriceLabel,
               max: dict.feedback.maxPriceLabel,
             }}
+            prices={chartPrices}
+            rangeLabels={{ one: shopCopy.rangeOne, many: shopCopy.rangeMany }}
           />
 
           <section className="shop-results">

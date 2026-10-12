@@ -86,7 +86,7 @@ export async function Footer({
       })
       .catch(() => null),
   ]);
-  const featuredImage = featured?.images[0]?.url ?? "/hero/handmade-red-murano-glass-necklace.jpg";
+  const featuredImage = featured?.images[0]?.url ?? "/hero/handmade-red-murano-glass-necklace.webp";
   const f = dict.footer;
   const nav = buildFooterNav({
     dict,

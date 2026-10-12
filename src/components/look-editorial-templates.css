@@ -985,3 +985,8 @@
     color: var(--brass);
   }
 }
+
+/* Breathing room between the price and the button it leads to. */
+.look-tpl .look-tpl-price {
+  margin-bottom: clamp(1.5rem, 2.5vw, 2.25rem);
+}

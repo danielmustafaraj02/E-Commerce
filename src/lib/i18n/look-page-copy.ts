@@ -9,7 +9,7 @@ const en = {
   editorialIntro:
     "A look brings together a necklace, a bracelet and earrings, selected for the way their colours and shapes complement one another. Wear the complete composition, or let a single piece set the tone.",
   editorialDescription:
-    "Three pieces of Murano glass, made as one. Wear them together, or one at a time as a quiet signature.",
+    "Three pieces drawn from the same colours of glass, chosen to sit well together. Each one also holds its own.",
   editorialIncluded: "In this look",
   editorialPrice: "The complete look",
   listingWhyTitle: "A look, already in harmony",
@@ -20,8 +20,8 @@ const en = {
       body: "Necklace, bracelet and earrings are paired for their colours and shapes, so the whole look feels considered while every piece still works on its own.",
     },
     {
-      title: "Made by hand in Murano",
-      body: "Each piece is crafted in Murano glass. Small differences in colour and form are part of the character of handmade work.",
+      title: "Glass worth a closer look",
+      body: "Every piece is in Murano glass. Small differences in colour and form from one piece to the next are part of the material's character.",
     },
     {
       title: "A better price as a set",
@@ -56,7 +56,7 @@ const en = {
   ],
   piecesTitle: "The pieces, one by one",
   piecesIntro:
-    "Every piece in this look is handmade in Murano glass. Wear them together, or each on its own.",
+    "Every piece in this look is in Murano glass. Wear them together, or each on its own.",
   storyLabel: "Why choose it",
   available: "Available",
   viewPiece: "View the piece",
@@ -65,11 +65,11 @@ const en = {
   whyIntro: "What comes with these pieces, beyond the glass itself.",
   why: [
     {
-      title: "Handmade in Murano",
-      body: "Every piece is hand-worked glass from Murano, using traditional lampworking techniques: never molded, never mass-produced.",
+      title: "Murano glass",
+      body: "Every piece is in Murano glass, from the island where Venice has worked glass since 1291.",
     },
     {
-      title: "Made to be worn together",
+      title: "Chosen to be worn together",
       body: "Colors and shapes were chosen to match, so the set reads as one look, and each piece still stands on its own.",
     },
     {
@@ -78,7 +78,7 @@ const en = {
     },
     {
       title: "Ready to give",
-      body: "Each piece arrives in our signature box, ready to be given as it is.",
+      body: "Each piece arrives in our gift box, ready to be given as it is.",
     },
     {
       title: "Shipped from Italy",
@@ -96,11 +96,11 @@ const en = {
   mixA: "Yes. With Compose your own look you choose any necklace, bracelet and earrings, and save {composed}% on the three.",
   variesQ: "Will my pieces look exactly like the photos?",
   variesA:
-    "Very close, but not identical: small variations in color, bubbles and shape aren't flaws, they're what a hand-blown piece looks like, and no two are ever quite the same.",
+    "Very close, though not identical: glass varies slightly in colour, bubbles and shape from one piece to the next, so no two are ever quite the same.",
 
   learnTitle: "Learn more",
   learn: {
-    guide: "How Murano glass is made, and how to tell it from imitations.",
+    guide: "How Murano glass is worked, and how to tell it from imitations.",
     careTitle: "Caring for your jewelry",
     care: "A few simple habits that keep the color and shine.",
     giftTitle: "Gift Finder",
@@ -117,8 +117,8 @@ const it: LookPageCopy = {
   editorialIntro:
     "Un look riunisce collana, bracciale e orecchini, scelti per l’armonia dei colori e delle forme. Indossa l’abbinamento completo, oppure lascia che un solo gioiello racconti il tuo stile.",
   editorialDescription:
-    "Tre espressioni del vetro di Murano, riunite in un abbinamento curato. Da indossare insieme per un look completo, o singolarmente come un dettaglio personale.",
-  editorialIncluded: "I gioielli del look",
+    "Tre pezzi nati dagli stessi colori di vetro, scelti per stare bene insieme. E ognuno, da solo, ha il suo carattere.",
+  editorialIncluded: "In questo look",
   editorialPrice: "Il look completo",
   listingWhyTitle: "Un look già in armonia",
   listingWhyIntro:
@@ -129,8 +129,8 @@ const it: LookPageCopy = {
       body: "Collana, bracciale e orecchini sono abbinati per colori e forme: il look è curato nel suo insieme, ma ogni pezzo si porta bene anche da solo.",
     },
     {
-      title: "Lavorati a mano a Murano",
-      body: "Ogni gioiello è realizzato in vetro di Murano. Le piccole differenze di colore e forma fanno parte del carattere del lavoro artigianale.",
+      title: "Vetro da guardare da vicino",
+      body: "Ogni gioiello è in vetro di Murano. Le piccole differenze di colore e di forma tra un pezzo e l'altro fanno parte del carattere del materiale.",
     },
     {
       title: "Un prezzo migliore insieme",
@@ -165,7 +165,7 @@ const it: LookPageCopy = {
   ],
   piecesTitle: "I pezzi, uno per uno",
   piecesIntro:
-    "Ogni pezzo di questo look è lavorato a mano in vetro di Murano. Indossali insieme, oppure uno alla volta.",
+    "Ogni pezzo di questo look è in vetro di Murano. Indossali insieme, oppure uno alla volta.",
   storyLabel: "Perché sceglierlo",
   available: "Disponibile",
   viewPiece: "Vedi il pezzo",
@@ -174,11 +174,11 @@ const it: LookPageCopy = {
   whyIntro: "Cosa arriva con questi pezzi, oltre al vetro.",
   why: [
     {
-      title: "Fatti a mano a Murano",
-      body: "Ogni pezzo è vetro lavorato a mano a Murano con le tecniche tradizionali della lavorazione a lume: mai stampato, mai prodotto in serie.",
+      title: "Vetro di Murano",
+      body: "Ogni pezzo è in vetro di Murano, l'isola dove Venezia lavora il vetro dal 1291.",
     },
     {
-      title: "Pensati per stare insieme",
+      title: "Scelti per stare insieme",
       body: "Colori e forme sono stati scelti per abbinarsi: il set si legge come un unico look, e ogni pezzo sta bene anche da solo.",
     },
     {
@@ -187,7 +187,7 @@ const it: LookPageCopy = {
     },
     {
       title: "Pronti da regalare",
-      body: "Ogni pezzo arriva nella nostra scatola firmata, pronto da regalare così com'è.",
+      body: "Ogni pezzo arriva nella nostra confezione regalo, pronto da regalare così com'è.",
     },
     {
       title: "Spediti dall'Italia",
@@ -205,11 +205,11 @@ const it: LookPageCopy = {
   mixA: "Sì. Con Componi il tuo look scegli una collana, un bracciale e degli orecchini qualsiasi, e risparmi il {composed}% sui tre.",
   variesQ: "I miei pezzi saranno identici alle foto?",
   variesA:
-    "Molto simili, ma non identici: le piccole variazioni di colore, le bolle e le forme non sono difetti, sono ciò che rende unico un pezzo soffiato a mano, mai identico a un altro.",
+    "Molto simili, ma non identici: il vetro varia leggermente per colore, bolle e forma da un pezzo all'altro, e due gioielli non sono mai del tutto uguali.",
 
   learnTitle: "Per saperne di più",
   learn: {
-    guide: "Come nasce il vetro di Murano, e come riconoscerlo dalle imitazioni.",
+    guide: "Come si lavora il vetro di Murano, e come riconoscerlo dalle imitazioni.",
     careTitle: "Come curare i tuoi gioielli",
     care: "Poche semplici abitudini per mantenere colore e brillantezza.",
     giftTitle: "Trova Regalo",

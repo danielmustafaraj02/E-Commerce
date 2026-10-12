@@ -1,9 +1,15 @@
-/** Remove near-white pixels connected to the image edges, preserving enclosed whites. */
+/**
+ * Remove near-white pixels connected to the image edges, preserving enclosed
+ * whites. With `minHoleArea`, enclosed near-white areas of at least that many
+ * pixels are removed too (the ground seen through a bracelet or a necklace's
+ * loop), while smaller ones (glints and white glass) stay.
+ */
 export function removeWhiteBackground(
   pixels: Uint8ClampedArray,
   width: number,
   height: number,
-  tolerance = 24
+  tolerance = 24,
+  minHoleArea = 0
 ): Uint8ClampedArray<ArrayBuffer> {
   if (
     !Number.isInteger(width) ||
@@ -37,8 +43,8 @@ export function removeWhiteBackground(
     visit(y * width);
     visit(y * width + width - 1);
   }
-  while (head < tail) {
-    const index = queue[head++];
+  // Fades a pixel by how white it is.
+  const fade = (index: number) => {
     const offset = index * 4;
     const distance = 255 - Math.min(pixels[offset], pixels[offset + 1], pixels[offset + 2]);
     const opacity = Math.max(0, Math.min(1, (distance - strength) / feather));
@@ -48,11 +54,31 @@ export function removeWhiteBackground(
         output[offset + channel] = (pixels[offset + channel] - 255 * (1 - opacity)) / opacity;
       }
     }
-    const x = index % width;
-    if (x > 0) visit(index - 1);
-    if (x < width - 1) visit(index + 1);
-    if (index >= width) visit(index - width);
-    if (index < width * (height - 1)) visit(index + width);
+  };
+  // Grows the queued area through its near-white neighbours.
+  const spread = () => {
+    while (head < tail) {
+      const index = queue[head++];
+      const x = index % width;
+      if (x > 0) visit(index - 1);
+      if (x < width - 1) visit(index + 1);
+      if (index >= width) visit(index - width);
+      if (index < width * (height - 1)) visit(index + width);
+    }
+  };
+  spread();
+  for (let at = 0; at < tail; at++) fade(queue[at]);
+  if (minHoleArea > 0) {
+    // Each enclosed near-white area is gathered whole, then faded only when it
+    // is large enough to be ground rather than a highlight.
+    for (let index = 0; index < width * height; index++) {
+      if (visited[index]) continue;
+      const start = tail;
+      visit(index);
+      if (tail === start) continue;
+      spread();
+      if (tail - start >= minHoleArea) for (let at = start; at < tail; at++) fade(queue[at]);
+    }
   }
   return output;
 }

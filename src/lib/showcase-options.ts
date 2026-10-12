@@ -28,11 +28,31 @@ export type ShowcaseSceneOverride = {
   href?: string;
   /** A picture of the admin's own (an upload or a site path). */
   image?: string;
+  imageScale?: number;
+  imageX?: number;
+  imageY?: number;
+  titleScale?: number;
+  titleX?: number;
+  titleY?: number;
+  descriptionScale?: number;
+  descriptionX?: number;
+  descriptionY?: number;
+  counterScale?: number;
+  counterX?: number;
+  counterY?: number;
+  buttonScale?: number;
+  buttonX?: number;
+  buttonY?: number;
+
   /** Which side of the picture the text sits on (default: alternating). */
   side?: "left" | "right";
+  /** Product (slug) shown in the hover card over the picture; absent = the
+   *  product whose photo the scene uses, if any. */
+  product?: string;
 };
 
 export type ShowcaseScroll = {
+  fullScreen?: true;
   style?: (typeof SHOWCASE_STYLES)[number]["value"];
   /** Scroll per step, as a fraction of the screen height (0.25–1.5; default 0.5). */
   distance?: number;
@@ -55,6 +75,28 @@ export type ShowcaseScroll = {
 const str = (v: unknown, max: number) => (typeof v === "string" ? v.slice(0, max) : "");
 const SAFE_LINK = /^(\/(?!\/)|https:\/\/)[^\s"'<>]*$/;
 
+const finiteRange = (value: unknown, min: number, max: number) =>
+  typeof value === "number" && Number.isFinite(value)
+    ? Math.min(max, Math.max(min, value))
+    : undefined;
+
+export function showcaseImageVars(scene?: ShowcaseSceneOverride): Record<string, string> {
+  return {
+    "--sc-image-scale": String((finiteRange(scene?.imageScale, 20, 250) ?? 100) / 100),
+    "--sc-image-x": `${finiteRange(scene?.imageX, -50, 50) ?? 0}%`,
+    "--sc-image-y": `${finiteRange(scene?.imageY, -50, 50) ?? 0}%`,
+  };
+}
+
+export function showcaseElementVars(scene?: ShowcaseSceneOverride): Record<string, string> {
+  const values = scene as Record<string, number | undefined> | undefined;
+  return Object.fromEntries(["title", "description", "counter", "button"].flatMap((key) => [
+    [`--sc-${key}-scale`, String((values?.[`${key}Scale`] ?? 100) / 100)],
+    [`--sc-${key}-x`, `${values?.[`${key}X`] ?? 0}%`],
+    [`--sc-${key}-y`, `${values?.[`${key}Y`] ?? 0}%`],
+  ]));
+}
+
 export function parseSceneOverride(value: unknown): ShowcaseSceneOverride | undefined {
   if (!value || typeof value !== "object") return undefined;
   const v = value as Record<string, unknown>;
@@ -65,7 +107,24 @@ export function parseSceneOverride(value: unknown): ShowcaseSceneOverride | unde
     cta: str(v.cta, 60).trim() || undefined,
     href: SAFE_LINK.test(href) ? href : undefined,
     image: safeImageUrl(v.image),
+    titleScale: finiteRange(v.titleScale, 20, 250),
+    titleX: finiteRange(v.titleX, -200, 200),
+    titleY: finiteRange(v.titleY, -200, 200),
+    descriptionScale: finiteRange(v.descriptionScale, 20, 250),
+    descriptionX: finiteRange(v.descriptionX, -200, 200),
+    descriptionY: finiteRange(v.descriptionY, -200, 200),
+    counterScale: finiteRange(v.counterScale, 20, 250),
+    counterX: finiteRange(v.counterX, -200, 200),
+    counterY: finiteRange(v.counterY, -200, 200),
+    buttonScale: finiteRange(v.buttonScale, 20, 250),
+    buttonX: finiteRange(v.buttonX, -200, 200),
+    buttonY: finiteRange(v.buttonY, -200, 200),
+
+    imageScale: finiteRange(v.imageScale, 20, 250),
+    imageX: finiteRange(v.imageX, -50, 50),
+    imageY: finiteRange(v.imageY, -50, 50),
     side: v.side === "left" || v.side === "right" ? v.side : undefined,
+    product: typeof v.product === "string" && /^[\w-]{1,120}$/.test(v.product.trim()) ? v.product.trim() : undefined,
   };
   return Object.values(out).some((x) => x !== undefined) ? out : undefined;
 }
@@ -78,6 +137,7 @@ export function parseShowcaseScroll(value: unknown): ShowcaseScroll | undefined 
       ? Math.round(clampPerUnit(v.distance) * 100) / 100
       : undefined;
   const out: ShowcaseScroll = {
+    fullScreen: v.fullScreen === true ? true : undefined,
     style: SHOWCASE_STYLES.slice(1).some((style) => style.value === v.style)
       ? (v.style as ShowcaseScroll["style"])
       : undefined,
@@ -102,6 +162,7 @@ export function parseShowcaseScroll(value: unknown): ShowcaseScroll | undefined 
 export function showcaseRoot(scroll?: ShowcaseScroll) {
   const attrs: Record<string, string> = {};
   const vars: Record<string, string> = {};
+  if (scroll?.fullScreen) attrs["data-full-screen"] = "";
   if (scroll?.style) attrs["data-showcase-style"] = scroll.style;
   if (scroll?.rail === false) attrs["data-no-rail"] = "";
   if (scroll?.counter === false) attrs["data-no-counter"] = "";

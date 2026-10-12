@@ -21,6 +21,9 @@ export function EditorialReveal({ children }: { children: ReactNode }) {
     const root = document.querySelector<HTMLElement>("[data-editorial-root]");
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     if (!root || motion.matches || !("IntersectionObserver" in window)) return;
+    // Where scroll timelines exist the parts follow the scroll in CSS
+    // (look-editorial.css), so nothing is staged here.
+    if (CSS.supports("animation-timeline: view()")) return;
 
     const targets = Array.from(root.querySelectorAll<HTMLElement>("[data-editorial-part]"));
     const observer = new IntersectionObserver(

@@ -31,7 +31,7 @@ export const muranoGlassmakersAndLabor: Article = {
   ],
   hero: {
     kind: "file",
-    src: "/blog/IMG_3204.JPG",
+    src: "/blog/IMG_3204.webp",
     alt: "Handmade Murano glass bracelet with a dark floral bead",
     altIt: "Bracciale artigianale in vetro di Murano con una perla floreale scura",
     rights: { credit: "Perla Murano Glass", license: "own-photography" },

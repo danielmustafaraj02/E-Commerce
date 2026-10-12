@@ -9,6 +9,7 @@ import { z } from "zod";
  */
 
 export const JOURNAL_CATEGORIES = ["history", "craft", "buying", "care", "gifting"] as const;
+export { ARTICLE_OPENING_TEMPLATES, type ArticleOpeningTemplate } from "./opening";
 
 /** Links allowed in text and buttons: site paths or http(s) only, never
  *  javascript:/data: — article text is rendered as links. */

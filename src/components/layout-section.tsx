@@ -2,12 +2,13 @@ import type { CSSProperties, ReactNode } from "react";
 import { sanitizeSectionHtml, scopeSectionCss } from "@/lib/custom-section";
 import type { LayoutEntry } from "@/lib/page-layout";
 import { entryContent, innerClass } from "@/lib/section-content";
-import { localizeForRequest } from "@/lib/builder-i18n-server";
+import { localizeForRequest, storyPriceSlugs, withStoryPrices } from "@/lib/builder-i18n-server";
 import { docNeedsLocalizing } from "@/lib/builder-i18n";
 import {
   backgroundLayersHtml,
   hasBackgroundLayers,
   optionAttributes,
+  optionVars,
   sectionInlineStyle,
 } from "@/lib/section-style";
 import { builderNeedsRuntime, hasLiveBlocks } from "@/lib/section-builder";
@@ -32,6 +33,8 @@ function Frame({
 }) {
   const s = entry.style;
   const opts = optionAttributes(entry.options);
+  const vars = optionVars(entry.options);
+  if (Object.keys(vars).length) style = { ...style, ...(vars as CSSProperties) };
   if (s?.anim) {
     return (
       <AnimateOnView
@@ -69,7 +72,7 @@ async function LocalizedLayoutSection({
   entry: LayoutEntry;
   children?: ReactNode;
 }) {
-  const builder = await localizeForRequest(entry.builder!);
+  const builder = await withStoryPrices(await localizeForRequest(entry.builder!));
   return (
     <LayoutSection entry={{ ...entry, builder }} localized>
       {children}
@@ -97,11 +100,16 @@ export function LayoutSection({
     return <div data-layout-id={entry.id}>{children}</div>;
   }
   // A design in the visitor's language (site text and per-language wording).
-  if (!localized && entry.builder && docNeedsLocalizing(entry.builder)) {
+  if (
+    !localized &&
+    entry.builder &&
+    (docNeedsLocalizing(entry.builder) || storyPriceSlugs(entry.builder).length > 0)
+  ) {
     return <LocalizedLayoutSection entry={entry}>{children}</LocalizedLayoutSection>;
   }
   const { style } = entry;
   const content = entryContent(entry);
+  const sectionGuiElements = entry.builder?.cells.flat().find((block) => block.type === "original")?.guiElements;
   const scopeClass = `layout-sec-${entry.id}`;
   const scoped = scopeSectionCss(`${content?.css ?? ""}\n${style?.css ?? ""}`, scopeClass);
   const classes = [
@@ -156,6 +164,7 @@ export function LayoutSection({
       ) : (
         <div
           className={innerClass(content)}
+          data-gui-elements={sectionGuiElements ? JSON.stringify(sectionGuiElements) : undefined}
           dangerouslySetInnerHTML={{ __html: sanitizeSectionHtml(content.html) }}
         />
       )}

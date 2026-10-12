@@ -24,19 +24,19 @@ const en = {
   },
   footer: {
     editorialTitle: "Discover the world of Murano glass",
-    editorialText: "Stories, craftsmanship and inspiration from Venice.",
+    editorialText: "Notes on Venetian glass: where it comes from, how it's worked, how to wear it.",
     editorialCta: "Explore the journal",
     newsletterHeading: "A little more Murano, occasionally.",
-    newsletterIntro: "New collections, stories and special offers, thoughtfully shared.",
+    newsletterIntro: "New pieces and the occasional story from the Journal.",
     newsletterPrivacy: "Your details stay private. Unsubscribe anytime.",
     aboutHeading: "About Perla",
     careHeading: "Customer care",
-    trustHandcrafted: "Handcrafted in Murano",
+    trustHandcrafted: "Murano glass",
     trustGift: "Gift-ready packaging",
     trustShipping: "Shipping from Italy",
     legalNav: "Legal",
     socialNav: "Social media",
-    brandTagline: "Authentic Murano glass, timeless beauty.",
+    brandTagline: "Venetian glass jewellery, chosen piece by piece.",
     rights: "All rights reserved.",
     terms: "Terms & Conditions",
     privacy: "Privacy Policy",
@@ -51,7 +51,7 @@ const en = {
     helpHeading: "Help",
     companyHeading: "Company",
     followUs: "Follow us",
-    tagline: "Handmade pieces, shipped with care.",
+    tagline: "Murano glass jewellery, chosen with care.",
     newsletterTitle: "Stay in the loop",
     newsletterBody: "New pieces and the occasional offer. No spam, unsubscribe anytime.",
     newsletterPlaceholder: "you@example.com",
@@ -63,7 +63,7 @@ const en = {
   },
   home: {
     heroEyebrow: "Welcome",
-    heroImageAlt: "Handmade red Murano glass bead necklace",
+    heroImageAlt: "Red Murano glass bead necklace",
     // Store-specific rather than platform-generic: a future non-jewelry
     // deployment should replace this line, same as it would replace the
     // product catalog.
@@ -74,36 +74,49 @@ const en = {
     // hero. The technique is still described on the product pages and in the
     // FAQ, which is where an answer engine can still find it — the hero is
     // now the brand line rather than the keyword line.
-    heroSubtitle: "Murano glass jewelry, assembled by hand. One bead at a time.",
+    heroSubtitle:
+      "Murano glass jewellery, chosen one piece at a time for its colour, how it sits when worn, and the small irregularities only glass can have.",
     heroVideoPlay: "Play the film",
     // The hero film's product card: the piece actually worn in the film, shown
     // on hover (desktop) or from the button (touch/keyboard). See
     // components/hero-video-product.tsx.
     heroProductEyebrow: "WORN IN THE VIDEO",
-    heroProductCta: "Discover the product",
-    heroProductOpen: "Discover the jewel",
+    heroProductCta: "View this piece",
+    heroProductOpen: "Which piece is this?",
     heroProductClose: "Close",
     shopNow: "Shop now",
     // Mobile-only hero (below 52rem): headline, one short sentence, CTA.
-    heroTagline: "Authentic Murano Glass",
-    heroMobileLede: "Handmade in Murano, Italy, one bead at a time.",
-    heroCta: "Explore Murano jewelry",
+    heroTagline: "Murano glass, worn every day",
+    heroMobileLede: "Murano glass jewellery, chosen one piece at a time.",
+    heroCta: "See the jewellery",
     shopCollection: "Shop Collection",
     pricesIncludeTax: "All prices shown include VAT/IVA.",
-    newArrivals: "New arrivals",
-    newArrivalsIntro: "New colours, new details.",
-    specialSelectionTitle: "Selected pieces, special prices.",
+    newArrivals: "Just arrived",
+    newArrivalsIntro:
+      "Recently added to the collection: new shapes and shades, chosen with the same eye.",
+    specialSelectionTitle: "A few pieces, at a gentler price",
     specialSelectionSubtitle:
-      "Discover a selection of handmade Murano glass jewelry at special prices, available while supplies last.",
-    specialSelectionCta: "Shop special-price pieces",
-    bestSellers: "Best sellers",
-    popularTitle: "Our community favourites",
-    muranoReason1Title: "Seven centuries of unbroken craft",
-    muranoReason1Body: "Every piece leaves Murano shaped by a maestro who learned the trade from whoever came before, using the same furnace gestures since the 14th century. No mold, no machine — just breath and hands.",
-    muranoReason2Title: "Each piece exists only once",
-    muranoReason2Body: "Handmade glass cannot be perfectly repeated. The colour gradients, the inclusions and the swirls in your piece are uniquely yours — never mass-produced, never duplicated.",
-    muranoReason3Title: "A living cultural heritage",
-    muranoReason3Body: "Murano glassmakers carry UNESCO recognition. When you wear a piece, you carry a tradition that Venice has guarded for over seven hundred years.",
+      "Pieces we have only a few of left, at a reduced price for as long as they last.",
+    specialSelectionCta: "See the pieces",
+    bestSellers: "Most loved",
+    popularTitle: "The ones you choose most often",
+    muranoReason1Title: "Since 1291, on one island",
+    muranoReason1Body:
+      "Venice moved its glass furnaces to Murano in 1291, and the island has been working glass ever since. The skills are still learned at the bench, by watching and trying. That unbroken line is why we chose Murano glass: a depth of colour you learn to recognise.",
+    muranoReason2Title: "Look closely at the beads",
+    muranoReason2Body:
+      "Along a single necklace the beads rarely read quite the same: one a shade deeper, one with a thread of gold turning the other way, one a fraction rounder. Glass keeps these small differences. We choose pieces where they are part of the design, not hidden by it.",
+    muranoReason3Title: "Where it comes from matters",
+    muranoReason3Body:
+      'A lot of jewellery sold as "Venetian glass" is made far from the lagoon. We work the other way round, choosing pieces from makers we know. The art of glass beads, as practised in Venice, has been on UNESCO\'s list of intangible cultural heritage since 2020.',
+    // Shorter tellings of the three reasons, for the phone layout of the
+    // collections showcase (lib/showcase-reasons.ts). Same facts as the full text.
+    muranoReason1Short:
+      "Venice moved its glass furnaces to Murano in 1291, and the island has worked glass ever since, its skills still learned at the bench. That unbroken line is why we chose Murano glass.",
+    muranoReason2Short:
+      "Along a necklace the beads rarely read the same: one a shade deeper, one with a thread of gold turning the other way. Glass keeps these differences, and we choose pieces that let them show.",
+    muranoReason3Short:
+      'A lot of jewellery sold as "Venetian glass" is made far from the lagoon. We choose pieces from makers we know. The art of glass beads has been UNESCO intangible heritage since 2020.',
     shopByCategory: "Shop by category",
     whyUsTitle: "Why shop with us",
     whyShipping: "Fast shipping",
@@ -112,27 +125,27 @@ const en = {
     whySecureBody: "Card and PayPal payments, never stored on our servers.",
     whyReturns: "Easy returns",
     whyReturnsBody: "14-day right of withdrawal on every order, EU-wide.",
-    testimonialsTitle: "What customers say",
+    testimonialsTitle: "From the people who wear them",
     verifiedBuyer: "Verified buyer",
     previousSlide: "Previous",
     nextSlide: "Next",
     pauseSlides: "Pause slideshow",
     playSlides: "Start slideshow",
-    newsletterCtaTitle: "Get 10% off your first order",
+    newsletterCtaTitle: "A letter, now and then",
     newsletterCtaBody:
-      "Subscribe and use code WELCOME10 at checkout. You'll also get new pieces and the occasional offer, straight to your inbox.",
-    newsletterSubmit: "Get 10% off",
+      "New pieces as they arrive, and the occasional story from the Journal. To begin, 10% off your first order with the code WELCOME10.",
+    newsletterSubmit: "Sign up",
     faqTitle: "Before you choose.",
     faq: [
       {
         question: "Is this real Murano glass?",
         answer:
-          "Yes, every piece is hand-worked glass from Murano, Italy, using traditional lampworking and glassblowing techniques, never molded or mass-produced. Read our full guide to Murano glass for how to tell genuine glass from imitations.",
+          'Yes, our jewellery is made with Murano glass, and some designs come from the workshops we work with. Our guide explains how to tell Murano glass from the imitations often sold as "Venetian glass".',
       },
       {
         question: "Where are the products made?",
         answer:
-          "On Murano, the small island in the Venetian lagoon that has been Italy's glassmaking center for over 700 years. Every piece is shaped by hand in a working furnace on the island.",
+          "The glass comes from Murano, the island in the Venetian lagoon where Venice has worked glass since 1291. Some designs come from the workshops we work with.",
       },
     ],
     faqShippingQuestion: "What shipping and returns options are available?",
@@ -142,12 +155,12 @@ const en = {
   about: {
     title: "About us",
     intro: (storeName: string) =>
-      `We started ${storeName} to bring authentic, hand-blown Murano glass jewelry to people who can't visit the furnaces themselves. Every piece is made using techniques passed down over seven centuries on the island of Murano, shipped straight from Venice.`,
+      `We started ${storeName} for people who love Venetian glass but can't walk along the fondamenta of Murano themselves. We don't make every piece ourselves: some come from makers we know and trust. What they share is the way we choose them, looking at the colour of the glass, the proportions and the finish.`,
     heritageImageAlt: "Brightly painted houses along a canal on Burano, in the Venetian lagoon",
     valuesTitle: "What we care about",
-    value1Title: "Quality first",
+    value1Title: "Chosen piece by piece",
     value1Body:
-      "Every piece is made in Murano using traditional lamp-working and glass-blowing techniques. No molds, no mass production.",
+      "We look at each design before it joins the collection: the colour of the glass, the clasp, the way it falls when worn.",
     value2Title: "Straightforward pricing",
     value2Body: "The price you see includes tax. No surprises at checkout.",
     value3Title: "Real support",
@@ -157,13 +170,13 @@ const en = {
     friendsIntro: "We're friends with the team at ",
     friendsLinkText: "Venetian Murano Glass",
     friendsOutro: ".",
-    heritageTitle: "The craft behind every piece",
+    heritageTitle: "A short history of Murano glass",
     heritageBody1:
-      "Murano glassmaking dates back to 1291, when Venice's furnaces were moved to the island of Murano, both to protect the city from fire risk and to keep the glassmakers' techniques close, on an island easier to control. Over seven centuries, that isolation turned into a concentration of skill found nowhere else: generations of maestri passing down lamp-working, murrine, and glass-blowing techniques that are still done entirely by hand today.",
+      "Murano's glassmaking story starts in 1291, when Venice moved its furnaces to the island, partly to keep fire away from the city and partly to keep the glassmakers' knowledge close. Over the centuries that small island gathered a rare density of skill: lampworking, murrine and glassblowing, passed from master to apprentice and still largely done by hand.",
     heritageBody2:
-      "Every piece here is made using those same traditional techniques: no molds, no mass production. Small variations in color, bubbles, and shape aren't flaws; they're what a hand-blown piece looks like, and no two are ever quite identical.",
+      "Glass worked by hand rarely comes out the same twice: a small bubble, a shift in colour, a curve that turns a little differently. These are the marks we look for when deciding what joins the collection.",
     guideLinkBody:
-      "Want the full story? Every technique named in our product descriptions, how to tell genuine hand-blown glass from an imitation, and how to care for it.",
+      "Want the full story? The main techniques, how to tell Murano glass from an imitation, and how to look after it.",
     guideLinkCta: "Read the complete Murano glass guide",
   },
   contact: {
@@ -213,9 +226,10 @@ const en = {
   // "Complete the look" on the product page (components/complete-the-look.tsx).
   look: {
     kicker: "Complete the look",
-    title: "One look, three details.",
-    subtitle: "Three pieces, one unmistakable look.",
-    intro: "Necklace, bracelet and earrings from the same collection, made to be worn together.",
+    title: "Three pieces, one conversation in colour.",
+    subtitle: "Necklace, bracelet and earrings that answer one another.",
+    intro:
+      "Chosen from the same palette, so they sit well together, and just as well on their own.",
     individualTotal: "Individual total",
     setTotal: "Complete set",
     pairTotal: "Two pieces",
@@ -228,33 +242,38 @@ const en = {
     added: "Added to your cart",
     thisPiece: "This piece",
     include: "Include {name}",
-    unavailable: "One piece is out of stock, so the complete set isn't available right now. The other pieces can still be added on their own.",
+    unavailable:
+      "One piece is out of stock, so the complete set isn't available right now. The other pieces can still be added on their own.",
   },
   looks: {
     navLabel: "Looks",
     title: "Our looks",
-    subtitle: "Pieces made to be worn together.",
-    metaDescription: "Matching Murano glass necklaces, bracelets and earrings, handmade in Murano and chosen to be worn together.",
-    viewLook: "See the pieces in this look",
+    subtitle: "Pieces chosen to be worn together.",
+    metaDescription:
+      "Murano glass necklaces, bracelets and earrings grouped by palette into looks: wear the three together, or one at a time.",
+    viewLook: "See the look up close",
     allLooks: "All looks",
     pieces: "{n} pieces",
     empty: "New looks are on their way.",
     backToLooks: "All looks",
     composeKicker: "Your style",
     composeTitle: "Compose your own look",
-    composeSubtitle: "Choose a necklace, a bracelet and earrings, see them together, and save {percent}% on the three.",
+    composeSubtitle:
+      "Choose a necklace, a bracelet and earrings, see them together, and save {percent}% on the three.",
     composeCta: "Start composing",
     composeHint: "Choose a necklace, a bracelet and earrings to save {percent}%.",
     composeTotal: "Your look",
     composeAdd: "Add your look to the cart",
-    composeMeta: "Compose your own Murano glass look: choose a necklace, a bracelet and earrings, see them together and save on the three.",
+    composeMeta:
+      "Compose your own Murano glass look: choose a necklace, a bracelet and earrings, see them together and save on the three.",
   },
   giftCard: {
     productName: "Personalised Gift Card",
-    title: "Make Your Gift Personal",
-    subtitle: "Add a little Venetian magic to your gift with a personalised message, beautifully printed just for them.",
-    metaDescription: "A personalised Perla Murano Glass gift card: choose a message or write your own, pick a font, and we print it and place it inside the package.",
-    intro: "Create something just for them.",
+    title: "A note to go with it",
+    subtitle: "A few words of your own, on a card we email to them as soon as your order is paid.",
+    metaDescription:
+      "A personalised Perla Murano Glass digital gift card: choose a message or write your own, pick a font, and we email it to the recipient when your order is paid.",
+    intro: "Write it the way you'd say it.",
     recipientLabel: "Recipient name",
     recipientPlaceholder: "Who is this gift for?",
     senderLabel: "Your name",
@@ -264,25 +283,44 @@ const en = {
     customTab: "Write your own",
     customPlaceholder: "Write your personal message here…",
     fontTitle: "Make it yours.",
-    previewTitle: "See your message come to life.",
+    previewTitle: "See how it will look.",
     forLine: "For {name}",
     fromLine: "With love, {name}",
     add: "Add Personalised Gift Card · {price}",
     update: "Update your gift card",
     added: "Added to your cart",
     emptyError: "Choose or write a message first.",
-    printedNote: "Your personalised card will be printed especially for this order and placed inside your Perla package.",
+    deliveryNote:
+      "Your card is digital: we email it to the recipient as soon as your order is paid. It can only be added to an order.",
     pdpTitle: "Make it a gift",
-    pdpLine: "Add a personalised gift card for {price}",
-    pdpBody: "Your message will be beautifully printed and included inside your Perla package.",
+    pdpLine: "Add a digital gift card for {price}",
     pdpCta: "Personalise your gift",
+    recipientEmailLabel: "Recipient email",
+    recipientEmailPlaceholder: "Where should we send the card?",
+    recipientEmailHelp:
+      "We email the card to this address as soon as your order is paid. We use it for nothing else.",
+    emailError: "Enter the recipient's email address.",
+    needsOrder: "The digital card is sold together with an order: add a piece to your cart first.",
+    needsOrderCta: "Browse the collection",
+    sendTo: "Send to",
+    emailSubject: "{sender} has sent you a card",
+    emailIntro: "{sender} chose a piece of Murano glass for you, and wrote you a few words.",
+    emailButton: "Open your card",
+    emailFooter:
+      "This card was sent at the request of the person who wrote it. You don't need to do anything.",
+    cardPageTitle: "A card for you, from {sender}",
+    cardPageTitleAnon: "A card for you",
+    cardPageNote:
+      "Written for you and sent with a gift of Murano glass jewellery. Tap the card to see the back.",
+    cardPageCta: "Discover Murano glass",
     yourMessage: "Your message",
     fontLabel: "Font",
     edit: "Edit",
     remove: "Remove",
-    adHeadline: "Give them a little piece of Venice.",
-    adSub: "Now make it personal.",
-    adBody: "Add a personalised Perla gift card for just {price}. Choose one of our elegant messages or write your own, pick your favourite font, and create a message made especially for them.",
+    adHeadline: "A small piece of Venice, and a few words.",
+    adSub: "Add a note of your own.",
+    adBody:
+      "A digital card for {price}, added to your order: pick one of our messages or write your own, choose a typeface, and we email it to them once the order is paid.",
     adCta: "Create Your Gift Message",
     seeBack: "See the back",
     seeFront: "See the front",
@@ -294,7 +332,8 @@ const en = {
     stickersCount: "{count} of {max}",
     addSticker: "Add motif: {name}",
     removeSticker: "Remove motif: {name}",
-    moveSticker: "{name} on the card: drag it or use the arrow keys to move it, Delete to remove it",
+    moveSticker:
+      "{name} on the card: drag it or use the arrow keys to move it, Delete to remove it",
     stickers: {
       heart: "Heart",
       pearl: "Pearl",
@@ -304,7 +343,7 @@ const en = {
       moon: "Moon",
     },
     backTitle: "Choose the back.",
-    backHelp: "The back carries the Perla logo. Choose the colour of the card it is printed on.",
+    backHelp: "The back carries the Perla logo. Choose its colour.",
     backLabel: "Back",
     backs: {
       ivory: "Ivory",
@@ -313,32 +352,33 @@ const en = {
       blush: "Blush pink",
     },
     fonts: {
-      serif: "Elegant Serif",
-      script: "Luxury Script",
+      serif: "Serif",
+      script: "Script",
       classic: "Classic",
-      modern: "Modern Minimal",
-      handwritten: "Romantic Handwritten",
+      modern: "Modern",
+      handwritten: "Handwritten",
     },
     presets: [
-      "A little piece of Venice, just for you.",
-      "With love, from Venice.",
-      "A special gift for someone special.",
-      "Made with love, chosen just for you.",
-      "A little Murano magic, just for you.",
-      "To someone who makes life beautiful.",
-      "With love and a little sparkle from Venice.",
+      "A small piece of Venice, for you.",
+      "Because it made me think of you.",
+      "For the days that need a little colour.",
+      "Chosen with you in mind.",
+      "To someone who makes ordinary days better.",
+      "Happy birthday. Wear it often.",
+      "Thank you, for everything.",
     ],
   },
   // The Gift Finder stylist flow (/gift-finder, src/lib/gift-finder.ts) and its
   // entry points on the homepage and product page.
   giftFinder: {
-    homeCtaLine: "Not sure what to choose? Find the perfect Murano gift",
+    homeCtaLine: "Looking for a gift and not sure where to start?",
     homeCtaTime: "5 questions · about 5 minutes",
-    homeCtaDetails: "Tell us who it’s for, the occasion, their style, your budget and the kind of jewellery. We’ll match you with real Murano pieces in stock.",
+    homeCtaDetails:
+      "Five questions about who it’s for and what they love. We’ll show you the pieces that suit them, from what we have in stock.",
     productCtaLine: "Not sure this is the one? Try our Gift Finder",
-    metaTitle: "Gift Finder: Find the Perfect Murano Glass Gift",
+    metaTitle: "Gift Finder: Choosing a Murano Glass Gift",
     metaDescription:
-      "Answer five quick questions and we'll match you with the perfect handmade Murano glass gift, chosen from real pieces in stock.",
+      "Five short questions about who it's for and what they like, and we suggest Murano glass pieces that are in stock now.",
     stepCounter: "Step {current} of {total}",
     back: "Back",
     next: "Next",
@@ -384,18 +424,18 @@ const en = {
       notSure: "Not sure? Surprise me",
       completeSet: "A complete matching set",
     },
-    resultsTitle: "We found your match",
-    resultsSubtitle: "Chosen for you from our handmade Murano glass collection.",
+    resultsTitle: "A few pieces that could suit them",
+    resultsSubtitle: "Picked from what's in stock, based on your answers.",
     reasonStyle: "Matches the style you chose",
-    reasonOccasion: "Perfect for the occasion",
-    reasonBudget: "Right within your budget",
+    reasonOccasion: "Suits the occasion",
+    reasonBudget: "Within your budget",
     reasonType: "The piece you were after",
-    reasonFallback: "A beautiful handmade pick from our collection",
+    reasonFallback: "One we'd suggest from the collection",
     shopThisGift: "Shop this gift",
     addToCart: "Add this gift to my cart",
     added: "Added to cart",
     emptyTitle: "No exact match this time",
-    emptyBody: "Browse the full collection instead. Every piece is handmade in Murano.",
+    emptyBody: "Browse the full collection instead, or try different answers.",
     emptyCta: "Browse all products",
     emailTitle: "Email me these picks",
     emailPlaceholder: "you@example.com",
@@ -408,7 +448,8 @@ const en = {
   },
   journal: {
     title: "The Murano Journal",
-    intro: "Stories of Venetian glass, craftsmanship and the art of giving.",
+    intro:
+      "Notes on Venetian glass: its history, how it's worked, how to care for it and how to give it.",
     explore: "Explore the Journal",
     readMore: "Read more",
     minRead: "{n} min read",
@@ -422,7 +463,7 @@ const en = {
     catBuying: "Buying guide",
     catCare: "Care",
     catGifting: "Gifting",
-    storyLink: "Discover the story behind Murano glass",
+    storyLink: "Read the history of Murano glass",
     nav: "Journal",
     byline: "By Perla Murano Glass",
     englishOnly: "This article is available in English only.",
@@ -430,7 +471,7 @@ const en = {
   },
   // FAQ (components/faq-section.tsx); shipping answers are filled from the zones.
   faq: {
-    intro: "The answers that make choosing easy.",
+    intro: "Short answers to what people ask us most.",
     eyebrow: "Information / FAQ",
     more: "More questions",
     fewer: "Fewer questions",
@@ -438,22 +479,31 @@ const en = {
     contactCta: "Contact us",
     careLink: "Read our care guide",
     giftLink: "Try the Gift Finder",
-    whereQ: "Where is my jewelry made and shipped from?",
-    whereA: "Each piece is made with glass from Murano, the glassmaking island in the Venetian lagoon, and is shipped to you from Italy.",
+    whereQ: "Where does my jewellery come from, and where does it ship from?",
+    whereA:
+      "The glass comes from Murano, the glassmaking island in the Venetian lagoon, and some designs come from the workshops we work with. Orders are shipped to you from Italy.",
     shippingCostQ: "How much does shipping cost?",
-    shippingCostA: "Shipping is free across Italy and Europe. To the USA and Canada it's {northAmerica}, and {rest} to the rest of the world. Import duties for deliveries outside the EU aren't included.",
-    shippingCostFallback: "The shipping cost for your address is shown at checkout, before you pay.",
+    shippingCostA:
+      "Shipping is free across Italy and Europe. To the USA and Canada it's {northAmerica}, and {rest} to the rest of the world. Import duties for deliveries outside the EU aren't included.",
+    shippingCostFallback:
+      "The shipping cost for your address is shown at checkout, before you pay.",
     shippingTimeQ: "How long does shipping take?",
-    shippingTimeA: "Standard delivery usually takes {europe} days within Europe, {northAmerica} days to the USA and Canada, and {rest} days to the rest of the world. The estimate for your address is shown at checkout.",
-    shippingTimeFallback: "The estimated delivery time for each shipping method is shown at checkout, before you pay.",
+    shippingTimeA:
+      "Standard delivery usually takes {europe} days within Europe, {northAmerica} days to the USA and Canada, and {rest} days to the rest of the world. The estimate for your address is shown at checkout.",
+    shippingTimeFallback:
+      "The estimated delivery time for each shipping method is shown at checkout, before you pay.",
     returnsQ: "Can I return or exchange my order?",
-    returnsA: "Yes. You have 14 days from delivery to withdraw from your purchase, and we refund your original payment method within 14 days, including standard delivery. Return shipping is at your cost unless the piece is faulty. For an exchange, just contact us.",
+    returnsA:
+      "Yes. You have 14 days from delivery to withdraw from your purchase, and we refund your original payment method within 14 days, including standard delivery. Return shipping is at your cost unless the piece is faulty. For an exchange, just contact us.",
     giftQ: "Is Murano glass jewelry a good gift?",
-    giftA: "Yes. Each piece is handmade in Italy from authentic Murano glass, so it feels personal and distinctive rather than mass-produced. It arrives in our signature gift box, ready for a birthday, anniversary, Mother's Day or a thoughtful thank-you. Our Gift Finder can help if you're unsure which style to choose.",
+    giftA:
+      "Often, yes. Glass carries colour in a way few materials do, and a piece chosen with someone's palette in mind tends to be worn rather than kept in a drawer. Every order arrives in our gift box, ready for a birthday, an anniversary or a thank-you. If you're unsure, the Gift Finder can narrow it down.",
     damagedQ: "What if my piece arrives damaged?",
-    damagedA: "Contact us with your order number and, if you can, a photo. We'll arrange a replacement, a repair or a full refund, including return shipping.",
+    damagedA:
+      "Contact us with your order number and, if you can, a photo. We'll arrange a replacement, a repair or a full refund, including return shipping.",
     contactQ: "How can I contact you?",
-    contactA: "Write to us through our contact page or by email at {email}. We'll get back to you as soon as we can.",
+    contactA:
+      "Write to us through our contact page or by email at {email}. We'll get back to you as soon as we can.",
   },
   product: {
     outOfStock: "Out of stock",
@@ -484,49 +534,48 @@ const en = {
     storyTitle: "The story behind this piece",
     shippingBanner:
       "Complimentary shipping across Italy & Europe · USA & Canada {northAmerica} · Rest of World {rest}",
-    handmadeBadge: "Handmade in Italy",
+    handmadeBadge: "Murano glass",
     lightweightBadge: "Lightweight",
     seeReviews: "See reviews",
-    giftReassuranceTitle: "A handmade Murano glass gift to remember",
-    giftReassuranceBody: "Made by hand in Italy, beautifully presented and ready to give.",
-    giftSectionEyebrow: "The perfect gift",
-    giftSectionHeadline: "More than a jewel, a lasting emotion.",
+    giftReassuranceTitle: "Ready to give",
+    giftReassuranceBody: "Arrives in our gift box, with room for a printed note.",
+    giftSectionEyebrow: "For giving",
+    giftSectionHeadline: "Some objects quietly remind us of someone.",
     giftSectionBody:
-      "Handmade in Italy from authentic Murano glass, each piece has its own colour and character—an original alternative to a mass-produced gift. It arrives in our signature gift box, ready for a birthday, anniversary, Mother's Day, or a thoughtful thank-you. Choose it for someone special, or as a lasting keepsake for yourself.",
+      "Glass keeps its colour for years, and a piece chosen with someone in mind tends to stay in use. It arrives in our gift box, ready for a birthday, an anniversary or a thank-you, or simply to keep for yourself.",
     giftSectionLink: "Discover our gift packaging",
-    giftFeature1: "Handmade with authentic Murano glass",
-    giftFeature2: "Signature gift box, ready to give",
-    giftFeature3: "A distinctive piece with its own character",
+    giftFeature1: "Murano glass, chosen piece by piece",
+    giftFeature2: "Arrives in our gift box",
+    giftFeature3: "Add a printed note if you like",
     faq: [
       {
         question: "Is this real Murano glass?",
         answer:
-          "Yes, every piece is hand-worked glass from Murano, Italy, using traditional lampworking and glassblowing techniques, never molded or mass-produced. Read our full guide to Murano glass for how to tell genuine glass from imitations.",
+          'Yes, our jewellery is made with Murano glass, and some designs come from the workshops we work with. Our guide explains how to tell Murano glass from the imitations often sold as "Venetian glass".',
       },
       {
         question: "Where is it made?",
         answer:
-          "On Murano, the small island in the Venetian lagoon that has been Italy's glassmaking center for over 700 years. Every piece is shaped by hand in a working furnace on the island.",
+          "The glass comes from Murano, the island in the Venetian lagoon where Venice has worked glass since 1291. Some designs come from the workshops we work with.",
       },
       {
         question: "How should I care for my jewelry?",
         answer:
-          "Keep it dry, avoid contact with perfume, and store each piece separately so they don't scratch one another. With a little care, Murano glass keeps its color and shine for a lifetime.",
+          "Keep it dry, away from perfume, and store each piece on its own so they don't scratch one another. The glass keeps its colour; the metal parts last longer with the same care.",
       },
       {
         question: "Can I return my order?",
         answer:
-          "Yes. Every order includes the EU's 14-day right of withdrawal. If it's not right for you, send it back for a full refund, no questions asked.",
+          "Yes. You have 14 days from delivery to withdraw from your purchase, and we refund your original payment method. Return shipping is at your cost unless the piece is faulty.",
       },
       {
         question: "What are the shipping options?",
         answer:
-          "Shipping is complimentary across Italy and the rest of Europe. Orders to the USA and Canada are €30, and €40 to the rest of the world. Standard delivery takes 3–5 days within Europe; international orders may be subject to local import duties and taxes, which aren't included in the price.",
+          "Shipping is free across Italy and Europe. For other destinations, the cost and the estimated delivery time for your address are shown at checkout, before you pay.",
       },
       {
         question: "Does it come gift-wrapped?",
-        answer:
-          "Yes, every piece arrives in our signature gift box, ready to give exactly as it is. No extra wrapping needed, whether it's a gift for someone else or a treat for yourself.",
+        answer: "Yes. Every order arrives in our gift box, ready to give as it is.",
       },
     ],
     noReviews: "No reviews yet.",
@@ -553,7 +602,7 @@ const en = {
       "Absolutely stunning",
     ] as [string, string, string, string, string],
     charactersLeft: "{n} characters left",
-    handmadeInMurano: "Handmade in Murano",
+    handmadeInMurano: "Murano glass",
     trackedShipping: "Tracked shipping",
     returnsBadge: "14-day right of withdrawal",
     secureBadge: "Secure checkout",
@@ -580,7 +629,8 @@ const en = {
     title: "Your cart",
     subtitle: "Your jewelry, chosen in Murano.",
     empty: "Your cart is empty",
-    emptyBody: "Every piece is made one bead at a time. Discover something that could become yours.",
+    emptyBody:
+      "Every piece is made one bead at a time. Discover something that could become yours.",
     browse: "Discover the jewelry",
     estimatedSubtotal: "Estimated subtotal",
     shippingNote: "Free shipping on every order.",
@@ -654,7 +704,7 @@ const en = {
     oauthNoMfaPassword: "Accounts created with Google must contact support to change this.",
   },
   emails: {
-    tagline: "{storeName}. Authentic Venetian glass, handmade in Murano.",
+    tagline: "{storeName}. Venetian glass jewellery, chosen piece by piece.",
     copyLinkHint: "If the button doesn't work, copy and paste this link into your browser:",
     verifySubject: "Confirm your email · {storeName}",
     verifyPreview: "Confirm your email address · {storeName}",
@@ -694,7 +744,7 @@ const en = {
       },
       processing: {
         heading: "Order being prepared",
-        message: "Your order is being carefully prepared by our artisans.",
+        message: "Your order is being checked and packed with care.",
       },
       shipped: {
         heading: "Your order is on its way",
@@ -888,7 +938,7 @@ const en = {
     cta: "Explore all pieces",
     relatedTitle: "You might also love",
     emptyTitle: "Begin Your Journey",
-    emptyBody: "Explore our collection and discover handcrafted Murano glass pieces.",
+    emptyBody: "Pieces you look at will appear here, so you can find them again.",
     emptyCta: "Browse the collection",
   },
   cookieConsent: {
@@ -927,19 +977,19 @@ const it: Dictionary = {
   },
   footer: {
     editorialTitle: "Scopri il mondo del vetro di Murano",
-    editorialText: "Storie, artigianalità e ispirazione da Venezia.",
+    editorialText: "Appunti sul vetro veneziano: da dove viene, come si lavora, come si porta.",
     editorialCta: "Scopri le storie",
     newsletterHeading: "Un po' più di Murano, ogni tanto.",
-    newsletterIntro: "Nuove collezioni, storie e offerte speciali, condivise con cura.",
+    newsletterIntro: "Nuovi pezzi e, ogni tanto, una storia dal Journal.",
     newsletterPrivacy: "I tuoi dati restano riservati. Puoi disiscriverti quando vuoi.",
     aboutHeading: "Chi è Perla",
     careHeading: "Assistenza clienti",
-    trustHandcrafted: "Lavorato a mano a Murano",
+    trustHandcrafted: "Vetro di Murano",
     trustGift: "Pronto da regalare",
     trustShipping: "Spedito dall'Italia",
     legalNav: "Note legali",
     socialNav: "Social network",
-    brandTagline: "Vetro di Murano autentico, bellezza senza tempo.",
+    brandTagline: "Gioielli in vetro veneziano, scelti uno a uno.",
     rights: "Tutti i diritti riservati.",
     terms: "Termini e Condizioni",
     privacy: "Informativa sulla Privacy",
@@ -954,7 +1004,7 @@ const it: Dictionary = {
     helpHeading: "Assistenza",
     companyHeading: "Azienda",
     followUs: "Seguici",
-    tagline: "Pezzi fatti a mano, spediti con cura.",
+    tagline: "Gioielli in vetro di Murano, scelti con cura.",
     newsletterTitle: "Resta aggiornato",
     newsletterBody:
       "Nuovi pezzi e qualche offerta ogni tanto. Niente spam, disiscriviti quando vuoi.",
@@ -967,36 +1017,47 @@ const it: Dictionary = {
   },
   home: {
     heroEyebrow: "Benvenuto",
-    heroImageAlt: "Collana artigianale di perle in vetro di Murano rosso",
-    heroSubtitle: "Gioielli in vetro di Murano, assemblati a mano. Una perla alla volta.",
+    heroImageAlt: "Collana di perle in vetro di Murano rosso",
+    heroSubtitle:
+      "Gioielli in vetro di Murano, scelti uno a uno per il colore, per come si portano e per quelle piccole irregolarità che solo il vetro sa avere.",
     heroVideoPlay: "Avvia il video",
     // The hero film's product card: the piece actually worn in the film, shown
     // on hover (desktop) or from the button (touch/keyboard). See
     // components/hero-video-product.tsx.
     heroProductEyebrow: "INDOSSATO NEL VIDEO",
-    heroProductCta: "Scopri il prodotto",
-    heroProductOpen: "Scopri il gioiello",
+    heroProductCta: "Vedi questo gioiello",
+    heroProductOpen: "Che gioiello è?",
     heroProductClose: "Chiudi",
     shopNow: "Acquista ora",
-    heroTagline: "Autentico vetro di Murano",
-    heroMobileLede: "Fatto a mano a Murano, una perla alla volta.",
-    heroCta: "Scopri i gioielli",
+    heroTagline: "Vetro di Murano, ogni giorno",
+    heroMobileLede: "Gioielli in vetro di Murano, scelti uno a uno.",
+    heroCta: "Guarda i gioielli",
     shopCollection: "Scopri la collezione",
     pricesIncludeTax: "Tutti i prezzi mostrati includono IVA.",
-    newArrivals: "Nuovi arrivi",
-    newArrivalsIntro: "Nuovi colori, nuovi dettagli.",
-    specialSelectionTitle: "Pezzi selezionati, prezzi speciali.",
+    newArrivals: "Appena arrivati",
+    newArrivalsIntro:
+      "Le ultime aggiunte alla collezione: forme e sfumature nuove, scelte con la stessa attenzione.",
+    specialSelectionTitle: "Qualche pezzo, a un prezzo più gentile",
     specialSelectionSubtitle:
-      "Scopri una selezione di gioielli in vetro di Murano fatti a mano a prezzi speciali, disponibili fino a esaurimento scorte.",
-    specialSelectionCta: "Acquista i gioielli in offerta",
-    bestSellers: "I più venduti",
-    popularTitle: "I preferiti della community",
-    muranoReason1Title: "Settecento anni di artigianato ininterrotto",
-    muranoReason1Body: "Ogni pezzo lascia Murano plasmato da un maestro che ha imparato il mestiere da chi lo ha preceduto, con gli stessi gesti da forno del XIV secolo. Nessuno stampo, nessuna macchina — solo soffio e mani.",
-    muranoReason2Title: "Ogni pezzo esiste una sola volta",
-    muranoReason2Body: "Il vetro fatto a mano non può essere riprodotto alla perfezione. I degradé di colore, le inclusioni e i vortici del tuo pezzo sono unicamente tuoi — mai prodotto in serie, mai duplicato.",
-    muranoReason3Title: "Un patrimonio culturale vivo",
-    muranoReason3Body: "I maestri vetrai di Murano godono del riconoscimento UNESCO. Quando indossi un pezzo, porti con te una tradizione che Venezia custodisce da oltre settecento anni.",
+      "Pezzi di cui ci restano pochi esemplari, a un prezzo ridotto finché ci sono.",
+    specialSelectionCta: "Guarda i pezzi",
+    bestSellers: "I più amati",
+    popularTitle: "Quelli che scegliete più spesso",
+    muranoReason1Title: "Dal 1291, su un'isola sola",
+    muranoReason1Body:
+      "Nel 1291 Venezia trasferì le sue fornaci a Murano, e da allora l'isola non ha mai smesso di lavorare il vetro. Il mestiere si impara ancora al banco, guardando e provando. È per questa continuità che abbiamo scelto il vetro di Murano: un colore profondo, che si impara a riconoscere.",
+    muranoReason2Title: "Guarda da vicino le perle",
+    muranoReason2Body:
+      "Lungo una collana le perle raramente si somigliano del tutto: una ha un tono più intenso, un'altra un filo d'oro che gira al contrario, un'altra ancora è appena più tonda. Il vetro conserva queste piccole differenze. Scegliamo i pezzi in cui fanno parte del disegno, invece di restare nascoste.",
+    muranoReason3Title: "Conta da dove viene",
+    muranoReason3Body:
+      'Molti gioielli venduti come "vetro veneziano" nascono lontano dalla laguna. Noi facciamo il contrario: scegliamo i pezzi da laboratori che conosciamo. L\'arte delle perle di vetro, così come si pratica a Venezia, è patrimonio culturale immateriale UNESCO dal 2020.',
+    muranoReason1Short:
+      "Nel 1291 Venezia trasferì le sue fornaci a Murano, e da allora l'isola lavora il vetro senza interruzioni, imparando il mestiere al banco. È per questo che abbiamo scelto il vetro di Murano.",
+    muranoReason2Short:
+      "Lungo una collana le perle raramente si somigliano: una ha un tono più intenso, un'altra un filo d'oro che gira al contrario. Il vetro conserva queste differenze, e noi scegliamo i pezzi che le lasciano vedere.",
+    muranoReason3Short:
+      'Molti gioielli venduti come "vetro veneziano" nascono lontano dalla laguna. Noi scegliamo i pezzi da laboratori che conosciamo. L\'arte delle perle di vetro è patrimonio UNESCO dal 2020.',
     shopByCategory: "Acquista per categoria",
     whyUsTitle: "Perché scegliere noi",
     whyShipping: "Spedizione veloce",
@@ -1005,27 +1066,27 @@ const it: Dictionary = {
     whySecureBody: "Pagamenti con carta e PayPal, mai memorizzati sui nostri server.",
     whyReturns: "Resi facili",
     whyReturnsBody: "Diritto di recesso di 14 giorni su ogni ordine, in tutta l'UE.",
-    testimonialsTitle: "Cosa dicono i clienti",
+    testimonialsTitle: "Da chi li indossa già",
     verifiedBuyer: "Acquirente verificato",
     previousSlide: "Precedente",
     nextSlide: "Successivo",
     pauseSlides: "Metti in pausa la presentazione",
     playSlides: "Avvia la presentazione",
-    newsletterCtaTitle: "Ottieni il 10% di sconto sul tuo primo ordine",
+    newsletterCtaTitle: "Una lettera, ogni tanto",
     newsletterCtaBody:
-      "Iscriviti e usa il codice WELCOME10 al checkout. Riceverai anche nuovi pezzi e offerte occasionali, direttamente nella tua email.",
-    newsletterSubmit: "Ottieni il 10%",
+      "I nuovi pezzi quando arrivano e, ogni tanto, una storia dal Journal. Per cominciare, il 10% sul primo ordine con il codice WELCOME10.",
+    newsletterSubmit: "Iscriviti",
     faqTitle: "Prima di scegliere.",
     faq: [
       {
         question: "È vero vetro di Murano?",
         answer:
-          "Sì, ogni pezzo è vetro lavorato a mano a Murano, Italia, con tecniche tradizionali di lavorazione a lume e soffiatura, mai stampato o prodotto in serie. Leggi la nostra guida completa al vetro di Murano per capire come riconoscere il vetro autentico dalle imitazioni.",
+          'Sì, i nostri gioielli sono realizzati con vetro di Murano, e alcuni modelli nascono nei laboratori con cui collaboriamo. La nostra guida spiega come distinguere il vetro di Murano dalle imitazioni spesso vendute come "vetro veneziano".',
       },
       {
         question: "Dove vengono realizzati i prodotti?",
         answer:
-          "A Murano, la piccola isola della laguna veneziana che da oltre 700 anni è il centro della lavorazione del vetro in Italia. Ogni pezzo è modellato a mano in una fornace attiva sull'isola.",
+          "Il vetro viene da Murano, l'isola della laguna dove Venezia lavora il vetro dal 1291. Alcuni modelli nascono nei laboratori con cui collaboriamo.",
       },
     ],
     faqShippingQuestion: "Quali opzioni di spedizione e reso sono disponibili?",
@@ -1035,13 +1096,12 @@ const it: Dictionary = {
   about: {
     title: "Chi siamo",
     intro: (storeName: string) =>
-      `Abbiamo creato ${storeName} per portare gioielli autentici in vetro di Murano soffiato a mano a chi non può visitare di persona le fornaci. Ogni pezzo è realizzato con tecniche tramandate da sette secoli sull'isola di Murano, spedito direttamente da Venezia.`,
-    heritageImageAlt:
-      "Case dai colori vivaci lungo un canale di Burano, nella laguna di Venezia",
+      `Abbiamo creato ${storeName} per chi ama il vetro veneziano ma non può passeggiare di persona lungo le fondamenta di Murano. Non tutti i gioielli li realizziamo noi: alcuni arrivano da laboratori che conosciamo e di cui ci fidiamo. Ciò che li accomuna è il modo in cui li scegliamo: il colore del vetro, le proporzioni, la cura delle finiture.`,
+    heritageImageAlt: "Case dai colori vivaci lungo un canale di Burano, nella laguna di Venezia",
     valuesTitle: "Cosa ci sta a cuore",
-    value1Title: "Prima la qualità",
+    value1Title: "Scelti uno a uno",
     value1Body:
-      "Ogni pezzo è realizzato a Murano con tecniche tradizionali di lavorazione a lume e soffiatura del vetro. Niente stampi, niente produzione in serie.",
+      "Guardiamo ogni modello prima che entri in collezione: il colore del vetro, la chiusura, come cade quando lo indossi.",
     value2Title: "Prezzi trasparenti",
     value2Body: "Il prezzo che vedi include le tasse. Nessuna sorpresa al checkout.",
     value3Title: "Assistenza reale",
@@ -1052,13 +1112,13 @@ const it: Dictionary = {
     friendsIntro: "Siamo amici del team di ",
     friendsLinkText: "Venetian Murano Glass",
     friendsOutro: ".",
-    heritageTitle: "L'arte dietro ogni pezzo",
+    heritageTitle: "Breve storia del vetro di Murano",
     heritageBody1:
-      "La lavorazione del vetro di Murano risale al 1291, quando le fornaci di Venezia furono trasferite sull'isola di Murano, sia per proteggere la città dal rischio di incendi, sia per custodire le tecniche dei vetrai in un luogo più facile da controllare. In sette secoli, quell'isolamento è diventato una concentrazione di maestria che non si trova altrove: generazioni di maestri che si sono tramandati tecniche di lavorazione a lume, murrine e soffiatura del vetro ancora oggi interamente manuali.",
+      "La storia del vetro di Murano comincia nel 1291, quando Venezia trasferì le sue fornaci sull'isola: in parte per allontanare il rischio di incendi dalla città, in parte per tenere vicini i saperi dei vetrai. Nei secoli quella piccola isola ha raccolto una densità di competenze rara: lavorazione a lume, murrine, soffiatura, tramandate da maestro ad apprendista e ancora in gran parte manuali.",
     heritageBody2:
-      "Ogni pezzo qui è realizzato con queste stesse tecniche tradizionali: nessuno stampo, nessuna produzione in serie. Le piccole variazioni di colore, le bolle e le forme non sono difetti: sono ciò che rende un pezzo soffiato a mano unico, mai identico a un altro.",
+      "Il vetro lavorato a mano raramente esce uguale due volte: una piccola bolla, un cambio di tono, una curva che gira in modo appena diverso. Sono i segni che cerchiamo quando decidiamo cosa entra in collezione.",
     guideLinkBody:
-      "Vuoi la storia completa? Ogni tecnica nominata nelle descrizioni dei nostri prodotti, come riconoscere il vetro autentico soffiato a mano da un'imitazione, e come prendertene cura.",
+      "Vuoi la storia completa? Le tecniche principali, come distinguere il vetro di Murano da un'imitazione e come prendertene cura.",
     guideLinkCta: "Leggi la guida completa al vetro di Murano",
   },
   contact: {
@@ -1107,9 +1167,9 @@ const it: Dictionary = {
   },
   look: {
     kicker: "Completa il look",
-    title: "Un look, tre dettagli.",
-    subtitle: "Tre pezzi, un look inconfondibile.",
-    intro: "Collana, bracciale e orecchini della stessa collezione, pensati per essere indossati insieme.",
+    title: "Tre pezzi, un solo dialogo di colore.",
+    subtitle: "Collana, bracciale e orecchini che si rispondono.",
+    intro: "Scelti dalla stessa tavolozza: stanno bene insieme, e altrettanto bene da soli.",
     individualTotal: "Totale dei singoli pezzi",
     setTotal: "Set completo",
     pairTotal: "Due pezzi",
@@ -1122,33 +1182,38 @@ const it: Dictionary = {
     added: "Aggiunto al carrello",
     thisPiece: "Questo pezzo",
     include: "Includi {name}",
-    unavailable: "Un pezzo è esaurito, quindi il set completo al momento non è disponibile. Gli altri pezzi si possono comunque aggiungere singolarmente.",
+    unavailable:
+      "Un pezzo è esaurito, quindi il set completo al momento non è disponibile. Gli altri pezzi si possono comunque aggiungere singolarmente.",
   },
   looks: {
     navLabel: "Look",
     title: "I nostri look",
-    subtitle: "Gioielli pensati per essere indossati insieme.",
-    metaDescription: "Collane, bracciali e orecchini in vetro di Murano abbinati, fatti a mano a Murano e pensati per essere indossati insieme.",
-    viewLook: "Guarda i gioielli del look",
+    subtitle: "Gioielli scelti per essere indossati insieme.",
+    metaDescription:
+      "Collane, bracciali e orecchini in vetro di Murano riuniti per tavolozza in look da indossare insieme, o uno alla volta.",
+    viewLook: "Guarda il look da vicino",
     allLooks: "Tutti i look",
     pieces: "{n} pezzi",
     empty: "Nuovi look sono in arrivo.",
     backToLooks: "Tutti i look",
     composeKicker: "Il tuo stile",
     composeTitle: "Crea il tuo look",
-    composeSubtitle: "Scegli collana, bracciale e orecchini, guardali insieme e risparmia il {percent}% sui tre.",
+    composeSubtitle:
+      "Scegli collana, bracciale e orecchini, guardali insieme e risparmia il {percent}% sui tre.",
     composeCta: "Inizia a comporre",
     composeHint: "Scegli collana, bracciale e orecchini per risparmiare il {percent}%.",
     composeTotal: "Il tuo look",
     composeAdd: "Aggiungi il tuo look al carrello",
-    composeMeta: "Crea il tuo look in vetro di Murano: scegli collana, bracciale e orecchini, guardali insieme e risparmia sui tre.",
+    composeMeta:
+      "Crea il tuo look in vetro di Murano: scegli collana, bracciale e orecchini, guardali insieme e risparmia sui tre.",
   },
   giftCard: {
     productName: "Biglietto regalo personalizzato",
-    title: "Rendi personale il tuo regalo",
-    subtitle: "Aggiungi un tocco di magia veneziana al tuo regalo con un messaggio personalizzato, stampato con cura solo per chi lo riceve.",
-    metaDescription: "Un biglietto regalo Perla Murano Glass personalizzato: scegli un messaggio o scrivi il tuo, scegli il carattere, e noi lo stampiamo e lo mettiamo nella confezione.",
-    intro: "Crea qualcosa solo per lei, o per lui.",
+    title: "Qualche parola per accompagnarlo",
+    subtitle: "Qualche parola tua, su un biglietto che inviamo per email appena l'ordine è pagato.",
+    metaDescription:
+      "Biglietto regalo digitale personalizzato Perla Murano Glass: scegli un messaggio o scrivi il tuo, scegli il carattere e lo inviamo per email al destinatario quando l'ordine è pagato.",
+    intro: "Scrivilo come lo diresti a voce.",
     recipientLabel: "Nome del destinatario",
     recipientPlaceholder: "Per chi è questo regalo?",
     senderLabel: "Il tuo nome",
@@ -1158,25 +1223,46 @@ const it: Dictionary = {
     customTab: "Scrivi il tuo",
     customPlaceholder: "Scrivi qui il tuo messaggio personale…",
     fontTitle: "Rendilo tuo.",
-    previewTitle: "Guarda il tuo messaggio prendere vita.",
+    previewTitle: "Guarda come verrà.",
     forLine: "Per {name}",
     fromLine: "Con affetto, {name}",
     add: "Aggiungi il biglietto personalizzato · {price}",
     update: "Aggiorna il biglietto",
     added: "Aggiunto al carrello",
     emptyError: "Scegli o scrivi prima un messaggio.",
-    printedNote: "Il tuo biglietto personalizzato sarà stampato appositamente per questo ordine e inserito nella confezione Perla.",
+    deliveryNote:
+      "Il biglietto è digitale: lo inviamo per email al destinatario appena l'ordine è pagato. Si può aggiungere solo a un ordine.",
     pdpTitle: "Rendilo un regalo",
-    pdpLine: "Aggiungi un biglietto regalo personalizzato a {price}",
-    pdpBody: "Il tuo messaggio sarà stampato con cura e inserito nella confezione Perla.",
+    pdpLine: "Aggiungi un biglietto regalo digitale a {price}",
     pdpCta: "Personalizza il tuo regalo",
+    recipientEmailLabel: "Email del destinatario",
+    recipientEmailPlaceholder: "A chi inviamo il biglietto?",
+    recipientEmailHelp:
+      "Inviamo il biglietto a questo indirizzo appena l'ordine è pagato. Non lo usiamo per nient'altro.",
+    emailError: "Inserisci l'indirizzo email del destinatario.",
+    needsOrder:
+      "Il biglietto digitale si acquista insieme a un ordine: prima aggiungi un gioiello al carrello.",
+    needsOrderCta: "Scopri la collezione",
+    sendTo: "Invia a",
+    emailSubject: "{sender} ti ha inviato un biglietto",
+    emailIntro:
+      "{sender} ha scelto per te un gioiello in vetro di Murano e ti ha scritto qualche parola.",
+    emailButton: "Apri il tuo biglietto",
+    emailFooter:
+      "Questo biglietto è stato inviato su richiesta di chi l'ha scritto. Non devi fare nulla.",
+    cardPageTitle: "Un biglietto per te, da {sender}",
+    cardPageTitleAnon: "Un biglietto per te",
+    cardPageNote:
+      "Scritto per te e inviato insieme a un regalo in vetro di Murano. Gira il biglietto per vedere il retro.",
+    cardPageCta: "Scopri il vetro di Murano",
     yourMessage: "Il tuo messaggio",
     fontLabel: "Carattere",
     edit: "Modifica",
     remove: "Rimuovi",
-    adHeadline: "Regala un piccolo pezzo di Venezia.",
-    adSub: "Ora rendilo personale.",
-    adBody: "Aggiungi un biglietto regalo Perla personalizzato a soli {price}. Scegli uno dei nostri messaggi eleganti o scrivi il tuo, scegli il carattere che preferisci e crea un messaggio pensato solo per chi lo riceve.",
+    adHeadline: "Un piccolo pezzo di Venezia, e qualche parola.",
+    adSub: "Aggiungi un biglietto tuo.",
+    adBody:
+      "Un biglietto digitale a {price}, da aggiungere all'ordine: scegli uno dei nostri messaggi o scrivi il tuo, scegli il carattere e lo inviamo per email appena l'ordine è pagato.",
     adCta: "Crea il tuo messaggio",
     seeBack: "Guarda il retro",
     seeFront: "Guarda il fronte",
@@ -1184,11 +1270,13 @@ const it: Dictionary = {
     sideBack: "Retro",
     dragHint: "Trascina i simboli per posizionarli dove vuoi sul biglietto.",
     stickersTitle: "Aggiungi un tocco di luce.",
-    stickersHelp: "Facoltativo: tocca un simbolo per aggiungerlo, poi trascinalo dove preferisci sul biglietto.",
+    stickersHelp:
+      "Facoltativo: tocca un simbolo per aggiungerlo, poi trascinalo dove preferisci sul biglietto.",
     stickersCount: "{count} di {max}",
     addSticker: "Aggiungi simbolo: {name}",
     removeSticker: "Rimuovi simbolo: {name}",
-    moveSticker: "{name} sul biglietto: trascinalo o usa le frecce per spostarlo, Canc per rimuoverlo",
+    moveSticker:
+      "{name} sul biglietto: trascinalo o usa le frecce per spostarlo, Canc per rimuoverlo",
     stickers: {
       heart: "Cuore",
       pearl: "Perla",
@@ -1198,7 +1286,7 @@ const it: Dictionary = {
       moon: "Luna",
     },
     backTitle: "Scegli il retro.",
-    backHelp: "Sul retro c'è il logo Perla. Scegli il colore del cartoncino su cui è stampato.",
+    backHelp: "Il retro porta il logo Perla. Scegline il colore.",
     backLabel: "Retro",
     backs: {
       ivory: "Avorio",
@@ -1207,30 +1295,31 @@ const it: Dictionary = {
       blush: "Rosa cipria",
     },
     fonts: {
-      serif: "Serif elegante",
-      script: "Corsivo di lusso",
+      serif: "Serif",
+      script: "Corsivo",
       classic: "Classico",
-      modern: "Moderno minimale",
-      handwritten: "Calligrafia romantica",
+      modern: "Moderno",
+      handwritten: "Scritto a mano",
     },
     presets: [
-      "Un piccolo pezzo di Venezia, solo per te.",
-      "Con amore, da Venezia.",
-      "Un regalo speciale per una persona speciale.",
-      "Fatto con amore, scelto solo per te.",
-      "Un po' di magia di Murano, solo per te.",
-      "A chi rende la vita più bella.",
-      "Con amore e un po' di luce da Venezia.",
+      "Un piccolo pezzo di Venezia, per te.",
+      "Perché mi ha fatto pensare a te.",
+      "Per i giorni che chiedono un po' di colore.",
+      "Scelto pensando a te.",
+      "A chi rende migliori i giorni qualunque.",
+      "Buon compleanno. Indossalo spesso.",
+      "Grazie, di tutto.",
     ],
   },
   giftFinder: {
-    homeCtaLine: "Non sai cosa scegliere? Trova il regalo di Murano perfetto",
+    homeCtaLine: "Cerchi un regalo e non sai da dove partire?",
     homeCtaTime: "5 domande · circa 5 minuti",
-    homeCtaDetails: "Dicci per chi è, l’occasione, lo stile, il budget e il tipo di gioiello: ti abbineremo pezzi in vetro di Murano davvero disponibili.",
+    homeCtaDetails:
+      "Cinque domande su chi lo riceve e su cosa ama: ti mostriamo i pezzi che gli somigliano, tra quelli disponibili.",
     productCtaLine: "Non sei sicuro che sia quello giusto? Prova il nostro Trova Regalo",
-    metaTitle: "Trova Regalo: il regalo perfetto in vetro di Murano",
+    metaTitle: "Trova Regalo: scegliere un regalo in vetro di Murano",
     metaDescription:
-      "Rispondi a cinque semplici domande e ti proponiamo il regalo perfetto in vetro di Murano fatto a mano, scelto tra i pezzi realmente disponibili.",
+      "Cinque domande su chi lo riceve e cosa ama, e ti suggeriamo gioielli in vetro di Murano disponibili adesso.",
     stepCounter: "Passo {current} di {total}",
     back: "Indietro",
     next: "Avanti",
@@ -1276,18 +1365,18 @@ const it: Dictionary = {
       notSure: "Non sono sicuro? Sorprendimi",
       completeSet: "Un set completo abbinato",
     },
-    resultsTitle: "Abbiamo trovato il tuo abbinamento",
-    resultsSubtitle: "Scelto per te dalla nostra collezione in vetro di Murano fatto a mano.",
+    resultsTitle: "Qualche gioiello che potrebbe piacere",
+    resultsSubtitle: "Scelti tra i pezzi disponibili, in base alle tue risposte.",
     reasonStyle: "Corrisponde allo stile scelto",
-    reasonOccasion: "Perfetto per l'occasione",
+    reasonOccasion: "Adatto all'occasione",
     reasonBudget: "Nel tuo budget",
     reasonType: "Il tipo di gioiello che cercavi",
-    reasonFallback: "Una splendida scelta fatta a mano dalla nostra collezione",
+    reasonFallback: "Uno che ti suggeriamo dalla collezione",
     shopThisGift: "Scopri questo regalo",
     addToCart: "Aggiungi questo regalo al carrello",
     added: "Aggiunto al carrello",
     emptyTitle: "Questa volta nessun abbinamento esatto",
-    emptyBody: "Sfoglia invece l'intera collezione. Ogni pezzo è fatto a mano a Murano.",
+    emptyBody: "Prova a sfogliare l'intera collezione, oppure cambia qualche risposta.",
     emptyCta: "Sfoglia tutti i prodotti",
     emailTitle: "Inviami questi abbinamenti via email",
     emailPlaceholder: "tu@esempio.com",
@@ -1296,11 +1385,13 @@ const it: Dictionary = {
     emailSuccess: "Inviato! Controlla la tua casella email.",
     emailError: "Non è stato possibile inviarlo. Riprova.",
     bundleTitle: "Completa il look",
-    bundleIntro: "Questo pezzo fa parte di un set abbinato. Risparmia il 15% acquistandoli insieme.",
+    bundleIntro:
+      "Questo pezzo fa parte di un set abbinato. Risparmia il 15% acquistandoli insieme.",
   },
   journal: {
     title: "Storie di Murano",
-    intro: "Storie di vetro veneziano, artigianalità e arte del dono.",
+    intro:
+      "Appunti sul vetro veneziano: la sua storia, come si lavora, come curarlo e come regalarlo.",
     explore: "Scopri le storie",
     readMore: "Leggi di più",
     minRead: "{n} min di lettura",
@@ -1314,14 +1405,14 @@ const it: Dictionary = {
     catBuying: "Guida all'acquisto",
     catCare: "Cura",
     catGifting: "Regali",
-    storyLink: "Scopri la storia del vetro di Murano",
+    storyLink: "Leggi la storia del vetro di Murano",
     nav: "Storie",
     byline: "Di Perla Murano Glass",
     englishOnly: "Questo articolo è disponibile solo in inglese.",
     photoCredit: "Foto: {credit}",
   },
   faq: {
-    intro: "Le risposte per scegliere con serenità.",
+    intro: "Risposte brevi alle domande più frequenti.",
     eyebrow: "Informazioni / FAQ",
     more: "Altre domande",
     fewer: "Meno domande",
@@ -1329,22 +1420,31 @@ const it: Dictionary = {
     contactCta: "Contattaci",
     careLink: "Leggi la guida alla cura",
     giftLink: "Prova il Trova Regalo",
-    whereQ: "Dove vengono realizzati e da dove vengono spediti i gioielli?",
-    whereA: "Ogni pezzo è realizzato con vetro di Murano, l'isola del vetro nella laguna di Venezia, e ti viene spedito dall'Italia.",
+    whereQ: "Da dove vengono i gioielli, e da dove vengono spediti?",
+    whereA:
+      "Il vetro viene da Murano, l'isola del vetro nella laguna di Venezia, e alcuni modelli nascono nei laboratori con cui collaboriamo. Gli ordini partono dall'Italia.",
     shippingCostQ: "Quanto costa la spedizione?",
-    shippingCostA: "La spedizione è gratuita in Italia e in Europa. Verso USA e Canada costa {northAmerica}, verso il resto del mondo {rest}. I dazi per le consegne fuori dall'UE non sono inclusi.",
-    shippingCostFallback: "Il costo di spedizione per il tuo indirizzo è indicato al checkout, prima del pagamento.",
+    shippingCostA:
+      "La spedizione è gratuita in Italia e in Europa. Verso USA e Canada costa {northAmerica}, verso il resto del mondo {rest}. I dazi per le consegne fuori dall'UE non sono inclusi.",
+    shippingCostFallback:
+      "Il costo di spedizione per il tuo indirizzo è indicato al checkout, prima del pagamento.",
     shippingTimeQ: "Quanto tempo richiede la spedizione?",
-    shippingTimeA: "La consegna standard richiede di solito {europe} giorni in Europa, {northAmerica} giorni verso USA e Canada e {rest} giorni verso il resto del mondo. La stima per il tuo indirizzo è indicata al checkout.",
-    shippingTimeFallback: "I tempi di consegna stimati per ogni metodo di spedizione sono indicati al checkout, prima del pagamento.",
+    shippingTimeA:
+      "La consegna standard richiede di solito {europe} giorni in Europa, {northAmerica} giorni verso USA e Canada e {rest} giorni verso il resto del mondo. La stima per il tuo indirizzo è indicata al checkout.",
+    shippingTimeFallback:
+      "I tempi di consegna stimati per ogni metodo di spedizione sono indicati al checkout, prima del pagamento.",
     returnsQ: "Posso restituire o cambiare il mio ordine?",
-    returnsA: "Sì. Hai 14 giorni dalla consegna per recedere dall'acquisto e ti rimborsiamo sul metodo di pagamento originale entro 14 giorni, spedizione standard inclusa. Le spese di reso sono a tuo carico, salvo che il pezzo sia difettoso. Per un cambio, contattaci.",
+    returnsA:
+      "Sì. Hai 14 giorni dalla consegna per recedere dall'acquisto e ti rimborsiamo sul metodo di pagamento originale entro 14 giorni, spedizione standard inclusa. Le spese di reso sono a tuo carico, salvo che il pezzo sia difettoso. Per un cambio, contattaci.",
     giftQ: "Un gioiello in vetro di Murano è una bella idea regalo?",
-    giftA: "Sì. Ogni gioiello è lavorato a mano in Italia con autentico vetro di Murano: un dono personale e ricco di carattere, diverso da un accessorio prodotto in serie. Arriva nella nostra confezione firmata, già pronto per un compleanno, un anniversario, la festa della mamma o per dire grazie. Se hai un dubbio sul modello, il Trova Regalo ti aiuta a scegliere.",
+    giftA:
+      "Spesso sì. Il vetro porta il colore come pochi altri materiali, e un gioiello scelto pensando ai colori di chi lo riceve finisce indosso, non in un cassetto. Ogni ordine arriva nella nostra confezione regalo, pronto per un compleanno, un anniversario o un grazie. Se hai dubbi, il Trova Regalo ti aiuta a restringere la scelta.",
     damagedQ: "E se il mio gioiello arriva danneggiato?",
-    damagedA: "Contattaci indicando il numero d'ordine e, se possibile, una foto. Organizzeremo una sostituzione, una riparazione o un rimborso completo, spese di reso incluse.",
+    damagedA:
+      "Contattaci indicando il numero d'ordine e, se possibile, una foto. Organizzeremo una sostituzione, una riparazione o un rimborso completo, spese di reso incluse.",
     contactQ: "Come posso contattarvi?",
-    contactA: "Scrivici dalla pagina contatti o via email a {email}. Ti risponderemo il prima possibile.",
+    contactA:
+      "Scrivici dalla pagina contatti o via email a {email}. Ti risponderemo il prima possibile.",
   },
   product: {
     outOfStock: "Esaurito",
@@ -1375,49 +1475,50 @@ const it: Dictionary = {
     storyTitle: "La storia di questo pezzo",
     shippingBanner:
       "Spedizione omaggio in Italia ed Europa · USA e Canada {northAmerica} · Resto del mondo {rest}",
-    handmadeBadge: "Fatto a mano in Italia",
+    handmadeBadge: "Vetro di Murano",
     lightweightBadge: "Leggero",
     seeReviews: "Vedi le recensioni",
-    giftReassuranceTitle: "Un regalo in vetro di Murano da ricordare",
-    giftReassuranceBody: "Lavorato a mano in Italia, confezionato con cura e pronto da donare.",
-    giftSectionEyebrow: "Il regalo perfetto",
-    giftSectionHeadline: "Più di un gioiello, un'emozione che resta.",
+    giftReassuranceTitle: "Pronto da regalare",
+    giftReassuranceBody:
+      "Arriva nella nostra confezione regalo, con spazio per un biglietto stampato.",
+    giftSectionEyebrow: "Da regalare",
+    giftSectionHeadline: "Certi oggetti, in silenzio, ci ricordano qualcuno.",
     giftSectionBody:
-      "Lavorato a mano in Italia con autentico vetro di Murano, ogni gioiello ha colori e dettagli propri: un'alternativa speciale ai regali prodotti in serie. Arriva nella nostra confezione firmata, già pronto per un compleanno, un anniversario, la festa della mamma o per dire grazie. Sceglilo per una persona cara o come ricordo prezioso da tenere per te.",
+      "Il vetro conserva il suo colore negli anni, e un gioiello scelto pensando a qualcuno resta in uso a lungo. Arriva nella nostra confezione regalo, pronto per un compleanno, un anniversario o un grazie, oppure da tenere per te.",
     giftSectionLink: "Scopri la nostra confezione regalo",
-    giftFeature1: "Autentico vetro di Murano lavorato a mano",
-    giftFeature2: "Confezione firmata, pronta da regalare",
-    giftFeature3: "Un gioiello dal carattere unico",
+    giftFeature1: "Vetro di Murano, scelto pezzo per pezzo",
+    giftFeature2: "Arriva nella nostra confezione regalo",
+    giftFeature3: "Se vuoi, aggiungi un biglietto stampato",
     faq: [
       {
         question: "È vero vetro di Murano?",
         answer:
-          "Sì, ogni pezzo è vetro lavorato a mano a Murano, Italia, con le tecniche tradizionali della lavorazione a lume e della soffiatura, mai stampato o prodotto in serie. Consulta la nostra guida al vetro di Murano per riconoscere il vetro autentico dalle imitazioni.",
+          'Sì, i nostri gioielli sono realizzati con vetro di Murano, e alcuni modelli nascono nei laboratori con cui collaboriamo. La nostra guida spiega come distinguere il vetro di Murano dalle imitazioni spesso vendute come "vetro veneziano".',
       },
       {
         question: "Dove viene realizzato?",
         answer:
-          "A Murano, la piccola isola della laguna veneziana che da oltre 700 anni è il centro della lavorazione del vetro in Italia. Ogni pezzo viene modellato a mano in una fornace attiva sull'isola.",
+          "Il vetro viene da Murano, l'isola della laguna dove Venezia lavora il vetro dal 1291. Alcuni modelli nascono nei laboratori con cui collaboriamo.",
       },
       {
         question: "Come mi prendo cura del mio gioiello?",
         answer:
-          "Tienilo all'asciutto, evita il contatto con i profumi e conserva ogni pezzo separatamente per evitare graffi. Con qualche piccola attenzione, il vetro di Murano mantiene colore e brillantezza per tutta la vita.",
+          "Tienilo all'asciutto e lontano dai profumi, e conserva ogni pezzo da solo perché non si graffino a vicenda. Il vetro mantiene il suo colore; le parti in metallo durano di più con le stesse attenzioni.",
       },
       {
-        question: "Posso restituire il mio ordine?",
+        question: "Posso restituire l'ordine?",
         answer:
-          "Sì. Ogni ordine include il diritto di recesso di 14 giorni previsto dalla normativa UE. Se non è quello che cercavi, puoi restituirlo per un rimborso completo, senza bisogno di spiegazioni.",
+          "Sì. Hai 14 giorni dalla consegna per recedere dall'acquisto, e ti rimborsiamo sul metodo di pagamento originale. La spedizione di reso è a tuo carico, salvo che il pezzo sia difettoso.",
       },
       {
         question: "Quali sono le opzioni di spedizione?",
         answer:
-          "La spedizione è omaggio in Italia e nel resto d'Europa. Gli ordini verso USA e Canada hanno un costo di 30€, e di 40€ per il resto del mondo. La consegna standard richiede 3-5 giorni in Europa; gli ordini internazionali potrebbero essere soggetti a dazi doganali e imposte locali, non inclusi nel prezzo.",
+          "La spedizione è gratuita in Italia e in Europa. Per le altre destinazioni, il costo e i tempi stimati per il tuo indirizzo sono indicati al checkout, prima del pagamento.",
       },
       {
-        question: "Arriva confezionato come regalo?",
+        question: "Arriva in confezione regalo?",
         answer:
-          "Sì, ogni pezzo arriva nella nostra scatola firmata, pronto da regalare così com'è. Nessun confezionamento aggiuntivo necessario, che sia un regalo per qualcun altro o un pensiero per te stessa.",
+          "Sì. Ogni ordine arriva nella nostra confezione regalo, pronto da donare così com'è.",
       },
     ],
     noReviews: "Nessuna recensione ancora.",
@@ -1444,7 +1545,7 @@ const it: Dictionary = {
       "Semplicemente stupendo",
     ] as [string, string, string, string, string],
     charactersLeft: "{n} caratteri rimasti",
-    handmadeInMurano: "Fatto a mano a Murano",
+    handmadeInMurano: "Vetro di Murano",
     trackedShipping: "Spedizione tracciata",
     returnsBadge: "Diritto di recesso di 14 giorni",
     secureBadge: "Pagamento sicuro",
@@ -1549,7 +1650,7 @@ const it: Dictionary = {
       "Gli account creati con Google devono contattare l'assistenza per modificare questa impostazione.",
   },
   emails: {
-    tagline: "{storeName}. Autentico vetro veneziano, fatto a mano a Murano.",
+    tagline: "{storeName}. Gioielli in vetro veneziano, scelti uno a uno.",
     copyLinkHint: "Se il pulsante non funziona, copia e incolla questo link nel tuo browser:",
     verifySubject: "Conferma la tua email · {storeName}",
     verifyPreview: "Conferma il tuo indirizzo email · {storeName}",
@@ -1591,7 +1692,7 @@ const it: Dictionary = {
       },
       processing: {
         heading: "Ordine in preparazione",
-        message: "Il tuo ordine viene preparato con cura dai nostri artigiani.",
+        message: "Il tuo ordine viene controllato e confezionato con cura.",
       },
       shipped: {
         heading: "Il tuo ordine è in viaggio",
@@ -1787,7 +1888,7 @@ const it: Dictionary = {
     cta: "Esplora tutti i pezzi",
     relatedTitle: "Potrebbe piacerti anche",
     emptyTitle: "Inizia il tuo viaggio",
-    emptyBody: "Esplora la nostra collezione e scopri pezzi in vetro di Murano fatti a mano.",
+    emptyBody: "I gioielli che guardi compariranno qui, così potrai ritrovarli.",
     emptyCta: "Sfoglia la collezione",
   },
   cookieConsent: {
@@ -1891,11 +1992,20 @@ const fr: Dictionary = {
     bestSellers: "Meilleures ventes",
     popularTitle: "Les favoris de la communauté",
     muranoReason1Title: "Sept siècles d'artisanat ininterrompu",
-    muranoReason1Body: "Chaque pièce quitte Murano façonnée par un maestro qui a appris le métier de celui qui le précédait, avec les mêmes gestes de four depuis le XIVe siècle. Ni moule, ni machine — seulement le souffle et les mains.",
+    muranoReason1Body:
+      "Chaque pièce quitte Murano façonnée par un maestro qui a appris le métier de celui qui le précédait, avec les mêmes gestes de four depuis le XIVe siècle. Ni moule, ni machine — seulement le souffle et les mains.",
     muranoReason2Title: "Chaque pièce n'existe qu'une seule fois",
-    muranoReason2Body: "Le verre soufflé à la main ne peut être parfaitement reproduit. Les dégradés de couleur, les inclusions et les tourbillons de votre pièce vous appartiennent — jamais fabriqué en série, jamais dupliqué.",
+    muranoReason2Body:
+      "Le verre soufflé à la main ne peut être parfaitement reproduit. Les dégradés de couleur, les inclusions et les tourbillons de votre pièce vous appartiennent — jamais fabriqué en série, jamais dupliqué.",
     muranoReason3Title: "Un patrimoine culturel vivant",
-    muranoReason3Body: "Les maîtres verriers de Murano bénéficient de la reconnaissance UNESCO. Lorsque vous portez une pièce, vous portez une tradition que Venise garde précieusement depuis plus de sept cents ans.",
+    muranoReason3Body:
+      "Les maîtres verriers de Murano bénéficient de la reconnaissance UNESCO. Lorsque vous portez une pièce, vous portez une tradition que Venise garde précieusement depuis plus de sept cents ans.",
+    muranoReason1Short:
+      "À Murano, on travaille le verre depuis plus de sept siècles, et le métier se transmet toujours de main en main. Nos perles y naissent, dans la flamme, une à une : c'est de là que vient la profondeur de leur couleur.",
+    muranoReason2Short:
+      "Chaque perle est façonnée à la main dans le verre en fusion : une teinte plus profonde, une minuscule bulle d'air, un fil d'or qui tourne autrement. Pas des défauts, mais la signature de la main. La pièce que vous choisissez n'existe qu'ainsi.",
+    muranoReason3Short:
+      "Beaucoup de bijoux vendus comme « verre vénitien » sont fabriqués ailleurs. Les nôtres utilisent du véritable verre de Murano et sont assemblés à la main en Italie, un art protégé par l'UNESCO comme patrimoine culturel immatériel depuis 2020.",
     shopByCategory: "Acheter par catégorie",
     whyUsTitle: "Pourquoi acheter chez nous",
     whyShipping: "Livraison rapide",
@@ -2008,7 +2118,8 @@ const fr: Dictionary = {
     kicker: "Complétez le look",
     title: "Complétez le look Murano",
     subtitle: "Trois pièces, un look inimitable.",
-    intro: "Le collier, le bracelet et les boucles d'oreilles assortis de cette collection, choisis pour être portés ensemble.",
+    intro:
+      "Le collier, le bracelet et les boucles d'oreilles assortis de cette collection, choisis pour être portés ensemble.",
     individualTotal: "Total des pièces",
     setTotal: "Parure complète",
     pairTotal: "Deux pièces",
@@ -2021,13 +2132,15 @@ const fr: Dictionary = {
     added: "Ajouté au panier",
     thisPiece: "Cette pièce",
     include: "Inclure {name}",
-    unavailable: "Une pièce est en rupture de stock : la parure complète n'est pas disponible pour le moment. Les autres pièces peuvent être ajoutées séparément.",
+    unavailable:
+      "Une pièce est en rupture de stock : la parure complète n'est pas disponible pour le moment. Les autres pièces peuvent être ajoutées séparément.",
   },
   looks: {
     navLabel: "Looks",
     title: "Nos looks",
     subtitle: "Des bijoux pensés pour être portés ensemble.",
-    metaDescription: "Colliers, bracelets et boucles d'oreilles en verre de Murano assortis, faits main à Murano et pensés pour être portés ensemble.",
+    metaDescription:
+      "Colliers, bracelets et boucles d'oreilles en verre de Murano assortis, faits main à Murano et pensés pour être portés ensemble.",
     viewLook: "Voir les bijoux de cette parure",
     allLooks: "Tous les looks",
     pieces: "{n} pièces",
@@ -2035,18 +2148,23 @@ const fr: Dictionary = {
     backToLooks: "Tous les looks",
     composeKicker: "Votre style",
     composeTitle: "Composez votre look",
-    composeSubtitle: "Choisissez un collier, un bracelet et des boucles d'oreilles, voyez-les ensemble et économisez {percent} % sur les trois.",
+    composeSubtitle:
+      "Choisissez un collier, un bracelet et des boucles d'oreilles, voyez-les ensemble et économisez {percent} % sur les trois.",
     composeCta: "Commencer",
-    composeHint: "Choisissez un collier, un bracelet et des boucles d'oreilles pour économiser {percent} %.",
+    composeHint:
+      "Choisissez un collier, un bracelet et des boucles d'oreilles pour économiser {percent} %.",
     composeTotal: "Votre look",
     composeAdd: "Ajouter votre look au panier",
-    composeMeta: "Composez votre look en verre de Murano : choisissez un collier, un bracelet et des boucles d'oreilles, voyez-les ensemble et économisez sur les trois.",
+    composeMeta:
+      "Composez votre look en verre de Murano : choisissez un collier, un bracelet et des boucles d'oreilles, voyez-les ensemble et économisez sur les trois.",
   },
   giftCard: {
     productName: "Carte cadeau personnalisée",
     title: "Rendez votre cadeau personnel",
-    subtitle: "Ajoutez une touche de magie vénitienne à votre cadeau avec un message personnalisé, joliment imprimé rien que pour lui ou pour elle.",
-    metaDescription: "Une carte cadeau Perla Murano Glass personnalisée : choisissez un message ou écrivez le vôtre, une police, et nous l'imprimons et la plaçons dans le colis.",
+    subtitle:
+      "Quelques mots à vous, sur une carte que nous lui envoyons par e-mail dès que votre commande est payée.",
+    metaDescription:
+      "Une carte cadeau numérique personnalisée Perla Murano Glass : choisissez un message ou écrivez le vôtre, une police, et nous l'envoyons par e-mail au destinataire une fois la commande payée.",
     intro: "Créez quelque chose rien que pour eux.",
     recipientLabel: "Nom du destinataire",
     recipientPlaceholder: "Pour qui est ce cadeau ?",
@@ -2064,18 +2182,39 @@ const fr: Dictionary = {
     update: "Mettre à jour la carte",
     added: "Ajoutée au panier",
     emptyError: "Choisissez ou écrivez d'abord un message.",
-    printedNote: "Votre carte personnalisée sera imprimée spécialement pour cette commande et placée dans votre colis Perla.",
+    deliveryNote:
+      "Votre carte est numérique : nous l'envoyons par e-mail au destinataire dès que votre commande est payée. Elle ne peut être ajoutée qu'à une commande.",
     pdpTitle: "Offrez-le",
-    pdpLine: "Ajoutez une carte cadeau personnalisée pour {price}",
-    pdpBody: "Votre message sera joliment imprimé et glissé dans votre colis Perla.",
+    pdpLine: "Ajoutez une carte cadeau numérique pour {price}",
     pdpCta: "Personnaliser votre cadeau",
+    recipientEmailLabel: "E-mail du destinataire",
+    recipientEmailPlaceholder: "À qui envoyer la carte ?",
+    recipientEmailHelp:
+      "Nous envoyons la carte à cette adresse dès que votre commande est payée. Nous ne l'utilisons pour rien d'autre.",
+    emailError: "Saisissez l'adresse e-mail du destinataire.",
+    needsOrder:
+      "La carte numérique s'achète avec une commande : ajoutez d'abord un bijou à votre panier.",
+    needsOrderCta: "Découvrir la collection",
+    sendTo: "Envoyer à",
+    emailSubject: "{sender} vous a envoyé une carte",
+    emailIntro:
+      "{sender} a choisi pour vous un bijou en verre de Murano et vous a écrit quelques mots.",
+    emailButton: "Ouvrir votre carte",
+    emailFooter:
+      "Cette carte a été envoyée à la demande de la personne qui l'a écrite. Vous n'avez rien à faire.",
+    cardPageTitle: "Une carte pour vous, de {sender}",
+    cardPageTitleAnon: "Une carte pour vous",
+    cardPageNote:
+      "Écrite pour vous et envoyée avec un bijou en verre de Murano. Retournez la carte pour voir le verso.",
+    cardPageCta: "Découvrir le verre de Murano",
     yourMessage: "Votre message",
     fontLabel: "Police",
     edit: "Modifier",
     remove: "Retirer",
     adHeadline: "Offrez-lui un petit morceau de Venise.",
     adSub: "Et rendez-le personnel.",
-    adBody: "Ajoutez une carte cadeau Perla personnalisée pour seulement {price}. Choisissez l'un de nos messages élégants ou écrivez le vôtre, choisissez votre police préférée et créez un message pensé rien que pour eux.",
+    adBody:
+      "Une carte numérique pour {price}, ajoutée à votre commande : choisissez l'un de nos messages ou écrivez le vôtre, une police, et nous l'envoyons par e-mail une fois la commande payée.",
     adCta: "Créer votre message",
     seeBack: "Voir le verso",
     seeFront: "Voir le recto",
@@ -2083,11 +2222,13 @@ const fr: Dictionary = {
     sideBack: "Verso",
     dragHint: "Faites glisser les motifs pour les placer où vous voulez sur la carte.",
     stickersTitle: "Ajoutez une touche d'éclat.",
-    stickersHelp: "Facultatif : touchez un motif pour l'ajouter, puis faites-le glisser où vous le souhaitez sur la carte.",
+    stickersHelp:
+      "Facultatif : touchez un motif pour l'ajouter, puis faites-le glisser où vous le souhaitez sur la carte.",
     stickersCount: "{count} sur {max}",
     addSticker: "Ajouter le motif : {name}",
     removeSticker: "Retirer le motif : {name}",
-    moveSticker: "{name} sur la carte : faites-le glisser ou utilisez les flèches pour le déplacer, Suppr pour le retirer",
+    moveSticker:
+      "{name} sur la carte : faites-le glisser ou utilisez les flèches pour le déplacer, Suppr pour le retirer",
     stickers: {
       heart: "Cœur",
       pearl: "Perle",
@@ -2097,7 +2238,7 @@ const fr: Dictionary = {
       moon: "Lune",
     },
     backTitle: "Choisissez le verso.",
-    backHelp: "Le verso porte le logo Perla. Choisissez la couleur du papier sur lequel il est imprimé.",
+    backHelp: "Le verso porte le logo Perla. Choisissez sa couleur.",
     backLabel: "Verso",
     backs: {
       ivory: "Ivoire",
@@ -2125,7 +2266,8 @@ const fr: Dictionary = {
   giftFinder: {
     homeCtaLine: "Vous hésitez ? Trouvez le cadeau Murano parfait",
     homeCtaTime: "5 questions · environ 5 minutes",
-    homeCtaDetails: "Indiquez la personne, l’occasion, le style, le budget et le type de bijou. Nous vous proposerons des pièces en verre de Murano réellement disponibles.",
+    homeCtaDetails:
+      "Indiquez la personne, l’occasion, le style, le budget et le type de bijou. Nous vous proposerons des pièces en verre de Murano réellement disponibles.",
     productCtaLine: "Pas sûr que ce soit le bon ? Essayez notre Cadeau Idéal",
     metaTitle: "Cadeau Idéal, Le cadeau parfait en verre de Murano",
     metaDescription:
@@ -2195,7 +2337,8 @@ const fr: Dictionary = {
     emailSuccess: "Envoyé, vérifiez votre boîte de réception.",
     emailError: "Impossible d'envoyer. Veuillez réessayer.",
     bundleTitle: "Complétez le look",
-    bundleIntro: "Cette pièce fait partie d'une parure assortie, économisez 15 % en les achetant ensemble.",
+    bundleIntro:
+      "Cette pièce fait partie d'une parure assortie, économisez 15 % en les achetant ensemble.",
   },
   journal: {
     title: "Le Journal de Murano",
@@ -2229,21 +2372,30 @@ const fr: Dictionary = {
     careLink: "Lire notre guide d'entretien",
     giftLink: "Essayer le Cadeau Idéal",
     whereQ: "Où mes bijoux sont-ils fabriqués et d'où sont-ils expédiés ?",
-    whereA: "Chaque pièce est réalisée en verre de Murano, l'île des verriers de la lagune de Venise, et vous est expédiée depuis l'Italie.",
+    whereA:
+      "Chaque pièce est réalisée en verre de Murano, l'île des verriers de la lagune de Venise, et vous est expédiée depuis l'Italie.",
     shippingCostQ: "Combien coûte la livraison ?",
-    shippingCostA: "La livraison est offerte en Italie et en Europe. Vers les États-Unis et le Canada, elle coûte {northAmerica}, et {rest} vers le reste du monde. Les droits d'importation hors UE ne sont pas inclus.",
-    shippingCostFallback: "Le coût de livraison pour votre adresse est indiqué lors du paiement, avant de valider.",
+    shippingCostA:
+      "La livraison est offerte en Italie et en Europe. Vers les États-Unis et le Canada, elle coûte {northAmerica}, et {rest} vers le reste du monde. Les droits d'importation hors UE ne sont pas inclus.",
+    shippingCostFallback:
+      "Le coût de livraison pour votre adresse est indiqué lors du paiement, avant de valider.",
     shippingTimeQ: "Quel est le délai de livraison ?",
-    shippingTimeA: "La livraison standard prend généralement {europe} jours en Europe, {northAmerica} jours vers les États-Unis et le Canada, et {rest} jours vers le reste du monde. L'estimation pour votre adresse est indiquée lors du paiement.",
-    shippingTimeFallback: "Le délai de livraison estimé de chaque mode d'expédition est indiqué lors du paiement, avant de valider.",
+    shippingTimeA:
+      "La livraison standard prend généralement {europe} jours en Europe, {northAmerica} jours vers les États-Unis et le Canada, et {rest} jours vers le reste du monde. L'estimation pour votre adresse est indiquée lors du paiement.",
+    shippingTimeFallback:
+      "Le délai de livraison estimé de chaque mode d'expédition est indiqué lors du paiement, avant de valider.",
     returnsQ: "Puis-je retourner ou échanger ma commande ?",
-    returnsA: "Oui. Vous disposez de 14 jours après la livraison pour vous rétracter, et nous remboursons votre moyen de paiement d'origine sous 14 jours, livraison standard comprise. Les frais de retour sont à votre charge, sauf si la pièce est défectueuse. Pour un échange, contactez-nous.",
+    returnsA:
+      "Oui. Vous disposez de 14 jours après la livraison pour vous rétracter, et nous remboursons votre moyen de paiement d'origine sous 14 jours, livraison standard comprise. Les frais de retour sont à votre charge, sauf si la pièce est défectueuse. Pour un échange, contactez-nous.",
     giftQ: "Est-ce une bonne idée de cadeau ?",
-    giftA: "Tout à fait : chaque pièce arrive prête à offrir. Si vous hésitez, notre Cadeau Idéal vous suggère des pièces en quelques questions.",
+    giftA:
+      "Tout à fait : chaque pièce arrive prête à offrir. Si vous hésitez, notre Cadeau Idéal vous suggère des pièces en quelques questions.",
     damagedQ: "Et si ma pièce arrive endommagée ?",
-    damagedA: "Contactez-nous avec votre numéro de commande et, si possible, une photo. Nous organiserons un remplacement, une réparation ou un remboursement complet, frais de retour compris.",
+    damagedA:
+      "Contactez-nous avec votre numéro de commande et, si possible, une photo. Nous organiserons un remplacement, une réparation ou un remboursement complet, frais de retour compris.",
     contactQ: "Comment vous contacter ?",
-    contactA: "Écrivez-nous via notre page de contact ou par e-mail à {email}. Nous vous répondrons dès que possible.",
+    contactA:
+      "Écrivez-nous via notre page de contact ou par e-mail à {email}. Nous vous répondrons dès que possible.",
   },
   product: {
     outOfStock: "Épuisé",
@@ -2370,7 +2522,8 @@ const fr: Dictionary = {
     title: "Votre panier",
     subtitle: "Vos bijoux, choisis à Murano.",
     empty: "Votre panier est vide",
-    emptyBody: "Chaque bijou naît une perle à la fois. Découvrez celui qui pourrait devenir le vôtre.",
+    emptyBody:
+      "Chaque bijou naît une perle à la fois. Découvrez celui qui pourrait devenir le vôtre.",
     browse: "Découvrir les bijoux",
     estimatedSubtotal: "Sous-total estimé",
     shippingNote: "Livraison gratuite pour toute commande.",
@@ -2691,7 +2844,8 @@ const fr: Dictionary = {
     cta: "Explorer toutes les pièces",
     relatedTitle: "Vous pourriez aussi aimer",
     emptyTitle: "Commencez votre voyage",
-    emptyBody: "Explorez notre collection et découvrez des pièces en verre de Murano faites à la main.",
+    emptyBody:
+      "Explorez notre collection et découvrez des pièces en verre de Murano faites à la main.",
     emptyCta: "Parcourir la collection",
   },
   cookieConsent: {
@@ -2794,11 +2948,20 @@ const de: Dictionary = {
     bestSellers: "Bestseller",
     popularTitle: "Community-Favoriten",
     muranoReason1Title: "Sieben Jahrhunderte ununterbrochenes Handwerk",
-    muranoReason1Body: "Jedes Stück verlässt Murano geformt von einem Maestro, der das Handwerk von seinem Vorgänger erlernte – mit denselben Ofengesten seit dem 14. Jahrhundert. Keine Form, keine Maschine – nur Atem und Hände.",
+    muranoReason1Body:
+      "Jedes Stück verlässt Murano geformt von einem Maestro, der das Handwerk von seinem Vorgänger erlernte – mit denselben Ofengesten seit dem 14. Jahrhundert. Keine Form, keine Maschine – nur Atem und Hände.",
     muranoReason2Title: "Jedes Stück existiert nur einmal",
-    muranoReason2Body: "Handgemachtes Glas kann nicht perfekt reproduziert werden. Die Farbverläufe, Einschlüsse und Wirbel in Ihrem Stück sind einzigartig – niemals massenhergestellt, niemals dupliziert.",
+    muranoReason2Body:
+      "Handgemachtes Glas kann nicht perfekt reproduziert werden. Die Farbverläufe, Einschlüsse und Wirbel in Ihrem Stück sind einzigartig – niemals massenhergestellt, niemals dupliziert.",
     muranoReason3Title: "Ein lebendes kulturelles Erbe",
-    muranoReason3Body: "Muranoglas-Meister genießen UNESCO-Anerkennung. Wenn Sie ein Stück tragen, tragen Sie eine Tradition, die Venedig seit über siebenhundert Jahren bewahrt.",
+    muranoReason3Body:
+      "Muranoglas-Meister genießen UNESCO-Anerkennung. Wenn Sie ein Stück tragen, tragen Sie eine Tradition, die Venedig seit über siebenhundert Jahren bewahrt.",
+    muranoReason1Short:
+      "Auf Murano wird Glas seit mehr als sieben Jahrhunderten verarbeitet, und das Handwerk geht noch immer von Hand zu Hand. Dort entstehen unsere Perlen, in der Flamme, eine nach der anderen: Daher kommt die Tiefe ihrer Farbe.",
+    muranoReason2Short:
+      "Jede Perle wird von Hand aus geschmolzenem Glas geformt: ein tieferer Ton, ein winziges Luftbläschen, ein Goldfaden, der sich anders dreht. Keine Fehler, sondern die Signatur der Hand. Das Stück, das Sie wählen, gibt es nur genau so.",
+    muranoReason3Short:
+      "Viel Schmuck, der als „venezianisches Glas“ verkauft wird, entsteht anderswo. Unserer verwendet echtes Muranoglas und wird in Italien von Hand gefertigt – eine Kunst, die die UNESCO seit 2020 als immaterielles Kulturerbe schützt.",
     shopByCategory: "Nach Kategorie einkaufen",
     whyUsTitle: "Warum bei uns einkaufen",
     whyShipping: "Schneller Versand",
@@ -2838,8 +3001,7 @@ const de: Dictionary = {
     title: "Über uns",
     intro: (storeName: string) =>
       `Wir haben ${storeName} gegründet, um handgeblasenen, authentischen Muranoglas-Schmuck zu Menschen zu bringen, die die Glashütten nicht selbst besuchen können, jedes Stück entsteht nach Techniken, die seit sieben Jahrhunderten auf der Insel Murano weitergegeben werden, und wird direkt aus Venedig verschickt.`,
-    heritageImageAlt:
-      "Bunt gestrichene Häuser an einem Kanal auf Burano in der Lagune von Venedig",
+    heritageImageAlt: "Bunt gestrichene Häuser an einem Kanal auf Burano in der Lagune von Venedig",
     valuesTitle: "Was uns wichtig ist",
     value1Title: "Qualität zuerst",
     value1Body:
@@ -2911,7 +3073,8 @@ const de: Dictionary = {
     kicker: "Den Look vervollständigen",
     title: "Vervollständigen Sie den Murano-Look",
     subtitle: "Drei Stücke, ein unverwechselbarer Look.",
-    intro: "Die passende Kette, das Armband und die Ohrringe dieser Kollektion, ausgewählt, um zusammen getragen zu werden.",
+    intro:
+      "Die passende Kette, das Armband und die Ohrringe dieser Kollektion, ausgewählt, um zusammen getragen zu werden.",
     individualTotal: "Einzelpreise gesamt",
     setTotal: "Komplettes Set",
     pairTotal: "Zwei Stücke",
@@ -2924,13 +3087,15 @@ const de: Dictionary = {
     added: "Zum Warenkorb hinzugefügt",
     thisPiece: "Dieses Stück",
     include: "{name} einschließen",
-    unavailable: "Ein Stück ist ausverkauft, daher ist das komplette Set derzeit nicht verfügbar. Die anderen Stücke können Sie weiterhin einzeln hinzufügen.",
+    unavailable:
+      "Ein Stück ist ausverkauft, daher ist das komplette Set derzeit nicht verfügbar. Die anderen Stücke können Sie weiterhin einzeln hinzufügen.",
   },
   looks: {
     navLabel: "Looks",
     title: "Unsere Looks",
     subtitle: "Schmuckstücke, die zusammen getragen werden möchten.",
-    metaDescription: "Aufeinander abgestimmte Ketten, Armbänder und Ohrringe aus Muranoglas, handgefertigt in Murano und dafür gemacht, zusammen getragen zu werden.",
+    metaDescription:
+      "Aufeinander abgestimmte Ketten, Armbänder und Ohrringe aus Muranoglas, handgefertigt in Murano und dafür gemacht, zusammen getragen zu werden.",
     viewLook: "Schmuckstücke des Looks ansehen",
     allLooks: "Alle Looks",
     pieces: "{n} Stücke",
@@ -2938,18 +3103,22 @@ const de: Dictionary = {
     backToLooks: "Alle Looks",
     composeKicker: "Ihr Stil",
     composeTitle: "Stellen Sie Ihren eigenen Look zusammen",
-    composeSubtitle: "Wählen Sie eine Kette, ein Armband und Ohrringe, sehen Sie sie zusammen und sparen Sie {percent} % auf alle drei.",
+    composeSubtitle:
+      "Wählen Sie eine Kette, ein Armband und Ohrringe, sehen Sie sie zusammen und sparen Sie {percent} % auf alle drei.",
     composeCta: "Jetzt zusammenstellen",
     composeHint: "Wählen Sie eine Kette, ein Armband und Ohrringe, um {percent} % zu sparen.",
     composeTotal: "Ihr Look",
     composeAdd: "Ihren Look in den Warenkorb",
-    composeMeta: "Stellen Sie Ihren eigenen Look aus Muranoglas zusammen: Wählen Sie Kette, Armband und Ohrringe, sehen Sie sie zusammen und sparen Sie auf alle drei.",
+    composeMeta:
+      "Stellen Sie Ihren eigenen Look aus Muranoglas zusammen: Wählen Sie Kette, Armband und Ohrringe, sehen Sie sie zusammen und sparen Sie auf alle drei.",
   },
   giftCard: {
     productName: "Personalisierte Grußkarte",
     title: "Machen Sie Ihr Geschenk persönlich",
-    subtitle: "Verleihen Sie Ihrem Geschenk ein wenig venezianischen Zauber: mit einer persönlichen Botschaft, eigens für den Empfänger gedruckt.",
-    metaDescription: "Eine personalisierte Grußkarte von Perla Murano Glass: Wählen Sie eine Botschaft oder schreiben Sie Ihre eigene, wählen Sie eine Schrift, und wir drucken sie und legen sie ins Paket.",
+    subtitle:
+      "Ein paar eigene Worte auf einer Karte, die wir per E-Mail senden, sobald Ihre Bestellung bezahlt ist.",
+    metaDescription:
+      "Eine personalisierte digitale Grußkarte von Perla Murano Glass: Botschaft wählen oder selbst schreiben, Schrift wählen, und wir senden sie per E-Mail, sobald die Bestellung bezahlt ist.",
     intro: "Gestalten Sie etwas ganz Persönliches.",
     recipientLabel: "Name des Empfängers",
     recipientPlaceholder: "Für wen ist das Geschenk?",
@@ -2967,18 +3136,39 @@ const de: Dictionary = {
     update: "Grußkarte aktualisieren",
     added: "Zum Warenkorb hinzugefügt",
     emptyError: "Bitte wählen oder schreiben Sie zuerst eine Botschaft.",
-    printedNote: "Ihre personalisierte Karte wird eigens für diese Bestellung gedruckt und in Ihr Perla-Paket gelegt.",
+    deliveryNote:
+      "Ihre Karte ist digital: Wir senden sie per E-Mail an den Empfänger, sobald Ihre Bestellung bezahlt ist. Sie kann nur zu einer Bestellung hinzugefügt werden.",
     pdpTitle: "Als Geschenk",
-    pdpLine: "Personalisierte Grußkarte für {price} hinzufügen",
-    pdpBody: "Ihre Botschaft wird sorgfältig gedruckt und Ihrem Perla-Paket beigelegt.",
+    pdpLine: "Digitale Grußkarte für {price} hinzufügen",
     pdpCta: "Geschenk personalisieren",
+    recipientEmailLabel: "E-Mail des Empfängers",
+    recipientEmailPlaceholder: "Wohin sollen wir die Karte senden?",
+    recipientEmailHelp:
+      "Wir senden die Karte an diese Adresse, sobald Ihre Bestellung bezahlt ist, und verwenden sie für nichts anderes.",
+    emailError: "Bitte geben Sie die E-Mail-Adresse des Empfängers ein.",
+    needsOrder:
+      "Die digitale Karte gibt es nur zusammen mit einer Bestellung: Legen Sie zuerst ein Schmuckstück in den Warenkorb.",
+    needsOrderCta: "Zur Kollektion",
+    sendTo: "Senden an",
+    emailSubject: "{sender} hat Ihnen eine Karte geschickt",
+    emailIntro:
+      "{sender} hat für Sie ein Schmuckstück aus Muranoglas ausgesucht und Ihnen ein paar Worte geschrieben.",
+    emailButton: "Ihre Karte öffnen",
+    emailFooter:
+      "Diese Karte wurde auf Wunsch der Person versandt, die sie geschrieben hat. Sie müssen nichts tun.",
+    cardPageTitle: "Eine Karte für Sie, von {sender}",
+    cardPageTitleAnon: "Eine Karte für Sie",
+    cardPageNote:
+      "Für Sie geschrieben und mit einem Geschenk aus Muranoglas verschickt. Drehen Sie die Karte, um die Rückseite zu sehen.",
+    cardPageCta: "Muranoglas entdecken",
     yourMessage: "Ihre Botschaft",
     fontLabel: "Schrift",
     edit: "Bearbeiten",
     remove: "Entfernen",
     adHeadline: "Schenken Sie ein kleines Stück Venedig.",
     adSub: "Und machen Sie es persönlich.",
-    adBody: "Fügen Sie für nur {price} eine personalisierte Perla-Grußkarte hinzu. Wählen Sie eine unserer eleganten Botschaften oder schreiben Sie Ihre eigene, wählen Sie Ihre Lieblingsschrift und gestalten Sie eine Botschaft ganz für den Empfänger.",
+    adBody:
+      "Eine digitale Karte für {price} zu Ihrer Bestellung: Wählen Sie eine unserer Botschaften oder schreiben Sie Ihre eigene, wählen Sie eine Schrift, und wir senden sie per E-Mail, sobald die Bestellung bezahlt ist.",
     adCta: "Ihre Botschaft gestalten",
     seeBack: "Rückseite ansehen",
     seeFront: "Vorderseite ansehen",
@@ -2986,11 +3176,13 @@ const de: Dictionary = {
     sideBack: "Rückseite",
     dragHint: "Ziehen Sie die Motive an jede beliebige Stelle der Karte.",
     stickersTitle: "Ein wenig Glanz hinzufügen.",
-    stickersHelp: "Optional: Tippen Sie auf ein Motiv, um es hinzuzufügen, und ziehen Sie es dann an die gewünschte Stelle der Karte.",
+    stickersHelp:
+      "Optional: Tippen Sie auf ein Motiv, um es hinzuzufügen, und ziehen Sie es dann an die gewünschte Stelle der Karte.",
     stickersCount: "{count} von {max}",
     addSticker: "Motiv hinzufügen: {name}",
     removeSticker: "Motiv entfernen: {name}",
-    moveSticker: "{name} auf der Karte: ziehen oder mit den Pfeiltasten verschieben, Entf zum Entfernen",
+    moveSticker:
+      "{name} auf der Karte: ziehen oder mit den Pfeiltasten verschieben, Entf zum Entfernen",
     stickers: {
       heart: "Herz",
       pearl: "Perle",
@@ -3000,7 +3192,7 @@ const de: Dictionary = {
       moon: "Mond",
     },
     backTitle: "Wählen Sie die Rückseite.",
-    backHelp: "Die Rückseite trägt das Perla-Logo. Wählen Sie die Farbe des Kartons, auf den es gedruckt wird.",
+    backHelp: "Die Rückseite trägt das Perla-Logo. Wählen Sie ihre Farbe.",
     backLabel: "Rückseite",
     backs: {
       ivory: "Elfenbein",
@@ -3028,7 +3220,8 @@ const de: Dictionary = {
   giftFinder: {
     homeCtaLine: "Unentschlossen? Finden Sie das perfekte Murano-Geschenk",
     homeCtaTime: "5 Fragen · etwa 5 Minuten",
-    homeCtaDetails: "Nennen Sie die beschenkte Person, den Anlass, den Stil, das Budget und die Schmuckart. Wir finden passende Murano-Glasstücke, die tatsächlich verfügbar sind.",
+    homeCtaDetails:
+      "Nennen Sie die beschenkte Person, den Anlass, den Stil, das Budget und die Schmuckart. Wir finden passende Murano-Glasstücke, die tatsächlich verfügbar sind.",
     productCtaLine: "Nicht sicher, ob das das Richtige ist? Testen Sie unseren Geschenkfinder",
     metaTitle: "Geschenkfinder, Das perfekte Geschenk aus Muranoglas",
     metaDescription:
@@ -3089,7 +3282,8 @@ const de: Dictionary = {
     addToCart: "Dieses Geschenk in den Warenkorb legen",
     added: "Zum Warenkorb hinzugefügt",
     emptyTitle: "Diesmal keine exakte Übereinstimmung",
-    emptyBody: "Durchstöbern Sie stattdessen die gesamte Kollektion, jedes Stück ist in Murano handgefertigt.",
+    emptyBody:
+      "Durchstöbern Sie stattdessen die gesamte Kollektion, jedes Stück ist in Murano handgefertigt.",
     emptyCta: "Alle Produkte ansehen",
     emailTitle: "Diese Vorschläge per E-Mail senden",
     emailPlaceholder: "sie@beispiel.com",
@@ -3098,7 +3292,8 @@ const de: Dictionary = {
     emailSuccess: "Gesendet, bitte prüfen Sie Ihren Posteingang.",
     emailError: "Senden nicht möglich. Bitte versuchen Sie es erneut.",
     bundleTitle: "Den Look vervollständigen",
-    bundleIntro: "Dieses Stück gehört zu einem passenden Set, sparen Sie 15 %, wenn Sie es zusammen kaufen.",
+    bundleIntro:
+      "Dieses Stück gehört zu einem passenden Set, sparen Sie 15 %, wenn Sie es zusammen kaufen.",
   },
   journal: {
     title: "Das Murano-Journal",
@@ -3132,21 +3327,30 @@ const de: Dictionary = {
     careLink: "Zur Pflegeanleitung",
     giftLink: "Zum Geschenkfinder",
     whereQ: "Wo wird mein Schmuck gefertigt und von wo wird er versandt?",
-    whereA: "Jedes Stück wird aus Glas von Murano gefertigt, der Glasmacherinsel in der Lagune von Venedig, und aus Italien zu Ihnen versandt.",
+    whereA:
+      "Jedes Stück wird aus Glas von Murano gefertigt, der Glasmacherinsel in der Lagune von Venedig, und aus Italien zu Ihnen versandt.",
     shippingCostQ: "Was kostet der Versand?",
-    shippingCostA: "Der Versand nach Italien und in ganz Europa ist kostenlos. In die USA und nach Kanada kostet er {northAmerica}, in die übrige Welt {rest}. Einfuhrabgaben für Lieferungen außerhalb der EU sind nicht enthalten.",
-    shippingCostFallback: "Die Versandkosten für Ihre Adresse werden an der Kasse angezeigt, bevor Sie bezahlen.",
+    shippingCostA:
+      "Der Versand nach Italien und in ganz Europa ist kostenlos. In die USA und nach Kanada kostet er {northAmerica}, in die übrige Welt {rest}. Einfuhrabgaben für Lieferungen außerhalb der EU sind nicht enthalten.",
+    shippingCostFallback:
+      "Die Versandkosten für Ihre Adresse werden an der Kasse angezeigt, bevor Sie bezahlen.",
     shippingTimeQ: "Wie lange dauert der Versand?",
-    shippingTimeA: "Der Standardversand dauert in Europa meist {europe} Tage, in die USA und nach Kanada {northAmerica} Tage und in die übrige Welt {rest} Tage. Die Schätzung für Ihre Adresse sehen Sie an der Kasse.",
-    shippingTimeFallback: "Die voraussichtliche Lieferzeit jeder Versandart wird an der Kasse angezeigt, bevor Sie bezahlen.",
+    shippingTimeA:
+      "Der Standardversand dauert in Europa meist {europe} Tage, in die USA und nach Kanada {northAmerica} Tage und in die übrige Welt {rest} Tage. Die Schätzung für Ihre Adresse sehen Sie an der Kasse.",
+    shippingTimeFallback:
+      "Die voraussichtliche Lieferzeit jeder Versandart wird an der Kasse angezeigt, bevor Sie bezahlen.",
     returnsQ: "Kann ich meine Bestellung zurückgeben oder umtauschen?",
-    returnsA: "Ja. Sie können innerhalb von 14 Tagen nach der Lieferung vom Kauf zurücktreten, und wir erstatten Ihre ursprüngliche Zahlungsart innerhalb von 14 Tagen, einschließlich des Standardversands. Die Rücksendekosten tragen Sie, außer das Stück ist fehlerhaft. Für einen Umtausch kontaktieren Sie uns einfach.",
+    returnsA:
+      "Ja. Sie können innerhalb von 14 Tagen nach der Lieferung vom Kauf zurücktreten, und wir erstatten Ihre ursprüngliche Zahlungsart innerhalb von 14 Tagen, einschließlich des Standardversands. Die Rücksendekosten tragen Sie, außer das Stück ist fehlerhaft. Für einen Umtausch kontaktieren Sie uns einfach.",
     giftQ: "Eignet sich der Schmuck als Geschenk?",
-    giftA: "Sehr gut: Jedes Stück kommt bereit zum Verschenken an. Wenn Sie unsicher sind, schlägt Ihnen unser Geschenkfinder in wenigen Fragen passende Stücke vor.",
+    giftA:
+      "Sehr gut: Jedes Stück kommt bereit zum Verschenken an. Wenn Sie unsicher sind, schlägt Ihnen unser Geschenkfinder in wenigen Fragen passende Stücke vor.",
     damagedQ: "Was, wenn mein Stück beschädigt ankommt?",
-    damagedA: "Kontaktieren Sie uns mit Ihrer Bestellnummer und, wenn möglich, einem Foto. Wir veranlassen einen Ersatz, eine Reparatur oder eine vollständige Erstattung inklusive Rücksendung.",
+    damagedA:
+      "Kontaktieren Sie uns mit Ihrer Bestellnummer und, wenn möglich, einem Foto. Wir veranlassen einen Ersatz, eine Reparatur oder eine vollständige Erstattung inklusive Rücksendung.",
     contactQ: "Wie kann ich Sie kontaktieren?",
-    contactA: "Schreiben Sie uns über unsere Kontaktseite oder per E-Mail an {email}. Wir melden uns so schnell wie möglich.",
+    contactA:
+      "Schreiben Sie uns über unsere Kontaktseite oder per E-Mail an {email}. Wir melden uns so schnell wie möglich.",
   },
   product: {
     outOfStock: "Ausverkauft",
@@ -3274,7 +3478,8 @@ const de: Dictionary = {
     title: "Ihr Warenkorb",
     subtitle: "Ihr Schmuck, ausgewählt in Murano.",
     empty: "Ihr Warenkorb ist leer",
-    emptyBody: "Jedes Schmuckstück entsteht Perle für Perle. Entdecken Sie etwas, das Ihres werden könnte.",
+    emptyBody:
+      "Jedes Schmuckstück entsteht Perle für Perle. Entdecken Sie etwas, das Ihres werden könnte.",
     browse: "Schmuck entdecken",
     estimatedSubtotal: "Geschätzte Zwischensumme",
     shippingNote: "Kostenloser Versand für jede Bestellung.",
@@ -3696,11 +3901,20 @@ const ar: Dictionary = {
     bestSellers: "الأكثر مبيعًا",
     popularTitle: "المفضلة لدى مجتمعنا",
     muranoReason1Title: "سبعة قرون من الحرفية المتواصلة",
-    muranoReason1Body: "كل قطعة تغادر مورانو مشكّلة على يد ماسترو تعلّم الحرفة ممن سبقه، باستخدام نفس حركات الفرن منذ القرن الرابع عشر. لا قوالب، لا آلات — فقط النفَس والأيدي.",
+    muranoReason1Body:
+      "كل قطعة تغادر مورانو مشكّلة على يد ماسترو تعلّم الحرفة ممن سبقه، باستخدام نفس حركات الفرن منذ القرن الرابع عشر. لا قوالب، لا آلات — فقط النفَس والأيدي.",
     muranoReason2Title: "كل قطعة موجودة مرة واحدة فقط",
-    muranoReason2Body: "لا يمكن إعادة إنتاج الزجاج المصنوع يدوياً بشكل مثالي. تدرّجات الألوان والشوائب والدوامات في قطعتك لك وحدك — لم تُنتج بالجملة، ولن تُكرَّر.",
+    muranoReason2Body:
+      "لا يمكن إعادة إنتاج الزجاج المصنوع يدوياً بشكل مثالي. تدرّجات الألوان والشوائب والدوامات في قطعتك لك وحدك — لم تُنتج بالجملة، ولن تُكرَّر.",
     muranoReason3Title: "إرث ثقافي حي",
-    muranoReason3Body: "يحمل صانعو زجاج مورانو اعترافاً من اليونسكو. حين ترتدي قطعة، تحمل معك تقليداً حرصت عليه البندقية لأكثر من سبعمائة عام.",
+    muranoReason3Body:
+      "يحمل صانعو زجاج مورانو اعترافاً من اليونسكو. حين ترتدي قطعة، تحمل معك تقليداً حرصت عليه البندقية لأكثر من سبعمائة عام.",
+    muranoReason1Short:
+      "يُشكَّل الزجاج في مورانو منذ أكثر من سبعة قرون، وما زالت الحرفة تنتقل من يد إلى يد. هناك تولد خرزاتنا، في اللهب، واحدة تلو الأخرى: ومن هنا يأتي عمق ألوانها.",
+    muranoReason2Short:
+      "كل خرزة تُشكَّل يدويًا من زجاج منصهر: درجة لون أعمق، فقاعة هواء صغيرة، خيط ذهبي يلتفّ في اتجاه آخر. ليست عيوبًا، بل توقيع اليد. القطعة التي تختارها لا توجد إلا كما هي.",
+    muranoReason3Short:
+      "كثير من المجوهرات التي تُباع على أنها «زجاج فينيسي» تُصنع في مكان آخر. مجوهراتنا من زجاج مورانو الأصلي وتُجمَّع يدويًا في إيطاليا، وهو فنّ تحميه اليونسكو بوصفه تراثًا ثقافيًا غير مادي منذ عام 2020.",
     shopByCategory: "تسوّق حسب الفئة",
     whyUsTitle: "لماذا تتسوق معنا",
     whyShipping: "شحن سريع",
@@ -3824,13 +4038,15 @@ const ar: Dictionary = {
     added: "أُضيف إلى السلة",
     thisPiece: "هذه القطعة",
     include: "تضمين {name}",
-    unavailable: "إحدى القطع نفدت من المخزون، لذا الطقم الكامل غير متاح حاليًا. لا يزال بإمكانك إضافة القطع الأخرى منفردة.",
+    unavailable:
+      "إحدى القطع نفدت من المخزون، لذا الطقم الكامل غير متاح حاليًا. لا يزال بإمكانك إضافة القطع الأخرى منفردة.",
   },
   looks: {
     navLabel: "الإطلالات",
     title: "إطلالاتنا",
     subtitle: "قطع صُممت لتُرتدى معًا.",
-    metaDescription: "قلائد وأساور وأقراط متناسقة من زجاج مورانو، مصنوعة يدويًا في مورانو ومختارة لتُرتدى معًا.",
+    metaDescription:
+      "قلائد وأساور وأقراط متناسقة من زجاج مورانو، مصنوعة يدويًا في مورانو ومختارة لتُرتدى معًا.",
     viewLook: "اكتشف قطع هذه الإطلالة",
     allLooks: "كل الإطلالات",
     pieces: "{n} قطع",
@@ -3843,13 +4059,15 @@ const ar: Dictionary = {
     composeHint: "اختر قلادة وسوارًا وأقراطًا لتوفّر {percent}%.",
     composeTotal: "إطلالتك",
     composeAdd: "أضف إطلالتك إلى السلة",
-    composeMeta: "صمّم إطلالتك من زجاج مورانو: اختر قلادة وسوارًا وأقراطًا، شاهدها معًا ووفّر على القطع الثلاث.",
+    composeMeta:
+      "صمّم إطلالتك من زجاج مورانو: اختر قلادة وسوارًا وأقراطًا، شاهدها معًا ووفّر على القطع الثلاث.",
   },
   giftCard: {
     productName: "بطاقة إهداء مخصصة",
     title: "اجعل هديتك شخصية",
-    subtitle: "أضف لمسة من سحر البندقية إلى هديتك برسالة شخصية تُطبع بعناية خصيصًا لمن تحب.",
-    metaDescription: "بطاقة إهداء مخصصة من Perla Murano Glass: اختر رسالة أو اكتب رسالتك، واختر الخط، وسنطبعها ونضعها داخل الطرد.",
+    subtitle: "كلمات قليلة منك، على بطاقة نرسلها بالبريد الإلكتروني فور دفع طلبك.",
+    metaDescription:
+      "بطاقة إهداء رقمية مخصصة من Perla Murano Glass: اختر رسالة أو اكتب رسالتك، واختر الخط، وسنرسلها بالبريد الإلكتروني إلى المستلم عند دفع الطلب.",
     intro: "اصنع شيئًا خاصًا بهم وحدهم.",
     recipientLabel: "اسم المُهدى إليه",
     recipientPlaceholder: "لمن هذه الهدية؟",
@@ -3867,18 +4085,35 @@ const ar: Dictionary = {
     update: "حدّث بطاقتك",
     added: "أُضيفت إلى السلة",
     emptyError: "اختر رسالة أو اكتبها أولًا.",
-    printedNote: "ستُطبع بطاقتك المخصصة خصيصًا لهذا الطلب وتوضع داخل طرد Perla.",
+    deliveryNote:
+      "بطاقتك رقمية: نرسلها بالبريد الإلكتروني إلى المستلم فور دفع طلبك. يمكن إضافتها إلى طلب فقط.",
     pdpTitle: "اجعلها هدية",
-    pdpLine: "أضف بطاقة إهداء مخصصة مقابل {price}",
-    pdpBody: "ستُطبع رسالتك بعناية وتوضع داخل طرد Perla.",
+    pdpLine: "أضف بطاقة إهداء رقمية مقابل {price}",
     pdpCta: "خصّص هديتك",
+    recipientEmailLabel: "البريد الإلكتروني للمستلم",
+    recipientEmailPlaceholder: "إلى أين نرسل البطاقة؟",
+    recipientEmailHelp: "نرسل البطاقة إلى هذا العنوان فور دفع طلبك، ولا نستخدمه لأي غرض آخر.",
+    emailError: "أدخل البريد الإلكتروني للمستلم.",
+    needsOrder: "تُشترى البطاقة الرقمية مع طلب: أضف قطعة إلى سلتك أولًا.",
+    needsOrderCta: "تصفح المجموعة",
+    sendTo: "الإرسال إلى",
+    emailSubject: "أرسل لك {sender} بطاقة",
+    emailIntro: "اختار لك {sender} قطعة من زجاج مورانو وكتب لك بضع كلمات.",
+    emailButton: "افتح بطاقتك",
+    emailFooter: "أُرسلت هذه البطاقة بطلب من كاتبها. لا تحتاج إلى فعل أي شيء.",
+    cardPageTitle: "بطاقة لك من {sender}",
+    cardPageTitleAnon: "بطاقة لك",
+    cardPageNote:
+      "كُتبت لك وأُرسلت مع هدية من مجوهرات زجاج مورانو. اقلب البطاقة لرؤية الوجه الخلفي.",
+    cardPageCta: "اكتشف زجاج مورانو",
     yourMessage: "رسالتك",
     fontLabel: "الخط",
     edit: "تعديل",
     remove: "إزالة",
     adHeadline: "أهدهم قطعة صغيرة من البندقية.",
     adSub: "والآن اجعلها شخصية.",
-    adBody: "أضف بطاقة إهداء Perla مخصصة مقابل {price} فقط. اختر إحدى رسائلنا الأنيقة أو اكتب رسالتك، واختر خطك المفضل، واصنع رسالة لهم وحدهم.",
+    adBody:
+      "بطاقة رقمية مقابل {price} تضاف إلى طلبك: اختر إحدى رسائلنا أو اكتب رسالتك، واختر الخط، وسنرسلها بالبريد الإلكتروني فور دفع الطلب.",
     adCta: "اصنع رسالة هديتك",
     seeBack: "اعرض الوجه الخلفي",
     seeFront: "اعرض الوجه الأمامي",
@@ -3900,7 +4135,7 @@ const ar: Dictionary = {
       moon: "قمر",
     },
     backTitle: "اختر الوجه الخلفي.",
-    backHelp: "يحمل الوجه الخلفي شعار Perla. اختر لون الورق الذي يُطبع عليه.",
+    backHelp: "يحمل الوجه الخلفي شعار Perla. اختر لونه.",
     backLabel: "الوجه الخلفي",
     backs: {
       ivory: "عاجي",
@@ -3928,7 +4163,8 @@ const ar: Dictionary = {
   giftFinder: {
     homeCtaLine: "لست متأكدًا مما تختار؟ اعثر على هدية مورانو المثالية",
     homeCtaTime: "5 أسئلة · نحو 5 دقائق",
-    homeCtaDetails: "أخبرنا لمن الهدية والمناسبة والأسلوب والميزانية ونوع المجوهرات، لنقترح عليك قطعًا من زجاج مورانو متوفرة فعلًا.",
+    homeCtaDetails:
+      "أخبرنا لمن الهدية والمناسبة والأسلوب والميزانية ونوع المجوهرات، لنقترح عليك قطعًا من زجاج مورانو متوفرة فعلًا.",
     productCtaLine: "غير متأكد أن هذا هو الخيار الأنسب؟ جرّب أداة اختيار الهدية لدينا",
     metaTitle: "أداة اختيار الهدية، الهدية المثالية من زجاج مورانو",
     metaDescription:
@@ -4032,21 +4268,28 @@ const ar: Dictionary = {
     careLink: "اقرأ دليل العناية",
     giftLink: "جرّب أداة اختيار الهدية",
     whereQ: "أين تُصنع مجوهراتي ومن أين تُشحن؟",
-    whereA: "تُصنع كل قطعة من زجاج مورانو، جزيرة صناعة الزجاج في بحيرة البندقية، وتُشحن إليك من إيطاليا.",
+    whereA:
+      "تُصنع كل قطعة من زجاج مورانو، جزيرة صناعة الزجاج في بحيرة البندقية، وتُشحن إليك من إيطاليا.",
     shippingCostQ: "كم تكلفة الشحن؟",
-    shippingCostA: "الشحن مجاني داخل إيطاليا وأوروبا. إلى الولايات المتحدة وكندا تبلغ التكلفة {northAmerica}، وإلى باقي دول العالم {rest}. رسوم الاستيراد للشحنات خارج الاتحاد الأوروبي غير مشمولة.",
+    shippingCostA:
+      "الشحن مجاني داخل إيطاليا وأوروبا. إلى الولايات المتحدة وكندا تبلغ التكلفة {northAmerica}، وإلى باقي دول العالم {rest}. رسوم الاستيراد للشحنات خارج الاتحاد الأوروبي غير مشمولة.",
     shippingCostFallback: "تظهر تكلفة الشحن إلى عنوانك عند إتمام الطلب، قبل الدفع.",
     shippingTimeQ: "كم يستغرق الشحن؟",
-    shippingTimeA: "يستغرق الشحن العادي عادةً {europe} أيام داخل أوروبا، و{northAmerica} أيام إلى الولايات المتحدة وكندا، و{rest} أيام إلى باقي دول العالم. يظهر الموعد التقديري لعنوانك عند إتمام الطلب.",
+    shippingTimeA:
+      "يستغرق الشحن العادي عادةً {europe} أيام داخل أوروبا، و{northAmerica} أيام إلى الولايات المتحدة وكندا، و{rest} أيام إلى باقي دول العالم. يظهر الموعد التقديري لعنوانك عند إتمام الطلب.",
     shippingTimeFallback: "يظهر وقت التوصيل التقديري لكل طريقة شحن عند إتمام الطلب، قبل الدفع.",
     returnsQ: "هل يمكنني إرجاع طلبي أو استبداله؟",
-    returnsA: "نعم. لديك 14 يومًا من تاريخ الاستلام للانسحاب من الشراء، ونرد المبلغ إلى وسيلة الدفع الأصلية خلال 14 يومًا، بما في ذلك الشحن العادي. تكلفة شحن الإرجاع على حسابك ما لم تكن القطعة معيبة. للاستبدال، تواصل معنا ببساطة.",
+    returnsA:
+      "نعم. لديك 14 يومًا من تاريخ الاستلام للانسحاب من الشراء، ونرد المبلغ إلى وسيلة الدفع الأصلية خلال 14 يومًا، بما في ذلك الشحن العادي. تكلفة شحن الإرجاع على حسابك ما لم تكن القطعة معيبة. للاستبدال، تواصل معنا ببساطة.",
     giftQ: "هل تصلح كهدية؟",
-    giftA: "بالتأكيد: تصل كل قطعة جاهزة للإهداء. وإن لم تكن متأكدًا من اختيارك، تقترح عليك أداة اختيار الهدية قطعًا من خلال بضعة أسئلة سريعة.",
+    giftA:
+      "بالتأكيد: تصل كل قطعة جاهزة للإهداء. وإن لم تكن متأكدًا من اختيارك، تقترح عليك أداة اختيار الهدية قطعًا من خلال بضعة أسئلة سريعة.",
     damagedQ: "ماذا لو وصلت قطعتي تالفة؟",
-    damagedA: "تواصل معنا مع رقم طلبك وصورة إن أمكن. سنرتّب استبدالها أو إصلاحها أو ردّ المبلغ كاملًا، بما في ذلك تكلفة شحن الإرجاع.",
+    damagedA:
+      "تواصل معنا مع رقم طلبك وصورة إن أمكن. سنرتّب استبدالها أو إصلاحها أو ردّ المبلغ كاملًا، بما في ذلك تكلفة شحن الإرجاع.",
     contactQ: "كيف يمكنني التواصل معكم؟",
-    contactA: "راسلنا عبر صفحة التواصل أو عبر البريد الإلكتروني {email}. سنرد عليك في أقرب وقت ممكن.",
+    contactA:
+      "راسلنا عبر صفحة التواصل أو عبر البريد الإلكتروني {email}. سنرد عليك في أقرب وقت ممكن.",
   },
   product: {
     outOfStock: "غير متوفر",
@@ -4243,7 +4486,8 @@ const ar: Dictionary = {
     oauthContactSupport: "الحسابات المنشأة عبر Google تتطلب التواصل مع الدعم لحذفها.",
     invalidMfaCode: "رمز غير صالح.",
     mfaSetupNotFound: "لم يتم العثور على إعداد مصادقة ثنائية معلّق، أعد تحميل الصفحة.",
-    oauthNoMfaPassword: "يجب على الحسابات التي أُنشئت عبر Google التواصل مع الدعم لتغيير هذا الإعداد.",
+    oauthNoMfaPassword:
+      "يجب على الحسابات التي أُنشئت عبر Google التواصل مع الدعم لتغيير هذا الإعداد.",
   },
   emails: {
     tagline: "{storeName}، زجاج فينيسي أصيل، مصنوع يدويًا في مورانو.",
@@ -4564,17 +4808,25 @@ const zh: Dictionary = {
     newArrivals: "新品上架",
     newArrivalsIntro: "新色彩，新细节。",
     specialSelectionTitle: "精选臻品，特惠价格。",
-    specialSelectionSubtitle:
-      "探索精选的穆拉诺手工玻璃饰品，特惠价格，数量有限，售完为止。",
+    specialSelectionSubtitle: "探索精选的穆拉诺手工玻璃饰品，特惠价格，数量有限，售完为止。",
     specialSelectionCta: "选购特惠首饰",
     bestSellers: "热销商品",
     popularTitle: "社区最爱",
     muranoReason1Title: "七个世纪的不间断工艺",
-    muranoReason1Body: "每件作品离开穆拉诺时，都由一位大师亲手塑造——他从前辈那里学习这门手艺，沿用着自14世纪以来相同的窑炉技法。没有模具，没有机器，只有呼吸与双手。",
+    muranoReason1Body:
+      "每件作品离开穆拉诺时，都由一位大师亲手塑造——他从前辈那里学习这门手艺，沿用着自14世纪以来相同的窑炉技法。没有模具，没有机器，只有呼吸与双手。",
     muranoReason2Title: "每件作品独一无二",
-    muranoReason2Body: "手工玻璃无法被完美复制。您作品中的色彩渐变、内含物与漩涡纹理是专属于您的——从不量产，从不复制。",
+    muranoReason2Body:
+      "手工玻璃无法被完美复制。您作品中的色彩渐变、内含物与漩涡纹理是专属于您的——从不量产，从不复制。",
     muranoReason3Title: "活着的文化遗产",
-    muranoReason3Body: "穆拉诺玻璃工匠获得联合国教科文组织的认可。佩戴一件作品，您便承载着威尼斯守护了七百多年的传统。",
+    muranoReason3Body:
+      "穆拉诺玻璃工匠获得联合国教科文组织的认可。佩戴一件作品，您便承载着威尼斯守护了七百多年的传统。",
+    muranoReason1Short:
+      "穆拉诺的玻璃工艺已延续七百多年，至今仍手手相传。我们的珠子就诞生在那里，在火焰中逐颗成形——这正是它们色彩深邃的来源。",
+    muranoReason2Short:
+      "每颗珠子都由熔融玻璃手工塑形：更深一点的色调、一个细小的气泡、一缕转向别处的金丝。这些不是瑕疵，而是手的签名。您选中的作品，只以它本来的样子存在。",
+    muranoReason3Short:
+      "许多以“威尼斯玻璃”名义出售的首饰其实产自别处。我们的首饰采用正宗穆拉诺玻璃，在意大利手工组装；自2020年起，这门技艺受联合国教科文组织作为非物质文化遗产保护。",
     shopByCategory: "按分类选购",
     whyUsTitle: "为什么选择我们",
     whyShipping: "快速配送",
@@ -4711,7 +4963,8 @@ const zh: Dictionary = {
     backToLooks: "全部搭配",
     composeKicker: "您的风格",
     composeTitle: "打造专属搭配",
-    composeSubtitle: "选择一条项链、一条手链和一对耳环，看看它们的搭配效果，三件同购可省 {percent}%。",
+    composeSubtitle:
+      "选择一条项链、一条手链和一对耳环，看看它们的搭配效果，三件同购可省 {percent}%。",
     composeCta: "开始搭配",
     composeHint: "选择项链、手链和耳环即可节省 {percent}%。",
     composeTotal: "您的搭配",
@@ -4721,8 +4974,9 @@ const zh: Dictionary = {
   giftCard: {
     productName: "个性化礼品卡",
     title: "让您的礼物更具心意",
-    subtitle: "为礼物增添一抹威尼斯的魔力：一段专属寄语，精心印制，只为收礼的人。",
-    metaDescription: "Perla Murano Glass 个性化礼品卡：选择一段寄语或亲自撰写，挑选字体，我们会印制好并放入包裹。",
+    subtitle: "写下您自己的几句话，订单付款后我们立即通过电子邮件发送给对方。",
+    metaDescription:
+      "Perla Murano Glass 个性化电子礼品卡：选择一段寄语或亲自撰写，挑选字体，订单付款后我们会通过电子邮件发送给收件人。",
     intro: "为 TA 创造独一无二的心意。",
     recipientLabel: "收礼人姓名",
     recipientPlaceholder: "这份礼物送给谁？",
@@ -4740,18 +4994,34 @@ const zh: Dictionary = {
     update: "更新礼品卡",
     added: "已加入购物车",
     emptyError: "请先选择或撰写一段寄语。",
-    printedNote: "您的个性化卡片将专为此订单印制，并放入您的 Perla 包裹中。",
+    deliveryNote:
+      "这是一张电子卡片：订单付款后，我们会立即通过电子邮件发送给收件人。仅可随订单一起购买。",
     pdpTitle: "作为礼物",
-    pdpLine: "以 {price} 添加个性化礼品卡",
-    pdpBody: "您的寄语将被精美印制，并放入您的 Perla 包裹中。",
+    pdpLine: "以 {price} 添加电子礼品卡",
     pdpCta: "定制您的礼物",
+    recipientEmailLabel: "收件人邮箱",
+    recipientEmailPlaceholder: "卡片发送到哪里？",
+    recipientEmailHelp: "订单付款后，我们会将卡片发送到这个邮箱，不会用于其他用途。",
+    emailError: "请输入收件人的邮箱地址。",
+    needsOrder: "电子卡片需随订单一起购买：请先将饰品加入购物车。",
+    needsOrderCta: "浏览系列",
+    sendTo: "发送至",
+    emailSubject: "{sender} 给您寄来了一张卡片",
+    emailIntro: "{sender} 为您挑选了一件穆拉诺玻璃饰品，并写下了几句话。",
+    emailButton: "打开您的卡片",
+    emailFooter: "此卡片应写卡人的要求发送，您无需进行任何操作。",
+    cardPageTitle: "来自 {sender} 的卡片",
+    cardPageTitleAnon: "给您的卡片",
+    cardPageNote: "为您而写，随一份穆拉诺玻璃饰品礼物一起寄出。翻转卡片可查看背面。",
+    cardPageCta: "探索穆拉诺玻璃",
     yourMessage: "您的寄语",
     fontLabel: "字体",
     edit: "编辑",
     remove: "移除",
     adHeadline: "送 TA 一小片威尼斯。",
     adSub: "再添一份专属心意。",
-    adBody: "只需 {price} 即可添加 Perla 个性化礼品卡。选择我们的优雅寄语或亲自撰写，挑选喜爱的字体，写下只属于 TA 的话语。",
+    adBody:
+      "{price} 的电子卡片，随订单一起购买：选择我们的寄语或亲自撰写，挑选字体，订单付款后我们通过电子邮件发送给对方。",
     adCta: "创作您的礼物寄语",
     seeBack: "查看背面",
     seeFront: "查看正面",
@@ -4773,7 +5043,7 @@ const zh: Dictionary = {
       moon: "月亮",
     },
     backTitle: "选择背面。",
-    backHelp: "背面印有 Perla 标志。请选择印制所用卡纸的颜色。",
+    backHelp: "卡片背面印有 Perla 标志。请选择背面颜色。",
     backLabel: "背面",
     backs: {
       ivory: "象牙白",
@@ -4801,10 +5071,12 @@ const zh: Dictionary = {
   giftFinder: {
     homeCtaLine: "不确定选什么？找到完美的穆拉诺礼物",
     homeCtaTime: "5个问题 · 约5分钟",
-    homeCtaDetails: "告诉我们赠送对象、场合、风格、预算和首饰类型，即可查看当前有货的穆拉诺玻璃作品。",
+    homeCtaDetails:
+      "告诉我们赠送对象、场合、风格、预算和首饰类型，即可查看当前有货的穆拉诺玻璃作品。",
     productCtaLine: "不确定这是不是合适的礼物？试试我们的礼物查找器",
     metaTitle: "礼物查找器，完美的穆拉诺玻璃礼物",
-    metaDescription: "回答五个简单问题，我们将为您推荐完美的手工穆拉诺玻璃礼物，均从真实现货中挑选。",
+    metaDescription:
+      "回答五个简单问题，我们将为您推荐完美的手工穆拉诺玻璃礼物，均从真实现货中挑选。",
     stepCounter: "第 {current} 步，共 {total} 步",
     back: "上一步",
     next: "下一步",
@@ -4904,19 +5176,25 @@ const zh: Dictionary = {
     careLink: "阅读保养指南",
     giftLink: "试试礼物查找器",
     whereQ: "我的首饰在哪里制作，从哪里发货？",
-    whereA: "每件作品都采用来自穆拉诺的玻璃制作，穆拉诺是威尼斯潟湖中的玻璃之岛，并从意大利发货给你。",
+    whereA:
+      "每件作品都采用来自穆拉诺的玻璃制作，穆拉诺是威尼斯潟湖中的玻璃之岛，并从意大利发货给你。",
     shippingCostQ: "运费是多少？",
-    shippingCostA: "意大利及欧洲境内免运费。寄往美国和加拿大为 {northAmerica}，寄往其他地区为 {rest}。欧盟以外的进口关税不包含在内。",
+    shippingCostA:
+      "意大利及欧洲境内免运费。寄往美国和加拿大为 {northAmerica}，寄往其他地区为 {rest}。欧盟以外的进口关税不包含在内。",
     shippingCostFallback: "你所在地址的运费会在结账时、付款前显示。",
     shippingTimeQ: "运送需要多长时间？",
-    shippingTimeA: "标准配送在欧洲境内通常需要 {europe} 天，寄往美国和加拿大需要 {northAmerica} 天，寄往其他地区需要 {rest} 天。你所在地址的预计时间会在结账时显示。",
+    shippingTimeA:
+      "标准配送在欧洲境内通常需要 {europe} 天，寄往美国和加拿大需要 {northAmerica} 天，寄往其他地区需要 {rest} 天。你所在地址的预计时间会在结账时显示。",
     shippingTimeFallback: "每种配送方式的预计送达时间会在结账时、付款前显示。",
     returnsQ: "我可以退货或换货吗？",
-    returnsA: "可以。收货后 14 天内你可以撤销购买，我们会在 14 天内原路退款，包括标准运费。除非商品有瑕疵，退货运费由你承担。如需换货，请直接联系我们。",
+    returnsA:
+      "可以。收货后 14 天内你可以撤销购买，我们会在 14 天内原路退款，包括标准运费。除非商品有瑕疵，退货运费由你承担。如需换货，请直接联系我们。",
     giftQ: "适合作为礼物吗？",
-    giftA: "非常适合：每件作品送达时都可直接赠送。如果你拿不定主意，我们的礼物查找器只需几个简单问题就能为你推荐合适的作品。",
+    giftA:
+      "非常适合：每件作品送达时都可直接赠送。如果你拿不定主意，我们的礼物查找器只需几个简单问题就能为你推荐合适的作品。",
     damagedQ: "如果收到的首饰有损坏怎么办？",
-    damagedA: "请告诉我们你的订单号，如有可能附上照片。我们会为你安排更换、修复或全额退款，包括退货运费。",
+    damagedA:
+      "请告诉我们你的订单号，如有可能附上照片。我们会为你安排更换、修复或全额退款，包括退货运费。",
     contactQ: "如何联系你们？",
     contactA: "可以通过联系页面或发送电子邮件至 {email} 联系我们。我们会尽快回复你。",
   },
@@ -5428,11 +5706,20 @@ const ru: Dictionary = {
     bestSellers: "Хиты продаж",
     popularTitle: "Любимое сообществом",
     muranoReason1Title: "Семь веков непрерывного мастерства",
-    muranoReason1Body: "Каждое изделие покидает Мурано, созданное маэстро, передавшим своё мастерство от учителя к ученику с XIV века. Никаких форм, никаких машин — только дыхание и руки.",
+    muranoReason1Body:
+      "Каждое изделие покидает Мурано, созданное маэстро, передавшим своё мастерство от учителя к ученику с XIV века. Никаких форм, никаких машин — только дыхание и руки.",
     muranoReason2Title: "Каждое изделие существует в единственном экземпляре",
-    muranoReason2Body: "Изделие из стекла ручной работы невозможно воспроизвести идеально. Переходы цветов, включения и завихрения в вашем украшении принадлежат только вам.",
+    muranoReason2Body:
+      "Изделие из стекла ручной работы невозможно воспроизвести идеально. Переходы цветов, включения и завихрения в вашем украшении принадлежат только вам.",
     muranoReason3Title: "Живое культурное наследие",
-    muranoReason3Body: "Муранские стеклодувы имеют признание ЮНЕСКО. Надевая украшение, вы становитесь частью традиции, которую Венеция хранит более семисот лет.",
+    muranoReason3Body:
+      "Муранские стеклодувы имеют признание ЮНЕСКО. Надевая украшение, вы становитесь частью традиции, которую Венеция хранит более семисот лет.",
+    muranoReason1Short:
+      "На Мурано работают со стеклом больше семи веков, и ремесло до сих пор передаётся из рук в руки. Там, в пламени, одна за другой рождаются наши бусины — отсюда глубина их цвета.",
+    muranoReason2Short:
+      "Каждую бусину формируют вручную из расплавленного стекла: более глубокий оттенок, крошечный пузырёк воздуха, золотая нить, повернувшая иначе. Это не изъяны, а подпись руки. Украшение, которое вы выбираете, существует только таким.",
+    muranoReason3Short:
+      "Многие украшения, которые продают как «венецианское стекло», сделаны в другом месте. В наших — настоящее муранское стекло, и собраны они вручную в Италии. С 2020 года это искусство охраняется ЮНЕСКО как нематериальное культурное наследие.",
     shopByCategory: "Покупки по категориям",
     whyUsTitle: "Почему стоит выбрать нас",
     whyShipping: "Быстрая доставка",
@@ -5472,8 +5759,7 @@ const ru: Dictionary = {
     title: "О нас",
     intro: (storeName: string) =>
       `Мы основали ${storeName}, чтобы подлинные украшения из муранского стекла ручной работы могли получить те, кто не может лично посетить стекольные мастерские, каждое изделие создаётся по технологиям, которые передаются на острове Мурано уже семь столетий, и отправляется прямо из Венеции.`,
-    heritageImageAlt:
-      "Ярко окрашенные дома вдоль канала на острове Бурано в Венецианской лагуне",
+    heritageImageAlt: "Ярко окрашенные дома вдоль канала на острове Бурано в Венецианской лагуне",
     valuesTitle: "Что для нас важно",
     value1Title: "Качество прежде всего",
     value1Body:
@@ -5560,13 +5846,15 @@ const ru: Dictionary = {
     added: "Добавлено в корзину",
     thisPiece: "Это украшение",
     include: "Включить: {name}",
-    unavailable: "Одного украшения нет в наличии, поэтому комплект сейчас недоступен. Остальные украшения можно добавить по отдельности.",
+    unavailable:
+      "Одного украшения нет в наличии, поэтому комплект сейчас недоступен. Остальные украшения можно добавить по отдельности.",
   },
   looks: {
     navLabel: "Образы",
     title: "Наши образы",
     subtitle: "Украшения, созданные, чтобы носить их вместе.",
-    metaDescription: "Подобранные друг к другу колье, браслеты и серьги из муранского стекла ручной работы, созданные на Мурано, чтобы носить их вместе.",
+    metaDescription:
+      "Подобранные друг к другу колье, браслеты и серьги из муранского стекла ручной работы, созданные на Мурано, чтобы носить их вместе.",
     viewLook: "Посмотреть украшения из этого образа",
     allLooks: "Все образы",
     pieces: "Предметов: {n}",
@@ -5574,18 +5862,22 @@ const ru: Dictionary = {
     backToLooks: "Все образы",
     composeKicker: "Ваш стиль",
     composeTitle: "Создайте свой образ",
-    composeSubtitle: "Выберите колье, браслет и серьги, посмотрите на них вместе и сэкономьте {percent}% на всех трёх.",
+    composeSubtitle:
+      "Выберите колье, браслет и серьги, посмотрите на них вместе и сэкономьте {percent}% на всех трёх.",
     composeCta: "Начать",
     composeHint: "Выберите колье, браслет и серьги, чтобы сэкономить {percent}%.",
     composeTotal: "Ваш образ",
     composeAdd: "Добавить образ в корзину",
-    composeMeta: "Создайте свой образ из муранского стекла: выберите колье, браслет и серьги, посмотрите на них вместе и сэкономьте на всех трёх.",
+    composeMeta:
+      "Создайте свой образ из муранского стекла: выберите колье, браслет и серьги, посмотрите на них вместе и сэкономьте на всех трёх.",
   },
   giftCard: {
     productName: "Именная открытка",
     title: "Сделайте подарок личным",
-    subtitle: "Добавьте подарку немного венецианского волшебства: личное послание, бережно напечатанное специально для получателя.",
-    metaDescription: "Именная открытка Perla Murano Glass: выберите послание или напишите своё, выберите шрифт, а мы напечатаем её и вложим в посылку.",
+    subtitle:
+      "Несколько ваших слов на открытке, которую мы отправим по электронной почте сразу после оплаты заказа.",
+    metaDescription:
+      "Именная электронная открытка Perla Murano Glass: выберите послание или напишите своё, выберите шрифт, и мы отправим её получателю по почте после оплаты заказа.",
     intro: "Создайте что-то только для них.",
     recipientLabel: "Имя получателя",
     recipientPlaceholder: "Кому этот подарок?",
@@ -5603,18 +5895,38 @@ const ru: Dictionary = {
     update: "Обновить открытку",
     added: "Добавлено в корзину",
     emptyError: "Сначала выберите или напишите послание.",
-    printedNote: "Ваша именная открытка будет напечатана специально для этого заказа и вложена в посылку Perla.",
+    deliveryNote:
+      "Открытка электронная: мы отправим её получателю по электронной почте сразу после оплаты заказа. Её можно добавить только к заказу.",
     pdpTitle: "Сделать подарком",
-    pdpLine: "Добавьте именную открытку за {price}",
-    pdpBody: "Ваше послание будет бережно напечатано и вложено в посылку Perla.",
+    pdpLine: "Добавьте электронную открытку за {price}",
     pdpCta: "Персонализировать подарок",
+    recipientEmailLabel: "Email получателя",
+    recipientEmailPlaceholder: "Куда отправить открытку?",
+    recipientEmailHelp:
+      "Мы отправим открытку на этот адрес сразу после оплаты заказа и не используем его ни для чего другого.",
+    emailError: "Введите адрес электронной почты получателя.",
+    needsOrder:
+      "Электронная открытка продаётся только вместе с заказом: сначала добавьте украшение в корзину.",
+    needsOrderCta: "Смотреть коллекцию",
+    sendTo: "Отправить на",
+    emailSubject: "{sender} отправил(а) вам открытку",
+    emailIntro:
+      "{sender} выбрал(а) для вас украшение из муранского стекла и написал(а) вам несколько слов.",
+    emailButton: "Открыть открытку",
+    emailFooter: "Эта открытка отправлена по просьбе её автора. Вам ничего не нужно делать.",
+    cardPageTitle: "Открытка для вас от {sender}",
+    cardPageTitleAnon: "Открытка для вас",
+    cardPageNote:
+      "Написана для вас и отправлена вместе с подарком из муранского стекла. Переверните открытку, чтобы увидеть оборот.",
+    cardPageCta: "Открыть муранское стекло",
     yourMessage: "Ваше послание",
     fontLabel: "Шрифт",
     edit: "Изменить",
     remove: "Удалить",
     adHeadline: "Подарите им кусочек Венеции.",
     adSub: "А теперь сделайте его личным.",
-    adBody: "Добавьте именную открытку Perla всего за {price}. Выберите одно из наших изящных посланий или напишите своё, выберите любимый шрифт и создайте послание специально для получателя.",
+    adBody:
+      "Электронная открытка за {price} к вашему заказу: выберите одно из наших посланий или напишите своё, выберите шрифт, и мы отправим её по почте после оплаты заказа.",
     adCta: "Создать послание",
     seeBack: "Посмотреть оборот",
     seeFront: "Посмотреть лицевую сторону",
@@ -5622,7 +5934,8 @@ const ru: Dictionary = {
     sideBack: "Оборот",
     dragHint: "Перетащите узоры в любое место открытки.",
     stickersTitle: "Добавьте немного блеска.",
-    stickersHelp: "По желанию: нажмите на узор, чтобы добавить его, затем перетащите туда, куда хотите.",
+    stickersHelp:
+      "По желанию: нажмите на узор, чтобы добавить его, затем перетащите туда, куда хотите.",
     stickersCount: "{count} из {max}",
     addSticker: "Добавить узор: {name}",
     removeSticker: "Убрать узор: {name}",
@@ -5636,7 +5949,7 @@ const ru: Dictionary = {
       moon: "Луна",
     },
     backTitle: "Выберите оборот.",
-    backHelp: "На обороте — логотип Perla. Выберите цвет бумаги, на которой он будет напечатан.",
+    backHelp: "На обороте — логотип Perla. Выберите его цвет.",
     backLabel: "Оборот",
     backs: {
       ivory: "Слоновая кость",
@@ -5664,7 +5977,8 @@ const ru: Dictionary = {
   giftFinder: {
     homeCtaLine: "Не знаете, что выбрать? Найдите идеальный подарок из муранского стекла",
     homeCtaTime: "5 вопросов · около 5 минут",
-    homeCtaDetails: "Укажите получателя, повод, стиль, бюджет и тип украшения. Мы подберём изделия из муранского стекла, которые действительно есть в наличии.",
+    homeCtaDetails:
+      "Укажите получателя, повод, стиль, бюджет и тип украшения. Мы подберём изделия из муранского стекла, которые действительно есть в наличии.",
     productCtaLine: "Не уверены, что это то самое? Попробуйте наш Подборщик подарков",
     metaTitle: "Подборщик подарков, идеальный подарок из муранского стекла",
     metaDescription:
@@ -5715,7 +6029,8 @@ const ru: Dictionary = {
       completeSet: "Полный подобранный комплект",
     },
     resultsTitle: "Мы нашли ваш вариант",
-    resultsSubtitle: "Подобрано специально для вас из нашей коллекции муранского стекла ручной работы.",
+    resultsSubtitle:
+      "Подобрано специально для вас из нашей коллекции муранского стекла ручной работы.",
     reasonStyle: "Соответствует выбранному стилю",
     reasonOccasion: "Идеально подходит для повода",
     reasonBudget: "Точно в рамках бюджета",
@@ -5768,19 +6083,27 @@ const ru: Dictionary = {
     careLink: "Читать руководство по уходу",
     giftLink: "Открыть подбор подарка",
     whereQ: "Где изготовлены мои украшения и откуда их отправляют?",
-    whereA: "Каждое изделие сделано из стекла с Мурано, острова стеклодувов в Венецианской лагуне, и отправляется вам из Италии.",
+    whereA:
+      "Каждое изделие сделано из стекла с Мурано, острова стеклодувов в Венецианской лагуне, и отправляется вам из Италии.",
     shippingCostQ: "Сколько стоит доставка?",
-    shippingCostA: "Доставка по Италии и Европе бесплатна. В США и Канаду она стоит {northAmerica}, в остальные страны, {rest}. Импортные пошлины при доставке за пределы ЕС не включены.",
-    shippingCostFallback: "Стоимость доставки по вашему адресу показывается при оформлении заказа, до оплаты.",
+    shippingCostA:
+      "Доставка по Италии и Европе бесплатна. В США и Канаду она стоит {northAmerica}, в остальные страны, {rest}. Импортные пошлины при доставке за пределы ЕС не включены.",
+    shippingCostFallback:
+      "Стоимость доставки по вашему адресу показывается при оформлении заказа, до оплаты.",
     shippingTimeQ: "Сколько идёт доставка?",
-    shippingTimeA: "Стандартная доставка обычно занимает {europe} дн. по Европе, {northAmerica} дн. в США и Канаду и {rest} дн. в остальные страны. Срок для вашего адреса показывается при оформлении заказа.",
-    shippingTimeFallback: "Ориентировочный срок доставки для каждого способа показывается при оформлении заказа, до оплаты.",
+    shippingTimeA:
+      "Стандартная доставка обычно занимает {europe} дн. по Европе, {northAmerica} дн. в США и Канаду и {rest} дн. в остальные страны. Срок для вашего адреса показывается при оформлении заказа.",
+    shippingTimeFallback:
+      "Ориентировочный срок доставки для каждого способа показывается при оформлении заказа, до оплаты.",
     returnsQ: "Можно ли вернуть или обменять заказ?",
-    returnsA: "Да. У вас есть 14 дней с момента получения, чтобы отказаться от покупки, и мы вернём деньги на исходный способ оплаты в течение 14 дней, включая стандартную доставку. Обратная пересылка оплачивается вами, если изделие не имеет дефекта. Для обмена просто свяжитесь с нами.",
+    returnsA:
+      "Да. У вас есть 14 дней с момента получения, чтобы отказаться от покупки, и мы вернём деньги на исходный способ оплаты в течение 14 дней, включая стандартную доставку. Обратная пересылка оплачивается вами, если изделие не имеет дефекта. Для обмена просто свяжитесь с нами.",
     giftQ: "Подойдёт ли это в подарок?",
-    giftA: "Безусловно: каждое изделие приходит готовым к вручению. Если вы не уверены в выборе, наш подбор подарка предложит варианты после нескольких коротких вопросов.",
+    giftA:
+      "Безусловно: каждое изделие приходит готовым к вручению. Если вы не уверены в выборе, наш подбор подарка предложит варианты после нескольких коротких вопросов.",
     damagedQ: "Что делать, если изделие пришло повреждённым?",
-    damagedA: "Свяжитесь с нами, указав номер заказа и, по возможности, приложив фото. Мы организуем замену, ремонт или полный возврат денег, включая обратную пересылку.",
+    damagedA:
+      "Свяжитесь с нами, указав номер заказа и, по возможности, приложив фото. Мы организуем замену, ремонт или полный возврат денег, включая обратную пересылку.",
     contactQ: "Как с вами связаться?",
     contactA: "Напишите нам через страницу контактов или на {email}. Мы ответим как можно скорее.",
   },
@@ -5981,7 +6304,8 @@ const ru: Dictionary = {
     oauthContactSupport:
       "Чтобы удалить аккаунт, созданный через Google, свяжитесь со службой поддержки.",
     invalidMfaCode: "Неверный код.",
-    mfaSetupNotFound: "Незавершённая настройка двухфакторной аутентификации не найдена, обновите страницу.",
+    mfaSetupNotFound:
+      "Незавершённая настройка двухфакторной аутентификации не найдена, обновите страницу.",
     oauthNoMfaPassword:
       "Чтобы изменить эту настройку для аккаунта, созданного через Google, обратитесь в поддержку.",
   },
@@ -6224,7 +6548,8 @@ const ru: Dictionary = {
     cta: "Смотреть все изделия",
     relatedTitle: "Вам также может понравиться",
     emptyTitle: "Начните своё путешествие",
-    emptyBody: "Исследуйте нашу коллекцию и откройте для себя изделия ручной работы из муранского стекла.",
+    emptyBody:
+      "Исследуйте нашу коллекцию и откройте для себя изделия ручной работы из муранского стекла.",
     emptyCta: "Смотреть коллекцию",
   },
   cookieConsent: {
@@ -6327,11 +6652,20 @@ const es: Dictionary = {
     bestSellers: "Más vendidos",
     popularTitle: "Los favoritos de la comunidad",
     muranoReason1Title: "Siete siglos de artesanía ininterrumpida",
-    muranoReason1Body: "Cada pieza sale de Murano moldeada por un maestro que aprendió el oficio de quien le precedió, con los mismos gestos de horno desde el siglo XIV. Sin moldes, sin máquinas — solo aliento y manos.",
+    muranoReason1Body:
+      "Cada pieza sale de Murano moldeada por un maestro que aprendió el oficio de quien le precedió, con los mismos gestos de horno desde el siglo XIV. Sin moldes, sin máquinas — solo aliento y manos.",
     muranoReason2Title: "Cada pieza existe solo una vez",
-    muranoReason2Body: "El vidrio hecho a mano no puede reproducirse a la perfección. Los degradados de color, las inclusiones y los torbellinos de tu pieza son únicamente tuyos — nunca producido en serie, nunca duplicado.",
+    muranoReason2Body:
+      "El vidrio hecho a mano no puede reproducirse a la perfección. Los degradados de color, las inclusiones y los torbellinos de tu pieza son únicamente tuyos — nunca producido en serie, nunca duplicado.",
     muranoReason3Title: "Un patrimonio cultural vivo",
-    muranoReason3Body: "Los maestros vidrieros de Murano cuentan con el reconocimiento de la UNESCO. Al llevar una pieza, portas una tradición que Venecia ha custodiado durante más de setecientos años.",
+    muranoReason3Body:
+      "Los maestros vidrieros de Murano cuentan con el reconocimiento de la UNESCO. Al llevar una pieza, portas una tradición que Venecia ha custodiado durante más de setecientos años.",
+    muranoReason1Short:
+      "En Murano se trabaja el vidrio desde hace más de siete siglos, y el oficio sigue pasando de mano en mano. Allí nacen nuestras cuentas, en la llama, una a una: de ahí viene la profundidad de su color.",
+    muranoReason2Short:
+      "Cada cuenta se modela a mano a partir de vidrio fundido: un tono más profundo, una pequeña burbuja de aire, un hilo de oro que gira de otra manera. No son defectos, sino la firma de la mano. La pieza que eliges existe solo así.",
+    muranoReason3Short:
+      'Muchas joyas vendidas como "vidrio veneciano" se fabrican en otro lugar. Las nuestras usan auténtico vidrio de Murano y se componen a mano en Italia, un arte que la UNESCO protege como patrimonio cultural inmaterial desde 2020.',
     shopByCategory: "Comprar por categoría",
     whyUsTitle: "Por qué comprar con nosotros",
     whyShipping: "Envío rápido",
@@ -6371,8 +6705,7 @@ const es: Dictionary = {
     title: "Sobre nosotros",
     intro: (storeName: string) =>
       `Creamos ${storeName} para llevar joyería auténtica de vidrio de Murano soplado a mano a quienes no pueden visitar los hornos en persona, cada pieza elaborada con técnicas transmitidas durante siete siglos en la isla de Murano, enviada directamente desde Venecia.`,
-    heritageImageAlt:
-      "Casas de colores vivos junto a un canal de Burano, en la laguna de Venecia",
+    heritageImageAlt: "Casas de colores vivos junto a un canal de Burano, en la laguna de Venecia",
     valuesTitle: "Lo que nos importa",
     value1Title: "La calidad primero",
     value1Body:
@@ -6445,7 +6778,8 @@ const es: Dictionary = {
     kicker: "Completa el look",
     title: "Completa el look de Murano",
     subtitle: "Tres piezas, un look inconfundible.",
-    intro: "El collar, la pulsera y los pendientes a juego de esta colección, elegidos para llevarse juntos.",
+    intro:
+      "El collar, la pulsera y los pendientes a juego de esta colección, elegidos para llevarse juntos.",
     individualTotal: "Total por separado",
     setTotal: "Conjunto completo",
     pairTotal: "Dos piezas",
@@ -6458,13 +6792,15 @@ const es: Dictionary = {
     added: "Añadido al carrito",
     thisPiece: "Esta pieza",
     include: "Incluir {name}",
-    unavailable: "Una pieza está agotada, así que el conjunto completo no está disponible por ahora. Las demás piezas se pueden añadir por separado.",
+    unavailable:
+      "Una pieza está agotada, así que el conjunto completo no está disponible por ahora. Las demás piezas se pueden añadir por separado.",
   },
   looks: {
     navLabel: "Looks",
     title: "Nuestros looks",
     subtitle: "Joyas pensadas para llevarse juntas.",
-    metaDescription: "Collares, pulseras y pendientes de vidrio de Murano a juego, hechos a mano en Murano y pensados para llevarse juntos.",
+    metaDescription:
+      "Collares, pulseras y pendientes de vidrio de Murano a juego, hechos a mano en Murano y pensados para llevarse juntos.",
     viewLook: "Ver las piezas de este look",
     allLooks: "Todos los looks",
     pieces: "{n} piezas",
@@ -6472,18 +6808,22 @@ const es: Dictionary = {
     backToLooks: "Todos los looks",
     composeKicker: "Tu estilo",
     composeTitle: "Crea tu propio look",
-    composeSubtitle: "Elige un collar, una pulsera y unos pendientes, míralos juntos y ahorra un {percent}% en los tres.",
+    composeSubtitle:
+      "Elige un collar, una pulsera y unos pendientes, míralos juntos y ahorra un {percent}% en los tres.",
     composeCta: "Empezar a crear",
     composeHint: "Elige un collar, una pulsera y unos pendientes para ahorrar un {percent}%.",
     composeTotal: "Tu look",
     composeAdd: "Añadir tu look al carrito",
-    composeMeta: "Crea tu look de vidrio de Murano: elige collar, pulsera y pendientes, míralos juntos y ahorra en los tres.",
+    composeMeta:
+      "Crea tu look de vidrio de Murano: elige collar, pulsera y pendientes, míralos juntos y ahorra en los tres.",
   },
   giftCard: {
     productName: "Tarjeta regalo personalizada",
     title: "Haz tu regalo personal",
-    subtitle: "Añade un toque de magia veneciana a tu regalo con un mensaje personalizado, impreso con cuidado solo para quien lo recibe.",
-    metaDescription: "Una tarjeta regalo personalizada de Perla Murano Glass: elige un mensaje o escribe el tuyo, elige una fuente, y la imprimimos y la ponemos en el paquete.",
+    subtitle:
+      "Unas palabras tuyas, en una tarjeta que enviamos por email en cuanto se paga tu pedido.",
+    metaDescription:
+      "Tarjeta regalo digital personalizada de Perla Murano Glass: elige un mensaje o escribe el tuyo, elige la tipografía y la enviamos por email al destinatario cuando se paga el pedido.",
     intro: "Crea algo solo para esa persona.",
     recipientLabel: "Nombre del destinatario",
     recipientPlaceholder: "¿Para quién es este regalo?",
@@ -6501,18 +6841,39 @@ const es: Dictionary = {
     update: "Actualizar la tarjeta",
     added: "Añadida al carrito",
     emptyError: "Elige o escribe primero un mensaje.",
-    printedNote: "Tu tarjeta personalizada se imprimirá especialmente para este pedido y se incluirá en tu paquete Perla.",
+    deliveryNote:
+      "Tu tarjeta es digital: la enviamos por email al destinatario en cuanto se paga tu pedido. Solo se puede añadir a un pedido.",
     pdpTitle: "Hazlo un regalo",
-    pdpLine: "Añade una tarjeta regalo personalizada por {price}",
-    pdpBody: "Tu mensaje se imprimirá con cuidado y se incluirá en tu paquete Perla.",
+    pdpLine: "Añade una tarjeta regalo digital por {price}",
     pdpCta: "Personaliza tu regalo",
+    recipientEmailLabel: "Email del destinatario",
+    recipientEmailPlaceholder: "¿A dónde enviamos la tarjeta?",
+    recipientEmailHelp:
+      "Enviamos la tarjeta a esta dirección en cuanto se paga tu pedido. No la usamos para nada más.",
+    emailError: "Introduce el email del destinatario.",
+    needsOrder:
+      "La tarjeta digital se compra junto con un pedido: primero añade una pieza al carrito.",
+    needsOrderCta: "Ver la colección",
+    sendTo: "Enviar a",
+    emailSubject: "{sender} te ha enviado una tarjeta",
+    emailIntro:
+      "{sender} ha elegido para ti una joya de cristal de Murano y te ha escrito unas palabras.",
+    emailButton: "Abre tu tarjeta",
+    emailFooter:
+      "Esta tarjeta se ha enviado a petición de quien la escribió. No tienes que hacer nada.",
+    cardPageTitle: "Una tarjeta para ti, de {sender}",
+    cardPageTitleAnon: "Una tarjeta para ti",
+    cardPageNote:
+      "Escrita para ti y enviada con un regalo de cristal de Murano. Gira la tarjeta para ver el reverso.",
+    cardPageCta: "Descubre el cristal de Murano",
     yourMessage: "Tu mensaje",
     fontLabel: "Fuente",
     edit: "Editar",
     remove: "Quitar",
     adHeadline: "Regálale un pedacito de Venecia.",
     adSub: "Ahora hazlo personal.",
-    adBody: "Añade una tarjeta regalo Perla personalizada por solo {price}. Elige uno de nuestros elegantes mensajes o escribe el tuyo, elige tu fuente favorita y crea un mensaje pensado solo para esa persona.",
+    adBody:
+      "Una tarjeta digital por {price}, añadida a tu pedido: elige uno de nuestros mensajes o escribe el tuyo, elige la tipografía y la enviamos por email cuando se pague el pedido.",
     adCta: "Crea tu mensaje",
     seeBack: "Ver el reverso",
     seeFront: "Ver el anverso",
@@ -6520,11 +6881,13 @@ const es: Dictionary = {
     sideBack: "Reverso",
     dragHint: "Arrastra los motivos para colocarlos donde quieras en la tarjeta.",
     stickersTitle: "Añade un toque de brillo.",
-    stickersHelp: "Opcional: toca un motivo para añadirlo y luego arrástralo a donde quieras en la tarjeta.",
+    stickersHelp:
+      "Opcional: toca un motivo para añadirlo y luego arrástralo a donde quieras en la tarjeta.",
     stickersCount: "{count} de {max}",
     addSticker: "Añadir motivo: {name}",
     removeSticker: "Quitar motivo: {name}",
-    moveSticker: "{name} en la tarjeta: arrástralo o usa las flechas para moverlo, Supr para quitarlo",
+    moveSticker:
+      "{name} en la tarjeta: arrástralo o usa las flechas para moverlo, Supr para quitarlo",
     stickers: {
       heart: "Corazón",
       pearl: "Perla",
@@ -6534,7 +6897,7 @@ const es: Dictionary = {
       moon: "Luna",
     },
     backTitle: "Elige el reverso.",
-    backHelp: "El reverso lleva el logotipo de Perla. Elige el color de la cartulina en la que se imprime.",
+    backHelp: "El reverso lleva el logo de Perla. Elige su color.",
     backLabel: "Reverso",
     backs: {
       ivory: "Marfil",
@@ -6562,7 +6925,8 @@ const es: Dictionary = {
   giftFinder: {
     homeCtaLine: "¿No sabes qué elegir? Encuentra el regalo perfecto de Murano",
     homeCtaTime: "5 preguntas · unos 5 minutos",
-    homeCtaDetails: "Cuéntanos para quién es, la ocasión, el estilo, tu presupuesto y el tipo de joya. Te mostraremos piezas de vidrio de Murano realmente disponibles.",
+    homeCtaDetails:
+      "Cuéntanos para quién es, la ocasión, el estilo, tu presupuesto y el tipo de joya. Te mostraremos piezas de vidrio de Murano realmente disponibles.",
     productCtaLine: "¿No estás seguro de que sea el indicado? Prueba nuestro Buscador de Regalos",
     metaTitle: "Buscador de Regalos, El regalo perfecto de vidrio de Murano",
     metaDescription:
@@ -6632,7 +6996,8 @@ const es: Dictionary = {
     emailSuccess: "Enviado, revisa tu correo.",
     emailError: "No se pudo enviar. Inténtalo de nuevo.",
     bundleTitle: "Completa el look",
-    bundleIntro: "Esta pieza forma parte de un conjunto a juego, ahorra un 15% comprándolas juntas.",
+    bundleIntro:
+      "Esta pieza forma parte de un conjunto a juego, ahorra un 15% comprándolas juntas.",
   },
   journal: {
     title: "El Diario de Murano",
@@ -6666,21 +7031,30 @@ const es: Dictionary = {
     careLink: "Leer la guía de cuidado",
     giftLink: "Probar el Buscador de Regalos",
     whereQ: "¿Dónde se hacen mis joyas y desde dónde se envían?",
-    whereA: "Cada pieza está hecha con vidrio de Murano, la isla del vidrio en la laguna de Venecia, y te la enviamos desde Italia.",
+    whereA:
+      "Cada pieza está hecha con vidrio de Murano, la isla del vidrio en la laguna de Venecia, y te la enviamos desde Italia.",
     shippingCostQ: "¿Cuánto cuesta el envío?",
-    shippingCostA: "El envío es gratuito en Italia y Europa. A EE. UU. y Canadá cuesta {northAmerica}, y {rest} al resto del mundo. Los aranceles de importación fuera de la UE no están incluidos.",
-    shippingCostFallback: "El coste de envío a tu dirección se muestra al finalizar la compra, antes de pagar.",
+    shippingCostA:
+      "El envío es gratuito en Italia y Europa. A EE. UU. y Canadá cuesta {northAmerica}, y {rest} al resto del mundo. Los aranceles de importación fuera de la UE no están incluidos.",
+    shippingCostFallback:
+      "El coste de envío a tu dirección se muestra al finalizar la compra, antes de pagar.",
     shippingTimeQ: "¿Cuánto tarda el envío?",
-    shippingTimeA: "El envío estándar suele tardar {europe} días en Europa, {northAmerica} días a EE. UU. y Canadá y {rest} días al resto del mundo. La estimación para tu dirección se muestra al finalizar la compra.",
-    shippingTimeFallback: "El plazo de entrega estimado de cada método de envío se muestra al finalizar la compra, antes de pagar.",
+    shippingTimeA:
+      "El envío estándar suele tardar {europe} días en Europa, {northAmerica} días a EE. UU. y Canadá y {rest} días al resto del mundo. La estimación para tu dirección se muestra al finalizar la compra.",
+    shippingTimeFallback:
+      "El plazo de entrega estimado de cada método de envío se muestra al finalizar la compra, antes de pagar.",
     returnsQ: "¿Puedo devolver o cambiar mi pedido?",
-    returnsA: "Sí. Tienes 14 días desde la entrega para desistir de la compra, y te reembolsamos en el método de pago original en un plazo de 14 días, incluido el envío estándar. Los gastos de devolución corren de tu cuenta, salvo que la pieza sea defectuosa. Para un cambio, contáctanos.",
+    returnsA:
+      "Sí. Tienes 14 días desde la entrega para desistir de la compra, y te reembolsamos en el método de pago original en un plazo de 14 días, incluido el envío estándar. Los gastos de devolución corren de tu cuenta, salvo que la pieza sea defectuosa. Para un cambio, contáctanos.",
     giftQ: "¿Es un buen regalo?",
-    giftA: "Sin duda: cada pieza llega lista para regalar. Si no sabes cuál elegir, nuestro Buscador de Regalos te sugiere piezas con unas pocas preguntas.",
+    giftA:
+      "Sin duda: cada pieza llega lista para regalar. Si no sabes cuál elegir, nuestro Buscador de Regalos te sugiere piezas con unas pocas preguntas.",
     damagedQ: "¿Y si mi pieza llega dañada?",
-    damagedA: "Contáctanos con tu número de pedido y, si puedes, una foto. Organizaremos una sustitución, una reparación o un reembolso completo, incluido el envío de devolución.",
+    damagedA:
+      "Contáctanos con tu número de pedido y, si puedes, una foto. Organizaremos una sustitución, una reparación o un reembolso completo, incluido el envío de devolución.",
     contactQ: "¿Cómo puedo contactaros?",
-    contactA: "Escríbenos desde nuestra página de contacto o por correo a {email}. Te responderemos lo antes posible.",
+    contactA:
+      "Escríbenos desde nuestra página de contacto o por correo a {email}. Te responderemos lo antes posible.",
   },
   product: {
     outOfStock: "Agotado",
@@ -6880,7 +7254,8 @@ const es: Dictionary = {
       "Las cuentas creadas con Google deben contactar con soporte para eliminarse.",
     invalidMfaCode: "Código no válido.",
     mfaSetupNotFound: "No se encontró ninguna configuración de MFA pendiente. Recarga la página.",
-    oauthNoMfaPassword: "Las cuentas creadas con Google deben contactar con soporte para cambiar esto.",
+    oauthNoMfaPassword:
+      "Las cuentas creadas con Google deben contactar con soporte para cambiar esto.",
   },
   emails: {
     tagline: "{storeName}, auténtico vidrio veneciano, hecho a mano en Murano.",
@@ -7162,7 +7537,8 @@ const pt: Dictionary = {
     editorialCta: "Explorar o Diário",
     newsletterHeading: "Um pouco mais de Murano, de vez em quando.",
     newsletterIntro: "Novas coleções, histórias e ofertas especiais, partilhadas com cuidado.",
-    newsletterPrivacy: "Os seus dados ficam privados. Pode cancelar a subscrição a qualquer momento.",
+    newsletterPrivacy:
+      "Os seus dados ficam privados. Pode cancelar a subscrição a qualquer momento.",
     aboutHeading: "Sobre a Perla",
     careHeading: "Apoio ao cliente",
     trustHandcrafted: "Feito à mão em Murano",
@@ -7222,11 +7598,20 @@ const pt: Dictionary = {
     bestSellers: "Mais vendidos",
     popularTitle: "Os favoritos da comunidade",
     muranoReason1Title: "Sete séculos de artesanato ininterrupto",
-    muranoReason1Body: "Cada peça sai de Murano moldada por um maestro que aprendeu o ofício com quem o precedeu, usando os mesmos gestos de forno desde o século XIV. Sem moldes, sem máquinas — apenas sopro e mãos.",
+    muranoReason1Body:
+      "Cada peça sai de Murano moldada por um maestro que aprendeu o ofício com quem o precedeu, usando os mesmos gestos de forno desde o século XIV. Sem moldes, sem máquinas — apenas sopro e mãos.",
     muranoReason2Title: "Cada peça existe apenas uma vez",
-    muranoReason2Body: "O vidro feito à mão não pode ser perfeitamente reproduzido. Os degradês de cor, as inclusões e os redemoinhos na sua peça são exclusivamente seus — nunca produzido em série, nunca duplicado.",
+    muranoReason2Body:
+      "O vidro feito à mão não pode ser perfeitamente reproduzido. Os degradês de cor, as inclusões e os redemoinhos na sua peça são exclusivamente seus — nunca produzido em série, nunca duplicado.",
     muranoReason3Title: "Um patrimônio cultural vivo",
-    muranoReason3Body: "Os mestres vidreiros de Murano têm reconhecimento da UNESCO. Ao usar uma peça, carrega uma tradição que Veneza guarda há mais de setecentos anos.",
+    muranoReason3Body:
+      "Os mestres vidreiros de Murano têm reconhecimento da UNESCO. Ao usar uma peça, carrega uma tradição que Veneza guarda há mais de setecentos anos.",
+    muranoReason1Short:
+      "Em Murano trabalha-se o vidro há mais de sete séculos, e o ofício continua a passar de mão em mão. As nossas contas nascem lá, na chama, uma a uma: é daí que vem a profundidade da sua cor.",
+    muranoReason2Short:
+      "Cada conta é moldada à mão a partir de vidro fundido: um tom mais profundo, uma pequena bolha de ar, um fio de ouro que gira de outra maneira. Não são defeitos, são a assinatura da mão. A peça que escolhe existe só assim.",
+    muranoReason3Short:
+      'Muitas joias vendidas como "vidro veneziano" são feitas noutro sítio. As nossas usam autêntico vidro de Murano e são montadas à mão em Itália, uma arte protegida pela UNESCO como património cultural imaterial desde 2020.',
     shopByCategory: "Comprar por categoria",
     whyUsTitle: "Porquê comprar connosco",
     whyShipping: "Envio rápido",
@@ -7266,8 +7651,7 @@ const pt: Dictionary = {
     title: "Sobre nós",
     intro: (storeName: string) =>
       `Criámos a ${storeName} para levar joias autênticas em vidro de Murano soprado à mão a quem não pode visitar as fornalhas pessoalmente, cada peça feita com técnicas transmitidas ao longo de sete séculos na ilha de Murano, enviada diretamente de Veneza.`,
-    heritageImageAlt:
-      "Casas de cores vivas ao longo de um canal de Burano, na lagoa de Veneza",
+    heritageImageAlt: "Casas de cores vivas ao longo de um canal de Burano, na lagoa de Veneza",
     valuesTitle: "O que nos importa",
     value1Title: "Qualidade em primeiro lugar",
     value1Body:
@@ -7340,7 +7724,8 @@ const pt: Dictionary = {
     kicker: "Complete o look",
     title: "Complete o look de Murano",
     subtitle: "Três peças, um look inconfundível.",
-    intro: "O colar, a pulseira e os brincos a condizer desta coleção, escolhidos para serem usados em conjunto.",
+    intro:
+      "O colar, a pulseira e os brincos a condizer desta coleção, escolhidos para serem usados em conjunto.",
     individualTotal: "Total das peças",
     setTotal: "Conjunto completo",
     pairTotal: "Duas peças",
@@ -7353,13 +7738,15 @@ const pt: Dictionary = {
     added: "Adicionado ao carrinho",
     thisPiece: "Esta peça",
     include: "Incluir {name}",
-    unavailable: "Uma das peças está esgotada, por isso o conjunto completo não está disponível de momento. As outras peças podem ser adicionadas individualmente.",
+    unavailable:
+      "Uma das peças está esgotada, por isso o conjunto completo não está disponível de momento. As outras peças podem ser adicionadas individualmente.",
   },
   looks: {
     navLabel: "Looks",
     title: "Os nossos looks",
     subtitle: "Joias pensadas para serem usadas em conjunto.",
-    metaDescription: "Colares, pulseiras e brincos em vidro de Murano a condizer, feitos à mão em Murano e pensados para serem usados em conjunto.",
+    metaDescription:
+      "Colares, pulseiras e brincos em vidro de Murano a condizer, feitos à mão em Murano e pensados para serem usados em conjunto.",
     viewLook: "Ver as peças deste look",
     allLooks: "Todos os looks",
     pieces: "{n} peças",
@@ -7367,18 +7754,22 @@ const pt: Dictionary = {
     backToLooks: "Todos os looks",
     composeKicker: "O seu estilo",
     composeTitle: "Crie o seu próprio look",
-    composeSubtitle: "Escolha um colar, uma pulseira e uns brincos, veja-os juntos e poupe {percent}% nos três.",
+    composeSubtitle:
+      "Escolha um colar, uma pulseira e uns brincos, veja-os juntos e poupe {percent}% nos três.",
     composeCta: "Começar a criar",
     composeHint: "Escolha um colar, uma pulseira e uns brincos para poupar {percent}%.",
     composeTotal: "O seu look",
     composeAdd: "Adicionar o seu look ao carrinho",
-    composeMeta: "Crie o seu look em vidro de Murano: escolha colar, pulseira e brincos, veja-os juntos e poupe nos três.",
+    composeMeta:
+      "Crie o seu look em vidro de Murano: escolha colar, pulseira e brincos, veja-os juntos e poupe nos três.",
   },
   giftCard: {
     productName: "Cartão de oferta personalizado",
     title: "Torne o seu presente pessoal",
-    subtitle: "Acrescente um toque de magia veneziana ao seu presente com uma mensagem personalizada, impressa com cuidado só para quem o recebe.",
-    metaDescription: "Um cartão de oferta personalizado da Perla Murano Glass: escolha uma mensagem ou escreva a sua, escolha um tipo de letra, e nós imprimimo-lo e colocamo-lo na embalagem.",
+    subtitle:
+      "Algumas palavras suas, num cartão que enviamos por email assim que a encomenda for paga.",
+    metaDescription:
+      "Cartão de oferta digital personalizado Perla Murano Glass: escolha uma mensagem ou escreva a sua, escolha o tipo de letra e enviamos por email ao destinatário quando a encomenda for paga.",
     intro: "Crie algo só para essa pessoa.",
     recipientLabel: "Nome do destinatário",
     recipientPlaceholder: "Para quem é este presente?",
@@ -7396,18 +7787,38 @@ const pt: Dictionary = {
     update: "Atualizar o cartão",
     added: "Adicionado ao carrinho",
     emptyError: "Escolha ou escreva primeiro uma mensagem.",
-    printedNote: "O seu cartão personalizado será impresso especialmente para esta encomenda e colocado na sua embalagem Perla.",
+    deliveryNote:
+      "O seu cartão é digital: enviamo-lo por email ao destinatário assim que a encomenda for paga. Só pode ser adicionado a uma encomenda.",
     pdpTitle: "Faça dele um presente",
-    pdpLine: "Adicione um cartão de oferta personalizado por {price}",
-    pdpBody: "A sua mensagem será impressa com cuidado e incluída na sua embalagem Perla.",
+    pdpLine: "Adicione um cartão de oferta digital por {price}",
     pdpCta: "Personalizar o seu presente",
+    recipientEmailLabel: "Email do destinatário",
+    recipientEmailPlaceholder: "Para onde enviamos o cartão?",
+    recipientEmailHelp:
+      "Enviamos o cartão para este endereço assim que a encomenda for paga. Não o usamos para mais nada.",
+    emailError: "Introduza o email do destinatário.",
+    needsOrder:
+      "O cartão digital é comprado com uma encomenda: adicione primeiro uma peça ao carrinho.",
+    needsOrderCta: "Ver a coleção",
+    sendTo: "Enviar para",
+    emailSubject: "{sender} enviou-lhe um cartão",
+    emailIntro:
+      "{sender} escolheu para si uma joia de vidro de Murano e escreveu-lhe algumas palavras.",
+    emailButton: "Abrir o seu cartão",
+    emailFooter: "Este cartão foi enviado a pedido de quem o escreveu. Não precisa de fazer nada.",
+    cardPageTitle: "Um cartão para si, de {sender}",
+    cardPageTitleAnon: "Um cartão para si",
+    cardPageNote:
+      "Escrito para si e enviado com uma oferta de vidro de Murano. Vire o cartão para ver o verso.",
+    cardPageCta: "Descobrir o vidro de Murano",
     yourMessage: "A sua mensagem",
     fontLabel: "Tipo de letra",
     edit: "Editar",
     remove: "Remover",
     adHeadline: "Ofereça um pedacinho de Veneza.",
     adSub: "Agora torne-o pessoal.",
-    adBody: "Adicione um cartão de oferta Perla personalizado por apenas {price}. Escolha uma das nossas mensagens elegantes ou escreva a sua, escolha o seu tipo de letra preferido e crie uma mensagem feita só para essa pessoa.",
+    adBody:
+      "Um cartão digital por {price}, adicionado à sua encomenda: escolha uma das nossas mensagens ou escreva a sua, escolha o tipo de letra e enviamo-lo por email quando a encomenda for paga.",
     adCta: "Criar a sua mensagem",
     seeBack: "Ver o verso",
     seeFront: "Ver a frente",
@@ -7415,7 +7826,8 @@ const pt: Dictionary = {
     sideBack: "Verso",
     dragHint: "Arraste os motivos para os colocar onde quiser no cartão.",
     stickersTitle: "Acrescente um pouco de brilho.",
-    stickersHelp: "Opcional: toque num motivo para o acrescentar e depois arraste-o para onde preferir no cartão.",
+    stickersHelp:
+      "Opcional: toque num motivo para o acrescentar e depois arraste-o para onde preferir no cartão.",
     stickersCount: "{count} de {max}",
     addSticker: "Acrescentar motivo: {name}",
     removeSticker: "Retirar motivo: {name}",
@@ -7429,7 +7841,7 @@ const pt: Dictionary = {
       moon: "Lua",
     },
     backTitle: "Escolha o verso.",
-    backHelp: "O verso tem o logótipo da Perla. Escolha a cor do cartão em que é impresso.",
+    backHelp: "O verso tem o logótipo Perla. Escolha a sua cor.",
     backLabel: "Verso",
     backs: {
       ivory: "Marfim",
@@ -7457,8 +7869,10 @@ const pt: Dictionary = {
   giftFinder: {
     homeCtaLine: "Não sabe o que escolher? Encontre o presente de Murano perfeito",
     homeCtaTime: "5 perguntas · cerca de 5 minutos",
-    homeCtaDetails: "Indique para quem é, a ocasião, o estilo, o orçamento e o tipo de joia. Vamos sugerir peças de vidro de Murano realmente disponíveis.",
-    productCtaLine: "Não tem a certeza se é a peça certa? Experimente o nosso Localizador de Presentes",
+    homeCtaDetails:
+      "Indique para quem é, a ocasião, o estilo, o orçamento e o tipo de joia. Vamos sugerir peças de vidro de Murano realmente disponíveis.",
+    productCtaLine:
+      "Não tem a certeza se é a peça certa? Experimente o nosso Localizador de Presentes",
     metaTitle: "Localizador de Presentes, O presente perfeito em vidro de Murano",
     metaDescription:
       "Responda a cinco perguntas rápidas e sugerimos o presente perfeito em vidro de Murano feito à mão, escolhido entre peças realmente disponíveis.",
@@ -7527,7 +7941,8 @@ const pt: Dictionary = {
     emailSuccess: "Enviado, verifique o seu email.",
     emailError: "Não foi possível enviar. Tente novamente.",
     bundleTitle: "Complete o look",
-    bundleIntro: "Esta peça faz parte de um conjunto a condizer, poupe 15% comprando-as em conjunto.",
+    bundleIntro:
+      "Esta peça faz parte de um conjunto a condizer, poupe 15% comprando-as em conjunto.",
   },
   journal: {
     title: "O Diário de Murano",
@@ -7561,21 +7976,30 @@ const pt: Dictionary = {
     careLink: "Ler o guia de cuidados",
     giftLink: "Experimentar o Localizador de Presentes",
     whereQ: "Onde são feitas as minhas joias e de onde são enviadas?",
-    whereA: "Cada peça é feita com vidro de Murano, a ilha do vidro na lagoa de Veneza, e é enviada de Itália até si.",
+    whereA:
+      "Cada peça é feita com vidro de Murano, a ilha do vidro na lagoa de Veneza, e é enviada de Itália até si.",
     shippingCostQ: "Quanto custa o envio?",
-    shippingCostA: "O envio é gratuito em Itália e na Europa. Para os EUA e o Canadá custa {northAmerica}, e {rest} para o resto do mundo. Os direitos de importação fora da UE não estão incluídos.",
-    shippingCostFallback: "O custo de envio para a sua morada é apresentado no checkout, antes de pagar.",
+    shippingCostA:
+      "O envio é gratuito em Itália e na Europa. Para os EUA e o Canadá custa {northAmerica}, e {rest} para o resto do mundo. Os direitos de importação fora da UE não estão incluídos.",
+    shippingCostFallback:
+      "O custo de envio para a sua morada é apresentado no checkout, antes de pagar.",
     shippingTimeQ: "Quanto tempo demora o envio?",
-    shippingTimeA: "O envio normal demora habitualmente {europe} dias na Europa, {northAmerica} dias para os EUA e o Canadá e {rest} dias para o resto do mundo. A estimativa para a sua morada é apresentada no checkout.",
-    shippingTimeFallback: "O prazo de entrega estimado de cada método de envio é apresentado no checkout, antes de pagar.",
+    shippingTimeA:
+      "O envio normal demora habitualmente {europe} dias na Europa, {northAmerica} dias para os EUA e o Canadá e {rest} dias para o resto do mundo. A estimativa para a sua morada é apresentada no checkout.",
+    shippingTimeFallback:
+      "O prazo de entrega estimado de cada método de envio é apresentado no checkout, antes de pagar.",
     returnsQ: "Posso devolver ou trocar a minha encomenda?",
-    returnsA: "Sim. Tem 14 dias após a entrega para desistir da compra, e reembolsamos o método de pagamento original no prazo de 14 dias, incluindo o envio normal. Os custos de devolução são por sua conta, salvo se a peça tiver defeito. Para uma troca, contacte-nos.",
+    returnsA:
+      "Sim. Tem 14 dias após a entrega para desistir da compra, e reembolsamos o método de pagamento original no prazo de 14 dias, incluindo o envio normal. Os custos de devolução são por sua conta, salvo se a peça tiver defeito. Para uma troca, contacte-nos.",
     giftQ: "É uma boa opção para oferecer?",
-    giftA: "Sem dúvida: cada peça chega pronta a oferecer. Se não souber qual escolher, o nosso Localizador de Presentes sugere peças com algumas perguntas rápidas.",
+    giftA:
+      "Sem dúvida: cada peça chega pronta a oferecer. Se não souber qual escolher, o nosso Localizador de Presentes sugere peças com algumas perguntas rápidas.",
     damagedQ: "E se a minha peça chegar danificada?",
-    damagedA: "Contacte-nos com o número da encomenda e, se possível, uma fotografia. Trataremos de uma substituição, de uma reparação ou de um reembolso total, incluindo o envio da devolução.",
+    damagedA:
+      "Contacte-nos com o número da encomenda e, se possível, uma fotografia. Trataremos de uma substituição, de uma reparação ou de um reembolso total, incluindo o envio da devolução.",
     contactQ: "Como posso contactar-vos?",
-    contactA: "Escreva-nos através da página de contacto ou por e-mail para {email}. Responderemos o mais depressa possível.",
+    contactA:
+      "Escreva-nos através da página de contacto ou por e-mail para {email}. Responderemos o mais depressa possível.",
   },
   product: {
     outOfStock: "Esgotado",
@@ -7604,7 +8028,8 @@ const pt: Dictionary = {
     buyNow: "Comprar esta peça agora",
     reviews: "Avaliações",
     storyTitle: "A história desta peça",
-    shippingBanner: "Envio gratuito para Itália e Europa · EUA e Canadá {northAmerica} · Resto do mundo {rest}",
+    shippingBanner:
+      "Envio gratuito para Itália e Europa · EUA e Canadá {northAmerica} · Resto do mundo {rest}",
     handmadeBadge: "Feito à mão em Itália",
     lightweightBadge: "Leve",
     seeReviews: "Ver avaliações",
@@ -8119,11 +8544,20 @@ const hi: Dictionary = {
     bestSellers: "बेस्ट सेलर",
     popularTitle: "समुदाय के पसंदीदा",
     muranoReason1Title: "सात सदियों की अखंड शिल्पकला",
-    muranoReason1Body: "हर नग मुरानो से एक ऐसे उस्ताद के हाथों बनकर निकलता है जिसने यह हुनर अपने पूर्ववर्ती से सीखा — 14वीं सदी से चले आ रहे उन्हीं भट्टी के इशारों के साथ। कोई साँचा नहीं, कोई मशीन नहीं — केवल साँस और हाथ।",
+    muranoReason1Body:
+      "हर नग मुरानो से एक ऐसे उस्ताद के हाथों बनकर निकलता है जिसने यह हुनर अपने पूर्ववर्ती से सीखा — 14वीं सदी से चले आ रहे उन्हीं भट्टी के इशारों के साथ। कोई साँचा नहीं, कोई मशीन नहीं — केवल साँस और हाथ।",
     muranoReason2Title: "हर नग केवल एक बार अस्तित्व में आता है",
-    muranoReason2Body: "हाथ से बना काँच पूरी तरह दोहराया नहीं जा सकता। आपके नग में रंगों की ढाल, समावेश और भँवर सिर्फ आपके हैं — कभी बड़े पैमाने पर नहीं बना, कभी नकल नहीं हुई।",
+    muranoReason2Body:
+      "हाथ से बना काँच पूरी तरह दोहराया नहीं जा सकता। आपके नग में रंगों की ढाल, समावेश और भँवर सिर्फ आपके हैं — कभी बड़े पैमाने पर नहीं बना, कभी नकल नहीं हुई।",
     muranoReason3Title: "एक जीवंत सांस्कृतिक विरासत",
-    muranoReason3Body: "मुरानो के काँच कारीगरों को यूनेस्को की मान्यता प्राप्त है। जब आप कोई नग पहनते हैं, तो आप उस परंपरा को साथ लेते हैं जिसे वेनिस ने सात सौ से अधिक वर्षों से सँजोया है।",
+    muranoReason3Body:
+      "मुरानो के काँच कारीगरों को यूनेस्को की मान्यता प्राप्त है। जब आप कोई नग पहनते हैं, तो आप उस परंपरा को साथ लेते हैं जिसे वेनिस ने सात सौ से अधिक वर्षों से सँजोया है।",
+    muranoReason1Short:
+      "मुरानो में सात सदियों से भी ज़्यादा समय से काँच का काम होता आया है, और यह हुनर आज भी एक हाथ से दूसरे हाथ तक पहुँचता है। हमारे मनके वहीं, लौ में, एक-एक करके जन्म लेते हैं: उनके रंग की गहराई वहीं से आती है।",
+    muranoReason2Short:
+      "हर मनका पिघले काँच से हाथ से गढ़ा जाता है: थोड़ा गहरा रंग, हवा का एक छोटा-सा बुलबुला, सोने का एक धागा जो दूसरी ओर मुड़ जाता है। ये खामियाँ नहीं, हाथ के हस्ताक्षर हैं। आप जो गहना चुनते हैं, वह ठीक वैसा दूसरा नहीं है।",
+    muranoReason3Short:
+      '"वेनिस का काँच" कहकर बेचे जाने वाले कई गहने कहीं और बनते हैं। हमारे गहनों में असली मुरानो काँच है और इन्हें इटली में हाथ से जोड़ा जाता है — यह वह कला है जिसे यूनेस्को 2020 से अमूर्त सांस्कृतिक विरासत के रूप में संरक्षित करता है।',
     shopByCategory: "श्रेणी के अनुसार खरीदारी करें",
     whyUsTitle: "हमारे साथ खरीदारी क्यों करें",
     whyShipping: "तेज़ शिपिंग",
@@ -8247,13 +8681,15 @@ const hi: Dictionary = {
     added: "कार्ट में जोड़ा गया",
     thisPiece: "यह पीस",
     include: "{name} शामिल करें",
-    unavailable: "एक पीस स्टॉक में नहीं है, इसलिए पूरा सेट अभी उपलब्ध नहीं है। बाकी पीस आप अलग से जोड़ सकते हैं।",
+    unavailable:
+      "एक पीस स्टॉक में नहीं है, इसलिए पूरा सेट अभी उपलब्ध नहीं है। बाकी पीस आप अलग से जोड़ सकते हैं।",
   },
   looks: {
     navLabel: "लुक्स",
     title: "हमारे लुक्स",
     subtitle: "साथ पहनने के लिए बनाए गए आभूषण।",
-    metaDescription: "मुरानो ग्लास के मेल खाते हार, कंगन और झुमके, मुरानो में हाथ से बने और साथ पहनने के लिए चुने गए।",
+    metaDescription:
+      "मुरानो ग्लास के मेल खाते हार, कंगन और झुमके, मुरानो में हाथ से बने और साथ पहनने के लिए चुने गए।",
     viewLook: "इस लुक के आभूषण देखें",
     allLooks: "सभी लुक्स",
     pieces: "{n} आभूषण",
@@ -8261,18 +8697,22 @@ const hi: Dictionary = {
     backToLooks: "सभी लुक्स",
     composeKicker: "आपकी शैली",
     composeTitle: "अपना लुक खुद बनाएँ",
-    composeSubtitle: "एक हार, एक कंगन और झुमके चुनें, उन्हें साथ देखें और तीनों पर {percent}% बचाएँ।",
+    composeSubtitle:
+      "एक हार, एक कंगन और झुमके चुनें, उन्हें साथ देखें और तीनों पर {percent}% बचाएँ।",
     composeCta: "बनाना शुरू करें",
     composeHint: "{percent}% बचाने के लिए हार, कंगन और झुमके चुनें।",
     composeTotal: "आपका लुक",
     composeAdd: "अपना लुक कार्ट में जोड़ें",
-    composeMeta: "मुरानो ग्लास से अपना लुक बनाएँ: हार, कंगन और झुमके चुनें, उन्हें साथ देखें और तीनों पर बचत करें।",
+    composeMeta:
+      "मुरानो ग्लास से अपना लुक बनाएँ: हार, कंगन और झुमके चुनें, उन्हें साथ देखें और तीनों पर बचत करें।",
   },
   giftCard: {
     productName: "व्यक्तिगत उपहार कार्ड",
     title: "अपने उपहार को खास बनाएँ",
-    subtitle: "अपने उपहार में वेनिस का थोड़ा जादू जोड़ें, एक निजी संदेश के साथ जो खास उनके लिए सुंदरता से छापा जाता है।",
-    metaDescription: "Perla Murano Glass का व्यक्तिगत उपहार कार्ड: कोई संदेश चुनें या अपना लिखें, फ़ॉन्ट चुनें, और हम उसे छापकर पैकेज में रख देंगे।",
+    subtitle:
+      "आपके अपने कुछ शब्द, एक कार्ड पर जिसे हम आपका ऑर्डर भुगतान होते ही ईमेल से भेजते हैं।",
+    metaDescription:
+      "Perla Murano Glass का व्यक्तिगत डिजिटल उपहार कार्ड: संदेश चुनें या अपना लिखें, फ़ॉन्ट चुनें, और ऑर्डर का भुगतान होने पर हम इसे प्राप्तकर्ता को ईमेल करते हैं।",
     intro: "कुछ ऐसा बनाएँ जो सिर्फ़ उनके लिए हो।",
     recipientLabel: "प्राप्तकर्ता का नाम",
     recipientPlaceholder: "यह उपहार किसके लिए है?",
@@ -8290,18 +8730,38 @@ const hi: Dictionary = {
     update: "उपहार कार्ड अपडेट करें",
     added: "कार्ट में जोड़ा गया",
     emptyError: "पहले कोई संदेश चुनें या लिखें।",
-    printedNote: "आपका व्यक्तिगत कार्ड विशेष रूप से इस ऑर्डर के लिए छापा जाएगा और आपके Perla पैकेज में रखा जाएगा।",
+    deliveryNote:
+      "आपका कार्ड डिजिटल है: ऑर्डर का भुगतान होते ही हम इसे प्राप्तकर्ता को ईमेल करते हैं। इसे केवल किसी ऑर्डर के साथ जोड़ा जा सकता है।",
     pdpTitle: "इसे उपहार बनाएँ",
-    pdpLine: "{price} में व्यक्तिगत उपहार कार्ड जोड़ें",
-    pdpBody: "आपका संदेश सुंदरता से छापा जाएगा और आपके Perla पैकेज में रखा जाएगा।",
+    pdpLine: "{price} में डिजिटल उपहार कार्ड जोड़ें",
     pdpCta: "अपना उपहार व्यक्तिगत बनाएँ",
+    recipientEmailLabel: "प्राप्तकर्ता का ईमेल",
+    recipientEmailPlaceholder: "कार्ड कहाँ भेजें?",
+    recipientEmailHelp:
+      "ऑर्डर का भुगतान होते ही हम कार्ड इसी पते पर भेजते हैं। हम इसका किसी और काम में उपयोग नहीं करते।",
+    emailError: "प्राप्तकर्ता का ईमेल पता दर्ज करें।",
+    needsOrder: "डिजिटल कार्ड किसी ऑर्डर के साथ ही खरीदा जाता है: पहले कार्ट में कोई गहना जोड़ें।",
+    needsOrderCta: "संग्रह देखें",
+    sendTo: "भेजें",
+    emailSubject: "{sender} ने आपको एक कार्ड भेजा है",
+    emailIntro:
+      "{sender} ने आपके लिए मुरानो ग्लास का एक गहना चुना है और आपके लिए कुछ शब्द लिखे हैं।",
+    emailButton: "अपना कार्ड खोलें",
+    emailFooter:
+      "यह कार्ड इसे लिखने वाले के अनुरोध पर भेजा गया है। आपको कुछ करने की आवश्यकता नहीं है।",
+    cardPageTitle: "{sender} की ओर से आपके लिए एक कार्ड",
+    cardPageTitleAnon: "आपके लिए एक कार्ड",
+    cardPageNote:
+      "आपके लिए लिखा गया और मुरानो ग्लास के उपहार के साथ भेजा गया। पीछे की ओर देखने के लिए कार्ड पलटें।",
+    cardPageCta: "मुरानो ग्लास खोजें",
     yourMessage: "आपका संदेश",
     fontLabel: "फ़ॉन्ट",
     edit: "बदलें",
     remove: "हटाएँ",
     adHeadline: "उन्हें वेनिस का एक छोटा सा टुकड़ा दें।",
     adSub: "अब इसे व्यक्तिगत बनाएँ।",
-    adBody: "सिर्फ़ {price} में Perla का व्यक्तिगत उपहार कार्ड जोड़ें। हमारे सुंदर संदेशों में से चुनें या अपना लिखें, अपना पसंदीदा फ़ॉन्ट चुनें और खास उनके लिए संदेश बनाएँ।",
+    adBody:
+      "{price} का डिजिटल कार्ड, आपके ऑर्डर के साथ: हमारे संदेशों में से चुनें या अपना लिखें, फ़ॉन्ट चुनें, और ऑर्डर का भुगतान होते ही हम इसे ईमेल करते हैं।",
     adCta: "अपना उपहार संदेश बनाएँ",
     seeBack: "पीछे का भाग देखें",
     seeFront: "आगे का भाग देखें",
@@ -8309,11 +8769,13 @@ const hi: Dictionary = {
     sideBack: "पीछे",
     dragHint: "चिह्नों को खींचकर कार्ड पर कहीं भी रखें।",
     stickersTitle: "थोड़ी चमक जोड़ें।",
-    stickersHelp: "वैकल्पिक: कोई चिह्न जोड़ने के लिए उस पर टैप करें, फिर उसे कार्ड पर मनचाही जगह खींचें।",
+    stickersHelp:
+      "वैकल्पिक: कोई चिह्न जोड़ने के लिए उस पर टैप करें, फिर उसे कार्ड पर मनचाही जगह खींचें।",
     stickersCount: "{max} में से {count}",
     addSticker: "चिह्न जोड़ें: {name}",
     removeSticker: "चिह्न हटाएँ: {name}",
-    moveSticker: "कार्ड पर {name}: खिसकाने के लिए खींचें या तीर कुंजियों का उपयोग करें, हटाने के लिए डिलीट दबाएँ",
+    moveSticker:
+      "कार्ड पर {name}: खिसकाने के लिए खींचें या तीर कुंजियों का उपयोग करें, हटाने के लिए डिलीट दबाएँ",
     stickers: {
       heart: "दिल",
       pearl: "मोती",
@@ -8323,7 +8785,7 @@ const hi: Dictionary = {
       moon: "चाँद",
     },
     backTitle: "पीछे का भाग चुनें।",
-    backHelp: "पीछे Perla का लोगो छपा होता है। वह कार्ड का रंग चुनें जिस पर यह छपेगा।",
+    backHelp: "पीछे की ओर Perla का लोगो है। उसका रंग चुनें।",
     backLabel: "पीछे का भाग",
     backs: {
       ivory: "हाथीदाँत",
@@ -8351,7 +8813,8 @@ const hi: Dictionary = {
   giftFinder: {
     homeCtaLine: "समझ नहीं आ रहा क्या चुनें? परफेक्ट मुरानो गिफ्ट खोजें",
     homeCtaTime: "5 सवाल · लगभग 5 मिनट",
-    homeCtaDetails: "बताइए यह किसके लिए है, अवसर, पसंदीदा शैली, बजट और गहने का प्रकार क्या है। हम उपलब्ध मुरानो ग्लास के असली गहने सुझाएँगे।",
+    homeCtaDetails:
+      "बताइए यह किसके लिए है, अवसर, पसंदीदा शैली, बजट और गहने का प्रकार क्या है। हम उपलब्ध मुरानो ग्लास के असली गहने सुझाएँगे।",
     productCtaLine: "पक्का नहीं कि यही सही है? हमारा गिफ्ट फाइंडर आज़माएं",
     metaTitle: "गिफ्ट फाइंडर, मुरानो ग्लास का परफेक्ट गिफ्ट",
     metaDescription:
@@ -8455,19 +8918,26 @@ const hi: Dictionary = {
     careLink: "देखभाल गाइड पढ़ें",
     giftLink: "गिफ़्ट फ़ाइंडर आज़माएँ",
     whereQ: "मेरी ज्वेलरी कहाँ बनती है और कहाँ से भेजी जाती है?",
-    whereA: "हर पीस मुरानो के काँच से बनता है, वेनिस के लैगून में काँच कारीगरी का द्वीप, और इटली से आपको भेजा जाता है।",
+    whereA:
+      "हर पीस मुरानो के काँच से बनता है, वेनिस के लैगून में काँच कारीगरी का द्वीप, और इटली से आपको भेजा जाता है।",
     shippingCostQ: "शिपिंग की कीमत कितनी है?",
-    shippingCostA: "इटली और यूरोप में शिपिंग मुफ़्त है। अमेरिका और कनाडा के लिए यह {northAmerica} है, और बाकी दुनिया के लिए {rest}। यूरोपीय संघ के बाहर डिलीवरी पर आयात शुल्क शामिल नहीं है।",
+    shippingCostA:
+      "इटली और यूरोप में शिपिंग मुफ़्त है। अमेरिका और कनाडा के लिए यह {northAmerica} है, और बाकी दुनिया के लिए {rest}। यूरोपीय संघ के बाहर डिलीवरी पर आयात शुल्क शामिल नहीं है।",
     shippingCostFallback: "आपके पते के लिए शिपिंग की कीमत चेकआउट पर, भुगतान से पहले दिखाई जाती है।",
     shippingTimeQ: "शिपिंग में कितना समय लगता है?",
-    shippingTimeA: "स्टैंडर्ड डिलीवरी में आमतौर पर यूरोप में {europe} दिन, अमेरिका और कनाडा में {northAmerica} दिन और बाकी दुनिया में {rest} दिन लगते हैं। आपके पते का अनुमान चेकआउट पर दिखाया जाता है।",
-    shippingTimeFallback: "हर शिपिंग तरीके का अनुमानित डिलीवरी समय चेकआउट पर, भुगतान से पहले दिखाया जाता है।",
+    shippingTimeA:
+      "स्टैंडर्ड डिलीवरी में आमतौर पर यूरोप में {europe} दिन, अमेरिका और कनाडा में {northAmerica} दिन और बाकी दुनिया में {rest} दिन लगते हैं। आपके पते का अनुमान चेकआउट पर दिखाया जाता है।",
+    shippingTimeFallback:
+      "हर शिपिंग तरीके का अनुमानित डिलीवरी समय चेकआउट पर, भुगतान से पहले दिखाया जाता है।",
     returnsQ: "क्या मैं अपना ऑर्डर लौटा या बदल सकता हूँ?",
-    returnsA: "हाँ। डिलीवरी के बाद 14 दिनों तक आप खरीदारी रद्द कर सकते हैं, और हम 14 दिनों के भीतर मूल भुगतान तरीके पर पैसे लौटाते हैं, स्टैंडर्ड डिलीवरी सहित। पीस में खराबी न हो तो वापसी शिपिंग का खर्च आपका होता है। बदलने के लिए बस हमसे संपर्क करें।",
+    returnsA:
+      "हाँ। डिलीवरी के बाद 14 दिनों तक आप खरीदारी रद्द कर सकते हैं, और हम 14 दिनों के भीतर मूल भुगतान तरीके पर पैसे लौटाते हैं, स्टैंडर्ड डिलीवरी सहित। पीस में खराबी न हो तो वापसी शिपिंग का खर्च आपका होता है। बदलने के लिए बस हमसे संपर्क करें।",
     giftQ: "क्या यह उपहार के लिए अच्छा है?",
-    giftA: "बिल्कुल: हर पीस उपहार देने के लिए तैयार होकर आता है। अगर आप तय नहीं कर पा रहे हैं, तो हमारा गिफ़्ट फ़ाइंडर कुछ आसान सवालों में पीस सुझाता है।",
+    giftA:
+      "बिल्कुल: हर पीस उपहार देने के लिए तैयार होकर आता है। अगर आप तय नहीं कर पा रहे हैं, तो हमारा गिफ़्ट फ़ाइंडर कुछ आसान सवालों में पीस सुझाता है।",
     damagedQ: "अगर मेरा पीस टूटा हुआ पहुँचे तो?",
-    damagedA: "अपने ऑर्डर नंबर और हो सके तो एक फ़ोटो के साथ हमसे संपर्क करें। हम बदलने, मरम्मत या वापसी शिपिंग सहित पूरे रिफ़ंड की व्यवस्था करेंगे।",
+    damagedA:
+      "अपने ऑर्डर नंबर और हो सके तो एक फ़ोटो के साथ हमसे संपर्क करें। हम बदलने, मरम्मत या वापसी शिपिंग सहित पूरे रिफ़ंड की व्यवस्था करेंगे।",
     contactQ: "मैं आपसे कैसे संपर्क करूँ?",
     contactA: "हमारे संपर्क पेज से या {email} पर ईमेल करके लिखें। हम जल्द से जल्द जवाब देंगे।",
   },
@@ -8497,7 +8967,8 @@ const hi: Dictionary = {
     buyNow: "यह आभूषण अभी खरीदें",
     reviews: "समीक्षाएं",
     storyTitle: "इस टुकड़े की कहानी",
-    shippingBanner: "इटली और यूरोप में मुफ़्त शिपिंग · अमेरिका और कनाडा {northAmerica} · शेष विश्व {rest}",
+    shippingBanner:
+      "इटली और यूरोप में मुफ़्त शिपिंग · अमेरिका और कनाडा {northAmerica} · शेष विश्व {rest}",
     handmadeBadge: "इटली में हाथ से निर्मित",
     lightweightBadge: "हल्का वज़न",
     seeReviews: "समीक्षाएं देखें",
@@ -9009,11 +9480,20 @@ const ja: Dictionary = {
     bestSellers: "人気商品",
     popularTitle: "コミュニティのお気に入り",
     muranoReason1Title: "700年途切れることなく続く職人技",
-    muranoReason1Body: "すべての作品はムラノで、先代から技を受け継いだマエストロの手によって生まれます。14世紀から変わらない窯の動作で。型も機械もなく、ただ息吹と手だけで。",
+    muranoReason1Body:
+      "すべての作品はムラノで、先代から技を受け継いだマエストロの手によって生まれます。14世紀から変わらない窯の動作で。型も機械もなく、ただ息吹と手だけで。",
     muranoReason2Title: "一つとして同じものはない",
-    muranoReason2Body: "手作りのガラスは完全には再現できません。あなたの作品の色のグラデーション、内包物、渦模様はあなただけのもの——大量生産も複製も決してありません。",
+    muranoReason2Body:
+      "手作りのガラスは完全には再現できません。あなたの作品の色のグラデーション、内包物、渦模様はあなただけのもの——大量生産も複製も決してありません。",
     muranoReason3Title: "生きた文化遺産",
-    muranoReason3Body: "ムラノのガラス職人はユネスコの認定を受けています。作品を身に着けることは、ヴェネツィアが700年以上守り続けてきた伝統を受け継ぐことです。",
+    muranoReason3Body:
+      "ムラノのガラス職人はユネスコの認定を受けています。作品を身に着けることは、ヴェネツィアが700年以上守り続けてきた伝統を受け継ぐことです。",
+    muranoReason1Short:
+      "ムラノでは700年以上にわたってガラスが作られ、その技はいまも手から手へと受け継がれています。私たちのビーズはそこで、炎の中でひとつずつ生まれます。色の深みはそこから来ています。",
+    muranoReason2Short:
+      "どのビーズも、溶けたガラスから手で形づくられます。少し深い色合い、小さな気泡、別の向きに巻いた金の糸。それは欠点ではなく、手のしるしです。あなたが選ぶ一点は、そのままの姿でしか存在しません。",
+    muranoReason3Short:
+      "「ベネチアンガラス」として売られるジュエリーの多くは、別の場所で作られています。私たちのジュエリーは本物のムラノガラスを使い、イタリアで手作業で組み上げています。この技術は2020年からユネスコの無形文化遺産として保護されています。",
     shopByCategory: "カテゴリーから探す",
     whyUsTitle: "当店が選ばれる理由",
     whyShipping: "迅速な配送",
@@ -9126,7 +9606,8 @@ const ja: Dictionary = {
     kicker: "コーディネートを完成",
     title: "ムラーノのコーディネートを完成させる",
     subtitle: "3つのアイテムで、ひとつの特別な装い。",
-    intro: "このコレクションのネックレス、ブレスレット、ピアスを、一緒に身に着けられるよう揃えました。",
+    intro:
+      "このコレクションのネックレス、ブレスレット、ピアスを、一緒に身に着けられるよう揃えました。",
     individualTotal: "単品合計",
     setTotal: "セット価格",
     pairTotal: "2点",
@@ -9139,13 +9620,15 @@ const ja: Dictionary = {
     added: "カートに追加しました",
     thisPiece: "このアイテム",
     include: "{name}を含める",
-    unavailable: "在庫切れのアイテムがあるため、現在セットではご購入いただけません。他のアイテムは個別に追加できます。",
+    unavailable:
+      "在庫切れのアイテムがあるため、現在セットではご購入いただけません。他のアイテムは個別に追加できます。",
   },
   looks: {
     navLabel: "コーディネート",
     title: "コーディネート",
     subtitle: "一緒に身に着けるためのジュエリー。",
-    metaDescription: "ムラノで手作りされた、組み合わせて身に着けるためのムラノガラスのネックレス、ブレスレット、ピアス。",
+    metaDescription:
+      "ムラノで手作りされた、組み合わせて身に着けるためのムラノガラスのネックレス、ブレスレット、ピアス。",
     viewLook: "このコーディネートのジュエリーを見る",
     allLooks: "すべてのコーディネート",
     pieces: "{n}点",
@@ -9153,18 +9636,21 @@ const ja: Dictionary = {
     backToLooks: "すべてのコーディネート",
     composeKicker: "あなたのスタイル",
     composeTitle: "自分だけのコーディネートを",
-    composeSubtitle: "ネックレス、ブレスレット、ピアスを選んで組み合わせを確かめ、3点で{percent}%お得に。",
+    composeSubtitle:
+      "ネックレス、ブレスレット、ピアスを選んで組み合わせを確かめ、3点で{percent}%お得に。",
     composeCta: "コーディネートを始める",
     composeHint: "ネックレス、ブレスレット、ピアスを選ぶと{percent}%お得になります。",
     composeTotal: "あなたのコーディネート",
     composeAdd: "コーディネートをカートに追加",
-    composeMeta: "ムラノガラスで自分だけのコーディネートを。ネックレス、ブレスレット、ピアスを選んで組み合わせを確かめ、3点でお得に。",
+    composeMeta:
+      "ムラノガラスで自分だけのコーディネートを。ネックレス、ブレスレット、ピアスを選んで組み合わせを確かめ、3点でお得に。",
   },
   giftCard: {
     productName: "メッセージカード",
     title: "贈り物に、あなたの言葉を",
-    subtitle: "ヴェネツィアの魔法をひとさじ。大切な方のためだけに、心をこめて印刷するメッセージカードを添えて。",
-    metaDescription: "Perla Murano Glass のメッセージカード：メッセージを選ぶか自分で書き、書体を選べば、印刷してパッケージに同封します。",
+    subtitle: "ご注文のお支払いが済みしだい、メールでお届けするメッセージカードです。",
+    metaDescription:
+      "Perla Murano Glass のデジタルメッセージカード：メッセージを選ぶか自分で書き、書体を選ぶと、ご注文のお支払い後に受取人へメールでお届けします。",
     intro: "その人だけのための一枚を。",
     recipientLabel: "お相手のお名前",
     recipientPlaceholder: "どなたへの贈り物ですか？",
@@ -9182,18 +9668,38 @@ const ja: Dictionary = {
     update: "カードを更新",
     added: "カートに追加しました",
     emptyError: "先にメッセージを選ぶか書いてください。",
-    printedNote: "メッセージカードはこのご注文のために印刷し、Perla のパッケージに同封します。",
+    deliveryNote:
+      "カードはデジタルです。ご注文のお支払いが済みしだい、受取人へメールでお届けします。ご注文と一緒にのみ追加できます。",
     pdpTitle: "贈り物にする",
-    pdpLine: "{price} でメッセージカードを追加",
-    pdpBody: "メッセージは美しく印刷され、Perla のパッケージに同封されます。",
+    pdpLine: "{price} でデジタルメッセージカードを追加",
     pdpCta: "贈り物をパーソナライズ",
+    recipientEmailLabel: "受取人のメールアドレス",
+    recipientEmailPlaceholder: "カードの送り先",
+    recipientEmailHelp:
+      "ご注文のお支払いが済みしだい、このアドレスにカードをお送りします。それ以外の目的には使用しません。",
+    emailError: "受取人のメールアドレスを入力してください。",
+    needsOrder:
+      "デジタルカードはご注文と一緒にご購入いただけます。まずアクセサリーをカートに追加してください。",
+    needsOrderCta: "コレクションを見る",
+    sendTo: "送り先",
+    emailSubject: "{sender} さんからカードが届きました",
+    emailIntro:
+      "{sender} さんがあなたのためにムラーノガラスのアクセサリーを選び、メッセージを書きました。",
+    emailButton: "カードを開く",
+    emailFooter: "このカードは書き手のご依頼によりお送りしています。お手続きは不要です。",
+    cardPageTitle: "{sender} さんからのカード",
+    cardPageTitleAnon: "あなたへのカード",
+    cardPageNote:
+      "あなたのために書かれ、ムラーノガラスの贈り物と一緒に届けられたカードです。裏返すと裏面が見られます。",
+    cardPageCta: "ムラーノガラスを見る",
     yourMessage: "あなたのメッセージ",
     fontLabel: "書体",
     edit: "編集",
     remove: "削除",
     adHeadline: "ヴェネツィアのひとかけらを贈りましょう。",
     adSub: "そして、あなたの言葉を添えて。",
-    adBody: "わずか {price} で Perla のメッセージカードを添えられます。エレガントなメッセージから選ぶか自分で書き、お好きな書体を選んで、その人だけのメッセージを。",
+    adBody:
+      "ご注文に添える {price} のデジタルカード。メッセージを選ぶか自分で書き、書体を選べば、お支払い後にメールでお届けします。",
     adCta: "メッセージをつくる",
     seeBack: "裏面を見る",
     seeFront: "表面を見る",
@@ -9201,7 +9707,8 @@ const ja: Dictionary = {
     sideBack: "裏面",
     dragHint: "モチーフをドラッグして、カードのお好きな場所に配置できます。",
     stickersTitle: "小さなきらめきを添えて。",
-    stickersHelp: "任意：モチーフをタップして追加し、カードのお好きな位置までドラッグしてください。",
+    stickersHelp:
+      "任意：モチーフをタップして追加し、カードのお好きな位置までドラッグしてください。",
     stickersCount: "{count} / {max}",
     addSticker: "モチーフを追加：{name}",
     removeSticker: "モチーフを削除：{name}",
@@ -9215,7 +9722,7 @@ const ja: Dictionary = {
       moon: "ムーン",
     },
     backTitle: "裏面を選ぶ。",
-    backHelp: "裏面には Perla のロゴが入ります。印刷するカードの色をお選びください。",
+    backHelp: "裏面には Perla のロゴが入ります。色をお選びください。",
     backLabel: "裏面",
     backs: {
       ivory: "アイボリー",
@@ -9243,7 +9750,8 @@ const ja: Dictionary = {
   giftFinder: {
     homeCtaLine: "何を選べばいいかお悩みですか？ぴったりのムラーノギフトを見つけましょう",
     homeCtaTime: "5つの質問・約5分",
-    homeCtaDetails: "贈る相手、贈る場面、好み、予算、ジュエリーの種類を教えてください。在庫のあるムラーノガラス作品からご提案します。",
+    homeCtaDetails:
+      "贈る相手、贈る場面、好み、予算、ジュエリーの種類を教えてください。在庫のあるムラーノガラス作品からご提案します。",
     productCtaLine: "これで決まりか迷ったら？ギフトファインダーをお試しください",
     metaTitle: "ギフトファインダー、ムラーノガラスのぴったりの贈り物",
     metaDescription:
@@ -9347,21 +9855,29 @@ const ja: Dictionary = {
     careLink: "お手入れガイドを読む",
     giftLink: "ギフトファインダーを試す",
     whereQ: "ジュエリーはどこで作られ、どこから発送されますか？",
-    whereA: "どの作品もヴェネツィアのラグーンに浮かぶガラスの島、ムラーノのガラスで作られ、イタリアからお届けします。",
+    whereA:
+      "どの作品もヴェネツィアのラグーンに浮かぶガラスの島、ムラーノのガラスで作られ、イタリアからお届けします。",
     shippingCostQ: "送料はいくらですか？",
-    shippingCostA: "イタリアとヨーロッパ内は送料無料です。米国・カナダへは{northAmerica}、その他の地域へは{rest}です。EU域外への配送にかかる輸入関税は含まれません。",
+    shippingCostA:
+      "イタリアとヨーロッパ内は送料無料です。米国・カナダへは{northAmerica}、その他の地域へは{rest}です。EU域外への配送にかかる輸入関税は含まれません。",
     shippingCostFallback: "お届け先の送料は、お支払い前のチェックアウト画面に表示されます。",
     shippingTimeQ: "配送にはどのくらいかかりますか？",
-    shippingTimeA: "通常配送の目安は、ヨーロッパ内で{europe}日、米国・カナダへ{northAmerica}日、その他の地域へ{rest}日です。お届け先ごとの目安はチェックアウト画面に表示されます。",
-    shippingTimeFallback: "各配送方法のお届け予定は、お支払い前のチェックアウト画面に表示されます。",
+    shippingTimeA:
+      "通常配送の目安は、ヨーロッパ内で{europe}日、米国・カナダへ{northAmerica}日、その他の地域へ{rest}日です。お届け先ごとの目安はチェックアウト画面に表示されます。",
+    shippingTimeFallback:
+      "各配送方法のお届け予定は、お支払い前のチェックアウト画面に表示されます。",
     returnsQ: "返品や交換はできますか？",
-    returnsA: "はい。商品到着から14日以内であれば購入を撤回でき、通常配送料を含めて14日以内に元のお支払い方法へ返金します。商品に不良がない場合、返送料はお客様のご負担となります。交換をご希望の場合はお問い合わせください。",
+    returnsA:
+      "はい。商品到着から14日以内であれば購入を撤回でき、通常配送料を含めて14日以内に元のお支払い方法へ返金します。商品に不良がない場合、返送料はお客様のご負担となります。交換をご希望の場合はお問い合わせください。",
     giftQ: "ギフトに向いていますか？",
-    giftA: "もちろんです。どの作品もそのまま贈れる状態でお届けします。迷ったときは、ギフトファインダーがいくつかの質問で作品をご提案します。",
+    giftA:
+      "もちろんです。どの作品もそのまま贈れる状態でお届けします。迷ったときは、ギフトファインダーがいくつかの質問で作品をご提案します。",
     damagedQ: "商品が破損して届いた場合は？",
-    damagedA: "ご注文番号と、可能であれば写真を添えてご連絡ください。交換・修理、または返送料を含む全額返金を手配いたします。",
+    damagedA:
+      "ご注文番号と、可能であれば写真を添えてご連絡ください。交換・修理、または返送料を含む全額返金を手配いたします。",
     contactQ: "問い合わせ方法を教えてください。",
-    contactA: "お問い合わせページ、または{email}までメールでご連絡ください。できるだけ早くお返事いたします。",
+    contactA:
+      "お問い合わせページ、または{email}までメールでご連絡ください。できるだけ早くお返事いたします。",
   },
   product: {
     outOfStock: "在庫切れ",
@@ -9560,7 +10076,8 @@ const ja: Dictionary = {
     oauthContactSupport: "Googleで作成したアカウントを削除するには、サポートまでご連絡ください。",
     invalidMfaCode: "コードが正しくありません。",
     mfaSetupNotFound: "保留中のMFA設定が見つかりません。ページを再読み込みしてください。",
-    oauthNoMfaPassword: "Googleで作成したアカウントでこの設定を変更するには、サポートまでご連絡ください。",
+    oauthNoMfaPassword:
+      "Googleで作成したアカウントでこの設定を変更するには、サポートまでご連絡ください。",
   },
   emails: {
     tagline: "{storeName}、ムラノ島で手作りされた、本物のヴェネチアングラス。",
@@ -9662,7 +10179,8 @@ const ja: Dictionary = {
     discount: "割引",
     shipping: "送料",
     freeShippingApplied: "送料無料が適用されます!",
-    importDutiesNotice: "EU域外への配送にかかる輸入関税・税金は含まれておらず、受取人のご負担となります。",
+    importDutiesNotice:
+      "EU域外への配送にかかる輸入関税・税金は含まれておらず、受取人のご負担となります。",
     includesVat: "VAT/IVA込み",
     vat: "VAT/IVA",
     total: "合計",

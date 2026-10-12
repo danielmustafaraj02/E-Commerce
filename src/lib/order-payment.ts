@@ -1,5 +1,5 @@
 import type { Prisma } from "@prisma/client";
-import { createGiftVoucherCode } from "@/lib/gift-voucher";
+import { createGiftVoucherCode } from "@/lib/gift-voucher-codes";
 
 export type PaidOrder = Prisma.OrderGetPayload<{
   include: { user: { select: { email: true } }; giftVoucherIssue: true };
@@ -50,10 +50,21 @@ export async function applyPaidToOrder(
   }
 
   if (order.status === "pending") {
-    await tx.order.update({
-      where: { id: order.id },
+    // Compare-and-set, like the cancellation side (abandoned-orders.ts): a
+    // cancellation that committed after the read above has already put the
+    // stock and voucher credit back, so it must win; overwriting it with
+    // "paid" would sell the same stock twice (security audit F02).
+    const won = await tx.order.updateMany({
+      where: { id: order.id, status: "pending" },
       data: { status: "paid" },
     });
+    if (won.count !== 1) {
+      const now = await tx.order.findUnique({ where: { id: order.id }, select: { status: true } });
+      const current = { ...order, status: now?.status ?? order.status };
+      return current.status === "cancelled"
+        ? { outcome: "paid_after_cancel", order: current }
+        : { outcome: "already_settled", order: current };
+    }
     const paidOrder = { ...order, status: "paid" };
     const giftVoucherIssue = paidOrder.giftVoucherPurchaseAmount
       ? await issueGiftVoucher(tx, paidOrder)

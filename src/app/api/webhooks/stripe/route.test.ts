@@ -11,7 +11,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@/lib/db", () => {
   const tx = {
-    order: { findUnique: mocks.findOrder, update: mocks.updateOrder },
+    order: { findUnique: mocks.findOrder, updateMany: mocks.updateOrder },
     payment: { updateMany: mocks.updatePayments },
   };
   return { db: { $transaction: (fn: (t: typeof tx) => unknown) => fn(tx) } };
@@ -85,6 +85,7 @@ function order(status: string, overrides: Record<string, unknown> = {}) {
 
 beforeEach(() => {
   vi.resetAllMocks();
+  mocks.updateOrder.mockResolvedValue({ count: 1 });
   mocks.findOrder.mockResolvedValue(order("pending"));
 });
 
@@ -94,7 +95,7 @@ describe("Stripe webhook", () => {
 
     expect(res.status).toBe(200);
     expect(mocks.updateOrder).toHaveBeenCalledWith({
-      where: { id: "o1" },
+      where: { id: "o1", status: "pending" },
       data: { status: "paid" },
     });
     expect(mocks.updatePayments).toHaveBeenCalledWith(
@@ -160,7 +161,7 @@ describe("Stripe webhook", () => {
 
     expect(res.status).toBe(200);
     expect(mocks.updateOrder).toHaveBeenCalledWith({
-      where: { id: "o1" },
+      where: { id: "o1", status: "pending" },
       data: { status: "paid" },
     });
     expect(mocks.updatePayments).toHaveBeenCalledWith(

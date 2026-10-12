@@ -70,8 +70,8 @@ model StoreSettings {
   // fabricated), but some stores launch before they have enough of them to
   // look credible, so admins can hide the section entirely until then.
   showTestimonials      Boolean @default(true)
-  // Personalised gift card add-on (/personalised-gift-card): offered only
-  // while enabled; the price is charged per order, in cents.
+  // Personalised digital gift card add-on (/personalised-gift-card), bought
+  // only together with an order: offered while enabled; price per order, cents.
   giftCardEnabled       Boolean @default(false)
   giftCardPrice         Int     @default(500)
 
@@ -627,8 +627,9 @@ model Order {
   discountAmount            Int          @default(0) // cents, discount code + complete-the-look saving
   // The complete-the-look part of discountAmount (see lib/looks.ts).
   bundleDiscountAmount      Int          @default(0) // cents
-  // Personalised gift card printed and packed with the order (lib/gift-card.ts):
-  // its price (part of subtotal) and exactly what to print.
+  // Personalised digital gift card (lib/gift-card.ts): its price (part of
+  // subtotal), what it says, who receives it by email once the order is paid,
+  // the token that opens it at /card/<token>, and when it was sent.
   giftCardAmount            Int          @default(0) // cents
   giftCardMessageType       String? // preset | custom
   giftCardMessage           String?
@@ -637,6 +638,9 @@ model Order {
   giftCardFont              String?
   giftCardStickers          Json? // [{ icon, x, y }] as % of the card, at most 3
   giftCardBack              String? // ivory | lagoon | ruby | blush
+  giftCardRecipientEmail    String?
+  giftCardToken             String?      @unique
+  giftCardSentAt            DateTime?
   // A standalone digital store voucher is issued only after payment succeeds.
   // The tax on the underlying goods is calculated when the voucher is redeemed.
   giftVoucherPurchaseAmount Int          @default(0) // cents
@@ -876,6 +880,10 @@ model JournalPost {
   intro         String
   heroUrl       String
   heroAlt       String    @default("")
+  // "" = the site-wide choice (Page layout > Article); else an id from src/lib/journal/opening.ts.
+  openingTemplate String  @default("")
+  // Per-article moves/sizes/rotation of the opening's parts (OpeningLayout).
+  openingLayout Json      @default("{}")
   body          Json      @default("[]")
   // Citations, as Source[] (src/lib/journal/types.ts); empty = no sources block.
   sources       Json      @default("[]")
@@ -954,5 +962,24 @@ model PageLayout {
   target    String   @unique
   layout    Json
   updatedAt DateTime @updatedAt
+}
+
+// Named, numbered designs saved for an individual page section. `target` is
+// the page target and `sectionId` is its section ID, so each section owns its
+// own numbered sequence. Ten numbered defaults are generated from the built-in
+// section wardrobe; rows here store admin-added templates. `doc` is the
+// section BuilderDoc and `style` the optional section appearance.
+model PageTemplate {
+  id        String   @id @default(cuid())
+  target    String   // PageTarget — home, product, about, …
+  sectionId String
+  slot      Int      // 1-based number within this section
+  name      String   @default("")
+  description String @default("")
+  doc       Json     // { builder: BuilderDoc, style?: SectionStyle }
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([target, sectionId, slot])
+  @@index([target, sectionId])
 }
 

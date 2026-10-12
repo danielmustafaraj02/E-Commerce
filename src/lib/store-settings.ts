@@ -1,5 +1,6 @@
 import { cache } from "react";
 import { db } from "@/lib/db";
+import { shareImageUrl } from "@/lib/optimized-image";
 
 export type StoreSettings = Awaited<ReturnType<typeof getStoreSettings>>;
 
@@ -105,7 +106,8 @@ export const getStoreSettings = cache(async () => {
 // preview silently loses it. Centralized here so every page falls back to
 // the same social image the root layout uses.
 export function ogImage(settings: Pick<StoreSettings, "ogImageUrl" | "logoUrl">) {
-  return settings.ogImageUrl || settings.logoUrl || undefined;
+  const src = settings.ogImageUrl || settings.logoUrl;
+  return src ? shareImageUrl(src) : undefined;
 }
 
 // The header falls back to the bundled /public/logo.png whenever no admin

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { publicImageSrc } from "@/lib/public-image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "@/components/localized-link";
 
@@ -231,7 +232,7 @@ export function HeroVideoProduct({
         inert={!open}
       >
         <Image
-          src={imageUrl}
+          src={publicImageSrc(imageUrl)}
           alt=""
           width={120}
           height={120}

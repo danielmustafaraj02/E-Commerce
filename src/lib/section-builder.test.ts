@@ -5,6 +5,7 @@ import {
   duplicateBlock,
   builderNeedsRuntime,
   compileBuilder,
+  guiElementsCss,
   freshBlock,
   getRawField,
   inlineHtml,
@@ -21,6 +22,44 @@ import { ALL_TEMPLATES, PAGE_TEMPLATES } from "./page-templates";
 import { formatHtml, readableSectionHtml } from "./format-html";
 
 describe("section builder", () => {
+  it("round trips rotation and per-element native-section transforms", () => {
+    const doc = parseBuilder({ columns: 1, cells: [[{ type: "heading", text: "Turned", style: { rotate: -25 } }, { type: "original", guiElements: { "article-title": { x: 12, y: -8, w: 125, rotate: 17 } } }]] });
+    expect(doc?.cells[0][0]?.style?.rotate).toBe(-25);
+    expect(doc?.cells[0][1]?.guiElements?.["article-title"]).toEqual({ x: 12, y: -8, w: 125, rotate: 17 });
+    expect(compileBuilder(doc!, { edit: true }).html).toContain('data-gui-elements="{&quot;article-title&quot;:{&quot;x&quot;:12,&quot;y&quot;:-8,&quot;w&quot;:125,&quot;rotate&quot;:17}}');
+    expect(compileBuilder(doc!).html).toContain("--bld-rotate:-25deg");
+  });
+
+  it("preserves collection frame width, height and position", () => {
+    const doc = parseBuilder({ columns: 1, cells: [[{ type: "showcase", style: { w: 75, x: 10, h: 35 } }]] });
+    const html = compileBuilder(doc!, { edit: true }).html;
+    expect(html).toContain("width:75%");
+    expect(html).toContain("left:10%");
+    expect(html).toContain("--showcase-frame-height:35rem");
+  });
+
+  it("preserves saved story picture size and position through rendering", () => {
+    const doc = parseBuilder({ columns: 1, cells: [[{
+      type: "story", title: "Murano", text: "", src: "/piece.png", alt: "Piece",
+      side: "right", imageScale: 75, imageX: 12, imageY: -8,
+    }]] });
+    expect(doc?.cells[0][0]).toMatchObject({ imageScale: 75, imageX: 12, imageY: -8 });
+    const html = sanitizeSectionHtml(compileBuilder(doc!).html);
+    expect(html).toContain("--story-scale:0.75");
+    expect(html).toContain("--story-x:12%");
+    expect(html).toContain("--story-y:-8%");
+  });
+
+  it("preserves an editable story picture background through parsing and sanitizing", () => {
+    const doc = parseBuilder({ columns: 1, cells: [[{
+      type: "story", title: "Murano", text: "Handmade", src: "/piece.png",
+      alt: "Glass earrings", side: "right", imageBackground: "#ffffff",
+    }]] });
+    expect(doc?.cells[0][0]).toHaveProperty("imageBackground", "#ffffff");
+    const { html } = compileBuilder(doc!);
+    expect(sanitizeSectionHtml(html)).toContain('background:#ffffff');
+  });
+
   it("every template survives a parse round trip and compiles to clean HTML", () => {
     for (const template of SECTION_TEMPLATES) {
       const parsed = parseBuilder(JSON.parse(JSON.stringify(template.doc)));
@@ -449,6 +488,35 @@ describe("builder: phone friendliness", () => {
     expect(hero.doc.cells[1][0]).toMatchObject({ type: "video" });
     expect(hero.doc.mobile?.hide).toBeUndefined();
   });
+
+  it("turns a text|media split into media background with the text on its side", () => {
+    const split = (mobile: unknown, cells: unknown[][]) =>
+      parseBuilder({ columns: 2, mobile, cells })!;
+    const textLeft = split({ layout: "overlay", overlayShade: 200, overlayHeight: 5 }, [
+      [{ type: "heading", text: "Hi", size: "l" }],
+      [{ type: "image", src: "/a.jpg", alt: "" }],
+    ]);
+    expect(textLeft.mobile).toMatchObject({ layout: "overlay", overlayShade: 90, overlayHeight: 40 });
+    const { css } = compileBuilder(textLeft);
+    expect(css).toContain('grid-template-areas:"stack"');
+    expect(css).toContain("min-height:40svh");
+    expect(css).toContain(".bld-col:nth-child(2){position:relative;z-index:0");
+    expect(css).toContain(".bld-col:nth-child(1){position:relative;z-index:1;align-self:end;justify-self:start");
+    expect(css).toContain("rgb(0 0 0/0.9)");
+
+    const textRight = compileBuilder(
+      split({ layout: "overlay", overlayAlign: "top", reverse: true }, [
+        [{ type: "video", url: "https://youtu.be/x" }],
+        [{ type: "text", text: "Hi" }],
+      ])
+    ).css;
+    expect(textRight).toContain("align-self:start;justify-self:end");
+    expect(textRight).not.toContain("column-reverse");
+
+    // Without any media the columns simply stack, and one column cannot overlay.
+    expect(compileBuilder(split({ layout: "overlay" }, [[{ type: "text", text: "a" }], []])).css).not.toContain('"stack"');
+    expect(parseBuilder({ columns: 1, mobile: { layout: "overlay" }, cells: [[]] })!.mobile).toBeUndefined();
+  });
 });
 
 describe("builder: typing animation", () => {
@@ -735,5 +803,23 @@ describe("editable shapes", () => {
     const moved = applyBlockDrop(resized, "move:0:1", { col: 1, idx: 0 });
     expect(moved.doc.cells[1][0].type).toBe("shape");
     expect(moved.doc.cells[1][0].style?.h).toBe(20);
+  });
+});
+
+describe("builder: visual edits on a section's own elements", () => {
+  it("publishes moves, resizes and rotations as scoped CSS", () => {
+    const css = guiElementsCss({
+      "article-title": { x: 10, y: -5, rotate: 3 },
+      "journal-hero": { w: 120 },
+      "element-4": { x: 50 },
+      "bad key!": { x: 1 },
+    } as never);
+    expect(css).toContain(
+      ':is([data-gui-native-element="article-title"],.article-title){transform:translate(var(--gui-x,10%),var(--gui-y,-5%)) rotate(var(--gui-rotate,3deg)) scale(var(--gui-w,1),var(--gui-h,1))'
+    );
+    expect(css).toContain("scale(var(--gui-w,1.2),var(--gui-h,1))");
+    expect(css).not.toContain("element-4");
+    expect(css).not.toContain("bad key");
+    expect(guiElementsCss(undefined)).toBe("");
   });
 });

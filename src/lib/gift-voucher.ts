@@ -1,4 +1,3 @@
-import { randomBytes } from "node:crypto";
 import { z } from "zod";
 
 export const GIFT_VOUCHER_AMOUNTS = [10_000, 20_000, 50_000] as const;
@@ -23,14 +22,6 @@ export const giftVoucherPurchaseSchema = z.object({
 
 export type GiftVoucherPurchase = z.infer<typeof giftVoucherPurchaseSchema>;
 
-export function createGiftVoucherCode(): string {
-  const body = randomBytes(16).toString("hex").toUpperCase();
-  return `PERLA-${body.match(/.{1,8}/g)!.join("-")}`;
-}
-
-export function normalizeGiftVoucherCode(value: string): string {
-  const compact = value.toUpperCase().replace(/[^A-Z0-9]/g, "");
-  const body = compact.startsWith("PERLA") ? compact.slice(5) : compact;
-  const groups = body.match(/.{1,8}/g);
-  return groups?.length === 4 && groups.join("").length === 32 ? `PERLA-${groups.join("-")}` : "";
-}
+// createGiftVoucherCode / normalizeGiftVoucherCode moved to
+// @/lib/gift-voucher-codes (the node:crypto half of a gift voucher's
+// definition) — see that file for why.

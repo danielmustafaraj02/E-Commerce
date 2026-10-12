@@ -18,7 +18,7 @@ export const howToRecognizeAuthenticMuranoGlass: Article = {
   ],
   hero: {
     kind: "file",
-    src: "/blog/burano-colorful-houses-canal.jpg",
+    src: "/blog/burano-colorful-houses-canal.webp",
     alt: "Brightly painted houses along a canal on Burano, in the Venetian lagoon",
     rights: OWN_PHOTO,
   },

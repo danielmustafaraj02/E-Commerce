@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import { imageRemotePatterns } from "./src/lib/image-hosts";
+import { PHOTO_DIRS, legacyPhotoRewrite } from "./src/lib/public-image";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { privatePaths } from "./scripts/private-paths.mjs";
@@ -37,6 +38,13 @@ const nextConfig: NextConfig = {
     // 95 for the small nav-dropdown thumbnails, which are scaled *up* on
     // retina and would look soft at 90.
     qualities: [70, 75, 90, 95],
+    // Local images may not carry a query string (Next 16): a photo that
+    // changes gets a new file name instead.
+    localPatterns: [{ pathname: "/**", search: "" }],
+    // Optimized copies are kept a week (Next's default is 4 hours), so the
+    // same photo isn't re-encoded several times a day. A replaced photo needs
+    // a new file name to show before then.
+    minimumCacheTTL: 604800,
   },
   // Renamed images keep working at their old addresses (search engines may
   // have indexed them).
@@ -44,13 +52,30 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/hero/perla-viola-murano.jpg",
-        destination: "/hero/handmade-red-murano-glass-necklace.jpg",
+        destination: "/hero/handmade-red-murano-glass-necklace.webp",
         permanent: true,
       },
     ];
   },
+  async rewrites() {
+    return {
+      beforeFiles: [],
+      // Only when the file itself is gone (see src/lib/public-image.ts).
+      afterFiles: [legacyPhotoRewrite],
+      fallback: [],
+    };
+  },
   async headers() {
     return [
+      {
+        // Bundled photos and films: browsers reuse them for a day, then
+        // revalidate in the background (Next's default makes every visit ask).
+        // Files only: /products/<slug> and /about are pages.
+        source: `/:dir(${PHOTO_DIRS.join("|")})/:file(.+\\.(?:webp|avif|png|jpe?g|svg|mp4|webm))`,
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" },
+        ],
+      },
       {
         // Baseline headers for every response, including API routes (proxy.ts
         // sets these too, plus a per-request nonce-based CSP, for page routes).

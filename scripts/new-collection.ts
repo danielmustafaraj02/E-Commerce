@@ -48,10 +48,16 @@ const productSchema = z.object({
     .array(
       z.object({
         source: z.string().regex(/^new\/[^/]+\.jpeg$/),
-        url: z.string().regex(/^\/products\/new-2026-10\/[a-z0-9-]+\.jpg$/),
+        url: z.string().regex(/^\/products\/new-2026-10\/[a-z0-9-]+\.webp$/),
         altText: z.string().min(1),
         position: z.number().int().nonnegative(),
         isLifestyle: z.literal(false),
+        // Checksum of the prepared (retouched, WebP) asset; the untouched
+        // supplier source is kept for reference.
+        preparedSha256: z
+          .string()
+          .regex(/^[a-f0-9]{64}$/)
+          .optional(),
       })
     )
     .min(1),

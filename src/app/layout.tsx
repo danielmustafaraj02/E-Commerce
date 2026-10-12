@@ -18,6 +18,8 @@ import { FloatingCheckoutButton } from "@/components/floating-checkout-button";
 import { CartCelebration } from "@/components/cart-celebration";
 import { CookieConsent } from "@/components/cookie-consent";
 import { ConsentGatedAnalytics } from "@/components/consent-gated-analytics";
+import { ScrollMotionGuard } from "@/components/scroll-motion-guard";
+import { shareImageUrl } from "@/lib/optimized-image";
 import "./globals.css";
 
 // Only admin screens use the monospace face, so don't preload it on every
@@ -35,7 +37,8 @@ function siteUrl(settings: Awaited<ReturnType<typeof getStoreSettings>>) {
 export async function generateMetadata(): Promise<Metadata> {
   const [settings, locale] = await Promise.all([getStoreSettings(), getLocale()]);
   const description = settings.metaDescription || `Shop at ${settings.storeName}`;
-  const ogImage = settings.ogImageUrl || settings.logoUrl;
+  const ogSource = settings.ogImageUrl || settings.logoUrl;
+  const ogImage = ogSource ? shareImageUrl(ogSource) : undefined;
   const base = siteUrl(settings);
 
   return {
@@ -261,6 +264,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         />
         <CookieConsent dict={dict.cookieConsent} />
         <ConsentGatedAnalytics />
+        <ScrollMotionGuard />
       </body>
     </html>
   );

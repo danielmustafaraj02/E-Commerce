@@ -2,13 +2,13 @@ import { createElement as h, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ARTICLES } from "@/lib/journal";
+import { ARTICLE_OPENING_TEMPLATES } from "@/lib/journal/opening";
+import { optionAttributes } from "@/lib/section-style";
 import {
-  ARTICLE_OPENING_OPTIONS,
   ARTICLE_SECTIONS,
   defaultLayout,
   resolveLayout,
 } from "@/lib/page-layout";
-import { optionAttributes } from "@/lib/section-style";
 
 const mocks = vi.hoisted(() => ({ entries: vi.fn(), preview: vi.fn(), findArticle: vi.fn() }));
 vi.mock("@/app/home-fonts", () => ({ homeFontClasses: "" }));
@@ -61,26 +61,49 @@ beforeEach(() => {
 });
 
 describe("article page layouts", () => {
-  const opening = ARTICLE_OPENING_OPTIONS[0];
-  const styles = opening.type === "choice" ? opening.choices.map((choice) => choice.value) : [];
-
-  it.each(styles)(
-    "preserves the article title and hero for the %s opening",
-    async (articleOpening) => {
-      const layout = resolveLayout(
-        [{ id: "head", visible: true, options: { articleOpening } }],
-        ARTICLE_SECTIONS
-      );
-      mocks.entries.mockResolvedValue(layout);
+  it.each(ARTICLE_OPENING_TEMPLATES)(
+    "opens with the house template whatever the article stored (%s)",
+    async (openingTemplate) => {
+      mocks.findArticle.mockResolvedValue({ ...source, openingTemplate });
       const html = renderToStaticMarkup(await Page(props));
       expect(html).toContain("The actual article</h1>");
       expect(html).toContain('alt="Article hero"');
       expect(html.match(/class="journal-opening"/g)).toHaveLength(1);
-      if (articleOpening !== "classic") {
-        expect(html).toContain(`data-opt-article-opening="${articleOpening}"`);
-      }
+      expect(html).toContain('data-opening="blended"');
     }
   );
+
+  it("uses the house opening when the article has none, whatever the page layout says", async () => {
+    mocks.entries.mockResolvedValue(
+      resolveLayout([{ id: "head", visible: true, options: { articleOpening: "cover" } }], ARTICLE_SECTIONS)
+    );
+    const html = renderToStaticMarkup(await Page(props));
+    expect(html).toContain('data-opening="blended"');
+    expect(html).toContain("--o-size:0.89");
+  });
+
+  it("keeps an article's own adjustments when it already uses the house template", async () => {
+    mocks.findArticle.mockResolvedValue({
+      ...source,
+      openingTemplate: "blended",
+      openingLayout: { title: { x: 4, size: 120 }, text: "panel" },
+    });
+    const html = renderToStaticMarkup(await Page(props));
+    expect(html).toContain('data-text="panel"');
+    expect(html).toContain("--o-x:4");
+    expect(html).toContain("--o-size:1.2");
+  });
+
+  it("drops adjustments made for another template, using the house ones instead", async () => {
+    mocks.findArticle.mockResolvedValue({
+      ...source,
+      openingTemplate: "overlap",
+      openingLayout: { title: { x: 4, size: 120 }, text: "panel" },
+    });
+    const html = renderToStaticMarkup(await Page(props));
+    expect(html).not.toContain('data-text="panel"');
+    expect(html).toContain("--o-size:0.89");
+  });
 
   it("renders actual article content with the default sections", async () => {
     const html = renderToStaticMarkup(await Page(props));

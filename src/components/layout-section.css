@@ -86,6 +86,55 @@
     clip-path: none;
   }
 }
+/* Scroll-linked (globals.css): the section's chosen entrance follows the
+   scroll instead of a timer. Each keyframe starts from the waiting pose
+   above; the speed setting is how far the page scrolls while it plays
+   (--lay-travel) and the delay a later start (--lay-offset). */
+@keyframes lay-fade { from { opacity: 0; } }
+@keyframes lay-fade-up { from { opacity: 0; transform: translateY(2.5rem); } }
+@keyframes lay-fade-down { from { opacity: 0; transform: translateY(-2.5rem); } }
+@keyframes lay-slide-left { from { opacity: 0; transform: translateX(var(--lay-slide, -4rem)); } }
+@keyframes lay-slide-right { from { opacity: 0; transform: translateX(calc(-1 * var(--lay-slide, -4rem))); } }
+@keyframes lay-zoom { from { opacity: 0; transform: scale(0.92); } }
+@keyframes lay-shrink { from { opacity: 0; transform: scale(1.12); } }
+@keyframes lay-blur { from { opacity: 0; filter: blur(12px); } }
+@keyframes lay-wipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes lay-rotate { from { opacity: 0; transform: rotate(-4deg) translateY(1.5rem); } }
+@keyframes lay-skew-rise { from { opacity: 0; transform: translateY(5rem) skewY(6deg); } }
+@keyframes lay-flip { from { opacity: 0; transform: perspective(900px) rotateX(35deg); } }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .lay-anim {
+      transition: none;
+      animation-duration: auto;
+      animation-timing-function: linear;
+      animation-fill-mode: backwards;
+      animation-timeline: view();
+      animation-range: entry var(--lay-offset, 0vh) entry calc(var(--lay-travel, 40vh) + var(--lay-offset, 0vh));
+    }
+    .lay-anim-fade { animation-name: lay-fade; }
+    .lay-anim-fade-up { animation-name: lay-fade-up; }
+    .lay-anim-fade-down { animation-name: lay-fade-down; }
+    .lay-anim-slide-left { animation-name: lay-slide-left; }
+    .lay-anim-slide-right { animation-name: lay-slide-right; }
+    .lay-anim-zoom { animation-name: lay-zoom; }
+    .lay-anim-shrink { animation-name: lay-shrink; }
+    .lay-anim-blur { animation-name: lay-blur; }
+    .lay-anim-wipe { animation-name: lay-wipe; }
+    .lay-anim-rotate { animation-name: lay-rotate; }
+    .lay-anim-skew-rise { animation-name: lay-skew-rise; }
+    .lay-anim-flip {
+      animation-name: lay-flip;
+      transform-origin: 50% 100%;
+    }
+  }
+}
+@media (max-width: 47.99rem) {
+  .lay-anim-slide-left,
+  .lay-anim-slide-right {
+    --lay-slide: -1.25rem;
+  }
+}
 
 /* Section backgrounds: a looping video and/or colour overlay behind the content. */
 .lay-bg-layers {
@@ -290,6 +339,22 @@
     animation: none;
   }
 }
+/* Scroll-linked: a looping block moves only while it crosses the screen, a
+   set number of cycles per pass, and holds still when you stop scrolling. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .bld-idle > * {
+      animation-duration: auto;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+    .bld-idle-float > * { animation-iteration-count: 3; }
+    .bld-idle-pulse > * { animation-iteration-count: 4; }
+    .bld-idle-sway > * { animation-iteration-count: 3; }
+    .bld-idle-spin > * { animation-iteration-count: 1; }
+    .bld-idle-shine > * { animation-iteration-count: 3; }
+  }
+}
 /* Scroll parallax: the runtime sets --bld-par (px) from the block's place on screen. */
 .bld-par > * {
   translate: 0 var(--bld-par, 0px);
@@ -300,5 +365,49 @@
 @media (max-width: 47.99rem) {
   .lay-bg-overlay[data-fade] {
     background: color-mix(in srgb, var(--ov) 80%, transparent) !important;
+  }
+}
+
+/* Sliders of "Photos and buy box" (PRODUCT_TOP_OPTIONS, type "range"): each
+   arrives as a data-opt-* marker plus an --opt-* number on the section. */
+[data-opt-title-scale] .shop-product-title {
+  font-size: calc(clamp(1.9rem, 3vw, 2.9rem) * var(--opt-title-scale) / 100) !important;
+}
+[data-opt-price-scale] .shop-price {
+  font-size: calc(clamp(1.6rem, 2.2vw, 2rem) * var(--opt-price-scale) / 100);
+}
+[data-opt-info-width] .shop-product-info {
+  max-width: calc(var(--opt-info-width) * 1rem);
+}
+[data-opt-button-height] .shop-buy :is(.shop-cta-teal, .opt-buy-now, .shop-purchase-quantity, .shop-wishlist-action-wrap > button) {
+  min-height: calc(var(--opt-button-height) * 1px);
+}
+[data-opt-button-radius] .shop-buy :is(.shop-cta-teal, .opt-buy-now, .shop-purchase-quantity, .shop-wishlist-action-wrap > button) {
+  border-radius: calc(var(--opt-button-radius) * 1px);
+}
+@media (min-width: 56rem) {
+  [data-opt-photo-width] .shop-product-grid {
+    grid-template-columns:
+      minmax(0, calc(var(--opt-photo-width) * 1%))
+      minmax(min(25rem, 100%), 1fr);
+  }
+  [data-opt-photo-width][data-opt-gallery="right"] .shop-product-grid {
+    grid-template-columns:
+      minmax(min(25rem, 100%), 1fr)
+      minmax(0, calc(var(--opt-photo-width) * 1%));
+  }
+  [data-opt-column-gap] .shop-product-grid {
+    gap: calc(var(--opt-column-gap) * 1rem);
+  }
+  [data-opt-stick="info"] .shop-product-grid > .shop-gallery,
+  [data-opt-stick="none"] .shop-product-grid > .shop-gallery {
+    position: static;
+  }
+  [data-opt-stick="info"] .shop-product-grid {
+    align-items: start;
+  }
+  [data-opt-stick="info"] .shop-product-grid > .shop-product-info {
+    position: sticky;
+    top: 7rem;
   }
 }

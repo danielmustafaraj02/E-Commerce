@@ -12,7 +12,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@/lib/db", () => {
   const tx = {
-    order: { findUnique: mocks.findOrder, update: mocks.updateOrder },
+    order: { findUnique: mocks.findOrder, updateMany: mocks.updateOrder },
     payment: { update: mocks.updatePayment },
   };
   return {
@@ -71,6 +71,7 @@ function locationOf(res: Response) {
 
 beforeEach(() => {
   vi.resetAllMocks();
+  mocks.updateOrder.mockResolvedValue({ count: 1 });
   mocks.findPayment.mockResolvedValue(paymentFor());
   mocks.findOrder.mockResolvedValue(ORDER);
   mocks.capturePaypalOrder.mockResolvedValue(completedCapture());
@@ -82,7 +83,7 @@ describe("PayPal return route", () => {
     const res = await call({ token: "PAYPAL-1", orderNumber: "ORD-CHEAP" });
 
     expect(mocks.updateOrder).toHaveBeenCalledWith({
-      where: { id: "order-cheap" },
+      where: { id: "order-cheap", status: "pending" },
       data: { status: "paid" },
     });
     expect(mocks.updatePayment).toHaveBeenCalledWith({

@@ -3,6 +3,7 @@
 // licence is visible in the diff. Rules are enforced in journal.test.ts.
 
 import type { Locale } from "@/lib/i18n/locale-constants";
+import type { ArticleOpeningTemplate, OpeningLayout } from "./opening";
 
 export type JournalCategory = "history" | "craft" | "buying" | "care" | "gifting";
 
@@ -89,6 +90,10 @@ export type Article = ArticleCopy & {
   category: JournalCategory;
   published: string; // YYYY-MM-DD
   updated?: string;
+  /** Visual treatment for the title and lead image. */
+  openingTemplate?: ArticleOpeningTemplate;
+  /** Per-article moves, sizes and rotation of the opening's parts. */
+  openingLayout?: OpeningLayout;
   hero: JournalImage;
   sources: Source[];
   related: string[]; // other article slugs

@@ -29,6 +29,15 @@ describe("isTransientDbError", () => {
     expect(isTransientDbError(new Error("Connection terminated unexpectedly"))).toBe(true);
     expect(isTransientDbError(new Error("read ECONNRESET"))).toBe(true);
   });
+  it.each(["ETIMEDOUT", "ECONNRESET", "ECONNREFUSED", "EPIPE", "EAI_AGAIN"])(
+    "recognises adapter network code %s even when Prisma hides the message",
+    (code) => {
+      expect(isTransientDbError({ code, message: "Invalid prisma.user.findFirst() invocation" })).toBe(true);
+    }
+  );
+  it("does not retry permanent DNS failures", () => {
+    expect(isTransientDbError({ code: "ENOTFOUND" })).toBe(false);
+  });
   it("does not retry real query errors", () => {
     expect(isTransientDbError({ code: "P2002" })).toBe(false);
     expect(isTransientDbError(new Error("Unique constraint failed"))).toBe(false);

@@ -30,9 +30,9 @@ describe("giftCardLines", () => {
 });
 
 describe("giftCardSchema", () => {
-  const card = { messageType: "custom", message: "Hi", font: "serif" };
+  const card = { messageType: "custom", message: "Hi", font: "serif", recipientEmail: "a@b.it" };
 
-  it("accepts a card with only a message and a font", () => {
+  it("accepts a card with only a message, a font and where to email it", () => {
     expect(giftCardSchema.safeParse(card).success).toBe(true);
   });
 
@@ -43,10 +43,18 @@ describe("giftCardSchema", () => {
     ).toBe(false);
     expect(giftCardSchema.safeParse({ ...card, font: "comic" }).success).toBe(false);
   });
+
+  it("needs a valid recipient email, stored lower-case", () => {
+    expect(giftCardSchema.safeParse({ ...card, recipientEmail: undefined }).success).toBe(false);
+    expect(giftCardSchema.safeParse({ ...card, recipientEmail: "not-an-email" }).success).toBe(false);
+    expect(giftCardSchema.parse({ ...card, recipientEmail: " Sofia@Example.COM " }).recipientEmail).toBe(
+      "sofia@example.com"
+    );
+  });
 });
 
 describe("stickers and back", () => {
-  const card = { messageType: "custom", message: "Hi", font: "serif" };
+  const card = { messageType: "custom", message: "Hi", font: "serif", recipientEmail: "a@b.it" };
   const heart = { icon: "heart", x: 20, y: 30 };
 
   it("accepts up to three stickers placed on the card and a known back", () => {

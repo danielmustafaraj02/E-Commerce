@@ -58,6 +58,8 @@ describe("toArticle", () => {
     intro: "Intro text here",
     heroUrl: "https://x.public.blob.vercel-storage.com/a.jpg",
     heroAlt: "alt",
+    openingTemplate: "",
+    openingLayout: { title: { size: 130, x: 999 }, junk: { x: 1 } },
     body: [
       { type: "p", text: "Hello" },
       { type: "image", src: "/a.jpg", alt: "a" },
@@ -89,6 +91,10 @@ describe("toArticle", () => {
   it("maps to the shared Article shape and appends linked products", () => {
     const a = toArticle(post);
     expect(a.slug).toBe("my-post");
+    expect(a.openingTemplate).toBeUndefined();
+    expect(a.openingLayout).toEqual({ title: { size: 130, x: 60 } });
+    expect(toArticle({ ...post, openingTemplate: "overlap" }).openingTemplate).toBe("overlap");
+    expect(toArticle({ ...post, openingTemplate: "invalid" }).openingTemplate).toBeUndefined();
     expect(a.seoTitle).toBe("My post");
     expect(a.published).toBe("2026-10-04");
     expect(a.hero).toMatchObject({ kind: "file", src: post.heroUrl });

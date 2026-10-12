@@ -1,5 +1,7 @@
 "use client";
 
+import { showcaseImageVars, showcaseElementVars, type ShowcaseSceneOverride } from "@/lib/showcase-options";
+
 import { useEffect, useRef } from "react";
 import { Link } from "@/components/localized-link";
 import { CatalogImage } from "@/components/catalog-image";
@@ -13,26 +15,26 @@ import {
   sectionHeight,
 } from "@/lib/showcase-timeline";
 import { showcaseRoot, type ShowcaseScroll } from "@/lib/showcase-options";
+import type { ShowcasePiece } from "@/lib/showcase-pieces";
+import type { ShowcaseReason } from "@/lib/showcase-reasons";
 import "./collection-showcase.css";
 
-/* The per-scene mobile rail. Duplicated markup (not a CSS move) so the DOM
-   structure matches the two layouts the stylesheet picks between: on phones
-   the rail is a column INSIDE each animated scene, in the scene's own
-   right-hand gutter beside the piece and the copy, so it stays visible and
-   clickable during the transition and never overlays anything; on wider
-   screens the one stage-level rail in its own reserved column is used instead
-   and these are display:none. Both are the same three dots driven by the same
-   onSelect and the same --rail-fill, so the two layouts can never disagree. */
+/* On phones the navigation sits below the copy and travels with its scene.
+   Wider screens use the stage-level rail. Both share the same scroll position,
+   active dot and navigation handler. */
 function SceneRail({
   items,
   onSelect,
   label,
   active,
+  named = false,
 }: {
   items: { id: string; name: string }[];
   onSelect: (index: number) => void;
   label: string;
   active: number;
+  /** Show each collection's name as a tab instead of a bare dot. */
+  named?: boolean;
 }) {
   return (
     <nav className="showcase-rail showcase-rail-scene" aria-label={label}>
@@ -47,26 +49,44 @@ function SceneRail({
             data-rail-item={index}
             data-state={index === active ? "active" : index < active ? "passed" : "upcoming"}
             aria-current={index === active ? "true" : undefined}
-            aria-label={item.name}
+            aria-label={named ? undefined : item.name}
             onClick={() => onSelect(index)}
-          />
+          >
+            {named && (
+              <span className="showcase-rail-tab">
+                <span className="showcase-rail-tab-num" aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                {item.name}
+              </span>
+            )}
+          </button>
         </div>
       ))}
     </nav>
   );
 }
 
-export type ShowcaseItem = {
+export type ShowcaseItem = ShowcaseSceneOverride & {
   id: string;
   href: string;
   name: string;
   image: string;
   description: string;
   cta: string;
+  /** The product in the hover card over the picture, if any. */
+  piece?: ShowcasePiece;
   /** Which part of the sequence this scene occupies. */
   scene: "necklace" | "bracelet" | "earrings";
+  /** The "why Murano" reason this scene tells. When present it is the scene's
+   *  heading and text; the collection stays in the button, the rail and the
+   *  photograph. */
+  reason?: ShowcaseReason;
   /** Which side the text sits on; absent = alternating. */
   side?: "left" | "right";
+  imageScale?: number;
+  imageX?: number;
+  imageY?: number;
 };
 
 /**
@@ -95,10 +115,69 @@ export type ShowcaseItem = {
  * working. The content never depends on JavaScript.
  */
 
+/**
+ * Where the jewellery really sits inside its photograph, as the offset (in % of
+ * the image element) that puts the piece's own centre on the box's centre.
+ * Studio photos rarely frame the piece dead centre, and on the reasons' square
+ * colour blocks that shows. Read from a small copy of the decoded image: the
+ * corner colour is the background, and anything clearly different (or opaque,
+ * in a transparent PNG) is the piece. Null when the pixels cannot be read
+ * (a cross-origin picture) or nothing stands out.
+ */
+function pieceOffset(img: HTMLImageElement): { dx: number; dy: number } | null {
+  const nw = img.naturalWidth;
+  const nh = img.naturalHeight;
+  if (!nw || !nh) return null;
+  const k = Math.min(1, 160 / Math.max(nw, nh));
+  const w = Math.max(1, Math.round(nw * k));
+  const h = Math.max(1, Math.round(nh * k));
+  const canvas = document.createElement("canvas");
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+  if (!ctx) return null;
+  let data: Uint8ClampedArray;
+  try {
+    ctx.drawImage(img, 0, 0, w, h);
+    data = ctx.getImageData(0, 0, w, h).data;
+  } catch {
+    return null;
+  }
+  const [br, bg, bb] = [data[0], data[1], data[2]];
+  /* A transparent corner means a cut-out: every opaque pixel is the piece. */
+  const opaqueCorner = data[3] >= 16;
+  let x0 = w, y0 = h, x1 = -1, y1 = -1;
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const i = (y * w + x) * 4;
+      if (data[i + 3] < 16) continue;
+      const diff = Math.max(Math.abs(data[i] - br), Math.abs(data[i + 1] - bg), Math.abs(data[i + 2] - bb));
+      if (opaqueCorner && diff < 28) continue;
+      if (x < x0) x0 = x;
+      if (x > x1) x1 = x;
+      if (y < y0) y0 = y;
+      if (y > y1) y1 = y;
+    }
+  }
+  if (x1 < 0) return null;
+
+  /* object-fit: contain — where the photograph lands inside the element. */
+  const W = img.clientWidth;
+  const H = img.clientHeight;
+  if (!W || !H) return null;
+  const scale = Math.min(W / w, H / h);
+  const ox = (W - w * scale) / 2;
+  const oy = (H - h * scale) / 2;
+  const cx = ox + ((x0 + x1 + 1) / 2) * scale;
+  const cy = oy + ((y0 + y1 + 1) / 2) * scale;
+  return { dx: ((W / 2 - cx) / W) * 100, dy: ((H / 2 - cy) / H) * 100 };
+}
+
 /** The custom properties written per scene, all cleared on teardown. */
 const SCENE_PROPS = [
   "--scene-y",
   "--scene-scale",
+  "--piece-scale",
   "--image-opacity",
   "--copy-opacity",
   "--copy-reveal",
@@ -117,18 +196,27 @@ const COPY_SIDE: Record<ShowcaseItem["scene"], "left" | "right"> = {
 export function CollectionShowcase({
   items,
   railLabel = "Collection progress",
+  preloadFirstImage = false,
   options,
 }: {
   items: ShowcaseItem[];
   /** Accessible name for the progress rail's landmark. */
   railLabel?: string;
+  /** Opt in only when this section is placed above the fold. */
+  preloadFirstImage?: boolean;
   /** Scroll behaviour and look chosen in the visual editor. */
   options?: ShowcaseScroll;
 }) {
   const rootRef = useRef<HTMLDivElement>(null);
   const root = showcaseRoot(options);
+  /* The reasons bring their colour blocks with them (see the CSS). */
+  const withReasons = items.some((item) => item.reason);
   /* Read by the scroll effect through a ref, so a change of option re-runs it. */
   const unit = root.unit;
+  /* The scenes travel (the editor's choice, "slide" by default): the store
+     owner preferred the elements scrolling through to the in-place "morph"
+     dissolve, which stays available in lib/showcase-timeline.ts. The glide
+     added in update() keeps the travel smooth either way. */
   const transition = root.transition;
 
   /* Scroll so that scene `index` sits at its reading position: the exact offset
@@ -154,6 +242,33 @@ export function CollectionShowcase({
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     window.scrollTo({ top: target, behavior: reduce ? "auto" : "smooth" });
   };
+
+  /* Centre each piece on its colour block (see pieceOffset). Measured on load
+     and again on resize, since the contained photograph's position depends on
+     the box's shape. */
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root || !withReasons) return;
+    const images = Array.from(root.querySelectorAll<HTMLImageElement>(".showcase-figure img"));
+    const centre = (img: HTMLImageElement) => {
+      const figure = img.closest<HTMLElement>(".showcase-figure");
+      const offset = img.complete ? pieceOffset(img) : null;
+      if (!figure || !offset) return;
+      figure.style.setProperty("--piece-dx", `${offset.dx.toFixed(2)}%`);
+      figure.style.setProperty("--piece-dy", `${offset.dy.toFixed(2)}%`);
+    };
+    const onLoad = (event: Event) => centre(event.currentTarget as HTMLImageElement);
+    for (const img of images) {
+      img.addEventListener("load", onLoad);
+      centre(img);
+    }
+    const onResize = () => images.forEach(centre);
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("resize", onResize);
+      for (const img of images) img.removeEventListener("load", onLoad);
+    };
+  }, [withReasons, items]);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -196,6 +311,7 @@ export function CollectionShowcase({
     );
 
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const shortViewport = window.matchMedia("(max-height: 32rem)");
     let raf = 0;
     /* True while the effect owns the DOM. Strict Mode mounts, unmounts and
        remounts, so teardown has to be complete and re-enable has to be safe. */
@@ -293,6 +409,9 @@ export function CollectionShowcase({
       copy.style.removeProperty("pointer-events");
       copy.inert = false;
       copy.removeAttribute("aria-hidden");
+      scene.querySelector<HTMLElement>(".showcase-figure")?.style.removeProperty("pointer-events");
+      const pop = scene.querySelector<HTMLElement>(".showcase-pop");
+      if (pop) pop.inert = false;
       if (!sceneRail) return;
       sceneRail.style.removeProperty("opacity");
       sceneRail.inert = false;
@@ -381,6 +500,9 @@ export function CollectionShowcase({
     let stageHeight = 0;
     let travel = 0;
     let startScroll = 0;
+    /* The eased playhead (see update): -1 until the first frame lands it. */
+    let shown = -1;
+    let lastFrame = 0;
 
     const measure = () => {
       stageHeight = stage.getBoundingClientRect().height;
@@ -393,18 +515,44 @@ export function CollectionShowcase({
       /* The scroll position at which the stage first docks: the section's top
          reaches the stage's sticky offset. */
       startScroll = root.getBoundingClientRect().top + window.scrollY - stickyTop;
+      /* New geometry: land on the new position rather than gliding to it. */
+      shown = -1;
       return true;
     };
 
-    const update = () => {
+    /* The playhead glides toward the scroll position instead of jumping to it.
+       A mouse wheel moves the page in steps of ~100px, and mapping each step
+       straight onto the scenes made them advance in visible jerks; easing the
+       shown progress toward the real one (frame-rate independent, settling in
+       roughly a third of a second) turns those steps into one continuous
+       movement. Touch scrolling already carries its own momentum, so it gets a
+       shorter time constant and stays close to the finger. It is still a pure
+       function of where the page is: stop scrolling and it settles exactly on
+       the scroll position, so reversibility is unchanged. */
+    const coarse = window.matchMedia("(pointer: coarse)").matches;
+    const TIME_CONSTANT = coarse ? 70 : 120;
+
+    const update = (now: number = performance.now()) => {
       raf = 0;
       if (!active) return;
       if (stageHeight <= 0 || travel <= 0) return;
 
-      /* Progress is read straight off the scroll position, so it is exactly where
-         the scrollbar is on this frame — no layout read in between to introduce
-         lag, and no dependence on which element happens to be painted where. */
-      const progress = clamp01((window.scrollY - startScroll) / travel);
+      const target = clamp01((window.scrollY - startScroll) / travel);
+      if (shown < 0) {
+        /* First frame, or new geometry: land, don't glide. */
+        shown = target;
+      } else {
+        /* After a rest there is no previous frame to measure from; one nominal
+           frame keeps the first step of a new scroll eased instead of snapped. */
+        const dt = lastFrame ? Math.min(64, Math.max(0, now - lastFrame)) : 16;
+        shown += (target - shown) * (1 - Math.exp(-dt / TIME_CONSTANT));
+        if (Math.abs(target - shown) < 0.0004) shown = target;
+      }
+      lastFrame = now;
+      /* Keep easing until the playhead has caught up with the page. */
+      if (shown !== target) raf = requestAnimationFrame(update);
+      else lastFrame = 0;
+      const progress = shown;
 
       /* Travel a little over one stage height, so a departing scene is fully
          clear of the stage rather than stopping with its edge showing. */
@@ -421,6 +569,8 @@ export function CollectionShowcase({
         scene.style.setProperty("--scene-y", `${frame.y.toFixed(1)}px`);
         if (frame.scale !== undefined)
           scene.style.setProperty("--scene-scale", frame.scale.toFixed(3));
+        if (frame.pieceScale !== undefined)
+          scene.style.setProperty("--piece-scale", frame.pieceScale.toFixed(4));
         scene.style.setProperty("--image-opacity", frame.imageOpacity.toFixed(3));
         scene.style.setProperty("--copy-opacity", frame.copyOpacity.toFixed(3));
         /* The text's own travel, mirrored from its opacity so it finishes moving
@@ -435,6 +585,13 @@ export function CollectionShowcase({
           copy.inert = !interactive;
           copy.setAttribute("aria-hidden", String(!interactive));
           copy.style.pointerEvents = interactive ? "auto" : "none";
+          // The hover card over the piece follows the same gate.
+          const figure = scene.querySelector<HTMLElement>(".showcase-figure");
+          const pop = scene.querySelector<HTMLElement>(".showcase-pop");
+          if (figure && pop) {
+            figure.style.pointerEvents = interactive ? "auto" : "none";
+            pop.inert = !interactive;
+          }
         }
         if (sceneRail) {
           /* Same fade and same gate as the copy: the rail belongs to its
@@ -480,7 +637,9 @@ export function CollectionShowcase({
     };
 
     const enable = () => {
-      if (motion.matches) return;
+      // Landscape phones use the readable stacked layout without scroll space
+      // or inactive links left behind by the pinned timeline.
+      if (motion.matches || shortViewport.matches) return;
 
       /* Order matters. The sticky offset must be published BEFORE the stage is
          measured: the stage's height is derived from it
@@ -600,8 +759,10 @@ export function CollectionShowcase({
     stage.addEventListener("touchend", onTouchEnd, { passive: true });
 
     motion.addEventListener("change", onMotionChange);
+    shortViewport.addEventListener("change", onMotionChange);
     return () => {
       motion.removeEventListener("change", onMotionChange);
+      shortViewport.removeEventListener("change", onMotionChange);
       stage.removeEventListener("touchstart", onTouchStart);
       stage.removeEventListener("touchend", onTouchEnd);
       disable();
@@ -613,6 +774,7 @@ export function CollectionShowcase({
       className="showcase"
       ref={rootRef}
       {...root.attrs}
+      data-reasons={withReasons ? "" : undefined}
       style={root.vars as React.CSSProperties}
     >
       <div className="showcase-stage">
@@ -628,21 +790,32 @@ export function CollectionShowcase({
               data-scene={i}
               data-placement={item.scene}
               aria-label={item.name}
+              style={{ ...showcaseImageVars(item), ...showcaseElementVars(item) } as React.CSSProperties}
             >
               {/* The photograph. object-fit: contain keeps the piece whole — never
                   cropped, never stretched — and the figure holds a fixed box so
                   the copy never jumps when the file arrives. */}
               <div className="showcase-figure">
-                {/* `preload`, not the deprecated `priority`: the first scene is
-                    this section's LCP candidate. */}
+                {/* The default homepage places this below the hero: do not
+                    compete with its media unless this section is above the fold. */}
                 <CatalogImage
                   src={item.image}
                   alt=""
                   fill
-                  sizes="(min-width: 52rem) 34svh, 62vw"
-                  preload={i === 0}
+                  sizes="(min-width: 52rem) 34svh, (min-width: 25rem) 22rem, 90vw"
+                  preload={preloadFirstImage && i === 0}
                   className="showcase-image"
                 />
+                {item.piece && (
+                  <Link className="showcase-pop" href={item.piece.href}>
+                    <span className="showcase-pop-name">{item.piece.name}</span>
+                    <span className="showcase-pop-price">
+                      {item.piece.compare && <s>{item.piece.compare}</s>}
+                      {item.piece.price}
+                    </span>
+                    <span className="showcase-pop-cta">{item.piece.cta} →</span>
+                  </Link>
+                )}
               </div>
 
               <div
@@ -661,8 +834,17 @@ export function CollectionShowcase({
                     {String(items.length).padStart(2, "0")}
                   </span>
                 </p>
-                <h2 className="showcase-title">{item.name}</h2>
-                <p className="showcase-description">{item.description}</p>
+                <h2 className="showcase-title">{item.reason?.title ?? item.name}</h2>
+                {item.reason ? (
+                  /* Both tellings are in the markup; CSS shows one per layout,
+                     and `display: none` keeps the other from being read out. */
+                  <p className="showcase-description">
+                    <span className="showcase-reason-full">{item.reason.body}</span>
+                    <span className="showcase-reason-short">{item.reason.short}</span>
+                  </p>
+                ) : (
+                  <p className="showcase-description">{item.description}</p>
+                )}
                 <Link className="btn-primary btn-arrow showcase-cta" href={item.href}>
                   {item.cta}
                   {/* The shared arrow: moves 3px on hover, hidden from the
@@ -673,14 +855,14 @@ export function CollectionShowcase({
                 </Link>
               </div>
 
-              {/* The mobile rail: the same navigation, rendered in the scene's
-                  own right-hand gutter so it sits beside the content rather
-                  than under it. Hidden by CSS on wider screens. */}
+              {/* Mobile navigation, centred below the copy and hidden on
+                  wider screens. */}
               <SceneRail
                 items={items.map((it) => ({ id: it.id, name: it.name }))}
                 onSelect={scrollToScene}
                 label={railLabel}
                 active={i}
+                named={withReasons}
               />
             </section>
           ))}

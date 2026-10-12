@@ -1,404 +1,464 @@
-/* The headline, article details and licensed hero stay together in every style. */
-.journal-opening {
-  max-width: var(--journal-editorial-max, 78rem);
-  margin-inline: auto;
-  margin-bottom: clamp(2.5rem, 6vw, 5rem);
+/* Article opening: title, details and main photograph as ten numbered
+   templates (src/lib/journal/opening.ts). The template is the
+   `data-opening` attribute on .journal-opening; the wrapper is a size
+   container, so sizes in cqw and the @container rules follow the opening's own
+   width — the Admin > Articles preview then matches the site exactly.
+
+   Variables an editor controls:
+   - per article (inline, see openingPartProps): --o-x/--o-y (move, % of the
+     opening width), --o-w/--o-h (size), --o-size (title scale), --o-rot;
+   - site-wide (Page layout > Article > Options, on the section wrapper):
+     data-opt-headline-scale, -opening-scale, -opening-image-shape,
+     -headline-overlap, -opening-shade and the breadcrumb/series/meta toggles. */
+
+.journal-opening-wrap {
+  container: opening / inline-size;
 }
+.journal-opening {
+  position: relative;
+  max-width: var(--opening-width, var(--journal-editorial-max, 78rem));
+  margin-inline: auto;
+  margin-bottom: clamp(2.5rem, 6cqw, 5rem);
+  background: var(--opening-bg, transparent);
+}
+
+/* Parts the page-layout editor can drag (values come from guiElementsCss). */
+.journal-opening [data-gui-native-element] {
+  transform: translate(var(--gui-x, 0%), var(--gui-y, 0%)) rotate(var(--gui-rotate, 0deg))
+    scale(var(--gui-w, 1), var(--gui-h, 1));
+  transform-origin: center;
+}
+.journal-opening [data-gui-native-element="article-image"] { z-index: 0; }
+.journal-opening [data-gui-native-element="article-head"] { z-index: 2; }
+.journal-gui-eyebrow { display: none; }
+
+/* -- Shared base (Template 1 · classic) ------------------------------------ */
 .journal-article .journal-opening .journal-article-head {
+  position: relative;
   max-width: none;
-  padding: clamp(2.5rem, 6vw, 5rem) clamp(1.25rem, 4vw, 3rem) 2.5rem;
-  text-align: center;
+  padding: clamp(2.5rem, 6cqw, 5rem) clamp(1.25rem, 4cqw, 3rem) 2.5rem;
+  text-align: var(--opening-align, center);
+  align-items: var(--opening-items, center);
 }
 .journal-article .journal-opening h1 {
-  max-width: 20ch;
-  margin-inline: auto;
-  font-size: clamp(2.4rem, 5.6vw, 5.75rem);
-  line-height: 1.08;
+  max-width: var(--opening-measure, 20ch);
+  margin-inline: var(--opening-title-margin, auto);
+  font-size: calc(
+    var(--opening-title, clamp(2.4rem, 5.6cqw, 5.75rem)) * var(--headline-scale, 1) * var(--o-size, 1)
+  );
+  line-height: var(--opening-leading, 1.06);
   text-wrap: balance;
   overflow-wrap: anywhere;
 }
-.journal-article .journal-opening h1::after {
-  margin-inline: auto;
-}
+.journal-article .journal-opening h1::after { margin-inline: var(--opening-title-margin, auto); }
 .journal-opening .journal-breadcrumb {
-  justify-content: center;
+  justify-content: var(--opening-items, center);
   flex-wrap: wrap;
 }
-.journal-opening .journal-card-meta {
-  line-height: 1.8;
-  text-wrap: balance;
-}
+.journal-opening .journal-card-meta { line-height: 1.8; text-wrap: balance; }
 .journal-article .journal-opening .journal-hero {
+  position: relative;
+  width: 100%;
   margin-bottom: 0;
 }
-.journal-opening .journal-figure-frame img {
-  object-fit: cover;
+.journal-article .journal-opening .journal-figure-frame {
+  aspect-ratio: var(--opening-shape, var(--opening-ratio, 16 / 8.5));
+}
+.journal-opening .journal-figure-frame img { object-fit: var(--opening-fit, cover); }
+
+/* Left-aligned templates share these. */
+.journal-opening:is(
+    [data-opening="split"],
+    [data-opening="overlap"],
+    [data-opening="blended"],
+    [data-opening="cover"],
+    [data-opening="portrait"],
+    [data-opening="inset"],
+    [data-opening="offset"]
+  ) {
+  --opening-align: left;
+  --opening-items: flex-start;
+  --opening-title-margin: 0;
 }
 
-/* Classical frame: a restrained paper opening with a double hairline. */
-[data-opt-article-opening="framed"] .journal-opening {
-  margin: clamp(1rem, 3vw, 2.5rem) auto clamp(2.5rem, 6vw, 5rem);
-  width: calc(100% - 2 * clamp(1rem, 3vw, 2.5rem));
-  padding: clamp(0.75rem, 2vw, 1.5rem);
-  background: var(--ivory, #faf8f5);
+/* A dark veil over the photograph, for text that sits on it. */
+.journal-opening:is([data-opening="cover"], [data-opening="blended"]) .journal-figure-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--opening-veil);
+}
+
+/* -- 2 · framed ------------------------------------------------------------ */
+.journal-opening[data-opening="framed"] {
+  --opening-bg: var(--ivory, #faf8f5);
+  --opening-title: clamp(2.2rem, 4.5cqw, 4.5rem);
+  --opening-measure: 23ch;
+  --opening-ratio: 16 / 9;
+  width: calc(100% - 2 * clamp(1rem, 3cqw, 2.5rem));
+  margin-top: clamp(1rem, 3cqw, 2.5rem);
+  padding: clamp(0.75rem, 2cqw, 1.5rem);
   border: 1px solid var(--rule);
   outline: 1px solid var(--rule);
   outline-offset: -0.4rem;
 }
-.journal-article [data-opt-article-opening="framed"] .journal-article-head {
-  padding-top: clamp(2rem, 4vw, 3.5rem);
+
+/* -- 8 · masthead ---------------------------------------------------------- */
+.journal-opening[data-opening="masthead"] {
+  --opening-title: clamp(2.5rem, 5.8cqw, 6rem);
+  --opening-measure: 22ch;
+  --opening-leading: 1.04;
+  --opening-ratio: 21 / 9;
+  width: calc(100% - 2 * clamp(1rem, 4cqw, 3rem));
+  margin-top: clamp(1rem, 3cqw, 2.5rem);
+  border-top: 2px solid var(--midnight);
 }
-.journal-article [data-opt-article-opening="framed"] h1 {
-  max-width: 23ch;
-  font-size: clamp(2.2rem, 4.5vw, 4.5rem);
+.journal-article .journal-opening[data-opening="masthead"] h1 { letter-spacing: -0.035em; }
+.journal-article .journal-opening[data-opening="masthead"] h1::after { width: 100%; background: var(--rule); }
+
+/* -- 3 · split, 7 · portrait ---------------------------------------------- */
+.journal-opening:is([data-opening="split"], [data-opening="portrait"]) {
+  --opening-title: clamp(2.4rem, 4.7cqw, 5rem);
+  --opening-measure: 13ch;
+  --opening-leading: 1.02;
+  --opening-ratio: 4 / 3;
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.25rem, 4cqw, 3rem);
 }
-.journal-article [data-opt-article-opening="framed"] .journal-hero {
-  width: 100%;
+.journal-opening[data-opening="portrait"] {
+  --opening-bg: var(--ivory, #faf8f5);
+  --opening-measure: 16ch;
+  --opening-leading: 1.08;
+  --opening-fit: contain;
+  width: calc(100% - 2 * clamp(1rem, 3cqw, 2rem));
+  margin-top: clamp(1rem, 3cqw, 2rem);
+  border-block: 1px solid var(--rule);
 }
-.journal-article [data-opt-article-opening="framed"] .journal-figure-frame {
-  aspect-ratio: 16 / 9;
+.journal-article .journal-opening[data-opening="portrait"] h1 { font-style: italic; }
+.journal-article .journal-opening[data-opening="portrait"] .journal-hero {
+  padding: 0.5rem;
+  border: 1px solid var(--rule);
+  box-sizing: border-box;
+}
+.journal-article .journal-opening:is([data-opening="split"], [data-opening="portrait"]) .journal-article-head {
+  padding: 1rem 0;
 }
 
-/* Editorial spread: an asymmetric headline column beside a portrait image. */
-[data-opt-article-opening="split"] .journal-opening[data-has-image="true"] {
+/* -- 4 · overlap, 9 · inset: a paper title card partly on the photograph --- */
+.journal-opening:is([data-opening="overlap"], [data-opening="inset"]) {
+  --opening-title: clamp(2.4rem, 4.8cqw, 5rem);
+  --opening-leading: 1.02;
+  --opening-ratio: 4 / 3;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
-  align-items: center;
-  gap: clamp(1.5rem, 4vw, 4rem);
-  padding: clamp(1.25rem, 4vw, 3rem);
+  padding: clamp(1rem, 4cqw, 3rem);
 }
-.journal-article [data-opt-article-opening="split"] .journal-article-head {
-  padding: 1.5rem 0;
-  text-align: left;
-}
-.journal-article [data-opt-article-opening="split"] h1 {
-  max-width: 13ch;
-  margin-inline: 0;
-  font-size: clamp(2.4rem, 4.7vw, 5rem);
-  line-height: 1.02;
-}
-.journal-article [data-opt-article-opening="split"] h1::after {
-  margin-inline: 0;
-}
-[data-opt-article-opening="split"] .journal-breadcrumb {
-  justify-content: flex-start;
-}
-.journal-article [data-opt-article-opening="split"] .journal-hero {
-  width: 100%;
-}
-.journal-article [data-opt-article-opening="split"] .journal-figure-frame {
-  aspect-ratio: 4 / 5;
-}
-
-/* Editorial overlap: a paper title card crosses the photograph's left edge. */
-[data-opt-article-opening="overlap"] .journal-opening[data-has-image="true"] {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  align-items: center;
-  padding: clamp(1.25rem, 4vw, 3rem);
-}
-.journal-article [data-opt-article-opening="overlap"] .journal-article-head {
-  grid-column: 1 / 7;
-  grid-row: 1;
+.journal-article .journal-opening:is([data-opening="overlap"], [data-opening="inset"]) .journal-article-head {
   z-index: 1;
-  margin-block: 3rem;
-  padding: clamp(1.5rem, 3vw, 3rem);
-  text-align: left;
+  padding: clamp(1.5rem, 3cqw, 3rem);
   background: var(--ivory, #faf8f5);
   border-top: 2px solid var(--brass);
+  box-sizing: border-box;
 }
-.journal-article [data-opt-article-opening="overlap"] h1 {
-  margin-inline: 0;
-  font-size: clamp(2.4rem, 4.8vw, 5rem);
-  line-height: 1.02;
+/* Phones: the card first, overlapping the top of the photograph. */
+.journal-article .journal-opening[data-opening="overlap"] .journal-article-head { margin: 0 1rem -1.5rem; }
+/* Inset keeps the photograph first and the card over its bottom edge. */
+.journal-article .journal-opening[data-opening="inset"] .journal-article-head {
+  order: 2;
+  margin: -2.5rem 1rem 0;
 }
-.journal-article [data-opt-article-opening="overlap"] h1::after {
-  margin-inline: 0;
+.journal-article .journal-opening[data-opening="inset"] .journal-hero { order: 1; }
+
+/* -- 5 · blended, 10 · offset: the title crosses the photograph, no card --- */
+.journal-opening:is([data-opening="blended"], [data-opening="offset"]) {
+  --opening-title: clamp(2.6rem, 5cqw, 4.75rem);
+  --opening-measure: 20ch;
+  --opening-leading: 1.02;
+  --opening-ratio: 4 / 3;
+  display: grid;
+  isolation: isolate;
+  padding: clamp(1rem, 4cqw, 3rem);
 }
-[data-opt-article-opening="overlap"] .journal-breadcrumb {
-  justify-content: flex-start;
+.journal-article .journal-opening:is([data-opening="blended"], [data-opening="offset"]) .journal-article-head {
+  padding: 1rem 0 0;
+  background: transparent;
 }
-.journal-article [data-opt-article-opening="overlap"] .journal-hero {
-  grid-column: 5 / -1;
-  grid-row: 1;
-  width: 100%;
+.journal-article .journal-opening:is([data-opening="blended"], [data-opening="offset"]) h1 {
+  position: relative;
+  z-index: 1;
+  letter-spacing: -0.04em;
 }
-.journal-article [data-opt-article-opening="overlap"] .journal-figure-frame {
-  aspect-ratio: 4 / 5;
+.journal-article .journal-opening:is([data-opening="blended"], [data-opening="offset"]) h1::after { display: none; }
+.journal-opening[data-opening="blended"] {
+  /* The inverted letters need a real backdrop: on a transparent one they stay
+     white on the white page. */
+  --opening-bg: var(--background, #fff);
+  --opening-veil: linear-gradient(180deg, rgb(0 0 0 / var(--opening-shade, 25%)), transparent 55%);
+}
+.journal-article .journal-opening[data-opening="blended"] h1 {
+  color: #fff;
+  mix-blend-mode: difference;
+  margin: 1rem 0 -0.45em;
+}
+@container opening (max-width: 47.99rem) {
+  /* Phones: the title dips into the top of the photograph below it. */
+  .journal-article .journal-opening[data-opening="blended"] h1 { translate: 0 0.2em; }
 }
 
-/* The headline crosses the image edge directly. A shaded photographic backdrop
-   keeps the difference-blended letters bright instead of muddy midtones.
-   Keep the header out of a stacking context so the title can reach the image. */
-[data-opt-article-opening="blended"] .journal-opening[data-has-image="true"] {
+/* -- 6 · cover: white title on the photograph ------------------------------ */
+.journal-opening[data-opening="cover"] {
+  --opening-title: clamp(2.6rem, 6.5cqw, 6.5rem);
+  --opening-measure: 16ch;
+  --opening-leading: 1;
+  --opening-veil: linear-gradient(90deg, rgb(8 24 19 / calc(var(--opening-shade, 60%) + 25%)), rgb(8 24 19 / var(--opening-shade, 60%)) 55%, rgb(8 24 19 / calc(var(--opening-shade, 60%) - 30%)));
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  align-items: center;
   isolation: isolate;
-  background: var(--background, #fff);
-  padding: clamp(1.25rem, 4vw, 3rem);
 }
-.journal-article
-  [data-opt-article-opening="blended"]
-  [data-has-image="true"]
-  .journal-article-head {
-  grid-column: 1 / 11;
-  grid-row: 1;
-  position: relative;
-  z-index: auto;
-  padding: 2rem 0;
-  text-align: left;
-  background: transparent;
+.journal-opening[data-has-image="true"][data-opening="cover"] .journal-article-head,
+.journal-opening[data-has-image="true"][data-opening="cover"] .journal-hero {
+  grid-area: 1 / 1;
+}
+.journal-article .journal-opening[data-has-image="true"][data-opening="cover"] .journal-article-head {
+  z-index: 1;
+  align-self: center;
+  margin-block: 1rem 3rem;
+  padding: clamp(2.5rem, 6cqw, 5rem) clamp(1.5rem, 6cqw, 5rem);
+}
+.journal-opening[data-has-image="true"][data-opening="cover"]
+  :is(.journal-article-head, h1, .journal-breadcrumb, .journal-breadcrumb a, .journal-card-meta, .journal-series-kicker, .journal-language-note) {
+  color: #fff;
+}
+.journal-article .journal-opening[data-has-image="true"][data-opening="cover"] h1::after { background: #fff; }
+.journal-article .journal-opening[data-opening="cover"] .journal-hero {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+}
+.journal-article .journal-opening[data-opening="cover"] .journal-figure-frame {
+  min-height: 30rem;
+  aspect-ratio: auto;
+}
+.journal-opening[data-opening="cover"] .journal-hero figcaption {
+  padding: 0.75rem clamp(1.25rem, 4cqw, 3rem);
+  background: var(--background);
+}
+
+/* -- Wide openings: the side-by-side and layered compositions -------------- */
+@container opening (min-width: 48rem) {
+  .journal-opening:is([data-opening="split"], [data-opening="portrait"])[data-has-image="true"] {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    align-items: center;
+    gap: clamp(1.5rem, 4cqw, 4rem);
+    --opening-ratio: 4 / 5;
+  }
+  .journal-opening:is([data-opening="overlap"], [data-opening="blended"], [data-opening="offset"])[data-has-image="true"] {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: center;
+    --opening-ratio: 4 / 5;
+  }
+  .journal-opening:is([data-opening="overlap"], [data-opening="blended"], [data-opening="offset"])[data-has-image="true"]
+    :is(.journal-article-head, .journal-hero) {
+    grid-row: 1;
+  }
+  .journal-article .journal-opening[data-opening="overlap"][data-has-image="true"] .journal-article-head {
+    grid-column: 1 / 7;
+    margin: 3rem 0;
+  }
+  .journal-opening[data-opening="overlap"][data-has-image="true"] .journal-hero { grid-column: 5 / -1; }
+
+  .journal-article .journal-opening[data-opening="blended"][data-has-image="true"] .journal-article-head {
+    grid-column: 1 / var(--opening-headline-column, 10);
+    padding-block: 1rem;
+  }
+  .journal-opening[data-opening="blended"][data-has-image="true"] .journal-hero { grid-column: 5 / -1; }
+  .journal-opening[data-opening="blended"] {
+    /* Darkest where the title crosses (the left of the photo), opening up
+       towards the right so the rest of the picture keeps its light. */
+    --opening-veil: linear-gradient(90deg, rgb(0 0 0 / calc(var(--opening-shade, 25%) + 15%)) 0%, rgb(0 0 0 / calc(var(--opening-shade, 25%) + 5%)) 40%, rgb(0 0 0 / calc(var(--opening-shade, 25%) - 15%)) 80%, transparent 100%);
+  }
+  .journal-article .journal-opening[data-opening="blended"] h1 { margin: 1.5rem 0; }
+  .journal-opening[data-opening="blended"]
+    :is(.journal-breadcrumb, .journal-series-kicker, .journal-card-meta, .journal-language-note) {
+    max-width: 36%;
+  }
+
+  .journal-opening[data-opening="offset"][data-has-image="true"] .journal-hero { grid-column: 1 / 9; }
+  .journal-article .journal-opening[data-opening="offset"][data-has-image="true"] .journal-article-head {
+    grid-column: 7 / -1;
+    align-self: end;
+    margin-bottom: 3rem;
+    padding: 1.5rem 0 1.5rem clamp(1rem, 2cqw, 2rem);
+    background: linear-gradient(90deg, transparent, var(--background, #fff) 2.5rem);
+  }
+
+  .journal-opening[data-opening="inset"] { --opening-ratio: 16 / 8; }
+  .journal-article .journal-opening[data-opening="inset"] .journal-article-head {
+    width: min(62%, 44rem);
+    margin: -9cqw 0 0 clamp(1.5rem, 5cqw, 4rem);
+  }
+}
+
+/* -- Site-wide options (Page layout > Article > Options) ------------------- */
+[data-opt-headline-scale="small"] { --headline-scale: 0.8; }
+[data-opt-headline-scale="large"] { --headline-scale: 1.25; }
+[data-opt-opening-scale="regular"] { --opening-width: 72rem; }
+[data-opt-opening-scale="large"] { --opening-width: 78rem; }
+[data-opt-opening-image-shape="portrait"] { --opening-shape: 4 / 5; }
+[data-opt-opening-image-shape="square"] { --opening-shape: 1; }
+[data-opt-opening-image-shape="landscape"] { --opening-shape: 4 / 3; }
+[data-opt-headline-overlap="subtle"] { --opening-headline-column: 7; }
+[data-opt-headline-overlap="wide"] { --opening-headline-column: 12; }
+[data-opt-opening-shade="none"] { --opening-shade: 0%; }
+[data-opt-opening-shade="strong"] { --opening-shade: 60%; }
+[data-opt-opening-breadcrumb="off"] .journal-opening .journal-breadcrumb,
+[data-opt-opening-series="off"] .journal-opening .journal-series-kicker,
+[data-opt-opening-meta="off"] .journal-opening .journal-card-meta {
+  display: none;
+}
+
+/* -- Per-article adjustments (Admin > Articles > Opening design) ----------- */
+.journal-opening [data-opening-part] {
+  box-sizing: border-box;
+}
+@container opening (min-width: 48rem) {
+  .journal-opening [data-opening-part] {
+    translate: calc(var(--o-x, 0) * 1cqw) calc(var(--o-y, 0) * 1cqw);
+    rotate: var(--o-rot, 0deg);
+  }
+  .journal-article .journal-opening [data-opening-part][data-o-w] {
+    width: calc(var(--o-w) * 1cqw);
+    max-width: none;
+    justify-self: start;
+  }
+  .journal-article .journal-opening h1[data-opening-part][data-o-w] { max-width: none; }
+  .journal-article .journal-opening .journal-hero[data-o-h] .journal-figure-frame {
+    height: calc(var(--o-h) * 1cqw);
+    min-height: 0;
+    aspect-ratio: auto;
+  }
+}
+
+/* -- Text panel: readable text over any photograph -------------------------
+   Per article (data-text) or site-wide (Options > Text over the photograph). */
+.journal-opening:is([data-text="panel"], [data-text="panel-dark"]) .journal-article-head,
+[data-opt-opening-text="panel"] .journal-opening:not([data-text]) .journal-article-head,
+[data-opt-opening-text="panel-dark"] .journal-opening:not([data-text]) .journal-article-head {
+  z-index: 2;
+  align-self: center;
+  padding: clamp(1.25rem, 3cqw, 2.5rem);
   border: 0;
+  background: rgb(250 248 245 / 74%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-sizing: border-box;
 }
-.journal-article [data-opt-article-opening="blended"] [data-has-image="true"] h1 {
+.journal-opening[data-text="panel"] :is(h1, .journal-breadcrumb, .journal-breadcrumb a, .journal-card-meta, .journal-series-kicker, .journal-language-note),
+[data-opt-opening-text="panel"] .journal-opening:not([data-text]) :is(h1, .journal-breadcrumb, .journal-breadcrumb a, .journal-card-meta, .journal-series-kicker, .journal-language-note) {
+  color: var(--midnight, #1f1a24);
+  mix-blend-mode: normal;
+}
+.journal-opening[data-text="panel-dark"] .journal-article-head,
+[data-opt-opening-text="panel-dark"] .journal-opening:not([data-text]) .journal-article-head {
+  background: rgb(14 18 20 / 58%);
+}
+.journal-opening[data-text="panel-dark"] :is(h1, .journal-breadcrumb, .journal-breadcrumb a, .journal-card-meta, .journal-series-kicker, .journal-language-note),
+[data-opt-opening-text="panel-dark"] .journal-opening:not([data-text]) :is(h1, .journal-breadcrumb, .journal-breadcrumb a, .journal-card-meta, .journal-series-kicker, .journal-language-note) {
+  color: #fff;
+  mix-blend-mode: normal;
+}
+.journal-opening[data-text="panel-dark"] h1::after { background: #fff; }
+.journal-article .journal-opening [data-opening-part="meta"] {
+  font-size: calc(0.78rem * var(--o-size, 1));
+}
+
+/* Template 5 · blended: the letters invert against the photo and the page, so
+   nothing between the title and the opening may form its own layer (a
+   transform, translate, rotate or z-index would make the title blend with an
+   empty, transparent box and vanish on white). The title itself can still be
+   moved and rotated. */
+.journal-article .journal-opening[data-opening="blended"] .journal-article-head {
+  transform: none !important;
+  translate: none !important;
+  rotate: none !important;
+  z-index: auto !important;
+  isolation: auto;
+}
+.journal-article .journal-opening[data-opening="blended"] .journal-hero {
+  z-index: auto;
+  transform: none;
+}
+
+/* Per-article "darken the photo" (Admin > Articles > opening designer). */
+.journal-opening[data-shade] {
+  --opening-shade: var(--o-shade);
+}
+
+/* "White letters with a soft shadow": contrast from the text, not from a
+   darker photo. Letters stay white everywhere; a soft dark halo keeps them
+   legible over light glass and on the page. */
+.journal-opening[data-text="shadow"] :is(h1, .journal-breadcrumb, .journal-breadcrumb a, .journal-card-meta, .journal-series-kicker) {
+  color: #fff !important;
+  mix-blend-mode: normal !important;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 55%), 0 0 1.2em rgb(0 0 0 / 45%), 0 0 2.4em rgb(0 0 0 / 30%);
+}
+.journal-opening[data-text="shadow"] h1::after { background: #fff; }
+
+/* "Letters change colour where they cross the photograph": Template 5's
+   effect, available to every template (per article, or site-wide from
+   Page layout > Options). White letters in `difference` mode read as dark ink
+   on the page and invert the photograph where they cross it. For that the
+   title must blend with the page AND the photo, so nothing between it and the
+   opening may form its own layer: the text block loses its card, its drag
+   offset and its z-index (the title itself can still be moved and sized), and
+   the title is lifted above the photograph instead. */
+.journal-opening[data-text="invert"],
+[data-opt-opening-text="invert"] .journal-opening:not([data-text]) {
+  --opening-bg: var(--background, #fff);
+  isolation: isolate;
+}
+.journal-article .journal-opening[data-text="invert"] .journal-article-head,
+[data-opt-opening-text="invert"] .journal-article .journal-opening:not([data-text]) .journal-article-head {
+  background: transparent !important;
+  transform: none !important;
+  translate: none !important;
+  rotate: none !important;
+  z-index: auto !important;
+  isolation: auto;
+}
+.journal-article .journal-opening[data-text="invert"] .journal-hero,
+[data-opt-opening-text="invert"] .journal-article .journal-opening:not([data-text]) .journal-hero {
+  z-index: auto;
+}
+.journal-article .journal-opening[data-text="invert"] :is(h1, .journal-breadcrumb, .journal-series-kicker, .journal-card-meta, .journal-language-note),
+[data-opt-opening-text="invert"] .journal-article .journal-opening:not([data-text]) :is(h1, .journal-breadcrumb, .journal-series-kicker, .journal-card-meta, .journal-language-note) {
   position: relative;
   z-index: 1;
   color: #fff;
   mix-blend-mode: difference;
-  margin: 1.5rem 0;
-  max-width: 20ch;
-  font-size: clamp(3rem, 7.5vw, 7.5rem);
-  line-height: 1.02;
-  letter-spacing: -0.04em;
 }
-.journal-article [data-opt-article-opening="blended"] h1::after {
-  display: none;
-}
-[data-opt-article-opening="blended"]
-  [data-has-image="true"]
-  :is(.journal-breadcrumb, .journal-series-kicker, .journal-card-meta, .journal-language-note) {
-  position: relative;
-  z-index: 1;
-  max-width: 36%;
-  text-align: left;
-}
-[data-opt-article-opening="blended"] .journal-breadcrumb {
-  justify-content: flex-start;
-}
-.journal-article [data-opt-article-opening="blended"] [data-has-image="true"] .journal-hero {
-  position: relative;
-  z-index: 0;
-  grid-column: 5 / -1;
-  grid-row: 1;
-  width: 100%;
-}
-.journal-article [data-opt-article-opening="blended"] .journal-figure-frame {
-  aspect-ratio: 4 / 5;
-}
-
-/* The veil is confined to the image; it fades at the far edge and leaves
-   the caption outside the shaded area. */
-[data-opt-article-opening="blended"] [data-has-image="true"] .journal-figure-frame::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, rgb(0 0 0 / 30%) 0%, rgb(0 0 0 / 22%) 75%, transparent 100%);
-  pointer-events: none;
-}
-
-/* Magazine cover: readable ivory lettering over a shaded full-width image.
-   The shade ends with the photograph; its caption and attribution stay visible. */
-[data-opt-article-opening="cover"] .journal-opening[data-has-image="true"] {
-  display: grid;
-  isolation: isolate;
-}
-.journal-article [data-opt-article-opening="cover"] [data-has-image="true"] .journal-article-head {
-  grid-area: 1 / 1;
-  z-index: 1;
-  align-self: center;
-  margin-block: 1rem 5rem;
-  padding: clamp(2.5rem, 6vw, 5rem) clamp(1.5rem, 6vw, 5rem);
-  text-align: left;
-  color: #fff;
-}
-.journal-article [data-opt-article-opening="cover"] [data-has-image="true"] h1 {
-  color: #fff;
-  font-size: clamp(2.6rem, 6.5vw, 6.5rem);
-  line-height: 1;
-  max-width: 16ch;
-  margin-inline: 0;
-}
-.journal-article [data-opt-article-opening="cover"] [data-has-image="true"] h1::after {
-  background: #fff;
-  margin-inline: 0;
-}
-[data-opt-article-opening="cover"]
-  [data-has-image="true"]
-  :is(.journal-breadcrumb, .journal-card-meta, .journal-series-kicker, .journal-language-note) {
-  color: #fff;
-}
-[data-opt-article-opening="cover"] .journal-breadcrumb {
-  justify-content: flex-start;
-}
-[data-opt-article-opening="cover"] [data-has-image="true"] .journal-breadcrumb a {
+/* The small lines (breadcrumb, series, date) cross the photo too, so they
+   invert with the title instead of slipping behind the picture. */
+.journal-article .journal-opening[data-text="invert"] .journal-breadcrumb a,
+[data-opt-opening-text="invert"] .journal-article .journal-opening:not([data-text]) .journal-breadcrumb a {
   color: inherit;
 }
-.journal-article [data-opt-article-opening="cover"] [data-has-image="true"] .journal-hero {
-  grid-area: 1 / 1;
-  width: 100%;
-  display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
-}
-.journal-article [data-opt-article-opening="cover"] .journal-figure-frame {
-  min-height: 34rem;
-  aspect-ratio: auto;
-}
-[data-opt-article-opening="cover"] .journal-figure-frame::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    rgb(8 24 19 / 92%),
-    rgb(8 24 19 / 75%) 55%,
-    rgb(8 24 19 / 35%)
-  );
-  pointer-events: none;
-}
-[data-opt-article-opening="cover"] .journal-hero figcaption {
-  padding: 0.75rem clamp(1.25rem, 4vw, 3rem);
-  background: var(--background);
+.journal-article .journal-opening[data-text="invert"] h1::after,
+[data-opt-opening-text="invert"] .journal-article .journal-opening:not([data-text]) h1::after {
+  display: none;
 }
 
-/* Narrow openings stack cleanly; the overlap retains a small paper/image join. */
-@media (max-width: 48rem) {
-  [data-opt-article-opening="blended"] .journal-opening[data-has-image="true"] {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .journal-article
-    [data-opt-article-opening="blended"]
-    [data-has-image="true"]
-    .journal-article-head {
-    grid-column: 1;
-    grid-row: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 1rem 0 0;
-  }
-  [data-opt-article-opening="blended"]
-    [data-has-image="true"]
-    :is(.journal-breadcrumb, .journal-series-kicker, .journal-card-meta, .journal-language-note) {
-    max-width: 100%;
-  }
-  .journal-article [data-opt-article-opening="blended"] [data-has-image="true"] h1 {
-    order: 1;
-    font-size: clamp(2.6rem, 10vw, 4.5rem);
-    margin: 1rem 0 -0.45em;
-    transform: translateY(0.2em);
-  }
-  .journal-article [data-opt-article-opening="blended"] [data-has-image="true"] .journal-hero {
-    grid-column: 1;
-    grid-row: 2;
-  }
-  .journal-article [data-opt-article-opening="blended"] .journal-figure-frame {
-    aspect-ratio: 4 / 3;
-  }
-  [data-opt-article-opening="blended"] [data-has-image="true"] .journal-figure-frame::after {
-    background: linear-gradient(180deg, rgb(0 0 0 / 30%) 0%, rgb(0 0 0 / 22%) 15%, transparent 55%);
-  }
-  [data-opt-article-opening="split"] .journal-opening[data-has-image="true"] {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 1rem;
-  }
-  .journal-article [data-opt-article-opening="split"] .journal-figure-frame {
-    aspect-ratio: 4 / 3;
-  }
-  [data-opt-article-opening="overlap"] .journal-opening[data-has-image="true"] {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .journal-article [data-opt-article-opening="overlap"] .journal-article-head {
-    grid-column: 1;
-    grid-row: 1;
-    margin: 0 1rem -1.5rem;
-  }
-  .journal-article [data-opt-article-opening="overlap"] .journal-hero {
-    grid-column: 1;
-    grid-row: 2;
-  }
-  .journal-article [data-opt-article-opening="overlap"] .journal-figure-frame {
-    aspect-ratio: 4 / 3;
-  }
-  .journal-article [data-opt-article-opening="cover"] .journal-figure-frame {
-    min-height: 30rem;
-  }
+/* The article text follows its opening closely. Four gaps used to stack here:
+   the opening's bottom padding and margin, a minimum height left on the
+   page-builder block that holds the opening (taller than the opening itself),
+   and the intro's top margin. Together they left a band of empty page between
+   the photograph and the first line. */
+.journal-article .journal-opening {
+  padding-bottom: 0;
+  margin-bottom: clamp(1.5rem, 3.5vw, 2.75rem);
 }
-
-/* Portrait opening: a paper reading column beside a framed, uncropped image. */
-[data-opt-article-opening="portrait"] .journal-opening[data-has-image="true"] {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-  align-items: center;
-  gap: clamp(1.5rem, 4vw, 4rem);
-  margin-top: clamp(1rem, 3vw, 2rem);
-  width: calc(100% - 2 * clamp(1rem, 3vw, 2rem));
-  padding: clamp(1.25rem, 4vw, 3rem);
-  background: var(--ivory, #faf8f5);
-  border-block: 1px solid var(--rule);
+.bld-b:has(> .journal-opening-wrap) {
+  min-height: 0 !important;
 }
-.journal-article [data-opt-article-opening="portrait"] .journal-article-head {
-  padding: 1rem 0;
-  text-align: left;
-}
-.journal-article [data-opt-article-opening="portrait"] h1 {
-  max-width: 16ch;
-  margin-inline: 0;
-  font-size: clamp(2.4rem, 4.6vw, 4.75rem);
-  line-height: 1.08;
-  font-style: italic;
-}
-.journal-article [data-opt-article-opening="portrait"] h1::after {
-  margin-inline: 0;
-}
-[data-opt-article-opening="portrait"] .journal-breadcrumb {
-  justify-content: flex-start;
-}
-.journal-article [data-opt-article-opening="portrait"] .journal-hero {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid var(--rule);
-}
-.journal-article [data-opt-article-opening="portrait"] .journal-figure-frame {
-  aspect-ratio: 4 / 5;
-}
-[data-opt-article-opening="portrait"] .journal-figure-frame img {
-  object-fit: contain;
-}
-
-/* Masthead: a typographic opening with long rules and a panoramic image. */
-[data-opt-article-opening="masthead"] .journal-opening {
-  width: calc(100% - 2 * clamp(1rem, 4vw, 3rem));
-  margin-top: clamp(1rem, 3vw, 2.5rem);
-  border-top: 2px solid var(--midnight);
-}
-.journal-article [data-opt-article-opening="masthead"] .journal-article-head {
-  padding: clamp(2rem, 4vw, 3.5rem) 0 2rem;
-}
-.journal-article [data-opt-article-opening="masthead"] h1 {
-  max-width: 22ch;
-  font-size: clamp(2.5rem, 5.8vw, 6rem);
-  line-height: 1.04;
-  letter-spacing: -0.035em;
-}
-.journal-article [data-opt-article-opening="masthead"] h1::after {
-  width: 100%;
-  background: var(--rule);
-}
-.journal-article [data-opt-article-opening="masthead"] .journal-hero {
-  width: 100%;
-}
-.journal-article [data-opt-article-opening="masthead"] .journal-figure-frame {
-  aspect-ratio: 21 / 9;
-}
-@media (max-width: 48rem) {
-  [data-opt-article-opening="portrait"] .journal-opening[data-has-image="true"] {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 1.5rem;
-  }
-  .journal-article [data-opt-article-opening="portrait"] .journal-figure-frame {
-    aspect-ratio: 4 / 3;
-  }
-  .journal-article [data-opt-article-opening="masthead"] .journal-figure-frame {
-    aspect-ratio: 4 / 3;
-  }
+.journal-prose > .journal-intro:first-child {
+  margin-top: 0;
 }

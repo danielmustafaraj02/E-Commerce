@@ -13,11 +13,29 @@ export type PopularProduct = {
   imageUrl: string;
 };
 
-const AUTOSCROLL_MS = 6500;
 const SWIPE_PX = 40;
 const CLONE = 5; /* items cloned at each end — must be >= the max visible count (see CSS) */
 
-export function PopularCarousel({ products }: { products: PopularProduct[] }) {
+export type PopularCarouselLabels = {
+  /** Names the group of slide buttons, e.g. the section title. */
+  slides: string;
+  previous: string;
+  next: string;
+};
+
+const DEFAULT_LABELS: PopularCarouselLabels = {
+  slides: "Slides",
+  previous: "Previous",
+  next: "Next",
+};
+
+export function PopularCarousel({
+  products,
+  labels = DEFAULT_LABELS,
+}: {
+  products: PopularProduct[];
+  labels?: PopularCarouselLabels;
+}) {
   const n = products.length;
 
   /* Extended track: [last CLONE] + [all n] + [first CLONE] */
@@ -31,10 +49,7 @@ export function PopularCarousel({ products }: { products: PopularProduct[] }) {
   const [trackIndex, setTrackIndex] = useState(CLONE);
   /* When true, CSS transition is disabled for the instant snap-back */
   const [snap, setSnap] = useState(false);
-  const [paused, setPaused] = useState(false);
-  const [hovered, setHovered] = useState<number | null>(null);
   const touchX = useRef<number | null>(null);
-  const closeTimer = useRef<number | undefined>(undefined);
   /* Signals that the next trackIndex change is a snap (no transition) */
   const snapPending = useRef(false);
 
@@ -70,43 +85,22 @@ export function PopularCarousel({ products }: { products: PopularProduct[] }) {
     return () => cancelAnimationFrame(id);
   }, [snap]);
 
-  /* Auto-scroll */
-  useEffect(() => {
-    if (paused) return;
-    const id = window.setInterval(() => {
-      setTrackIndex((i) => i + 1);
-    }, AUTOSCROLL_MS);
-    return () => window.clearInterval(id);
-  }, [paused]);
-
   const prev = useCallback(() => {
-    setPaused(true);
     setTrackIndex((i) => i - 1);
   }, []);
 
   const next = useCallback(() => {
-    setPaused(true);
     setTrackIndex((i) => i + 1);
   }, []);
 
   /* Dot: which real product is at the left of the visible window */
   const realIndex = ((trackIndex - CLONE) % n + n) % n;
 
-  const showPopup = useCallback((i: number) => {
-    if (closeTimer.current !== undefined) window.clearTimeout(closeTimer.current);
-    setHovered(i);
-    setPaused(true);
-  }, []);
-
-  const hidePopup = useCallback(() => {
-    closeTimer.current = window.setTimeout(() => {
-      setHovered(null);
-      setPaused(false);
-    }, 200);
-  }, []);
-
   return (
-    <div className="popular-carousel" style={{ "--pop-ext-n": extN } as CSSProperties}>
+    <div
+      className="popular-carousel"
+      style={{ "--pop-ext-n": extN } as CSSProperties}
+    >
       <div
         className="popular-viewport"
         onTouchStart={(e) => {
@@ -132,11 +126,7 @@ export function PopularCarousel({ products }: { products: PopularProduct[] }) {
         >
           {extended.map((product, i) => (
             <li key={`${product.slug}-${i}`} className="popular-card-wrap">
-              <div
-                className="popular-card-inner"
-                onMouseEnter={() => showPopup(i)}
-                onMouseLeave={hidePopup}
-              >
+              <div className="popular-card-inner">
                 <Link
                   href={`/products/${product.slug}`}
                   className="popular-card-link"
@@ -148,33 +138,19 @@ export function PopularCarousel({ products }: { products: PopularProduct[] }) {
                       src={product.imageUrl}
                       alt=""
                       fill
-                      sizes="(min-width: 80rem) 14vw, (min-width: 64rem) 18vw, (min-width: 48rem) 25vw, (min-width: 36rem) 40vw, 80vw"
+                      sizes="(min-width: 80rem) 14vw, (min-width: 64rem) 18vw, (min-width: 48rem) 25vw, (min-width: 36rem) 40vw, calc(100vw - 6.25rem)"
                     />
                   </div>
                 </Link>
 
-                <div
-                  className="popular-card-popup"
-                  data-open={hovered === i ? "true" : undefined}
-                  aria-hidden={hovered !== i}
-                  inert={hovered !== i}
-                  onMouseEnter={() => showPopup(i)}
-                  onMouseLeave={hidePopup}
-                >
-                  <p className="popular-popup-name">{product.name}</p>
-                  <p className="popular-popup-price">{product.price}</p>
-                  <Link href={`/products/${product.slug}`} className="popular-popup-link">
-                    View product ↗
-                  </Link>
-                </div>
               </div>
               {/* The editorial caption: number, name and price, always shown,
                   as under a photograph in a magazine. */}
               <Link
                 href={`/products/${product.slug}`}
                 className="popular-caption"
-                tabIndex={-1}
-                aria-hidden="true"
+                tabIndex={i >= CLONE && i < CLONE + n ? undefined : -1}
+                aria-hidden={i < CLONE || i >= CLONE + n ? true : undefined}
               >
                 <span className="popular-caption-index">
                   {String(((((i - CLONE) % products.length) + products.length) % products.length) + 1).padStart(2, "0")}
@@ -191,32 +167,55 @@ export function PopularCarousel({ products }: { products: PopularProduct[] }) {
         type="button"
         className="popular-btn popular-btn--prev"
         onClick={prev}
-        aria-label="Previous"
+        aria-label={labels.previous}
       >
-        ←
+        <svg
+          width="28"
+          height="18"
+          viewBox="0 0 32 20"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path d="M29 10H3M9 4l-6 6 6 6" />
+        </svg>
       </button>
       <button
         type="button"
         className="popular-btn popular-btn--next"
         onClick={next}
-        aria-label="Next"
+        aria-label={labels.next}
       >
-        →
+        <svg
+          width="28"
+          height="18"
+          viewBox="0 0 32 20"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path d="M3 10h26M23 4l6 6-6 6" />
+        </svg>
       </button>
 
-      <div className="popular-dots" role="tablist" aria-label="Slides">
-        {products.map((_, i) => (
+      <div className="popular-dots" role="group" aria-label={labels.slides}>
+        {products.map((product, i) => (
           <button
-            key={i}
+            key={product.slug}
             type="button"
-            role="tab"
-            aria-selected={i === realIndex}
+            aria-label={product.name}
+            aria-current={i === realIndex ? "true" : undefined}
             className="popular-dot"
             data-active={i === realIndex ? "true" : undefined}
-            onClick={() => {
-              setTrackIndex(CLONE + i);
-              setPaused(true);
-            }}
+            onClick={() => setTrackIndex(CLONE + i)}
           />
         ))}
       </div>

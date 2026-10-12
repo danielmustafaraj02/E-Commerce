@@ -568,3 +568,20 @@
   border-top: 0;
   padding-top: 0;
 }
+
+/* One centred reading column. Every block of the article shares the same
+   left edge; pictures and product rows may run a little wider, still centred. */
+.journal-article .journal-prose {
+  --journal-measure: 44rem;
+  margin-inline: auto;
+}
+.journal-article .journal-prose > * {
+  max-width: var(--journal-measure);
+  margin-inline: auto;
+}
+.journal-article .journal-prose > :is(.journal-intro, h2, h3) {
+  max-width: var(--journal-measure);
+}
+.journal-article .journal-prose > :is(figure, .journal-figure, .journal-products, .journal-video) {
+  max-width: min(56rem, 100%);
+}
