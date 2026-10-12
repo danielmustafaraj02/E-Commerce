@@ -8,6 +8,7 @@ const mocks = vi.hoisted(() => ({
   upsertPayment: vi.fn(),
   retrieveSession: vi.fn(),
   createSession: vi.fn(),
+  rateLimit: vi.fn(),
 }));
 
 // Messages come back in the visitor's language; tests run as an English visitor.
@@ -31,6 +32,10 @@ vi.mock("@/lib/stripe", () => ({
   getStripe: async () => ({
     checkout: { sessions: { retrieve: mocks.retrieveSession, create: mocks.createSession } },
   }),
+}));
+vi.mock("@/lib/rate-limit", () => ({
+  rateLimit: mocks.rateLimit,
+  clientIp: () => "203.0.113.1",
 }));
 vi.mock("@/lib/store-settings", () => ({
   getStoreSettings: async () => ({ klarnaEnabled: false }),
@@ -60,6 +65,7 @@ function pay() {
 
 beforeEach(() => {
   vi.resetAllMocks();
+  mocks.rateLimit.mockResolvedValue({ success: true });
   mocks.findOrder.mockResolvedValue(ORDER);
   mocks.findPayment.mockResolvedValue(null);
   mocks.countPayments.mockResolvedValue(0);
@@ -67,6 +73,16 @@ beforeEach(() => {
 });
 
 describe("Stripe pay route", () => {
+  it("rate-limits repeated attempts before touching the database, like the PayPal route", async () => {
+    mocks.rateLimit.mockResolvedValue({ success: false });
+
+    const res = await pay();
+
+    expect(res.status).toBe(429);
+    expect(mocks.findOrder).not.toHaveBeenCalled();
+    expect(mocks.createSession).not.toHaveBeenCalled();
+  });
+
   it("creates a session for the first attempt and records a pending payment", async () => {
     const res = await pay();
 

@@ -1,37 +1,18 @@
 import { NextResponse } from "next/server";
-import { z } from "zod";
-import { auth } from "@/auth";
 import { db } from "@/lib/db";
+import { findPayableOrder } from "@/lib/payable-order";
 import { getStripe } from "@/lib/stripe";
-import { canAccessOrder } from "@/lib/orders";
 import { getStoreSettings } from "@/lib/store-settings";
 import { ONLINE_HOLD_MS } from "@/lib/abandoned-orders";
-import { getFeedback } from "@/lib/i18n/feedback";
 import { captureError } from "@/lib/monitoring";
 import { getGiftVoucherCopy } from "@/lib/gift-voucher-copy";
 import { locales, type Locale } from "@/lib/i18n/locale-constants";
 import { formatMoney } from "@/lib/format";
 
-const schema = z.object({ orderNumber: z.string().min(1) });
-
 export async function POST(request: Request) {
-  const t = await getFeedback();
-  const body = await request.json().catch(() => null);
-  const parsed = schema.safeParse(body);
-  if (!parsed.success) {
-    return NextResponse.json({ error: t.invalidInput }, { status: 400 });
-  }
-
-  const [session, order] = await Promise.all([
-    auth(),
-    db.order.findUnique({ where: { orderNumber: parsed.data.orderNumber } }),
-  ]);
-  if (!order || !canAccessOrder(order, session)) {
-    return NextResponse.json({ error: t.orderNotFound }, { status: 404 });
-  }
-  if (order.status !== "pending") {
-    return NextResponse.json({ error: t.orderNotAwaitingPayment }, { status: 400 });
-  }
+  const found = await findPayableOrder(request, "stripe-pay");
+  if ("response" in found) return found.response;
+  const { order, t } = found;
 
   let stripe;
   try {

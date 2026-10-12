@@ -1,38 +1,13 @@
 import { NextResponse } from "next/server";
-import { z } from "zod";
-import { auth } from "@/auth";
 import { db } from "@/lib/db";
+import { findPayableOrder } from "@/lib/payable-order";
 import { createPaypalOrder } from "@/lib/paypal";
-import { canAccessOrder } from "@/lib/orders";
-import { rateLimit, clientIp } from "@/lib/rate-limit";
-import { getFeedback } from "@/lib/i18n/feedback";
 import { captureError } from "@/lib/monitoring";
 
-const schema = z.object({ orderNumber: z.string().min(1) });
-
 export async function POST(request: Request) {
-  const t = await getFeedback();
-  const { success } = await rateLimit(`paypal-pay:${clientIp(request)}`, 10, 60_000);
-  if (!success) {
-    return NextResponse.json({ error: t.tooManyRequests }, { status: 429 });
-  }
-
-  const body = await request.json().catch(() => null);
-  const parsed = schema.safeParse(body);
-  if (!parsed.success) {
-    return NextResponse.json({ error: t.invalidInput }, { status: 400 });
-  }
-
-  const [session, order] = await Promise.all([
-    auth(),
-    db.order.findUnique({ where: { orderNumber: parsed.data.orderNumber } }),
-  ]);
-  if (!order || !canAccessOrder(order, session)) {
-    return NextResponse.json({ error: t.orderNotFound }, { status: 404 });
-  }
-  if (order.status !== "pending") {
-    return NextResponse.json({ error: t.orderNotAwaitingPayment }, { status: 400 });
-  }
+  const found = await findPayableOrder(request, "paypal-pay");
+  if ("response" in found) return found.response;
+  const { order, t } = found;
 
   const origin = new URL(request.url).origin;
 
