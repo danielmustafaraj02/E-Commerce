@@ -1,25 +1,17 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { MAX_CART_LINES, MAX_CART_QUANTITY } from "@/lib/cart-limits";
+import { cartItemsSchema, discountCodeSchema, giftVoucherCodeSchema } from "@/lib/checkout-input";
 import { quoteOrder, PricingError } from "@/lib/pricing";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { getFeedback } from "@/lib/i18n/feedback";
 import { pricingMessage } from "@/lib/pricing-messages";
 
 const quoteSchema = z.object({
-  items: z
-    .array(
-      z.object({
-        productId: z.string().min(1),
-        quantity: z.coerce.number().int().positive().max(MAX_CART_QUANTITY),
-      })
-    )
-    .min(1)
-    .max(MAX_CART_LINES),
+  items: cartItemsSchema,
   country: z.string().length(2),
   shippingMethodId: z.string().min(1),
-  discountCode: z.string().min(1).max(50).optional(),
-  giftVoucherCode: z.string().min(1).max(64).optional(),
+  discountCode: discountCodeSchema.optional(),
+  giftVoucherCode: giftVoucherCodeSchema.optional(),
   giftCard: z.boolean().optional(),
 });
 
