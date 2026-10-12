@@ -10,6 +10,8 @@ A. Visual editor        src/app/admin/settings/page-layout/**   (local admin onl
         │ uses
         ▼
 B. Design engine        src/lib/section-builder.ts   BuilderDoc: schema, validation, compile to HTML/CSS
+                        src/lib/section-builder-editing.ts  editing commands + canvas CSS (editor only)
+                        src/lib/section-templates.ts         built-in designs (server and editor)
                         src/lib/page-layout.ts       LayoutEntry, page targets, section catalogue
                         src/lib/section-designs.ts, page-templates.ts   templates
                         src/lib/site-style.ts, block-theme.ts           design tokens
@@ -93,7 +95,8 @@ same section at once (one editor in practice).
 2. A tablet layer: overrides stored like phone overrides, with inheritance
    phone ← tablet ← computer, and per-property "inherited / overridden / reset"
    in the inspector.
-3. Split `section-builder.ts` into schema, compile, templates and CSS modules
-   (no behaviour change; tests first).
+3. Split `section-builder.ts` further into schema and compile modules. Templates
+   and editing commands are already separate (`section-templates.ts`,
+   `section-builder-editing.ts`).
 4. Page-level drafts (order and visibility) using the same reserved-key
    storage.

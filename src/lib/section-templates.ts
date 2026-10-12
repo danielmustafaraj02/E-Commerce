@@ -1,6 +1,6 @@
 // The built-in section designs offered in Admin > Page layout ("Templates"),
-// as builder documents. Editor-side: the storefront renders saved designs and
-// never needs this catalogue.
+// as builder documents. Used by the editor and, on the server, by
+// page-templates.ts; no browser bundle needs it.
 import type { SectionStyle } from "@/lib/page-layout";
 import type { Align, BuilderBlock, BuilderDoc, HeadingRule } from "@/lib/section-builder";
 

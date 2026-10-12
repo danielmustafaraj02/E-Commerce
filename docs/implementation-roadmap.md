@@ -39,8 +39,8 @@ Done:
 Next:
 - `v` schema version on `BuilderDoc` + migration function.
 - Page-level drafts (section order and visibility).
-- Split `section-builder.ts` (schema / compile / CSS / templates) behind its
-  current exports.
+- Split `section-builder.ts` into schema and compile modules (templates and
+  editing commands were split out on 2026-10-13).
 
 Acceptance: published content unchanged while drafts are edited (verified on a
 local database); tests for draft storage and actions (**met** for sections).
