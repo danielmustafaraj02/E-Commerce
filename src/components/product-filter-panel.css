@@ -148,20 +148,6 @@ fieldset.pf-section > .pf-label {
   margin-bottom: 0.65rem;
 }
 
-.pf-select {
-  width: 100%;
-  padding: 0.6rem 0.75rem;
-  border: 1px solid var(--pf-rule);
-  border-radius: var(--radius-panel);
-  background: var(--ivory);
-  color: var(--pf-ink);
-  font: inherit;
-}
-.pf-select:focus-visible {
-  outline: 1px solid var(--pf-ink);
-  outline-offset: 1px;
-}
-
 /* -- Price ------------------------------------------------------------------- */
 
 .pf-price {

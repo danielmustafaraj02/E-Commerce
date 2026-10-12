@@ -199,36 +199,6 @@ body {
   font-family: var(--font-ui), system-ui, sans-serif;
 }
 
-/* A thin band of the glass palette (violet, teal, rose, gold) on the edge of
-   the header and footer — the one colorful thread that runs through every page. */
-/* The header is already positioned (sticky) and would lose that to a
-   `position: relative` here, since unlayered CSS beats Tailwind's utilities;
-   only the footer needs a positioning context. */
-.glass-rule-top {
-  position: relative;
-}
-.glass-rule::after,
-.glass-rule-top::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(
-    90deg,
-    var(--accent),
-    var(--glass-teal),
-    var(--glass-rose),
-    var(--glass-gold)
-  );
-}
-.glass-rule::after {
-  bottom: 0;
-}
-.glass-rule-top::before {
-  top: 0;
-}
-
 /* Tailwind v4 preflight matches the native UA default of `cursor: default`
    on <button>, so every button site-wide reads as inert until hovered.
    Restore the pointer cursor everywhere except disabled buttons. */
@@ -265,59 +235,6 @@ button:not(:disabled),
   to {
     opacity: 1;
     transform: scale(1);
-  }
-}
-
-@keyframes card-in {
-  from {
-    opacity: 0;
-    transform: translateY(16px) scale(0.94);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes cart-bounce {
-  0%,
-  100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  25% {
-    transform: translateY(-8px) rotate(-4deg);
-  }
-  50% {
-    transform: translateY(0) rotate(0deg);
-  }
-  75% {
-    transform: translateY(-4px) rotate(4deg);
-  }
-}
-
-@keyframes bracelet-sway {
-  0%,
-  100% {
-    transform: rotate(0deg);
-  }
-  25% {
-    transform: rotate(-6deg);
-  }
-  50% {
-    transform: rotate(0deg);
-  }
-  75% {
-    transform: rotate(6deg);
-  }
-}
-
-@keyframes badge-breathe {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.12);
   }
 }
 
@@ -526,36 +443,6 @@ button:not(:disabled),
     animation: pop-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
   }
 
-  /* Large empty-cart illustration (cart-client.tsx) — a gentle continuous
-     rock, not a one-shot entrance, since it's the only thing on the page. */
-  .animate-cart-bounce {
-    animation: cart-bounce 2.6s ease-in-out infinite;
-    transform-origin: 50% 90%;
-  }
-
-  /* Empty-wishlist bracelet illustration (wishlist-empty-icon.tsx) — the
-     whole charm bracelet gently dangles/sways on a continuous loop, like it's
-     swinging from a hook, while each colored bead pops in with a stagger
-     (--bead-delay) for a one-shot "sparkling" entrance on mount. */
-  .animate-bracelet-sway {
-    animation: bracelet-sway 2.8s ease-in-out infinite;
-    transform-origin: 50% 8%;
-  }
-  .bracelet-bead {
-    animation: pop-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-    animation-delay: var(--bead-delay, 0s);
-  }
-
-  /* "Why us" icon badges (app/page.tsx) — the three color-mix circles sat
-     completely static next to a page full of motion. A slow, staggered
-     breathing loop (transform-only, so it costs nothing extra to theme)
-     gives each one a little life without competing for attention like a
-     one-shot entrance would on a section this far down the page. */
-  .animate-badge-breathe {
-    animation: badge-breathe 3.2s ease-in-out infinite;
-    animation-delay: var(--badge-delay, 0s);
-  }
-
   /* Confetti burst (confetti-burst.tsx) — a one-shot "coriandoli" scatter
      fired from the wishlist heart button and the post-registration welcome
      moment. Each piece flies out to its own --tx/--ty/--rot and fades,
@@ -578,35 +465,6 @@ button:not(:disabled),
      route's content eases in on navigation instead of popping in instantly. */
   .page-transition {
     animation: fade-up 0.4s ease both;
-  }
-
-  /* "Shop by category" cards (category-carousel.tsx): staggered pop/slide-in
-     once the section's <Reveal> wrapper flips to data-reveal="true", rather
-     than a second IntersectionObserver per card. Hidden state is scoped to
-     [data-reveal] (true or false) so cards never sit invisible if JS never
-     runs the reveal at all. */
-  [data-reveal] .category-card {
-    opacity: 0;
-    transform: translateY(16px) scale(0.94);
-  }
-  [data-reveal="true"] .category-card {
-    animation: card-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
-    animation-delay: var(--card-delay, 0s);
-  }
-
-  /* Swiper's own pagination dots for the "Shop by category" showcase
-     (category-carousel.tsx) — restyled to match the site's rounded, muted
-     look instead of Swiper's default small blue dots. */
-  .category-showcase .swiper-pagination-bullet {
-    width: 8px;
-    height: 8px;
-    background: var(--foreground);
-    opacity: 0.2;
-    transition: opacity 0.2s ease, background 0.2s ease;
-  }
-  .category-showcase .swiper-pagination-bullet-active {
-    background: var(--color-primary);
-    opacity: 1;
   }
 
   /* Header category nav (header.tsx) — the row of category/About/guide
@@ -678,11 +536,6 @@ button:not(:disabled),
     [data-reveal] {
       transition: none;
       animation: fade-up linear backwards;
-      animation-timeline: view();
-      animation-range: var(--scroll-in);
-    }
-    [data-reveal] .category-card {
-      animation: card-in linear both;
       animation-timeline: view();
       animation-range: var(--scroll-in);
     }
@@ -925,29 +778,6 @@ button:not(:disabled),
 @keyframes locale-orbit {
   from { rotate: 0deg; }
   to { rotate: 360deg; }
-}
-
-/* Header category row (header.tsx) can overflow horizontally on narrow
-   viewports. Swipe-scrolling still works without a visible scrollbar track
-   (touch/trackpad users don't need it, and the OS-drawn bar read as a
-   layout bug at this width) — the mask fade instead signals "more content"
-   at the trailing edge. */
-.scrollbar-hide {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-.edge-fade-x {
-  mask-image: linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent);
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent,
-    black 16px,
-    black calc(100% - 16px),
-    transparent
-  );
 }
 
 /* AuthCard (auth-card.tsx) — login and register share one card and swap in
@@ -1400,29 +1230,6 @@ button:not(:disabled),
     box-shadow: 0 1px 2px color-mix(in srgb, var(--foreground) 4%, transparent);
   }
 
-  /* Selectable option card — radio-driven choices (shipping method, payment
-   method) presented as a clickable card with the whole row as the hit
-   target, not just the small radio dot. */
-  .option-card {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    border-radius: var(--radius-panel);
-    border: 1.5px solid color-mix(in srgb, var(--foreground) 14%, transparent);
-    padding: 0.75rem 1rem;
-    cursor: pointer;
-    transition:
-      border-color 0.2s ease,
-      background-color 0.2s ease;
-  }
-  .option-card:hover {
-    border-color: color-mix(in srgb, var(--color-primary) 50%, transparent);
-  }
-  .option-card:has(:checked) {
-    border-color: var(--color-primary);
-    background: color-mix(in srgb, var(--color-primary) 6%, transparent);
-  }
-
   /* Color filter swatches (product-filter-panel.tsx) — a real circle of the
      actual color rather than a text dropdown. 2.75rem (44px) meets the
      minimum touch-target size, important since this is opened at least as
@@ -1474,38 +1281,6 @@ button:not(:disabled),
   .color-swatch:has(:checked) .color-swatch-check {
     display: flex;
   }
-} /* end @layer components */
-
-/* Shared prev/next button for every homepage carousel (best sellers,
-   categories, testimonials — see carousel-nav-button.tsx). Rendered as a
-   normal flex sibling next to the Swiper track rather than Swiper's own
-   absolutely-positioned nav buttons, which float on top of slide content:
-   with text-heavy slides (testimonials) that clipped the card's own text
-   as soon as it ran close to the edge, at any padding/offset value. */
-.carousel-nav-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: var(--radius-button);
-  color: var(--color-primary);
-  background: var(--background);
-  border: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
-  box-shadow: 0 1px 4px color-mix(in srgb, var(--foreground) 12%, transparent);
-  transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease,
-    opacity 0.15s ease;
-}
-.carousel-nav-btn:hover {
-  transform: scale(1.08);
-  box-shadow: 0 2px 8px color-mix(in srgb, var(--foreground) 18%, transparent);
-}
-.carousel-nav-btn.swiper-button-disabled {
-  opacity: 0.35;
-  pointer-events: none;
 }
 /* Hero background: three soft glass-tone blobs, each in its own corner,
    evoking molten Murano glass without needing a photo of it. Pure CSS
@@ -1602,10 +1377,6 @@ button:not(:disabled),
       animation-direction: reverse;
     }
   }
-}
-
-.testimonials-swiper .swiper-slide {
-  height: auto;
 }
 
 /* ---------------------------------------------------------------------------

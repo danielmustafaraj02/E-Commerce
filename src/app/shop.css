@@ -1318,21 +1318,6 @@
   background: var(--tint-lilac);
   color: var(--gold);
 }
-
-/* Selectable option cards (shipping / payment method): violet, not the store's
-   near-black primary. */
-.shelf .option-card {
-  border-color: var(--rule);
-  background: color-mix(in srgb, var(--ivory) 55%, transparent);
-}
-.shelf .option-card:hover {
-  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
-}
-.shelf .option-card:has(:checked) {
-  border-color: var(--accent);
-  background: var(--ivory);
-  box-shadow: inset 0 0 0 1px var(--accent);
-}
 .shelf .field-radio::after {
   background: var(--accent);
 }

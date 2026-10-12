@@ -940,45 +940,12 @@
     transform: translateY(0) scale(1);
   }
 }
-/* The exit mirrors the entrance: same leftward drift and rise, ending
-   invisible — scrolling back out of a grid, the cards leave in the same
-   left-to-right order they arrived in. */
-@keyframes shelf-item-exit {
-  from {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: translateX(-30px) translateY(24px) scale(0.98);
-  }
-}
 @keyframes section-fade-in {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
-  }
-}
-@keyframes editorial-copy-slide {
-  from {
-    opacity: 0;
-    transform: translateX(-28px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-@keyframes editorial-image-slide {
-  from {
-    opacity: 0;
-    transform: translateX(28px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
   }
 }
 /* The h1 is excluded here — it plays its own typing reveal instead of the
@@ -2064,45 +2031,6 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .home-category-reveal[data-reveal] {
-    opacity: 1;
-    transform: none;
-    transition: none;
-    animation: none;
-  }
-  .home-category-reveal[data-reveal="false"] .shelf-eyebrow,
-  .home-category-reveal[data-reveal="false"] .shelf-heading {
-    opacity: 0;
-    transform: translateY(0.65rem);
-  }
-  .home-category-reveal[data-reveal="false"] .shelf-eyebrow::before,
-  .home-category-reveal[data-reveal="false"] .shelf-eyebrow::after,
-  .home-category-reveal[data-reveal="false"] .shelf-heading::after {
-    transform: scaleX(0);
-  }
-  .home-category-reveal[data-reveal="true"] .shelf-eyebrow {
-    animation: home-look-copy-in 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) both;
-  }
-  .home-category-reveal[data-reveal="true"] .shelf-heading {
-    animation: home-look-copy-in 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) 0.4s both;
-  }
-  .home-category-reveal[data-reveal="true"] .shelf-eyebrow::before,
-  .home-category-reveal[data-reveal="true"] .shelf-eyebrow::after {
-    animation: home-look-rule-in 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s both;
-  }
-  .home-category-reveal[data-reveal="true"] .shelf-heading::after {
-    animation: home-look-rule-in 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) 0.95s both;
-  }
-  @keyframes home-category-card-in {
-    from {
-      opacity: 0;
-      translate: 1.25rem 0;
-    }
-    to {
-      opacity: 1;
-      translate: 0 0;
-    }
-  }
   /* Cards scrub in with the page scroll itself: each rises into focus as it
      crosses into view and drifts back out of focus if you scroll up again,
      rather than firing once on a timer. Later columns take a later slice of
@@ -2133,11 +2061,6 @@
       .shelf-section--categories {
         view-timeline: --cat-scroll block;
       }
-      .home-category-reveal[data-reveal] .shelf-eyebrow,
-      .home-category-reveal[data-reveal] .shelf-heading,
-      .home-category-reveal[data-reveal] .shelf-eyebrow::before,
-      .home-category-reveal[data-reveal] .shelf-eyebrow::after,
-      .home-category-reveal[data-reveal] .shelf-heading::after,
       .shelf-categories .shelf-category {
         animation-duration: auto;
         animation-delay: 0s;
@@ -2146,23 +2069,6 @@
         animation-iteration-count: 1;
         animation-direction: normal;
         animation-timeline: --cat-scroll;
-      }
-      .home-category-reveal[data-reveal] .shelf-eyebrow {
-        animation-name: home-look-copy-in;
-        animation-range: cover 5.5% cover 10%;
-      }
-      .home-category-reveal[data-reveal] .shelf-eyebrow::before,
-      .home-category-reveal[data-reveal] .shelf-eyebrow::after {
-        animation-name: home-look-rule-in;
-        animation-range: cover 6% cover 11%;
-      }
-      .home-category-reveal[data-reveal] .shelf-heading {
-        animation-name: home-look-copy-in;
-        animation-range: cover 7% cover 12%;
-      }
-      .home-category-reveal[data-reveal] .shelf-heading::after {
-        animation-name: home-look-rule-in;
-        animation-range: cover 10% cover 13.5%;
       }
       .shelf-categories .shelf-category {
         animation-name: home-category-scroll-in;
@@ -2185,137 +2091,6 @@
       }
       .shelf-categories .shelf-category:nth-child(3n + 3):nth-child(n + 4) {
         animation-range: entry 50% cover 40%;
-      }
-    }
-
-    /* Browsers without scroll timelines keep the original one-shot stagger. */
-    @supports not (animation-timeline: view()) {
-      .home-category-reveal[data-reveal="false"] .shelf-category {
-        opacity: 0;
-        translate: 1.25rem 0;
-      }
-      .home-category-reveal[data-reveal="true"] .shelf-category {
-        animation: home-category-card-in 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) both;
-      }
-      .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(1) {
-        animation-delay: 1.2s;
-      }
-      .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(2) {
-        animation-delay: 1.5s;
-      }
-      .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(3) {
-        animation-delay: 1.8s;
-      }
-      .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(4) {
-        animation-delay: 2.1s;
-      }
-      .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(5) {
-        animation-delay: 2.4s;
-      }
-      .home-category-reveal[data-reveal="true"] .shelf-category:nth-child(6) {
-        animation-delay: 2.7s;
-      }
-    }
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .home-looks-heading-reveal[data-reveal] {
-    opacity: 1;
-    transform: none;
-    transition: none;
-    animation: none;
-  }
-  .home-looks-heading-reveal[data-reveal="false"] .shelf-eyebrow,
-  .home-looks-heading-reveal[data-reveal="false"] .shelf-heading {
-    opacity: 0;
-    transform: translateY(0.65rem);
-  }
-  .home-looks-heading-reveal[data-reveal="false"] .shelf-eyebrow::before,
-  .home-looks-heading-reveal[data-reveal="false"] .shelf-eyebrow::after,
-  .home-looks-heading-reveal[data-reveal="false"] .shelf-heading::after {
-    transform: scaleX(0);
-  }
-  .home-looks-heading-reveal[data-reveal="true"] .shelf-eyebrow {
-    animation: home-look-copy-in 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) both;
-  }
-  .home-looks-heading-reveal[data-reveal="true"] .shelf-heading {
-    animation: home-look-copy-in 1.4s cubic-bezier(0.22, 0.61, 0.36, 1) 0.4s both;
-  }
-  .home-looks-heading-reveal[data-reveal="true"] .shelf-eyebrow::before,
-  .home-looks-heading-reveal[data-reveal="true"] .shelf-eyebrow::after {
-    animation: home-look-rule-in 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s both;
-  }
-  .home-looks-heading-reveal[data-reveal="true"] .shelf-heading::after {
-    animation: home-look-rule-in 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) 0.95s both;
-  }
-  @keyframes home-look-copy-in {
-    from {
-      opacity: 0;
-      transform: translateY(0.65rem);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  @keyframes home-look-rule-in {
-    from {
-      transform: scaleX(0);
-    }
-    to {
-      transform: scaleX(1);
-    }
-  }
-}
-/* Scroll-linked (globals.css): eyebrow, its rules, the heading and the gold
-   rule under it arrive in reading order as the heading comes up. On desktop
-   the categories heading already runs on its section's --cat-scroll timeline
-   above, so only phones take it from here. */
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .home-looks-heading-reveal[data-reveal] .shelf-eyebrow,
-    .home-looks-heading-reveal[data-reveal] .shelf-heading,
-    .home-looks-heading-reveal[data-reveal] .shelf-eyebrow::before,
-    .home-looks-heading-reveal[data-reveal] .shelf-eyebrow::after,
-    .home-looks-heading-reveal[data-reveal] .shelf-heading::after {
-      animation: home-look-copy-in linear backwards;
-      animation-timeline: view();
-      animation-range: entry 0% entry 30vh;
-    }
-    .home-looks-heading-reveal[data-reveal] .shelf-eyebrow::before,
-    .home-looks-heading-reveal[data-reveal] .shelf-eyebrow::after {
-      animation-name: home-look-rule-in;
-      animation-range: entry 3vh entry 30vh;
-    }
-    .home-looks-heading-reveal[data-reveal] .shelf-heading {
-      animation-range: entry 4vh entry 34vh;
-    }
-    .home-looks-heading-reveal[data-reveal] .shelf-heading::after {
-      animation-name: home-look-rule-in;
-      animation-range: entry 10vh entry 40vh;
-    }
-    @media (max-width: 47.99rem) {
-      .home-category-reveal[data-reveal] .shelf-eyebrow,
-      .home-category-reveal[data-reveal] .shelf-heading,
-      .home-category-reveal[data-reveal] .shelf-eyebrow::before,
-      .home-category-reveal[data-reveal] .shelf-eyebrow::after,
-      .home-category-reveal[data-reveal] .shelf-heading::after {
-        animation: home-look-copy-in linear backwards;
-        animation-timeline: view();
-        animation-range: entry 0% entry 30vh;
-      }
-      .home-category-reveal[data-reveal] .shelf-eyebrow::before,
-      .home-category-reveal[data-reveal] .shelf-eyebrow::after {
-        animation-name: home-look-rule-in;
-        animation-range: entry 3vh entry 30vh;
-      }
-      .home-category-reveal[data-reveal] .shelf-heading {
-        animation-range: entry 4vh entry 34vh;
-      }
-      .home-category-reveal[data-reveal] .shelf-heading::after {
-        animation-name: home-look-rule-in;
-        animation-range: entry 10vh entry 40vh;
       }
     }
   }
@@ -2857,39 +2632,6 @@
 
 /* -- Phones ----------------------------------------------------------------------- */
 
-/* Dot indicators under the mobile carousel (category-strip.tsx) — with only
-   one card visible at a time, there was nothing left on screen signalling
-   "there are more of these, swipe" the way the old peeking-neighbour layout
-   did. display:none by default; the phones media query below overrides it
-   to flex — that override has to come AFTER this block in the file, since
-   two rules of equal specificity resolve by source order, and a later plain
-   rule beats an earlier one regardless of which media query is active.
-   (NOT a Tailwind sm:hidden on the element (JSX): this file's plain,
-   unlayered CSS always beats a Tailwind utility class too, regardless of
-   media query, since cascade layers rank below unlayered rules no matter
-   their specificity or source order.) */
-.category-dots {
-  display: none;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: 0.75rem;
-}
-.category-dot {
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--foreground) 22%, transparent);
-  transition:
-    background-color 0.25s ease,
-    width 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-/* Stretches into a pill rather than just swapping color — reads as "the
-   indicator moved to here" instead of a flat on/off swap between two dots. */
-.category-dot.is-active {
-  width: 1.5rem;
-  background: var(--color-primary);
-}
-
 /* Categories become a one-at-a-time carousel: a single full-width card,
    swipeable, and looping in both directions (CategoryStrip.tsx clones the
    first/last card off-screen and silently re-centers on the real one once a
@@ -2961,9 +2703,6 @@
     margin-top: 0.65rem;
     font-size: 0.75rem;
     letter-spacing: 0.12em;
-  }
-  .category-dots {
-    display: flex;
   }
 }
 
@@ -3998,322 +3737,12 @@
     transition: none;
   }
 }
-
-/* Large collection portraits: necklaces, bracelets, then earrings. */
-.home-editorial-row {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-}
-.home-editorial-row + .home-editorial-row {
-  border-top: 1px solid rgb(var(--brass-rgb) / 24%);
-}
-.home-editorial-inner {
-  max-width: 100rem;
-  margin-inline: auto;
-  padding: clamp(4rem, 8vw, 6rem) clamp(1.5rem, 5vw, 5rem);
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
-  align-items: center;
-  gap: clamp(2rem, 4vw, 4.5rem);
-  min-height: min(52rem, 86svh);
-}
-.home-editorial-copy {
-  padding-block: 2rem;
-  /* The copy cell is now just the name: centred, and itself the click
-     target through the stretched link that covers the whole cell. */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  text-align: center;
-  min-height: 14rem;
-  /* The whole cell answers the pointer as a link — the stretched link under
-     the type is the affordance, not a button. */
-  cursor: pointer;
-}
-
-/* A small eyebrow above the name, so a shopper who lands mid-page knows what
-   kind of piece the photograph shows before reading the collection name. */
-.home-editorial-eyebrow {
-  margin: 0 0 1.1rem;
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--ink-soft) 90%, transparent);
-}
-
-/* The stretched link: invisible, it covers the copy cell so the collection
-   name is the button. It sits UNDER the title (z-index) so text selection is
-   not swallowed, but hit-testing still reaches it everywhere between and
-   around the letters. */
-.home-editorial-stretch {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  outline: none;
-}
-.home-editorial-stretch:focus-visible {
-  outline: 2px solid var(--gold, var(--brass));
-  outline-offset: -2px;
-}
-/* Quiet affordance: the name leans toward the visitor when its row is
-   pointed at, since there is no separate "Shop" line anymore. */
-@media (hover: hover) and (pointer: fine) {
-  .home-editorial-row:hover .home-editorial-title {
-    color: var(--accent-deep);
-    letter-spacing: 0.01em;
-    transition:
-      color 0.45s var(--ease-out-soft),
-      letter-spacing 0.45s var(--ease-out-soft);
-  }
-}
-.shelf .home-editorial-title {
-  font-size: clamp(2.6rem, 4.2vw, 5rem);
-  line-height: 1.04;
-  overflow-wrap: anywhere;
-}
-/* The arrow slides out beside the name when the row is pointed at: the click
-   affordance without a button. It starts as a zero-width clip so the resting
-   line is exactly the collection name, nothing more. */
-.home-editorial-arrow {
-  display: inline-block;
-  margin-inline-start: 0;
-  width: 0;
-  overflow: hidden;
-  opacity: 0;
-  vertical-align: baseline;
-  font-size: 0.5em;
-  color: var(--gold);
-  transform: translateX(-0.4em);
-  transition:
-    width 0.5s var(--ease-out-soft),
-    opacity 0.35s ease-out,
-    transform 0.5s var(--ease-out-soft);
-}
-@media (hover: hover) and (pointer: fine) {
-  .home-editorial-row:hover .home-editorial-arrow,
-  .home-editorial-row:focus-within .home-editorial-arrow {
-    width: 1em;
-    opacity: 1;
-    transform: translateX(0);
-  }
-  /* Keyboard: the focus ring lands on the stretched link, and the arrow
-     answers it the same way, so tabbing shows the affordance too. */
-  .home-editorial-row:focus-within .home-editorial-title {
-    color: var(--accent-deep);
-  }
-}
-/* The same soft champagne bar that opens New arrivals, reused under every
-   collection title so the three rows read as one family. */
-.home-editorial-title::after {
-  content: "";
-  display: block;
-  width: min(11rem, 55%);
-  height: 1px;
-  margin-top: clamp(1.4rem, 2vw, 2rem);
-  margin-inline: auto;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  transform-origin: center;
-}
-.home-editorial-description {
-  max-width: 30rem;
-  margin: 1.75rem 0 2.25rem;
-  font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(1.05rem, 1.4vw, 1.3rem);
-  line-height: 1.65;
-}
-.home-editorial-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 1.75rem;
-  padding-block: 0.75rem;
-  border-bottom: 1px solid currentColor;
-  font-size: 0.72rem;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  transition: gap var(--motion-quick) var(--ease-in-out-soft);
-}
-/* The arrow leads the eye a little further on the way out, and the rule
-   fades as it goes — pointer-only, since a gap shift on tap does nothing. */
-@media (hover: hover) and (pointer: fine) {
-  .home-editorial-link:hover,
-  .home-editorial-link:focus-visible {
-    gap: 2.25rem;
-    border-bottom-color: color-mix(in srgb, currentColor 35%, transparent);
-  }
-}
-.home-editorial-link span {
-  font-size: 1.4rem;
-}
-.home-editorial-image {
-  position: relative;
-  display: block;
-  width: min(100%, 40rem);
-  justify-self: center;
-  height: clamp(26rem, 44vw, 40rem);
-  mix-blend-mode: multiply;
-}
-.home-editorial-image img {
-  object-fit: contain;
-}
 /* Content is visible until the observer prepares an off-screen entrance.
    The copy arrives as a small choreography rather than one block slide:
    the eyebrow fades in, the collection name rises from below with a slight
    blur resolving to sharp (the same "pane of glass coming into focus" move
    the hero and flyouts use), and the champagne bar draws last. The jewelry
    fades in from the right as before. */
-@media (prefers-reduced-motion: no-preference) {
-  .home-editorial-copy[data-editorial-state] {
-    transition:
-      opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
-      transform 1100ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .home-editorial-eyebrow,
-  .home-editorial-title {
-    /* Prepared by the JS only when off-screen: visible without it. */
-    opacity: 1;
-  }
-  .home-editorial-copy[data-editorial-state="pending"] .home-editorial-eyebrow,
-  .home-editorial-copy[data-editorial-state="pending"] .home-editorial-title {
-    opacity: 0;
-    transform: translateY(26px);
-    filter: blur(6px);
-  }
-  .home-editorial-copy[data-editorial-state] .home-editorial-eyebrow,
-  .home-editorial-copy[data-editorial-state] .home-editorial-title {
-    transition:
-      opacity 900ms cubic-bezier(0.16, 1, 0.3, 1),
-      transform 1100ms cubic-bezier(0.16, 1, 0.3, 1),
-      filter 900ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  /* The eyebrow leads, the name follows a beat behind — reading order,
-     staged. */
-  .home-editorial-copy[data-editorial-state="pending"] .home-editorial-eyebrow {
-    transition-delay: 0ms;
-  }
-  .home-editorial-copy[data-editorial-state="pending"] .home-editorial-title {
-    transition-delay: 160ms;
-  }
-  .home-editorial-copy[data-editorial-state="pending"] {
-    opacity: 0;
-    transform: translateX(-24px);
-  }
-  .home-editorial-image[data-editorial-state] {
-    transition: opacity 950ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .home-editorial-image[data-editorial-state="pending"] {
-    opacity: 0;
-  }
-  .home-editorial-copy[data-editorial-state="visible"],
-  .home-editorial-image[data-editorial-state="visible"] {
-    opacity: 1;
-    transform: none;
-  }
-  .home-editorial-copy[data-editorial-state="visible"] .home-editorial-eyebrow,
-  .home-editorial-copy[data-editorial-state="visible"] .home-editorial-title {
-    opacity: 1;
-    transform: none;
-    filter: blur(0);
-  }
-  /* The photograph settles the last 2% of its travel as it arrives: the
-     movement is what makes a still image feel placed rather than pasted.
-     Keyed off the same attribute, so it cannot run without the observer. */
-  .home-editorial-image img {
-    transition: transform 1400ms var(--ease-out-soft);
-  }
-  .home-editorial-image[data-editorial-state="pending"] img {
-    transform: scale(1.04);
-  }
-  /* The champagne bar draws itself under the collection title after the
-     name has landed, completing the staged entrance. */
-  .home-editorial-copy[data-editorial-state] .home-editorial-title::after {
-    transition: transform 1100ms var(--ease-out-soft) 620ms;
-  }
-  .home-editorial-copy[data-editorial-state="pending"] .home-editorial-title::after {
-    transform: scaleX(0);
-  }
-  .home-editorial-copy[data-editorial-state="visible"] .home-editorial-title::after {
-    transform: scaleX(1);
-  }
-  .home-editorial-image img {
-    will-change: transform;
-  }
-  @media (hover: hover) and (pointer: fine) {
-    /* The portrait breathes in very slightly under the pointer: enough to feel
-       alive, far too little to look like a shop card lifting. */
-    .home-editorial-image {
-      transition: transform 1200ms var(--ease-out-soft);
-    }
-    .home-editorial-image:hover {
-      transform: scale(1.015);
-    }
-  }
-  /* Where scroll timelines exist, the photograph drifts a little as the row
-     crosses the viewport: the piece is never quite static, and the row gains
-     a sense of depth without any element moving out of its box. */
-  @media (min-width: 48rem) {
-    @supports (animation-timeline: view()) {
-      .home-editorial-image[data-editorial-state="visible"] img {
-        animation: home-editorial-drift linear both;
-        animation-timeline: view();
-        animation-range: cover -12% cover 12%;
-      }
-    }
-  }
-  @keyframes home-editorial-drift {
-    from {
-      transform: scale(1.05) translateY(1.2%);
-    }
-    to {
-      transform: scale(1.09) translateY(-1.2%);
-    }
-  }
-  @media (max-width: 51.99rem) {
-    .home-editorial-copy[data-editorial-state="pending"] {
-      transform: translateY(16px);
-    }
-    .home-editorial-image[data-editorial-state] {
-      transition-duration: 900ms;
-    }
-  }
-}
-.home-editorial-link:focus-visible,
-.home-editorial-image:focus-visible {
-  outline: 2px solid var(--ink);
-  outline-offset: 6px;
-}
-@media (min-width: 52rem) {
-  .home-editorial-row:nth-child(even) .home-editorial-inner {
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr);
-  }
-  .home-editorial-row:nth-child(even) .home-editorial-image {
-    grid-column: 1;
-    grid-row: 1;
-  }
-  .home-editorial-row:nth-child(even) .home-editorial-copy {
-    grid-column: 2;
-    grid-row: 1;
-  }
-}
-@media (max-width: 51.99rem) {
-  .home-editorial-inner {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0;
-    padding: 2.5rem 1.25rem;
-    min-height: auto;
-  }
-  .home-editorial-copy {
-    padding: 1.5rem 0;
-    min-height: 9rem;
-  }
-  .home-editorial-image {
-    height: clamp(24rem, 115vw, 44rem);
-    margin-top: 1.5rem;
-  }
-}
 
 /* The atelier photograph carries the jewelry; keep the copy in its clear area. */
 .shelf-hero--still-life .shelf-hero-scene {
@@ -4494,11 +3923,6 @@
   }
 
   /* --- Editorial rows ---------------------------------------------------- */
-  /* The copy arrives with a shorter travel on a phone: at 390px wide a 36px
-     sideways slide reads as a mistake rather than a reveal. */
-  .home-editorial-image[data-editorial-state="pending"] img {
-    transform: scale(1.02);
-  }
 }
 
 /* Very narrow phones (iPhone SE and similar, <= 360px). */
