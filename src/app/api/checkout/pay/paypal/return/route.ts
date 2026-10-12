@@ -4,7 +4,7 @@ import { capturePaypalOrder } from "@/lib/paypal";
 import { capturedAmount, capturedAmountMatches } from "@/lib/paypal-amount";
 import { captureError } from "@/lib/monitoring";
 import { applyPaidToOrder } from "@/lib/order-payment";
-import { sendOrderStatusEmail } from "@/lib/email";
+import { sendPaidOrderEmails } from "@/lib/paid-order-emails";
 
 // UX-only fast path: captures immediately so the buyer sees "paid" without
 // waiting on the webhook. The webhook (/api/webhooks/paypal) is still the
@@ -85,39 +85,7 @@ export async function GET(request: Request) {
         (applied.outcome === "already_settled" && applied.order.status !== "cancelled")
       ) {
         if (applied.outcome === "paid") {
-          try {
-            const emailOrder = {
-              orderNumber: applied.order.orderNumber,
-              status: "paid",
-              trackingNumber: applied.order.trackingNumber,
-              guestEmail: applied.order.guestEmail,
-              user: applied.order.user,
-            };
-            try {
-              await sendOrderStatusEmail(emailOrder);
-            } catch (error) {
-              captureError(error, {
-                scope: "paypal-return-order-email",
-                orderNumber: order.orderNumber,
-              });
-            }
-            if (applied.order.giftVoucherIssue) {
-              try {
-                const { sendGiftVoucherEmail } = await import("@/lib/email");
-                await sendGiftVoucherEmail(applied.order.giftVoucherIssue, applied.order.locale);
-              } catch (error) {
-                captureError(error, {
-                  scope: "paypal-return-gift-voucher-email",
-                  orderNumber: order.orderNumber,
-                });
-              }
-            }
-          } catch (error) {
-            captureError(error, {
-              scope: "paypal-return-email",
-              orderNumber: order.orderNumber,
-            });
-          }
+          await sendPaidOrderEmails(applied.order, "paypal-return");
         }
         return NextResponse.redirect(new URL(`${confirmationUrl}?paid=1`, request.url));
       }

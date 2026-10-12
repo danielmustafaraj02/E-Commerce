@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { verifyPaypalWebhookSignature } from "@/lib/paypal";
 import { captureError } from "@/lib/monitoring";
-import { sendOrderStatusEmail } from "@/lib/email";
+import { sendPaidOrderEmails } from "@/lib/paid-order-emails";
 import { applyPaidToOrder } from "@/lib/order-payment";
 
 export async function POST(request: Request) {
@@ -79,42 +79,9 @@ export async function POST(request: Request) {
         }
         const paidOrder = applied.outcome === "paid" ? applied.order : null;
 
-        // Outside the transaction and in its own try/catch — see the Stripe
-        // webhook for why an email failure must not fail this handler.
+        // Outside the transaction; never fails the handler (see sendPaidOrderEmails).
         if (paidOrder) {
-          try {
-            const emailOrder = {
-              orderNumber: paidOrder.orderNumber,
-              status: "paid",
-              trackingNumber: paidOrder.trackingNumber,
-              guestEmail: paidOrder.guestEmail,
-              user: paidOrder.user,
-            };
-            try {
-              await sendOrderStatusEmail(emailOrder);
-            } catch (error) {
-              captureError(error, {
-                scope: "paypal-webhook-order-email",
-                orderNumber: paidOrder.orderNumber,
-              });
-            }
-            if (paidOrder.giftVoucherIssue) {
-              try {
-                const { sendGiftVoucherEmail } = await import("@/lib/email");
-                await sendGiftVoucherEmail(paidOrder.giftVoucherIssue, paidOrder.locale);
-              } catch (error) {
-                captureError(error, {
-                  scope: "paypal-webhook-gift-voucher-email",
-                  orderNumber: paidOrder.orderNumber,
-                });
-              }
-            }
-          } catch (error) {
-            captureError(error, {
-              scope: "paypal-webhook-email",
-              orderNumber: paidOrder.orderNumber,
-            });
-          }
+          await sendPaidOrderEmails(paidOrder, "paypal-webhook");
         }
       }
     }
