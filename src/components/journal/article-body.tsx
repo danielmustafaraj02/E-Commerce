@@ -3,7 +3,7 @@ import { ShelfItem } from "@/components/shelf-item";
 import { JournalImage } from "@/components/journal/journal-image";
 import { parseInline } from "@/lib/journal";
 import { localizedCardProduct } from "@/lib/product-i18n";
-import { videoEmbedUrl } from "@/lib/journal/article-schema";
+import { videoEmbedUrl } from "@/lib/video-embed";
 import type { Block } from "@/lib/journal/types";
 import type { JournalProductMap } from "@/lib/journal/products";
 import type { Locale } from "@/lib/i18n/locale";

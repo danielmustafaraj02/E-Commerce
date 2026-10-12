@@ -1,7 +1,7 @@
 import { getLocale } from "@/lib/i18n/locale";
 import { flatSiteText } from "@/lib/builder-i18n-server";
 import type { PageTarget } from "@/lib/page-layout";
-import { LayoutPreviewBridge } from "./layout-preview-bridge";
+import { LayoutPreviewBridge } from "./layout-preview-bridge-lazy";
 
 /** The admin preview bridge, given this page's language and its site text so
  *  designs that use the site's own wording preview in the right language. */

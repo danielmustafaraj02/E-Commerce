@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { videoEmbedUrl } from "@/lib/video-embed";
 
 /**
  * The shape and rules of an article written in Admin > Articles: categories,
@@ -7,6 +8,8 @@ import { z } from "zod";
  * can use it without dragging `pg` into the browser bundle — db-articles.ts
  * re-exports everything here, so server code can keep importing from there.
  */
+
+export { videoEmbedUrl };
 
 export const JOURNAL_CATEGORIES = ["history", "craft", "buying", "care", "gifting"] as const;
 
@@ -19,34 +22,6 @@ const noUnsafeLinks = (text: string) =>
 
 const text = (max: number) =>
   z.string().trim().min(1).max(max).refine(noUnsafeLinks, "Links must start with / or https://");
-
-/** The iframe URL for a YouTube or Vimeo link, or null for anything else. */
-export function videoEmbedUrl(url: string): string | null {
-  let u: URL;
-  try {
-    u = new URL(url.trim());
-  } catch {
-    return null;
-  }
-  const host = u.hostname.replace(/^www\./, "");
-  const id = (value: string | null | undefined, pattern: RegExp) =>
-    value && pattern.test(value) ? value : null;
-  if (host === "youtu.be") {
-    const v = id(u.pathname.slice(1), /^[\w-]{11}$/);
-    return v && `https://www.youtube-nocookie.com/embed/${v}`;
-  }
-  if (host === "youtube.com" || host === "m.youtube.com") {
-    const v =
-      id(u.searchParams.get("v"), /^[\w-]{11}$/) ??
-      id(u.pathname.match(/^\/(?:embed|shorts)\/([\w-]{11})$/)?.[1], /^[\w-]{11}$/);
-    return v && `https://www.youtube-nocookie.com/embed/${v}`;
-  }
-  if (host === "vimeo.com" || host === "player.vimeo.com") {
-    const v = id(u.pathname.match(/(\d{6,})$/)?.[1], /^\d+$/);
-    return v && `https://player.vimeo.com/video/${v}`;
-  }
-  return null;
-}
 
 const imageSrc = z
   .string()

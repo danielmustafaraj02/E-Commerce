@@ -1,4 +1,4 @@
-import { videoEmbedUrl } from "@/lib/journal/article-schema";
+import { videoEmbedUrl } from "@/lib/video-embed";
 import { safeColor, safeImageUrl, safeVideoUrl } from "@/lib/custom-section";
 import { optimizedImageUrl, optimizedSrcSet } from "@/lib/optimized-image";
 import type { SectionStyle } from "@/lib/page-layout";

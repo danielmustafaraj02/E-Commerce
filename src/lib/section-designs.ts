@@ -1,4 +1,4 @@
-import { videoEmbedUrl } from "./journal/article-schema";
+import { videoEmbedUrl } from "@/lib/video-embed";
 import { JEWELLERY_STYLES } from "./jewellery-styles";
 import {
   parseBuilder,
