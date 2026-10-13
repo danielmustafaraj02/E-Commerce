@@ -1603,63 +1603,14 @@ body:has(.showcase[data-full-screen]) {
 /* ── Hover card over the scene's piece ───────────────────────────────────────
    Name, price and a link to the product the photo shows. Pointer devices
    only: on touch screens the scene's own button is the way on. */
+/* The piece's hover card is the site-wide .pop-card (globals.css), placed at
+   the pointer by collection-showcase.tsx; only pointers that hover get it. */
 .showcase-pop {
   display: none;
 }
 @media (hover: hover) and (pointer: fine) {
   .showcase-pop {
-    position: absolute;
-    z-index: 3;
-    left: 50%;
-    bottom: 8%;
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-    box-sizing: border-box;
-    width: max-content;
-    max-width: min(16rem, 90%);
-    padding: 0.85rem 1.1rem;
-    border: 1px solid color-mix(in srgb, var(--champagne, #d9c9a8) 70%, transparent);
-    background: var(--ivory, #fff);
-    color: var(--midnight, #2b1f28);
-    text-decoration: none;
-    box-shadow: 0 2px 4px rgb(0 0 0 / 6%), 0 14px 32px rgb(0 0 0 / 14%);
-    opacity: 0;
-    visibility: hidden;
-    transform: translate(-50%, 8px);
-    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
-  }
-  .showcase-figure:hover .showcase-pop,
-  .showcase-pop:focus-visible {
-    opacity: 1;
-    visibility: visible;
-    transform: translate(-50%, 0);
-    transition-delay: 0s;
-  }
-  .showcase-pop-name {
-    font: 500 1rem/1.3 var(--font-display), Georgia, serif;
-  }
-  .showcase-pop-price {
-    display: flex;
-    gap: 0.5rem;
-    align-items: baseline;
-    font: 600 0.9rem/1.3 var(--font-ui), sans-serif;
-  }
-  .showcase-pop-price s {
-    font-weight: 400;
-    opacity: 0.6;
-  }
-  .showcase-pop-cta {
-    margin-top: 0.3rem;
-    font: 500 0.66rem/1.3 var(--font-ui), sans-serif;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--brass-deep, var(--brass, #8a6a3a));
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .showcase-pop {
-    transition: none;
+    display: grid;
   }
 }
 

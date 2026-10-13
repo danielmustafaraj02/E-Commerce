@@ -2,17 +2,20 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { HeroProduct } from "@/lib/hero-concepts/products";
+import { popPosition } from "@/lib/pop-anchor";
 
-type Open = { slug: string; x: number; y: number; below: boolean };
+/** The open card: its piece, and where the pointer entered it (px, in the hero). */
+type Open = { slug: string; x: number; y: number };
 
 const pieceOf = (target: EventTarget | null) =>
   (target instanceof Element ? target.closest(".hc-piece[data-slug]") : null) as HTMLElement | null;
 
 /**
  * The product card of a hero piece: its name, price and a link to it. Opens on
- * hover with a mouse and on tap on a touch screen; closes on leaving, a tap
- * elsewhere, Escape, a resize or a change of rotating scene. One card per
- * hero, placed beside the piece and kept inside the hero's edges.
+ * hover with a mouse and on tap on a touch screen, just off the point where the
+ * pointer entered the piece (lib/pop-anchor.ts), and stays there while the
+ * pointer moves over that piece; it closes on leaving, a tap elsewhere,
+ * Escape, a resize or a change of rotating scene. One card per hero.
  *
  * The pieces themselves stay out of the keyboard and screen-reader order (the
  * hero's own button leads to the same pieces); the card is a shortcut for
@@ -28,33 +31,31 @@ export function PieceCards({
   const card = useRef<HTMLDivElement>(null);
   const hideTimer = useRef<number>(undefined);
   const [open, setOpen] = useState<Open | null>(null);
+  const openSlug = useRef<string | null>(null);
+  useEffect(() => {
+    openSlug.current = open?.slug ?? null;
+  }, [open]);
 
   useEffect(() => {
     const root = card.current?.closest(".hc") as HTMLElement | null;
     if (!root) return;
-    const show = (piece: HTMLElement) => {
+    const show = (piece: HTMLElement, event: { clientX: number; clientY: number }) => {
       const slug = piece.dataset.slug;
       if (!slug || !products[slug]) return;
       window.clearTimeout(hideTimer.current);
+      // Same piece: the card stays where it opened.
+      if (slug === openSlug.current) return;
       const r = root.getBoundingClientRect();
-      const p = piece.getBoundingClientRect();
-      // Below the piece when it sits in the top part of the hero, else above.
-      const below = p.top + p.height / 2 - r.top < r.height * 0.45;
-      setOpen({
-        slug,
-        x: p.left + p.width / 2 - r.left,
-        y: below ? p.bottom - r.top - p.height * 0.12 : p.top - r.top + p.height * 0.12,
-        below,
-      });
+      setOpen({ slug, x: event.clientX - r.left, y: event.clientY - r.top });
     };
     const hideSoon = () => {
       window.clearTimeout(hideTimer.current);
-      hideTimer.current = window.setTimeout(() => setOpen(null), 200);
+      hideTimer.current = window.setTimeout(() => setOpen(null), 220);
     };
     const over = (e: PointerEvent) => {
       if (e.pointerType !== "mouse") return;
       const piece = pieceOf(e.target);
-      if (piece) show(piece);
+      if (piece) show(piece, e);
       else if (card.current?.contains(e.target as Node)) window.clearTimeout(hideTimer.current);
     };
     const out = (e: PointerEvent) => {
@@ -65,7 +66,7 @@ export function PieceCards({
     };
     const click = (e: MouseEvent) => {
       const piece = pieceOf(e.target);
-      if (piece) show(piece);
+      if (piece) show(piece, e);
       else if (!card.current?.contains(e.target as Node)) setOpen(null);
     };
     const tapOutside = (e: PointerEvent) => {
@@ -92,31 +93,33 @@ export function PieceCards({
     };
   }, [products]);
 
-  // Keep the card inside the hero: measured once it has its size.
+  // Placed once the card has its content (and so its size).
   useLayoutEffect(() => {
     const el = card.current;
     const root = el?.closest(".hc") as HTMLElement | null;
     if (!el || !root || !open) return;
-    const margin = 12;
-    const w = el.offsetWidth;
-    const h = el.offsetHeight;
-    const left = Math.min(Math.max(open.x - w / 2, margin), root.clientWidth - w - margin);
-    const top = open.below
-      ? Math.min(open.y, root.clientHeight - h - margin)
-      : Math.max(open.y - h, margin);
-    el.style.left = `${left}px`;
-    el.style.top = `${top}px`;
+    const p = popPosition({
+      pointer: open,
+      card: { width: el.offsetWidth, height: el.offsetHeight },
+      container: { width: root.clientWidth, height: root.clientHeight },
+    });
+    el.style.left = `${p.left}px`;
+    el.style.top = `${p.top}px`;
+    el.style.setProperty("--pop-origin", p.origin);
   }, [open]);
 
-  const product = open ? products[open.slug] : null;
+  // The last piece stays in the card while it fades out.
+  const [shown, setShown] = useState<string | null>(null);
+  if (open && open.slug !== shown) setShown(open.slug);
+  const product = shown ? products[shown] : null;
   return (
-    <div ref={card} className="hc-card" data-open={product ? "true" : undefined}>
+    <div ref={card} className="pop-card" data-open={open ? "true" : undefined}>
       {product && (
         <>
-          <span className="hc-card-name">{product.name}</span>
-          <span className="hc-card-price">{product.soldOut ? labels.soldOut : product.price}</span>
-          <a className="hc-card-link" href={product.href}>
-            {labels.view} <span aria-hidden="true">→</span>
+          <span className="pop-card-name">{product.name}</span>
+          <span className="pop-card-price">{product.soldOut ? labels.soldOut : product.price}</span>
+          <a className="pop-card-cta" href={product.href}>
+            {labels.view} <span className="pop-card-cta-arrow" aria-hidden="true">→</span>
           </a>
         </>
       )}

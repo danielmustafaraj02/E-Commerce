@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link } from "@/components/localized-link";
 import { CatalogImage } from "@/components/catalog-image";
 import { useCartStore } from "@/lib/cart-store";
@@ -13,6 +13,7 @@ import type { LookView } from "@/lib/look-data";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { getLookPageCopy } from "@/lib/i18n/look-page-copy";
 import type { Locale } from "@/lib/i18n/locale-constants";
+import { popPosition } from "@/lib/pop-anchor";
 
 // "Complete the look" on the product page: the piece's matching set, all
 // pre-selected, priced as a set. The saving shown is computed the same way
@@ -42,14 +43,38 @@ export function CompleteTheLook({
     () => new Set(look.pieces.filter((p) => p.available).map((p) => p.productId))
   );
   const [added, setAdded] = useState(false);
-  /* Which piece's hover card is open in the composition (pointer devices). A
-     short close delay lets the pointer travel from the piece onto its card. */
-  const [hovered, setHovered] = useState<string | null>(null);
+  /* Which piece's hover card is open in the composition (pointer devices),
+     and where the pointer entered it: the card opens just off that point
+     (lib/pop-anchor.ts) and stays there while the pointer moves over the same
+     piece. A short close delay lets the pointer travel onto the card. */
+  const [hovered, setHovered] = useState<{ id: string; x: number; y: number } | null>(null);
+  const [cardPiece, setCardPiece] = useState<string | null>(null);
+  if (hovered && hovered.id !== cardPiece) setCardPiece(hovered.id);
   const closeTimer = useRef<number | undefined>(undefined);
-  const openCard = (id: string) => {
+  const visualRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const openCard = (id: string, event: { clientX: number; clientY: number }) => {
     window.clearTimeout(closeTimer.current);
-    setHovered(id);
+    const box = visualRef.current?.getBoundingClientRect();
+    if (!box) return;
+    setHovered((current) =>
+      current?.id === id ? current : { id, x: event.clientX - box.left, y: event.clientY - box.top }
+    );
   };
+  const keepCard = () => window.clearTimeout(closeTimer.current);
+  useLayoutEffect(() => {
+    const card = cardRef.current;
+    const visual = visualRef.current;
+    if (!card || !visual || !hovered) return;
+    const p = popPosition({
+      pointer: hovered,
+      card: { width: card.offsetWidth, height: card.offsetHeight },
+      container: { width: visual.clientWidth, height: visual.clientHeight },
+    });
+    card.style.left = `${p.left}px`;
+    card.style.top = `${p.top}px`;
+    card.style.setProperty("--pop-origin", p.origin);
+  }, [hovered]);
   const closeCard = () => {
     window.clearTimeout(closeTimer.current);
     closeTimer.current = window.setTimeout(() => setHovered(null), 180);
@@ -203,7 +228,12 @@ export function CompleteTheLook({
           ) : (
             // No styled photo: the pieces' own photos as one composition,
             // arranged by lib/look-composition.ts for whatever is selected.
-            <div className="look-visual" aria-hidden="true" data-sold-out={soldOut || undefined}>
+            <div
+              ref={visualRef}
+              className="look-visual"
+              aria-hidden="true"
+              data-sold-out={soldOut || undefined}
+            >
               {look.pieces.map((piece, i) =>
                 piece.imageUrl ? (
                   <div key={piece.productId} className="look-visual-slot">
@@ -211,7 +241,7 @@ export function CompleteTheLook({
                     className="look-visual-layer"
                     data-visible={placements[i].visible}
                     style={slotVars(placements[i].desktop, placements[i].mobile)}
-                    onMouseEnter={() => openCard(piece.productId)}
+                    onMouseEnter={(e) => openCard(piece.productId, e)}
                     onMouseLeave={closeCard}
                   >
                     <CatalogImage
@@ -225,32 +255,40 @@ export function CompleteTheLook({
                       }
                     />
                   </div>
-                  {/* The piece's card, on hover. Pointer devices only (CSS);
-                      the list beside the picture is the way in for keyboards,
-                      screen readers and touch, so the card's link is skipped
-                      in the tab order and the composition stays aria-hidden. */}
-                  {placements[i].visible && (
-                    <div
-                      className="look-pop"
-                      data-open={hovered === piece.productId ? "true" : undefined}
-                      style={slotVars(placements[i].desktop, placements[i].mobile)}
-                      onMouseEnter={() => openCard(piece.productId)}
-                      onMouseLeave={closeCard}
-                    >
-                      <span className="look-pop-name">{piece.name}</span>
-                      <span className="look-pop-price">
-                        {piece.available ? money(piece.price) : outOfStockLabel}
-                      </span>
-                      {piece.productId !== currentProductId && (
-                        <Link href={`/products/${piece.slug}`} className="look-pop-link" tabIndex={-1}>
-                          {getLookPageCopy(locale.slice(0, 2) as Locale).viewPiece} →
-                        </Link>
-                      )}
-                    </div>
-                  )}
                   </div>
                 ) : null
               )}
+              {/* The piece's card, on hover: the site-wide .pop-card. Pointer
+                  devices only (CSS); the list beside the picture is the way in
+                  for keyboards, screen readers and touch, so the card's link is
+                  skipped in the tab order and the composition stays aria-hidden. */}
+              {(() => {
+                const piece = look.pieces.find((p) => p.productId === cardPiece);
+                return (
+                  <div
+                    ref={cardRef}
+                    className="pop-card look-pop"
+                    data-open={hovered ? "true" : undefined}
+                    onMouseEnter={keepCard}
+                    onMouseLeave={closeCard}
+                  >
+                    {piece && (
+                      <>
+                        <span className="pop-card-name">{piece.name}</span>
+                        <span className="pop-card-price">
+                          {piece.available ? money(piece.price) : outOfStockLabel}
+                        </span>
+                        {piece.productId !== currentProductId && (
+                          <Link href={`/products/${piece.slug}`} className="pop-card-cta" tabIndex={-1}>
+                            {getLookPageCopy(locale.slice(0, 2) as Locale).viewPiece}{" "}
+                            <span className="pop-card-cta-arrow" aria-hidden="true">→</span>
+                          </Link>
+                        )}
+                      </>
+                    )}
+                  </div>
+                );
+              })()}
               <p className="look-visual-empty" data-visible={!anyShown}>
                 {dict.emptyState}
               </p>

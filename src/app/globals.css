@@ -1485,3 +1485,84 @@ h3 {
   padding-block: 0.3rem;
   margin-block: -0.3rem;
 }
+
+/* ── Product hover card ──────────────────────────────────────────────────────
+   One card for every place a piece can be pointed at: the hero, the
+   collections showcase and Complete the look. It opens just off the pointer
+   (lib/pop-anchor.ts), grows from the corner nearest it (--pop-origin, set
+   with the position) and stays put until the pointer leaves the piece. */
+.pop-card {
+  position: absolute;
+  z-index: 30;
+  display: grid;
+  gap: 0.2rem;
+  box-sizing: border-box;
+  width: max-content;
+  max-width: min(15rem, calc(100% - 1rem));
+  padding: 0.85rem 1.05rem 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--champagne, #d9c9a8) 80%, transparent);
+  border-radius: 0.5rem;
+  background: var(--ivory, #fbfaf6);
+  color: var(--midnight, #13233a);
+  text-align: start;
+  text-decoration: none;
+  box-shadow:
+    0 1px 2px rgb(0 0 0 / 5%),
+    0 16px 32px -12px rgb(10 24 44 / 32%);
+  opacity: 0;
+  visibility: hidden;
+  scale: 0.96;
+  transform-origin: var(--pop-origin, top left);
+  pointer-events: none;
+  transition:
+    opacity 0.18s ease,
+    scale 0.24s cubic-bezier(0.2, 0.7, 0.2, 1),
+    visibility 0s linear 0.24s;
+}
+.pop-card[data-open="true"] {
+  opacity: 1;
+  visibility: visible;
+  scale: 1;
+  pointer-events: auto;
+  transition-delay: 0s;
+}
+.pop-card-name {
+  font: 400 1.02rem/1.25 var(--font-display), Georgia, serif;
+  text-wrap: balance;
+}
+.pop-card-price {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+  font: 500 0.86rem/1.35 var(--font-ui), sans-serif;
+  opacity: 0.8;
+}
+.pop-card-price s {
+  font-weight: 400;
+  opacity: 0.65;
+}
+.pop-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.35rem;
+  color: var(--brass-deep, #8a6a3a);
+  font: 600 0.7rem/1.3 var(--font-ui), sans-serif;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.pop-card-cta-arrow {
+  transition: translate 0.2s ease;
+}
+.pop-card:hover .pop-card-cta-arrow,
+.pop-card-cta:focus-visible .pop-card-cta-arrow {
+  translate: 3px 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pop-card,
+  .pop-card-cta-arrow {
+    scale: 1;
+    transition: opacity 0.15s linear, visibility 0s linear 0.15s;
+  }
+}

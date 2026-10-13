@@ -5,6 +5,7 @@ import { showcaseImageVars, showcaseElementVars, type ShowcaseSceneOverride } fr
 import { useEffect, useRef } from "react";
 import { Link } from "@/components/localized-link";
 import { CatalogImage } from "@/components/catalog-image";
+import { popPosition } from "@/lib/pop-anchor";
 import { ShowcaseProgressRail } from "@/components/showcase-progress-rail";
 import {
   activeScene,
@@ -242,6 +243,48 @@ export function CollectionShowcase({
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     window.scrollTo({ top: target, behavior: reduce ? "auto" : "smooth" });
   };
+
+  /* Each scene's hover card (the site-wide .pop-card) opens just off the point
+     where the pointer entered the photograph and stays there until it leaves
+     (lib/pop-anchor.ts); keyboard focus on its link opens it near the foot. */
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const cleanups: (() => void)[] = [];
+    for (const figure of root.querySelectorAll<HTMLElement>(".showcase-figure")) {
+      const pop = figure.querySelector<HTMLElement>(".showcase-pop");
+      if (!pop) continue;
+      const openAt = (x: number, y: number) => {
+        const p = popPosition({
+          pointer: { x, y },
+          card: { width: pop.offsetWidth, height: pop.offsetHeight },
+          container: { width: figure.clientWidth, height: figure.clientHeight },
+        });
+        pop.style.left = `${p.left}px`;
+        pop.style.top = `${p.top}px`;
+        pop.style.setProperty("--pop-origin", p.origin);
+        pop.dataset.open = "true";
+      };
+      const enter = (e: PointerEvent) => {
+        if (e.pointerType !== "mouse") return;
+        const box = figure.getBoundingClientRect();
+        openAt(e.clientX - box.left, e.clientY - box.top);
+      };
+      const leave = () => delete pop.dataset.open;
+      const focus = () => openAt(figure.clientWidth / 2, figure.clientHeight * 0.7);
+      figure.addEventListener("pointerenter", enter);
+      figure.addEventListener("pointerleave", leave);
+      pop.addEventListener("focus", focus);
+      pop.addEventListener("blur", leave);
+      cleanups.push(() => {
+        figure.removeEventListener("pointerenter", enter);
+        figure.removeEventListener("pointerleave", leave);
+        pop.removeEventListener("focus", focus);
+        pop.removeEventListener("blur", leave);
+      });
+    }
+    return () => cleanups.forEach((cleanup) => cleanup());
+  }, [items]);
 
   /* Centre each piece on its colour block (see pieceOffset). Measured on load
      and again on resize, since the contained photograph's position depends on
@@ -810,13 +853,15 @@ export function CollectionShowcase({
                   className="showcase-image"
                 />
                 {item.piece && (
-                  <Link className="showcase-pop" href={item.piece.href}>
-                    <span className="showcase-pop-name">{item.piece.name}</span>
-                    <span className="showcase-pop-price">
+                  <Link className="pop-card showcase-pop" href={item.piece.href}>
+                    <span className="pop-card-name">{item.piece.name}</span>
+                    <span className="pop-card-price">
                       {item.piece.compare && <s>{item.piece.compare}</s>}
                       {item.piece.price}
                     </span>
-                    <span className="showcase-pop-cta">{item.piece.cta} →</span>
+                    <span className="pop-card-cta">
+                      {item.piece.cta} <span className="pop-card-cta-arrow" aria-hidden="true">→</span>
+                    </span>
                   </Link>
                 )}
               </div>
