@@ -39,6 +39,9 @@ import { PopularCarousel } from "@/components/popular-carousel";
 import { getAllLooks } from "@/lib/look-data";
 import { LooksEditorialList } from "@/components/looks-editorial-list";
 import { JournalPreview } from "@/components/journal/journal-preview";
+import { HeroConcept } from "@/components/hero-concepts/hero-concept";
+import { getLiveHeroConcept } from "@/lib/hero-concepts/live";
+import { heroCopy } from "@/lib/hero-concepts/copy";
 import { homeFontClasses } from "./home-fonts";
 import "./home.css";
 
@@ -125,7 +128,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
   ] = await Promise.all([getStoreSettings(), getLocale(), getHomepageData()]);
   // Staff overrides from Admin > Settings > Page text, per language.
   const dict = applyHomeCopy(getDictionary(locale), parseHomeCopy(settings.homeCopy)[locale]);
-  const looks = await getAllLooks(locale, 3);
+  const [looks, liveHero] = await Promise.all([getAllLooks(locale, 3), getLiveHeroConcept()]);
   const showcaseCopy = getShowcaseCopy(locale);
   const showcaseReasons = getShowcaseReasons(dict.home);
   const editorialCollections = COLLECTION_ORDER.flatMap((prefix) => {
@@ -472,11 +475,23 @@ export default async function Home({ searchParams }: PageProps<"/">) {
   // into the ground instead of sitting in cards.
   return (
     <main className={`shelf shelf-home flex flex-1 flex-col ${homeFontClasses}`}>
-      {homeEntries.map((entry) => (
-        <LayoutSection key={entry.id} entry={entry} preview={preview}>
-          {entry.custom ? null : homeSections[entry.id as HomeSectionId]}
-        </LayoutSection>
-      ))}
+      {homeEntries.map((entry) =>
+        // A hero concept published in Admin > Settings > Hero concepts takes
+        // the hero's place; the layout's own hero comes back when it is
+        // unpublished. The layout preview always shows the layout's hero.
+        entry.id === "hero" && liveHero && !preview ? (
+          <HeroConcept
+            key={entry.id}
+            concept={liveHero.concept}
+            config={liveHero.config}
+            copy={heroCopy(locale, settings.storeName, settings.homeCopy)}
+          />
+        ) : (
+          <LayoutSection key={entry.id} entry={entry} preview={preview}>
+            {entry.custom ? null : homeSections[entry.id as HomeSectionId]}
+          </LayoutSection>
+        )
+      )}
       {preview && <PreviewBridge target="home" />}
     </main>
   );
