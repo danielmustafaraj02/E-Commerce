@@ -9,6 +9,9 @@ import { muranoGlassModernRevival } from "@/content/journal/murano-glass-modern-
 import { howToRecognizeAuthenticMuranoGlass } from "@/content/journal/how-to-recognize-authentic-murano-glass";
 import { howToCareForMuranoGlassJewelry } from "@/content/journal/how-to-care-for-murano-glass-jewelry";
 import { thingsToDoInMurano } from "@/content/journal/things-to-do-in-murano";
+import { muranoGlassBraceletsBuyingGuide } from "@/content/journal/murano-glass-bracelets-buying-guide";
+import { muranoGlassNecklacesBuyingGuide } from "@/content/journal/murano-glass-necklaces-buying-guide";
+import { muranoGlassEarringsBuyingGuide } from "@/content/journal/murano-glass-earrings-buying-guide";
 
 // Newest first. Keep a dated series together in reading order, even when its
 // opening article is older and has only just been updated as part of the series.
@@ -22,6 +25,9 @@ const journalArticles: Article[] = [
   thingsToDoInMurano,
   howToRecognizeAuthenticMuranoGlass,
   howToCareForMuranoGlassJewelry,
+  muranoGlassNecklacesBuyingGuide,
+  muranoGlassBraceletsBuyingGuide,
+  muranoGlassEarringsBuyingGuide,
 ];
 
 const latestSeriesDate = journalArticles
