@@ -126,8 +126,11 @@ export function CompleteTheLook({
 
   // The showcase follows the same selection as the cards (one source of
   // truth): unselected pieces fade out and the rest move into a new layout.
+  // A look with nothing in stock can have nothing selected, which would leave
+  // an empty picture: show the whole composition (faded) instead.
+  const soldOut = look.pieces.every((p) => !p.available);
   const placements = lookComposition(
-    look.pieces.map((p) => ({ kind: p.kind, selected: selected.has(p.productId) }))
+    look.pieces.map((p) => ({ kind: p.kind, selected: soldOut || selected.has(p.productId) }))
   );
   const anyShown = placements.some((p) => p.visible);
   const slotVars = (d: Slot, m: Slot) =>
@@ -200,7 +203,7 @@ export function CompleteTheLook({
           ) : (
             // No styled photo: the pieces' own photos as one composition,
             // arranged by lib/look-composition.ts for whatever is selected.
-            <div className="look-visual" aria-hidden="true">
+            <div className="look-visual" aria-hidden="true" data-sold-out={soldOut || undefined}>
               {look.pieces.map((piece, i) =>
                 piece.imageUrl ? (
                   <div key={piece.productId} className="look-visual-slot">

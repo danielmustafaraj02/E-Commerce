@@ -1,1 +1,194 @@
-{}
+{
+  "/products/bracciali-in-vetro-di-murano/bangle-cremisi-3c2860.png": {
+    "model": "/products/gallery-2026-10/bangle-cremisi-3c2860-model.webp",
+    "detail": "/products/gallery-2026-10/bangle-cremisi-3c2860-detail.webp"
+  },
+  "/products/bracciali-in-vetro-di-murano/bracciale-avvolto-ambra-8b8166.png": {
+    "model": "/products/gallery-2026-10/bracciale-avvolto-ambra-8b8166-model.webp",
+    "detail": "/products/gallery-2026-10/bracciale-avvolto-ambra-8b8166-detail.webp"
+  },
+  "/products/bracciali-in-vetro-di-murano/bracciale-avvolto-chiaro-di-luna-07cf09.png": {
+    "model": "/products/gallery-2026-10/bracciale-avvolto-chiaro-di-luna-07cf09-model.webp",
+    "detail": "/products/gallery-2026-10/bracciale-avvolto-chiaro-di-luna-07cf09-detail.webp"
+  },
+  "/products/bracciali-in-vetro-di-murano/bracciale-avvolto-egeo-6bbcaa.png": {
+    "model": "/products/gallery-2026-10/bracciale-avvolto-egeo-6bbcaa-model.webp",
+    "detail": "/products/gallery-2026-10/bracciale-avvolto-egeo-6bbcaa-detail.webp"
+  },
+  "/products/bracciali-in-vetro-di-murano/bracciale-avvolto-polvere-di-stelle-f1788c.png": {
+    "model": "/products/gallery-2026-10/bracciale-avvolto-polvere-di-stelle-f1788c-model.webp",
+    "detail": "/products/gallery-2026-10/bracciale-avvolto-polvere-di-stelle-f1788c-detail.webp"
+  },
+  "/products/bracciali-in-vetro-di-murano/bracciale-avvolto-quarzo-rosa-f4920c.png": {
+    "model": "/products/gallery-2026-10/bracciale-avvolto-quarzo-rosa-f4920c-model.webp",
+    "detail": "/products/gallery-2026-10/bracciale-avvolto-quarzo-rosa-f4920c-detail.webp"
+  },
+  "/products/bracciali-in-vetro-di-murano/bracciale-avvolto-salvia-e-oro-fec6dc.png": {
+    "model": "/products/gallery-2026-10/bracciale-avvolto-salvia-e-oro-fec6dc-model.webp",
+    "detail": "/products/gallery-2026-10/bracciale-avvolto-salvia-e-oro-fec6dc-detail.webp"
+  },
+  "/products/bracciali-in-vetro-di-murano/bracciale-boccio-di-lilla-5a445c.png": {
+    "model": "/products/gallery-2026-10/bracciale-boccio-di-lilla-5a445c-model.webp",
+    "detail": "/products/gallery-2026-10/bracciale-boccio-di-lilla-5a445c-detail.webp"
+  },
+  "/products/bracciali-in-vetro-di-murano/bracciale-bolle-di-cielo-bee6fa.png": {
+    "model": "/products/gallery-2026-10/bracciale-bolle-di-cielo-bee6fa-model.webp",
+    "detail": "/products/gallery-2026-10/bracciale-bolle-di-cielo-bee6fa-detail.webp"
+  },
+  "/products/bracciali-in-vetro-di-murano/bracciale-caraibi-88bfe3.png": {
+    "model": "/products/gallery-2026-10/bracciale-caraibi-88bfe3-model.webp",
+    "detail": "/products/gallery-2026-10/bracciale-caraibi-88bfe3-detail.webp"
+  },
+  "/products/bracciali-in-vetro-di-murano/bracciale-carnevale-c35a85.png": {
+    "model": "/products/gallery-2026-10/bracciale-carnevale-c35a85-model.webp",
+    "detail": "/products/gallery-2026-10/bracciale-carnevale-c35a85-detail.webp"
+  },
+  "/products/bracciali-in-vetro-di-murano/bracciale-fiore-di-onice-1c6c6e.png": {
+    "model": "/products/gallery-2026-10/bracciale-fiore-di-onice-1c6c6e-model.webp",
+    "detail": "/products/gallery-2026-10/bracciale-fiore-di-onice-1c6c6e-detail.webp"
+  },
+  "/products/bracciali-in-vetro-di-murano/bracciale-foresta-dorata-37b0e2.png": {
+    "model": "/products/gallery-2026-10/bracciale-foresta-dorata-37b0e2-model.webp",
+    "detail": "/products/gallery-2026-10/bracciale-foresta-dorata-37b0e2-detail.webp"
+  },
+  "/products/bracciali-in-vetro-di-murano/bracciale-fuoco-di-granato-9ff520.png": {
+    "model": "/products/gallery-2026-10/bracciale-fuoco-di-granato-9ff520-model.webp",
+    "detail": "/products/gallery-2026-10/bracciale-fuoco-di-granato-9ff520-detail.webp"
+  },
+  "/products/bracciali-in-vetro-di-murano/bracciale-laguna-azzurra-5ae8cc.png": {
+    "model": "/products/gallery-2026-10/bracciale-laguna-azzurra-5ae8cc-model.webp",
+    "detail": "/products/gallery-2026-10/bracciale-laguna-azzurra-5ae8cc-detail.webp"
+  },
+  "/products/bracciali-in-vetro-di-murano/bracciale-polvere-d-oro-perlato-13ecaa.png": {
+    "model": "/products/gallery-2026-10/bracciale-polvere-d-oro-perlato-13ecaa-model.webp",
+    "detail": "/products/gallery-2026-10/bracciale-polvere-d-oro-perlato-13ecaa-detail.webp"
+  },
+  "/products/bracciali-in-vetro-di-murano/bracciale-polvere-d-oro-rosa-380f82.png": {
+    "model": "/products/gallery-2026-10/bracciale-polvere-d-oro-rosa-380f82-model.webp",
+    "detail": "/products/gallery-2026-10/bracciale-polvere-d-oro-rosa-380f82-detail.webp"
+  },
+  "/products/bracciali-in-vetro-di-murano/bracciale-rame-di-mezzanotte-ca793a.png": {
+    "model": "/products/gallery-2026-10/bracciale-rame-di-mezzanotte-ca793a-model.webp",
+    "detail": "/products/gallery-2026-10/bracciale-rame-di-mezzanotte-ca793a-detail.webp"
+  },
+  "/products/bracciali-in-vetro-di-murano/bracciale-rosa-toscana-735d23.png": {
+    "model": "/products/gallery-2026-10/bracciale-rosa-toscana-735d23-model.webp",
+    "detail": "/products/gallery-2026-10/bracciale-rosa-toscana-735d23-detail.webp"
+  },
+  "/products/collane-in-vetro-di-murano/collana-acquamarina-98782c.png": {
+    "model": "/products/gallery-2026-10/collana-acquamarina-98782c-model.webp",
+    "detail": "/products/gallery-2026-10/collana-acquamarina-98782c-detail.webp"
+  },
+  "/products/collane-in-vetro-di-murano/collana-ametista-9e7d11.png": {
+    "model": "/products/gallery-2026-10/collana-ametista-9e7d11-model.webp",
+    "detail": "/products/gallery-2026-10/collana-ametista-9e7d11-detail.webp"
+  },
+  "/products/collane-in-vetro-di-murano/collana-arcobaleno-216e66.png": {
+    "model": "/products/gallery-2026-10/collana-arcobaleno-216e66-model.webp",
+    "detail": "/products/gallery-2026-10/collana-arcobaleno-216e66-detail.webp"
+  },
+  "/products/collane-in-vetro-di-murano/collana-cielo-d-estate-4cf739.png": {
+    "model": "/products/gallery-2026-10/collana-cielo-d-estate-4cf739-model.webp",
+    "detail": "/products/gallery-2026-10/collana-cielo-d-estate-4cf739-detail.webp"
+  },
+  "/products/collane-in-vetro-di-murano/collana-fiamma-scarlatta-17effb.png": {
+    "model": "/products/gallery-2026-10/collana-fiamma-scarlatta-17effb-model.webp",
+    "detail": "/products/gallery-2026-10/collana-fiamma-scarlatta-17effb-detail.webp"
+  },
+  "/products/collane-in-vetro-di-murano/collana-fiore-notturno-15492b.png": {
+    "model": "/products/gallery-2026-10/collana-fiore-notturno-15492b-model.webp",
+    "detail": "/products/gallery-2026-10/collana-fiore-notturno-15492b-detail.webp"
+  },
+  "/products/collane-in-vetro-di-murano/collana-fucsia-reale-94d36e.png": {
+    "model": "/products/gallery-2026-10/collana-fucsia-reale-94d36e-model.webp",
+    "detail": "/products/gallery-2026-10/collana-fucsia-reale-94d36e-detail.webp"
+  },
+  "/products/collane-in-vetro-di-murano/collana-gemme-miste-6e735f.png": {
+    "model": "/products/gallery-2026-10/collana-gemme-miste-6e735f-model.webp",
+    "detail": "/products/gallery-2026-10/collana-gemme-miste-6e735f-detail.webp"
+  },
+  "/products/collane-in-vetro-di-murano/collana-notte-stellata-92b5fd.png": {
+    "model": "/products/gallery-2026-10/collana-notte-stellata-92b5fd-model.webp",
+    "detail": "/products/gallery-2026-10/collana-notte-stellata-92b5fd-detail.webp"
+  },
+  "/products/collane-in-vetro-di-murano/collana-onde-di-smeraldo-143dbf.png": {
+    "model": "/products/gallery-2026-10/collana-onde-di-smeraldo-143dbf-model.webp",
+    "detail": "/products/gallery-2026-10/collana-onde-di-smeraldo-143dbf-detail.webp"
+  },
+  "/products/collane-in-vetro-di-murano/collana-papavero-70d5a3.png": {
+    "model": "/products/gallery-2026-10/collana-papavero-70d5a3-model.webp",
+    "detail": "/products/gallery-2026-10/collana-papavero-70d5a3-detail.webp"
+  },
+  "/products/collane-in-vetro-di-murano/collana-peonia-dorata-46a3de.png": {
+    "model": "/products/gallery-2026-10/collana-peonia-dorata-46a3de-model.webp",
+    "detail": "/products/gallery-2026-10/collana-peonia-dorata-46a3de-detail.webp"
+  },
+  "/products/collane-in-vetro-di-murano/collana-perla-celeste-5e4eb6.png": {
+    "model": "/products/gallery-2026-10/collana-perla-celeste-5e4eb6-model.webp",
+    "detail": "/products/gallery-2026-10/collana-perla-celeste-5e4eb6-detail.webp"
+  },
+  "/products/collane-in-vetro-di-murano/collana-perla-rosa-antico-f396d8.png": {
+    "model": "/products/gallery-2026-10/collana-perla-rosa-antico-f396d8-model.webp",
+    "detail": "/products/gallery-2026-10/collana-perla-rosa-antico-f396d8-detail.webp"
+  },
+  "/products/collane-in-vetro-di-murano/collana-perla-rosa-e-salvia-ca0636.png": {
+    "model": "/products/gallery-2026-10/collana-perla-rosa-e-salvia-ca0636-model.webp",
+    "detail": "/products/gallery-2026-10/collana-perla-rosa-e-salvia-ca0636-detail.webp"
+  },
+  "/products/collane-in-vetro-di-murano/collana-rame-antico-85514c.png": {
+    "model": "/products/gallery-2026-10/collana-rame-antico-85514c-model.webp",
+    "detail": "/products/gallery-2026-10/collana-rame-antico-85514c-detail.webp"
+  },
+  "/products/collane-in-vetro-di-murano/collana-rubino-ff1b2a.png": {
+    "model": "/products/gallery-2026-10/collana-rubino-ff1b2a-model.webp",
+    "detail": "/products/gallery-2026-10/collana-rubino-ff1b2a-detail.webp"
+  },
+  "/products/collane-in-vetro-di-murano/collana-smeraldo-e-argento-a0dd26.png": {
+    "model": "/products/gallery-2026-10/collana-smeraldo-e-argento-a0dd26-model.webp",
+    "detail": "/products/gallery-2026-10/collana-smeraldo-e-argento-a0dd26-detail.webp"
+  },
+  "/products/collane-in-vetro-di-murano/collana-turchese-sfaccettato-8e4504.png": {
+    "model": "/products/gallery-2026-10/collana-turchese-sfaccettato-8e4504-model.webp",
+    "detail": "/products/gallery-2026-10/collana-turchese-sfaccettato-8e4504-detail.webp"
+  },
+  "/products/orecchini-in-vetro-di-murano/orecchini-blu-profondo-fa4c96.png": {
+    "model": "/products/gallery-2026-10/orecchini-blu-profondo-fa4c96-model.webp",
+    "detail": "/products/gallery-2026-10/orecchini-blu-profondo-fa4c96-detail.webp"
+  },
+  "/products/orecchini-in-vetro-di-murano/orecchini-foglia-di-menta-9c749a.png": {
+    "model": "/products/gallery-2026-10/orecchini-foglia-di-menta-9c749a-model.webp",
+    "detail": "/products/gallery-2026-10/orecchini-foglia-di-menta-9c749a-detail.webp"
+  },
+  "/products/orecchini-in-vetro-di-murano/orecchini-giardino-pastello-d650a2.png": {
+    "model": "/products/gallery-2026-10/orecchini-giardino-pastello-d650a2-model.webp",
+    "detail": "/products/gallery-2026-10/orecchini-giardino-pastello-d650a2-detail.webp"
+  },
+  "/products/orecchini-in-vetro-di-murano/orecchini-goccia-di-ghiaccio-51362e.png": {
+    "model": "/products/gallery-2026-10/orecchini-goccia-di-ghiaccio-51362e-model.webp",
+    "detail": "/products/gallery-2026-10/orecchini-goccia-di-ghiaccio-51362e-detail.webp"
+  },
+  "/products/orecchini-in-vetro-di-murano/orecchini-goccia-di-rubino.png": {
+    "model": "/products/orecchini-in-vetro-di-murano/orecchini-goccia-di-rubino-2.webp",
+    "detail": "/products/orecchini-in-vetro-di-murano/orecchini-goccia-di-rubino-4.webp"
+  },
+  "/products/orecchini-in-vetro-di-murano/orecchini-macchie-di-notte-871a65.png": {
+    "model": "/products/gallery-2026-10/orecchini-macchie-di-notte-871a65-model.webp",
+    "detail": "/products/gallery-2026-10/orecchini-macchie-di-notte-871a65-detail.webp"
+  },
+  "/products/orecchini-in-vetro-di-murano/orecchini-petalo-di-rosa-e081a0.png": {
+    "model": "/products/gallery-2026-10/orecchini-petalo-di-rosa-e081a0-model.webp",
+    "detail": "/products/gallery-2026-10/orecchini-petalo-di-rosa-e081a0-detail.webp"
+  },
+  "/products/orecchini-in-vetro-di-murano/orecchini-sassolino-di-onice-6bae0d.png": {
+    "model": "/products/gallery-2026-10/orecchini-sassolino-di-onice-6bae0d-model.webp",
+    "detail": "/products/gallery-2026-10/orecchini-sassolino-di-onice-6bae0d-detail.webp"
+  },
+  "/products/new-2026-10/orecchini-medaglioni-rosa-e-sabbia-ottobre-2026-1.jpg": {
+    "model": "/products/gallery-2026-10/orecchini-medaglioni-rosa-e-sabbia-ottobre-2026-model.webp",
+    "detail": "/products/gallery-2026-10/orecchini-medaglioni-rosa-e-sabbia-ottobre-2026-detail.webp"
+  },
+  "/products/new-2026-10/bracciale-medaglioni-turchesi-ottobre-2026-1.jpg": {
+    "model": "/products/gallery-2026-10/bracciale-medaglioni-turchesi-ottobre-2026-model.webp",
+    "detail": "/products/gallery-2026-10/bracciale-medaglioni-turchesi-ottobre-2026-detail.webp"
+  }
+}

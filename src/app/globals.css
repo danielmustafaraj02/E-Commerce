@@ -1475,3 +1475,13 @@ h3 {
   );
   pointer-events: none;
 }
+
+/* Standalone text links ("Read more", breadcrumbs, "Get in touch", source
+   titles; "All looks" has the same in shop.css) are only 17–20px tall. Padding above and below,
+   cancelled by an equal negative margin, gives each a hit area of at least
+   24px (WCAG 2.5.8 target size) without moving a single line of text. */
+:is(.journal-read-more, .journal-breadcrumb a, .shelf-link, .journal-source-heading a) {
+  display: inline-block;
+  padding-block: 0.3rem;
+  margin-block: -0.3rem;
+}

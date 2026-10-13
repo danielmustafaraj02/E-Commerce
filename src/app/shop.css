@@ -2793,6 +2793,12 @@ a.shop-line-name:focus-visible {
      with the transparent layer and leave the photo's white box visible. */
   mix-blend-mode: multiply;
 }
+/* Every piece of the look is out of stock: the composition still shows,
+   quieter (the piece list says why), rather than an empty stage. */
+.look-visual[data-sold-out] .look-visual-layer img {
+  /* Desaturated, not faded: fading lets the photo's pale ground show as a box. */
+  filter: grayscale(0.65);
+}
 /* Leaving: a little faster, fading and settling slightly smaller in place. */
 .look-visual-layer[data-visible="false"] {
   opacity: 0;
@@ -4051,7 +4057,10 @@ a.look-piece-name:focus-visible {
 .look-back {
   display: inline-flex;
   gap: 0.5rem;
-  margin-top: 1.25rem;
+  /* A 24px+ hit area; the margins keep the text where it was. */
+  padding-block: 0.3rem;
+  margin-top: 0.95rem;
+  margin-bottom: -0.3rem;
   color: var(--ink-soft);
   font-size: 0.75rem;
   font-weight: 500;
