@@ -1,10 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState, useSyncExternalStore, type CSSProperties } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
 import type { RotatingStyle } from "@/lib/hero-concepts/config";
 
 export type RotatingPiece = {
+  /** Set when the piece can open a product card. */
+  slug?: string;
   src: string;
   width: number;
   height: number;
@@ -52,6 +54,9 @@ export function RotatingPieces({
 }) {
   const [shown, setShown] = useState({ current: pin ?? 0, previous: -1 });
   const [held, setHeld] = useState(false);
+  // A mouse resting on a piece (its card may be open) holds the scene.
+  const [hovering, setHovering] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
   // A newly pinned scene moves in like any other change.
   const [lastPin, setLastPin] = useState(pin);
   if (pin !== lastPin) {
@@ -72,7 +77,12 @@ export function RotatingPieces({
     () => false
   );
   const running =
-    scenes.length > 1 && pin === undefined && !paused && !held && !reduced && !hidden;
+    scenes.length > 1 && pin === undefined && !paused && !held && !hovering && !reduced && !hidden;
+
+  // A new scene closes any open product card (its piece has just left).
+  useEffect(() => {
+    rootRef.current?.closest(".hc")?.dispatchEvent(new Event("hc-scene"));
+  }, [current]);
 
   useEffect(() => {
     if (!running) return;
@@ -85,7 +95,15 @@ export function RotatingPieces({
 
   return (
     <>
-      <div className="hc-rot" data-style={styleName}>
+      <div
+        ref={rootRef}
+        className="hc-rot"
+        data-style={styleName}
+        onPointerOver={(e) => {
+          if (e.pointerType === "mouse" && (e.target as Element).closest(".hc-piece")) setHovering(true);
+        }}
+        onPointerLeave={() => setHovering(false)}
+      >
         {scenes.map((pieces, s) => (
           <div
             key={s}
@@ -96,6 +114,7 @@ export function RotatingPieces({
               <div
                 key={i}
                 className="hc-piece hc-rot-piece"
+                data-slug={piece.slug}
                 style={
                   {
                     left: `${piece.x}%`,

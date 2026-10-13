@@ -14,7 +14,7 @@
 // Pages keep working while an original is still waiting to be converted or
 // archived: the app asks for the .webp (src/lib/public-image.ts) and a request
 // for a missing original is rewritten to its WebP (next.config.ts).
-import { existsSync, mkdirSync, readdirSync, renameSync, statSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, renameSync, statSync, watch } from "node:fs";
 import { basename, dirname, extname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -59,14 +59,16 @@ function archive(root, file) {
 
 export async function optimizeImages(
   root,
-  { archive: archiveOriginals = false, log = console.log } = {}
+  { archive: archiveOriginals = false, log = console.log, changedFiles = [] } = {}
 ) {
   const files = PHOTO_DIRS.flatMap((dir) => filesIn(join(root, "public", dir)));
   // A photo replaced after its conversion (same name, newer file) is converted again.
   const pending = files.filter(
     (file) =>
       PHOTO.test(file) &&
-      (!existsSync(webpPath(file)) || statSync(file).mtimeMs > statSync(webpPath(file)).mtimeMs)
+      (changedFiles.includes(file) ||
+        !existsSync(webpPath(file)) ||
+        statSync(file).mtimeMs > statSync(webpPath(file)).mtimeMs)
   );
   const result = { converted: 0, archived: 0, bytesBefore: 0, bytesAfter: 0 };
 
@@ -98,6 +100,61 @@ export async function optimizeImages(
     }
   }
   return result;
+}
+
+// Watch original photos only: writing a WebP must never trigger another conversion.
+export function watchImages(
+  root,
+  { debounceMs = 300, log = console.log, onError = console.error, onConverted = () => {} } = {}
+) {
+  const publicDir = join(root, "public");
+  mkdirSync(publicDir, { recursive: true });
+  const changed = new Set();
+  let timer;
+  let running;
+  let closed = false;
+  let retries = 0;
+  const schedule = () => {
+    clearTimeout(timer);
+    timer = setTimeout(convert, debounceMs);
+  };
+  const convert = () => {
+    if (closed || running) return;
+    const changedFiles = [...changed];
+    changed.clear();
+    running = optimizeImages(root, { log, changedFiles })
+      .then((result) => {
+        retries = 0;
+        if (result.converted) onConverted(result);
+      })
+      .catch((error) => {
+        onError(error);
+        // A file may still be copying when its first filesystem event arrives.
+        if (++retries < 3) changedFiles.forEach((file) => changed.add(file));
+      })
+      .finally(() => {
+        running = undefined;
+        if (!closed && changed.size) schedule();
+      });
+  };
+  const watcher = watch(publicDir, { recursive: true }, (_event, filename) => {
+    if (!filename) return;
+    const name = filename.toString();
+    if (!PHOTO_DIRS.includes(name.split(/[\\/]/)[0]) || !PHOTO.test(name)) return;
+    changed.add(join(publicDir, name));
+    retries = 0;
+    schedule();
+  });
+  watcher.on("error", onError);
+  schedule();
+  return {
+    async close() {
+      closed = true;
+      clearTimeout(timer);
+      watcher.close();
+      await running;
+    },
+  };
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

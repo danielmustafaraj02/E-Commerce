@@ -307,6 +307,90 @@
   display: none;
 }
 
+/* ---- Product cards (piece-cards.tsx) ----------------------------------------- */
+
+.hc {
+  position: relative;
+}
+/* With cards on, a piece answers the pointer: it lifts a little, the others
+   stay still. Waiting and leaving rotating scenes stay out of the way. */
+.hc[data-cards] .hc-piece[data-slug] {
+  pointer-events: auto;
+  cursor: pointer;
+}
+.hc[data-cards] .hc-rot-scene:not([data-state="active"]) .hc-piece {
+  pointer-events: none;
+}
+.hc[data-cards] .hc-piece[data-slug] img {
+  transition: scale 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+@media (hover: hover) {
+  .hc[data-cards] .hc-piece[data-slug]:hover img {
+    scale: 1.04;
+  }
+}
+.hc-card {
+  position: absolute;
+  z-index: 30;
+  display: grid;
+  gap: 0.15rem;
+  width: max-content;
+  max-width: min(16rem, calc(100% - 1.5rem));
+  padding: 0.8rem 1rem 0.85rem;
+  border: 1px solid color-mix(in srgb, var(--hc-ground) 18%, transparent);
+  background: #fbfaf6;
+  color: #13233a;
+  box-shadow: 0 0.75rem 2rem -1rem rgb(9 22 40 / 45%);
+  font-family: var(--font-ui);
+  opacity: 0;
+  translate: 0 6px;
+  pointer-events: none;
+  transition:
+    opacity 0.2s ease,
+    translate 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.hc-card[data-open] {
+  opacity: 1;
+  translate: 0 0;
+  pointer-events: auto;
+}
+.hc-card-name {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  line-height: 1.2;
+}
+.hc-card-price {
+  font-size: 0.85rem;
+  color: #46536a;
+}
+.hc-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 2.75rem;
+  margin-block: 0.2rem -0.65rem;
+  color: #13233a;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.hc-card-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
+}
+.hc-card-link:focus-visible {
+  outline: 2px solid #13233a;
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hc-card,
+  .hc[data-cards] .hc-piece[data-slug] img {
+    transition: none;
+  }
+}
+
 /* ---- Phones: a different composition, not a smaller one ------------------------- */
 
 @container hc (max-width: 47.99rem) {

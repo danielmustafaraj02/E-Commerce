@@ -27,7 +27,17 @@ export const cutoutFor = (slug: string) => BY_SLUG.get(slug);
 export const QUIET_CONTRAST = 40;
 export const isQuiet = (cutout: Pick<Cutout, "contrast">) => cutout.contrast < QUIET_CONTRAST;
 /** The wallpaper's pieces when none are chosen. */
-export const WALLPAPER_POOL = CUTOUTS.filter((cutout) => !isQuiet(cutout)).map((c) => c.slug);
+
+/** Pale or white glass the cut-out can't separate cleanly from its white
+ *  photo ground: fine in a picker, patchy when shown large on the blue. */
+const PATCHY = /chiaro-di-luna|perle-salvia|quadrati-miele|sabbia-e-notte|orecchini-perle-rosa/;
+/** Longest side, in pixels, a cut-out needs to stay crisp in the hero. */
+export const HERO_MIN_PIXELS = 700;
+/** Good enough to show large in a hero: sharp, clear of the blue, clean edges. */
+export const isHeroGrade = (cutout: Cutout) =>
+  Math.max(cutout.width, cutout.height) >= HERO_MIN_PIXELS && !isQuiet(cutout) && !PATCHY.test(cutout.slug);
+/** The wallpaper's pieces when none are chosen: hero-grade ones only. */
+export const WALLPAPER_POOL = CUTOUTS.filter(isHeroGrade).map((c) => c.slug);
 
 /** Where the draft lives: a row of the PageLayout key/value table, like the
  *  section drafts and block presets. */
@@ -95,6 +105,8 @@ export type WallpaperConfig = {
 export type HeroConceptsConfig = {
   /** The concept marked as the favourite; publishing is a separate step. */
   chosen: ConceptId | null;
+  /** Hovering (or tapping) a piece shows its name, price and a link to it. */
+  cards: boolean;
   minimal: MinimalConfig;
   rotating: RotatingConfig;
   wallpaper: WallpaperConfig;
@@ -121,6 +133,7 @@ export const LIMITS = {
 
 export const DEFAULTS: HeroConceptsConfig = {
   chosen: null,
+  cards: true,
   minimal: {
     slug: "collana-fiamma-scarlatta-17effb",
     x: 50,
@@ -230,6 +243,7 @@ export function parseHeroConcepts(value: unknown): HeroConceptsConfig {
 
   return {
     chosen: CONCEPTS.includes(raw.chosen as ConceptId) ? (raw.chosen as ConceptId) : null,
+    cards: typeof raw.cards === "boolean" ? raw.cards : d.cards,
     minimal: {
       slug: known(m.slug) ? m.slug : d.minimal.slug,
       x: num(m.x, LIMITS.position, d.minimal.x),
@@ -348,7 +362,7 @@ export const WALL_FRAMES: Record<"wide" | "tall", Frame> = {
 
 // Large pieces need a sharp photo; small ones prefer earrings (a pair reads
 // well small) and large ones round pieces (they read well big).
-const LARGE_MIN_PIXELS = 600;
+const LARGE_MIN_PIXELS = 900;
 const TIER_SHARES = [0.2, 0.35, 0.45];
 
 /**
@@ -456,4 +470,13 @@ export function wallpaperLayout(config: WallpaperConfig, shape: "wide" | "tall")
     });
   }
   return pieces;
+}
+
+/** The products a concept shows, for their cards (names and prices). */
+export function conceptSlugs(concept: ConceptId, config: HeroConceptsConfig): string[] {
+  if (concept === "minimal") return [config.minimal.slug];
+  if (concept === "rotating") return [...new Set(config.rotating.scenes.flatMap((s) => s.pieces.map((p) => p.slug)))];
+  return [
+    ...new Set([...wallpaperLayout(config.wallpaper, "wide"), ...wallpaperLayout(config.wallpaper, "tall")].map((p) => p.slug)),
+  ];
 }

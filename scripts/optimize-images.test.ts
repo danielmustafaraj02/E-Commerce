@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, mkdtempSync, rmSync, utimesSync, writeFileSync }
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import sharp from "sharp";
-import { optimizeImages } from "./optimize-images.mjs";
+import { optimizeImages, watchImages } from "./optimize-images.mjs";
 
 const roots: string[] = [];
 afterEach(() => roots.splice(0).forEach((root) => rmSync(root, { recursive: true, force: true })));
@@ -24,6 +24,41 @@ const photo = (width: number, height: number, alpha = 1) =>
 const run = (root: string, archive = false) => optimizeImages(root, { archive, log: () => {} });
 
 describe("optimizeImages", () => {
+  it("automatically converts new and replaced photos while watching", async () => {
+    const root = fixture();
+    const original = join(root, "public/products/rings/new.png");
+    const output = join(root, "public/products/rings/new.webp");
+    const errors: unknown[] = [];
+    let notify: (() => void) | undefined;
+    const watcher = watchImages(root, {
+      debounceMs: 30,
+      log: () => {},
+      onError: (error: unknown) => errors.push(error),
+      onConverted: () => notify?.(),
+    });
+    const converted = () =>
+      new Promise<void>((resolve) => {
+        notify = resolve;
+      });
+    try {
+      const added = converted();
+      await photo(32, 32).png().toFile(original);
+      await added;
+      expect((await sharp(output).metadata()).format).toBe("webp");
+
+      const replaced = converted();
+      await photo(48, 24).png().toFile(original);
+      // Even a replacement with an older preserved timestamp must be converted.
+      utimesSync(original, new Date(0), new Date(0));
+      await replaced;
+      expect(await sharp(output).metadata()).toMatchObject({ width: 48, height: 24 });
+      expect(errors).toEqual([]);
+      expect((await run(root)).converted).toBe(0);
+    } finally {
+      await watcher.close();
+    }
+  }, 10_000);
+
   it("converts photos to WebP, scaled to 2560px and stripped of metadata", async () => {
     const root = fixture();
     await photo(3000, 1000)

@@ -41,6 +41,8 @@ import { LooksEditorialList } from "@/components/looks-editorial-list";
 import { JournalPreview } from "@/components/journal/journal-preview";
 import { HeroConcept } from "@/components/hero-concepts/hero-concept";
 import { getLiveHeroConcept } from "@/lib/hero-concepts/live";
+import { heroProducts } from "@/lib/hero-concepts/products";
+import { conceptSlugs } from "@/lib/hero-concepts/config";
 import { heroCopy } from "@/lib/hero-concepts/copy";
 import { homeFontClasses } from "./home-fonts";
 import "./home.css";
@@ -129,6 +131,11 @@ export default async function Home({ searchParams }: PageProps<"/">) {
   // Staff overrides from Admin > Settings > Page text, per language.
   const dict = applyHomeCopy(getDictionary(locale), parseHomeCopy(settings.homeCopy)[locale]);
   const [looks, liveHero] = await Promise.all([getAllLooks(locale, 3), getLiveHeroConcept()]);
+  // The published hero concept's product cards (name, price, link), if it has them.
+  const liveHeroProducts =
+    liveHero?.config.cards && !preview
+      ? await heroProducts(conceptSlugs(liveHero.concept, liveHero.config), locale, settings.defaultLocale)
+      : undefined;
   const showcaseCopy = getShowcaseCopy(locale);
   const showcaseReasons = getShowcaseReasons(dict.home);
   const editorialCollections = COLLECTION_ORDER.flatMap((prefix) => {
@@ -484,6 +491,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
             key={entry.id}
             concept={liveHero.concept}
             config={liveHero.config}
+            products={liveHeroProducts}
             copy={heroCopy(locale, settings.storeName, settings.homeCopy)}
           />
         ) : (

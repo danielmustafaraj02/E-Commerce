@@ -31,6 +31,10 @@ const TOLERANCE = Number(process.env.CUTOUT_TOLERANCE ?? 36);
 // Enclosed white this large (a share of the photo) is the ground seen through a
 // bracelet or a necklace's loop; smaller patches are glints and stay.
 const HOLE_SHARE = 0.008;
+// A second, stricter pass: only nearly pure white, from this small share up —
+// the inside of lever-back hooks and gaps between chain links.
+const WHITE_HOLE_SHARE = 0.0012;
+const WHITE_HOLE_TOLERANCE = 8;
 // Opaque islands smaller than this share of the largest one are dust.
 const MIN_ISLAND_SHARE = 0.02;
 // White and milky glass reads as ground to the removal and comes out in pieces;
@@ -68,6 +72,59 @@ const SHADOW_FLOOR = 110;
 const SHADOW_STEP = 12;
 // How dark the shadow lands on the blue (1 = as dark as in the photo).
 const SHADOW_STRENGTH = 0.7;
+
+/**
+ * Cleans the outline. The removal leaves a rim of light, colourless pixels
+ * where the white ground bled into the piece's edge (a pale halo on the blue)
+ * and a stair-stepped edge that shows when a piece is drawn large. Peels up to
+ * two pixels of such rim, then softens the outline by one pixel.
+ */
+export function refineEdges(pixels: Uint8ClampedArray, width: number, height: number) {
+  const n = width * height;
+  const near = (i: number, test: (j: number) => boolean) => {
+    const x = i % width;
+    return (
+      (x > 0 && test(i - 1)) ||
+      (x < width - 1 && test(i + 1)) ||
+      (i >= width && test(i - width)) ||
+      (i < n - width && test(i + width))
+    );
+  };
+  const clear = (j: number) => pixels[j * 4 + 3] < 8;
+  for (let pass = 0; pass < 2; pass++) {
+    const peel: number[] = [];
+    for (let i = 0; i < n; i++) {
+      const o = i * 4;
+      if (pixels[o + 3] < 8) continue;
+      const min = Math.min(pixels[o], pixels[o + 1], pixels[o + 2]);
+      const max = Math.max(pixels[o], pixels[o + 1], pixels[o + 2]);
+      if (min > 205 && max - min < 28 && near(i, clear)) peel.push(i);
+    }
+    for (const i of peel) pixels[i * 4 + 3] = 0;
+  }
+  // One-pixel soften: an edge pixel takes the mean opacity of its 3×3 block.
+  const alpha = new Uint8ClampedArray(n);
+  for (let i = 0; i < n; i++) alpha[i] = pixels[i * 4 + 3];
+  for (let i = 0; i < n; i++) {
+    const x = i % width;
+    if (alpha[i] === 0 && !near(i, (j) => alpha[j] > 0)) continue;
+    if (alpha[i] > 0 && !near(i, (j) => alpha[j] === 0)) continue;
+    let sum = 0;
+    let count = 0;
+    for (let dy = -1; dy <= 1; dy++)
+      for (let dx = -1; dx <= 1; dx++) {
+        const xx = x + dx;
+        const j = i + dy * width + dx;
+        if (xx < 0 || xx >= width || j < 0 || j >= n) continue;
+        sum += alpha[j];
+        count++;
+      }
+    const soft = Math.round(sum / count);
+    // Only ever soften an opaque edge pixel; a cleared one keeps its colour
+    // channels (white), so it may not gain opacity.
+    if (alpha[i] > 0) pixels[i * 4 + 3] = Math.min(alpha[i], soft);
+  }
+}
 
 /** Clears dust: opaque islands too small to be part of the piece. */
 export function dropSpecks(pixels: Uint8ClampedArray, width: number, height: number) {
@@ -263,8 +320,19 @@ async function cut(file: string, slug: string) {
     TOLERANCE,
     Math.round(info.width * info.height * HOLE_SHARE)
   );
+  if (!PALE.has(slug)) {
+    const strict = removeWhiteBackground(
+      pixels,
+      info.width,
+      info.height,
+      WHITE_HOLE_TOLERANCE,
+      Math.round(info.width * info.height * WHITE_HOLE_SHARE)
+    );
+    pixels.set(strict);
+  }
   if (SHADOWED.test(file) && !PALE.has(slug)) softenShadows(pixels, info.width, info.height);
   dropSpecks(pixels, info.width, info.height);
+  refineEdges(pixels, info.width, info.height);
   // Trim to the piece, with a few pixels of air so a soft edge is not cut.
   const trimmed = await sharp(Buffer.from(pixels.buffer), {
     raw: { width: info.width, height: info.height, channels: 4 },

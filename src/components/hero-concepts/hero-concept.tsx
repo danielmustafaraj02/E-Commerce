@@ -8,6 +8,8 @@ import {
   type HeroConceptsConfig,
   type WallPiece,
 } from "@/lib/hero-concepts/config";
+import type { HeroProduct } from "@/lib/hero-concepts/products";
+import { PieceCards } from "./piece-cards";
 import { RotatingPieces, type RotatingPiece } from "./rotating-pieces";
 import "./hero-concepts.css";
 
@@ -19,6 +21,9 @@ export type HeroCopy = {
   ctaHref: string;
   pause: string;
   play: string;
+  /** The product card's link, and its note for a piece that is sold out. */
+  view: string;
+  soldOut: string;
 };
 
 /**
@@ -33,7 +38,8 @@ export type HeroCopy = {
  * The layout answers to its own width (container queries), not the window's,
  * so the admin can draw a true phone and a true computer side by side. The
  * pieces are decorative (alt="" and hidden from assistive technology): the
- * heading, text and button are the content, and always sit above them.
+ * heading, text and button are the content, and always sit above them. With
+ * `config.cards` and `products`, hovering or tapping a piece shows its card.
  */
 export function HeroConcept({
   concept,
@@ -41,6 +47,7 @@ export function HeroConcept({
   copy,
   paused = false,
   scene,
+  products,
   className,
   style,
 }: {
@@ -51,18 +58,24 @@ export function HeroConcept({
   paused?: boolean;
   /** Rotating only: show this scene and stay on it. */
   scene?: number;
+  /** Name, price and page of each piece shown, by slug, for the cards. */
+  products?: Record<string, HeroProduct>;
   className?: string;
   style?: CSSProperties;
 }) {
+  const cards = config.cards && products && Object.keys(products).length > 0 ? products : null;
+  // Pieces carry their slug only when they can open a card.
+  const slugFor = (slug: string) => (cards?.[slug] ? slug : undefined);
   return (
     <section
       className={["hc", className].filter(Boolean).join(" ")}
       data-concept={concept}
       data-paused={paused || undefined}
+      data-cards={cards ? "true" : undefined}
       style={style}
     >
       <div className="hc-stage">
-        {concept === "wallpaper" && <Wallpaper config={config} />}
+        {concept === "wallpaper" && <Wallpaper config={config} slugFor={slugFor} />}
         <div className="hc-copy">
           <p className="hc-eyebrow">
             <span>{copy.eyebrow}</span>
@@ -79,14 +92,19 @@ export function HeroConcept({
             </a>
           </p>
         </div>
-        {concept === "minimal" && <Minimal config={config} />}
-        {concept === "rotating" && <Rotating config={config} paused={paused} scene={scene} copy={copy} />}
+        {concept === "minimal" && <Minimal config={config} slugFor={slugFor} />}
+        {concept === "rotating" && (
+          <Rotating config={config} paused={paused} scene={scene} copy={copy} slugFor={slugFor} />
+        )}
       </div>
+      {cards && <PieceCards products={cards} labels={{ view: copy.view, soldOut: copy.soldOut }} />}
     </section>
   );
 }
 
-function Minimal({ config }: { config: HeroConceptsConfig }) {
+type SlugFor = (slug: string) => string | undefined;
+
+function Minimal({ config, slugFor }: { config: HeroConceptsConfig; slugFor: SlugFor }) {
   const m = config.minimal;
   const cutout = cutoutFor(m.slug);
   if (!cutout) return <div className="hc-media" aria-hidden="true" />;
@@ -106,6 +124,7 @@ function Minimal({ config }: { config: HeroConceptsConfig }) {
           } as CSSProperties
         }
         data-float={m.float || undefined}
+        data-slug={slugFor(m.slug)}
       >
         <div className="hc-float">
           <Image
@@ -130,11 +149,13 @@ function Rotating({
   paused,
   scene,
   copy,
+  slugFor,
 }: {
   config: HeroConceptsConfig;
   paused: boolean;
   scene?: number;
   copy: HeroCopy;
+  slugFor: SlugFor;
 }) {
   const r = config.rotating;
   const scenes = r.scenes
@@ -144,6 +165,7 @@ function Rotating({
         return cutout
           ? [
               {
+                slug: slugFor(piece.slug),
                 src: cutout.src,
                 width: cutout.width,
                 height: cutout.height,
@@ -171,17 +193,25 @@ function Rotating({
   );
 }
 
-function Wallpaper({ config }: { config: HeroConceptsConfig }) {
+function Wallpaper({ config, slugFor }: { config: HeroConceptsConfig; slugFor: SlugFor }) {
   const w = config.wallpaper;
   return (
     <div className="hc-wall" aria-hidden="true" data-entrance={w.entrance || undefined}>
-      <WallLayer pieces={wallpaperLayout(w, "wide")} shape="wide" />
-      <WallLayer pieces={wallpaperLayout(w, "tall")} shape="tall" />
+      <WallLayer pieces={wallpaperLayout(w, "wide")} shape="wide" slugFor={slugFor} />
+      <WallLayer pieces={wallpaperLayout(w, "tall")} shape="tall" slugFor={slugFor} />
     </div>
   );
 }
 
-function WallLayer({ pieces, shape }: { pieces: WallPiece[]; shape: "wide" | "tall" }) {
+function WallLayer({
+  pieces,
+  shape,
+  slugFor,
+}: {
+  pieces: WallPiece[];
+  shape: "wide" | "tall";
+  slugFor: SlugFor;
+}) {
   return (
     <div className={`hc-wall-layer hc-wall-${shape}`}>
       {pieces.map((piece, i) => {
@@ -190,6 +220,7 @@ function WallLayer({ pieces, shape }: { pieces: WallPiece[]; shape: "wide" | "ta
           <div
             key={i}
             className="hc-piece hc-wall-piece"
+            data-slug={slugFor(piece.slug)}
             style={
               {
                 left: `${piece.x}%`,
