@@ -226,18 +226,59 @@ export function getLookPageCopy(locale: Locale): LookPageCopy {
   return locale === "it" ? it : en;
 }
 
+/**
+ * Each look's own reason to choose it, keyed by the look's name without the
+ * collection suffix (" · Ottobre 2026"). "Handmade in Murano" is said only of
+ * the October 2026 looks, whose provenance is verified; discounts are left to
+ * the price badge beside the text.
+ */
+const LOOK_DESCRIPTIONS: Record<string, { en: string; it: string }> = {
+  "rosso rubino": {
+    en: "A red that reads from across the room, with gold veining that catches candlelight. The set for an anniversary, a dinner out or the December parties, and each piece holds its own when worn alone.",
+    it: "Un rosso che si nota da lontano, con venature d'oro che catturano la luce delle candele. Il set per un anniversario, una cena fuori o le feste di dicembre, e ogni pezzo sta benissimo anche da solo.",
+  },
+  "rosa e salvia": {
+    en: "Quiet enough for the office, soft enough for every day: pink and sage that sit kindly beside linen, denim and grey wool. An easy first set, and a gift that is hard to get wrong.",
+    it: "Discreto in ufficio, morbido ogni giorno: rosa e salvia che stanno bene con lino, denim e lana grigia. Un primo set facile da portare, e un regalo difficile da sbagliare.",
+  },
+  "medaglioni rosa e sabbia": {
+    en: "Rose and sand, the colours of a Venetian wall at sunset. Warm neutrals that go with camel, cream and denim, handmade in Murano and made to be worn daily rather than saved for best.",
+    it: "Rosa e sabbia, i colori di un muro veneziano al tramonto. Neutri caldi che si abbinano a cammello, panna e denim, fatti a mano a Murano e pensati per ogni giorno, non per il cassetto.",
+  },
+  "medaglioni turchesi": {
+    en: "The lagoon in summer: turquoise and azure that light up a white shirt or sun-warmed skin. A holiday set, handmade in Murano, that keeps the feeling going once you are home.",
+    it: "La laguna d'estate: turchese e azzurro che illuminano una camicia bianca o la pelle abbronzata. Un set da vacanza, fatto a mano a Murano, che porta quella sensazione anche a casa.",
+  },
+  "arabeschi sabbia e nero": {
+    en: "Black arabesques on sand, worked into the glass by hand on Murano. Graphic enough for black and white, warm enough for autumn: for someone who likes jewellery with a signature.",
+    it: "Arabeschi neri su fondo sabbia, lavorati a mano nel vetro a Murano. Abbastanza grafico per il bianco e nero, abbastanza caldo per l'autunno: per chi ama un gioiello con carattere.",
+  },
+  "arabeschi turchese e corallo": {
+    en: "Coral and turquoise swirls, handmade in Murano, so no two beads are quite alike. A statement set for someone who loves colour, and a conversation starter every time it is worn.",
+    it: "Volute corallo e turchese, fatte a mano a Murano, così nessuna perla è uguale all'altra. Un set che si fa notare, per chi ama il colore, e che fa conversazione ogni volta che si indossa.",
+  },
+  "sfere notte": {
+    en: "Lustrous black glass in simple round shapes: the little black dress of jewellery. It goes from a work blazer to evening wear, and makes an easy gift for someone with a minimal style. Handmade in Murano.",
+    it: "Vetro nero lucente in forme rotonde e semplici: il tubino nero dei gioielli. Passa dalla giacca da lavoro all'abito da sera, ed è un regalo facile per chi ha uno stile essenziale. Fatto a mano a Murano.",
+  },
+  "sfere rosso": {
+    en: "Glossy red spheres with gold-tone clasps and hooks: a confident touch of colour for a festive table, Valentine's Day, or simply a grey Monday. Light, easy to wear, handmade in Murano.",
+    it: "Sfere rosse lucide con chiusure e ganci dorati: un tocco di colore deciso per una tavola di festa, San Valentino o semplicemente un lunedì grigio. Leggeri, facili da portare, fatti a mano a Murano.",
+  },
+  "perle salvia": {
+    en: "Sage green in different sizes, like sea glass gathered on a Venetian shore. A calm, natural colour for linen and knitwear, and a thoughtful gift for someone who prefers understatement. Handmade in Murano.",
+    it: "Verde salvia in misure diverse, come vetro di mare raccolto su una riva veneziana. Un colore calmo e naturale per lino e maglieria, e un regalo pensato per chi ama la discrezione. Fatto a mano a Murano.",
+  },
+  "perle rosa": {
+    en: "Rose pink with a soft, pearly shine: romantic without being sweet. Lovely for a wedding guest or a bridesmaid, and gentle enough to wear every day after. Handmade in Murano.",
+    it: "Rosa con una luce morbida e perlata: romantico senza essere stucchevole. Perfetto per un'invitata a un matrimonio o una damigella, e delicato abbastanza da portarlo ogni giorno, dopo. Fatto a mano a Murano.",
+  },
+};
+
 export function getLookEditorialDescription(name: string, locale: Locale): string {
-  const descriptions: Record<string, { en: string; it: string }> = {
-    "rosso rubino": {
-      en: "Ruby red, across three pieces. Wear them together for a coordinated look, or let one take the lead.",
-      it: "Il rosso rubino, in tre gioielli. Indossali insieme per un look coordinato, oppure lascia protagonista un solo pezzo.",
-    },
-    "rosa e salvia": {
-      en: "Soft pink and sage green, in balance. Wear the three together, or choose a single accent for every day.",
-      it: "Rosa e verde salvia, in equilibrio. Indossa i tre gioielli insieme, oppure scegli un solo dettaglio per ogni giorno.",
-    },
-  };
-  const description = descriptions[name.trim().toLowerCase()];
+  // "Perle Rosa · Ottobre 2026" → "perle rosa"
+  const key = name.split("·")[0].trim().toLowerCase();
+  const description = LOOK_DESCRIPTIONS[key];
   return (
     description?.[locale === "it" ? "it" : "en"] ?? getLookPageCopy(locale).editorialDescription
   );
