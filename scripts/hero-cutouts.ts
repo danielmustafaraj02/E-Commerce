@@ -4,22 +4,88 @@
 //   npx tsx --env-file=.env.local scripts/hero-cutouts.ts [slug …]
 //
 // Every listed product's first studio photo (white ground, in public/products)
-// goes through the same white-ground removal the admin image editor uses
-// (src/lib/white-background.ts), is trimmed to the piece itself and saved as a
-// WebP with transparency in public/hero/cutouts/<slug>.<hash>.webp. The list
-// of what exists is written to src/lib/hero-concepts/cutouts.json, which the
-// concepts read, so a product without a cut-out simply isn't offered.
+// is cut out, trimmed to the piece and saved as a WebP with transparency in
+// public/hero/cutouts/<slug>.<hash>.webp. The list of what exists is written
+// to src/lib/hero-concepts/cutouts.json, which the concepts read, so a product
+// without a cut-out simply isn't offered.
+//
+// Cutting out: with the segmentation model available, it decides what is the
+// piece (it clears the ground trapped between beads and keeps white glass and
+// pearls whole); edge pixels then have the white ground un-mixed from their
+// colour. The model is a large download, so it is not a project dependency:
+//
+//   mkdir -p tmp/bgremove && cd tmp/bgremove && npm init -y &&
+//     npm install @imgly/background-removal-node@1.4.5 &&
+//     rm -rf node_modules/sharp && ln -s ../../../node_modules/sharp node_modules/sharp
+//
+// (the symlink replaces the package's own sharp, whose install scripts npm
+// skips). Point BG_REMOVAL_MODULE elsewhere if it lives somewhere else.
+// Without it the script falls back to the white-ground removal of the admin
+// image editor (src/lib/white-background.ts) with the extra passes below.
 //
 // Read-only on the database. Re-running replaces the files; pass slugs to redo
 // only those.
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import sharp from "sharp";
 import { db } from "../src/lib/db";
 import { publicImageSrc } from "../src/lib/public-image";
 import { removeWhiteBackground } from "../src/lib/white-background";
 
+type RemoveBackground = (image: Blob, config?: object) => Promise<Blob>;
+const MODEL_PATH =
+  process.env.BG_REMOVAL_MODULE ??
+  join(process.cwd(), "tmp/bgremove/node_modules/@imgly/background-removal-node/dist/index.cjs");
+let model: RemoveBackground | null | undefined;
+const MODEL_ALPHA_FLOOR = 16;
+/** The segmentation model, or null when it isn't installed. */
+async function loadModel() {
+  if (model !== undefined) return model;
+  try {
+    const mod = await import(MODEL_PATH);
+    model = (mod.removeBackground ?? mod.default?.removeBackground) as RemoveBackground;
+    console.log("using the segmentation model");
+  } catch {
+    model = null;
+    console.log("segmentation model not found; using the white-ground removal");
+  }
+  return model;
+}
+
+/**
+ * Cuts the piece out with the segmentation model: its mask decides what is the
+ * piece; the colours are the photo's own, with the white ground un-mixed from
+ * semi-transparent edge pixels so no pale fringe shows on the blue.
+ */
+async function cutWithModel(remove: RemoveBackground, rgba: Buffer, width: number, height: number) {
+  const png = await sharp(rgba, { raw: { width, height, channels: 4 } }).png().toBuffer();
+  const out = await remove(new Blob([new Uint8Array(png)], { type: "image/png" }), {
+    model: "medium",
+    // Its model files sit beside the module, wherever it was installed.
+    publicPath: `file://${dirname(MODEL_PATH)}/`,
+    output: { format: "image/png", quality: 1 },
+  });
+  const mask = await sharp(Buffer.from(await out.arrayBuffer()))
+    .resize(width, height, { fit: "fill" })
+    .ensureAlpha()
+    .extractChannel(3)
+    .raw()
+    .toBuffer();
+  const pixels = new Uint8ClampedArray(rgba);
+  for (let i = 0; i < width * height; i++) {
+    const o = i * 4;
+    // Faint traces (a ghost of the studio shadow) would stop the trim and
+    // tint the blue: below MODEL_ALPHA_FLOOR the pixel is ground.
+    const value = mask[i] < MODEL_ALPHA_FLOOR ? 0 : mask[i];
+    const a = value / 255;
+    pixels[o + 3] = value;
+    if (a > 0 && a < 1) {
+      for (let c = 0; c < 3; c++) pixels[o + c] = (pixels[o + c] - 255 * (1 - a)) / a;
+    }
+  }
+  return pixels;
+}
 const OUT_DIR = join(process.cwd(), "public/hero/cutouts");
 const MANIFEST = join(process.cwd(), "src/lib/hero-concepts/cutouts.json");
 // Long edge before removal. The product photos are smaller than this, so in
@@ -37,8 +103,8 @@ const WHITE_HOLE_SHARE = 0.0012;
 const WHITE_HOLE_TOLERANCE = 8;
 // Opaque islands smaller than this share of the largest one are dust.
 const MIN_ISLAND_SHARE = 0.02;
-// White and milky glass reads as ground to the removal and comes out in pieces;
-// these need a hand-made cut-out (the admin image editor) instead.
+// White and milky glass reads as ground to the white-ground removal and comes
+// out in pieces; without the segmentation model these are left out.
 const EXCLUDE = new Set([
   "bracciale-perle-salvia-ottobre-2026",
   "bracciale-quadrati-miele-ottobre-2026",
@@ -313,6 +379,12 @@ async function cut(file: string, slug: string) {
     .ensureAlpha()
     .raw()
     .toBuffer({ resolveWithObject: true });
+  const remove = await loadModel();
+  if (remove) {
+    const pixels = await cutWithModel(remove, data, info.width, info.height);
+    dropSpecks(pixels, info.width, info.height);
+    return save(pixels, info.width, info.height, slug);
+  }
   const pixels = removeWhiteBackground(
     new Uint8ClampedArray(data),
     info.width,
@@ -333,6 +405,12 @@ async function cut(file: string, slug: string) {
   if (SHADOWED.test(file) && !PALE.has(slug)) softenShadows(pixels, info.width, info.height);
   dropSpecks(pixels, info.width, info.height);
   refineEdges(pixels, info.width, info.height);
+  return save(pixels, info.width, info.height, slug);
+}
+
+/** Trims, encodes and writes a cut-out; returns its address and size. */
+async function save(pixels: Uint8ClampedArray, width: number, height: number, slug: string) {
+  const info = { width, height };
   // Trim to the piece, with a few pixels of air so a soft edge is not cut.
   const trimmed = await sharp(Buffer.from(pixels.buffer), {
     raw: { width: info.width, height: info.height, channels: 4 },
@@ -369,7 +447,8 @@ async function main() {
   });
 
   for (const product of products) {
-    if (EXCLUDE.has(product.slug)) {
+    // Only the white-ground removal fails on these; the model handles them.
+    if (EXCLUDE.has(product.slug) && !(await loadModel())) {
       clearCutouts(product.slug);
       bySlug.delete(product.slug);
       continue;

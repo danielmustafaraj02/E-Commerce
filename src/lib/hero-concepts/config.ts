@@ -28,14 +28,11 @@ export const QUIET_CONTRAST = 40;
 export const isQuiet = (cutout: Pick<Cutout, "contrast">) => cutout.contrast < QUIET_CONTRAST;
 /** The wallpaper's pieces when none are chosen. */
 
-/** Pale or white glass the cut-out can't separate cleanly from its white
- *  photo ground: fine in a picker, patchy when shown large on the blue. */
-const PATCHY = /chiaro-di-luna|perle-salvia|quadrati-miele|sabbia-e-notte|orecchini-perle-rosa/;
 /** Longest side, in pixels, a cut-out needs to stay crisp in the hero. */
 export const HERO_MIN_PIXELS = 700;
-/** Good enough to show large in a hero: sharp, clear of the blue, clean edges. */
+/** Good enough to show large in a hero: sharp and clear of the blue. */
 export const isHeroGrade = (cutout: Cutout) =>
-  Math.max(cutout.width, cutout.height) >= HERO_MIN_PIXELS && !isQuiet(cutout) && !PATCHY.test(cutout.slug);
+  Math.max(cutout.width, cutout.height) >= HERO_MIN_PIXELS && !isQuiet(cutout);
 /** The wallpaper's pieces when none are chosen: hero-grade ones only. */
 export const WALLPAPER_POOL = CUTOUTS.filter(isHeroGrade).map((c) => c.slug);
 
