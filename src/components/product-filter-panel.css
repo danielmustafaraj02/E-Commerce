@@ -63,12 +63,6 @@
   line-height: 1;
   letter-spacing: 0.01em;
 }
-.pf-active-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 999px;
-  background: var(--pf-gold);
-}
 .pf-toggle {
   flex: none;
   margin-inline-start: auto;
@@ -622,5 +616,78 @@ fieldset.pf-section > .pf-label {
   .pf-chart-bar {
     animation: none;
     transition: background-color 0.2s ease;
+  }
+}
+
+/* ── Applied as you choose (2026-10) ─────────────────────────────────────────
+   Without an "apply" button every control has to say plainly what it is and
+   whether it is on: darker labels and outlines, a filled colour ring with a
+   tick, and the number of active filters on the bar that opens the panel. */
+.pf-label {
+  color: var(--pf-ink);
+  font-weight: 600;
+}
+.pf-option {
+  border-color: color-mix(in srgb, var(--pf-ink) 28%, transparent);
+  color: var(--pf-ink);
+}
+.pf-active-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.35rem;
+  height: 1.35rem;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background: var(--pf-ink);
+  color: var(--ivory);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+.pf-bead:has(:checked) .pf-bead-glass {
+  box-shadow:
+    0 0 0 2px var(--pf-card),
+    0 0 0 4px var(--pf-ink),
+    0 1px 2px rgb(var(--midnight-rgb) / 0.18);
+}
+/* The tick sits on the bead, in white with a dark edge so it reads on the
+   pale beads (white, crystal, silver) as well as on the dark ones. */
+.pf-bead::after {
+  content: "";
+  position: absolute;
+  width: 0.36rem;
+  height: 0.68rem;
+  margin-top: -0.15rem;
+  border: solid var(--ivory);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) scale(0.6);
+  opacity: 0;
+  filter: drop-shadow(0 0 1px rgb(var(--midnight-rgb) / 0.9));
+  pointer-events: none;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+.pf-bead:has(:checked)::after {
+  opacity: 1;
+  transform: rotate(45deg) scale(1);
+}
+.pf-stock .pf-check {
+  border-color: var(--pf-ink);
+}
+.pf-clear {
+  display: inline-block;
+  padding-block: 0.4rem;
+  font-size: 0.86rem;
+  color: var(--pf-ink);
+}
+/* The "apply" button only exists without JavaScript (inside <noscript>). */
+.pf-form > .pf-submit {
+  margin-top: 1rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pf-bead::after {
+    transition: none;
   }
 }

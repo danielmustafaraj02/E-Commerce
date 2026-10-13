@@ -13,26 +13,23 @@ import { db } from "@/lib/db";
 import { getStoreSettings, ogImage } from "@/lib/store-settings";
 import { getLocale, type Locale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-import { localizedName, localizedCardProduct } from "@/lib/product-i18n";
+import { localizedName } from "@/lib/product-i18n";
 import { toSafeJsonLd } from "@/lib/json-ld";
 import { hreflangAlternates, localizedCanonical } from "@/lib/hreflang";
-import { ShelfItem } from "@/components/shelf-item";
 import { homeFontClasses } from "@/app/home-fonts";
 import "../home.css";
 import "../shop.css";
 import { ProductFilterPanel } from "@/components/product-filter-panel";
 import { Pagination } from "@/components/pagination";
 import { isProductColorKey } from "@/lib/product-colors";
-import { getGiftVoucherCopy } from "@/lib/gift-voucher-copy";
 import { getShopCopy } from "@/lib/i18n/shop-copy";
-import { applyTemplate } from "@/lib/i18n/format";
+import { formatMoney } from "@/lib/format";
+import { activeFilterChips, clearFiltersHref, listingHref, type SortKey } from "@/lib/shop-filters";
+import { ActiveFilters, ShopGrid, ShopToolbar, listingRatings } from "@/components/shop-listing";
 import { getShippingBanner } from "@/lib/shipping-banner";
 import { NEW_COLLECTION, getNewCollectionCopy } from "@/lib/new-collection";
 
 const PAGE_SIZE = 12;
-
-// Omitted = newest first, the order the catalog already used.
-type SortKey = "price-asc" | "price-desc";
 
 const filtersSchema = z.object({
   // `.catch`: a mangled ?sort= only drops the sort, instead of failing the
@@ -244,31 +241,19 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
     .slice((filters.page - 1) * PAGE_SIZE, filters.page * PAGE_SIZE)
     .map((p) => p.id);
 
-  // One grouped query for the ratings of just this page's pieces; a piece with
-  // no reviews has no row, so it simply shows no stars.
-  const [pageProducts, ratingRows] = pageIds.length
-    ? await Promise.all([
-        db.product.findMany({
+  // Just this page's pieces, and their ratings (a piece with no reviews simply
+  // shows no stars).
+  const [pageProducts, ratingById] = await Promise.all([
+    pageIds.length
+      ? db.product.findMany({
           where: { id: { in: pageIds } },
           include: { images: { take: 1, orderBy: { position: "asc" } } },
-        }),
-        db.review.groupBy({
-          by: ["productId"],
-          where: { productId: { in: pageIds } },
-          _avg: { rating: true },
-          _count: { _all: true },
-        }),
-      ])
-    : [[], []];
+        })
+      : [],
+    listingRatings(pageIds),
+  ]);
   const productById = new Map(pageProducts.map((p) => [p.id, p]));
   const products = pageIds.map((id) => productById.get(id)!).filter(Boolean);
-  const ratingById = new Map(
-    ratingRows.flatMap((row) =>
-      row._avg.rating === null
-        ? []
-        : [[row.productId, { average: row._avg.rating, count: row._count._all }] as const]
-    )
-  );
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
@@ -277,27 +262,8 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
   const newCollection = filters.collection === "new" ? getNewCollectionCopy(uiLocale) : null;
   const basePath = newCollection ? NEW_COLLECTION.path : "/products";
 
-  // Keeps every active filter; `page` is left out when it is not given, so a
-  // sort link always lands back on page 1.
-  const buildHref = ({ page, sort }: { page?: number; sort?: SortKey }) => {
-    const params = new URLSearchParams();
-    if (filters.q) params.set("q", filters.q);
-    for (const category of filters.category ?? []) params.append("category", category);
-    if (filters.minPrice !== undefined) params.set("minPrice", String(filters.minPrice));
-    if (filters.maxPrice !== undefined) params.set("maxPrice", String(filters.maxPrice));
-    if (filters.inStock) params.set("inStock", filters.inStock);
-    if (filters.sale) params.set("sale", filters.sale);
-    for (const color of filters.color ?? []) params.append("color", color);
-    if (sort) params.set("sort", sort);
-    if (page !== undefined) params.set("page", String(page));
-    return params.size ? `${basePath}?${params.toString()}` : basePath;
-  };
-  const buildPageHref = (page: number) => buildHref({ page, sort: filters.sort });
-  const sortOptions: { key: SortKey | undefined; label: string; short: string }[] = [
-    { key: undefined, label: shopCopy.sortNewest, short: shopCopy.sortNewestShort },
-    { key: "price-asc", label: shopCopy.sortPriceAsc, short: shopCopy.sortPriceAscShort },
-    { key: "price-desc", label: shopCopy.sortPriceDesc, short: shopCopy.sortPriceDescShort },
-  ];
+  const buildPageHref = (page: number) => listingHref(basePath, filters, page);
+  const sortHref = (sort?: SortKey) => listingHref(basePath, { ...filters, sort });
 
   // Only for the plain, unfiltered catalog view — a search/filter result is
   // a thin, high-cardinality slice that isn't worth asserting as a
@@ -325,11 +291,21 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
       : null;
 
   // "Clear filters" keeps the search and the sale view, just drops the rest.
-  const clearParams = new URLSearchParams();
-  if (filters.q) clearParams.set("q", filters.q);
-  if (filters.sale) clearParams.set("sale", filters.sale);
-  if (filters.sort) clearParams.set("sort", filters.sort);
-  const clearHref = clearParams.size ? `${basePath}?${clearParams.toString()}` : basePath;
+  const clearHref = clearFiltersHref(basePath, filters);
+  const categoryNames = new Map(categories.map((c) => [c.slug, localizedName(c, uiLocale)]));
+  const money = (euros: number) =>
+    formatMoney(Math.round(euros * 100), settings.defaultCurrency, settings.defaultLocale);
+  const chips = activeFilterChips(basePath, filters, {
+    category: (slug) => categoryNames.get(slug) ?? slug,
+    color: (key) => (isProductColorKey(key) ? dict.products.colors[key] : key),
+    price: `${money(filters.minPrice ?? priceMin)} – ${money(filters.maxPrice ?? priceMax)}`,
+    inStock: dict.products.inStockOnly,
+  });
+  const intro = newCollection
+    ? newCollection.intro
+    : filters.sale
+      ? shopCopy.saleIntro
+      : shopCopy.catalogIntro;
 
   const sections: Record<ProductsSectionId, ReactNode> = {
     head: (
@@ -344,7 +320,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
                   ? dict.home.specialSelectionTitle
                   : dict.products.allProducts}
           </h1>
-          {newCollection && !filters.q && <p className="shop-intro">{newCollection.intro}</p>}
+          {!filters.q && <p className="shop-intro">{intro}</p>}
           {/* The reassurances a shopper looks for before committing, in the
               store's own already-translated copy (the product page uses the
               same strings): shipping first, since it is the strongest one.
@@ -359,33 +335,6 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
     ),
     list: (
       <>
-        {!filters.q && !filters.category?.length && !filters.sale && !newCollection && filters.page === 1 && (
-          <nav
-            className="shelf-wrap shelf-wrap--wide shop-chips shop-catalog-paths"
-            aria-label={dict.footer.shopHeading}
-          >
-            {categories.map((category) => (
-              <Link key={category.id} href={`/category/${category.slug}`} className="shop-chip">
-                {localizedName(category, uiLocale)}
-              </Link>
-            ))}
-            <Link href="/gift-finder" className="shop-chip">
-              {dict.giftFinder.metaTitle}
-            </Link>
-            <Link href="/gift-card" className="shop-chip">
-              {getGiftVoucherCopy(uiLocale).purchaseLabel}
-            </Link>
-            {settings.giftCardEnabled && (
-              <Link href="/personalised-gift-card" className="shop-chip">
-                {dict.giftCard.productName}
-              </Link>
-            )}
-            <Link href="/murano-glass" className="shop-chip">
-              {dict.footer.muranoGuide}
-            </Link>
-          </nav>
-        )}
-
         <div className="shelf-wrap shelf-wrap--wide shop-layout">
           <ProductFilterPanel
             dict={dict.products}
@@ -409,6 +358,15 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
           />
 
           <section className="shop-results">
+            {products.length > 0 && (
+              <ShopToolbar total={total} copy={shopCopy} sort={filters.sort} sortHref={sortHref} />
+            )}
+            <ActiveFilters
+              chips={chips}
+              clearHref={clearHref}
+              copy={shopCopy}
+              clearLabel={dict.products.clearFilters}
+            />
             {products.length === 0 ? (
               // A dead end loses the shopper; hand them a way back instead.
               <div className="shop-empty">
@@ -433,70 +391,13 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
                 </div>
               </div>
             ) : (
-              <>
-                <div className="shop-toolbar">
-                  <p className="shop-count" aria-live="polite">
-                    {shopCopy.pieceCount(total)}
-                  </p>
-                  {total > 1 && (
-                    <nav className="shop-sort" aria-label={shopCopy.sortLabel}>
-                      <span className="shop-sort-label" aria-hidden="true">
-                        {shopCopy.sortLabel}
-                      </span>
-                      <ul>
-                        {sortOptions.map((option) => (
-                          <li key={option.key ?? "newest"}>
-                            <Link
-                              href={buildHref({ sort: option.key })}
-                              // Same catalog, reordered: nothing for a crawler to follow.
-                              rel="nofollow"
-                              aria-current={filters.sort === option.key ? "true" : undefined}
-                              className="shop-sort-link"
-                            >
-                              <span className="shop-sort-full">{option.label}</span>
-                              <span className="shop-sort-short" aria-hidden="true">
-                                {option.short}
-                              </span>
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </nav>
-                  )}
-                </div>
-                <ul className="shop-grid">
-                  {products.map((product) => {
-                    const rating = ratingById.get(product.id);
-                    // Untracked pieces have no real stock count, so never claim one.
-                    const lowStock =
-                      product.trackInventory &&
-                      product.stockQty > 0 &&
-                      product.stockQty <= product.lowStockThreshold;
-                    return (
-                      <ShelfItem
-                        key={product.slug}
-                        product={localizedCardProduct(product, uiLocale)}
-                        locale={settings.defaultLocale}
-                        outOfStockLabel={dict.product.outOfStock}
-                        quickAddLabel={dict.product.addToCart}
-                        addedLabel={dict.product.added}
-                        sizes="(min-width: 40rem) 20vw, 50vw"
-                        rating={
-                          rating && {
-                            ...rating,
-                            label: `${rating.average.toFixed(1)}/5 · ${applyTemplate(dict.product.reviewCount, { n: rating.count })}`,
-                          }
-                        }
-                        scarcityLabel={
-                          lowStock
-                            ? applyTemplate(dict.product.onlyLeft, { n: product.stockQty })
-                            : undefined
-                        }
-                      />
-                    );
-                  })}
-                </ul>
-              </>
+              <ShopGrid
+                products={products}
+                ratings={ratingById}
+                locale={uiLocale}
+                catalogLocale={settings.defaultLocale}
+                dict={dict}
+              />
             )}
 
             <Pagination

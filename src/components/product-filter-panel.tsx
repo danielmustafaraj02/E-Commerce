@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { FilterForm } from "@/components/filter-form";
 import { Link } from "@/components/localized-link";
 import { PriceRangeSlider } from "@/components/price-range-slider";
 import { PRODUCT_COLOR_KEYS, PRODUCT_COLOR_SWATCH } from "@/lib/product-colors";
@@ -10,7 +11,9 @@ type Category = { id: string; slug: string; name: string };
 
 // Shared by /products (all categories, with a category picker) and
 // /category/[slug] (already scoped to one category, so the picker is
-// hidden) — same price-range + in-stock filtering either way.
+// hidden) — same price-range + in-stock filtering either way. Every filter
+// applies as soon as it changes (components/filter-form.tsx); there is no
+// "apply" button unless JavaScript is off.
 //
 // Desktop: always expanded, no collapse — filters are visible and
 // adjustable at a glance. Sticky (sm:self-start keeps it from stretching
@@ -66,13 +69,19 @@ export function ProductFilterPanel({
   /** "1 piece in this range" / "{n} pieces in this range". */
   rangeLabels?: { one: string; many: string };
 }) {
-  const hasActiveFilters = Boolean(
-    (showCategory && filters.category?.length) ||
-    filters.minPrice !== undefined ||
-    filters.maxPrice !== undefined ||
-    filters.inStock ||
-    filters.color?.length
-  );
+  const activeCount =
+    (showCategory ? (filters.category?.length ?? 0) : 0) +
+    (filters.color?.length ?? 0) +
+    (filters.minPrice !== undefined || filters.maxPrice !== undefined ? 1 : 0) +
+    (filters.inStock ? 1 : 0);
+  const hasActiveFilters = activeCount > 0;
+  // The current selection, for the form to re-tick its boxes after a
+  // navigation it did not make itself.
+  const selected = new URLSearchParams([
+    ...(filters.category ?? []).map((value) => ["category", value]),
+    ...(filters.color ?? []).map((value) => ["color", value]),
+    ...(filters.inStock ? [["inStock", filters.inStock]] : []),
+  ]).toString();
 
   return (
     <aside
@@ -101,7 +110,11 @@ export function ProductFilterPanel({
             <path d="M4 6h16M7 12h10M10 18h4" />
           </svg>
           <span className="pf-title">{dict.filtersTitle}</span>
-          {hasActiveFilters && <span className="pf-active-dot" aria-hidden="true" />}
+          {hasActiveFilters && (
+            <span className="pf-active-count" aria-hidden="true">
+              {activeCount}
+            </span>
+          )}
           {/* Phones only: the panel collapses there, so the header toggles it. */}
           <svg
             width="18"
@@ -131,7 +144,7 @@ export function ProductFilterPanel({
           </svg>
         </label>
 
-        <form method="GET" className="pf-form">
+        <FilterForm selected={selected} className="pf-form">
           {filters.q && <input type="hidden" name="q" value={filters.q} />}
           {filters.sale && <input type="hidden" name="sale" value={filters.sale} />}
           {filters.sort && <input type="hidden" name="sort" value={filters.sort} />}
@@ -207,22 +220,25 @@ export function ProductFilterPanel({
             {dict.inStockOnly}
           </label>
 
-          <div className="pf-actions">
+          {/* Without JavaScript nothing applies on its own: the button is back. */}
+          <noscript>
             <button type="submit" className="pf-submit">
               {dict.applyFilters}
               <span aria-hidden="true">→</span>
             </button>
-            {hasActiveFilters && (
-              <Link href={clearHref} className="pf-clear">
+          </noscript>
+          {hasActiveFilters && (
+            <div className="pf-actions">
+              <Link href={clearHref} rel="nofollow" scroll={false} className="pf-clear">
                 {dict.clearFilters}
               </Link>
-            )}
-          </div>
+            </div>
+          )}
 
           <p className="pf-signature" aria-hidden="true" translate="no">
             Vetri di Murano
           </p>
-        </form>
+        </FilterForm>
       </div>
     </aside>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as Slider from "@radix-ui/react-slider";
 import { formatMoney } from "@/lib/format";
 
@@ -37,10 +37,29 @@ export function PriceRangeSlider({
   const sliderMax = hasRange ? max : max + 1;
   const step = Math.max(1, Math.round((sliderMax - sliderMin) / 100));
 
-  const [value, setValue] = useState<[number, number]>([
+  const initial = (): [number, number] => [
     Math.max(sliderMin, Math.min(defaultMin ?? sliderMin, sliderMax)),
     Math.min(sliderMax, Math.max(defaultMax ?? sliderMax, sliderMin)),
-  ]);
+  ];
+  const [value, setValue] = useState<[number, number]>(initial);
+  // A new range from the page (a filter removed above the grid, "clear
+  // filters", back/forward) moves the handles to it.
+  const fromPage = `${defaultMin}|${defaultMax}|${sliderMin}|${sliderMax}`;
+  const [shown, setShown] = useState(fromPage);
+  if (shown !== fromPage) {
+    setShown(fromPage);
+    setValue(initial());
+  }
+
+  // Letting go of a handle applies the range (components/filter-form.tsx),
+  // once the hidden fields below hold it; arrow keys settle first.
+  const root = useRef<HTMLDivElement>(null);
+  const [commits, setCommits] = useState(0);
+  useEffect(() => {
+    if (!commits) return;
+    const timer = window.setTimeout(() => root.current?.closest("form")?.requestSubmit(), 250);
+    return () => window.clearTimeout(timer);
+  }, [commits]);
 
   /* Equal price bands retain the real counts. Occupied bars have a small
      visual floor so a rare price group is distinct from an empty band;
@@ -57,7 +76,7 @@ export function PriceRangeSlider({
   const inRange = (prices ?? []).filter((p) => p >= value[0] - 0.005 && p <= value[1] + 0.005).length;
 
   return (
-    <div className="pf-price">
+    <div ref={root} className="pf-price">
       <div className="pf-price-values">
         <span>{formatMoney(Math.round(value[0] * 100), currency, locale)}</span>
         <span className="pf-price-sep">{separatorLabel}</span>
@@ -103,6 +122,7 @@ export function PriceRangeSlider({
         minStepsBetweenThumbs={0}
         value={value}
         onValueChange={(next) => setValue([next[0], next[1]])}
+        onValueCommit={() => setCommits((n) => n + 1)}
       >
         <Slider.Track className="pf-slider-track">
           <Slider.Range className="pf-slider-range" />
@@ -117,8 +137,10 @@ export function PriceRangeSlider({
         </p>
       )}
 
-      <input type="hidden" name="minPrice" value={value[0]} />
-      <input type="hidden" name="maxPrice" value={value[1]} />
+      {/* A handle at its end of the track is no limit at all, so it sends
+          nothing (and lights no "active filter"). */}
+      {value[0] > sliderMin && <input type="hidden" name="minPrice" value={value[0]} />}
+      {value[1] < sliderMax && <input type="hidden" name="maxPrice" value={value[1]} />}
     </div>
   );
 }

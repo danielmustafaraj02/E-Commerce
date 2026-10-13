@@ -8,30 +8,34 @@ import { withPageMeta } from "@/lib/page-meta";
 import { siteBaseUrl } from "@/lib/site-url";
 import { cache } from "react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { getStoreSettings, ogImage } from "@/lib/store-settings";
 import { getLocale, type Locale } from "@/lib/i18n/locale";
-import { getShopCopy } from "@/lib/i18n/shop-copy";
+import { categoryIntro, getShopCopy } from "@/lib/i18n/shop-copy";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-import { localizedName, localizedDescription, localizedCardProduct } from "@/lib/product-i18n";
+import { localizedName, localizedDescription } from "@/lib/product-i18n";
 import { firstParagraph, paragraphs, truncateAtWord } from "@/lib/text";
 import { toSafeJsonLd } from "@/lib/json-ld";
 import { hreflangAlternates, localizedCanonical } from "@/lib/hreflang";
-import { ShelfItem } from "@/components/shelf-item";
 import { homeFontClasses } from "@/app/home-fonts";
 import "../../home.css";
 import "../../shop.css";
+import { Link } from "@/components/localized-link";
 import { ProductFilterPanel } from "@/components/product-filter-panel";
 import { Pagination } from "@/components/pagination";
 import { isProductColorKey } from "@/lib/product-colors";
-import { getGiftVoucherCopy } from "@/lib/gift-voucher-copy";
+import { formatMoney } from "@/lib/format";
+import { getShippingBanner } from "@/lib/shipping-banner";
+import { activeFilterChips, clearFiltersHref, listingHref, type SortKey } from "@/lib/shop-filters";
+import { ActiveFilters, ShopGrid, ShopToolbar, listingRatings } from "@/components/shop-listing";
 
 const PAGE_SIZE = 12;
 
 const filtersSchema = z.object({
+  // Same orders as /products; a mangled ?sort= only drops the sort.
+  sort: z.enum(["price-asc", "price-desc"]).optional().catch(undefined),
   minPrice: z.coerce.number().nonnegative().optional(),
   maxPrice: z.coerce.number().nonnegative().optional(),
   inStock: z.enum(["1"]).optional(),
@@ -130,7 +134,7 @@ async function baseMetadata({
   // (?page=2 with nothing else) is genuinely different products, so it gets a
   // self-referencing canonical — same rule as /products.
   const page = Array.isArray(raw.page) ? raw.page[0] : raw.page;
-  const isPlainPagination = !raw.minPrice && !raw.maxPrice && !raw.inStock && !raw.color;
+  const isPlainPagination = !raw.minPrice && !raw.maxPrice && !raw.inStock && !raw.color && !raw.sort;
   const canonical =
     isPlainPagination && page && /^[2-9]\d*$|^1\d+$/.test(page)
       ? `/category/${category.slug}?page=${page}`
@@ -189,6 +193,7 @@ export default async function CategoryPage({
     maxPrice: single(raw.maxPrice),
     inStock: single(raw.inStock),
     color: colorValues.length ? colorValues : undefined,
+    sort: single(raw.sort),
     page: single(raw.page),
   });
   const filters = parsed.success ? parsed.data : { page: 1 };
@@ -204,6 +209,11 @@ export default async function CategoryPage({
   const shopCopy = getShopCopy(uiLocale);
   const categoryName = localizedName(category, uiLocale);
   const copy = localizedDescription(category, uiLocale);
+  const shippingBanner = await getShippingBanner(
+    dict.product.shippingBanner,
+    settings.defaultCurrency,
+    settings.defaultLocale
+  );
 
   const where = {
     active: true,
@@ -221,7 +231,8 @@ export default async function CategoryPage({
 
   // See src/app/products/page.tsx for why this doesn't just add stockQty
   // to the Prisma orderBy — pushes out-of-stock items to the end of the
-  // grid instead of leaving them wherever createdAt puts them.
+  // grid instead of leaving them wherever createdAt puts them. Price sorts
+  // break ties newest-first, as there.
   // Every price in the current selection, but not narrowed by the price
   // filter itself: the chart above the price slider shows the whole spread
   // the shopper is choosing from (as on /products).
@@ -229,7 +240,12 @@ export default async function CategoryPage({
   const [allMatchingIds, priceBounds, chartRows] = await Promise.all([
     db.product.findMany({
       where,
-      orderBy: { createdAt: "desc" },
+      orderBy:
+        filters.sort === "price-asc"
+          ? [{ price: "asc" }, { createdAt: "desc" }]
+          : filters.sort === "price-desc"
+            ? [{ price: "desc" }, { createdAt: "desc" }]
+            : [{ createdAt: "desc" }],
       select: { id: true, stockQty: true },
     }),
     db.product.aggregate({
@@ -248,12 +264,15 @@ export default async function CategoryPage({
     .slice((filters.page - 1) * PAGE_SIZE, filters.page * PAGE_SIZE)
     .map((p) => p.id);
 
-  const pageProducts = pageIds.length
-    ? await db.product.findMany({
-        where: { id: { in: pageIds } },
-        include: { images: { take: 1, orderBy: { position: "asc" } } },
-      })
-    : [];
+  const [pageProducts, ratingById] = await Promise.all([
+    pageIds.length
+      ? db.product.findMany({
+          where: { id: { in: pageIds } },
+          include: { images: { take: 1, orderBy: { position: "asc" } } },
+        })
+      : [],
+    listingRatings(pageIds),
+  ]);
   const productById = new Map(pageProducts.map((p) => [p.id, p]));
   const products = pageIds.map((id) => productById.get(id)!).filter(Boolean);
 
@@ -262,15 +281,19 @@ export default async function CategoryPage({
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
-  const buildPageHref = (page: number) => {
-    const params = new URLSearchParams();
-    if (filters.minPrice !== undefined) params.set("minPrice", String(filters.minPrice));
-    if (filters.maxPrice !== undefined) params.set("maxPrice", String(filters.maxPrice));
-    if (filters.inStock) params.set("inStock", filters.inStock);
-    for (const color of filters.color ?? []) params.append("color", color);
-    params.set("page", String(page));
-    return `/category/${category.slug}?${params.toString()}`;
-  };
+  const basePath = `/category/${category.slug}`;
+  const buildPageHref = (page: number) => listingHref(basePath, filters, page);
+  const sortHref = (sort?: SortKey) => listingHref(basePath, { ...filters, sort });
+  const clearHref = clearFiltersHref(basePath, filters);
+  const money = (euros: number) =>
+    formatMoney(Math.round(euros * 100), settings.defaultCurrency, settings.defaultLocale);
+  const chips = activeFilterChips(basePath, filters, {
+    category: (slug) => slug,
+    color: (key) => (isProductColorKey(key) ? dict.products.colors[key] : key),
+    price: `${money(filters.minPrice ?? priceMin)} – ${money(filters.maxPrice ?? priceMax)}`,
+    inStock: dict.products.inStockOnly,
+  });
+  const intro = categoryIntro(shopCopy, category.slug);
 
   const base = siteBaseUrl(settings);
   const categoryUrl = `${base}/category/${category.slug}`;
@@ -306,34 +329,17 @@ export default async function CategoryPage({
       <header className="shop-head">
         <div className="shelf-wrap shelf-wrap--wide">
           <h1 className="shop-title">{categoryName}</h1>
+          {intro && <p className="shop-intro">{intro}</p>}
+          {shippingBanner && <p className="shop-promise">{shippingBanner}</p>}
           {category.children.length > 0 && (
             <div className="shop-chips">
               {category.children.map((child) => (
-                <a key={child.id} href={`/category/${child.slug}`} className="shop-chip">
+                <Link key={child.id} href={`/category/${child.slug}`} className="shop-chip">
                   {localizedName(child, uiLocale)}
-                </a>
+                </Link>
               ))}
             </div>
           )}
-          <nav className="shop-chips" aria-label={dict.footer.shopHeading}>
-            <Link href="/products" className="shop-chip">
-              {dict.footer.allProducts}
-            </Link>
-            <Link href="/gift-finder" className="shop-chip">
-              {dict.giftFinder.metaTitle}
-            </Link>
-            <Link href="/gift-card" className="shop-chip">
-              {getGiftVoucherCopy(uiLocale).purchaseLabel}
-            </Link>
-            {settings.giftCardEnabled && (
-              <Link href="/personalised-gift-card" className="shop-chip">
-                {dict.giftCard.productName}
-              </Link>
-            )}
-            <Link href="/murano-glass" className="shop-chip">
-              {dict.footer.muranoGuide}
-            </Link>
-          </nav>
         </div>
       </header>
     ),
@@ -348,7 +354,7 @@ export default async function CategoryPage({
             priceMax={priceMax}
             currency={settings.defaultCurrency}
             locale={settings.defaultLocale}
-            clearHref={`/category/${category.slug}`}
+            clearHref={clearHref}
             priceLabels={{
               min: dict.feedback.minPriceLabel,
               max: dict.feedback.maxPriceLabel,
@@ -358,6 +364,15 @@ export default async function CategoryPage({
           />
 
           <section className="shop-results">
+            {products.length > 0 && (
+              <ShopToolbar total={total} copy={shopCopy} sort={filters.sort} sortHref={sortHref} />
+            )}
+            <ActiveFilters
+              chips={chips}
+              clearHref={clearHref}
+              copy={shopCopy}
+              clearLabel={dict.products.clearFilters}
+            />
             {products.length === 0 ? (
               <p className="shelf-note">
                 {total === 0 &&
@@ -370,19 +385,13 @@ export default async function CategoryPage({
                   : dict.products.noResults}
               </p>
             ) : (
-              <ul className="shop-grid">
-                {products.map((product) => (
-                  <ShelfItem
-                    key={product.slug}
-                    product={localizedCardProduct(product, uiLocale)}
-                    locale={settings.defaultLocale}
-                    outOfStockLabel={dict.product.outOfStock}
-                    quickAddLabel={dict.product.addToCart}
-                    addedLabel={dict.product.added}
-                    sizes="(min-width: 40rem) 20vw, 50vw"
-                  />
-                ))}
-              </ul>
+              <ShopGrid
+                products={products}
+                ratings={ratingById}
+                locale={uiLocale}
+                catalogLocale={settings.defaultLocale}
+                dict={dict}
+              />
             )}
 
             <Pagination
