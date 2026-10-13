@@ -12,6 +12,7 @@
 import { parseBuilder, type BuilderDoc } from "@/lib/section-builder";
 import { BOLD_TEMPLATE_IDS, EDITORIAL_TEMPLATE_META } from "@/lib/look-templates";
 import { ARTICLE_OPENING_TEMPLATES, OPENING_DESCRIPTIONS, openingNumber } from "@/lib/journal/opening";
+import { ARTICLE_LIST } from "@/lib/journal/article-list";
 import {
   CUSTOM_ID_RE,
   MAX_CUSTOM_CSS,
@@ -321,6 +322,20 @@ export const LOOK_OPTIONS = [
   LOOK_CTA_OPTION,
 ] as const;
 
+/** The home page Journal section's three places: each one either the next
+ *  newest article (the default) or an article chosen here. */
+export const JOURNAL_PICK_KEYS = ["article1", "article2", "article3"] as const;
+export const JOURNAL_PICK_OPTIONS: OptionDef[] = JOURNAL_PICK_KEYS.map((key, i) => ({
+  key,
+  label: `Article ${i + 1}`,
+  hint: i === 0 ? "Leave on “Newest” to fill the place with the latest article" : undefined,
+  type: "choice" as const,
+  choices: [
+    { value: "newest", label: "Newest (automatic)" },
+    ...ARTICLE_LIST.map((article) => ({ value: article.slug, label: article.title })),
+  ],
+}));
+
 /** Home page sections, top to bottom. The hero and the collections showcase
  *  come first like they always did, but are ordinary sections now: they can be
  *  hidden, restyled, replaced with a design or edited as HTML. */
@@ -343,7 +358,12 @@ export const HOME_SECTIONS = [
   { id: "faq", label: "FAQ", hint: "Shipping, returns, care" },
   { id: "giftFinder", label: "Gift finder banner", hint: "Call to action to the gift finder" },
   { id: "testimonials", label: "Customer reviews", hint: "Real reviews only" },
-  { id: "journal", label: "Journal", hint: "Latest blog articles" },
+  {
+    id: "journal",
+    label: "Journal",
+    hint: "Three blog articles: the latest, or the ones you choose",
+    options: JOURNAL_PICK_OPTIONS,
+  },
   { id: "newsletter", label: "Newsletter", hint: "Signup with discount" },
 ] as const satisfies readonly SectionMeta[];
 

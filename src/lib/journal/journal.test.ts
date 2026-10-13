@@ -105,3 +105,12 @@ describe("readingMinutes", () => {
     for (const article of ARTICLES) expect(readingMinutes(article)).toBeGreaterThanOrEqual(1);
   });
 });
+
+describe("ARTICLE_LIST", () => {
+  it("lists every built-in article by its own title", async () => {
+    const { ARTICLE_LIST } = await import("./article-list");
+    expect(Object.fromEntries(ARTICLE_LIST.map((a) => [a.slug, a.title]))).toEqual(
+      Object.fromEntries(ARTICLES.map((a) => [a.slug, a.title]))
+    );
+  });
+});

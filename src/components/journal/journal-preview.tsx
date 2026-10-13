@@ -11,8 +11,19 @@ import type { Locale } from "@/lib/i18n/locale";
 const PREVIEW_COUNT = 3;
 const FALLBACK_IMAGE = "/hero/handmade-red-murano-glass-necklace.webp";
 
-export async function JournalPreview({ locale }: { locale: Locale }) {
-  const articles = (await getAllArticles()).slice(0, PREVIEW_COUNT).map((article) =>
+/** The articles to show: each place takes its chosen article (`picks`, by
+ *  slug, from the page layout) or else the newest one not already shown. */
+export function previewArticles<T extends { slug: string }>(all: T[], picks: (string | undefined)[]): T[] {
+  const chosen = picks.map((slug) => all.find((article) => article.slug === slug));
+  const used = new Set(chosen.flatMap((article) => (article ? [article.slug] : [])));
+  const rest = all.filter((article) => !used.has(article.slug));
+  return Array.from({ length: PREVIEW_COUNT }, (_, i) => chosen[i] ?? rest.shift()).filter(
+    (article): article is T => !!article
+  );
+}
+
+export async function JournalPreview({ locale, picks = [] }: { locale: Locale; picks?: (string | undefined)[] }) {
+  const articles = previewArticles(await getAllArticles(), picks).map((article) =>
     localizeArticle(article, locale)
   );
   const products = await getJournalProducts(

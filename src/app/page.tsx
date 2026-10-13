@@ -1,7 +1,13 @@
 import { withPageMeta } from "@/lib/page-meta";
 import { type CSSProperties, type ReactNode } from "react";
 import { applyHomeCopy, parseHomeCopy } from "@/lib/home-copy";
-import { HOME_SECTIONS, resolveLayout, withEditorialExamples, type HomeSectionId } from "@/lib/page-layout";
+import {
+  HOME_SECTIONS,
+  JOURNAL_PICK_KEYS,
+  resolveLayout,
+  withEditorialExamples,
+  type HomeSectionId,
+} from "@/lib/page-layout";
 import { getSharedLookOptions } from "@/lib/page-layout-store";
 import { showcasePieces } from "@/lib/showcase-pieces";
 import { homeValueFaq } from "@/lib/i18n/home-values-copy";
@@ -179,6 +185,8 @@ export default async function Home({ searchParams }: PageProps<"/">) {
   // filtered out first, the seed guard never sees them and re-injects the
   // deleted section on every render. Visible filtering happens after.
   const storedEntries = resolveLayout(settings.homeLayout, HOME_SECTIONS);
+  // The articles chosen for the Journal section (Page layout › Journal).
+  const journalOptions = storedEntries.find((entry) => entry.id === "journal")?.options;
   // The chosen Look layout (Admin > Page layout > Looks > Options), one template
   // for the home page and the Looks page. Both this and `storedEntries` above
   // MUST be declared before `homeSections`: that object literal is evaluated
@@ -455,7 +463,10 @@ export default async function Home({ searchParams }: PageProps<"/">) {
         </section>
       ),
     journal: (
-      <JournalPreview locale={locale} />
+      <JournalPreview
+        locale={locale}
+        picks={JOURNAL_PICK_KEYS.map((key) => journalOptions?.[key])}
+      />
 ),
     newsletter: (
       <section className="shelf-newsletter shelf-section">
