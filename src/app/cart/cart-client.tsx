@@ -199,7 +199,9 @@ export function CartClient({
               <button
                 type="button"
                 onClick={() => handleRemove(item)}
-                className="text-foreground/60 hover:text-danger mt-1 text-xs underline-offset-2 transition-colors hover:underline"
+                // The padding makes a 44px-tall tap target; the negative
+                // margins keep the word exactly where it was.
+                className="text-foreground/60 hover:text-danger -mx-2 -mt-2 -mb-3 px-2 py-3 text-xs underline-offset-2 transition-colors hover:underline"
               >
                 {dict.remove}
               </button>

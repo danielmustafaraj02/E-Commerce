@@ -398,7 +398,9 @@
 }
 .gc-final-preview {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* minmax(0, …): a plain 1fr will not shrink below the card's content, which
+     pushed the back past the screen edge on 320px phones. */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.75rem;
   padding: 1.5rem 1rem;
   background: var(--ivory);

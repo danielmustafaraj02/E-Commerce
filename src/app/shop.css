@@ -70,6 +70,32 @@
   border-color: var(--accent);
   color: var(--ivory);
 }
+/* Phones: the catalogue's paths (categories, gift finder, vouchers, guide)
+   are one row you swipe, not five wrapped rows above the first product. The
+   row is the full-width .shelf-wrap, so it scrolls edge to edge and keeps
+   the page gutter as its padding. */
+@media (max-width: 39.99rem) {
+  .shop-catalog-paths {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+    scroll-padding-inline: var(--page-gutter);
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .shop-catalog-paths::-webkit-scrollbar {
+    display: none;
+  }
+  .shop-catalog-paths .shop-chip {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    white-space: nowrap;
+    scroll-snap-align: start;
+  }
+}
 
 /* -- Listing: filter sidebar + grid ---------------------------------------- */
 
@@ -556,7 +582,7 @@
 .shop-value-row {
   color: var(--aventurine-deep);
   margin: 0 0 0.9rem;
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -932,7 +958,7 @@
   vertical-align: middle;
   margin-inline-start: 0.6rem;
   color: var(--aventurine-deep);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -2217,7 +2243,7 @@ a.shop-line-name:focus-visible {
   background: rgb(var(--midnight-rgb) / 82%);
   color: var(--ivory);
   font-family: var(--font-ui), system-ui, sans-serif;
-  font-size: 0.62rem;
+  font-size: 0.72rem;
   font-weight: 500;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -3179,7 +3205,10 @@ a.look-piece-name:focus-visible {
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.1em;
+  line-height: 1.35;
   text-transform: uppercase;
+  /* On a narrow phone the label takes two lines; balance them. */
+  text-wrap: balance;
   box-shadow: none;
   transition:
     background-color 0.2s ease,
@@ -3287,7 +3316,7 @@ a.look-piece-name:focus-visible {
   font-family: var(--font-ui), system-ui, sans-serif;
 }
 .shop-delivery-estimate-label {
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -3310,7 +3339,7 @@ a.look-piece-name:focus-visible {
   font-family: var(--font-ui), system-ui, sans-serif;
 }
 .shop-ship-to-label {
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -3380,7 +3409,7 @@ a.look-piece-name:focus-visible {
   gap: 0.35rem;
 }
 .cc-label {
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -3422,7 +3451,11 @@ a.look-piece-name:focus-visible {
 }
 .cc-toggle {
   position: absolute;
-  inset-inline-end: 0.8rem;
+  /* A full 44px touch target around the small chevron; the chevron itself
+     stays where it was (0.8rem from the edge). */
+  inset-inline-end: calc(0.8rem - (2.75rem - 12px) / 2);
+  width: 2.75rem;
+  height: 2.75rem;
   display: grid;
   place-items: center;
   padding: 0;
@@ -3622,7 +3655,7 @@ a.look-piece-name:focus-visible {
 }
 .shop-pdp-payments-label {
   color: var(--ink-soft);
-  font-size: 0.62rem;
+  font-size: 0.72rem;
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;

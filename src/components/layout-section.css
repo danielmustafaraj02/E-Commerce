@@ -11,6 +11,13 @@
 .custom-section {
   width: 100%;
 }
+/* A block moved or sized past the screen edge in the builder must not widen
+   the page (it gave product pages a sideways scroll). Clip on the full-width
+   section, so a block hanging outside its column but on screen still shows;
+   `clip`, unlike `hidden`, keeps vertical overlaps and sticky blocks working. */
+[data-custom-section] {
+  overflow-x: clip;
+}
 .custom-section img,
 .custom-section video,
 .custom-section iframe {
