@@ -1,40 +1,49 @@
-# Local administration and public storefront
+# Local development
 
-Admin, customer accounts, sign-in, registration, password recovery and their API routes are local-only: they live in ignored source paths during development and move into `.local-only/` before public builds. Keep a private backup of these files; a public clone intentionally cannot recreate it. Local admin access uses an existing admin record for audit ownership, with no login or MFA prompt on the loopback development server. Customer authentication remains available locally. No customer records are deleted.
-
-`npm run dev` (or `npm run dev:turbo`) restores real local route files automatically. Open `/admin` directly; no login is needed on localhost. A clone without `.local-only/` runs the guest storefront without local account links.
-
-Use the address printed by Next, normally `http://127.0.0.1:3000`. Proxy preserves the incoming loopback hostname, and `skipProxyUrlNormalize` prevents Next's response adapter from changing a rewrite to `localhost`. This keeps translated paths such as `/en/login` as internal rewrites instead of creating a redirect loop. Restart the dev server after changing this configuration.
-
-`npm run build` moves those files into ignored private storage before compiling. The public authentication implementation always returns no session, so guest checkout and browser wishlists remain available without exposing customer or staff sign-in. Account links and sign-in prompts are omitted. The postbuild check rejects private routes and private files in deployment traces. Both production and preview deployments use this public build. Direct production builds with local routes still present fail with an instruction to use `npm run build`.
-
-After this separation is first installed, run:
+## Start the shop
 
 ```sh
-npm run local:untrack
+npm run dev
 ```
 
-This stages removal of the old private files from Git without deleting the local originals. It moves private files into storage, verifies every tracked file is preserved, stages their Git removal, then restores the real local files. Commit those removals together with the public code and configuration changes. `.gitignore` excludes private storage and local source paths; `.vercelignore` excludes them from CLI uploads. Ignoring files alone does not remove previously tracked files.
+Open the address printed by Next, normally `http://127.0.0.1:3000`. Use `npm run dev:turbo` for Turbopack development.
 
-These changes do not erase private source from earlier Git commits. They exclude it from future pushes after the removal commit. No repository history is rewritten.
+Private admin and account routes are restored automatically from `.local-only/`. Local admin access needs private source, an existing admin record and a loopback address. A public clone has no private admin source. Back up private files separately: Git does not contain them.
 
-Use `npm run local:isolate` only when importing a new private source directory into this workspace. It moves private files into storage and refuses to overwrite duplicate copies or alter unrelated symlinks.
+The database comes from your environment settings. Local admin changes can affect live data if you use the production connection. Use a separate development database for testing.
 
-After a public build, `npm run dev` restores the local pages for continued administration and template screenshot review:
+## Photos
+
+JPG/PNG photos convert to WebP at startup, while the dev server runs, and before builds. This covers nested folders under `public/products`, `public/hero`, `public/about`, `public/blog`, `public/gift-card` and `public/decor`. Restart the dev server after changing the runner.
+
+Conversion preserves transparency, removes metadata and limits the longest edge to 2560 pixels. Originals stay available. Run `npm run images:webp` to archive them in ignored `originals/public/`. Root logos and the social preview stay PNG. Hosted image URLs are outside this folder converter.
+
+## Checks
 
 ```sh
-npm run visual:review -- --login
+npm test
+npm run lint
+npm run typecheck
+npx tsc --noEmit -p .local-only/tsconfig.json
 ```
 
-The no-login admin implementation is stored in `.local-only/src/admin-session.ts`, excluded from Git and deployment uploads. Its public module is an inert stub. Development uses the ignored `.local-only/tsconfig.json` to map the session and sign-in modules to their private implementations; production uses the public `tsconfig.json`. Admin access without credentials is enabled only in development with private source present and a loopback Host (`localhost`, `127.0.0.1`, or `::1`). Public builds still reject private route files before compilation and have no local session implementation.
+The last command checks private source too. For template screenshots, see [visual review](scripts/visual-review.md).
 
-## Deploying
+## Deploy
 
-Vercel builds every push to `main`; there is no other step. The build (`npm run build`) applies pending Prisma migrations to the production database first, then compiles the public storefront and fails if any admin or account file got into it.
+1. Commit the complete change, including any new `prisma/migrations/` files.
+2. Push to the linked `main` branch. Vercel builds it when the integration and account are available.
+3. Check deployment success and the public storefront.
 
-1. Commit everything the change needs, including new files under `prisma/migrations/`. A migration left uncommitted deploys code that expects database columns that don't exist yet.
-2. `git push`.
+`npm run build` first moves private routes into `.local-only/`, converts photos, then runs database migrations and compiles. The postbuild check rejects private routes and private files. Public checkout is guest-only; admin and account sign-in are not deployed. Run `npm run dev` to restore private routes afterwards.
 
-Orders, customers and everything else in `/admin` are read from the live database, so the local admin shows the same orders as the production site once its migrations are applied. If an admin page errors with "column ... does not exist", run `npx prisma migrate deploy` (it targets the database in `.env.local`) or push, and let the build apply it.
+Vercel previews skip migrations unless `MIGRATE_PREVIEWS=1`. Previews that share production data may fail when new code requires unapplied columns. Use a separate preview database before enabling preview migrations.
 
-Never commit database dumps, `.env*` files or internal reports; `.gitignore` excludes them.
+If admin reports a missing database column, check the database and pending migrations before running `npx prisma migrate deploy`. Never commit `.env*` secrets, dumps or customer data.
+
+## Private source maintenance
+
+- `npm run local:untrack`: stages removal of old tracked private files while preserving their local copies. Use only when those files are still tracked.
+- `npm run local:isolate`: imports private source into local storage; it refuses duplicate copies and unmanaged symlinks.
+
+Neither command removes sensitive data from old Git commits.

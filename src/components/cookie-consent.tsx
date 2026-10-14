@@ -3,7 +3,12 @@
 import { useEffect, useState } from "react";
 import { Link } from "@/components/localized-link";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
-import { CONSENT_CHANGED_EVENT, CONSENT_STORAGE_KEY } from "@/lib/consent";
+import {
+  CONSENT_CHANGED_EVENT,
+  CONSENT_STORAGE_KEY,
+  CONSENT_OPEN_EVENT,
+  parseConsent,
+} from "@/lib/consent";
 
 export function CookieConsent({ dict }: { dict: Dictionary["cookieConsent"] }) {
   const [visible, setVisible] = useState(false);
@@ -17,10 +22,22 @@ export function CookieConsent({ dict }: { dict: Dictionary["cookieConsent"] }) {
     // synchronously in an effect" advice doesn't apply to this pattern.
     try {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      if (!localStorage.getItem(CONSENT_STORAGE_KEY)) setVisible(true);
+      if (!parseConsent(localStorage.getItem(CONSENT_STORAGE_KEY))) setVisible(true);
     } catch {
-      // If storage is unavailable, skip the banner rather than show it forever.
+      setVisible(true);
     }
+    function reopen() {
+      let choice = null;
+      try {
+        choice = parseConsent(localStorage.getItem(CONSENT_STORAGE_KEY));
+      } catch {}
+      setAnalytics(choice?.analytics ?? false);
+      setMarketing(choice?.marketing ?? false);
+      setCustomizing(true);
+      setVisible(true);
+    }
+    window.addEventListener(CONSENT_OPEN_EVENT, reopen);
+    return () => window.removeEventListener(CONSENT_OPEN_EVENT, reopen);
   }, []);
 
   async function save(choice: { analytics: boolean; marketing: boolean }) {

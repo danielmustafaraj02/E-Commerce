@@ -1,102 +1,36 @@
-# Builder architecture
+# Visual builder
 
-How the visual builder is put together, and the rules that keep it safe. Read
-with `architecture-audit.md`.
+The editor runs in the private local admin. Visitors see only published layouts.
 
-## Layers and dependency direction
+## Main modules
 
-```
-A. Visual editor        src/app/admin/settings/page-layout/**   (local admin only)
-        │ uses
-        ▼
-B. Design engine        src/lib/section-builder.ts   BuilderDoc: schema, validation, compile to HTML/CSS
-                        src/lib/section-builder-editing.ts  editing commands + canvas CSS (editor only)
-                        src/lib/section-templates.ts         built-in designs (server and editor)
-                        src/lib/page-layout.ts       LayoutEntry, page targets, section catalogue
-                        src/lib/section-designs.ts, page-templates.ts   templates
-                        src/lib/site-style.ts, block-theme.ts           design tokens
-                        src/lib/section-drafts.ts, section-versions.ts  draft and history storage
-        ▲ used by
-C. Storefront renderer  src/components/layout-section.tsx, builder-view.tsx, builder-live.tsx
-                        src/lib/page-layout-store.ts (reads published layouts only)
-D. Commerce/publishing  src/lib/pricing.ts, place-order.ts, order-payment.ts, stripe.ts, …
-```
+| Module                                                                      | Job                                                 |
+| --------------------------------------------------------------------------- | --------------------------------------------------- |
+| `src/app/admin/settings/page-layout/`                                       | Editor canvas and controls; private source          |
+| `src/lib/section-builder.ts`                                                | Document types, validation and HTML/CSS compilation |
+| `src/lib/section-builder-editing.ts`                                        | Editing commands and canvas CSS                     |
+| `src/lib/section-templates.ts`                                              | Built-in designs                                    |
+| `src/lib/page-layout.ts`                                                    | Page targets, sections and layout options           |
+| `src/lib/page-layout-store.ts`                                              | Published layout reads                              |
+| `src/lib/section-drafts.ts`, `section-versions.ts`                          | Drafts and version history                          |
+| `src/components/layout-section.tsx`, `builder-view.tsx`, `builder-live.tsx` | Storefront rendering                                |
 
-Rules:
-1. **B is pure.** No DOM, no React, no database. It is imported by both A and C.
-2. **C never imports A.** The public build moves every admin file out before
-   compiling and fails if any admin path appears in a server trace
-   (`scripts/verify-public-build.mjs`).
-3. **Documents are data, never code.** Builder blocks are an allowlist of types
-   and properties; compiled HTML goes through `sanitizeSectionHtml`; custom CSS
-   is scoped with `scopeSectionCss`; image and video URLs pass `safeImageUrl` /
-   `safeVideoUrl`. No user-supplied script ever runs on the storefront.
-4. **Commerce is server-authoritative.** Builder blocks that show products only
-   reference data; prices, stock and totals are always re-read on the server.
+A page is an ordered list of sections. Each section can use built-in content, custom markup or a `BuilderDoc` containing columns and blocks. Desktop properties are the base; phone properties override them. Tablet overrides are not yet part of this model.
 
-## The document
+## Storage and publishing
 
-```
-Page (target)            home | product | about | contact | looks | journal | article | category | list
-└─ LayoutEntry[]         one per section, in page order
-   ├─ id, visible
-   ├─ style              background (colour/gradient/image/film), overlay, spacing, scoped CSS
-   ├─ options            section-specific choices (e.g. Look row style)
-   ├─ html               hand-written markup replacing a built-in section, or
-   ├─ custom             a section of the owner's own (name, html, css), or
-   └─ builder: BuilderDoc
-       ├─ columns 1–4, widths, gap, divider, valign, width: full
-       ├─ mobile         reverse, hidden columns, gap, font scale, overlay layout
-       └─ cells[col][]   BuilderBlock: 29 types, each with
-                         style (position, size, rotation, colours, spacing, effects),
-                         phone position/size (mx, my, mw, mh), motion, translations
-```
+Home and product layouts live in `StoreSettings`. Other layouts use `PageLayout` rows keyed by page target. Section drafts use `sec-draft:<page>:<section>`; history uses `sec-hist:<page>:<section>` and keeps the latest 12 versions. Templates use `PageTemplate` and `SectionTemplate`.
 
-Responsive model today: computer is the base; phone overrides are stored next
-to the property they override (`mx` beside `x`). There is no tablet layer yet.
+The editor autosaves a section draft after a short pause. **Publish** updates the visible section, records the old version and clears the draft. **Discard** restores the published version. Reopening resumes an existing draft.
 
-## Storage
+Page order and visibility still save directly. Two editors can overwrite each other's changes; there is no conflict detection yet.
 
-| What | Where |
-|---|---|
-| Home / product page layout (published) | `StoreSettings.homeLayout`, `.productPageLayout` |
-| Other pages' layouts (published) | `PageLayout` row keyed by the page target |
-| Section version history | `PageLayout` row `sec-hist:<page>:<section>` (12 newest) |
-| **Section draft (new)** | `PageLayout` row `sec-draft:<page>:<section>` |
-| Block styles, block presets | `PageLayout` rows `block-theme`, block presets key |
-| Numbered designs per section | `PageTemplate` |
-| Saved templates | `SectionTemplate` |
+## Rules to preserve
 
-The storefront reads a page's own key only, so reserved keys can never reach the
-site. They need no migration.
+- Shared document logic has no browser, React or database dependency.
+- Public renderers never import the admin editor.
+- Documents are data: validate blocks, sanitize HTML, scope CSS and check media URLs. Never execute content scripts.
+- Product blocks reference catalog data; checkout prices and stock remain server-controlled.
+- Preserve saved document fields and CSS selectors during refactors.
 
-## Draft and publish (added in this phase)
-
-- The editor **autosaves** the working copy as a draft about 1.2 s after the
-  last change: never on every keystroke or drag, and never just for opening a
-  section.
-- The live site **does not change** until **Publish**. Publish writes the
-  section into the page, keeps the replaced version in history, writes the
-  audit log, and deletes the draft. All of this happens in `saveSectionEntry`.
-- **Discard draft** deletes the draft and returns to the live version.
-- Reopening a section resumes its draft and says so. The page overview marks
-  sections that have unpublished drafts.
-- Leaving the editor with changes the server does not have yet asks for
-  confirmation.
-
-Known limits: page order and visibility still save directly (they are a
-separate, small list); there is no conflict detection if two people edit the
-same section at once (one editor in practice).
-
-## Next steps for the engine
-
-1. Add `v` (schema version) to `BuilderDoc` with a migration function, before
-   any breaking change to the format.
-2. A tablet layer: overrides stored like phone overrides, with inheritance
-   phone ← tablet ← computer, and per-property "inherited / overridden / reset"
-   in the inspector.
-3. Split `section-builder.ts` further into schema and compile modules. Templates
-   and editing commands are already separate (`section-templates.ts`,
-   `section-builder-editing.ts`).
-4. Page-level drafts (order and visibility) using the same reserved-key
-   storage.
+Remaining work is in the [roadmap](implementation-roadmap.md).

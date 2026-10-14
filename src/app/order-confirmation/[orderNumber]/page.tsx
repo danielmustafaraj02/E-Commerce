@@ -19,6 +19,7 @@ import { isPaypalConfigured } from "@/lib/paypal";
 import { LookPurchaseTracker } from "@/components/look-purchase-tracker";
 import { GiftFinderPurchaseTracker } from "@/components/gift-finder-purchase-tracker";
 import { ClearCartOnPaidReturn } from "@/components/clear-cart-on-paid-return";
+import { withdrawalCopy } from "@/lib/withdrawal-copy";
 import { getGiftVoucherCopy } from "@/lib/gift-voucher-copy";
 
 const RETURNABLE_STATUSES = ["paid", "processing", "shipped", "delivered"];
@@ -53,12 +54,14 @@ export default async function OrderConfirmationPage({
         },
         shippingMethod: true,
         address: true,
+        user: { select: { name: true, email: true } },
         giftVoucherIssue: true,
         returnRequests: true,
       },
     }),
   ]);
   const dict = getDictionary(uiLocale);
+  const recessoCopy = withdrawalCopy(uiLocale);
   const voucherCopy = getGiftVoucherCopy(uiLocale);
   const paypalEnabled = await isPaypalConfigured();
 
@@ -153,10 +156,10 @@ export default async function OrderConfirmationPage({
             )}
             {order.giftVoucherIssue ? (
               <div className="mt-5 border border-[#b89a62] bg-[#fdfbf6] p-4">
-                <p className="text-foreground/60 mb-2 text-xs uppercase tracking-[0.14em]">
+                <p className="text-foreground/60 mb-2 text-xs tracking-[0.14em] uppercase">
                   {voucherCopy.codeLabel}
                 </p>
-                <p className="break-all font-mono text-lg tracking-[0.08em]" translate="no">
+                <p className="font-mono text-lg tracking-[0.08em] break-all" translate="no">
                   {order.giftVoucherIssue.code}
                 </p>
                 <p className="text-foreground/70 mt-3 text-sm">{voucherCopy.redeemInstruction}</p>
@@ -292,11 +295,23 @@ export default async function OrderConfirmationPage({
         {RETURNABLE_STATUSES.includes(order.status) && (
           <section className="mt-6">
             {order.returnRequests.length > 0 && order.returnRequests[0].status !== "rejected" ? (
-              <p className="text-foreground/70 text-sm">
-                {dict.feedback.returnStatusLabel}: {order.returnRequests[0].status}
-              </p>
+              <div className="flex flex-col gap-3 text-sm">
+                <p className="text-foreground/70">
+                  {dict.feedback.returnStatusLabel}: {order.returnRequests[0].status}
+                </p>
+                <a
+                  className="underline"
+                  download={`withdrawal-${order.orderNumber}.txt`}
+                  href={`data:text/plain;charset=utf-8,${encodeURIComponent(order.returnRequests[0].reason)}`}
+                >
+                  {recessoCopy.download}
+                </a>
+              </div>
             ) : (
               <ReturnRequestForm
+                locale={uiLocale}
+                name={order.address?.fullName ?? order.user?.name ?? ""}
+                email={order.guestEmail ?? order.user?.email ?? ""}
                 orderNumber={order.orderNumber}
                 labels={{
                   submitted: dict.feedback.returnSubmitted,

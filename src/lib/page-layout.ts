@@ -11,7 +11,11 @@
 
 import { parseBuilder, type BuilderDoc } from "@/lib/section-builder";
 import { BOLD_TEMPLATE_IDS, EDITORIAL_TEMPLATE_META } from "@/lib/look-templates";
-import { ARTICLE_OPENING_TEMPLATES, OPENING_DESCRIPTIONS, openingNumber } from "@/lib/journal/opening";
+import {
+  ARTICLE_OPENING_TEMPLATES,
+  OPENING_DESCRIPTIONS,
+  openingNumber,
+} from "@/lib/journal/opening";
 import { ARTICLE_LIST } from "@/lib/journal/article-list";
 import {
   CUSTOM_ID_RE,
@@ -120,13 +124,73 @@ export type OptionDef =
     };
 
 export const PRODUCT_TOP_OPTIONS: OptionDef[] = [
-  { key: "photoWidth", label: "Photo column width", type: "range", min: 35, max: 70, unit: "%", initial: 58, hint: "Of the page width, on computers" },
-  { key: "columnGap", label: "Space between photos and text", type: "range", min: 1, max: 10, step: 0.5, unit: "rem", initial: 6 },
-  { key: "infoWidth", label: "Text column width", type: "range", min: 22, max: 48, unit: "rem", initial: 36 },
-  { key: "titleScale", label: "Title size", type: "range", min: 60, max: 170, step: 5, unit: "%", initial: 100 },
-  { key: "priceScale", label: "Price size", type: "range", min: 60, max: 180, step: 5, unit: "%", initial: 100 },
-  { key: "buttonHeight", label: "Button height", type: "range", min: 40, max: 76, unit: "px", initial: 56 },
-  { key: "buttonRadius", label: "Button corners", type: "range", min: 0, max: 32, unit: "px", initial: 0 },
+  {
+    key: "photoWidth",
+    label: "Photo column width",
+    type: "range",
+    min: 35,
+    max: 70,
+    unit: "%",
+    initial: 58,
+    hint: "Of the page width, on computers",
+  },
+  {
+    key: "columnGap",
+    label: "Space between photos and text",
+    type: "range",
+    min: 1,
+    max: 10,
+    step: 0.5,
+    unit: "rem",
+    initial: 6,
+  },
+  {
+    key: "infoWidth",
+    label: "Text column width",
+    type: "range",
+    min: 22,
+    max: 48,
+    unit: "rem",
+    initial: 36,
+  },
+  {
+    key: "titleScale",
+    label: "Title size",
+    type: "range",
+    min: 60,
+    max: 170,
+    step: 5,
+    unit: "%",
+    initial: 100,
+  },
+  {
+    key: "priceScale",
+    label: "Price size",
+    type: "range",
+    min: 60,
+    max: 180,
+    step: 5,
+    unit: "%",
+    initial: 100,
+  },
+  {
+    key: "buttonHeight",
+    label: "Button height",
+    type: "range",
+    min: 40,
+    max: 76,
+    unit: "px",
+    initial: 56,
+  },
+  {
+    key: "buttonRadius",
+    label: "Button corners",
+    type: "range",
+    min: 0,
+    max: 32,
+    unit: "px",
+    initial: 0,
+  },
   {
     key: "stick",
     label: "Stays in view while scrolling",
@@ -322,15 +386,19 @@ export const LOOK_OPTIONS = [
   LOOK_CTA_OPTION,
 ] as const;
 
-/** The home page Journal section's three places: each one either the next
- *  newest article (the default) or an article chosen here. */
+/** The home page Journal section defaults to featured Venice stories;
+ *  each place can also show the newest article or an explicit choice. */
 export const JOURNAL_PICK_KEYS = ["article1", "article2", "article3"] as const;
 export const JOURNAL_PICK_OPTIONS: OptionDef[] = JOURNAL_PICK_KEYS.map((key, i) => ({
   key,
   label: `Article ${i + 1}`,
-  hint: i === 0 ? "Leave on “Newest” to fill the place with the latest article" : undefined,
+  hint:
+    i === 0
+      ? "Featured stories use photos of Venice and the lagoon; choose Newest for the latest articles"
+      : undefined,
   type: "choice" as const,
   choices: [
+    { value: "featured", label: "Venice stories (default)" },
     { value: "newest", label: "Newest (automatic)" },
     ...ARTICLE_LIST.map((article) => ({ value: article.slug, label: article.title })),
   ],

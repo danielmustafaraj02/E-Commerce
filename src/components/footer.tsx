@@ -1,4 +1,7 @@
 import { Link } from "@/components/localized-link";
+import { CookiePreferencesButton } from "@/components/cookie-preferences-button";
+import { getStoreSettings } from "@/lib/store-settings";
+import { sellerDetails } from "@/lib/legal-content";
 import { db } from "@/lib/db";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import type { Locale } from "@/lib/i18n/locale";
@@ -64,7 +67,7 @@ export async function Footer({
   locale: Locale;
   giftCardEnabled: boolean;
 }) {
-  const [categories, featured] = await Promise.all([
+  const [categories, featured, settings] = await Promise.all([
     db.category
       .findMany({
         where: { parentId: null },
@@ -85,8 +88,10 @@ export async function Footer({
         },
       })
       .catch(() => null),
+    getStoreSettings(),
   ]);
   const featuredImage = featured?.images[0]?.url ?? "/hero/handmade-red-murano-glass-necklace.webp";
+  const seller = sellerDetails(settings);
   const f = dict.footer;
   const nav = buildFooterNav({
     dict,
@@ -188,6 +193,9 @@ export async function Footer({
 
         <nav aria-label={f.legalNav}>
           <ul className="footer-legal">
+            <li>
+              <CookiePreferencesButton label={dict.cookieConsent.customize} />
+            </li>
             {nav.legal.map((link) => (
               <li key={link.href}>
                 <Link href={link.href}>{link.label}</Link>
@@ -195,6 +203,9 @@ export async function Footer({
             ))}
           </ul>
         </nav>
+        {seller.length > 0 && (
+          <p className="text-foreground/70 text-center text-xs">{seller.join(" · ")}</p>
+        )}
         <p className="footer-copyright">
           &copy; {new Date().getFullYear()} <span translate="no">{storeName}</span>. {f.rights}
         </p>

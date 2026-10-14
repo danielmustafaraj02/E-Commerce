@@ -1,3 +1,4 @@
+import { repairLegalContent } from "../src/lib/legal-content";
 import bcrypt from "bcryptjs";
 import { db } from "../src/lib/db";
 import { LEGACY_DEFAULT_PASSWORD, resolveSeedAdmin } from "../src/lib/seed-admin";
@@ -19,9 +20,9 @@ async function main() {
       defaultCurrency: "EUR",
       defaultLocale: "it-IT",
       contactEmail: "hello@demo-store.example",
-      vatNumber: "IT00000000000",
-      companyLegalName: "Demo Store S.r.l.",
-      companyAddress: "Via Roma 1, 00100 Roma, Italy",
+      vatNumber: null,
+      companyLegalName: null,
+      companyAddress: null,
       pricesIncludeTax: true,
       freeShippingThreshold: 5000,
     },
@@ -254,7 +255,7 @@ async function main() {
       slug: "terms",
       title: "Terms & Conditions",
       content: `1. About these terms
-These Terms & Conditions govern all purchases made on this website, operated by ${legalName} (VAT/P.IVA: ${storeSettings.vatNumber ?? "N/A"}), ${storeSettings.companyAddress ?? ""}. By placing an order, you agree to these terms.
+These Terms & Conditions govern all purchases made on this website, operated by ${legalName} ${storeSettings.vatNumber ? `(VAT/P.IVA: ${storeSettings.vatNumber})` : ""}${storeSettings.companyAddress ? `, ${storeSettings.companyAddress}` : ""}. By placing an order, you agree to these terms.
 
 2. Orders and contract formation
 An order is an offer to buy. The contract is formed when we send you an order confirmation email. We reserve the right to refuse or cancel an order (e.g. pricing errors, stock unavailability, suspected fraud) before that point, with a full refund of any amount already charged.
@@ -357,6 +358,7 @@ Questions about this policy: ${storeSettings.contactEmail}.`,
     },
   ];
   for (const page of legalPages) {
+    page.content = repairLegalContent(page.slug, page.content);
     await db.legalPage.upsert({
       where: { slug: page.slug },
       update: page,

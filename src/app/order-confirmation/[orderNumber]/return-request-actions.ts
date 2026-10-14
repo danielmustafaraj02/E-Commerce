@@ -1,5 +1,9 @@
 "use server";
 
+import { captureError } from "@/lib/monitoring";
+import { sendEmail } from "@/lib/email";
+import { getLocale } from "@/lib/i18n/locale";
+import { withdrawalCopy } from "@/lib/withdrawal-copy";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { auth } from "@/auth";
@@ -9,11 +13,19 @@ import { writeAuditLog } from "@/lib/audit-log";
 import { getFeedback } from "@/lib/i18n/feedback";
 import { rateLimit } from "@/lib/rate-limit";
 
-const schema = z.object({ reason: z.string().min(1).max(2000) });
+const schema = z.object({
+  name: z.string().trim().min(1).max(200),
+  email: z.email().max(254),
+  reason: z.string().trim().max(2000),
+});
 
 const RETURNABLE_STATUSES = ["paid", "processing", "shipped", "delivered"];
 
-export async function requestReturn(orderNumber: string, _prevState: unknown, formData: FormData) {
+export async function requestReturn(
+  orderNumber: string,
+  _prevState: unknown,
+  formData: FormData
+): Promise<{ error: string | null; success: boolean; receipt?: string; emailSent?: boolean }> {
   const t = await getFeedback();
 
   // A guest order's orderNumber is its only access token (see lib/orders.ts),
@@ -25,8 +37,13 @@ export async function requestReturn(orderNumber: string, _prevState: unknown, fo
   const { success: withinLimit } = await rateLimit(`return-request:${ip}`, 10, 60_000);
   if (!withinLimit) return { error: t.orderNotFound, success: false };
 
-  const parsed = schema.safeParse({ reason: formData.get("reason") });
-  if (!parsed.success) return { error: t.returnReasonRequired, success: false };
+  const copy = withdrawalCopy(await getLocale());
+  const parsed = schema.safeParse({
+    name: formData.get("name"),
+    email: formData.get("email"),
+    reason: formData.get("reason") ?? "",
+  });
+  if (!parsed.success) return { error: copy.invalid, success: false };
 
   const [session, order] = await Promise.all([
     auth(),
@@ -42,11 +59,14 @@ export async function requestReturn(orderNumber: string, _prevState: unknown, fo
     return { error: t.returnInProgress, success: false };
   }
 
+  const transmittedAt = new Date();
+  const receipt = `${copy.statement} ${orderNumber}\n${copy.name}: ${parsed.data.name}\n${copy.email}: ${parsed.data.email}\nUTC: ${transmittedAt.toISOString()}\n${copy.reason}: ${parsed.data.reason}`;
   const returnRequest = await db.returnRequest.create({
     data: {
       orderId: order.id,
       userId: session?.user?.id ?? null,
-      reason: parsed.data.reason,
+      reason: receipt,
+      createdAt: transmittedAt,
     },
   });
 
@@ -57,8 +77,17 @@ export async function requestReturn(orderNumber: string, _prevState: unknown, fo
       entityType: "ReturnRequest",
       entityId: returnRequest.id,
       after: { orderId: order.id, reason: parsed.data.reason },
-    });
+    }).catch((error) =>
+      captureError(error, { action: "withdrawal.audit", returnRequestId: returnRequest.id })
+    );
   }
 
-  return { error: null, success: true };
+  const html = `<pre>${receipt.replace(/[&<>"\']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]!)}</pre>`;
+  const emailSent = await sendEmail({
+    to: parsed.data.email,
+    subject: `${copy.subject} — ${orderNumber}`,
+    text: receipt,
+    html,
+  }).catch(() => false);
+  return { error: null, success: true, receipt, emailSent };
 }

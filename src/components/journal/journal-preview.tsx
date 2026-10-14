@@ -9,12 +9,25 @@ import { getDictionary } from "@/lib/i18n/dictionaries";
 import type { Locale } from "@/lib/i18n/locale";
 
 const PREVIEW_COUNT = 3;
+const FEATURED_VENICE_STORIES = [
+  "history-of-murano-glass",
+  "venetian-glass-beads",
+  "how-to-recognize-authentic-murano-glass",
+] as const;
 const FALLBACK_IMAGE = "/hero/handmade-red-murano-glass-necklace.webp";
 
 /** The articles to show: each place takes its chosen article (`picks`, by
- *  slug, from the page layout) or else the newest one not already shown. */
-export function previewArticles<T extends { slug: string }>(all: T[], picks: (string | undefined)[]): T[] {
-  const chosen = picks.map((slug) => all.find((article) => article.slug === slug));
+ *  slug, from the page layout), a featured Venice story by default, or the
+ *  newest remaining article when explicitly requested or a pick is unavailable. */
+export function previewArticles<T extends { slug: string }>(
+  all: T[],
+  picks: (string | undefined)[]
+): T[] {
+  const chosen = Array.from({ length: PREVIEW_COUNT }, (_, i) => {
+    const pick = picks[i] ?? "featured";
+    const slug = pick === "featured" ? FEATURED_VENICE_STORIES[i] : pick;
+    return all.find((article) => article.slug === slug);
+  });
   const used = new Set(chosen.flatMap((article) => (article ? [article.slug] : [])));
   const rest = all.filter((article) => !used.has(article.slug));
   return Array.from({ length: PREVIEW_COUNT }, (_, i) => chosen[i] ?? rest.shift()).filter(
@@ -22,7 +35,13 @@ export function previewArticles<T extends { slug: string }>(all: T[], picks: (st
   );
 }
 
-export async function JournalPreview({ locale, picks = [] }: { locale: Locale; picks?: (string | undefined)[] }) {
+export async function JournalPreview({
+  locale,
+  picks = [],
+}: {
+  locale: Locale;
+  picks?: (string | undefined)[];
+}) {
   const articles = previewArticles(await getAllArticles(), picks).map((article) =>
     localizeArticle(article, locale)
   );
@@ -34,7 +53,10 @@ export async function JournalPreview({ locale, picks = [] }: { locale: Locale; p
   const journal = getDictionary(locale).journal;
 
   return (
-    <section className="shelf-section shelf-section--journal-preview" aria-labelledby="journal-preview-title">
+    <section
+      className="shelf-section shelf-section--journal-preview"
+      aria-labelledby="journal-preview-title"
+    >
       <div className="shelf-wrap">
         <div className="shelf-heading-row journal-preview-heading">
           <div>
@@ -51,8 +73,7 @@ export async function JournalPreview({ locale, picks = [] }: { locale: Locale; p
         <ul className="journal-preview-grid">
           {articles.map((article) => {
             const image =
-              article.hero.kind === "product" &&
-              !products.get(article.hero.productSlug)?.images[0]
+              article.hero.kind === "product" && !products.get(article.hero.productSlug)?.images[0]
                 ? {
                     kind: "file" as const,
                     src: FALLBACK_IMAGE,

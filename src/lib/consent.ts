@@ -6,6 +6,8 @@ export const CONSENT_STORAGE_KEY = "cookie-consent";
 // `storage` event only reaches *other* tabs, never the one that wrote.
 export const CONSENT_CHANGED_EVENT = "cookie-consent-changed";
 
+export const CONSENT_OPEN_EVENT = "cookie-consent-open";
+
 export type ConsentChoice = { analytics: boolean; marketing: boolean };
 
 // Strict on purpose: anything that isn't exactly the shape the banner writes

@@ -1,3 +1,4 @@
+import { repairLegalContent } from "@/lib/legal-content";
 import { withPageMeta } from "@/lib/page-meta";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -27,7 +28,9 @@ async function baseMetadata({ params }: PageProps<"/legal/[slug]">): Promise<Met
   };
 }
 
-export async function generateMetadata(props: Parameters<typeof baseMetadata>[0]): Promise<Metadata> {
+export async function generateMetadata(
+  props: Parameters<typeof baseMetadata>[0]
+): Promise<Metadata> {
   return withPageMeta(`legal:${(await props.params).slug}`, await baseMetadata(props));
 }
 
@@ -51,7 +54,7 @@ export default async function LegalPage({ params }: PageProps<"/legal/[slug]">) 
     <ShelfMain>
       <ShelfHead title={page.title} />
       <ShelfBody>
-        <p className="shop-legal">{page.content}</p>
+        <p className="shop-legal">{repairLegalContent(slug, page.content)}</p>
         <p className="text-foreground/60 mt-8 text-xs">
           Last updated {page.lastUpdated.toLocaleDateString()}
         </p>

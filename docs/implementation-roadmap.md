@@ -1,100 +1,49 @@
-# Implementation roadmap
+# Things to do
 
-Order follows the master specification, adjusted where the audit found risks
-that matter more than the planned order. Each phase is independently testable
-and reversible. Status as of 11 October 2026.
+Consolidated on 13 October 2026. These are remaining checks and improvements from the project notes. A historical finding needs a current check before being treated as an active defect. Detailed security and owner follow-up stay in ignored local notes.
 
-## Stop points (need the owner's explicit go-ahead)
+## First: verify the buying journey
 
-- Anything that writes to the production database outside normal admin use
-  (migrations included: they run automatically on the next deploy).
-- Switching Stripe to live keys, changing payment providers, or any refund flow.
-- Changing secrets or environment variables in Vercel.
-- Rewriting Git history (the database dump) or changing repository visibility.
-- Vercel plan or billing changes (the site is currently disabled).
+- [ ] Set up a separate test database and test payment credentials.
+- [ ] Test product → cart → shipping → payment → confirmation in Italian and English, on phone and desktop.
+- [ ] Test order expiry, cancellation, payment retries and emails, including failed requests. Verify stock and credit are released exactly once.
+- [ ] Check supplier-managed availability agrees across products, looks, checkout and Merchant feeds.
+- [ ] Check confirmation messages for pending, paid, cancelled and refunded orders. Clear only the cart belonging to the completed purchase.
+- [ ] Review tax, delivery prices, payment availability, legal text and provenance claims against the store's real settings.
 
-## Phase 0 — Audit and preservation · **done**
+Done means the full journey passes with test data, including failures and retries.
 
-- Architecture, builder, security, performance documents in `docs/`.
-- Measured baseline (`performance-baseline.md`).
-- Found: live site disabled by Vercel; DB dump in public history; open security
-  findings; mobile LCP and CLS misses.
+## Content and mobile review
 
-**Owner actions:** resolve the Vercel pause (dashboard → Usage/Billing; Pro for a
-commercial shop); decide on the dump in Git history.
+- [ ] Review the saved product-page layout: an earlier audit found a copied home hero and a second main heading. Remove or replace that section if still present.
+- [ ] Check phone hero text does not cover jewelry; use a stacked layout where needed.
+- [ ] Replace repeated look descriptions with useful product-specific text.
+- [ ] Check small carousels, dot navigation and keyboard focus on visible products.
+- [ ] Review translations, Arabic layout, 200% zoom and screen-reader navigation.
 
-## Phase 0.5 — Revenue and security fixes · **done** (pulled forward)
+Product/model/detail/packaging galleries and automatic bundled-photo WebP conversion are implemented locally. Deployment still needs verification.
 
-Fixed F02, F03, F04, F05 and the Next.js advisories (see `security-audit.md`).
-Acceptance: duplicate-line, limit, coupon-race and settlement-race tests pass;
-`npm audit --omit=dev` reports 0. **Met.**
+## Speed: measure, then improve
 
-## Phase 1 — Core architecture · **first part done**
+- [ ] Repeat mobile measurements with the real catalog after the recent bundle changes.
+- [ ] Investigate product-page layout shift and slow article hero loading.
+- [ ] Review font loading and route-specific CSS before further bundle changes.
+- [ ] Profile large catalog queries before adding indexes or changing caching.
 
-Done:
-- Draft/publish for sections: autosaved server drafts, explicit Publish,
-  Discard, resume on reopen, unsaved-change protection, draft badges on the page
-  overview. No migration needed (reserved keys in `PageLayout`).
+Targets: LCP ≤ 2.5 seconds, CLS ≤ 0.1 and INP ≤ 200 milliseconds. See [performance notes](performance-baseline.md).
 
-Next:
-- `v` schema version on `BuilderDoc` + migration function.
-- Page-level drafts (section order and visibility).
-- Split `section-builder.ts` into schema and compile modules (templates and
-  editing commands were split out on 2026-10-13).
+## Builder: next useful features
 
-Acceptance: published content unchanged while drafts are edited (verified on a
-local database); tests for draft storage and actions (**met** for sections).
+- [ ] Add a document schema version and migration function before changing saved formats.
+- [ ] Add drafts for page order and visibility.
+- [ ] Add tablet overrides with clear inherited values and reset controls.
+- [ ] Add conflict detection for simultaneous editing.
+- [ ] Test draft → reopen → publish → restore, and screenshot representative templates on phone, tablet and desktop.
 
-## Phase 2 — Editor foundation · **largely present**
+Section drafts, publishing, history and the local go-live screen already exist. Rulers, extra media tools and more templates are later improvements, after the buying journey and publishing checks.
 
-Present: canvas, selection, multi-select, drag, resize, rotation, grid snapping,
-alignment, layers, lock/hide, copy/paste/duplicate, undo/redo, autosave.
+## Maintenance
 
-Next: rulers and pan, spacing guides between blocks, keyboard shortcut sheet,
-layer list virtualization for very long sections.
+Split large modules one responsibility at a time when changing them. Preserve saved styles, translations and public/private boundaries. Wire up or remove unused recent components only after checking their callers and saved content.
 
-## Phase 3 — Templates and responsive · **partial**
-
-Next: tablet breakpoint (overrides stored like phone ones, inheritance
-phone ← tablet ← computer); inspector shows inherited vs overridden values with
-"reset to inherited"; header/footer/cart template families.
-
-Acceptance: a section can differ on tablet without changing computer or phone;
-every overridden property shows and can be reset.
-
-## Phase 4 — Advanced design · **partial**
-
-Next: media tags, focal point and crop presets; duplicate detection on upload;
-spacing/radius tokens in Site style; versioned theme export/import with
-validation.
-
-## Phase 5 — Commerce · **present**
-
-Next: F01 (express checkout holds), F08 (idempotent checkout attempts), refunds
-from the admin through Stripe (needs authorization), stock rule consistency for
-supplier-managed items.
-
-## Phase 6 — Security and performance · **in progress**
-
-Security next: F06, F07, F09, F14, F15; a Neon development branch so the local
-admin no longer tests against production.
-
-Performance next (from the baseline): product page CLS; self-hosted fonts;
-shared JavaScript; per-route CSS; article hero preload. Acceptance: mobile LCP
-≤ 2.5 s and CLS ≤ 0.1 on home, product, category and article pages under the
-documented test profile.
-
-## Phase 7 — Go-live wizard · **done** (pulled forward)
-
-`/admin/settings/go-live`: six steps (store, domain and Vercel, payments,
-security, search and speed, publish), read-only, no secret values, design
-publishing and code deployment shown separately, exact deploy instructions
-instead of a deploy button (no secure deployment integration exists).
-Detects the current Vercel suspension as a blocker.
-
-## Phase 8 — Final QA · **not started**
-
-End-to-end tests (Playwright) for: open editor → apply template → autosave →
-reopen → publish → storefront shows it → restore version; Stripe test checkout
-against a test-mode account; visual regression snapshots of every template on
-desktop/tablet/mobile. Needs: a test database and Stripe test keys in CI.
+Keep this list current: mark a task complete only with evidence, then remove details that no longer help the next person.
