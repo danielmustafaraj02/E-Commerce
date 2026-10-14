@@ -1,4 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { existsSync } from "node:fs";
+import type { Session } from "next-auth";
 
 const mocks = vi.hoisted(() => ({
   auth: vi.fn(),
@@ -20,7 +22,14 @@ vi.mock("@/lib/admin-session", () => ({ getLocalAdminSession: mocks.local }));
 vi.mock("next/headers", () => ({ headers: async () => ({ get: () => mocks.host }) }));
 vi.mock("@/lib/db", () => ({ db: { user: { findFirst: mocks.owner } } }));
 vi.mock("@/lib/local-features", () => ({ isLocalAdminAccess: mocks.allowLocal }));
-import { getLocalAdminSession } from "../../.local-only/src/admin-session";
+// The passwordless localhost session lives in the untracked .local-only
+// workspace; a non-literal import keeps the public type check from needing it.
+const LOCAL_SESSION = "../../.local-only/src/admin-session";
+const hasLocalSession = existsSync(new URL(`${LOCAL_SESSION}.ts`, import.meta.url));
+async function getLocalAdminSession(): Promise<Session | null> {
+  const mod = await import(/* @vite-ignore */ LOCAL_SESSION);
+  return mod.getLocalAdminSession();
+}
 
 import { requireStaff, requireAdmin } from "./require-admin";
 
@@ -90,7 +99,7 @@ describe("local control panel", () => {
   });
 });
 
-describe("private localhost session", () => {
+describe.skipIf(!hasLocalSession)("private localhost session", () => {
   it("uses an existing admin ID without signing in or changing the database", async () => {
     mocks.allowLocal.mockReturnValue(true);
     mocks.owner.mockResolvedValue({
