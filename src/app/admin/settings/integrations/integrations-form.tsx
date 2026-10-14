@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { startTransition, useActionState } from "react";
 import { updateIntegrationSettings, clearIntegrationField } from "./actions";
 import { FormAlert } from "@/components/form-alert";
 
@@ -35,7 +35,13 @@ function Field({
         {configured && type === "password" && (
           <span className="flex items-center gap-2 text-xs">
             <span className="text-success">configured</span>
-            <button type="submit" formAction={boundClear} className="text-danger hover:underline">
+            {/* type="button", not a submit: the first submit button is the form's
+                default, so Enter in any field would have cleared this one. */}
+            <button
+              type="button"
+              onClick={() => startTransition(() => boundClear())}
+              className="text-danger hover:underline"
+            >
               Clear
             </button>
           </span>

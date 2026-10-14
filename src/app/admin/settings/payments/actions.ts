@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
@@ -60,6 +61,7 @@ export async function updatePaymentSettings(_prevState: unknown, formData: FormD
     after: { updatedFields: Object.keys(data), klarnaEnabled },
   });
 
+  revalidatePath("/admin/settings/payments");
   return { error: null, success: true };
 }
 
@@ -134,6 +136,7 @@ export async function updateOfflinePaymentSettings(_prevState: unknown, formData
     },
   });
 
+  revalidatePath("/admin/settings/payments");
   return { error: null, success: true };
 }
 
@@ -150,4 +153,5 @@ export async function clearPaymentField(field: keyof typeof schema.shape) {
     entityId: before.id,
     after: { clearedField: field },
   });
+  revalidatePath("/admin/settings/payments");
 }

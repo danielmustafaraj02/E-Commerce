@@ -9,6 +9,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@/lib/require-admin", () => ({ requireAdmin: mocks.requireAdmin }));
 vi.mock("@/lib/audit-log", () => ({ writeAuditLog: mocks.writeAuditLog }));
 vi.mock("@/lib/store-settings", () => ({ getStoreSettings: async () => ({ id: "settings1" }) }));
+vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 vi.mock("@/lib/db", () => ({ db: { storeSettings: { upsert: mocks.upsert } } }));
 
 import { updateOfflinePaymentSettings } from "./actions";

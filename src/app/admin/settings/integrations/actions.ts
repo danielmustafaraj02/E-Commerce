@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
@@ -63,6 +64,7 @@ export async function updateIntegrationSettings(_prevState: unknown, formData: F
     after: { updatedFields: Object.keys(data) },
   });
 
+  revalidatePath("/admin/settings/integrations");
   return { error: null, success: true };
 }
 
@@ -79,4 +81,5 @@ export async function clearIntegrationField(field: keyof typeof schema.shape) {
     entityId: before.id,
     after: { clearedField: field },
   });
+  revalidatePath("/admin/settings/integrations");
 }
