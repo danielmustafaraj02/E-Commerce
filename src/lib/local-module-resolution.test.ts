@@ -38,7 +38,7 @@ describe("framework module resolution", () => {
         resolve(".local-only/src/admin-session.ts")
       );
       expect(resolveModule(process.cwd(), "@/lib/auth-runtime")).toBe(
-        resolve(".local-only/src/auth.ts")
+        resolve("src/lib/auth-runtime.ts")
       );
     }
   );

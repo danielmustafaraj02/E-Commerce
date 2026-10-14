@@ -18,7 +18,9 @@ const nextConfig: NextConfig = {
   // Prevent the response adapter from changing preserved 127.0.0.1 rewrite
   // targets back to localhost and turning them into external requests.
   skipProxyUrlNormalize: true,
-  env: { NEXT_PUBLIC_LOCAL_ACCOUNTS: String(localAccounts) },
+  // Customer accounts and the (MFA-gated) admin are public. The passwordless
+  // loopback admin still needs development mode — see src/lib/local-features.ts.
+  env: { NEXT_PUBLIC_LOCAL_ACCOUNTS: "true" },
   typescript: {
     // Next resolves TypeScript paths before webpack aliases. Keep the exact
     // local mappings in the private tsconfig so both bundlers select them.

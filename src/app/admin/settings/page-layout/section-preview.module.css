@@ -1,0 +1,115 @@
+.preview {
+  min-width: 0;
+  width: 100%;
+  color: #24382e;
+  container-type: inline-size;
+}
+.toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.65rem 0.75rem;
+  background: #fff;
+  border: 1px solid #deded6;
+  border-bottom: 0;
+  border-radius: 0.6rem 0.6rem 0 0;
+  font-size: 0.75rem;
+}
+.toolbar button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2rem;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid transparent;
+  border-radius: 0.3rem;
+  text-decoration: none !important;
+  color: #526158;
+  background: transparent;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 150ms ease-out,
+    color 150ms ease-out;
+}
+.toolbar button:hover:not(:disabled) {
+  background: #f1f4f0;
+  color: #154230;
+}
+.toolbar button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.toolbar button[aria-pressed="true"] {
+  border-color: #c8d3ca;
+  background: #edf2ee;
+  color: #154230;
+}
+/* Screen sizes: one segmented control. */
+.segment {
+  display: inline-flex;
+  padding: 0.15rem;
+  gap: 0.15rem;
+  border: 1px solid #e3e7e1;
+  border-radius: 0.45rem;
+  background: #f6f7f4;
+}
+.segment button {
+  min-height: 1.85rem;
+}
+@container (max-width: 34rem) {
+  .toolbar button span {
+    display: none;
+  }
+}
+.toolbar label {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  margin-left: auto;
+  color: #526158;
+}
+.toolbar select {
+  border: 1px solid #deded6;
+  border-radius: 0.3rem;
+  background: white;
+  padding: 0.3rem;
+}
+.viewport {
+  width: 100%;
+  min-width: 0;
+  overflow: auto;
+  border: 1px solid #deded6;
+  border-radius: 0 0 0.6rem 0.6rem;
+  background: #efefea;
+  padding: 0;
+  overscroll-behavior: contain;
+}
+.canvas {
+  position: relative;
+  overflow: hidden;
+  margin-inline: auto;
+  max-width: none;
+  background: #fff;
+}
+.frame {
+  display: block;
+  border: 0;
+  background: #fff;
+  max-width: none;
+}
+.toolbar button:focus-visible,
+.toolbar select:focus-visible {
+  outline: 2px solid #154230;
+  outline-offset: 2px;
+}
+/* What the selection can do (align, position, the scroll story): a band of the
+   same card, between the toolbar and the canvas. */
+.contextRow {
+  padding: 0.45rem 0.75rem;
+  border: 1px solid #deded6;
+  border-block: 0;
+  border-top: 1px solid #ecece5;
+  background: #fafaf7;
+}

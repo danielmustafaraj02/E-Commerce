@@ -1,4 +1,4 @@
-// Set by next.config.ts, never enabled by a production environment variable.
+// Set by next.config.ts: accounts (and the MFA-gated admin) are on everywhere.
 export const LOCAL_ACCOUNTS_ENABLED = process.env.NEXT_PUBLIC_LOCAL_ACCOUNTS === "true";
 
 export function isLocalAdminAccess(host: string | null): boolean {
