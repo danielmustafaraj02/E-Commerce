@@ -1,15 +1,17 @@
-import { describe, expect, it } from "vitest";
-import { auth, handlers, signIn } from "./auth-runtime";
+import { describe, expect, it, vi } from "vitest";
+
+vi.mock("@/lib/db", () => ({ db: {} }));
+vi.mock("@/lib/store-settings", () => ({ getStoreSettings: async () => ({}) }));
+
+import { handlers } from "./auth-runtime";
 import { getLocalAdminSession } from "./admin-session";
 
-describe("public guest authentication", () => {
-  it("never accepts a stored customer or staff session", async () => {
-    expect(await auth()).toBeNull();
+describe("public authentication", () => {
+  it("never grants the passwordless local admin session outside the workspace", async () => {
     expect(await getLocalAdminSession()).toBeNull();
   });
-  it("has no public login handlers", async () => {
-    expect((await handlers.GET()).status).toBe(404);
-    expect((await handlers.POST()).status).toBe(404);
-    await expect(signIn("credentials", { redirect: false })).rejects.toThrow("local workspace");
+  it("exposes real NextAuth route handlers for customer login", () => {
+    expect(typeof handlers.GET).toBe("function");
+    expect(typeof handlers.POST).toBe("function");
   });
 });

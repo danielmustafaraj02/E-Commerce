@@ -6,7 +6,7 @@ import { resolve } from "node:path";
 import { privatePaths } from "./scripts/private-paths.mjs";
 
 const isProd = process.env.NODE_ENV === "production";
-const localAuth = resolve(process.cwd(), ".local-only/src/auth.ts");
+const localAuth = resolve(process.cwd(), ".local-only/src/admin-session.ts");
 const localAccounts = !isProd && existsSync(localAuth);
 if (isProd && privatePaths.some((path) => existsSync(resolve(process.cwd(), path)))) {
   throw new Error(

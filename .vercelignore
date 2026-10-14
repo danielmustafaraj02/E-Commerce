@@ -8,6 +8,7 @@ build
 out
 
 # Environment and config - ignored by default but being explicit
+.env
 .env.local
 .env.*.local
 
