@@ -31,6 +31,19 @@ export const HERO_MIN_PIXELS = 700;
 /** Good enough to show large in a hero: sharp and clear of the blue. */
 export const isHeroGrade = (cutout: Cutout) =>
   Math.max(cutout.width, cutout.height) >= HERO_MIN_PIXELS && !isQuiet(cutout);
+
+/**
+ * The transparent cut-out of a product photo, matched by file name: both are
+ * named after the product slug, the main photo of a newer piece with a "-1"
+ * suffix. Only the main photo matches, so a scene showing a worn or detail
+ * shot keeps it, and only cut-outs sharp enough to show large are returned.
+ */
+export function cutoutForImage(url: string): Cutout | undefined {
+  const stem = (url.split("?")[0].split("/").pop() ?? "").replace(/\.[a-z0-9]+$/i, "");
+  const cutout = cutoutFor(stem) ?? cutoutFor(stem.replace(/-1$/, ""));
+  return cutout && Math.max(cutout.width, cutout.height) >= HERO_MIN_PIXELS ? cutout : undefined;
+}
+
 /** The wallpaper's pieces when none are chosen: hero-grade ones only. */
 export const WALLPAPER_POOL = CUTOUTS.filter(isHeroGrade).map((c) => c.slug);
 

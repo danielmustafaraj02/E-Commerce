@@ -48,7 +48,7 @@ import { JournalPreview } from "@/components/journal/journal-preview";
 import { HeroConcept } from "@/components/hero-concepts/hero-concept";
 import { LIVE_HERO } from "@/design/hero";
 import { heroProducts } from "@/lib/hero-concepts/products";
-import { conceptSlugs } from "@/lib/hero-concepts/config";
+import { conceptSlugs, cutoutForImage } from "@/lib/hero-concepts/config";
 import { heroCopy } from "@/lib/hero-concepts/copy";
 import { homeFontClasses } from "../home-fonts";
 
@@ -65,7 +65,7 @@ async function baseMetadata(): Promise<Metadata> {
     // English and Italian name the three collections rather than claim the
     // pieces are handmade in Venice: Perla curates from several makers.
     en: ["Murano Glass Jewelry: Necklaces, Bracelets & Earrings", "Murano Glass Jewelry"],
-    it: ["Gioielli in Vetro di Murano: Collane, Bracciali e Orecchini", "Gioielli in Vetro di Murano"],
+    it: ["Gioielli in vetro di Murano: collane, bracciali e orecchini", "Gioielli in vetro di Murano"],
     fr: ["Bijoux en Verre de Murano, Faits Main à Venise", "Bijoux en Verre de Murano"],
     de: ["Muranoglas-Schmuck, Handgefertigt in Venedig", "Muranoglas-Schmuck"],
     ar: ["مجوهرات زجاج مورانو، صناعة يدوية في البندقية", "مجوهرات زجاج مورانو"],
@@ -78,12 +78,14 @@ async function baseMetadata(): Promise<Metadata> {
   };
   const candidates = titleCandidatesByLocale[locale];
   const title = fitTitle(candidates, settings.storeName);
-  // Admin-entered copy (Settings > SEO) wins when set; otherwise the hero
-  // subtitle is already keyword-rich, locale-translated marketing copy, so
-  // it makes a far better snippet than the layout's generic fallback.
-  const description = settings.metaDescription
-    ? settings.metaDescription
-    : truncateAtWord(dict.home.heroSubtitle, 155);
+  // Admin-entered copy (Settings > SEO) is a single text in one language, so
+  // it is used on the English home page only; every other language shows the
+  // hero subtitle, which is already keyword-rich and translated. (Any one
+  // language can still be overridden in Admin > Overview > Page metadata.)
+  const description =
+    locale === "en" && settings.metaDescription
+      ? settings.metaDescription
+      : truncateAtWord(dict.home.heroSubtitle, 155);
   const image = ogImage(settings);
   const canonical = "/";
 
@@ -275,12 +277,16 @@ export default async function Home() {
         <CollectionShowcase
           items={editorialCollections.map((category, i) => {
             const scene = SHOWCASE_SCENE_ORDER[i] ?? "necklace";
+            // The transparent cut-out of the photo where there is one: see
+            // ShowcaseItem.cutout.
+            const cutout = cutoutForImage(category.image!.url);
             return {
               piece: showcaseCardPieces[i],
               id: category.id,
               href: `/category/${category.slug}`,
               name: localizedName(category, locale),
-              image: category.image!.url,
+              image: cutout?.src ?? category.image!.url,
+              cutout: !!cutout,
               description: showcaseCopy.scenes[scene].description,
               cta: showcaseCopy.scenes[scene].cta,
               reason: showcaseReasons[scene],

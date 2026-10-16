@@ -439,6 +439,16 @@
 .showcase-image {
   filter: brightness(1.025);
 }
+/* A transparent cut-out (ShowcaseItem.cutout) has no white left to blend away,
+   so it skips the multiply and the brightness nudge and looks the same in
+   every browser. Cut-outs are trimmed to the piece, so the padding gives back
+   the margin the studio photo had and the piece keeps its size in the frame. */
+.showcase-image[data-cutout] {
+  box-sizing: border-box;
+  padding: 18%;
+  mix-blend-mode: normal;
+  filter: none;
+}
 
 /* ── Options from the visual editor ───────────────────────────────────── */
 .showcase[data-no-rail] .showcase-rail {

@@ -33,6 +33,11 @@ export type ShowcaseItem = ShowcaseSceneOverride & {
   imageScale?: number;
   imageX?: number;
   imageY?: number;
+  /** `image` is a transparent cut-out (public/hero/cutouts) rather than the
+   *  white-backed photo. The photo relies on a multiply blend to lose its
+   *  white, and iOS Safari skips that blend here, leaving a white box on the
+   *  tint; a cut-out has no white to hide. */
+  cutout?: boolean;
 };
 
 const COPY_SIDE: Record<ShowcaseItem["scene"], "left" | "right"> = {
@@ -182,6 +187,7 @@ export function CollectionShowcase({
                   sizes="(min-width: 52rem) 34rem, (min-width: 25rem) 22rem, 90vw"
                   preload={preloadFirstImage && i === 0}
                   className="showcase-image"
+                  data-cutout={item.cutout ? "" : undefined}
                 />
               </div>
 

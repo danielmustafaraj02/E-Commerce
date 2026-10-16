@@ -22,6 +22,7 @@ import { FaqSection } from "@/components/faq-section";
 import { JournalPreview } from "@/components/journal/journal-preview";
 import type { BuilderBlock, LiveType } from "@/lib/section-builder";
 import { showcaseReasons } from "@/lib/showcase-reasons";
+import { cutoutForImage } from "@/lib/hero-concepts/config";
 
 /**
  * The live blocks of the section builder, rendered on the server with the
@@ -197,12 +198,15 @@ export async function LiveBlock({ block }: { block: Extract<BuilderBlock, { type
       const items = collections.map((category, i) => {
             const scene = SHOWCASE_SCENE_ORDER[i] ?? "necklace";
             const own = overrides[scene];
+            const photo = overrides[scene]?.image ?? category.image!.url;
+            const cutout = cutoutForImage(photo);
             return {
               ...overrides[scene],
               id: category.id,
               href: overrides[scene]?.href ?? `/category/${category.slug}`,
               name: overrides[scene]?.name ?? localizedName(category, locale),
-              image: overrides[scene]?.image ?? category.image!.url,
+              image: cutout?.src ?? photo,
+              cutout: !!cutout,
               side: overrides[scene]?.side,
               imageScale: overrides[scene]?.imageScale,
               imageX: overrides[scene]?.imageX,
