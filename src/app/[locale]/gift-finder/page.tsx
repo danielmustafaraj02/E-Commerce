@@ -5,6 +5,7 @@ import { getStoreSettings, ogImage } from "@/lib/store-settings";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { hreflangAlternates, localizedCanonical } from "@/lib/hreflang";
+import { fitTitle } from "@/lib/seo-text";
 import { localizedName, productImageAlt } from "@/lib/product-i18n";
 import { getLooksForProducts } from "@/lib/look-data";
 import { deriveProductType } from "@/lib/gift-finder";
@@ -24,7 +25,7 @@ async function baseMetadata(): Promise<Metadata> {
   const image = ogImage(settings);
 
   return {
-    title: dict.metaTitle,
+    title: fitTitle([dict.metaTitle], settings.storeName),
     description: dict.metaDescription,
     alternates: {
       canonical: localizedCanonical(locale, canonical),

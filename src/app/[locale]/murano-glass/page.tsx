@@ -8,7 +8,8 @@ import { getLocale, type Locale } from "@/lib/i18n/locale";
 import { getMuranoGuideContent } from "@/lib/murano-guide-content";
 import { localizedName } from "@/lib/product-i18n";
 import { absoluteUrl, toSafeJsonLd } from "@/lib/json-ld";
-import { hreflangAlternates, localizedCanonical } from "@/lib/hreflang";
+import { hreflangAlternates, localizedCanonical, ogLocale } from "@/lib/hreflang";
+import { fitTitle } from "@/lib/seo-text";
 import { AnimatedHeading } from "@/components/animated-heading";
 import { Reveal } from "@/components/reveal";
 import { ShelfMain } from "@/components/shelf-main";
@@ -41,7 +42,9 @@ async function baseMetadata(): Promise<Metadata> {
   const content = getMuranoGuideContent(locale);
   const image = ogImage(settings);
   return {
-    title: content.metaTitle,
+    // Without the store name when title plus name would run past what a
+    // results page shows, rather than have the topic cut off.
+    title: fitTitle([content.metaTitle], settings.storeName),
     description: content.metaDescription,
     alternates: {
       canonical: localizedCanonical(locale, "/murano-glass"),
@@ -51,6 +54,7 @@ async function baseMetadata(): Promise<Metadata> {
       title: content.metaTitle,
       description: content.metaDescription,
       type: "article",
+      locale: ogLocale(locale),
       images: image ? [{ url: image }] : undefined,
     },
     twitter: {
@@ -75,7 +79,9 @@ export default async function MuranoGlassGuidePage() {
   const content = getMuranoGuideContent(locale);
   const artCaptions = GUIDE_ART_CAPTIONS[locale];
   const base = siteBaseUrl(settings);
-  const pageUrl = `${base}/murano-glass`;
+  // The language-prefixed URL, the same one the canonical names: the bare
+  // /murano-glass only redirects.
+  const pageUrl = `${base}${localizedCanonical(locale, "/murano-glass")}`;
   const image = ogImage(settings);
 
   // Google's Article rich-result guidelines require an `image`, unlike the
@@ -89,8 +95,8 @@ export default async function MuranoGlassGuidePage() {
     image: image ? [absoluteUrl(image, base)] : undefined,
     inLanguage: locale,
     mainEntityOfPage: pageUrl,
-    author: { "@type": "Organization", name: settings.storeName },
-    publisher: { "@type": "Organization", name: settings.storeName },
+    author: { "@type": "Organization", name: settings.storeName, url: base },
+    publisher: { "@type": "Organization", name: settings.storeName, url: base },
   };
 
   const howToJsonLd = {
@@ -119,7 +125,12 @@ export default async function MuranoGlassGuidePage() {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: settings.storeName, item: base || undefined },
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: settings.storeName,
+        item: `${base}${localizedCanonical(locale, "/")}`,
+      },
       { "@type": "ListItem", position: 2, name: content.title, item: pageUrl },
     ],
   };

@@ -328,7 +328,9 @@ export default async function ProductDetailPage({ params }: PageProps<"/[locale]
       : null;
 
   const base = siteBaseUrl(settings);
-  const productUrl = `${base}/products/${product.slug}`;
+  // Language-prefixed, like the canonical: the bare /products/... only
+  // redirects, and a shared link should open in the language it was shared from.
+  const productUrl = `${base}${localizedCanonical(uiLocale, `/products/${product.slug}`)}`;
 
   const material = productMaterial(product.category);
   const sizeKey = productSizeDictKey(product.category);
@@ -385,7 +387,7 @@ export default async function ProductDetailPage({ params }: PageProps<"/[locale]
         freeShippingThresholdCents: settings.freeShippingThreshold,
       }),
       hasMerchantReturnPolicy: buildReturnPolicy(shippingZones, {
-        returnPolicyUrl: base ? `${base}/legal/returns` : undefined,
+        returnPolicyUrl: base ? `${base}${localizedCanonical(uiLocale, "/legal/returns")}` : undefined,
       }),
       availability: outOfStock ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
       url: productUrl,
@@ -400,14 +402,19 @@ export default async function ProductDetailPage({ params }: PageProps<"/[locale]
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: dict.footer.allProducts, item: `${base}/products` },
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: dict.footer.allProducts,
+        item: `${base}${localizedCanonical(uiLocale, "/products")}`,
+      },
       ...(product.category
         ? [
             {
               "@type": "ListItem",
               position: 2,
               name: categoryName,
-              item: `${base}/category/${product.category.slug}`,
+              item: `${base}${localizedCanonical(uiLocale, `/category/${product.category.slug}`)}`,
             },
           ]
         : []),

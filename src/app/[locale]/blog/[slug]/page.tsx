@@ -15,6 +15,7 @@ import { getStoreSettings } from "@/lib/store-settings";
 import { siteBaseUrl } from "@/lib/site-url";
 import { getLocale } from "@/lib/i18n/locale";
 import { ogLocale } from "@/lib/hreflang";
+import { fitTitle } from "@/lib/seo-text";
 import type { Locale } from "@/lib/i18n/locale-constants";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { applyTemplate } from "@/lib/i18n/format";
@@ -52,9 +53,10 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/blog/[sl
   // so this is what makes a missing item a real 404 (not a 200 carrying the
   // not-found page), including the copy kept in the cache.
   if (!source) notFound();
-  const [uiLocale, products] = await Promise.all([
+  const [uiLocale, products, settings] = await Promise.all([
     getLocale(),
     getJournalProducts(articleProductSlugs(source)),
+    getStoreSettings(),
   ]);
   const article = localizeArticle(source, uiLocale);
   const hero = journalImageSrc(article.hero, products);
@@ -67,7 +69,9 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/blog/[sl
       ? available.filter((l) => l !== article.contentLocale).map(ogLocale)
       : undefined;
   return {
-    title: article.seoTitle,
+    // seoTitle is written to fit on its own; with " | store name" added most
+    // would be cut off in results, so the name goes when it doesn't fit.
+    title: fitTitle([article.seoTitle], settings.storeName),
     description: article.description,
     alternates: {
       canonical,
@@ -136,11 +140,20 @@ export default async function JournalArticlePage({ params }: PageProps<"/[locale
   const jsonLd = [
     {
       "@context": "https://schema.org",
-      "@type": "Article",
+      "@type": "BlogPosting",
       headline: article.title,
       description: article.description,
       inLanguage: article.contentLocale,
       mainEntityOfPage: url,
+      articleSection: categoryLabel(contentJournal, article.category),
+      keywords:
+        [article.primaryKeyword, ...(article.secondaryKeywords ?? [])].filter(Boolean).join(", ") ||
+        undefined,
+      isPartOf: {
+        "@type": "Blog",
+        name: contentJournal.title,
+        url: `${base}/${article.contentLocale}/blog`,
+      },
       datePublished: article.published,
       dateModified: article.updated ?? article.published,
       image: heroSrc ? [absoluteUrl(heroSrc, base)] : undefined,

@@ -211,7 +211,9 @@ export function SettingsForm({ settings }: { settings: Settings }) {
             className="field"
           />
           <span className="text-foreground/60 text-xs">
-            Shown under your title in Google search results. Aim for 120–160 characters.
+            Shown under your title in Google search results for the English home page. Aim for
+            120–160 characters. Other languages use their own translated text; to change one, use
+            Overview &gt; Page metadata.
           </span>
         </label>
         <label className="flex flex-col gap-1 text-sm">

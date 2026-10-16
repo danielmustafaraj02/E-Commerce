@@ -9,7 +9,20 @@ import type { Metadata } from "next";
 import { getStoreSettings, ogImage } from "@/lib/store-settings";
 import { getLocale, type Locale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-import { hreflangAlternates, localizedCanonical } from "@/lib/hreflang";
+import { hreflangAlternates, localizedCanonical, ogLocale } from "@/lib/hreflang";
+import { fitTitle } from "@/lib/seo-text";
+import { shareImageUrl } from "@/lib/optimized-image";
+import { siteBaseUrl } from "@/lib/site-url";
+import { toSafeJsonLd } from "@/lib/json-ld";
+
+const HERO_IMAGE = "/blog/burano-colorful-houses-canal.webp";
+
+// English and Italian: a title that says what the shop is, since "About us"
+// alone tells a results page nothing.
+const SEARCH_TITLE: Partial<Record<Locale, string>> = {
+  en: "About Us: Murano Glass Jewelry, Chosen Piece by Piece",
+  it: "Chi siamo: gioielli in vetro di Murano scelti uno a uno",
+};
 import { AnimatedHeading } from "@/components/animated-heading";
 import { Reveal } from "@/components/reveal";
 import { ShelfMain } from "@/components/shelf-main";
@@ -25,8 +38,9 @@ async function baseMetadata(): Promise<Metadata> {
   // cite, so it benefits from a distinct <title>/description. The deep
   // technique/authenticity/FAQ content lives on /murano-glass instead.
   const descriptionByLocale: Record<Locale, string> = {
-    en: `The story behind ${settings.storeName} and the 700-year Murano glassmaking tradition its pieces are made in.`,
-    it: `La storia di ${settings.storeName} e la tradizione vetraria muranese di 700 anni con cui sono realizzati i suoi pezzi.`,
+    // Not every piece is made by us, so neither line says it is.
+    en: `Who is behind ${settings.storeName}, how we choose each Murano glass necklace, bracelet and pair of earrings, and a short history of glass on Murano.`,
+    it: `Chi c'è dietro ${settings.storeName}, come scegliamo ogni collana, bracciale e paio di orecchini in vetro di Murano, e una breve storia del vetro a Murano.`,
     fr: `L'histoire de ${settings.storeName} et de la tradition verrière de Murano, vieille de 700 ans, dans laquelle ses pièces sont réalisées.`,
     de: `Die Geschichte von ${settings.storeName} und der 700 Jahre alten Murano-Glasbläsertradition, in der die Stücke gefertigt werden.`,
     ar: `القصة وراء ${settings.storeName} وتقليد صناعة زجاج مورانو العريق الممتد لسبعمائة عام الذي تُصنع به قطعها.`,
@@ -38,23 +52,26 @@ async function baseMetadata(): Promise<Metadata> {
     ja: `${settings.storeName}の物語と、その作品が作られる700年の歴史を持つムラノガラス製造の伝統。`,
   };
   const description = descriptionByLocale[locale];
-  const image = ogImage(settings);
+  const title = SEARCH_TITLE[locale] ?? dict.about.title;
+  // The page's own photograph where it has one to share.
+  const image = SEARCH_TITLE[locale] ? shareImageUrl(HERO_IMAGE) : ogImage(settings);
   return {
-    title: dict.about.title,
+    title: fitTitle([title], settings.storeName),
     description,
     alternates: {
       canonical: localizedCanonical(locale, "/about"),
       languages: hreflangAlternates("/about"),
     },
     openGraph: {
-      title: dict.about.title,
+      title,
       description,
       type: "website",
-      images: image ? [{ url: image }] : undefined,
+      locale: ogLocale(locale),
+      images: image ? [{ url: image, alt: dict.about.heritageImageAlt }] : undefined,
     },
     twitter: {
       card: "summary_large_image",
-      title: dict.about.title,
+      title,
       description,
       images: image ? [image] : undefined,
     },
@@ -84,11 +101,37 @@ export default async function AboutPage() {
     { title: dict.home.whyReturns, body: dict.home.whyReturnsBody },
   ];
 
+  const base = siteBaseUrl(settings);
+  const pageUrl = `${base}${localizedCanonical(locale, "/about")}`;
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "AboutPage",
+      name: dict.about.title,
+      url: pageUrl,
+      inLanguage: locale,
+      about: { "@type": "Organization", name: settings.storeName, url: base },
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: settings.storeName,
+          item: `${base}${localizedCanonical(locale, "/")}`,
+        },
+        { "@type": "ListItem", position: 2, name: dict.about.title, item: pageUrl },
+      ],
+    },
+  ];
+
   const sections: Record<AboutSectionId, ReactNode> = {
     hero: (
       <section className="about-hero">
         <Image
-          src="/blog/burano-colorful-houses-canal.webp"
+          src={HERO_IMAGE}
           alt={dict.about.heritageImageAlt}
           fill
           preload
@@ -182,6 +225,7 @@ export default async function AboutPage() {
 
   return (
     <ShelfMain className="about-page">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: toSafeJsonLd(jsonLd) }} />
       {entries.map((entry) => (
         <LayoutSection key={entry.id} entry={entry}>
           {entry.custom ? null : sections[entry.id as AboutSectionId]}

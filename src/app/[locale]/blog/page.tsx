@@ -6,16 +6,20 @@ import { withPageMeta } from "@/lib/page-meta";
 import { Link } from "@/components/localized-link";
 import type { Metadata } from "next";
 import { getStoreSettings, ogImage } from "@/lib/store-settings";
-import { getLocale } from "@/lib/i18n/locale";
+import { getLocale, type Locale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { applyTemplate } from "@/lib/i18n/format";
-import { localizeArticle, readingMinutes } from "@/lib/journal";
+import { articlePath, localizeArticle, readingMinutes } from "@/lib/journal";
 import { getAllArticles } from "@/lib/journal/db-articles";
 import type { JournalCategory, LocalizedArticle } from "@/lib/journal/types";
 import { getJournalProducts } from "@/lib/journal/products";
-import { JournalImage } from "@/components/journal/journal-image";
+import { JournalImage, journalImageSrc } from "@/components/journal/journal-image";
 import { homeFontClasses } from "@/app/home-fonts";
-import { hreflangAlternates, localizedCanonical } from "@/lib/hreflang";
+import { hreflangAlternates, localizedCanonical, ogLocale } from "@/lib/hreflang";
+import { fitTitle } from "@/lib/seo-text";
+import { shareImageUrl } from "@/lib/optimized-image";
+import { siteBaseUrl } from "@/lib/site-url";
+import { toSafeJsonLd } from "@/lib/json-ld";
 import { categoryLabel, formatArticleDate } from "./journal-shared";
 import "../../home.css";
 import "./journal.css";
@@ -23,22 +27,59 @@ import "./journal-simple.css";
 
 const CATEGORIES: JournalCategory[] = ["history", "craft", "buying", "care", "gifting"];
 
+// The journal's own name says little to someone searching, so English and
+// Italian get a title naming what the articles cover, and a description
+// listing the actual subjects. Other languages keep the name and the intro.
+const SEARCH_COPY: Partial<Record<Locale, { title: string; description: string }>> = {
+  en: {
+    title: "The Murano Journal: Glass History, Techniques and Care",
+    description:
+      "Articles on Murano glass: what changed in 1291, cristallo and lattimo, filigrana and murrine, Venetian beads, spotting imitations and caring for jewelry.",
+  },
+  it: {
+    title: "Storie di Murano: storia, tecniche e cura del vetro",
+    description:
+      "Articoli sul vetro di Murano: cosa cambiò nel 1291, cristallo e lattimo, filigrana e murrine, perle veneziane, imitazioni e cura dei gioielli.",
+  },
+};
+
 async function baseMetadata(): Promise<Metadata> {
-  const [settings, locale] = await Promise.all([getStoreSettings(), getLocale()]);
+  const [settings, locale, articles] = await Promise.all([
+    getStoreSettings(),
+    getLocale(),
+    getAllArticles(),
+  ]);
   const dict = getDictionary(locale).journal;
-  const image = ogImage(settings);
+  const copy = SEARCH_COPY[locale];
+  const title = copy?.title ?? dict.title;
+  const description = copy?.description ?? dict.intro;
+  // The newest article's photograph, as on the page itself, rather than the
+  // store-wide share image.
+  const latest = articles[0];
+  const products = await getJournalProducts(
+    latest?.hero.kind === "product" ? [latest.hero.productSlug] : []
+  );
+  const hero = latest ? journalImageSrc(latest.hero, products) : null;
+  const image = hero ? shareImageUrl(hero) : ogImage(settings);
   return {
-    title: dict.title,
-    description: dict.intro,
+    title: fitTitle([title], settings.storeName),
+    description,
     alternates: {
       canonical: localizedCanonical(locale, "/blog"),
       languages: hreflangAlternates("/blog"),
     },
     openGraph: {
-      title: dict.title,
-      description: dict.intro,
+      title,
+      description,
       type: "website",
+      locale: ogLocale(locale),
       images: image ? [{ url: image }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: image ? [image] : undefined,
     },
   };
 }
@@ -63,6 +104,49 @@ export default async function JournalIndexPage({ searchParams }: PageProps<"/[lo
     articles.flatMap((a) => (a.hero.kind === "product" ? [a.hero.productSlug] : []))
   );
   const [featured, ...rest] = articles;
+
+  const settings = await getStoreSettings();
+  const base = siteBaseUrl(settings);
+  const blogUrl = `${base}${localizedCanonical(uiLocale, "/blog")}`;
+  // The journal as a Blog whose posts are the articles, each at the URL of
+  // the language it is actually written in (an untranslated article is the
+  // English page), plus the trail back to the home page.
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Blog",
+      name: j.title,
+      description: SEARCH_COPY[uiLocale]?.description ?? j.intro,
+      url: blogUrl,
+      inLanguage: uiLocale,
+      publisher: { "@type": "Organization", name: settings.storeName, url: base },
+      blogPost: ARTICLES.map((source) => {
+        const article = localizeArticle(source, uiLocale);
+        return {
+          "@type": "BlogPosting",
+          headline: article.title,
+          description: article.description,
+          url: `${base}${articlePath(article.slug, article.contentLocale)}`,
+          inLanguage: article.contentLocale,
+          datePublished: article.published,
+          dateModified: article.updated ?? article.published,
+        };
+      }),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: settings.storeName,
+          item: `${base}${localizedCanonical(uiLocale, "/")}`,
+        },
+        { "@type": "ListItem", position: 2, name: j.title, item: blogUrl },
+      ],
+    },
+  ];
 
   const sections: Record<JournalSectionId, ReactNode> = {
     head: (
@@ -144,6 +228,7 @@ export default async function JournalIndexPage({ searchParams }: PageProps<"/[lo
 
   return (
     <main className={`shelf journal ${homeFontClasses}`}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: toSafeJsonLd(jsonLd) }} />
       {entries.map((entry) => (
         <LayoutSection key={entry.id} entry={entry}>
           {entry.custom ? null : sections[entry.id as JournalSectionId]}

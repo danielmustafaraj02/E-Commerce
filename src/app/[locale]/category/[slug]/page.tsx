@@ -65,7 +65,7 @@ async function baseMetadata({
   // platform-generic default.
   const titleByLocale: Record<Locale, string> = {
     en: `Murano Glass ${name}`,
-    it: `${name} in Vetro di Murano`,
+    it: `${name} in vetro di Murano`,
     fr: `${name} en Verre de Murano`,
     de: `${name} aus Muranoglas`,
     ar: `${name} من زجاج مورانو`,
