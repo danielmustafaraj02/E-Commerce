@@ -1,5 +1,6 @@
 import { absoluteUrl } from "@/lib/json-ld";
 import { canOptimize, optimizedImageUrl } from "@/lib/optimized-image";
+import { PHOTO_QUALITY } from "@/lib/image-sizes";
 import { publicImageSrc } from "@/lib/public-image";
 
 // Mail clients load pictures from the open web, so an email's image address must
@@ -14,7 +15,7 @@ export function emailAbsoluteUrl(url: string | null | undefined, base: string): 
   if (!url) return null;
   const src = publicImageSrc(url);
   if (/\.webp(?=[?#]|$)/i.test(src) && canOptimize(src)) {
-    return absoluteUrl(optimizedImageUrl(src, 384), base);
+    return absoluteUrl(optimizedImageUrl(src, 384, PHOTO_QUALITY), base);
   }
   return absoluteUrl(src, base);
 }
@@ -26,5 +27,5 @@ export function emailAbsoluteUrl(url: string | null | undefined, base: string): 
 export function emailThumbnailUrl(url: string | null | undefined, base: string): string | null {
   if (!url) return null;
   const src = publicImageSrc(url);
-  return absoluteUrl(canOptimize(src) ? optimizedImageUrl(src, 128) : src, base);
+  return absoluteUrl(canOptimize(src) ? optimizedImageUrl(src, 128, PHOTO_QUALITY) : src, base);
 }

@@ -62,7 +62,7 @@ describe("optimizedSrcSet", () => {
 
 describe("shareImageUrl", () => {
   it("sends this site's pictures through the optimizer at 1200px", () => {
-    expect(shareImageUrl("/og-image.png")).toBe("/_next/image?url=%2Fog-image.png&w=1200&q=75");
+    expect(shareImageUrl("/og-image.png")).toBe("/_next/image?url=%2Fog-image.png&w=1200&q=90");
   });
 
   it("leaves pictures on other hosts as they are", () => {

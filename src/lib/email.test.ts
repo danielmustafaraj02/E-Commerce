@@ -168,7 +168,7 @@ describe("sendOrderStatusEmail", () => {
     const html: string = mocks.send.mock.calls[0][0].html;
     expect(html).toContain('src="https://example.com/logo.png"');
     expect(html).toContain(
-      'src="https://example.com/_next/image?url=%2Fproducts%2Fbracelets%2Fonyx.webp&amp;w=128&amp;q=75"'
+      'src="https://example.com/_next/image?url=%2Fproducts%2Fbracelets%2Fonyx.webp&amp;w=128&amp;q=90"'
     );
     expect(html).not.toMatch(/src="\//);
   });

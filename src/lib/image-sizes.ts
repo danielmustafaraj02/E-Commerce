@@ -13,6 +13,11 @@ export const IMAGE_DEVICE_SIZES = [640, 828, 1200, 1920] as const;
 /** Thumbnails and small tiles (only for images with a `sizes` hint). */
 export const IMAGE_SMALL_SIZES = [64, 128, 256, 384] as const;
 
-/** 90 for catalog and hero photos, 75 (the default) elsewhere, 95 for the
- *  nav-dropdown thumbnails, which are scaled up on retina screens. */
-export const IMAGE_QUALITIES = [75, 90, 95] as const;
+/** 90 for every product and hero photo, wherever it appears (pages, menus,
+ *  e-mails, link previews), so each photo is stored once per width rather than
+ *  once per quality; 75 (the default) for other pictures, such as the large
+ *  journal photographs. */
+export const IMAGE_QUALITIES = [75, 90] as const;
+
+/** The quality product photos are served at; see IMAGE_QUALITIES. */
+export const PHOTO_QUALITY = 90;

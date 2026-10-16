@@ -19,7 +19,7 @@ describe("emailThumbnailUrl", () => {
   it("serves a local product picture as a small resized copy with a complete address", () => {
     // Named by its current WebP file: rows saved earlier still say .png.
     expect(emailThumbnailUrl("/products/bracelets/a b.png", `${base}/`)).toBe(
-      "https://shop.example/_next/image?url=%2Fproducts%2Fbracelets%2Fa%20b.webp&w=128&q=75"
+      "https://shop.example/_next/image?url=%2Fproducts%2Fbracelets%2Fa%20b.webp&w=128&q=90"
     );
   });
 

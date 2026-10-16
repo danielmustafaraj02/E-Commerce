@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { publicImageSrc } from "@/lib/public-image";
+import { PHOTO_QUALITY } from "@/lib/image-sizes";
 import { Link } from "@/components/localized-link";
 import { useRef, useState, useEffect, useCallback } from "react";
 import "./products-dropdown.css";
@@ -136,7 +137,7 @@ export function ProductsDropdown({
                        this was a big grid tile; keeping it would have shipped
                        roughly double the bytes for no visible gain. */
                     sizes="48px"
-                    quality={95}
+                    quality={PHOTO_QUALITY}
                     className="object-cover"
                   />
                 </span>

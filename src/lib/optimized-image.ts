@@ -1,6 +1,6 @@
 import { isOptimizableSrc } from "@/lib/image-hosts";
 import { publicImageSrc } from "@/lib/public-image";
-import { IMAGE_DEVICE_SIZES, IMAGE_SMALL_SIZES } from "@/lib/image-sizes";
+import { IMAGE_DEVICE_SIZES, IMAGE_SMALL_SIZES, PHOTO_QUALITY } from "@/lib/image-sizes";
 
 /**
  * Addresses on Next's image optimizer for images that next/image can't render:
@@ -39,9 +39,12 @@ export function optimizedImageUrl(src: string, width: number, quality = 75): str
 
 /** A picture for link previews (Open Graph / Twitter cards, structured data):
  *  this site's files through the optimizer at 1200px, which also hands JPEG to
- *  crawlers that don't ask for WebP; pictures on other hosts unchanged. */
+ *  crawlers that don't ask for WebP; pictures on other hosts unchanged. At the
+ *  photo quality, so a product's preview is the copy its page already uses. */
 export function shareImageUrl(src: string): string {
-  return src.startsWith("/") && !src.startsWith("//") ? optimizedImageUrl(src, 1200) : src;
+  return src.startsWith("/") && !src.startsWith("//")
+    ? optimizedImageUrl(src, 1200, PHOTO_QUALITY)
+    : src;
 }
 
 /** A srcset of optimized widths for `src`, or undefined when the optimizer
