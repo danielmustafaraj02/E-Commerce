@@ -223,6 +223,12 @@
   width: min(100%, 22rem);
   aspect-ratio: 1 / 1.12;
   overflow: clip;
+  /* The photo's multiply blends inside this box rather than with whatever
+     sits further back. Without it iOS Safari, which puts the crossfading
+     scenes on their own compositing layers, blended with nothing and left the
+     photo's white backdrop showing as a box on the tint — the same fallback
+     as .shelf-item-photo in home.css. */
+  isolation: isolate;
   border-radius: 1.5rem;
   background: var(--scene-tint);
 }
@@ -363,7 +369,7 @@
     height: clamp(20rem, calc(100svh - 12rem), 34rem);
     width: auto;
     max-width: 55%;
-    border-radius: 0;
+    border-radius: 1.25rem;
   }
   .showcase-copy {
     flex: 1 1 0;

@@ -375,6 +375,16 @@
   .popular-btn--next {
     inset-inline-end: 0.25rem;
   }
+  /* Centred on the photo, not on photo plus caption (top: 50% sat low). The
+     photo is the rail's width less the slot's two 0.375rem sides (the
+     max-width: 47.99rem rule below), and 112% of that tall
+     (.popular-card-inner above), so its middle is 56% of that width. */
+  .popular-carousel {
+    container-type: inline-size;
+  }
+  .popular-btn {
+    top: calc((100cqi - 0.75rem) * 0.56);
+  }
 }
 .popular-dot::before {
   transition: background 0.25s, width 0.25s;

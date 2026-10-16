@@ -39,6 +39,12 @@ export type LookView = {
   available: boolean;
 };
 
+const LOOK_PIECE_ORDER: Record<ProductType, number> = {
+  necklace: 0,
+  bracelet: 1,
+  earrings: 2,
+};
+
 const LOOK_INCLUDE = {
   products: {
     where: { active: true },
@@ -77,6 +83,13 @@ function toLookViews(looks: LookRow[], locale: Locale): LookView[] {
           kind: deriveProductType(product.category ?? null),
         };
       });
+      // Keep every look's product list in the same necklace → bracelet →
+      // earrings order, regardless of when the products were added to it.
+      pieces.sort(
+        (a, b) =>
+          (a.kind ? LOOK_PIECE_ORDER[a.kind] : 3) -
+          (b.kind ? LOOK_PIECE_ORDER[b.kind] : 3)
+      );
       return {
         id: look.id,
         name: catalogDisplayName(look.name),

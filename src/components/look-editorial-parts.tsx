@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Link } from "@/components/localized-link";
 import { CatalogImage } from "@/components/catalog-image";
+import { LookJewelryTap } from "@/components/look-jewelry-tap";
 import { formatMoney } from "@/lib/format";
 import { applyTemplate } from "@/lib/i18n/format";
 import type { LookView } from "@/lib/look-data";
@@ -117,7 +118,9 @@ export function LookJewelry({
   }
   const pieces = leadOnly ? parts.ordered.slice(0, 1) : parts.ordered;
   return (
-    <div className={`look-jewelry look-jewelry--composed ${leadOnly ? "look-jewelry--lead" : ""}`}>
+    <LookJewelryTap
+      className={`look-jewelry look-jewelry--composed ${leadOnly ? "look-jewelry--lead" : ""}`}
+    >
       {pieces.map(({ piece }, index) => (
         <Link
           key={piece.productId}
@@ -133,7 +136,8 @@ export function LookJewelry({
                 sizes={sizes}
                 loading={priority ? "eager" : "lazy"}
               />
-              {/* Hover card (pointer devices): name, price and a call to action.
+              {/* Card with name, price and a call to action: on hover with a
+                  mouse, on a first tap on touch screens (LookJewelryTap).
                   Hidden from assistive tech: the link already reads as the name. */}
               <span className="look-jewelry-pop" aria-hidden="true">
                 <span className="look-jewelry-pop-name">{piece.name}</span>
@@ -150,7 +154,7 @@ export function LookJewelry({
           <span className="look-jewelry-caption">{piece.name}</span>
         </Link>
       ))}
-    </div>
+    </LookJewelryTap>
   );
 }
 

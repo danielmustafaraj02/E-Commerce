@@ -651,7 +651,9 @@ export default async function ProductDetailPage({ params }: PageProps<"/[locale]
                 </details>
               </div>
 
-              <div className="border-foreground/10 mt-6 border-t pt-4">
+              {/* No rule of its own: the last accordion row's border already
+                  separates the share buttons from the questions above. */}
+              <div className="mt-5">
                 <ShareButtons url={productUrl} title={name} dict={dict.product} />
               </div>
             </div>

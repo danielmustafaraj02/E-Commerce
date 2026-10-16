@@ -415,7 +415,48 @@ button:not(:disabled),
   transform: none;
 }
 
+/* The floating checkout button follows scroll direction on every screen:
+   visible while scrolling down, tucked below the viewport while scrolling up. */
+.floating-checkout-button {
+  --floating-checkout-offset: 0px;
+  --floating-checkout-scale: 1;
+  transform: translate3d(0, var(--floating-checkout-offset), 0)
+    scale(var(--floating-checkout-scale));
+}
+.floating-checkout-button[data-scroll-state="hidden"] {
+  --floating-checkout-offset: calc(100% + 1.5rem);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .floating-checkout-button[data-scroll-state="visible"]:hover {
+    --floating-checkout-scale: 1.03;
+  }
+}
+.floating-checkout-button[data-scroll-state="visible"]:active {
+  --floating-checkout-scale: 0.97;
+}
+
 @media (prefers-reduced-motion: no-preference) {
+  .floating-checkout-button {
+    transition:
+      opacity 0.22s ease,
+      transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1),
+      visibility 0s linear;
+  }
+  .floating-checkout-button[data-scroll-state="entering"] {
+    --floating-checkout-offset: 0.75rem;
+    --floating-checkout-scale: 0.98;
+    opacity: 0;
+  }
+  .floating-checkout-button[data-scroll-state="hidden"] {
+    transition:
+      opacity 0.22s ease,
+      transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1),
+      visibility 0s linear 0.32s;
+  }
+
   [data-reveal] {
     opacity: 0;
     transform: translateY(12px);

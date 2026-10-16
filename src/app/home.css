@@ -297,20 +297,82 @@
   font-size: 0.98rem;
   line-height: 1.75;
 }
+/* Phones: the centred band on a ground-coloured tint read as three lines
+   floating in a screen of empty space. Here it becomes one compact panel —
+   hairline frame, faint wash, a short gold rule — that is tappable as a whole,
+   and the sections either side close up around it. The paddings carry
+   `.shelf-home` to outrank `.shelf-home .shelf-section`, the home page's
+   section rhythm further down. */
 @media (max-width: 35rem) {
-  .shelf-giftfinder-band {
-    padding-block: 2.75rem;
+  .shelf-home .shelf-section:has(+ .shelf-giftfinder-band) {
+    padding-bottom: 1.75rem;
+  }
+  .shelf-home .shelf-section.shelf-giftfinder-band {
+    padding-block: 0.25rem 2.5rem;
+  }
+  /* The panel's own frame is the divider, so the faded seam drawn above every
+     home section (see "Home polish") would only double it. */
+  .shelf-home
+    > .shelf-section
+    + .shelf-section.shelf-giftfinder-band:not(.shelf-newsletter)::before {
+    display: none;
+  }
+  .shelf-home .shelf-giftfinder-band + .shelf-section {
+    padding-top: 3rem;
   }
   .shelf-giftfinder-content {
-    gap: 0.65rem;
-    padding-inline: 0.9rem;
-  }
-  .shelf-giftfinder-link {
+    justify-items: stretch;
     gap: 0.5rem;
-    font-size: clamp(1.3rem, 6vw, 1.65rem);
+    padding: 1.4rem 1.25rem 1.3rem;
+    border: 1px solid var(--rule);
+    background: color-mix(in srgb, var(--accent) 4%, var(--ground));
+    text-align: start;
+  }
+  .shelf-giftfinder-content::before {
+    position: absolute;
+    top: -1px;
+    inset-inline-start: 1.25rem;
+    width: 2.5rem;
+    height: 2px;
+    background: var(--gold);
+    content: "";
+  }
+  .shelf-giftfinder-time {
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+  }
+  /* The link's hit area covers the whole panel; its underline gives way to a
+     framed arrow, which reads as a control on a touch screen. */
+  .shelf-giftfinder-link {
+    position: static;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 0.1rem;
+    text-align: start;
+    font-size: clamp(1.25rem, 5.4vw, 1.5rem);
+  }
+  .shelf-giftfinder-link::before {
+    position: absolute;
+    inset: 0;
+    content: "";
+  }
+  /* The reveal animation gives each line of copy its own layer, painted above
+     the hit area; let taps on them fall through to the link. */
+  .shelf-giftfinder-time,
+  .shelf-giftfinder-details {
+    pointer-events: none;
+  }
+  .shelf-giftfinder-link::after {
+    display: none;
+  }
+  .shelf-giftfinder-link .giftfinder-arrow {
+    box-sizing: content-box;
+    padding: 0.7rem;
+    border: 1px solid currentColor;
   }
   .shelf-giftfinder-details {
     font-size: 0.92rem;
+    line-height: 1.6;
   }
 }
 .shelf-giftfinder-link .giftfinder-arrow {
@@ -349,6 +411,19 @@
       animation-timeline: view();
       animation-range: var(--scroll-in);
     }
+  }
+}
+/* Phones: the title only fades in. A transform on the link would make it the
+   containing block for its full-panel hit area, shrinking that back to the
+   title alone. */
+@media (max-width: 35rem) {
+  .shelf-giftfinder-reveal[data-reveal] .shelf-giftfinder-link {
+    animation-name: giftfinder-title-in;
+  }
+}
+@keyframes giftfinder-title-in {
+  from {
+    opacity: 0;
   }
 }
 @media (prefers-reduced-motion: reduce) {

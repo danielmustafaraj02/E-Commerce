@@ -285,6 +285,13 @@
      should be the first thing on screen. */
   padding-block: clamp(1.25rem, 2.5vw, 2rem) var(--home-section-space);
 }
+/* Phones: the info column ends on the share buttons, and the full section
+   rhythm below them read as an empty screen before the next section. */
+@media (max-width: 39.99rem) {
+  .shop-product {
+    padding-bottom: 2.25rem;
+  }
+}
 .shop-back {
   display: inline-block;
   margin-bottom: 1rem;
@@ -413,37 +420,88 @@
   border: 0;
   cursor: zoom-in;
 }
-.shop-gallery-pagination {
-  display: flex;
-  justify-content: center;
-  gap: 0.25rem;
-  margin-top: 0.25rem;
+.shop-gallery-stage {
+  position: relative;
 }
-.shop-gallery-pagination button {
-  display: grid;
-  width: 2.75rem;
-  height: 2.75rem;
-  place-items: center;
-  border: 0;
-  background: transparent;
+/* Counter and zoom cue sit on the photo in view. They never take a tap: it
+   goes to the photo. */
+.shop-gallery-count,
+.shop-gallery-zoom-chip {
+  position: absolute;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 1.9rem;
+  padding: 0.3rem 0.65rem;
+  background: color-mix(in srgb, var(--ivory) 88%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 12%, transparent);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: var(--ink);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  pointer-events: none;
 }
-.shop-gallery-pagination button span {
-  width: 0.375rem;
-  height: 0.375rem;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--ink) 24%, transparent);
+.shop-gallery-count {
+  top: 0.75rem;
+  inset-inline-start: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+}
+.shop-gallery-zoom-chip {
+  bottom: 0.75rem;
+  inset-inline-end: 0.75rem;
+}
+.shop-gallery-zoom-chip svg {
+  flex: none;
+}
+/* Once the visitor has swiped they've found the gallery; the label folds
+   away and the icon stays as the reminder. */
+.shop-gallery-zoom-label {
+  display: inline-block;
+  max-width: 10rem;
+  overflow: hidden;
+  white-space: nowrap;
   transition:
-    width var(--interactive-duration) ease,
-    background-color var(--interactive-duration) ease;
+    max-width 0.4s var(--ease-out-soft, ease),
+    opacity 0.3s ease;
 }
-.shop-gallery-pagination button[aria-current="true"] span {
-  width: 1.25rem;
-  background: var(--accent);
+.shop-gallery-mobile[data-swiped] .shop-gallery-zoom-label {
+  max-width: 0;
+  opacity: 0;
 }
-.shop-gallery-pagination button:focus-visible {
+.shop-gallery-mobile[data-swiped] .shop-gallery-zoom-chip {
+  gap: 0;
+}
+/* Thumbnails of the whole set instead of dots, centred under the photo. The
+   auto margins centre them while they fit and, unlike justify-content, still
+   let the first one scroll into view when they don't. */
+.shop-gallery-strip {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.shop-gallery-strip::-webkit-scrollbar {
+  display: none;
+}
+.shop-gallery-strip > :first-child {
+  margin-inline-start: auto;
+}
+.shop-gallery-strip > :last-child {
+  margin-inline-end: auto;
+}
+.shop-thumb--strip {
+  flex: none;
+  width: 3.5rem;
+  aspect-ratio: 4 / 5;
+}
+.shop-thumb--strip:focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: -2px;
-  border-radius: 999px;
+  outline-offset: 2px;
 }
 
 @media (min-width: 40rem) {
@@ -545,7 +603,7 @@
   .shop-gallery .shop-product-photo img {
     transition: none;
   }
-  .shop-gallery-pagination button span {
+  .shop-gallery-zoom-label {
     transition: none;
   }
 }
