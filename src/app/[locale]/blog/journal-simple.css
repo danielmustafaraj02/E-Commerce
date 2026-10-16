@@ -317,6 +317,25 @@
   max-width: 100%;
   height: auto;
 }
+/* Lists in the article text. The CSS reset strips their bullets and spacing,
+   which ran the items together into what read as one paragraph. (The facts
+   box and the sources keep their own list styles.) */
+.journal-article .journal-prose > :is(ul, ol) {
+  margin-top: 1.25rem;
+  padding-inline-start: 1.4rem;
+}
+.journal-article .journal-prose > ul {
+  list-style: disc;
+}
+.journal-article .journal-prose > ol {
+  list-style: decimal;
+}
+.journal-article .journal-prose > :is(ul, ol) > li + li {
+  margin-top: 0.65rem;
+}
+.journal-article .journal-prose > :is(ul, ol) > li::marker {
+  color: var(--accent-deep, var(--ink));
+}
 
 /* -- Article photo: fit phone and desktop ---------------------------------------
    Phone: edge to edge, 4:3, never taller than 60% of the screen.

@@ -59,22 +59,24 @@ export default async function AccountPage({
         }
         title={user.name || dict.account.title}
       >
-        <p className="shop-lede">{dict.account.signedInAs(session.user.email!)}</p>
+        {/* Account details, not an introduction: the small UI line, which
+            also lets a long address wrap instead of widening the page. */}
+        <p className="shop-intro">{dict.account.signedInAs(session.user.email!)}</p>
       </ShelfHead>
       <ShelfBody>
         {verified === "1" && (
-          <div className="mt-4">
+          <div className="mb-8">
             <FormAlert type="success">{dict.feedback.emailConfirmed}</FormAlert>
           </div>
         )}
         {verified === "expired" && (
-          <div className="mt-4">
+          <div className="mb-8">
             <FormAlert type="error">{dict.feedback.confirmLinkExpired}</FormAlert>
           </div>
         )}
 
         {!user.emailVerified && (
-          <div className="border-warning/30 bg-warning/5 mt-6 rounded-lg border p-4">
+          <div className="border-warning/30 bg-warning/5 mb-8 rounded-lg border p-4">
             <p className="text-sm">{dict.feedback.confirmEmailPrompt}</p>
             <ResendVerificationForm
               labels={{
@@ -141,7 +143,9 @@ export default async function AccountPage({
         </section>
 
         <section className="shop-section">
-          <div className="mb-4 flex items-baseline justify-between gap-3">
+          {/* Wraps the link under the heading when both don't fit on one
+              line, rather than squeezing the heading onto two. */}
+          <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
             <h2 className="shop-h2 shop-h2--flush">
               <svg
                 width="20"
@@ -160,7 +164,7 @@ export default async function AccountPage({
               {dict.account.wishlist}
             </h2>
             <Link href="/account/wishlist" className="shelf-link">
-              {dict.account.viewWishlist}
+              {dict.account.viewWishlist} <span aria-hidden="true">→</span>
             </Link>
           </div>
           {wishlistPreview.length === 0 ? (
