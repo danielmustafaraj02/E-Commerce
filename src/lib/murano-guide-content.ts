@@ -28,284 +28,285 @@ export type MuranoGuideContent = {
 };
 
 const en: MuranoGuideContent = {
-  metaTitle: "Murano Glass Guide: History, Real vs Fake",
+  metaTitle: "Murano Glass Guide: History, Techniques, Real vs Fake",
   metaDescription:
-    "Murano glass explained: 700 years of history, lampworking and murrine techniques, how to tell genuine glass from imitations, and how to care for it.",
-  title: "The Complete Guide to Murano Glass",
+    "How glass came to Murano, what lampwork, filigrana and murrine really are, how to check the Vetro Artistico® Murano mark and how to care for glass jewelry.",
+  title: "A Guide to Murano Glass",
   intro:
-    "Murano glass is glass made on Murano, a small island in the Venetian lagoon that has been Venice's glassmaking center for over 700 years. The name is protected by an Italian trademark for a reason: it describes a specific place, a specific set of hand techniques, and a level of skill that mass-produced glass jewelry sold under the same name usually doesn't have. This guide covers where it comes from, how it's actually made, and how to tell the genuine article from an imitation.",
+    "Murano is a small island in the Venetian lagoon, and glass has been worked there for more than seven centuries. “Murano glass” should mean glass made on the island, but the words on their own guarantee nothing: they are printed on plenty of beads made elsewhere. This guide covers how the craft came to Murano, what the main techniques involve, how to check what you are buying, and how to look after glass jewelry once it is yours.",
   historyTitle: "A short history",
   historyParagraphs: [
-    "In 1291, the Republic of Venice ordered every glass furnace in the city moved to the island of Murano. The official reason was fire safety, furnaces ran day and night in a city built almost entirely of wood, but it also had the effect of concentrating every glassmaker in one place the Republic could control. Glassmaking on the island was governed by its own guild, the Arte dei Fioleri, and for centuries afterward Murano's glassmakers held a genuinely privileged status (some were even permitted to marry into Venetian nobility) in exchange for rules that restricted where they could travel and who they could train, leaving the island to practice the trade elsewhere was, for a long stretch of that history, treated as an act of treason.",
-    "The Renaissance was Murano's golden age. Around the 1450s, a glassmaker named Angelo Barovier developed cristallo, a glass clear and colorless enough to rival rock crystal, a genuine technical breakthrough at the time, and Murano became Europe's main source of fine mirrors and chandeliers for the next three centuries. Murrine and millefiori (glass canes with a mosaic-like cross-section, an ancient technique with roots in Roman and Egyptian glasswork) were revived and refined on the island. In the 17th century, one of Murano's furnaces is said to have discovered aventurine glass, glass flecked with tiny copper crystals, by accident, and it's been a signature Murano material ever since.",
-    "It nearly ended twice. Cheaper glass from Bohemia and France ate into Murano's market through the 1700s, and then in 1797 Napoleon's occupation dissolved the Republic of Venice and, with it, the glassmakers' guild, production collapsed to a fraction of what it had been. The revival that followed is unusually well documented: Antonio Salviati relaunched large-scale mosaic and glass production in the 1860s and helped found the Murano Glass Museum in 1861 to preserve and showcase the island's own history; Paolo Venini founded what became one of the island's most influential furnaces in 1921. Murano glass is still made by hand today, in working furnaces on the island, using largely the same core techniques as seven centuries ago.",
+    "Glass was already being worked on Murano before 1291, but that year changed the island’s place in the story. On 8 November 1291, Venice ordered the furnaces operating in the city, especially around Rialto, to be destroyed. New ones could be built elsewhere in the lagoon, and Murano is where the industry gathered. Fire is the usual explanation, and a plausible one in a crowded city of wooden houses. The rule also belonged to a wider system: Venice decided where glass could be made and which raw materials could leave, and the glassmakers’ guild controlled who could practise the trade and where they could take it.",
+    "Murano’s reputation grew in the fifteenth and sixteenth centuries. Cristallo, a clear soda glass credited to Angelo Barovier around the middle of the fifteenth century, could be blown thin and almost colorless. It was not lead crystal, which came later and from elsewhere. Lattimo, an opaque white glass, was made to look like porcelain. In the first half of the sixteenth century came filigrana, with threads of white or colored glass built into clear glass while it was hot. Venetian mirrors and, later, chandeliers were sold all over Europe.",
+    "In the eighteenth century Bohemian crystal took much of Murano’s market, and the decline deepened after the fall of the Venetian Republic in 1797. The revival that followed is unusually well recorded. The Murano Glass Museum, which dates it to roughly 1850–1895, was founded in 1861, and the Abate Zanetti glass school followed in 1862, while makers brought back murrine and other old techniques. In the twentieth century, glassworks such as Venini invited designers to the furnace: around 1942 Carlo Scarpa turned the old mezza filigrana into stripes of color. Glass is still worked on the island today, in furnaces you can visit.",
   ],
-  beadsTitle: "Beads, trade, and a complicated history",
+  beadsTitle: "Beads, trade and a harder history",
   beadsBody:
-    "Individually lamp-worked beads like the ones in this catalog are one Murano tradition, but for a long stretch of its history, the island's biggest export by volume wasn't art glass at all. It was conterie: small, cheaply-made glass beads, produced by the millions and shipped out through Venice's trading networks from the 16th century onward to Africa, Asia and the Americas, where they were used as a form of currency, including, uncomfortably, within the transatlantic slave trade. That mass-production tradition had its own separate guild and its own workers, distinct from the furnace maestri making cristallo and chandeliers. It's a different craft from the individually shaped pieces in this guide, but it's part of the same island's history, and it's a large part of why Venetian glass beads still turn up in museum collections and archaeological digs on four continents today.",
+    "For a long time beads, not vases, were among Murano’s most important exports. The Glass Museum records bead making on the island from the fourteenth century, and there was more than one kind. Conterie were tiny beads cut from thin hollow canes. Rosetta, or chevron, beads were cut from layered canes with a star-shaped cross-section, an invention traditionally credited to Marietta Barovier. Lampwork beads were shaped one at a time at the flame. By one estimate, between 1773 and 1790 beads made up 43% of the value of Venetian glass exports. Some travelled through Atlantic trade that included the slave trade, which is one reason Venetian beads turn up in museums and excavations far from Venice. On the island itself, the Società Veneziana Conterie, formed in 1898, made beads on an industrial scale until it closed in 1993.",
   techniquesTitle: "The techniques, explained",
   techniques: [
     {
       name: "Lampworking (lavorazione a lume)",
-      body: "Shaping a glass rod over an open flame rather than a furnace, the technique behind most individual beads. A glassworker heats the tip of a colored glass rod until it's molten, winds it around a metal mandrel to form a bead, and shapes it with tools and gravity while it's still soft.",
+      body: "A rod of glass is softened in a flame and wound around a thin metal rod, the mandrel, turning all the time until a bead takes shape. Colors, layers and decoration are added while the glass is still soft. Most individual glass beads are made this way, one at a time.",
     },
     {
       name: "Glassblowing (soffiatura)",
-      body: "Gathering molten glass from a furnace on the end of a blowpipe and shaping it by blowing air into it while turning, the technique behind larger hollow forms like vases and larger beads.",
+      body: "Molten glass is gathered from the furnace on the end of a blowpipe and inflated as it turns. It is the technique behind vases, goblets and other hollow pieces, and behind some larger beads.",
     },
     {
       name: "Murrine and millefiori",
-      body: "A murrina is a slice cut from a long glass cane that was built up, layer by layer, so its cross-section shows a pattern, a flower, a star, a face. Millefiori (\"thousand flowers\") is the best-known style of murrine. Slices are arranged on the surface of a bead or vase and fused in with heat, so the pattern runs all the way through the glass rather than sitting on top of it.",
+      body: "A cane is built from layers of colored glass so that its cross-section shows a pattern: a star, a flower, even a tiny portrait. Cut into thin slices, it gives murrine; slices set side by side and fused give millefiori, “a thousand flowers.” The pattern runs right through the glass instead of sitting on the surface. The technique has Roman precedents and was revived on Murano in the nineteenth century.",
     },
     {
       name: "Filigrana (filigree)",
-      body: "Thin canes of white or colored glass, sometimes twisted (retortoli) or crossed into a fine net (reticello), are embedded in clear glass before it's shaped, visible as delicate threads running through the piece.",
+      body: "Threads of white or colored glass are built into clear glass while it is hot. In retortoli the threads are twisted; in reticello they cross into a fine net, often with a tiny air bubble caught at each crossing. The Glass Museum dates filigrana to the first half of the sixteenth century.",
     },
     {
       name: "Sommerso",
-      body: 'Italian for "submerged." Layers of different-colored glass are dipped one over another, each fully encasing the last, so a piece shows depth and a gradient between colors rather than a single flat tone.',
+      body: "Italian for “submerged.” Glass of one color is cased in another, sometimes several times over, so that one color seems to float inside the next.",
     },
     {
       name: "Avventurina (aventurine glass)",
-      body: "Glass with tiny copper crystals suspended inside it, giving it a metallic sparkle. A genuine Murano invention, traditionally kept as one of the island's more closely guarded formulas.",
+      body: "Glass full of tiny copper crystals that catch the light. It has been made in Venice since the seventeenth century. The crystals form only as the glass cools slowly, which is what makes it hard to produce.",
     },
     {
       name: "Gold and silver leaf",
-      body: "Thin sheets of real gold or silver leaf are laid onto the glass while it's still hot and worked in, so the metal becomes part of the surface rather than sitting on top of it, the source of the metallic flecks and veining seen in many pieces.",
+      body: "Real gold or silver leaf is laid on the hot glass and often cased in clear glass, so the metal shows as flecks and veins inside the bead rather than as a coating on top.",
     },
     {
       name: "Craquelé (ice glass)",
-      body: "Hot glass is plunged briefly into cold water, which shatters its surface into a fine network of cracks, then it goes back into the furnace just long enough to fuse a smooth layer over the top and seal the pattern in without melting it away.",
+      body: "Hot glass is plunged into cold water, which crazes the surface into a fine web of cracks. It is then reheated just enough to seal the cracks in.",
     },
     {
       name: "Sandblasting (sabbiatura)",
-      body: "Done cold, after the piece has fully formed, a fine abrasive is blown at the surface to soften its shine into a matte, frosted finish.",
+      body: "Done cold, once the piece is finished: a fine abrasive is blown at the surface and turns the shine into a soft matte finish.",
     },
     {
       name: "The pontil mark",
-      body: "The rough (or carefully polished) mark left on a piece where it was broken off the punty rod that held it during shaping. Mass-produced glass, formed in a mold, doesn't have one, a genuine pontil mark is one of the more reliable signs of hand-blown glass.",
+      body: "Found on blown pieces such as vases and glasses: the mark left where the piece was broken off the pontil, the iron rod that held it while it was finished. It may be rough or ground smooth. Pressed and molded glass has none, so on a vessel it is a useful sign of hand work. Beads are made differently and don’t have one.",
     },
   ],
   authenticityTitle: "How to recognize genuine Murano glass",
   authenticityIntro:
-    "\"Murano glass\" is one of the most imitated names in jewelry and decorative glass, mass-produced beads made in factories elsewhere (often at a fraction of the cost) are routinely sold under the same label, especially to tourists in Venice itself. There's an actual trademark, Vetro Artistico® Murano, registered by the Consorzio Promovetro Murano, that furnaces on the island can apply to their work to certify where it was really made, but plenty of genuine small-batch work isn't formally certified, and plenty of certified-sounding claims are made up. The more reliable check is the glass itself:",
+    "The most reliable guarantee is a mark, not the look of the glass. Vetro Artistico® Murano was created by the Veneto Region in 1994 and is registered as a European trademark. Only companies producing glass on Murano can be licensed to use it, and since 2016 every label carries a serial number and a Datamatrix code you can check online. A lot of genuine work, especially small pieces such as beads, is sold without the label, so for everything else it pays to look closely and ask:",
   authenticitySigns: [
-    "Small air bubbles and slight asymmetry, signs a human shaped it, not a mold.",
-    "Color that shifts subtly from piece to piece in the same set, rather than being perfectly uniform.",
-    "A pontil mark where applicable (see above), a mold-made piece won't have one.",
-    "Weight and thickness that feel substantial rather than thin and light, hand-gathered glass tends to carry more of it than a machine-formed piece.",
-    "A price that reflects real labor. A skilled lampworker spends real time on every single bead; a price that looks too low for that usually means it wasn't made that way.",
+    "Where exactly was the glass worked, and by whom? A seller who knows will simply tell you.",
+    "Which technique was used? For beads: lampwork, cut cane or blown glass?",
+    "Is there a Vetro Artistico® Murano label, and can you check its codes?",
+    "Small differences between the beads of one piece, in color, size or shape, are normal in handmade glass. Perfect uniformity along a whole strand is more typical of mass production, although on its own it proves nothing.",
+    "The price. Lampwork takes time at the flame for every single bead, so a very low price for a strand of “Murano” beads deserves a question.",
   ],
   careTitle: "Caring for Murano glass jewelry",
   careIntro:
-    "Glass is more forgiving than people expect, but it's still glass, a few habits make it last.",
+    "The glass will outlast almost everything around it. What needs looking after is the thread, the clasp and the metal parts, and the glass itself only asks you to spare it knocks and sudden changes of temperature.",
   careSteps: [
     {
       name: "Put it on last",
-      body: "Perfume, hairspray and lotion can dull glass's surface over time, apply them first, then put your jewelry on.",
+      body: "Let perfume, hairspray and creams dry first. They are harder on the thread and the metal than on the glass.",
     },
     {
-      name: "Take it off for water and sleep",
-      body: "Remove it before showering, swimming or sleeping, so it isn't knocked around or exposed to chlorine/salt water for hours at a time.",
+      name: "Keep it dry",
+      body: "Take it off before swimming, bathing or sport. Water that stays in the thread and around the clasp is what wears a piece out.",
     },
     {
-      name: "Wipe it down after wearing",
-      body: "A soft, dry cloth is enough to keep it clean, no need for jewelry cleaner or water.",
+      name: "Clean it gently",
+      body: "A soft, dry cloth is usually enough. If the glass looks dull, use a cloth dampened with lukewarm water and let the piece dry in the air. No dishwasher, ultrasonic cleaner or household products, and never leave a strung piece to soak.",
     },
     {
-      name: "Store pieces separately",
-      body: "A soft pouch or a lined box keeps beads from knocking against each other or against harder jewelry, which is the most common way a piece gets chipped.",
+      name: "Store each piece on its own",
+      body: "Glass beads can chip or scratch each other. Keep each piece in its pouch or in a lined box, and lay necklaces flat so the thread isn’t under constant tension.",
     },
     {
-      name: "Avoid sudden temperature changes",
-      body: "Leaving glass jewelry somewhere very hot (a car dashboard, direct sun) and then handling it while cold can stress the glass, the same thermal-shock principle that cracks a cold glass filled with hot water.",
+      name: "Avoid sudden changes of temperature",
+      body: "Don’t leave glass on a sunny windowsill or a radiator, and don’t rinse it in hot water straight after it has been out in the cold. It is rapid change, not heat or cold as such, that can crack glass.",
     },
   ],
   shopCtaTitle: "Shop the collection",
   shopCtaBody:
-    "Every piece in each of these collections is made using the techniques above, browse by category to see them.",
+    "Necklaces, bracelets and earrings in Murano glass. Now that you know what to look for, the color, the finish and the small differences between one bead and the next are easier to see.",
   faqTitle: "Frequently asked questions",
   faq: [
     {
-      question: "Is Murano glass real glass, or something synthetic?",
+      question: "Is Murano glass real glass?",
       answer:
-        "Real glass, a mix of silica sand, soda and lime melted at high temperature in a furnace, the same base recipe glass has used for centuries. What makes it \"Murano glass\" specifically is where and how it's worked, not a different raw material.",
+        "Yes. It is a soda-lime glass, made mainly from silica sand, soda and lime and melted in a furnace. What makes it Murano glass is where and how it is worked, not a secret ingredient.",
     },
     {
       question: "What's the difference between Murano glass and ordinary glass jewelry?",
       answer:
-        "Mostly the process: Murano glass is shaped by hand, bead by bead, using techniques like lampworking, murrine and sommerso, rather than cast or pressed in a mold. That's also why two \"identical\" Murano pieces are never perfectly identical.",
+        "Mostly the making. Murano beads are usually shaped one at a time at the flame or cut from hand-built canes, while cheap glass beads are typically made by machine or pressed in molds. Handwork leaves small differences between beads, which is one reason two Murano pieces are rarely identical.",
     },
     {
-      question: "Why is genuine Murano glass more expensive than lookalikes?",
+      question: "Why does genuine Murano glass cost more than lookalikes?",
       answer:
-        "Because it takes real skilled labor and time, a lampworker shapes each bead individually over an open flame. Mass-produced imitation glass, formed in molds in a factory, skips almost all of that labor, which is exactly why it costs less.",
+        "Time and skill. A lampworker shapes every bead individually at the flame, and a long strand can need dozens of them. Molded imitations skip almost all of that work, which is why they cost less.",
     },
     {
-      question: "What is a pontil mark, and should I be able to see one?",
+      question: "How can I check that a piece is genuine?",
       answer:
-        "It's the mark left where a hand-blown piece was broken off the rod that held it during shaping, sometimes visible as a small rough or polished spot. Not every technique leaves an obvious one, but where it's present, it's a strong sign of hand work.",
+        "Look for the Vetro Artistico® Murano label and check its serial number and Datamatrix code online. If there is no label, ask the seller where the glass was worked, by whom and with which technique. Clear, specific answers are a good sign.",
     },
     {
-      question: "Why do beads in the same set look slightly different from each other?",
+      question: "Why do the beads in one piece look slightly different from each other?",
       answer:
-        "Because each one passed through a person's hands, not a mold. Small differences in color, bubbles and shape are what hand-blown glass looks like, not a defect.",
+        "Because each one was shaped separately, by hand. Small variations in color and size, and the tiny bubbles inside the glass, are part of handmade glass, not defects.",
     },
     {
       question: "How do I clean and store Murano glass jewelry?",
       answer:
-        'Wipe it with a soft, dry cloth after wearing, put it on after (not before) perfume or lotion, and store pieces separately so they don\'t knock against each other. See "Caring for Murano glass jewelry" above for the full list.',
+        "Wipe it with a soft, dry cloth (with a little lukewarm water if it looks dull), let it dry in the air, put it on after perfume and creams, and store each piece separately. The care section above has the details.",
     },
     {
       question: "Is glass jewelry eco-friendly?",
       answer:
-        "Glass itself is one of the most recyclable materials that exists, it can be melted down and reworked indefinitely without losing quality, which is part of how Murano furnaces have kept working the same raw material for seven centuries.",
+        "It is durable rather than “eco” in any certified sense. Glass is remarkably stable: the Murano Glass Museum holds Roman glass from the first to the third century AD. A piece that is looked after can last for decades, and when the thread wears out it can be restrung.",
     },
     {
-      question: "Can a cracked or chipped bead be repaired?",
+      question: "Can a chipped bead be repaired?",
       answer:
-        "Not invisibly, in most cases, a repair usually shows. That's the practical reason to avoid impact and sudden temperature changes (see the care section above) rather than count on fixing damage after the fact.",
+        "As a rule, not invisibly. A worn thread or a loose clasp is a different matter: a piece can be restrung many times.",
     },
   ],
 };
 
 const it: MuranoGuideContent = {
-  metaTitle: "Vetro di Murano: storia, tecniche e autenticità",
+  metaTitle: "Vetro di Murano: storia, tecniche e come riconoscerlo",
   metaDescription:
-    "Da dove viene il vetro di Murano, come si lavora a lume e con le murrine, come riconoscere l'originale dalle imitazioni e come curarlo: la guida completa.",
-  title: "La Guida Completa al Vetro di Murano",
+    "Perché il vetro si lavora a Murano, cosa sono il lume, la filigrana e le murrine, come verificare il marchio Vetro Artistico® Murano e come curare i gioielli.",
+  title: "Guida al vetro di Murano",
   intro:
-    "Il vetro di Murano è il vetro lavorato a Murano, una piccola isola della laguna veneziana che da oltre 700 anni è il centro della lavorazione del vetro veneziana. Il nome è tutelato da un marchio italiano per un motivo preciso: descrive un luogo specifico, un insieme specifico di tecniche manuali e un livello di abilità che la bigiotteria in vetro prodotta in serie e venduta con lo stesso nome, di solito, non ha. Questa guida racconta da dove viene, come viene davvero realizzato e come riconoscere il pezzo autentico da un'imitazione.",
+    "Murano è una piccola isola della laguna di Venezia, e il vetro vi si lavora da più di sette secoli. “Vetro di Murano” dovrebbe voler dire vetro lavorato sull’isola, ma la dicitura da sola non garantisce niente: la si legge anche su tante perle prodotte altrove. Questa guida racconta come l’arte vetraria si è concentrata a Murano, in che cosa consistono le tecniche principali, come verificare quello che si compra e come curare un gioiello in vetro una volta che è tuo.",
   historyTitle: "Una breve storia",
   historyParagraphs: [
-    "Nel 1291 la Repubblica di Venezia ordinò che tutte le fornaci vetrarie della città fossero trasferite sull'isola di Murano. Il motivo ufficiale era la sicurezza antincendio, le fornaci restavano accese giorno e notte in una città costruita quasi interamente in legno, ma l'effetto fu anche quello di concentrare tutti i vetrai in un luogo che la Repubblica poteva controllare più facilmente. La lavorazione del vetro sull'isola era regolata da una corporazione propria, l'Arte dei Fioleri, e per secoli i vetrai muranesi godettero di uno status davvero privilegiato (ad alcuni fu persino concesso di sposare nobildonne veneziane), in cambio di regole che limitavano dove potevano viaggiare e chi potevano formare, lasciare l'isola per esercitare il mestiere altrove fu, per un lungo periodo, considerato un vero e proprio tradimento.",
-    "Il Rinascimento fu l'epoca d'oro di Murano. Intorno alla metà del Quattrocento, un vetraio di nome Angelo Barovier mise a punto il cristallo, un vetro trasparente e incolore capace di rivaleggiare con il cristallo di rocca, una vera svolta tecnica per l'epoca, e per i tre secoli successivi Murano divenne la principale fonte europea di specchi e lampadari raffinati. Le murrine e i millefiori (canne di vetro che, in sezione, mostrano un disegno a mosaico, una tecnica antica, con radici nella lavorazione del vetro romana ed egizia) furono ripresi e perfezionati proprio sull'isola. Nel XVII secolo, si racconta che una delle fornaci scoprì per caso il vetro avventurina, vetro punteggiato di minuscoli cristalli di rame, che da allora è diventato un materiale distintivo di Murano.",
-    "L'industria rischiò di scomparire, e non una sola volta. La concorrenza del vetro più economico prodotto in Boemia e in Francia eroso il mercato di Murano nel corso del Settecento, poi nel 1797 l'occupazione napoleonica sciolse la Repubblica di Venezia e, con essa, la corporazione dei vetrai, la produzione crollò a una frazione di quella di un tempo. La rinascita che seguì è insolitamente ben documentata: Antonio Salviati rilanciò la produzione di mosaici e vetri su larga scala negli anni 1860 e contribuì a fondare il Museo del Vetro di Murano nel 1861, per preservare e raccontare la storia dell'isola; Paolo Venini fondò nel 1921 quella che sarebbe diventata una delle fornaci più influenti dell'isola. Ancora oggi il vetro di Murano viene lavorato a mano, nelle fornaci attive sull'isola, con tecniche di base rimaste in gran parte le stesse di sette secoli fa.",
+    "A Murano il vetro si lavorava già prima del 1291, ma quell’anno cambiò il ruolo dell’isola. L’8 novembre 1291 Venezia stabilì che le fornaci attive in città, soprattutto intorno a Rialto, fossero distrutte. Se ne potevano costruire altre nella laguna, e fu a Murano che il settore si concentrò. La spiegazione più citata è il rischio d’incendio, plausibile in una città fitta di case di legno. Ma la norma rientrava in un sistema più ampio: Venezia decideva dove si poteva produrre e quali materiali potevano uscire, mentre l’arte dei vetrai stabiliva chi poteva esercitare il mestiere e dove poteva portarlo.",
+    "La fama di Murano crebbe tra Quattrocento e Cinquecento. Il cristallo, un vetro sodico limpido attribuito ad Angelo Barovier verso la metà del Quattrocento, si poteva soffiare sottile e quasi incolore. Non aveva niente a che fare con il cristallo al piombo, arrivato più tardi e da altri paesi. Il lattimo, un vetro bianco e opaco, si faceva per somigliare alla porcellana. Nella prima metà del Cinquecento arrivò la filigrana: fili di vetro bianco o colorato inglobati nel vetro trasparente ancora caldo. Gli specchi veneziani e, più tardi, i lampadari si vendevano in tutta Europa.",
+    "Nel Settecento il cristallo di Boemia tolse a Murano buona parte del mercato, e la crisi si aggravò dopo la caduta della Repubblica di Venezia nel 1797. La ripresa che seguì è insolitamente ben documentata. Il Museo del Vetro, che la colloca all’incirca tra il 1850 e il 1895, fu fondato nel 1861 e la scuola vetraria Abate Zanetti nel 1862, mentre i maestri recuperavano le murrine e altre tecniche antiche. Nel Novecento fornaci come Venini chiamarono i designer accanto ai maestri: intorno al 1942 Carlo Scarpa trasformò la vecchia mezza filigrana in righe di colore. Ancora oggi sull’isola il vetro si lavora in fornaci che si possono visitare.",
   ],
-  beadsTitle: "Perle, commercio e una storia complicata",
+  beadsTitle: "Perle, commerci e una storia difficile",
   beadsBody:
-    "Le perle lavorate a lume una per una, come quelle di questo catalogo, sono una tradizione muranese, ma per un lungo periodo della sua storia, la principale esportazione dell'isola per volume non fu affatto il vetro d'arte. Furono le conterie: piccole perle di vetro prodotte a basso costo, realizzate a milioni e spedite attraverso le rotte commerciali di Venezia a partire dal XVI secolo verso Africa, Asia e Americhe, dove venivano usate come forma di moneta di scambio, anche, con disagio, all'interno della tratta transatlantica degli schiavi. Quella tradizione di produzione in serie aveva una propria corporazione e propri lavoratori, distinti dai maestri di fornace che realizzavano cristallo e lampadari. È un mestiere diverso dai pezzi lavorati singolarmente descritti in questa guida, ma fa parte della stessa storia dell'isola, ed è in buona parte il motivo per cui le perle di vetro veneziane si trovano ancora oggi in collezioni museali e siti archeologici in quattro continenti.",
+    "Per molto tempo le perle, più dei vasi, furono tra le esportazioni più importanti di Murano. Il Museo del Vetro documenta la produzione di perle sull’isola dal Trecento, e i tipi erano diversi. Le conterie erano perline minuscole tagliate da sottili canne cave. Le rosette, ricavate da canne a strati con la sezione a stella, sono tradizionalmente attribuite a Marietta Barovier. Le perle a lume, infine, si modellavano una per una alla fiamma. Secondo una stima, tra il 1773 e il 1790 le perle valevano il 43% delle esportazioni veneziane di vetro. Alcune viaggiarono lungo rotte atlantiche di cui faceva parte anche la tratta degli schiavi: è uno dei motivi per cui perle veneziane si trovano in musei e scavi lontanissimi da Venezia. Sull’isola, la Società Veneziana Conterie, nata nel 1898, le produsse su scala industriale fino alla chiusura, nel 1993.",
   techniquesTitle: "Le tecniche, spiegate",
   techniques: [
     {
       name: "Lavorazione a lume",
-      body: "Consiste nel modellare una bacchetta di vetro sulla fiamma libera, anziché in fornace, è la tecnica dietro la maggior parte delle perle singole. Il maestro scalda la punta di una bacchetta di vetro colorato fino a renderla incandescente, la avvolge attorno a un mandrino metallico per formare la perla e la modella con gli attrezzi e con la forza di gravità mentre è ancora morbida.",
+      body: "Una bacchetta di vetro viene ammorbidita alla fiamma e avvolta intorno a una sottile asta di metallo, il mandrino, girando di continuo finché prende forma una perla. Colori, strati e decori si aggiungono mentre il vetro è ancora morbido. È così che nasce la maggior parte delle perle di vetro, una alla volta.",
     },
     {
       name: "Soffiatura",
-      body: "Si preleva vetro fuso dalla fornace sulla punta di una canna da soffio e lo si modella soffiando aria al suo interno mentre lo si fa ruotare, è la tecnica dietro le forme cave più grandi, come vasi e perle di dimensioni maggiori.",
+      body: "Il vetro fuso si raccoglie dalla fornace sulla punta della canna da soffio e si gonfia mentre gira. È la tecnica di vasi, calici e altri oggetti cavi, e di alcune perle più grandi.",
     },
     {
       name: "Murrine e millefiori",
-      body: 'Una murrina è una fetta tagliata da una lunga canna di vetro costruita a strati, in modo che la sua sezione mostri un disegno, un fiore, una stella, un volto. Il millefiori ("mille fiori") è lo stile di murrina più conosciuto. Le fette vengono disposte sulla superficie di una perla o di un vaso e fuse con il calore, così il motivo attraversa tutto lo spessore del vetro invece di restare in superficie.',
+      body: "Una canna viene costruita con strati di vetro colorato, in modo che la sua sezione mostri un disegno: una stella, un fiore, perfino un piccolo ritratto. Tagliata a fette sottili dà le murrine; accostate e fuse insieme, le fette formano il millefiori. Il disegno attraversa tutto lo spessore del vetro invece di restare in superficie. La tecnica ha precedenti romani ed è stata ripresa a Murano nell’Ottocento.",
     },
     {
       name: "Filigrana",
-      body: "Sottili canne di vetro bianco o colorato, a volte attorcigliate (retortoli) o incrociate a formare una rete fine (reticello), vengono inglobate nel vetro trasparente prima che venga modellato, restano visibili come delicati fili che attraversano il pezzo.",
+      body: "Fili di vetro bianco o colorato vengono inglobati nel vetro trasparente ancora caldo. Nella filigrana a retortoli i fili sono ritorti; nel reticello si incrociano in una rete sottile, spesso con una piccola bolla d’aria chiusa a ogni incrocio. Il Museo del Vetro data la filigrana alla prima metà del Cinquecento.",
     },
     {
       name: "Sommerso",
-      body: "Strati di vetro di colori diversi vengono immersi uno sopra l'altro, ciascuno avvolgendo completamente il precedente, così il pezzo mostra profondità e una sfumatura tra i colori invece di un unico tono piatto.",
+      body: "Un vetro di un colore viene rivestito da un altro, a volte più volte, così che un colore sembri sospeso dentro l’altro.",
     },
     {
       name: "Vetro avventurina",
-      body: "Vetro con minuscoli cristalli di rame sospesi al suo interno, che gli conferiscono un luccichio metallico. Un'invenzione autenticamente muranese, tradizionalmente custodita come una delle formule più gelosamente protette dell'isola.",
+      body: "Vetro pieno di minuscoli cristalli di rame che catturano la luce. A Venezia si produce dal Seicento. I cristalli si formano solo se il vetro si raffredda lentamente, ed è questo a renderlo difficile da ottenere.",
     },
     {
-      name: "Foglia d'oro e d'argento",
-      body: "Sottili fogli di oro o argento vero vengono adagiati sul vetro ancora caldo e lavorati al suo interno, così il metallo diventa parte della superficie invece di restare sopra di essa, è da qui che nascono i riflessi e le venature metalliche visibili in molti pezzi.",
+      name: "Foglia d’oro e d’argento",
+      body: "Una foglia d’oro o d’argento vero viene stesa sul vetro caldo e spesso ricoperta di vetro trasparente: il metallo resta dentro la perla, in pagliuzze e venature, invece di formare una patina in superficie.",
     },
     {
-      name: "Craquelé (vetro a ghiaccio)",
-      body: "Il vetro caldo viene immerso brevemente in acqua fredda, che ne screpola la superficie in una fitta rete di crepe; poi torna in fornace giusto il tempo necessario a fondere uno strato liscio sopra il motivo e sigillarlo, senza farlo sparire.",
+      name: "Craquelé (vetro ghiaccio)",
+      body: "Il vetro caldo viene immerso nell’acqua fredda, che ne incrina la superficie in una rete fittissima. Poi lo si riscalda quanto basta per sigillare le crepe all’interno.",
     },
     {
       name: "Sabbiatura",
-      body: "Si esegue a freddo, a pezzo già formato, un abrasivo fine viene spruzzato sulla superficie per trasformarne la lucentezza in una finitura opaca e vellutata.",
+      body: "Si fa a freddo, a pezzo finito: un abrasivo finissimo, spruzzato sulla superficie, trasforma la lucentezza in un opaco morbido.",
     },
     {
       name: "Il segno del pontello",
-      body: "Il segno, ruvido o accuratamente levigato, che resta sul pezzo nel punto in cui è stato staccato dal pontello che lo sosteneva durante la lavorazione. Il vetro prodotto in serie, formato in uno stampo, non ne ha uno, un vero segno di pontello è uno degli indizi più affidabili di una lavorazione a mano.",
+      body: "Si trova sugli oggetti soffiati, come vasi e bicchieri: è il segno lasciato dove il pezzo è stato staccato dal pontello, l’asta di ferro che lo reggeva durante la rifinitura. Può essere ruvido o levigato. Il vetro pressato o stampato non ce l’ha, quindi su un oggetto cavo è un buon indizio di lavorazione a mano. Le perle si fanno in un altro modo e non ce l’hanno.",
     },
   ],
   authenticityTitle: "Come riconoscere il vero vetro di Murano",
   authenticityIntro:
-    "\"Vetro di Murano\" è uno dei nomi più imitati nella bigiotteria e negli oggetti in vetro: perle prodotte in serie in fabbriche altrove (spesso a una frazione del costo) vengono regolarmente vendute con la stessa dicitura, specialmente ai turisti a Venezia. Esiste un vero e proprio marchio, Vetro Artistico® Murano, registrato dal Consorzio Promovetro Murano, che le fornaci dell'isola possono apporre sui propri lavori per certificarne la reale provenienza, ma molti lavori autentici realizzati in piccole quantità non sono certificati formalmente, e molte dichiarazioni che sembrano una certificazione sono inventate. Il controllo più affidabile resta il vetro stesso:",
+    "La garanzia più solida è un marchio, non l’aspetto del vetro. Vetro Artistico® Murano è stato istituito dalla Regione Veneto nel 1994 ed è registrato come marchio europeo. Possono usarlo solo le aziende che producono vetro a Murano, e dal 2016 ogni etichetta riporta un numero di serie e un codice Datamatrix che si possono verificare online. Molti lavori autentici, soprattutto pezzi piccoli come le perle, si vendono senza etichetta: per tutto il resto conviene guardare da vicino e fare qualche domanda.",
   authenticitySigns: [
-    "Piccole bolle d'aria e una leggera asimmetria, segno che è stato modellato da una persona, non da uno stampo.",
-    "Un colore che varia impercettibilmente da un pezzo all'altro dello stesso set, invece di essere perfettamente uniforme.",
-    "Un segno di pontello dove applicabile (vedi sopra), un pezzo stampato non ne avrà uno.",
-    "Un peso e uno spessore che si sentono sostanziosi, non sottili e leggeri, il vetro raccolto a mano tende a pesare di più di un pezzo formato a macchina.",
-    "Un prezzo che rispecchia il lavoro reale. Un maestro dedica tempo vero a ogni singola perla; un prezzo troppo basso di solito significa che non è stata realizzata così.",
+    "Dove è stato lavorato il vetro, e da chi? Un venditore che lo sa te lo dirà senza giri di parole.",
+    "Quale tecnica è stata usata? Per le perle: lume, canna tagliata o soffiatura?",
+    "C’è l’etichetta Vetro Artistico® Murano, e se ne possono verificare i codici?",
+    "Piccole differenze tra le perle di uno stesso gioiello, nel colore, nella misura o nella forma, sono normali nel vetro lavorato a mano. Un’uniformità perfetta lungo tutto un filo è più tipica della produzione in serie, anche se da sola non prova nulla.",
+    "Il prezzo. A lume ogni perla richiede tempo alla fiamma: un prezzo molto basso per un filo di perle “di Murano” merita una domanda in più.",
   ],
-  careTitle: "Come prendersi cura dei gioielli in vetro di Murano",
+  careTitle: "Come curare i gioielli in vetro di Murano",
   careIntro:
-    "Il vetro è più resistente di quanto si pensi, ma resta vetro, poche abitudini bastano a farlo durare più a lungo.",
+    "Il vetro sopravvive a quasi tutto quello che ha intorno. Ciò che va protetto sono il filo, la chiusura e le parti in metallo; al vetro basta risparmiare urti e sbalzi di temperatura.",
   careSteps: [
     {
       name: "Indossalo per ultimo",
-      body: "Profumo, lacca e creme possono opacizzare la superficie del vetro nel tempo, applicali prima, poi indossa i gioielli.",
+      body: "Lascia asciugare prima profumo, lacca e creme: rovinano più il filo e il metallo che il vetro.",
     },
     {
-      name: "Toglilo prima dell'acqua e del sonno",
-      body: "Rimuovilo prima della doccia, del bagno o del sonno, così non viene urtato o esposto per ore a cloro o acqua salata.",
+      name: "Tienilo all’asciutto",
+      body: "Toglilo prima di nuotare, fare il bagno o sport. È l’acqua che resta nel filo e intorno alla chiusura a consumare un gioiello.",
     },
     {
-      name: "Puliscilo dopo l'uso",
-      body: "Basta un panno morbido e asciutto per tenerlo pulito, non serve un detergente per gioielli né acqua.",
+      name: "Puliscilo con delicatezza",
+      body: "Di solito basta un panno morbido e asciutto. Se il vetro sembra opaco, passa un panno inumidito con acqua tiepida e lascia asciugare all’aria. Niente lavastoviglie, ultrasuoni o detersivi, e non lasciare mai in ammollo un gioiello infilato.",
     },
     {
-      name: "Conserva i pezzi separati",
-      body: "Un sacchetto morbido o una scatola foderata evitano che le perle si urtino tra loro o con gioielli più duri, la causa più comune di scheggiature.",
+      name: "Conserva ogni pezzo da solo",
+      body: "Le perle di vetro possono scheggiarsi o graffiarsi a vicenda. Tieni ogni gioiello nel suo sacchetto o in una scatola foderata, e conserva le collane distese, così il filo non resta sempre in tensione.",
     },
     {
-      name: "Evita sbalzi termici improvvisi",
-      body: "Lasciare un gioiello in vetro in un posto molto caldo (il cruscotto dell'auto, il sole diretto) e poi maneggiarlo mentre è freddo può mettere sotto stress il vetro, lo stesso principio di shock termico che incrina un bicchiere freddo riempito d'acqua calda.",
+      name: "Evita gli sbalzi di temperatura",
+      body: "Non lasciare il vetro sul davanzale al sole o sul termosifone, e non sciacquarlo in acqua calda appena rientrato dal freddo. A incrinare il vetro sono i cambi bruschi, non il caldo o il freddo in sé.",
     },
   ],
   shopCtaTitle: "Scopri la collezione",
-  shopCtaBody: "Ogni pezzo di queste collezioni è realizzato con le tecniche descritte sopra, sfoglia per categoria per vederli.",
+  shopCtaBody:
+    "Collane, bracciali e orecchini in vetro di Murano. Ora che sai cosa guardare, il colore, le finiture e le piccole differenze tra una perla e l’altra si notano meglio.",
   faqTitle: "Domande frequenti",
   faq: [
     {
-      question: "Il vetro di Murano è vetro vero o un materiale sintetico?",
+      question: "Il vetro di Murano è vetro vero?",
       answer:
-        'È vetro vero, un mix di sabbia silicea, soda e calce fuso ad alta temperatura in fornace, la stessa ricetta di base usata da secoli. Ciò che lo rende "vetro di Murano" è dove e come viene lavorato, non una materia prima diversa.',
+        "Sì. È un vetro sodico-calcico, fatto soprattutto di sabbia silicea, soda e calce e fuso in fornace. A renderlo vetro di Murano sono il luogo e il modo in cui viene lavorato, non un ingrediente segreto.",
     },
     {
-      question: "Che differenza c'è tra il vetro di Murano e la normale bigiotteria in vetro?",
+      question: "Che differenza c’è tra il vetro di Murano e la bigiotteria in vetro comune?",
       answer:
-        'Soprattutto il processo: il vetro di Murano viene modellato a mano, perla per perla, con tecniche come la lavorazione a lume, le murrine e il sommerso, invece di essere colato o pressato in uno stampo. È anche per questo che due pezzi "identici" di Murano non sono mai perfettamente uguali.',
+        "Soprattutto la lavorazione. Le perle di Murano di solito si modellano una alla volta alla fiamma o si tagliano da canne costruite a mano, mentre le perle economiche sono in genere fatte a macchina o pressate in stampo. Il lavoro manuale lascia piccole differenze tra una perla e l’altra: anche per questo due gioielli di Murano raramente sono identici.",
     },
     {
       question: "Perché il vero vetro di Murano costa più delle imitazioni?",
       answer:
-        "Perché richiede manodopera qualificata e tempo reale, un maestro modella ogni perla individualmente sulla fiamma libera. Il vetro d'imitazione prodotto in serie, formato in stampi in fabbrica, salta quasi tutto questo lavoro, ed è proprio per questo che costa meno.",
+        "Per il tempo e l’abilità che richiede. Un maestro a lume modella ogni perla singolarmente alla fiamma, e per un filo lungo ne servono decine. Le imitazioni stampate saltano quasi tutto questo lavoro, ed è per questo che costano meno.",
     },
     {
-      question: "Cos'è il segno del pontello e dovrei riuscire a vederlo?",
+      question: "Come posso verificare che un pezzo sia autentico?",
       answer:
-        "È il segno lasciato nel punto in cui un pezzo soffiato a mano è stato staccato dall'asta che lo sosteneva durante la lavorazione, a volte visibile come una piccola zona ruvida o levigata. Non tutte le tecniche ne lasciano uno evidente, ma dove è presente è un forte indizio di lavorazione manuale.",
+        "Cerca l’etichetta Vetro Artistico® Murano e verificane online il numero di serie e il codice Datamatrix. Se l’etichetta non c’è, chiedi al venditore dove è stato lavorato il vetro, da chi e con quale tecnica: risposte chiare e precise sono un buon segno.",
     },
     {
-      question: "Perché le perle di uno stesso set sembrano leggermente diverse tra loro?",
+      question: "Perché le perle di uno stesso gioiello sono leggermente diverse tra loro?",
       answer:
-        "Perché ognuna è passata dalle mani di una persona, non da uno stampo. Le piccole differenze di colore, le bolle e la forma sono ciò che caratterizza il vetro soffiato a mano, non un difetto.",
+        "Perché ognuna è stata modellata a parte, a mano. Piccole variazioni di colore e di misura, e le minuscole bolle dentro il vetro, fanno parte del vetro lavorato a mano: non sono difetti.",
     },
     {
       question: "Come pulisco e conservo i gioielli in vetro di Murano?",
       answer:
-        'Puliscili con un panno morbido e asciutto dopo l\'uso, indossali dopo (non prima) profumo o creme, e conservali separati per evitare che si urtino tra loro. Vedi "Come prendersi cura dei gioielli in vetro di Murano" sopra per l\'elenco completo.',
+        "Passali con un panno morbido e asciutto (con un po’ d’acqua tiepida se il vetro sembra opaco), lasciali asciugare all’aria, indossali dopo profumo e creme e conserva ogni pezzo separato. Trovi i dettagli nella sezione sulla cura, qui sopra.",
     },
     {
-      question: "La bigiotteria in vetro è ecologica?",
+      question: "I gioielli in vetro sono una scelta sostenibile?",
       answer:
-        "Il vetro in sé è uno dei materiali più riciclabili che esistano, può essere fuso e rilavorato all'infinito senza perdere qualità, ed è anche per questo che le fornaci di Murano lavorano la stessa materia prima da sette secoli.",
+        "Sono durevoli, più che “ecologici” in senso certificato. Il vetro è un materiale molto stabile: il Museo del Vetro di Murano conserva vetri romani del I–III secolo d.C. Un gioiello tenuto con cura dura decenni, e quando il filo si consuma lo si può rinfilare.",
     },
     {
-      question: "Una perla incrinata o scheggiata può essere riparata?",
+      question: "Una perla scheggiata si può riparare?",
       answer:
-        "Nella maggior parte dei casi, non in modo invisibile, la riparazione di solito si vede. È il motivo pratico per cui vale la pena evitare urti e sbalzi termici improvvisi (vedi la sezione cura sopra), piuttosto che contare di poter rimediare al danno in un secondo momento.",
+        "Di norma non senza che si veda. Un filo consumato o una chiusura allentata, invece, si sistemano: un gioiello si può rinfilare molte volte.",
     },
   ],
 };

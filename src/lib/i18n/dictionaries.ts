@@ -162,7 +162,7 @@ const en = {
     value1Body:
       "We look at each design before it joins the collection: the colour of the glass, the clasp, the way it falls when worn.",
     value2Title: "Straightforward pricing",
-    value2Body: "The price you see includes tax. No surprises at checkout.",
+    value2Body: "The price you see includes VAT, and shipping is shown before you pay.",
     value3Title: "Real support",
     value3Body: "A person reads every message sent to our contact address, not a bot.",
     contactCta: "Have a question? ",
@@ -172,7 +172,7 @@ const en = {
     friendsOutro: ".",
     heritageTitle: "A short history of Murano glass",
     heritageBody1:
-      "Murano's glassmaking story starts in 1291, when Venice moved its furnaces to the island, partly to keep fire away from the city and partly to keep the glassmakers' knowledge close. Over the centuries that small island gathered a rare density of skill: lampworking, murrine and glassblowing, passed from master to apprentice and still largely done by hand.",
+      "Glass was worked on Murano before 1291, but that year Venice ordered the furnaces in the city destroyed, and the industry gathered on the island. Fire is the usual explanation, but the move also suited a city that kept a close eye on a valuable trade. In the centuries that followed, Murano became known for cristallo, lattimo, filigrana and glass beads, techniques still practised on the island and still learned at the bench, next to someone who knows them.",
     heritageBody2:
       "Glass worked by hand rarely comes out the same twice: a small bubble, a shift in colour, a curve that turns a little differently. These are the marks we look for when deciding what joins the collection.",
     guideLinkBody:
@@ -1090,7 +1090,7 @@ const it: Dictionary = {
     value1Body:
       "Guardiamo ogni modello prima che entri in collezione: il colore del vetro, la chiusura, come cade quando lo indossi.",
     value2Title: "Prezzi trasparenti",
-    value2Body: "Il prezzo che vedi include le tasse. Nessuna sorpresa al checkout.",
+    value2Body: "Il prezzo che vedi include l'IVA, e le spese di spedizione compaiono prima del pagamento.",
     value3Title: "Assistenza reale",
     value3Body:
       "Una persona legge ogni messaggio inviato al nostro indirizzo di contatto, non un bot.",
@@ -1101,7 +1101,7 @@ const it: Dictionary = {
     friendsOutro: ".",
     heritageTitle: "Breve storia del vetro di Murano",
     heritageBody1:
-      "La storia del vetro di Murano comincia nel 1291, quando Venezia trasferì le sue fornaci sull'isola: in parte per allontanare il rischio di incendi dalla città, in parte per tenere vicini i saperi dei vetrai. Nei secoli quella piccola isola ha raccolto una densità di competenze rara: lavorazione a lume, murrine, soffiatura, tramandate da maestro ad apprendista e ancora in gran parte manuali.",
+      "A Murano il vetro si lavorava già prima del 1291, ma quell'anno Venezia ordinò di distruggere le fornaci attive in città, e il settore si concentrò sull'isola. Il rischio d'incendio è la spiegazione più citata, ma lo spostamento faceva comodo anche a una città che sorvegliava da vicino un mestiere prezioso. Nei secoli successivi Murano si fece conoscere per il cristallo, il lattimo, la filigrana e le perle di vetro: tecniche che sull'isola si praticano ancora e si imparano ancora al banco, accanto a chi le conosce.",
     heritageBody2:
       "Il vetro lavorato a mano raramente esce uguale due volte: una piccola bolla, un cambio di tono, una curva che gira in modo appena diverso. Sono i segni che cerchiamo quando decidiamo cosa entra in collezione.",
     guideLinkBody:

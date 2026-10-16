@@ -81,7 +81,7 @@ export const muranoGlassBraceletsBuyingGuide: Article = {
     { type: "h3", text: "Blues of the lagoon" },
     {
       type: "p",
-      text: "Blue is the colour people most often ask us for, and it comes in several moods. [Caribbean](/products/bracciale-caraibi-88bfe3) is faceted turquoise and sky blue, cut to throw the light back, and light enough to forget you are wearing it. [Azure Lagoon](/products/bracciale-laguna-azzurra-5ae8cc) mixes round aqua beads with mottled turquoise-and-sand ovals, a summer bracelet. The [Aegean Wrap](/products/bracciale-avvolto-egeo-6bbcaa) has two translucent aqua spheres that let the light through.",
+      text: "There is more than one blue. [Caribbean](/products/bracciale-caraibi-88bfe3) is faceted turquoise and sky blue, cut to throw the light back, and light enough to forget you are wearing it. [Azure Lagoon](/products/bracciale-laguna-azzurra-5ae8cc) mixes round aqua beads with mottled turquoise-and-sand ovals, a summer bracelet. The [Aegean Wrap](/products/bracciale-avvolto-egeo-6bbcaa) has two translucent aqua spheres that let the light through.",
     },
     {
       type: "products",
@@ -235,7 +235,7 @@ export const muranoGlassBraceletsBuyingGuide: Article = {
         { type: "h3", text: "I blu della laguna" },
         {
           type: "p",
-          text: "Il blu è il colore che ci chiedono più spesso, e ha umori diversi. [Caraibi](/products/bracciale-caraibi-88bfe3) è turchese e azzurro cielo sfaccettato, tagliato per rimandare la luce, e così leggero che ci si dimentica di averlo. [Laguna Azzurra](/products/bracciale-laguna-azzurra-5ae8cc) alterna perle tonde azzurro acqua a ovali maculati turchese e sabbia: un bracciale da estate. L'[Avvolto Egeo](/products/bracciale-avvolto-egeo-6bbcaa) ha due sfere azzurro acqua traslucide che lasciano passare la luce.",
+          text: "Di blu ce n'è più di uno. [Caraibi](/products/bracciale-caraibi-88bfe3) è turchese e azzurro cielo sfaccettato, tagliato per rimandare la luce, e così leggero che ci si dimentica di averlo. [Laguna Azzurra](/products/bracciale-laguna-azzurra-5ae8cc) alterna perle tonde azzurro acqua a ovali maculati turchese e sabbia: un bracciale da estate. L'[Avvolto Egeo](/products/bracciale-avvolto-egeo-6bbcaa) ha due sfere azzurro acqua traslucide che lasciano passare la luce.",
         },
         {
           type: "products",

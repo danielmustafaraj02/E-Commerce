@@ -26,7 +26,7 @@ export const muranoGlassNecklacesBuyingGuide: Article = {
     rights: OWN_PHOTO,
   },
   intro:
-    "A necklace sits closer to the face than any other piece, so it changes how an outfit reads more than a bracelet or a ring can. Three choices make the difference: how low it falls, whether the beads sit on a chain or along a strand, and the kind of glass you want to see. Here is how to make them, with the necklaces in our collection.",
+    "A necklace frames the face, so it changes an outfit more than a bracelet or a ring can. Three choices make the difference: how low it falls, whether the beads sit on a chain or along a strand, and the kind of glass you want to see. Here is how to make them, with the necklaces in our collection.",
   body: [
     {
       type: "facts",
@@ -149,7 +149,7 @@ export const muranoGlassNecklacesBuyingGuide: Article = {
     { type: "h2", text: "The small beads along the strand" },
     {
       type: "p",
-      text: "The rows of tiny beads between the larger ones, gold, grey, red, burgundy, belong to a long lagoon tradition. The [Murano Glass Museum](https://museovetro.visitmuve.it/en/il-museo/in-depth/glossary/) describes conterie as small beads cut from thin hollow glass canes and then rounded, and its [history of Venetian beads](https://museovetro.visitmuve.it/en/il-museo/layout-and-collections/venetian-beads/) documents bead making on Murano from the fourteenth century. The wider story is in [the history of Murano glass](/blog/history-of-murano-glass).",
+      text: "Seed beads like the gold, grey, red and burgundy ones running between the larger beads have a long history in the lagoon. The [Murano Glass Museum](https://museovetro.visitmuve.it/en/il-museo/in-depth/glossary/) describes conterie as small beads cut from thin hollow glass canes and then rounded, and its [history of Venetian beads](https://museovetro.visitmuve.it/en/il-museo/layout-and-collections/venetian-beads/) documents bead making on Murano from the fourteenth century. The wider story is in [the history of Murano glass](/blog/history-of-murano-glass).",
     },
     { type: "h2", text: "Looking after it" },
     {
@@ -187,7 +187,7 @@ export const muranoGlassNecklacesBuyingGuide: Article = {
       title: "Come scegliere una collana in vetro di Murano",
       seoTitle: "Come scegliere una collana in vetro di Murano",
       description:
-        "Lunghezza, catenella o filo, e lo stile che cerchi: una breve guida per scegliere una collana in vetro di Murano, con i pezzi della collezione per ogni scollatura.",
+        "Lunghezza, catenella o filo, stile: una breve guida per scegliere una collana in vetro di Murano, con i pezzi della collezione per ogni scollatura.",
       primaryKeyword: "collana vetro di murano",
       secondaryKeywords: [
         "come scegliere una collana di perle di vetro",
@@ -195,7 +195,7 @@ export const muranoGlassNecklacesBuyingGuide: Article = {
         "collana vetro di murano regalo",
       ],
       intro:
-        "La collana sta più vicina al viso di qualsiasi altro gioiello, quindi cambia il modo in cui si legge un outfit più di un bracciale o di un anello. Tre scelte fanno la differenza: quanto scende, se le perle stanno su una catenella o lungo un filo, e il tipo di vetro che vuoi vedere. Ecco come farle, con le collane della nostra collezione.",
+        "La collana incornicia il viso, e per questo cambia l'insieme più di un bracciale o di un anello. Tre scelte fanno la differenza: quanto scende, se le perle stanno su una catenella o lungo un filo, e il tipo di vetro che vuoi vedere. Ecco come orientarsi, con le collane della nostra collezione.",
       body: [
         {
           type: "facts",
@@ -318,7 +318,7 @@ export const muranoGlassNecklacesBuyingGuide: Article = {
         { type: "h2", text: "Le piccole perle lungo il filo" },
         {
           type: "p",
-          text: "Le file di perline minuscole tra quelle più grandi, dorate, grigie, rosse, bordeaux, appartengono a una lunga tradizione lagunare. Il [Museo del Vetro di Murano](https://museovetro.visitmuve.it/en/il-museo/in-depth/glossary/) descrive le conterie come piccole perle tagliate da sottili canne di vetro cave e poi arrotondate, e la sua [storia delle perle veneziane](https://museovetro.visitmuve.it/en/il-museo/layout-and-collections/venetian-beads/) documenta la produzione di perle a Murano dal Trecento. La storia più ampia è in [la storia del vetro di Murano](/blog/history-of-murano-glass).",
+          text: "Perline come quelle dorate, grigie, rosse e bordeaux che corrono tra le perle più grandi hanno una lunga storia in laguna. Il [Museo del Vetro di Murano](https://museovetro.visitmuve.it/en/il-museo/in-depth/glossary/) descrive le conterie come piccole perle tagliate da sottili canne di vetro cave e poi arrotondate, e la sua [storia delle perle veneziane](https://museovetro.visitmuve.it/en/il-museo/layout-and-collections/venetian-beads/) documenta la produzione di perle a Murano dal Trecento. Il resto della storia è nel nostro articolo sulla [storia del vetro di Murano](/blog/history-of-murano-glass).",
         },
         { type: "h2", text: "Come averne cura" },
         {
