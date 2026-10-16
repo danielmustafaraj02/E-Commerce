@@ -3,11 +3,15 @@ import { PrismaPg } from "@prisma/adapter-pg";
 
 // Next.js loads .env itself, but standalone scripts run via `tsx` (e.g. the
 // seed script) don't get that for free — load it defensively here too.
+// loadEnvFile never overrides existing vars, so load .env.local first to match
+// Next.js precedence (shell > .env.local > .env).
 if (!process.env.DATABASE_URL) {
-  try {
-    process.loadEnvFile();
-  } catch {
-    // .env is optional (e.g. in CI where vars are injected directly)
+  for (const file of [".env.local", ".env"]) {
+    try {
+      process.loadEnvFile(file);
+    } catch {
+      // env files are optional (e.g. in CI where vars are injected directly)
+    }
   }
 }
 
@@ -33,8 +37,25 @@ export function explicitDatabaseSslMode(connectionString: string): string {
 // ("Connection terminated unexpectedly") before the pool notices. So idle
 // connections are retired well before the server would drop them, TCP
 // keep-alive stays on, and connecting has a clear timeout instead of hanging.
+function requireDatabaseUrl(): string {
+  const value = process.env.DATABASE_URL;
+  if (!value) {
+    throw new Error(
+      "DATABASE_URL is not set. Locally: copy .env.example to .env.local and point it at your local Postgres (see the Database section). In production: set it in the host's environment variables."
+    );
+  }
+  try {
+    new URL(value);
+  } catch {
+    throw new Error(
+      "DATABASE_URL is not a valid URL. Expected postgresql://user:password@host:5432/dbname (special characters in the password must be URL-encoded)."
+    );
+  }
+  return value;
+}
+
 const adapter = new PrismaPg({
-  connectionString: explicitDatabaseSslMode(process.env.DATABASE_URL!),
+  connectionString: explicitDatabaseSslMode(requireDatabaseUrl()),
   idleTimeoutMillis: 10_000,
   connectionTimeoutMillis: 15_000,
   keepAlive: true,

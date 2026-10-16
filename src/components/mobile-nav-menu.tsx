@@ -5,7 +5,6 @@ import { createPortal } from "react-dom";
 import { Link } from "@/components/localized-link";
 import Image from "next/image";
 import { CatalogImage } from "@/components/catalog-image";
-import { SocialLinks, type SocialUrls } from "@/components/social-links";
 import "./mobile-nav-menu.css";
 
 type NavLink = {
@@ -57,6 +56,22 @@ function rowIcon(href: string) {
       </svg>
     );
   }
+  if (href.includes("new-collection")) {
+    return (
+      <svg {...common}>
+        <path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3Z" />
+        <path d="M19 16v4M17 18h4" />
+      </svg>
+    );
+  }
+  if (href.includes("looks")) {
+    return (
+      <svg {...common}>
+        <path d="M12 7.5a2 2 0 1 0-2-2" />
+        <path d="M12 7.5v2L3.5 15.2a1.2 1.2 0 0 0 .7 2.2h15.6a1.2 1.2 0 0 0 .7-2.2L12 9.5" />
+      </svg>
+    );
+  }
   if (href.includes("about")) {
     return (
       <svg {...common}>
@@ -87,8 +102,6 @@ export function MobileNavMenu({
   searchLabel,
   storeName,
   logoUrl,
-  social,
-  socialLabel,
   legal,
   legalLabel,
 }: {
@@ -104,8 +117,6 @@ export function MobileNavMenu({
    *  headerLogoSrc — importing that helper here would drag the DB client
    *  into this client component's bundle). */
   logoUrl: string | null;
-  social: SocialUrls;
-  socialLabel: string;
   legal: { href: string; label: string }[];
   legalLabel: string;
 }) {
@@ -309,14 +320,11 @@ export function MobileNavMenu({
                             src={category.imageUrl}
                             alt=""
                             fill
-                            sizes="64px"
+                            sizes="80px"
                           />
                         </span>
                       ) : null}
                       <span className="mobile-menu-label">{category.label}</span>
-                      <span className="mobile-menu-arrow rtl:rotate-180" aria-hidden="true">
-                        →
-                      </span>
                     </Link>
                   </li>
                 ))}
@@ -325,10 +333,12 @@ export function MobileNavMenu({
                   .map((link) => (
                     <li key={link.href}>
                       <Link href={link.href} onClick={close}>
+                        {rowIcon(link.href) ? (
+                          <span className="mobile-menu-thumb mobile-menu-thumb--icon" aria-hidden="true">
+                            {rowIcon(link.href)}
+                          </span>
+                        ) : null}
                         <span className="mobile-menu-label">{link.label}</span>
-                        <span className="mobile-menu-arrow rtl:rotate-180" aria-hidden="true">
-                          →
-                        </span>
                       </Link>
                     </li>
                   ))}
@@ -348,7 +358,6 @@ export function MobileNavMenu({
             </nav>
 
             <div className="mobile-menu-closing">
-              <SocialLinks urls={social} label={socialLabel} />
               <nav aria-label={legalLabel}>
                 <ul className="footer-legal">
                   {legal.map((link) => (

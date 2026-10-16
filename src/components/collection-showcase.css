@@ -1,1283 +1,329 @@
 /* ─────────────────────────────────────────────────────────────────────────
-   The collections showcase — a scroll-driven, sticky sequence
-   (components/collection-showcase.tsx, timing in lib/showcase-timeline.ts).
+   The collections showcase — numbered tabs over one scene at a time
+   (components/collection-showcase.tsx).
 
-   Layout, and why it is split in two:
-
-   The three jewellery pieces all travel down ONE vertical axis, and the text
-   sits beside them. These are deliberately separate concerns:
-
-     .showcase-figure   the jewellery — on the shared axis, in a fixed-size box
-     .showcase-copy     the text — in the column to the left of the axis
-
-   Because the copy is positioned independently and the figure always sits on
-   the same axis, nothing slides sideways between scenes. An earlier version put
-   each scene in a two-column grid and swapped the columns, which moved the
-   bracelet to x+287 and the earrings to x-287: the three pieces sat on three
-   different axes. A later one centred the axis and alternated the text left /
-   right / left, which squeezed the copy into the ~200px between the stage edge
-   and the piece (a one-line description wrapped) and left the other half of the
-   stage empty. On desktop the axis now sits at --showcase-axis of the content
-   column and the copy is always on its left — see "Desktop composition" below.
-   Phones stack the flexible photograph, centred copy and navigation vertically.
-
-   Per frame the component writes three custom properties per scene:
-     --scene-y         vertical offset in px (negative leaving, positive arriving)
-     --image-opacity   photograph only
-     --copy-opacity    text only
-   Image and text fade independently, which is what allows the required order:
-   text out, then the piece travels, then the next text in. No transitions are
-   declared on any animated property — a transition would ease toward a stale
-   value and lag behind the scroll position.
-
-   These rules ARE the no-JavaScript and reduced-motion layout: three scenes
-   stacked, each fully readable with a working link. Only [data-scene-live]
-   switches on the pinned presentation, so the content never depends on JS.
+   No scroll animation: nothing is pinned or moves with the page. Phones stack
+   the tabs, the photograph and the copy; from 52rem the scene is two columns
+   (photograph | copy), mirrored on scenes whose copy sits on the right.
+   Class names (.showcase-figure / -title / -description / -index / -cta,
+   [data-scene]) are shared with the admin visual editor.
    ───────────────────────────────────────────────────────────────────────── */
 
 .showcase {
-  /* Written by the component once the effect is live. */
-  --showcase-sticky-top: 0px;
-  /* Space kept clear at the foot of the stage for the floating checkout button
-     and the cookie-consent sheet, both of which are position:fixed and would
-     otherwise cover the piece and its button.
-     enable() MEASURES the fixed chrome (checkout, cookie sheet) and writes
-     --showcase-measured-inset; --showcase-bottom-inset is that, floored by a
-     static fallback. A guessed constant either let the checkout cover the
-     progress rail or wasted a fifth of the stage. */
-  --showcase-measured-inset: 3rem;
-  /* The floor is breathing room under the piece, nothing more: the real
-     obstruction is MEASURED (and, since measureChrome now requires a
-     horizontal overlap with the scene column, measured only when it is
-     actually in the way). It was 4.5rem as a hedge against that measurement
-     being wrong, which cost every piece height on every page view. */
-  --showcase-bottom-inset: max(var(--showcase-measured-inset), 3rem);
-  /* Horizontal breathing room at the stage edges: the centred, constrained
-     inset the layout is built around. */
-  --showcase-gutter: clamp(24px, 5vw, 96px);
-
-  /* ── The geometry the piece and the copy are BOTH derived from ───────────
-     Two numbers, and everything horizontal follows from them, so growing the
-     jewellery and moving the copy can never be tuned against each other:
-
-       --showcase-piece-halfmax  the widest HALF-box the jewellery may occupy,
-                                 measured from the central axis
-       --showcase-copy-inset     where the copy's inner edge sits, also from
-                                 the axis — the half-box plus a deliberate gap
-
-     The gap between the piece's box edge and the nearest word is therefore a
-     constant by construction, not an emergent property of three separate
-     clamps. The previous version derived the piece's width cap from `23vw`
-     and the copy's position from a SEPARATE `--showcase-piece-clearance`, so
-     the two drifted: the cap resolved to roughly half the space actually
-     available and the bracelet and earrings rendered visibly smaller than the
-     necklace with a wide empty band beside them. */
-  --showcase-piece-halfmax: clamp(9rem, 20.5vw, 17.5rem);
-  --showcase-copy-gap: clamp(1.5rem, 3vw, 3rem);
-  --showcase-copy-inset: calc(var(--showcase-piece-halfmax) + var(--showcase-copy-gap));
-  /* The measure: 28–34 characters per line. `ch` is the font's own digit
-     width, so this tracks the responsive type sizes rather than fighting them. */
-  --showcase-measure: 33ch;
-  /* The progress rail's reserved grid track. It must hold everything the rail
-     ever draws: the wrapping category label BESIDE its dot, the 44px hit area,
-     the active dot's ring and its focus outline, plus the required 32px gap to
-     the content. Sized for the longest localised label wrapping to two lines. */
-  --showcase-rail-col: clamp(9rem, 14vw, 12rem);
-  /* The minimum clear space between the rail and the scene content. */
-  --showcase-rail-gap: 32px;
-
-  --showcase-content-pad: var(--showcase-gutter);
   position: relative;
   background: var(--ivory);
-}
-
-/* ── The pinned stage ────────────────────────────────────────────────────────
-   Only present when JS is driving. Without it the stage is an ordinary block
-   and the scenes stack in document order.
-
-   The pinned stage is a THREE-COLUMN grid: the scene content, and the progress
-   rail in a track of its own. That is the structural fix for the rail ever
-   covering the text: the rail's width is a grid track, so the content column
-   simply ends where the rail begins. Nothing is overlaid, and no amount of
-   label length can push anything on top of the description. */
-.showcase[data-scene-live] {
-  /* The stage's real height: the viewport minus the MEASURED sticky header.
-     Every vertical constraint below is expressed against this rather than
-     against raw svh, so "as large as fits below the navbar" is literally what
-     the piece is sized to. */
-  --showcase-stage-h: var(--showcase-frame-height, calc(100svh - var(--showcase-sticky-top)));
-  /* The tallest box the jewellery may have: the stage, less the scene's own
-     top padding and the measured bottom clearance (floating checkout, cookie
-     sheet). This is the cap that makes the piece fill the space below the
-     navbar without ever reaching into it or under the checkout button. */
-  --showcase-piece-fit: calc(var(--showcase-stage-h) - var(--showcase-bottom-inset) - 1.5rem);
-}
-
-.showcase[data-scene-live] .showcase-stage {
-  position: sticky;
-  top: var(--showcase-sticky-top);
-  height: var(--showcase-stage-h);
-  overflow: clip;
-  isolation: isolate;
-  display: grid;
-  /* Symmetric outer columns. The rail lives in the right-hand one and the left
-     one is left empty, which is what keeps the scene content TRULY centred on
-     the stage: with only a right-hand rail reserved, the content column would be
-     pushed left of centre by half the rail's width. Content sits in the middle
-     1fr, so its midpoint is the stage's midpoint. */
-  grid-template-columns: var(--showcase-rail-col) minmax(0, 1fr) var(--showcase-rail-col);
-  align-items: center;
+  /* Generous space above and below, so the section never feels pinned to the
+     screen's edges and the visitor doesn't have to stop at an exact scroll
+     position to see it whole. */
+  padding-block: clamp(2.5rem, 8vw, 5rem);
+  padding-inline: clamp(1rem, 3vw, 3rem);
 }
 
 .showcase-stage {
-  position: relative;
-  background: var(--ivory);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  max-width: 112rem;
+  margin-inline: auto;
 }
 
-/* The scene content column: piece and copy, sized to the space the grid gives it. */
-.showcase-content {
-  position: relative;
-  /* The middle column, so the piece and the text are centred on the stage. */
-  grid-column: 2;
-  grid-row: 1;
-  height: 100%;
-  /* No min-width: as a grid item it must be allowed to shrink, or a long
-     localised label inside a scene would widen this column and push the layout
-     rather than wrapping inside it. */
-  min-width: 0;
+/* ── Tabs ─────────────────────────────────────────────────────────────── */
+.showcase-rail {
+  width: 100%;
 }
-
-/* ── One scene ────────────────────────────────────────────────────────────
-   Stacked (the fallback): photograph, then copy beneath it. */
-.showcase-scene {
-  position: relative;
-  display: grid;
-  grid-template-rows: auto auto;
-  gap: clamp(1.25rem, 3vh, 2.5rem);
-  justify-items: center;
-  padding: clamp(2.5rem, 7vh, 5rem) clamp(1.25rem, 5vw, 4rem);
+.showcase-tabs {
+  display: flex;
+  justify-content: center;
+  gap: clamp(0.5rem, 2.5vw, 1rem);
 }
-
-/* Pinned: every scene fills the content column and they stack. The scene moves as
-   one piece; its image and copy fade separately. */
-.showcase[data-scene-live] .showcase-scene {
+.showcase-tab {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 44px;
+  padding: 0.7rem 1.35rem 0.85rem;
+  border: 1px solid color-mix(in srgb, var(--brass) 42%, transparent);
+  border-radius: 0;
+  background: transparent;
+  color: color-mix(in srgb, var(--ink) 58%, transparent);
+  font: inherit;
+  cursor: pointer;
+  overflow: hidden;
+  transition:
+    background-color 0.4s ease,
+    border-color 0.4s ease,
+    color 0.4s ease;
+}
+/* A hairline inset frame turns each tab into a small engraved plate. */
+.showcase-tab::before {
+  content: "";
   position: absolute;
-  inset: 0;
-  display: grid;
-  align-content: center;
-  justify-items: center;
-  /* No horizontal padding: the copy's own insets are measured against this box. */
-  padding: clamp(1rem, 3vh, 2rem) 0 var(--showcase-bottom-inset);
-  transform: translate3d(0, var(--scene-y, 0px), 0) scale(var(--scene-scale, 1));
+  inset: 3px;
+  border: 1px solid color-mix(in srgb, var(--brass) 22%, transparent);
   pointer-events: none;
+  transition: border-color 0.4s ease;
+}
+.showcase-tab-number {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.25rem, 3.4vw, 1.55rem);
+  font-style: italic;
+  line-height: 1;
+  color: color-mix(in srgb, var(--gold, var(--brass)) 75%, transparent);
+}
+.showcase-tab-name {
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+.showcase-tab[data-state="active"] {
+  color: var(--champagne, var(--ivory));
+  background: var(--midnight);
+  border-color: var(--midnight);
+}
+.showcase-tab[data-state="active"]::before {
+  border-color: color-mix(in srgb, var(--gold, var(--brass)) 55%, transparent);
+}
+.showcase-tab[data-state="active"] .showcase-tab-number {
+  color: var(--gold-soft, var(--gold, var(--brass)));
+}
+/* Underline timer: fills across the active tab while the tabs cycle; its end
+   moves to the next tab (see CollectionShowcase). */
+.showcase-tab::after {
+  content: "";
+  position: absolute;
+  inset: auto 3px 3px;
+  height: 2px;
+  background: var(--gold, var(--brass));
+  transform: scaleX(0);
+  transform-origin: left;
+}
+[dir="rtl"] .showcase-tab::after {
+  transform-origin: right;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .showcase-rail[data-auto] .showcase-tab[data-state="active"]::after {
+    animation: showcase-tab-timer 6s linear forwards;
+  }
+  .showcase-rail[data-auto]:is(:hover, :focus-within) .showcase-tab[data-state="active"]::after {
+    animation-play-state: paused;
+  }
+}
+@keyframes showcase-tab-timer {
+  to {
+    transform: scaleX(1);
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+  .showcase-tab:hover {
+    color: var(--ink);
+    border-color: var(--gold, var(--brass));
+  }
+  .showcase-tab:hover::before {
+    border-color: color-mix(in srgb, var(--gold, var(--brass)) 60%, transparent);
+  }
+  .showcase-tab[data-state="active"]:hover {
+    color: var(--champagne, var(--ivory));
+    border-color: var(--midnight);
+  }
+}
+@media (max-width: 30rem) {
+  .showcase-tabs {
+    gap: 0.4rem;
+    padding-inline: 0.5rem;
+  }
+  .showcase-tab {
+    flex: 1 1 0;
+    min-width: 0;
+    padding-inline: 0.3rem;
+  }
+  .showcase-tab-name {
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+  }
+}
+.showcase-tab:focus-visible {
+  outline: 2px solid var(--midnight);
+  outline-offset: 3px;
 }
 
-/* ── The jewellery: one central axis, for every scene ─────────────────────
-   The figure is centred in the stage and sized BY HEIGHT, never by width.
-   Sizing by width derives a height from the column, which can exceed the stage
-   and push the text out of the viewport entirely.
+/* ── One scene ────────────────────────────────────────────────────────── */
+.showcase-content {
+  width: 100%;
+}
+.showcase-scene {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.25rem, 4vw, 2rem);
+  /* Tint behind the piece, one per collection. */
+  --scene-tint: color-mix(in srgb, var(--champagne) 55%, var(--ivory));
+}
+.showcase-scene[data-placement="bracelet"] {
+  --scene-tint: color-mix(in srgb, var(--sapphire) 20%, var(--ivory));
+}
+.showcase-scene[data-placement="earrings"] {
+  --scene-tint: color-mix(in srgb, var(--brass) 22%, var(--ivory));
+}
+.showcase-scene[data-active="false"] {
+  display: none;
+}
 
-   Each piece keeps its own photograph's real aspect ratio (measured from the
-   source file), so nothing is cropped or stretched, and each is scaled to its
-   own comfortable size — the bracelet's photograph carries a lot of internal
-   whitespace, so it is given a smaller box that makes the piece itself read at
-   a comparable weight to the necklace. */
 .showcase-figure {
   position: relative;
-  height: var(--showcase-piece-height, 60%);
-  /* Explicit width from the box height and the photograph's own ratio: the
-     scene grid centres its items, so `width: auto` has no content to size
-     from (the image inside is absolutely positioned by next/image's fill)
-     and the box would collapse. Derived from the height, so whatever the
-     mobile media query sets the height to, the width follows it. */
-  width: calc(
-    var(--showcase-piece-height, 60%) * var(--showcase-piece-ratio-num, 4) /
-      var(--showcase-piece-ratio-den, 5)
-  );
-  max-width: 100%;
-  aspect-ratio: var(--showcase-piece-ratio, 4 / 5);
-  justify-self: center;
-  align-self: center;
-  /* The box is the crop. --showcase-piece-zoom scales the photograph up inside
-     this element to push the frame's empty margin out of view, and that margin
-     is OPAQUE WHITE, not transparent — so without clipping it paints over
-     whatever sits next to the figure. On a phone, where the copy is directly
-     beneath, the bracelet's 1.37 zoom covered the index line and ran off the
-     top of the screen. Clipping here is also what makes the zoom a crop rather
-     than an overflow: every zoom is bounded by its frame's own margin (see the
-     per-piece block below), so what is cut is only ever empty frame. */
+  width: min(100%, 22rem);
+  aspect-ratio: 1 / 1.12;
   overflow: clip;
+  border-radius: 1.5rem;
+  background: var(--scene-tint);
 }
-
 .showcase-image {
   object-fit: contain;
+  /* The studio photographs are white-backed; multiply lets the tint show. */
+  mix-blend-mode: multiply;
+  transform: translate(var(--sc-image-x, 0%), var(--sc-image-y, 0%)) scale(var(--sc-image-scale, 1));
 }
 
-/* ── Per-piece sizing ─────────────────────────────────────────────────────
-   Each photograph is a different shape AND surrounds its jewellery with a
-   different amount of empty space, so a single box size renders three pieces
-   at three different apparent sizes. Measured from the source files (the
-   alpha bounding box of the piece within the frame):
-
-     piece      file         piece fills   W      H
-     necklace   1024x1536    970x1241      95%    81%
-     bracelet   1023x1537    696x781       68%    51%
-     earrings   1164x1351    505x935       43%    69%
-
-   Three numbers per scene follow from that table and nothing else is tuned:
-
-     --showcase-piece-ratio-num/den   the file's real pixel dimensions
-     --showcase-piece-fill-w/h        the fraction of the frame the piece fills
-     --showcase-piece-zoom            how far the image is scaled up inside its
-                                      box to crop the frame's empty margin
-
-   Everything the layout needs is derived from them, so the three scenes cannot
-   drift apart the way they had: the ratios in this file described a 588x885
-   necklace and a SQUARE 1080x1080 bracelet, and neither file is those
-   dimensions. The bracelet is portrait, like the necklace — it was being given
-   a 3/2 LANDSCAPE box and object-fit: cover, so the crop cut the top and the
-   bottom clean off the piece. Every piece is `contain` now and nothing is
-   cropped; the zoom works on the frame's margin, never on the jewellery.
-
-   The apparent size of each piece is box height x fill-h x zoom. The necklace
-   and the earrings are set to ~0.76 of their box and the bracelet to ~0.70:
-   the bracelet's frame is so much emptier than the other two that matching
-   them exactly would need a zoom with no margin for error, and it reads well
-   a touch smaller.
-
-   The zoom is bounded by the frame's own margin — at 1/fill it would put the
-   piece's edge exactly on the box's edge — and every value here stays inside
-   that bound, so no zoom can ever clip the jewellery:
-
-     necklace  1.00 of a 1.053 ceiling (current photo fills 95% of width)
-     bracelet  1.37 of a 1.471 ceiling
-     earrings  1.10 of a 1.449 ceiling  */
-
-.showcase[data-scene-live] .showcase-scene {
-  /* Declared on the SCENE, not the figure, so the copy can read the piece's
-     real width too; the figure inherits it. One formula for all three. The height is the smallest of:
-
-       1. --showcase-piece-fit, the hard "fits below the navbar and above the
-          fixed chrome" cap, which is what normally binds;
-       2. an absolute ceiling, so a very tall window does not make a monster;
-       3. the WIDTH cap — and it is applied to the VISIBLE PIECE, not to the
-          file box. That is the whole point of carrying fill-w: the earrings
-          occupy 43% of their frame's width, so their box may extend past
-          --showcase-piece-halfmax while the earrings themselves stay well
-          inside it. Capping the box instead made the two emptiest frames
-          render visibly smaller than the necklace for no reason the reader
-          could see. */
-  --showcase-piece-height: min(
-    var(--showcase-piece-fit, 46rem),
-    52rem,
-    calc(
-      2 * var(--showcase-piece-halfmax) / var(--showcase-piece-fill-w, 1) *
-        var(--showcase-piece-ratio-den) / var(--showcase-piece-ratio-num) /
-        var(--showcase-piece-zoom, 1)
-    )
-  );
-}
-
-/* The zoom: the image is scaled inside its own box so the frame's empty margin
-   falls outside it and the jewellery reads larger. The box does not move, so
-   the central axis and the copy's clearance are untouched; the only thing that
-   leaves the box is transparent margin. */
-.showcase-image {
-  transform: translate(var(--sc-image-x, 0%), var(--sc-image-y, 0%)) scale(calc(var(--showcase-piece-zoom, 1) * var(--sc-image-scale, 1)));
-}
-
-.showcase-scene[data-placement="necklace"] {
-  --showcase-piece-ratio: 1023 / 1537;
-  --showcase-piece-ratio-num: 1023;
-  --showcase-piece-ratio-den: 1537;
-  --showcase-piece-fill-w: 0.95;
-  --showcase-piece-fill-h: 0.81;
-  --showcase-piece-zoom: 1;
-}
-
-.showcase-scene[data-placement="bracelet"] {
-  /* The same portrait frame as the necklace — NOT the square this file used to
-     claim — with the piece sitting smaller inside it, so it takes the largest
-     zoom of the three. */
-  --showcase-piece-ratio: 1023 / 1537;
-  --showcase-piece-ratio-num: 1023;
-  --showcase-piece-ratio-den: 1537;
-  --showcase-piece-fill-w: 0.68;
-  --showcase-piece-fill-h: 0.51;
-  --showcase-piece-zoom: 1.37;
-}
-
-.showcase-scene[data-placement="earrings"] {
-  --showcase-piece-ratio: 1164 / 1351;
-  --showcase-piece-ratio-num: 1164;
-  --showcase-piece-ratio-den: 1351;
-  --showcase-piece-fill-w: 0.43;
-  --showcase-piece-fill-h: 0.69;
-  --showcase-piece-zoom: 1.1;
-}
-
-/* ── The text: alternating side columns ──────────────────────────────────
-   Centred in the left or right half, vertically centred against the piece, and
-   kept at a deliberate, constant distance from it. Because the figure is
-   centred in the whole stage and the copy in one half, the copy can never push
-   the jewellery off axis.
-
-   The block is one editorial unit, always in the same order and always with the
-   same rhythm between its parts:
-
-     index         01 / 03, a quiet counter
-     heading       the category name, from the database
-     description   one styling benefit, 20–30 words
-     CTA           one link into the category
-
-   The gaps between them are set individually rather than by a single `gap`,
-   because the relationship is not uniform: the index sits CLOSE under nothing
-   and leads straight into the heading, the description needs air above it, and
-   the button needs more air still so it reads as an action rather than as the
-   last line of the paragraph. */
 .showcase-copy {
   display: flex;
   flex-direction: column;
-  gap: 0;
-  max-width: var(--showcase-measure);
-  opacity: 1;
+  align-items: center;
+  text-align: center;
+  max-width: 34rem;
 }
 
-.showcase[data-scene-live] .showcase-copy {
-  position: absolute;
-  /* Vertically centred against the piece; the horizontal placement (left or
-     right half) is set per scene by [data-side] below. */
-  top: 50%;
-  /* Both the -50% centring and the scroll-driven slide ride in ONE `transform`,
-     deliberately: they used to be split across `translate: 0 -50%` and this
-     `transform`, and the layouts that cancel the pinned placement (the phone
-     grid, the short-viewport fallback, reduced motion) cancelled it with
-     `transform: none; translate: none`.
-
-     Lightning CSS, which Next runs over this file, folds a `transform: none`
-     and its neighbouring `translate` into a single `transform: translate3d(0,
-     0, 0)` — and DROPS the `translate: none`. So the override cancelled the
-     slide but not the centring, the base rule's -50% survived into layouts
-     that are in normal flow, and every one of those rendered the copy half its
-     own height too high: on a phone the text sat up inside the photograph.
-
-     With one property there is nothing left to drop: `transform: none`
-     cancels the whole placement, which is what those rules mean. */
-  transform: translate3d(calc(var(--copy-slide, 0px) * (1 - var(--copy-reveal, 1))), -50%, 0);
-}
-
-.showcase[data-scene-live] .showcase-figure {
-  opacity: var(--image-opacity, 0);
-}
-
-.showcase[data-scene-live] .showcase-copy {
-  opacity: var(--copy-opacity, 0);
-}
-
-/* Both sides share their width rule: start at the content column's own edge
-   and stop --showcase-copy-inset short of the central axis, then bound the
-   result to the 28–34ch measure. `min-width: 0` so a long localised word wraps
-   INSIDE the column instead of widening it and pushing the layout. */
-.showcase[data-scene-live] .showcase-copy[data-side="left"],
-.showcase[data-scene-live] .showcase-copy[data-side="right"] {
-  width: min(var(--showcase-measure), max(11rem, calc(50% - var(--showcase-copy-inset))));
-  min-width: 0;
-}
-
-/* Necklace and earrings: text on the LEFT of the piece. */
-.showcase[data-scene-live] .showcase-copy[data-side="left"] {
-  left: 0;
-  text-align: left;
-  align-items: flex-start;
-  /* The slide is POSITIVE-to-zero: the block starts displaced to the right, i.e.
-     INWARD, and settles at its left-hand resting place. Sliding outward instead
-     pushed it past its own column edge — and on the right-hand scenes that meant
-     into the progress rail's track. */
-  --copy-slide: 1.75rem;
-}
-
-/* Bracelet: text on the RIGHT, mirrored.
-   Its right edge stops at the content column's right edge — which is already
-   clear of the rail, because the rail is a separate grid track. Nothing here
-   needs to know the rail exists. */
-.showcase[data-scene-live] .showcase-copy[data-side="right"] {
-  right: 0;
-  text-align: right;
-  align-items: flex-end;
-  /* Mirrored: starts displaced left, i.e. INWARD, and settles at its right-hand
-     resting place, so it never travels out past the content column. */
-  --copy-slide: -1.75rem;
-}
-
-/* ── The category index ──────────────────────────────────────────────────
-   A quiet counter, not a headline: small, tracked out, and in the brand green
-   at a reduced weight so it reads as a mark on the page rather than as copy.
-   Tabular figures so 01 and 03 are exactly the same width and the block does
-   not shift between scenes. */
+/* The counter repeats the tabs; shown only beside the piece on wide screens. */
 .showcase-index {
-  display: flex;
-  align-items: baseline;
+  display: none;
+  align-items: flex-end;
   gap: 0.4em;
-  margin: 0 0 clamp(0.9rem, 2.2vh, 1.4rem);
+  margin: 0 0 1.25rem;
   font-size: 0.8rem;
   font-weight: 500;
   letter-spacing: 0.22em;
   font-variant-numeric: tabular-nums;
-  color: color-mix(in srgb, var(--midnight) 70%, transparent);
-}
-
-.showcase-index-sep,
-.showcase-index-total {
   color: color-mix(in srgb, var(--ink) 38%, transparent);
-  letter-spacing: 0.14em;
+}
+.showcase-index-current {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(3rem, 5vw, 4.5rem);
+  font-weight: 400;
+  line-height: 0.8;
+  letter-spacing: -0.02em;
+  color: color-mix(in srgb, var(--gold, var(--brass)) 60%, transparent);
 }
 
 .showcase-title {
   margin: 0;
   font-family: var(--font-chrome, var(--font-display)), Georgia, serif;
-  /* Expressive, and bounded by the measure rather than by the viewport alone:
-     the display face is what carries the editorial register. */
-  font-size: clamp(2.1rem, 3.9vw, 3.4rem);
+  font-size: clamp(2.1rem, 7vw, 3.4rem);
   font-weight: 400;
   line-height: 1.04;
   letter-spacing: -0.015em;
   color: var(--ink);
-}
-
-.showcase-description {
-  margin: clamp(0.85rem, 2vh, 1.3rem) 0 0;
-  /* One editorial line, so it is set a touch larger and looser than body copy
-     — at a 25-word paragraph this size would have been tiring, but a single
-     clause can carry it, and it keeps the line from reading as a caption under
-     a 3rem heading. */
-  font-size: clamp(1rem, 1.15vw, 1.18rem);
-  line-height: 1.55;
-  color: var(--ink-muted);
-  /* The measure again, on the paragraph itself: the heading may run wider than
-     the text without dragging the text with it. */
-  max-width: var(--showcase-measure);
-  /* `balance` rather than `pretty`: with one or two lines the point is for the
-     two to come out even, not for the last line to avoid an orphan. */
   text-wrap: balance;
 }
-
-/* The CTA is the shared .btn-primary / .btn-arrow from globals.css and home.css
-   — this only places it. Nothing about its colour, border, tracking, hover or
-   focus is set here, so the showcase's button is the site's button. */
+.showcase-description {
+  margin: 1rem 0 0;
+  font-size: clamp(1rem, 2.6vw, 1.15rem);
+  line-height: 1.6;
+  color: var(--ink-muted);
+  text-wrap: pretty;
+}
 .showcase-cta {
-  margin-top: clamp(1.4rem, 3.2vh, 2.2rem);
+  margin-top: clamp(1.4rem, 4vw, 2rem);
   white-space: nowrap;
 }
 
-/* ── Narrow screens: the text goes beneath the jewellery ──────────────────
-   Side placement has no room here, so every scene returns to a centred piece
-   with the text below it, even while the stage is pinned. The footer inset is
-   kept so the floating checkout button still cannot cover the CTA. */
+.showcase-title,
+.showcase-description,
+.showcase-index,
+.showcase-cta {
+  transform-origin: left center;
+}
+.showcase .showcase-title { transform: translate(var(--sc-title-x, 0%), var(--sc-title-y, 0%)) scale(var(--sc-title-scale, 1)); }
+.showcase .showcase-description { transform: translate(var(--sc-description-x, 0%), var(--sc-description-y, 0%)) scale(var(--sc-description-scale, 1)); }
+.showcase .showcase-index { transform: translate(var(--sc-counter-x, 0%), var(--sc-counter-y, 0%)) scale(var(--sc-counter-scale, 1)); }
+.showcase .showcase-cta { transform: translate(var(--sc-button-x, 0%), var(--sc-button-y, 0%)) scale(var(--sc-button-scale, 1)); }
+
+/* Full text beside the piece; the shorter telling on phones. */
+.showcase-reason-short {
+  display: none;
+}
 @media (max-width: 51.99rem) {
-  .showcase,
-  .showcase[data-scene-live] {
-    /* Keep the frame within the phone even when the builder sets a desktop
-       height. Fixed chrome and the device safe area stay clear of the CTA. */
-    --showcase-stage-h: min(
-      var(--showcase-frame-height, 100svh),
-      calc(100svh - var(--showcase-sticky-top))
-    );
-    --showcase-bottom-inset: calc(
-      max(var(--showcase-measured-inset), 2rem) + env(safe-area-inset-bottom, 0px)
-    );
+  .showcase-reason-full {
+    display: none;
   }
-
-  /* The copy and navigation keep their natural height. Only the photograph
-     shrinks to fit, so longer translations cannot push the button off screen.
-     A single column gives the text the full phone width. */
-  .showcase[data-scene-live] .showcase-scene {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: clamp(0.75rem, 1.5svh, 1rem);
-    padding: 1rem clamp(1.25rem, 5vw, 2rem) var(--showcase-bottom-inset);
-  }
-
-  /* A flexible frame, with object-fit preserving the photograph's ratio.
-     min-height: 0 allows this frame to yield to the actual copy height. */
-  .showcase[data-scene-live] .showcase-scene .showcase-figure {
-    flex: 0 1 auto;
-    width: min(100%, 22rem);
-    height: clamp(12rem, 45svh, 24rem);
-    min-height: 0;
-    aspect-ratio: auto;
-    align-self: center;
-  }
-
-  .showcase[data-scene-live] .showcase-scene .showcase-copy,
-  .showcase[data-scene-live] .showcase-scene .showcase-copy[data-side="left"],
-  .showcase[data-scene-live] .showcase-scene .showcase-copy[data-side="right"] {
-    flex: 0 0 auto;
-    position: static;
-    top: auto;
-    left: auto;
-    right: auto;
-    transform: none;
-    width: 100%;
-    max-width: 26rem;
-    margin-inline: auto;
-    padding: 0;
-    align-items: center;
-    text-align: center;
-    gap: 0;
-    margin-top: 0;
+  .showcase-reason-short {
+    display: inline;
   }
 }
 
-/* ── The progress rail ────────────────────────────────────────────────────────
-   Three dots on a fixed rhythm, joined by one continuous track. A separate
-   component (components/showcase-progress-rail.tsx); these are its styles.
-
-   On desktop the rail occupies a grid column. The pinned stage lays out
-   `content (2fr) | rail (--showcase-rail-col)`, so this element occupies a track
-   of real width and the scene content column ends where it begins. Everything the
-   rail draws — the dots, their 44px hit areas, the active dot's ring, the focus
-   outline, and the wrapping category labels — lives inside that track. No z-index,
-   clipping or font shrinking is involved, and no label can reach the text.
-
-   The rhythm is the other half of it: every row is exactly 44px tall (also the
-   minimum touch target), so a dot's state — outlined, filled, enlarged, ringed —
-   can never move it. Every state is expressed with background, border and scale on
-   a fixed-size element, so the layout is byte-identical in all three states.
-
-   The track is inset by exactly half a row top and bottom, which makes it run from
-   the first dot's CENTRE to the last dot's CENTRE. (It used to be inset by a few
-   pixels that did not match the row height, leaving a stub of line floating above
-   the final dot.) */
-.showcase-rail {
-  /* Only inside the pinned showcase; hidden in the stacked/no-JS layout, where
-     there is no scroll position for it to indicate. */
-  display: none;
-}
-
-/* The per-scene mobile rail: hidden on desktop (the stage-level rail in its
-   own grid column serves there), shown only in the mobile media query. */
-.showcase-rail-scene {
-  display: none;
-}
-
-/* THE RAIL IS A GRID COLUMN, NOT AN OVERLAY: it occupies the right-hand
-     reserved track, and everything it draws lives inside it.
-     :not(.showcase-rail-scene) matters: the per-scene mobile rail ALSO carries
-     the .showcase-rail class, and without the exclusion this rule would
-     force-display all three of those inside their scenes' single-column grids
-     — an implicit overflowing column at the stage's right edge, a full-height
-     duplicate track apiece, and an extra grid item that shifts the jewellery
-     off centre. This rule must only ever match the ONE stage-level rail. */
-.showcase[data-scene-live] .showcase-rail:not(.showcase-rail-scene) {
-  grid-column: 3;
-  grid-row: 1;
-  /* Hug the dots rather than stretching the column: the track's 22px insets
-     below are measured from THIS box's edges, so a fit-content height of
-     three 44px rows makes the track run from the first dot's centre to the
-     last (~88px), not the full column height. */
-  position: relative;
-  height: fit-content;
-  align-self: center;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: center;
-  gap: 0;
-  min-width: 0;
-}
-
-/* ── Desktop composition: the copy and the piece as one group ───────────────
-   The old layout centred the piece on the stage and pushed the copy into the
-   leftover edge, between the stage's edge and the piece's half-box — about 200px
-   at 1440, so the one-line description wrapped onto two — while the other half
-   of the stage stood empty (and so did a left-hand column kept only to mirror
-   the rail).
-
-   Now the stage is [content | rail]. All three pieces still travel down ONE
-   axis (so nothing slides sideways between scenes), but that axis sits at
-   --showcase-axis of the content column instead of the middle, and the copy is
-   always on its left. The copy takes the room that frees up: it is as wide as
-   its longest line (a one-line description stays one line) and is capped at the
-   piece's own clearance, so it wraps only on a screen with truly no room. */
+/* ── Wide screens: photograph and copy side by side ───────────────────── */
 @media (min-width: 52rem) {
-  .showcase {
-    --showcase-axis: 64%;
-    /* The copy's left edge: roomier than the page gutter, so the group
-       (copy + piece) sits balanced in the content column and the space left
-       beside it is roughly the same on both sides. */
-    --showcase-copy-left: clamp(24px, 9vw, 168px);
-  }
-
-  .showcase[data-scene-live] .showcase-stage {
-    grid-template-columns: minmax(0, 1fr) var(--showcase-rail-col);
-  }
-
-  .showcase[data-scene-live] .showcase-content {
-    grid-column: 1;
-  }
-
-  .showcase[data-scene-live] .showcase-rail:not(.showcase-rail-scene) {
-    grid-column: 2;
-  }
-
-  .showcase[data-scene-live] .showcase-figure {
-    justify-self: start;
-    left: var(--showcase-axis);
-    /* `transform`, not `translate`: the CSS build drops a lone `translate`. */
-    transform: translateX(-50%);
-  }
-
-  .showcase[data-scene-live] .showcase-copy[data-side] {
-    left: var(--showcase-copy-left);
-    right: auto;
-    width: max-content;
-    /* Clear of the piece's actual box: half its real width (height x the
-       photograph's ratio) plus the gap, measured from the axis. */
-    max-width: max(
-      11rem,
-      calc(
-        var(--showcase-axis) - var(--showcase-piece-height) * var(--showcase-piece-ratio-num) /
-          var(--showcase-piece-ratio-den) / 2 - var(--showcase-copy-gap) - var(--showcase-copy-left)
-      )
-    );
-    text-align: left;
-    align-items: flex-start;
-    --copy-slide: 1.75rem;
-  }
-
-  /* Mirror composition: when copy is on the RIGHT the piece axis flips to the
-     left (100% - axis = 36%) so the whole group mirrors rather than only the
-     text moving while the image stays put. `:has()` lets the scene itself drive
-     the figure's position from the copy's data-side attribute. */
-  .showcase[data-scene-live]
-    .showcase-scene:has(.showcase-copy[data-side="right"])
-    .showcase-figure {
-    left: calc(100% - var(--showcase-axis));
-  }
-
-  .showcase[data-scene-live] .showcase-copy[data-side="right"] {
-    left: auto;
-    right: var(--showcase-copy-left);
-    text-align: right;
-    align-items: flex-end;
-    --copy-slide: -1.75rem;
-    /* Same formula as the left side: available space between the copy's outer
-       edge and the piece's nearest half-width, minus the gap. */
-    max-width: max(
-      11rem,
-      calc(
-        var(--showcase-axis) - var(--showcase-piece-height) * var(--showcase-piece-ratio-num) /
-          var(--showcase-piece-ratio-den) / 2 - var(--showcase-copy-gap) - var(--showcase-copy-left)
-      )
-    );
-  }
-
-  .showcase[data-scene-live] .showcase-description {
-    max-width: none;
-  }
-
-  /* A little more presence for the heading now that it has the room. */
-  .showcase-title {
-    font-size: clamp(2.25rem, 4.4vw, 4.25rem);
-  }
-}
-
-/* The connecting track: a muted hairline, with the brand-green progress line
-   scaled over it from the top.
-
-   Positioned on the DOTS' centre line — 22px in from the rail's right edge,
-   the centre of each 44px button — and inset by half a row at each end. The
-   rail hugs its three rows (fit-content, above), so this spans dot-centre to
-   dot-centre (~88px for three rows), never the stage height. */
-.showcase-rail-track {
-  position: absolute;
-  top: 22px;
-  bottom: 22px;
-  right: 22px;
-  width: 1px;
-  overflow: hidden;
-  background: var(--hairline);
-}
-
-.showcase-rail-fill {
-  position: absolute;
-  inset: 0;
-  /* Brand green: the site's --midnight (bottle green) token. */
-  background: var(--midnight);
-  transform-origin: top center;
-  /* Continuous scroll progress, normalised 0…1, written by the showcase's own
-     update() pass — no second loop. */
-  scale: 1 var(--rail-fill, 0);
-}
-
-/* One row of the rail: [label | dot], on the fixed rhythm.
-
-   The row is exactly 44px tall — also the minimum touch target — so a dot's
-   state can never move it, and the label lives on that same line. The row's own
-   inner padding provides the required 32px gap to the scene content; nothing
-   needs to know where the rail is. */
-.showcase-rail-row {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  width: 100%;
-  height: 44px;
-  padding-left: var(--showcase-rail-gap);
-  min-width: 0;
-}
-
-/* The category name. IN FLOW inside the reserved column, filling the space left
-   of the dot, and wrapping when a localised name is longer than the column:
-   never absolutely positioned, never offset negatively, never a tooltip, so it
-   cannot reach the scene text by construction. */
-.showcase-rail-label {
-  flex: 1 1 auto;
-  min-width: 0;
-  font-family: var(--font-ui), system-ui, sans-serif;
-  font-size: 0.8rem;
-  line-height: 1.25;
-  letter-spacing: 0.08em;
-  text-align: right;
-  overflow-wrap: anywhere;
-  color: color-mix(in srgb, var(--ink) 50%, transparent);
-  opacity: 0;
-  pointer-events: none;
-  /* Arrives by drifting IN toward its dot, never by moving the dot: the
-     translate is on the label alone and the row's height is fixed, so the
-     rhythm of the rail is identical in every state. */
-  transform: translateX(0.5rem);
-  transition:
-    opacity 0.5s var(--ease-out-soft),
-    transform 0.5s var(--ease-out-soft),
-    color 0.5s var(--ease-out-soft);
-}
-
-/* The current category's name is always shown; the others on hover/focus. */
-.showcase-rail-row:hover .showcase-rail-label,
-.showcase-rail-item:focus-visible ~ .showcase-rail-label,
-.showcase-rail-row:has([data-state="active"]) .showcase-rail-label {
-  opacity: 1;
-  transform: translateX(0);
-}
-/* A passed category keeps a trace of itself, so the rail reads as a route
-   already partly walked rather than as one lit dot in the dark. */
-.showcase-rail-row:has([data-state="passed"]) .showcase-rail-label {
-  opacity: 0.45;
-  transform: translateX(0);
-}
-
-/* The current label carries the brand colour. */
-.showcase-rail-row:has([data-state="active"]) .showcase-rail-label {
-  color: var(--midnight);
-}
-
-.showcase-rail-item {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* The hit area. At least 44×44, and fixed, so it never affects the rhythm. */
-  width: 44px;
-  height: 44px;
-  flex: 0 0 auto;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-  color: var(--hairline);
-}
-
-/* The dot itself, centred in the fixed-size button.
-
-   One fixed 10px box in EVERY state, scaled by `scale`. Sizing the element
-   differently per state would move its centre by a fraction of a pixel and
-   make the column of dots shimmer as the reader scrolls; a transform cannot,
-   and it is also the only thing here the compositor can animate on its own. */
-.showcase-rail-item::after {
-  content: "";
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  border: 1px solid currentColor;
-  background: var(--ivory);
-  scale: 0.6;
-  transition:
-    background-color 0.45s var(--ease-out-soft),
-    border-color 0.45s var(--ease-out-soft),
-    scale 0.55s cubic-bezier(0.22, 1.1, 0.36, 1);
-}
-
-/* The ring: a second, independent circle that expands out of the dot as it
-   becomes current and settles as a soft halo. Drawn as its own pseudo-element
-   rather than a box-shadow so it can scale and fade on its own curve — a
-   shadow would have to animate its spread, which is not a compositor
-   property and jitters on a scroll. */
-.showcase-rail-item::before {
-  content: "";
-  position: absolute;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 1px solid currentColor;
-  opacity: 0;
-  scale: 0.45;
-  pointer-events: none;
-  transition:
-    opacity 0.6s var(--ease-out-soft),
-    scale 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-/* Upcoming: a small outlined circle, in a quiet neutral. */
-.showcase-rail-item[data-state="upcoming"] {
-  color: color-mix(in srgb, var(--ink) 32%, transparent);
-}
-
-/* Completed: a small filled circle, muted so it does not compete with the
-   current dot. */
-.showcase-rail-item[data-state="passed"] {
-  color: color-mix(in srgb, var(--midnight) 55%, transparent);
-}
-
-.showcase-rail-item[data-state="passed"]::after {
-  background: currentColor;
-  scale: 0.5;
-}
-
-/* Current: brand green, slightly larger, with a subtle outer ring. The ring is a
-   box-shadow rather than a border, so it adds no layout. */
-.showcase-rail-item[data-state="active"] {
-  color: var(--midnight);
-}
-
-.showcase-rail-item[data-state="active"]::after {
-  background: currentColor;
-  border-color: currentColor;
-  scale: 1;
-}
-
-.showcase-rail-item[data-state="active"]::before {
-  opacity: 0.35;
-  scale: 1;
-}
-
-/* Hover and keyboard focus give the dot a little of the active treatment, so
-   the rail answers the pointer before it is clicked. */
-@media (hover: hover) and (pointer: fine) {
-  .showcase-rail-item:hover::after {
-    scale: 0.85;
-  }
-  .showcase-rail-item:hover::before {
-    opacity: 0.2;
-    scale: 0.85;
-  }
-}
-
-/* Visible keyboard focus, drawn inside the rail's own track. */
-.showcase-rail-item:focus-visible {
-  outline: none;
-}
-
-.showcase-rail-item:focus-visible::after {
-  outline: 2px solid var(--brass, var(--ink));
-  outline-offset: 3px;
-}
-
-/* ── Narrower desktops: the same rail, just tighter ───────────────────────
-   The labels used to be dropped entirely below 64rem, which left a bare 60px
-   column of three dots between 832px and 1024px — a different component to
-   look at, for no reason the reader could see, at the one width where a
-   laptop most often sits. The label stays; the column and the type simply
-   narrow. Below 52rem the phone layout uses a horizontal row of dots. */
-@media (max-width: 64rem) {
-  .showcase {
-    --showcase-rail-col: clamp(7rem, 11vw, 9rem);
-    --showcase-rail-gap: 20px;
-  }
-
-  .showcase-rail-label {
-    font-size: 0.66rem;
-    letter-spacing: 0.05em;
-  }
-}
-
-/* Mobile navigation travels with its scene, in a row beneath the copy. */
-@media (max-width: 51.99rem) {
-  .showcase[data-scene-live] .showcase-stage {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: minmax(0, 1fr);
-  }
-
-  .showcase[data-scene-live] .showcase-content {
-    grid-column: 1;
-    grid-row: 1;
-  }
-
-  .showcase[data-scene-live] .showcase-rail:not(.showcase-rail-scene) {
-    display: none;
-  }
-
-  .showcase[data-scene-live] .showcase-rail-scene {
-    display: flex;
-    position: relative;
-    flex: 0 0 44px;
+  .showcase-scene {
     flex-direction: row;
-    align-items: center;
     justify-content: center;
-    width: max-content;
-    max-width: 100%;
-    height: 44px;
-    align-self: center;
-    margin: 0;
-    pointer-events: auto;
+    gap: clamp(3rem, 8vw, 10rem);
   }
-
-  /* Each dot retains a 44 × 44 touch target. */
-  .showcase[data-scene-live] .showcase-rail-scene .showcase-rail-row {
-    height: 44px;
-    width: 44px;
-    padding-left: 0;
-    justify-content: center;
+  .showcase-scene:has(.showcase-copy[data-side="right"]) {
+    flex-direction: row-reverse;
   }
-
-  .showcase[data-scene-live] .showcase-rail-scene .showcase-rail-item {
-    width: 100%;
-  }
-
-  /* Dots only on a phone: each still carries its localised category name in
-     aria-label, so no label is lost — only its rendering. */
-  .showcase-rail-label {
-    display: none;
-  }
-
-  /* The track runs horizontally along the dots' centre line, inset by half a row
-     at each end so it spans the first dot's centre to the last and no further. */
-  .showcase[data-scene-live] .showcase-rail-scene .showcase-rail-track {
-    top: 22px;
-    bottom: auto;
-    left: 22px;
-    right: 22px;
+  .showcase-figure {
+    flex: 0 1 42rem;
     width: auto;
-    height: 1px;
-    translate: none;
+    border-radius: 0;
   }
-
-  .showcase[data-scene-live] .showcase-rail-scene .showcase-rail-fill {
-    transform-origin: left center;
-    scale: var(--rail-fill, 0) 1;
-  }
-
-  /* Dots on mobile: slightly larger than before so they read as tappable
-     controls rather than decorative marks. The hit area stays 44px so touch
-     targets meet WCAG minimum without changing the rhythm. */
-  .showcase-rail-item::after {
-    width: 7px;
-    height: 7px;
-  }
-
-  .showcase-rail-item[data-state="active"]::after {
-    width: 10px;
-    height: 10px;
-    box-shadow: 0 0 0 4px color-mix(in srgb, var(--midnight) 14%, transparent);
-  }
-
-  /* Passed dots keep a visible filled state so the rail reads as a route
-     already walked, not just an empty track. */
-  .showcase-rail-item[data-state="passed"]::after {
-    width: 6px;
-    height: 6px;
-    background: color-mix(in srgb, var(--midnight) 40%, transparent);
-  }
-}
-
-/* ── Swipe hint — mobile only ─────────────────────────────────────────────────
-   A subtle label at the foot of the pinned stage nudging users to swipe
-   horizontally. Hidden by default; the mobile query overrides it to flex.
-   CSS hides it on desktop (nothing to swipe there — the rail's dots are the
-   way in, and the scroll itself drives the sequence). */
-.showcase-swipe-hint {
-  display: none;
-}
-
-@media (max-width: 51.99rem) {
-  .showcase[data-scene-live] .showcase-swipe-hint {
-    position: absolute;
-    inset-inline: 0;
-    bottom: max(env(safe-area-inset-bottom, 0px), 0.75rem);
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-    margin: 0;
-    pointer-events: none;
-    font-family: var(--font-ui), system-ui, sans-serif;
-    font-size: 0.62rem;
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: color-mix(in srgb, var(--ink) 38%, transparent);
-    /* Fade out after a few seconds so it doesn't permanently clutter the stage.
-       The animation plays once on mount and stops, leaving the hint invisible.
-       If JS is off or reduced-motion is set, this element is display:none. */
-    animation: swipe-hint-fade 4s 1.5s ease-out forwards;
-  }
-
-  .showcase-swipe-arrow {
-    display: inline-block;
-    /* A gentle opacity pulse: one arrow dims while the other brightens, so the
-       pair together reads as a left-right motion cue without any mechanical
-       back-and-forth. cubic-bezier(0.16, 1, 0.3, 1) is the site's --ease-out-soft
-       — it arrives quickly and settles, never bouncy. */
-    animation: swipe-arrow-pulse 1.1s 1.5s cubic-bezier(0.16, 1, 0.3, 1) 3 alternate;
-  }
-
-  .showcase-swipe-arrow:last-child {
-    animation-direction: alternate-reverse;
-  }
-}
-
-@keyframes swipe-hint-fade {
-  0% {
-    opacity: 1;
-  }
-  70% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-@keyframes swipe-arrow-pulse {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.25;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .showcase-swipe-hint {
-    display: none !important;
-  }
-}
-
-/* Roomy desktop spreads: each scene owns two columns instead of squeezing
-   copy into the leftover space around an absolutely positioned image axis. */
-@media (min-width: 52rem) and (min-height: 32.01rem) and (prefers-reduced-motion: no-preference) {
-  .showcase[data-scene-live] .showcase-scene {
-    grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
-    grid-template-rows: minmax(0, 1fr);
-    align-content: stretch;
-    align-items: center;
-    gap: clamp(2rem, 4vw, 5rem);
-    padding: clamp(1.5rem, 4vw, 4rem);
-  }
-  .showcase[data-scene-live] .showcase-scene .showcase-figure {
-    grid-column: 2;
-    grid-row: 1;
-    position: relative;
-    left: auto;
-    justify-self: stretch;
-    width: 100%;
-    max-width: none;
-    height: min(calc(var(--showcase-stage-h) - 6rem), 44rem);
-    aspect-ratio: auto;
-    transform: none;
-  }
-  .showcase[data-scene-live] .showcase-scene .showcase-copy[data-side] {
-    grid-column: 1;
-    grid-row: 1;
-    position: relative;
-    top: auto;
-    left: auto;
-    right: auto;
-    justify-self: stretch;
-    width: 100%;
-    max-width: 34rem;
-    min-width: 0;
-    text-align: left;
+  .showcase-copy {
+    flex: 1 1 0;
     align-items: flex-start;
-    transform: translateX(calc(var(--copy-slide, 0px) * (1 - var(--copy-reveal, 1))));
+    text-align: start;
   }
-  .showcase[data-scene-live] .showcase-scene:has(.showcase-copy[data-side="right"]) {
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+  .showcase-index {
+    display: flex;
   }
-  .showcase[data-scene-live] .showcase-scene:has(.showcase-copy[data-side="right"]) .showcase-figure {
-    grid-column: 1;
-    left: auto;
+  .showcase-title {
+    font-size: clamp(2.25rem, 3.4vw, 3.4rem);
+    max-width: 20ch;
   }
-  .showcase[data-scene-live] .showcase-scene .showcase-copy[data-side="right"] {
-    grid-column: 2;
-  }
-  .showcase[data-scene-live][data-no-rail] .showcase-stage {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .showcase[data-scene-live] .showcase-scene .showcase-title {
-    font-size: clamp(2.75rem, 4.5vw, 5rem);
-    max-width: 14ch;
-    text-wrap: balance;
-  }
-  .showcase[data-scene-live] .showcase-scene .showcase-description {
-    max-width: 32ch;
-    font-size: clamp(1rem, 1.2vw, 1.2rem);
-    line-height: 1.65;
-  }
-}
-
-/* ── Short viewports: too little height for piece AND text ────────────────────
-   Rather than let the two collide, the showcase reverts to the plain stacked
-   layout and the effect stops driving it. */
-@media (max-height: 32rem) {
-  .showcase {
-    --showcase-bottom-inset: max(var(--showcase-measured-inset), 1rem);
-  }
-
-  .showcase[data-scene-live] .showcase-stage {
-    position: static;
-    height: auto;
-    overflow: visible;
-    /* Back to a single column: the stage is no longer a pinned viewport. */
+  .showcase-title::after {
+    content: "";
     display: block;
+    width: 3.25rem;
+    height: 1px;
+    margin-top: 1.25rem;
+    background: var(--gold, var(--brass));
   }
-
-  .showcase[data-scene-live] .showcase-content {
-    height: auto;
+  .showcase-description {
+    max-width: 56ch;
   }
-
-  .showcase[data-scene-live] .showcase-scene {
-    position: static;
-    transform: none;
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto auto;
-  }
-
-  /* Back to one column, so the explicit placements the phone layout makes —
-     figure and copy in the middle track, the indicator in the right-hand
-     gutter — have to be released here too. Left in place they would address a
-     column this grid no longer declares, and the browser would conjure an
-     implicit one beside the content. */
-  .showcase[data-scene-live] .showcase-scene .showcase-figure,
-  .showcase[data-scene-live] .showcase-scene .showcase-copy,
-  .showcase[data-scene-live] .showcase-scene .showcase-copy[data-side="left"],
-  .showcase[data-scene-live] .showcase-scene .showcase-copy[data-side="right"] {
-    grid-column: 1;
-    grid-row: auto;
-  }
-
-  /* And the desktop composition's placement: stacked, the piece is centred and
-     the copy is as wide as its column, as it was before that layout existed. */
-  .showcase[data-scene-live] .showcase-figure {
-    justify-self: center;
-    left: auto;
-    transform: none;
-  }
-
-  .showcase[data-scene-live] .showcase-copy[data-side] {
-    width: auto;
-    max-width: var(--showcase-measure);
-  }
-
-  .showcase[data-scene-live] .showcase-figure,
-  .showcase[data-scene-live] .showcase-copy {
-    opacity: 1;
-  }
-
-  .showcase[data-scene-live] .showcase-copy,
-  .showcase[data-scene-live] .showcase-copy[data-side="left"],
-  .showcase[data-scene-live] .showcase-copy[data-side="right"] {
-    position: static;
-    transform: none;
-  }
-
-  /* No indicator in the stacked fallback: the stage is not pinned, so there is
-     no single scroll position for it to point at. Every scene is fully readable
-     and its link works, which is the whole content of the section. */
-  .showcase[data-scene-live] .showcase-rail,
-  .showcase[data-scene-live] .showcase-rail-scene {
-    display: none;
+}
+/* Phones: the photograph is a little shorter than the screen leaves room for,
+   so the tabs, photo and button all show with space to spare. */
+@media (max-width: 51.99rem) {
+  .showcase-figure {
+    width: min(100%, 17rem);
+    max-height: 38svh;
   }
 }
 
-/* ── Reduced motion: the plain stacked layout, nothing pinned ──────────────── */
-
-@media (prefers-reduced-motion: reduce) {
-  /* The rail still states where the reader is; it just stops moving to say so. */
-  .showcase-rail-item::after,
-  .showcase-rail-item::before,
-  .showcase-rail-label {
-    transition: none;
-  }
-
-  .showcase {
-    height: auto !important;
-  }
-
-  /* The rail is navigation, not decoration: with the pinned stage off there is
-     no scroll position for it to indicate, so it is hidden and the scene links
-     remain the way through. The per-scene mobile row too — it only exists in
-     the pinned layout. */
-  .showcase[data-scene-live] .showcase-rail,
-  .showcase[data-scene-live] .showcase-rail-scene {
-    display: none;
-  }
-
-  .showcase[data-scene-live] .showcase-stage {
-    position: static;
-    height: auto;
-    overflow: visible;
-    display: block;
-  }
-
-  .showcase[data-scene-live] .showcase-content {
-    height: auto;
-  }
-
-  .showcase[data-scene-live] .showcase-scene {
-    position: static;
-    transform: none;
-  }
-
-  .showcase[data-scene-live] .showcase-figure,
-  .showcase[data-scene-live] .showcase-copy {
-    opacity: 1;
-  }
-
-  .showcase[data-scene-live] .showcase-copy,
-  .showcase[data-scene-live] .showcase-copy[data-side="left"],
-  .showcase[data-scene-live] .showcase-copy[data-side="right"] {
-    position: static;
-    transform: none;
-  }
-}
-
-/* ── Options set in the visual editor (Collections animation block) ───────────
-   Each is opt-in through an attribute on the section's root, so the default
-   look above is untouched when none is set. The hiding rules are !important
-   because the layout rules above show these parts with more specific
-   selectors per breakpoint. */
+/* ── Options from the visual editor ───────────────────────────────────── */
 .showcase[data-no-rail] .showcase-rail {
-  display: none !important;
+  display: none;
 }
 .showcase[data-no-counter] .showcase-index {
   display: none !important;
 }
 .showcase[data-no-cta] .showcase-cta {
-  display: none !important;
+  display: none;
 }
 .showcase[data-no-text] .showcase-description {
-  display: none !important;
+  display: none;
 }
-.showcase[data-no-hint] .showcase-swipe-hint {
-  display: none !important;
-}
-.showcase[data-colors],
-.showcase[data-colors] .showcase-stage {
+.showcase[data-colors] {
   background: var(--sc-bg, var(--ivory));
 }
 .showcase[data-colors] .showcase-title {
@@ -1292,610 +338,6 @@
   border-color: var(--sc-accent, var(--midnight));
   color: var(--sc-accent-text, var(--ivory));
 }
-.showcase[data-colors] .showcase-rail-fill {
-  background: var(--sc-accent, var(--midnight));
-}
-.showcase[data-colors] .showcase-rail-item {
-  color: var(--sc-accent, var(--midnight));
-}
-
-/* ── Editorial pass: the same language as the "why Murano" rows below ───────
-   A large pale numeral, a gold rule under the name, the line set as an italic
-   display sentence, and each piece standing on a soft colour block offset
-   behind it — the block fades and travels with its piece. */
-.showcase-index {
-  align-items: flex-end;
-}
-.showcase-index-current {
-  font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(3rem, 5vw, 4.75rem);
-  font-weight: 400;
-  line-height: 0.8;
-  letter-spacing: -0.02em;
-  color: color-mix(in srgb, var(--gold, var(--brass)) 60%, transparent);
-}
-.showcase-title::after {
-  content: "";
-  display: block;
-  width: 3.25rem;
-  height: 1px;
-  margin-top: clamp(1rem, 2.2vh, 1.5rem);
-  background: var(--gold, var(--brass));
-}
-.showcase-copy[data-side="right"] .showcase-title::after {
-  margin-inline-start: auto;
-}
-.showcase-description {
-  font-family: var(--font-display), Georgia, serif;
-  font-style: italic;
-  font-size: clamp(1.15rem, 1.5vw, 1.4rem);
-  line-height: 1.45;
-}
-.showcase-figure {
-  isolation: isolate;
-}
-.showcase-figure::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: 12% -10% -4% 10%;
-  background: color-mix(in srgb, var(--champagne) 55%, var(--ivory));
-}
-.showcase-scene:has(.showcase-copy[data-side="right"]) .showcase-figure::before {
-  inset: 12% 10% -4% -10%;
-}
-@media (max-width: 51.99rem) {
-  .showcase-figure::before {
-    inset: 14% 4% -2% 4%;
-  }
-}
-/* The studio photographs are white-backed: multiplied inside the figure's own
-   group, the white takes the block's colour and the piece sits on it. */
-.showcase-figure .showcase-image {
-  mix-blend-mode: multiply;
-}
-.showcase-figure::before {
-  background: color-mix(in srgb, var(--champagne) 80%, var(--ivory));
-}
-
-/* Compositions chosen in Page layout; the scroll geometry stays shared. */
-.showcase[data-showcase-style="minimal"] .showcase-figure::before {
-  display: none;
-}
-.showcase[data-showcase-style="minimal"] .showcase-index {
-  opacity: 0.5;
-}
-.showcase[data-showcase-style="minimal"] .showcase-title::after {
-  display: none;
-}
-.showcase[data-showcase-style="minimal"] .showcase-description {
-  font-family: var(--font-ui), sans-serif;
-  font-style: normal;
-  font-size: 1rem;
-}
-.showcase[data-showcase-style="classical"] .showcase-figure::before {
-  inset: 0;
-  background: var(--sc-bg, var(--ivory));
-  border: 1px solid var(--brass);
-  outline: 1px solid var(--rule);
-  outline-offset: 0.5rem;
-}
-.showcase[data-showcase-style="classical"] .showcase-title {
-  font-style: italic;
-  font-weight: 400;
-}
-.showcase[data-showcase-style="classical"] .showcase-index-current {
-  font-size: 2.5rem;
-}
-.showcase[data-showcase-style="arched"] .showcase-figure::before {
-  inset: 0 -5% -3%;
-  background: color-mix(in srgb, var(--champagne) 45%, var(--ivory));
-  border: 1px solid var(--rule);
-  border-radius: 50% 50% 0 0;
-}
-.showcase[data-showcase-style="arched"] .showcase-description {
-  font-style: normal;
-}
-.showcase[data-showcase-style="bold"] .showcase-figure::before {
-  inset: 8% -8%;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--sc-accent, var(--brass)) 35%, var(--ivory));
-}
-.showcase[data-showcase-style="bold"] .showcase-title {
-  font-weight: 600;
-  letter-spacing: -0.05em;
-}
-.showcase[data-showcase-style="bold"] .showcase-index-current {
-  color: var(--sc-title, var(--midnight));
-}
-.showcase[data-showcase-style="bold"] .showcase-title::after {
-  height: 3px;
-  width: 4rem;
-}
-
-/* Studio and couture keep the jewellery's shared axis and accessible rails. */
-.showcase[data-showcase-style="studio"] .showcase-figure::before {
-  inset: 0;
-  background: var(--sc-bg, var(--ivory));
-  border: 1px solid var(--rule);
-}
-.showcase[data-showcase-style="studio"] .showcase-title::after {
-  width: 2rem;
-}
-.showcase[data-showcase-style="studio"] .showcase-index-current {
-  font-size: clamp(2rem, 3vw, 3rem);
-}
-.showcase[data-showcase-style="studio"] .showcase-description {
-  font-family: var(--font-ui), sans-serif;
-  font-style: normal;
-  font-size: 0.9375rem;
-  line-height: 1.7;
-}
-.showcase[data-showcase-style="couture"] .showcase-figure::before {
-  inset: 8% -6% -2% 6%;
-  background: color-mix(in srgb, var(--champagne) 35%, var(--ivory));
-  border: 1px solid var(--brass);
-}
-.showcase[data-showcase-style="couture"] .showcase-figure::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: -3% 8% 8% -3%;
-  border: 1px solid var(--rule);
-  pointer-events: none;
-}
-.showcase[data-showcase-style="couture"] .showcase-title {
-  font-style: italic;
-  font-weight: 400;
-  letter-spacing: -0.025em;
-}
-.showcase[data-showcase-style="couture"] .showcase-index-current {
-  font-size: clamp(2.5rem, 4vw, 4rem);
-}
-@media (max-width: 51.99rem) {
-  .showcase[data-showcase-style="couture"] .showcase-figure::before {
-    inset: 5% 0 -2% 3%;
-  }
-  .showcase[data-showcase-style="couture"] .showcase-figure::after {
-    inset: -2% 5% 6% 0;
-  }
-}
-
-/* Optional full-screen presentation, independent of the builder's column width. */
-.showcase[data-full-screen] {
-  width: 100vw;
-  max-width: none;
-  margin-inline: calc(50% - 50vw);
-}
-.showcase[data-full-screen][data-scene-live] .showcase-stage {
-  min-height: var(--showcase-stage-h);
-}
-
-.showcase .showcase-title { transform: translate(var(--sc-title-x, 0%), var(--sc-title-y, 0%)) scale(var(--sc-title-scale, 1)); transform-origin: left center; }
-
-.showcase .showcase-description { transform: translate(var(--sc-description-x, 0%), var(--sc-description-y, 0%)) scale(var(--sc-description-scale, 1)); transform-origin: left center; }
-
-.showcase .showcase-index { transform: translate(var(--sc-counter-x, 0%), var(--sc-counter-y, 0%)) scale(var(--sc-counter-scale, 1)); transform-origin: left center; }
-
-.showcase .showcase-cta { transform: translate(var(--sc-button-x, 0%), var(--sc-button-y, 0%)) scale(var(--sc-button-scale, 1)); transform-origin: left center; }
-
-/* ── One text edge ───────────────────────────────────────────────────────────
-   Beside the piece (wide screens), the counter, title, description and button
-   share the copy column's edge. Generic section styles (e.g. "centre every
-   heading") must not pull the title off that line. Phones keep their centred
-   text under the piece. */
-@media (min-width: 52rem) {
-  .showcase .showcase-copy > .showcase-index,
-  .showcase .showcase-copy > .showcase-title,
-  .showcase .showcase-copy > .showcase-description {
-    margin-inline: 0;
-    max-width: none;
-    text-align: inherit;
-  }
-  .showcase .showcase-copy {
-    text-align: start;
-  }
-  .showcase .showcase-copy > .showcase-cta {
-    align-self: flex-start;
-  }
-}
-@media (max-width: 51.99rem) {
-  /* Desktop editor offsets do not describe the stacked phone composition. */
-  .showcase .showcase-copy > .showcase-index,
-  .showcase .showcase-copy > .showcase-title,
-  .showcase .showcase-copy > .showcase-description,
-  .showcase .showcase-copy > .showcase-cta {
-    transform: none;
-  }
-
-  .showcase .showcase-scene .showcase-figure {
-    width: min(100%, 22rem);
-    height: clamp(12rem, 45svh, 24rem);
-    min-height: 0;
-    aspect-ratio: auto;
-  }
-
-  .showcase .showcase-figure .showcase-image {
-    transform: scale(var(--showcase-piece-zoom, 1));
-  }
-
-  .showcase .showcase-copy,
-  .showcase .showcase-copy[data-side] {
-    width: 100%;
-    max-width: 26rem;
-    align-items: center;
-    text-align: center;
-  }
-
-  .showcase .showcase-copy > .showcase-index {
-    justify-content: center;
-    margin: 0 0 0.75rem;
-    font-size: 0.625rem;
-  }
-
-  .showcase .showcase-copy .showcase-index-current {
-    font-size: 2rem;
-    line-height: 1;
-  }
-
-  .showcase .showcase-copy > .showcase-title {
-    max-width: 100%;
-    margin-inline: auto;
-    font-size: clamp(1.75rem, 7vw, 2.5rem);
-    line-height: 1.1;
-    text-align: center;
-    overflow-wrap: anywhere;
-  }
-
-  .showcase .showcase-copy .showcase-title::after {
-    margin: 0.75rem auto 0;
-  }
-
-  .showcase .showcase-copy > .showcase-description {
-    width: 100%;
-    max-width: 34ch;
-    margin: 0.75rem auto 0;
-    font-size: 0.9375rem;
-    line-height: 1.5;
-    text-wrap: balance;
-    overflow-wrap: anywhere;
-  }
-
-  .showcase .showcase-copy > .showcase-cta {
-    align-self: center;
-    max-width: 100%;
-    min-height: 48px;
-    margin-top: 1rem;
-    padding: 0.85rem 1.25rem;
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    line-height: 1.4;
-    white-space: normal;
-    text-align: center;
-    overflow-wrap: anywhere;
-  }
-}
-
-/* ── Balance and robustness ──────────────────────────────────────────────────
-   Category names on the rail stay on one line (they used to break mid-word,
-   "Collan|e", in a laptop-width column) and the rail keeps clear of the
-   screen edge. */
-.showcase-rail-label {
-  flex: 0 0 auto;
-  white-space: nowrap;
-  overflow-wrap: normal;
-}
-@media (min-width: 52rem) {
-  .showcase[data-scene-live] .showcase-stage > .showcase-rail {
-    /* A margin, not padding: the dots' track is positioned against the rail's
-       own box, so the whole rail (dots and line) moves in together. */
-    margin-inline-end: clamp(0.75rem, 2.5vw, 2.5rem);
-  }
-}
-/* "Fill the screen" spans 100vw, which includes the scrollbar: clip the few
-   pixels it would otherwise add as a sideways scroll. `clip`, not `hidden`, so
-   the pinned (sticky) stage keeps working. */
-html:has(.showcase[data-full-screen]),
-body:has(.showcase[data-full-screen]) {
-  overflow-x: clip;
-}
-
-/* ── Hover card over the scene's piece ───────────────────────────────────────
-   Name, price and a link to the product the photo shows. Pointer devices
-   only: on touch screens the scene's own button is the way on. */
-/* The piece's hover card is the site-wide .pop-card (globals.css), placed at
-   the pointer by collection-showcase.tsx; only pointers that hover get it. */
-.showcase-pop {
-  display: none;
-}
-@media (hover: hover) and (pointer: fine) {
-  .showcase-pop {
-    display: grid;
-  }
-}
-
-/* ── Why Murano, told by the collections ─────────────────────────────────────
-   When each scene carries a reason (lib/showcase-reasons.ts), the piece sits on
-   a near-square colour block, as the old "why Murano" rows had it, and each
-   collection gets its own tint from the palette so the colour changes as the
-   sequence moves on. The block is the photograph's own box: the studio photos
-   are white-backed and already multiplied (above), so the piece sits on the
-   colour with no visible frame edge.
-
-   The box changes from the file's portrait shape to 1 : 1.12. The photograph
-   stays `contain`, so it is now bounded by height; the width each piece fills
-   is re-derived for the new box (fill-w x file ratio / 0.893) and every zoom is
-   still inside its frame's own margin (1 / fill-h), so no jewellery is cut. */
-.showcase[data-reasons] .showcase-scene[data-placement="necklace"] {
-  --scene-tint: color-mix(in srgb, var(--champagne) 60%, var(--ivory));
-  --showcase-piece-fill-w: 0.71;
-}
-.showcase[data-reasons] .showcase-scene[data-placement="bracelet"] {
-  --scene-tint: color-mix(in srgb, var(--sapphire) 20%, var(--ivory));
-  --showcase-piece-fill-w: 0.51;
-}
-.showcase[data-reasons] .showcase-scene[data-placement="earrings"] {
-  --scene-tint: color-mix(in srgb, var(--brass) 22%, var(--ivory));
-  --showcase-piece-fill-w: 0.41;
-}
-.showcase[data-reasons] .showcase-scene {
-  --showcase-piece-ratio: 1 / 1.12;
-  --showcase-piece-ratio-num: 1;
-  --showcase-piece-ratio-den: 1.12;
-}
-
-/* The block. Declared after the composition styles so it holds in every one
-   of them (including "minimal", which otherwise has no block at all). It is
-   part of the photograph's figure, so in the "morph" transition it dissolves
-   with its piece: one scene's colour melts into the next instead of wiping. */
-/* `[data-placement]` lifts this above the right-hand scenes' offset block
-   (`.showcase-scene:has(.showcase-copy[data-side="right"]) …`). */
-.showcase[data-reasons] .showcase-scene[data-placement] .showcase-figure::before {
-  content: "";
-  display: block;
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  border: 0;
-  border-radius: 0;
-  outline: 0;
-  background: var(--scene-tint, color-mix(in srgb, var(--champagne) 60%, var(--ivory)));
-}
-
-/* The copy arrives in order: heading, then text, then button, each on a
-   later stretch of the same scroll value (opacity only, so the editor's own
-   position offsets on these elements are left alone). */
-.showcase[data-reasons][data-scene-live] .showcase-copy > .showcase-title {
-  opacity: clamp(0, var(--copy-opacity, 1) * 1.25, 1);
-}
-.showcase[data-reasons][data-scene-live] .showcase-copy > .showcase-description {
-  opacity: clamp(0, (var(--copy-opacity, 1) - 0.2) / 0.8, 1);
-}
-.showcase[data-reasons][data-scene-live] .showcase-copy > .showcase-cta {
-  opacity: clamp(0, (var(--copy-opacity, 1) - 0.4) / 0.6, 1);
-}
-.showcase[data-reasons] .showcase-scene[data-placement] .showcase-figure::after {
-  display: none;
-}
-
-/* Full text beside the piece; the shorter telling on phones. */
-.showcase-reason-short {
-  display: none;
-}
-.showcase[data-reasons] .showcase-description {
-  text-wrap: pretty;
-}
-
-@media (min-width: 52rem) {
-  /* The reasons need room: a sentence-long heading, a paragraph and a large
-     colour block do not fit the builder's 72rem content column beside the
-     rail without cramping all three. On wide screens the showcase steps out of
-     that column, centred on the viewport, up to 88rem. */
-  .showcase[data-reasons] {
-    --showcase-wide: min(calc(100vw - 2 * clamp(1.5rem, 4vw, 4rem)), 88rem);
-  }
-  .showcase[data-reasons][data-scene-live] {
-    width: var(--showcase-wide);
-    max-width: none;
-    margin-inline: calc((100% - var(--showcase-wide)) / 2);
-  }
-  .showcase[data-reasons][data-scene-live] .showcase-scene {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
-    gap: clamp(2.5rem, 5vw, 6rem);
-  }
-  .showcase[data-reasons][data-scene-live] .showcase-scene:has(.showcase-copy[data-side="right"]) {
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-  }
-  .showcase[data-reasons][data-scene-live] .showcase-scene .showcase-copy[data-side] {
-    max-width: 36rem;
-  }
-  /* The block takes its column, bounded by the pinned stage's height. */
-  .showcase[data-reasons][data-scene-live] .showcase-scene .showcase-figure {
-    justify-self: center;
-    width: min(100%, calc((var(--showcase-stage-h) - 8rem) / 1.12), 44rem);
-    height: auto;
-    aspect-ratio: 1 / 1.12;
-  }
-  /* A reason is a sentence, not a collection name: one step smaller, and a
-     measure wide enough that the full text stays inside the pinned stage. */
-  .showcase[data-reasons][data-scene-live] .showcase-scene .showcase-title {
-    font-size: clamp(2.25rem, 3.1vw, 3.75rem);
-    max-width: 20ch;
-  }
-  .showcase[data-reasons][data-scene-live] .showcase-scene .showcase-description {
-    max-width: 46ch;
-    font-size: clamp(0.98rem, 1.05vw, 1.08rem);
-    line-height: 1.7;
-  }
-}
-
-@media (max-width: 51.99rem) {
-  .showcase-reason-full {
-    display: none;
-  }
-  .showcase-reason-short {
-    display: inline;
-  }
-  /* The numbers live in the tabs (01 Collane · 02 Bracciali · 03 Orecchini),
-     so the counter above the heading would only repeat them. */
-  .showcase[data-reasons] .showcase-copy > .showcase-index {
-    display: none;
-  }
-
-  /* The collections as numbered tabs at the head of the scene: they say where
-     the reader is, how many there are, and where a tap goes. */
-  .showcase[data-reasons][data-scene-live] .showcase-rail-scene {
-    order: -1;
-    flex: 0 0 auto;
-    gap: clamp(0.5rem, 3vw, 1.25rem);
-    height: auto;
-  }
-  .showcase[data-reasons][data-scene-live] .showcase-rail-scene .showcase-rail-track {
-    display: none;
-  }
-  .showcase[data-reasons][data-scene-live] .showcase-rail-scene .showcase-rail-row {
-    width: auto;
-    height: auto;
-  }
-  .showcase[data-reasons][data-scene-live] .showcase-rail-scene .showcase-rail-item {
-    width: auto;
-    min-width: 44px;
-    height: auto;
-    min-height: 44px;
-    padding: 0.25rem 0.35rem;
-    color: color-mix(in srgb, var(--ink) 42%, transparent);
-  }
-  .showcase[data-reasons] .showcase-rail-scene .showcase-rail-item::before,
-  .showcase[data-reasons] .showcase-rail-scene .showcase-rail-item::after {
-    display: none;
-  }
-  .showcase-rail-tab {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.15rem;
-    padding-bottom: 0.4rem;
-    border-bottom: 1px solid transparent;
-    font: 500 0.72rem/1.2 var(--font-ui), system-ui, sans-serif;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    transition: color 0.3s ease, border-color 0.3s ease;
-  }
-  .showcase-rail-tab-num {
-    font: 400 1.15rem/1 var(--font-display), Georgia, serif;
-    letter-spacing: 0;
-    font-variant-numeric: lining-nums;
-  }
-  .showcase[data-reasons] .showcase-rail-scene .showcase-rail-item[data-state="active"] {
-    color: var(--ink);
-  }
-  .showcase-rail-item[data-state="active"] .showcase-rail-tab {
-    border-bottom-color: var(--gold, var(--brass));
-  }
-  .showcase-rail-item[data-state="active"] .showcase-rail-tab-num {
-    color: var(--brass-deep, var(--brass));
-  }
-
-  /* A bigger, square block: the piece is the subject of the scene. Only the
-     photograph yields height when a longer translation needs it. */
-  .showcase[data-reasons][data-scene-live] .showcase-scene .showcase-figure {
-    width: auto;
-    height: clamp(10rem, 40svh, 21rem);
-    aspect-ratio: 1;
-  }
-  .showcase[data-reasons][data-scene-live] .showcase-scene {
-    gap: clamp(0.85rem, 2svh, 1.25rem);
-  }
-  .showcase[data-reasons] .showcase-copy > .showcase-title {
-    font-size: clamp(1.65rem, 7.2vw, 2.15rem);
-    line-height: 1.08;
-    letter-spacing: -0.01em;
-    text-wrap: balance;
-  }
-  .showcase[data-reasons] .showcase-copy > .showcase-description {
-    max-width: 34ch;
-    margin-top: 0.6rem;
-    font-size: 0.92rem;
-    line-height: 1.6;
-    color: color-mix(in srgb, var(--ink) 72%, transparent);
-  }
-}
-
-/* Each piece centred on its block: the measured offset (collection-showcase.tsx,
-   pieceOffset) replaces the editor's position nudge, which was set for the old
-   portrait box. It is scaled with the zoom so the piece's own centre, not the
-   photograph's, lands in the middle. The editor's size still applies. */
-.showcase[data-reasons] .showcase-figure .showcase-image {
-  transform: translate(
-      calc(var(--piece-dx, 0%) * var(--showcase-piece-zoom, 1) * var(--sc-image-scale, 1) * var(--piece-scale, 1)),
-      calc(var(--piece-dy, 0%) * var(--showcase-piece-zoom, 1) * var(--sc-image-scale, 1) * var(--piece-scale, 1))
-    )
-    scale(calc(var(--showcase-piece-zoom, 1) * var(--sc-image-scale, 1) * var(--piece-scale, 1)));
-}
-
-/* Softly rounded colour blocks: a generous radius that scales with the block,
-   so the large desktop block and the phone block read as the same shape. The
-   figure already clips its contents, so the photograph follows the curve. */
-.showcase[data-reasons] .showcase-figure {
-  --block-radius: clamp(1.25rem, 3.2vw, 2.75rem);
-  border-radius: var(--block-radius);
-}
-.showcase[data-reasons] .showcase-scene[data-placement] .showcase-figure::before {
-  border-radius: inherit;
-}
-
-/* ── Editorial touches for the reasons (wide screens) ─────────────────────────
-   Light and few: the counter as a magazine folio (italic numeral joined to the
-   total by a fine line), a short gold rule under the heading, and a little
-   tighter heading. Nothing moves or changes size. */
-@media (min-width: 52rem) {
-  .showcase[data-reasons] .showcase-copy > .showcase-index {
-    display: flex;
-    align-items: baseline;
-    gap: 0.2rem;
-    margin-bottom: 1.25rem;
-    opacity: 1;
-  }
-  /* One baseline for both figures; the rule sits at the small figure's mid-height. */
-  .showcase[data-reasons] .showcase-index-current,
-  .showcase[data-reasons] .showcase-index-total {
-    font-family: var(--font-display), Georgia, serif;
-    font-style: italic;
-    font-weight: 400;
-    font-variant-numeric: lining-nums;
-    line-height: 1;
-  }
-  .showcase[data-reasons] .showcase-index-current {
-    font-size: clamp(2.4rem, 3.2vw, 3rem);
-    letter-spacing: -0.01em;
-    color: var(--brass, #8a6a3a);
-  }
-  .showcase[data-reasons] .showcase-index-sep {
-    font-family: var(--font-display), Georgia, serif;
-    font-style: italic;
-    font-weight: 300;
-    font-size: clamp(2.4rem, 3.2vw, 3rem);
-    line-height: 1;
-    color: color-mix(in srgb, var(--brass, #8a6a3a) 45%, transparent);
-  }
-  .showcase[data-reasons] .showcase-index-total {
-    font-size: clamp(2.4rem, 3.2vw, 3rem);
-    letter-spacing: -0.01em;
-    color: color-mix(in srgb, var(--ink, #1a1714) 28%, transparent);
-  }
-  .showcase[data-reasons][data-scene-live] .showcase-scene .showcase-title {
-    letter-spacing: -0.02em;
-  }
-  .showcase[data-reasons] .showcase-title::after {
-    content: "";
-    display: block !important;
-    width: 2.5rem;
-    height: 1px;
-    margin-top: clamp(1rem, 2vh, 1.4rem);
-    background: var(--gold, var(--brass));
-  }
-  .showcase[data-reasons] .showcase-copy[data-side="right"] .showcase-title::after {
-    margin-inline-start: 0;
-  }
+.showcase[data-colors] .showcase-tab[data-state="active"] {
+  border-color: var(--sc-accent, var(--midnight));
 }

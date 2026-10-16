@@ -485,7 +485,7 @@ body:has(.auth-flow-page) .site-footer {
 
    The whole choreography is hover-only: on touch there is no hover, and a
    tap would leave the fill and the name pill stuck on screen for good (the
-   screenshot bug) —    so phones simply get the quiet plate. */
+   screenshot bug) —    so phones simply get the plate with the glyph already in its brand colour. */
    .social-links li {
      position: relative;
    }
@@ -563,6 +563,13 @@ body:has(.auth-flow-page) .site-footer {
   }
 }
 
+/* Touch screens never hover, so the icons rest in their brand colour. */
+@media (hover: none), (pointer: coarse) {
+  .social-links a {
+    color: var(--ink, var(--footer-ink));
+  }
+}
+
 .social-links a:focus-visible {
   outline: 2px solid var(--gold, var(--brass));
   outline-offset: 2px;
@@ -594,9 +601,30 @@ body:has(.auth-flow-page) .site-footer {
   font-size: 0.86rem;
   color: var(--footer-soft);
 }
-.footer-legal a {
+.footer-legal a,
+.footer-legal button {
   display: inline-block;
   padding-block: 0.6rem;
+}
+/* "Personalizza" is a button but must read as one of the links: same type,
+   same baseline, no underline, centred in its own row slot. */
+.footer-legal li {
+  display: flex;
+  align-items: center;
+}
+.footer-legal button {
+  margin: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  line-height: inherit;
+  cursor: pointer;
+  text-decoration: none;
+}
+.footer-legal button:hover {
+  color: var(--footer-teal);
 }
 .footer-copyright {
   margin: -0.5rem 0 0;

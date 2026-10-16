@@ -28,6 +28,24 @@ export function HeaderHeight() {
       if (height > 0) root.style.setProperty("--hero-header-offset", `${height}px`);
     };
 
+    // Phone browsers resize the viewport when their address/tool bars slide
+    // away on the first scroll. Anything sized from the viewport height (the
+    // hero) would grow at that moment. So the height is read once, with the
+    // bars showing, and only re-read when the WIDTH changes (rotation, a real
+    // resize) — never for the bars. Hero CSS reads --stable-vh.
+    let lastWidth = window.innerWidth;
+    const applyVh = () => {
+      root.style.setProperty("--stable-vh", `${window.innerHeight}px`);
+    };
+    const onResize = () => {
+      if (window.innerWidth !== lastWidth) {
+        lastWidth = window.innerWidth;
+        applyVh();
+      }
+    };
+    applyVh();
+    window.addEventListener("resize", onResize);
+
     apply();
     const observer = new ResizeObserver(apply);
     observer.observe(header);
@@ -38,6 +56,7 @@ export function HeaderHeight() {
     return () => {
       observer.disconnect();
       window.removeEventListener("resize", apply);
+      window.removeEventListener("resize", onResize);
     };
   }, []);
 

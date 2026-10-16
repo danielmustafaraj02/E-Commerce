@@ -38,6 +38,7 @@ import { shareImageUrl } from "@/lib/optimized-image";
 import "../../home.css";
 import "../journal.css";
 import "../article-opening.css";
+import "../journal-simple.css";
 
 export function generateStaticParams() {
   return ARTICLES.map((article) => ({ slug: article.slug }));

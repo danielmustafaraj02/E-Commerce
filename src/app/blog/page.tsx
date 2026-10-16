@@ -21,6 +21,7 @@ import { hreflangAlternates, localizedCanonical } from "@/lib/hreflang";
 import { categoryLabel, formatArticleDate } from "./journal-shared";
 import "../home.css";
 import "./journal.css";
+import "./journal-simple.css";
 
 const CATEGORIES: JournalCategory[] = ["history", "craft", "buying", "care", "gifting"];
 

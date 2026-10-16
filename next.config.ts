@@ -15,6 +15,11 @@ if (isProd && privatePaths.some((path) => existsSync(resolve(process.cwd(), path
 }
 
 const nextConfig: NextConfig = {
+  // Opening the dev server from a phone on the same Wi-Fi (http://192.168.x.x)
+  // is a cross-origin request to Next. Without this the dev scripts are
+  // blocked, the page never hydrates, and buttons and scroll reveals stay dead.
+  // Development only; has no effect on a production build.
+  allowedDevOrigins: ["192.168.*.*", "10.*.*.*", "172.*.*.*", "*.local"],
   // Prevent the response adapter from changing preserved 127.0.0.1 rewrite
   // targets back to localhost and turning them into external requests.
   skipProxyUrlNormalize: true,

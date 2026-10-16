@@ -35,6 +35,18 @@ const BRAND: Record<Platform, string> = {
   twitterUrl: "#101419",
 };
 
+/* Solid glyph colour for touch screens, where there is no hover to reveal the
+   brand colour — Instagram's gradient can't fill a stroke, so it takes the
+   magenta from the middle of it. */
+const BRAND_INK: Record<Platform, string> = {
+  instagramUrl: "#d62976",
+  facebookUrl: "#1877f2",
+  tiktokUrl: "#101419",
+  youtubeUrl: "#ff0000",
+  linkedinUrl: "#0a66c2",
+  twitterUrl: "#101419",
+};
+
 function SocialIcon({ platform }: { platform: Platform }) {
   const common = { width: 18, height: 18, viewBox: "0 0 24 24", "aria-hidden": true as const };
   switch (platform) {
@@ -109,7 +121,12 @@ export function SocialLinks({ urls, label }: { urls: SocialUrls; label: string }
           <li
             key={entry.platform}
             data-tooltip={entry.label}
-            style={{ "--bg": BRAND[entry.platform] } as React.CSSProperties}
+            style={
+              {
+                "--bg": BRAND[entry.platform],
+                "--ink": BRAND_INK[entry.platform],
+              } as React.CSSProperties
+            }
           >
             <a
               href={entry.href}

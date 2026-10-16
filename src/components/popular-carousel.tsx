@@ -14,6 +14,7 @@ export type PopularProduct = {
 };
 
 const SWIPE_PX = 40;
+const AUTOPLAY_MS = 4500;
 const CLONE = 5; /* items cloned at each end — must be >= the max visible count (see CSS) */
 
 export type PopularCarouselLabels = {
@@ -93,6 +94,25 @@ export function PopularCarousel({
     setTrackIndex((i) => i + 1);
   }, []);
 
+  /* Autoplay: advance every few seconds. The timer restarts on every slide
+     change, so a manual tap or swipe naturally postpones the next advance.
+     Paused while hovered or focused, and never for
+     visitors who prefer reduced motion. */
+  const [paused, setPaused] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(true);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReducedMotion(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+  useEffect(() => {
+    if (paused || reducedMotion || n < 2) return;
+    const id = window.setTimeout(next, AUTOPLAY_MS);
+    return () => window.clearTimeout(id);
+  }, [trackIndex, paused, reducedMotion, n, next]);
+
   /* Dot: which real product is at the left of the visible window */
   const realIndex = ((trackIndex - CLONE) % n + n) % n;
 
@@ -100,6 +120,10 @@ export function PopularCarousel({
     <div
       className="popular-carousel"
       style={{ "--pop-ext-n": extN } as CSSProperties}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
     >
       <div
         className="popular-viewport"

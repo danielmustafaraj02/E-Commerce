@@ -7,7 +7,7 @@ export function CookiePreferencesButton({ label }: { label: string }) {
     <button
       type="button"
       onClick={() => window.dispatchEvent(new Event(CONSENT_OPEN_EVENT))}
-      className="underline"
+      className="cookie-preferences-button"
     >
       {label}
     </button>

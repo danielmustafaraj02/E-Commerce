@@ -25,7 +25,10 @@ const FOOTER_PRODUCT_SLUG = "collana-onde-di-smeraldo-143dbf";
 // Small line icons for the trust strip, drawn in currentColor.
 const TRUST_ICONS = {
   handcrafted: (
-    <path d="M4 16c3-1 5-3 7-6l3-4c1-1 2.5-.5 2 1l-2 4h5c1 0 1.5 1.2.7 1.9L14 18c-2 1.6-6 2-10 1" />
+    <>
+      <path d="M9.5 3h5M10 3v3.2c0 1.2-.7 2-1.7 3C7 10.5 6 12.2 6 14.5 6 18.3 8.5 21 12 21s6-2.7 6-6.5c0-2.3-1-4-2.3-5.3-1-1-1.7-1.8-1.7-3V3" />
+      <path d="M8.2 14.5c1.2.8 2.5 1.2 3.8 1.2s2.6-.4 3.8-1.2" />
+    </>
   ),
   secure: (
     <>

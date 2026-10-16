@@ -857,8 +857,8 @@
 .shelf-home .shelf-hero {
   /* The breathing room under the film, also subtracted from the copy's own
      centring so the two stay optically level. */
-  --hero-foot: clamp(1.25rem, 2.8vh, 2.5rem);
-  min-height: calc(100svh - var(--hero-header-offset, 5.75rem));
+  --hero-foot: clamp(1.25rem, calc(var(--stable-vh, 100svh) * 0.028), 2.5rem);
+  min-height: calc(var(--stable-vh, 100svh) - var(--hero-header-offset, 5.75rem));
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -875,7 +875,7 @@
    only the veil above the marks is trimmed so the copy keeps its room. */
 @media (min-width: 52rem) and (max-height: 52rem) {
   .shelf-home .shelf-hero {
-    min-height: calc(100svh - var(--hero-header-offset, 5.75rem));
+    min-height: calc(var(--stable-vh, 100svh) - var(--hero-header-offset, 5.75rem));
   }
 }
 .shelf-hero-copy {
@@ -2350,11 +2350,20 @@
     gap: 1.25rem;
     min-height: 0;
   }
+  /* Phones: the band is centred on its axis — copy, form and the -10% mark
+     share one centre line instead of hugging the left edge. */
   .shelf-newsletter-inner {
     max-width: 34rem;
+    width: 100%;
+    margin-inline: auto;
+    align-items: center;
+    text-align: center;
+  }
+  .shelf-newsletter-inner p {
+    margin-inline: auto;
   }
   .shelf-newsletter-discount {
-    justify-self: start;
+    justify-self: center;
     font-size: clamp(3rem, 14vw, 4.5rem);
   }
 }
@@ -2567,7 +2576,7 @@
 .shelf-home .shelf-hero-grid {
   /* Desktop overrides this with the compact reference layout; mobile keeps
      the existing lower placement over the full-bleed film. */
-  padding-block: clamp(9rem, 16vh, 14rem) clamp(2rem, 5vh, 4rem);
+  padding-block: clamp(9rem, calc(var(--stable-vh, 100svh) * 0.16), 14rem) clamp(2rem, calc(var(--stable-vh, 100svh) * 0.05), 4rem);
 }
 .shelf-home .shelf-hero-copy {
   position: relative;
@@ -2790,7 +2799,7 @@
     gap: 1.1rem;
     /* Same lowered copy as desktop: a tall spacer above pushes the name,
        lede and CTA into the lower half of the film. */
-    padding-block: clamp(12rem, 30vh, 19rem) 2.25rem;
+    padding-block: clamp(12rem, calc(var(--stable-vh, 100svh) * 0.3), 19rem) 2.25rem;
   }
   .shelf-home .shelf-hero-copy {
     display: contents;
@@ -4105,17 +4114,17 @@
    tightens with the screen's height, and the film fills its column. */
 @media (min-width: 48rem) {
   .layout-sec-hero .bld {
-    height: calc(100svh - var(--hero-header-offset, 5.75rem));
+    height: calc(var(--stable-vh, 100svh) - var(--hero-header-offset, 5.75rem));
     min-height: 32rem;
     max-height: 64rem;
   }
   .layout-sec-hero .bld-col:not(:has(:is(img, video, iframe))) {
-    padding-block: clamp(1.5rem, 6svh, 4.5rem) !important;
+    padding-block: clamp(1.5rem, calc(var(--stable-vh, 100svh) * 0.06), 4.5rem) !important;
     justify-content: center;
     overflow: hidden;
   }
   .layout-sec-hero .bld .bld-h {
-    font-size: min(clamp(2.4em, 11vw, 4.6em), 9.5svh);
+    font-size: min(clamp(2.4em, 11vw, 4.6em), calc(var(--stable-vh, 100svh) * 0.095));
     line-height: 1.02;
   }
   .layout-sec-hero .bld .bld-col p {
@@ -4135,4 +4144,41 @@
     height: 100% !important;
     min-height: 0 !important;
   }
+}
+
+/* -- Photos on phones: no mask on a blended image ---------------------------
+   The photo's white used to be dissolved with `mix-blend-mode: multiply` AND a
+   `mask-image` feather on the same <img>. Mobile WebKit drops the blend when a
+   mask shares the element, so the photo showed as a bright white box, edge
+   "shadow" and all, on the tinted page. The image now keeps only the multiply,
+   which every browser honours once it stands alone. */
+.shelf .shelf-item-photo img,
+.shelf .shelf-category-photo img,
+.shelf .shop-product-photo img,
+.shelf .shop-thumb img {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+.shelf .shelf-item-photo,
+.shelf .shelf-category-photo,
+.shelf .shop-product-photo,
+.shelf .shop-thumb {
+  position: relative;
+  background-color: var(--ivory);
+}
+/* No soft wash: it read as a blur along the sides on a real phone. The
+   studio photos' only flaw is a faint shadow right at their outer edge, so the
+   picture is simply enlarged a touch inside its overflow-hidden frame, which
+   crops that edge off. The pieces sit well inside the frame, so nothing is
+   lost. `scale` composes with the hover `transform`, it does not replace it. */
+.shelf .shelf-item-photo img,
+.shelf .shelf-category-photo img,
+.shelf .shop-product-photo:not(:has(.shop-photo--lifestyle)) img,
+.shelf .shop-thumb:not(:has(.shop-photo--lifestyle)) img {
+  scale: 1.12;
+  filter: none;
+}
+/* Labels and buttons on the photo always sit above the picture. */
+.shelf .shelf-item-photo > :is(.shelf-badge, .shelf-discount-badge, button, a) {
+  z-index: 3;
 }

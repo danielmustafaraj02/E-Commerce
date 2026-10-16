@@ -327,8 +327,6 @@ export async function Header({
               searchPlaceholder={dict.nav.searchPlaceholder}
               searchLabel={dict.nav.search}
               storeName={storeName}
-              social={social}
-              socialLabel={dict.footer.socialNav}
               legal={legalLinks(dict)}
               legalLabel={dict.footer.legalNav}
             />

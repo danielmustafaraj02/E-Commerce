@@ -35,7 +35,11 @@ function Frame({
   const opts = optionAttributes(entry.options);
   const vars = optionVars(entry.options);
   if (Object.keys(vars).length) style = { ...style, ...(vars as CSSProperties) };
-  if (s?.anim) {
+  // The hero is already on screen at load and is taller than the phone's
+  // viewport, so a scroll-linked entrance (zoom, shrink…) would sit half-played
+  // at rest and finish on the first scroll — the hero visibly "expanding".
+  // It is shown in its final state instead.
+  if (s?.anim && entry.id !== "hero") {
     return (
       <AnimateOnView
         anim={s.anim}

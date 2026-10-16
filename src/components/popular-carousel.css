@@ -334,3 +334,59 @@
     font-size: 0.875rem;
   }
 }
+
+/* ── Softer controls ───────────────────────────────────────────────────────
+   Round frosted buttons that float inside the photo's margin instead of
+   square outlines glued to the screen edge, and dots whose active one
+   stretches into a small pill. */
+.popular-btn {
+  border-radius: 50%;
+  border-color: color-mix(in srgb, var(--brass) 28%, transparent);
+  background: color-mix(in srgb, var(--ivory) 88%, transparent);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  box-shadow:
+    0 2px 10px color-mix(in srgb, var(--midnight) 14%, transparent),
+    0 0 0 4px color-mix(in srgb, var(--ivory) 45%, transparent);
+}
+.popular-btn svg {
+  width: 1.15rem;
+  height: 0.8rem;
+}
+/* Phones: the buttons live entirely inside the 2.75rem gutter, clear of both
+   the screen edge and the photo, even on the narrowest handsets. A 44px tap
+   area is kept with an invisible halo. */
+@media (max-width: 35.999rem) {
+  .popular-btn {
+    width: 2.25rem;
+    height: 2.25rem;
+    min-width: 0;
+    min-height: 0;
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--midnight) 14%, transparent);
+  }
+  .popular-btn::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+  }
+  .popular-btn--prev {
+    inset-inline-start: 0.25rem;
+  }
+  .popular-btn--next {
+    inset-inline-end: 0.25rem;
+  }
+}
+.popular-dot::before {
+  transition: background 0.25s, width 0.25s;
+}
+.popular-dot[data-active="true"]::before {
+  width: 1.1rem;
+  border-radius: 999px;
+  transform: none;
+  background: var(--brass);
+}
+@media (prefers-reduced-motion: reduce) {
+  .popular-dot::before {
+    transition: none;
+  }
+}

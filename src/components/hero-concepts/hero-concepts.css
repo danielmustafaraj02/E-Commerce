@@ -27,7 +27,7 @@
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-  min-height: min(calc(var(--hc-vh, 1svh) * 88), 58rem);
+  min-height: min(calc(var(--hc-vh, calc(var(--stable-vh, 100svh) / 100)) * 88), 58rem);
   overflow: hidden;
   isolation: isolate;
 }
@@ -70,7 +70,7 @@
   color: inherit;
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: min(clamp(2.4em, 11cqi, 4.6em), calc(var(--hc-vh, 1svh) * 9.5));
+  font-size: min(clamp(2.4em, 11cqi, 4.6em), calc(var(--hc-vh, calc(var(--stable-vh, 100svh) / 100)) * 9.5));
   line-height: 1.02;
   letter-spacing: normal;
   text-wrap: balance;
@@ -91,23 +91,38 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  min-height: 2.75rem;
-  padding: 0.8rem 1.8rem;
-  border: 1px solid currentColor;
-  color: inherit;
-  font-weight: 500;
-  line-height: 1.4;
-  letter-spacing: 0.1em;
-  text-decoration: none;
-  text-transform: uppercase;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
-}
-.hc-cta:hover {
+  gap: 0.75rem;
+  min-height: 3.5rem;
+  padding: 1rem 2.4rem;
+  border: 1.5px solid var(--hc-ink);
   background: var(--hc-ink);
   color: var(--hc-ground);
+  font-size: 0.95em;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  text-transform: uppercase;
+  box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--hc-ink) 55%, transparent);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+}
+.hc-cta span {
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.hc-cta:hover {
+  background: transparent;
+  color: var(--hc-ink);
+  box-shadow: none;
+}
+.hc-cta:hover span {
+  transform: translateX(4px);
+}
+.hc-cta:active {
+  transform: translateY(1px) scale(0.98);
 }
 .hc-cta:focus-visible {
   outline: 2px solid var(--hc-ink);
@@ -342,7 +357,7 @@
   .hc-stage {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto 1fr;
-    min-height: calc(var(--hc-vh, 1svh) * 100 - var(--hc-header, 5.75rem));
+    min-height: calc(var(--hc-vh, calc(var(--stable-vh, 100svh) / 100)) * 100 - var(--hc-header, 5.75rem));
   }
   .hc-copy {
     grid-column: 1;
@@ -362,7 +377,13 @@
   .hc-media {
     grid-column: 1;
     grid-row: 1;
-    height: min(100cqi, calc(var(--hc-vh, 1svh) * 46));
+    /* Taller than wide: the piece gets the room it needs, and the copy
+       starts below the box, so nothing reaches into the text. */
+    height: min(135cqi, calc(var(--hc-vh, calc(var(--stable-vh, 100svh) / 100)) * 58));
+    overflow: hidden;
+  }
+  .hc-media .hc-piece {
+    --hmax: 80;
   }
   .hc-hold {
     right: 0.75rem;
@@ -372,6 +393,14 @@
   .hc[data-concept="wallpaper"] .hc-copy {
     grid-row: 1 / -1;
     align-self: end;
+  }
+  /* The pieces keep to the upper part; the text has its own band below. */
+  .hc[data-concept="wallpaper"] .hc-stage {
+    min-height: calc(var(--hc-vh, calc(var(--stable-vh, 100svh) / 100)) * 118 - var(--hc-header, 5.75rem));
+  }
+  .hc[data-concept="wallpaper"] .hc-wall {
+    inset: 0 0 auto 0;
+    height: 66%;
   }
   .hc-wall-wide {
     display: none;

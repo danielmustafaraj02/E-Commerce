@@ -42,7 +42,8 @@ function XIcon() {
   );
 }
 
-/* Round, quiet at rest; on hover each takes its platform's own colour. */
+/* Round, quiet at rest; on hover each takes its platform's own colour (on touch,
+   where there is no hover, the glyphs are coloured from the start). */
 const BUTTON =
   "inline-flex h-10 w-10 items-center justify-center rounded-full border border-foreground/15 text-foreground/70 transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground";
 
@@ -100,7 +101,7 @@ export function ShareButtons({
         href={`https://wa.me/?text=${encodedTitle}%20${encodedUrl}`}
         target="_blank"
         rel="noopener noreferrer"
-        className={`${BUTTON} hover:border-[#25d366] hover:bg-[#25d366]`}
+        className={`${BUTTON} hover:border-[#25d366] hover:bg-[#25d366] [@media(hover:none)]:text-[#25d366]`}
         aria-label="WhatsApp"
         title="WhatsApp"
       >
@@ -110,7 +111,7 @@ export function ShareButtons({
         href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}
         target="_blank"
         rel="noopener noreferrer"
-        className={`${BUTTON} hover:border-[#1877f2] hover:bg-[#1877f2]`}
+        className={`${BUTTON} hover:border-[#1877f2] hover:bg-[#1877f2] [@media(hover:none)]:text-[#1877f2]`}
         aria-label="Facebook"
         title="Facebook"
       >
@@ -120,7 +121,7 @@ export function ShareButtons({
         href={`https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`}
         target="_blank"
         rel="noopener noreferrer"
-        className={`${BUTTON} hover:border-[#101419] hover:bg-[#101419]`}
+        className={`${BUTTON} hover:border-[#101419] hover:bg-[#101419] [@media(hover:none)]:text-[#101419]`}
         aria-label="X"
         title="X"
       >
