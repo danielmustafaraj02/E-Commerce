@@ -1,4 +1,3 @@
-import { applyHomeCopy, parseHomeCopy } from "@/lib/home-copy";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import type { Locale } from "@/lib/i18n/locale-constants";
 import type { HeroCopy } from "@/components/hero-concepts/hero-concept";
@@ -12,11 +11,10 @@ const HOLD_LABELS: Partial<Record<Locale, { pause: string; play: string; view: s
 
 /**
  * The hero's words in one language, from the same sources as the live hero:
- * the store's name, and the subtitle and button text of the home dictionary
- * with the admin's Page text overrides applied.
+ * the store's name, and the subtitle and button text of the home dictionary.
  */
-export function heroCopy(locale: Locale, storeName: string, homeCopy: unknown): HeroCopy {
-  const dict = applyHomeCopy(getDictionary(locale), parseHomeCopy(homeCopy)[locale]);
+export function heroCopy(locale: Locale, storeName: string): HeroCopy {
+  const dict = getDictionary(locale);
   const hold = HOLD_LABELS[locale] ?? HOLD_LABELS.en!;
   return {
     // Place names, the same in every language.

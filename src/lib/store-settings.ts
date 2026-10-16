@@ -86,7 +86,12 @@ const defaults = {
 // share a single DB round trip instead of re-querying per call.
 export const getStoreSettings = cache(async () => {
   try {
-    const settings = await db.storeSettings.findFirst();
+    // The old page-designer columns (layouts, page text, saved palettes) are
+    // left in the database but never read: the design is code (src/design/).
+    // Skipping them keeps a few KB of JSON out of every request.
+    const settings = await db.storeSettings.findFirst({
+      omit: { homeLayout: true, productPageLayout: true, homeCopy: true, customPalettes: true },
+    });
     return settings ?? defaults;
   } catch (error) {
     // The storefront should still render before the database is available

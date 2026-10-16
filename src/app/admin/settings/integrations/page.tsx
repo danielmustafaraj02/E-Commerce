@@ -1,6 +1,7 @@
 import { requireAdmin } from "@/lib/require-admin";
 import { getStoreSettings } from "@/lib/store-settings";
 import { siteBaseUrl } from "@/lib/site-url";
+import { senderAddress } from "@/lib/email";
 import { IntegrationsForm } from "./integrations-form";
 
 export default async function AdminIntegrationsPage() {
@@ -9,7 +10,7 @@ export default async function AdminIntegrationsPage() {
 
   const configured = {
     resendApiKey: Boolean(settings.resendApiKey || process.env.RESEND_API_KEY),
-    emailFrom: Boolean(settings.emailFrom || process.env.EMAIL_FROM),
+    emailFrom: Boolean(senderAddress(settings)),
     turnstileSiteKey: Boolean(
       settings.turnstileSiteKey || process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
     ),
@@ -31,7 +32,8 @@ export default async function AdminIntegrationsPage() {
         siteUrl={siteBaseUrl(settings)}
         configured={configured}
         current={{
-          emailFrom: settings.emailFrom ?? process.env.EMAIL_FROM ?? "",
+          // What emails are actually sent from (see senderAddress in lib/email.ts).
+          emailFrom: senderAddress(settings) ?? "",
           turnstileSiteKey:
             settings.turnstileSiteKey ?? process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "",
           googleClientId: settings.googleClientId ?? process.env.GOOGLE_CLIENT_ID ?? "",

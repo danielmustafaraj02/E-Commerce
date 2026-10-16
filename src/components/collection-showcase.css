@@ -151,7 +151,11 @@
 }
 
 /* ── One scene ────────────────────────────────────────────────────────── */
+/* All scenes share one grid cell, stacked: switching crossfades the outgoing
+   scene into the next instead of swapping them, and the section keeps the
+   tallest scene's height, so nothing below it jumps. */
 .showcase-content {
+  display: grid;
   width: 100%;
 }
 .showcase-scene {
@@ -168,8 +172,50 @@
 .showcase-scene[data-placement="earrings"] {
   --scene-tint: color-mix(in srgb, var(--brass) 22%, var(--ivory));
 }
+.showcase-scene {
+  grid-area: 1 / 1;
+  transition:
+    opacity 0.7s ease,
+    visibility 0s linear 0s;
+}
 .showcase-scene[data-active="false"] {
-  display: none;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  /* Hidden only once it has faded out. */
+  transition:
+    opacity 0.45s ease,
+    visibility 0s linear 0.45s;
+}
+/* The incoming piece settles from a touch smaller; its words rise a little
+   after it, so the change reads as one gesture rather than a cut. */
+.showcase-scene .showcase-figure,
+.showcase-scene .showcase-copy {
+  transition:
+    transform 0.9s cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity 0.7s ease;
+}
+.showcase-scene[data-active="true"] .showcase-copy {
+  transition-delay: 0.12s;
+}
+.showcase-scene[data-active="false"] .showcase-figure {
+  transform: scale(0.97);
+}
+.showcase-scene[data-active="false"] .showcase-copy {
+  opacity: 0;
+  transform: translateY(0.75rem);
+}
+@media (prefers-reduced-motion: reduce) {
+  .showcase-scene,
+  .showcase-scene[data-active="false"],
+  .showcase-scene .showcase-figure,
+  .showcase-scene .showcase-copy {
+    transition: none;
+  }
+  .showcase-scene[data-active="false"] .showcase-figure,
+  .showcase-scene[data-active="false"] .showcase-copy {
+    transform: none;
+  }
 }
 
 .showcase-figure {
@@ -184,7 +230,7 @@
   object-fit: contain;
   /* The studio photographs are white-backed; multiply lets the tint show. */
   mix-blend-mode: multiply;
-  transform: translate(var(--sc-image-x, 0%), var(--sc-image-y, 0%)) scale(var(--sc-image-scale, 1));
+  transform: scale(var(--sc-image-scale, 1));
 }
 
 .showcase-copy {
@@ -244,10 +290,12 @@
 .showcase-cta {
   transform-origin: left center;
 }
-.showcase .showcase-title { transform: translate(var(--sc-title-x, 0%), var(--sc-title-y, 0%)) scale(var(--sc-title-scale, 1)); }
-.showcase .showcase-description { transform: translate(var(--sc-description-x, 0%), var(--sc-description-y, 0%)) scale(var(--sc-description-scale, 1)); }
-.showcase .showcase-index { transform: translate(var(--sc-counter-x, 0%), var(--sc-counter-y, 0%)) scale(var(--sc-counter-scale, 1)); }
-.showcase .showcase-cta { transform: translate(var(--sc-button-x, 0%), var(--sc-button-y, 0%)) scale(var(--sc-button-scale, 1)); }
+/* Sizes only. The old visual editor also saved per-scene nudges (--sc-*-x/-y);
+   they pushed the pieces off centre and are no longer applied anywhere. */
+.showcase .showcase-title { transform: scale(var(--sc-title-scale, 1)); }
+.showcase .showcase-description { transform: scale(var(--sc-description-scale, 1)); }
+.showcase .showcase-index { transform: scale(var(--sc-counter-scale, 1)); }
+.showcase .showcase-cta { transform: scale(var(--sc-button-scale, 1)); }
 
 /* Full text beside the piece; the shorter telling on phones. */
 .showcase-reason-short {
@@ -264,21 +312,63 @@
 
 /* ── Wide screens: photograph and copy side by side ───────────────────── */
 @media (min-width: 52rem) {
+  /* The whole scene — tabs, photograph, copy — fits the screen under the
+     sticky header: the photograph takes its height from the viewport (what is
+     left after the header and the section's padding), and its width follows
+     from its shape. */
+  .showcase {
+    padding-block: 2.5rem;
+  }
+  /* The tabs stand in a column beside the scene rather than above it, so the
+     photograph can use the screen's full height. */
+  .showcase-stage {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(2rem, 4vw, 4rem);
+  }
+  .showcase-rail {
+    width: auto;
+    flex: 0 0 auto;
+  }
+  .showcase-tabs {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .showcase-tab {
+    min-width: 9.5rem;
+  }
+  .showcase-content {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+  /* A little wider than the page's usual 72rem column, so the photograph and
+     the copy sit side by side at a comfortable measure. */
+  .custom-section-inner:has(> .bld .showcase) {
+    max-width: 84rem;
+  }
   .showcase-scene {
     flex-direction: row;
     justify-content: center;
-    gap: clamp(3rem, 8vw, 10rem);
+    align-items: center;
+    gap: clamp(2rem, 4vw, 4rem);
   }
   .showcase-scene:has(.showcase-copy[data-side="right"]) {
     flex-direction: row-reverse;
   }
   .showcase-figure {
-    flex: 0 1 42rem;
+    flex: 0 0 auto;
+    /* The screen minus the sticky header and the section's padding, and no
+       taller than 34rem: beside it the copy keeps a readable width. */
+    height: clamp(20rem, calc(100svh - 12rem), 34rem);
     width: auto;
+    max-width: 55%;
     border-radius: 0;
   }
   .showcase-copy {
     flex: 1 1 0;
+    min-width: 0;
+    max-width: 32rem;
     align-items: flex-start;
     text-align: start;
   }
@@ -304,10 +394,44 @@
 /* Phones: the photograph is a little shorter than the screen leaves room for,
    so the tabs, photo and button all show with space to spare. */
 @media (max-width: 51.99rem) {
-  .showcase-figure {
-    width: min(100%, 17rem);
-    max-height: 38svh;
+  /* Sized so tabs, photo, copy and button fit one phone screen under the
+     header, with an even breath above and below. */
+  .showcase {
+    padding-block: 2.5rem;
   }
+  .showcase-stage {
+    gap: 1.25rem;
+  }
+  .showcase-scene {
+    gap: 1.25rem;
+  }
+  .showcase-figure {
+    width: min(100%, 15rem);
+    max-height: 30svh;
+  }
+  .showcase-title {
+    font-size: clamp(1.85rem, 8vw, 2.4rem);
+  }
+  .showcase-description {
+    margin-top: 0.75rem;
+    font-size: 0.98rem;
+    line-height: 1.55;
+  }
+  .showcase-cta {
+    margin-top: 1.25rem;
+  }
+  /* The copy is centred on phones, so its sizes scale from the middle. */
+  .showcase-title,
+  .showcase-description,
+  .showcase-index,
+  .showcase-cta {
+    transform-origin: center;
+  }
+}
+/* Studio backdrops that are a shade off pure white (a near-white 249, not 255)
+   would show as a pale box under multiply; this nudge lifts them to white. */
+.showcase-image {
+  filter: brightness(1.025);
 }
 
 /* ── Options from the visual editor ───────────────────────────────────── */

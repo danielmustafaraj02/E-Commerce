@@ -10,9 +10,8 @@ Online shop for Murano glass jewelry, with an 11-language storefront and a local
 | Understand the code                   | [Architecture](ARCHITECTURE.md)               |
 | Keep the brand consistent             | [Product](PRODUCT.md) and [Design](DESIGN.md) |
 | See what still needs doing            | [Roadmap](docs/implementation-roadmap.md)     |
-| Work on the visual editor             | [Builder](docs/builder-architecture.md)       |
+| Change the site's look                | [Builder](docs/builder-architecture.md)       |
 | Check speed                           | [Performance](docs/performance-baseline.md)   |
-| Review template screenshots           | [Visual review](scripts/visual-review.md)     |
 
 ## Run locally
 

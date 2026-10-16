@@ -1,0 +1,413 @@
+// Order matters, so it is stated here rather than left to the order other
+// pages happen to import these in: the shared base first, then the
+// components' own styles (imported below), then this page's overrides last.
+import "../../../home.css";
+import "../journal.css";
+import "../article-opening.css";
+import type { ReactNode } from "react";
+import { LayoutSection } from "@/components/layout-section";
+import { pageEntries } from "@/lib/page-layout-store";
+import type { ARTICLE_SECTIONS } from "@/lib/page-layout";
+import { Link } from "@/components/localized-link";
+import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+import { getStoreSettings } from "@/lib/store-settings";
+import { siteBaseUrl } from "@/lib/site-url";
+import { getLocale } from "@/lib/i18n/locale";
+import { ogLocale } from "@/lib/hreflang";
+import type { Locale } from "@/lib/i18n/locale-constants";
+import { getDictionary } from "@/lib/i18n/dictionaries";
+import { applyTemplate } from "@/lib/i18n/format";
+import { toSafeJsonLd, absoluteUrl } from "@/lib/json-ld";
+import {
+  ARTICLES,
+  articleLanguages,
+  articleTranslationLocales,
+  articlePath,
+  articleProductSlugs,
+  localizeArticle,
+  readingMinutes,
+  relatedArticles,
+  seriesArticles,
+} from "@/lib/journal";
+import { findArticle } from "@/lib/journal/db-articles";
+import { HOUSE_OPENING, openingPartProps, type OpeningLayout } from "@/lib/journal/opening";
+import type { Source } from "@/lib/journal/types";
+import { getJournalProducts } from "@/lib/journal/products";
+import { ArticleBody, InlineText } from "@/components/journal/article-body";
+import { JournalImage, journalImageSrc } from "@/components/journal/journal-image";
+import { homeFontClasses } from "@/app/home-fonts";
+import { categoryLabel, formatArticleDate } from "../journal-shared";
+import { shareImageUrl } from "@/lib/optimized-image";
+import "../journal-simple.css";
+
+export function generateStaticParams() {
+  return ARTICLES.map((article) => ({ slug: article.slug }));
+}
+
+export async function generateMetadata({ params }: PageProps<"/[locale]/blog/[slug]">): Promise<Metadata> {
+  const { slug } = await params;
+  const source = await findArticle(slug);
+  // Here, not only in the page: metadata resolves before the body streams,
+  // so this is what makes a missing item a real 404 (not a 200 carrying the
+  // not-found page), including the copy kept in the cache.
+  if (!source) notFound();
+  const [uiLocale, products] = await Promise.all([
+    getLocale(),
+    getJournalProducts(articleProductSlugs(source)),
+  ]);
+  const article = localizeArticle(source, uiLocale);
+  const hero = journalImageSrc(article.hero, products);
+  const image = hero ? shareImageUrl(hero) : null;
+  const canonical = articlePath(article.slug, article.contentLocale);
+  const languages = articleLanguages(source);
+  const available = ["en", ...articleTranslationLocales(source)] as Locale[];
+  const alternateLocale =
+    available.length > 1
+      ? available.filter((l) => l !== article.contentLocale).map(ogLocale)
+      : undefined;
+  return {
+    title: article.seoTitle,
+    description: article.description,
+    alternates: {
+      canonical,
+      languages,
+    },
+    openGraph: {
+      title: article.seoTitle,
+      description: article.description,
+      type: "article",
+      locale: ogLocale(article.contentLocale),
+      alternateLocale,
+      publishedTime: article.published,
+      modifiedTime: article.updated ?? article.published,
+      images: image
+        ? [
+            {
+              url: image,
+              alt:
+                article.contentLocale === "it"
+                  ? (article.hero.altIt ?? article.hero.alt)
+                  : article.hero.alt,
+            },
+          ]
+        : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: article.seoTitle,
+      description: article.description,
+      images: image ? [image] : undefined,
+    },
+  };
+}
+
+type ArticleSectionId = (typeof ARTICLE_SECTIONS)[number]["id"];
+
+export default async function JournalArticlePage({ params }: PageProps<"/[locale]/blog/[slug]">) {
+  const entries = await pageEntries("article");
+  const { slug } = await params;
+  const source = await findArticle(slug);
+  if (!source) notFound();
+
+  const relatedHeroSlugs = source.related.flatMap((relatedSlug) => {
+    const relatedArticle = ARTICLES.find((a) => a.slug === relatedSlug);
+    return relatedArticle?.hero.kind === "product" ? [relatedArticle.hero.productSlug] : [];
+  });
+  const [settings, uiLocale, products] = await Promise.all([
+    getStoreSettings(),
+    getLocale(),
+    getJournalProducts([...articleProductSlugs(source), ...relatedHeroSlugs]),
+  ]);
+  const dict = getDictionary(uiLocale);
+  const j = dict.journal;
+  const article = localizeArticle(source, uiLocale);
+  const contentJournal = getDictionary(article.contentLocale).journal;
+  const related = relatedArticles(source, uiLocale);
+  const episodes = seriesArticles(source, uiLocale);
+  const base = siteBaseUrl(settings);
+  const url = `${base}${articlePath(article.slug, article.contentLocale)}`;
+  const heroSrc = journalImageSrc(article.hero, products);
+  // One house opening for every article (see HOUSE_OPENING).
+  const opening = HOUSE_OPENING.template;
+  const openingLayout: OpeningLayout = HOUSE_OPENING.layout;
+  const credit = (c: string) => applyTemplate(j.photoCredit, { credit: c });
+
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: article.title,
+      description: article.description,
+      inLanguage: article.contentLocale,
+      mainEntityOfPage: url,
+      datePublished: article.published,
+      dateModified: article.updated ?? article.published,
+      image: heroSrc ? [absoluteUrl(heroSrc, base)] : undefined,
+      author: { "@type": "Organization", name: settings.storeName, url: base },
+      publisher: { "@type": "Organization", name: settings.storeName, url: base },
+      citation: article.sources.map((s) => s.url),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: settings.storeName,
+          item: `${base}/${article.contentLocale}`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: contentJournal.title,
+          item: `${base}/${article.contentLocale}/blog`,
+        },
+        { "@type": "ListItem", position: 3, name: article.title, item: url },
+      ],
+    },
+  ];
+
+  const sections: Record<ArticleSectionId, ReactNode> = {
+    head: (
+      <div className="journal-opening-wrap">
+      <div className="journal-opening" data-has-image={!!heroSrc} data-opening={opening}
+        data-text={openingLayout?.text}
+        {...(openingLayout?.shade !== undefined && {
+          "data-shade": "",
+          style: { "--o-shade": `${openingLayout.shade}%` } as React.CSSProperties,
+        })}
+      >
+        <header
+          className="journal-article-head"
+          data-gui-native-element="article-head"
+          {...openingPartProps(openingLayout, "head")}
+        >
+          <span className="journal-gui-eyebrow" data-gui-native-element="article-breadcrumb">{j.title} / {categoryLabel(j, article.category)}</span>
+          <nav aria-label="Breadcrumb" className="journal-breadcrumb" lang={uiLocale}>
+            <Link href="/blog">{j.title}</Link>
+            <span aria-hidden="true">/</span>
+            <Link href={`/blog?category=${article.category}`}>
+              {categoryLabel(j, article.category)}
+            </Link>
+          </nav>
+          {article.series && (
+            <p className="journal-series-kicker" lang={article.contentLocale}>
+              {article.contentLocale === "it" ? article.series.titleIt : article.series.title}
+              {" · "}
+              {article.contentLocale === "it" ? "Episodio" : "Episode"} {article.series.episode}{" "}
+              {article.contentLocale === "it" ? "di" : "of"} {article.series.total}
+            </p>
+          )}
+          <h1
+            lang={article.contentLocale}
+            data-gui-native-element="article-title"
+            {...openingPartProps(openingLayout, "title")}
+          >
+            {article.title}
+          </h1>
+          <p
+            className="journal-card-meta"
+            lang={uiLocale}
+            data-gui-native-element="article-meta"
+            {...openingPartProps(openingLayout, "meta")}
+          >
+            <span className="journal-meta-item">
+              {applyTemplate(j.minRead, { n: readingMinutes(article) })}
+            </span>
+            {" · "}
+            <span className="journal-meta-item">
+              {applyTemplate(j.published, {
+                date: formatArticleDate(article.published, article.contentLocale),
+              })}
+            </span>
+            {article.updated && (
+              <>
+                {" · "}
+                <span className="journal-meta-item">
+                  {applyTemplate(j.updated, {
+                    date: formatArticleDate(article.updated, article.contentLocale),
+                  })}
+                </span>
+              </>
+            )}
+            {" · "}
+            <span className="journal-meta-item">{j.byline}</span>
+          </p>
+          {article.contentLocale !== uiLocale && (
+            <p className="journal-language-note" lang={uiLocale}>
+              {j.englishOnly}
+            </p>
+          )}
+        </header>
+        <JournalImage
+          image={article.hero}
+          products={products}
+          sizes="(min-width: 64rem) 60rem, 100vw"
+          priority
+          className="journal-hero"
+          figureProps={{
+            "data-gui-native-element": "article-image",
+            ...openingPartProps(openingLayout, "image"),
+          }}
+          creditLabel={credit}
+          locale={article.contentLocale}
+        />
+      </div>
+      </div>
+    ),
+    body: (
+      <div className="journal-prose" lang={article.contentLocale}>
+        <p className="journal-intro">
+          <InlineText text={article.intro} />
+        </p>
+        <ArticleBody
+          blocks={article.body}
+          products={products}
+          locale={settings.defaultLocale}
+          uiLocale={uiLocale}
+          labels={{
+            outOfStock: dict.product.outOfStock,
+            addToCart: dict.product.addToCart,
+            added: dict.product.added,
+            photoCredit: credit,
+          }}
+        />
+
+        {article.sources.length > 0 && (
+          <section className="journal-sources" aria-labelledby="journal-sources-title">
+            <h2 id="journal-sources-title" lang={uiLocale}>
+              {j.sources}
+            </h2>
+            <ul>
+              {article.sources.map((source) => (
+                <li key={source.url}>
+                  <p className="journal-source-heading">
+                    <a href={source.url} target="_blank" rel="noopener noreferrer">
+                      {source.title}
+                    </a>
+                  </p>
+                  <p className="journal-source-meta">
+                    {source.author ? `${source.author}. ` : ""}
+                    {source.publisher}
+                    {source.published ? ` · ${source.published}` : ""}
+                    {source.locator ? ` · ${source.locator}` : ""}
+                    {" · "}
+                    {article.contentLocale === "it" ? "Consultato" : "Accessed"}{" "}
+                    {formatArticleDate(source.accessed, article.contentLocale)}
+                    {source.kind && <> · {sourceKindLabel(source.kind, article.contentLocale)}</>}
+                  </p>
+                  <p className="journal-source-note">
+                    {article.contentLocale === "it"
+                      ? (source.usedForIt ?? source.usedFor)
+                      : source.usedFor}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+      </div>
+    ),
+    series: episodes.length > 0 && article.series && (
+      <nav
+        className="journal-series"
+        aria-label={article.contentLocale === "it" ? article.series.titleIt : article.series.title}
+        lang={article.contentLocale}
+      >
+        <div className="shelf-wrap">
+          <p className="journal-kicker">
+            {article.contentLocale === "it" ? "Percorso completo" : "The complete series"}
+          </p>
+          <h2>{article.contentLocale === "it" ? article.series.titleIt : article.series.title}</h2>
+          <ol>
+            {episodes.map((episode) => (
+              <li key={episode.slug}>
+                {episode.slug === article.slug ? (
+                  <span aria-current="page">
+                    <span className="journal-series-number">{episode.series?.episode}</span>
+                    {episode.title}
+                  </span>
+                ) : (
+                  <Link href={`/blog/${episode.slug}`}>
+                    <span className="journal-series-number">{episode.series?.episode}</span>
+                    {episode.title}
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ol>
+        </div>
+      </nav>
+    ),
+    related: related.length > 0 && (
+      <section
+        className="shelf-section shelf-section--sand"
+        aria-labelledby="journal-related-title"
+      >
+        <div className="shelf-wrap">
+          <h2 id="journal-related-title" className="shelf-heading">
+            {j.related}
+          </h2>
+          <ul className="journal-related">
+            {related.map((r) => (
+              <li key={r.slug}>
+                <Link href={`/blog/${r.slug}`}>
+                  <JournalImage
+                    image={r.hero}
+                    products={products}
+                    sizes="(min-width: 48rem) 22rem, 100vw"
+                    creditLabel={credit}
+                    locale={r.contentLocale}
+                  />
+                  <span className="journal-kicker">{categoryLabel(j, r.category)}</span>
+                  <span className="journal-related-title" lang={r.contentLocale}>
+                    {r.title}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    ),
+  };
+
+  return (
+    <main className={`shelf journal ${homeFontClasses}`}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: toSafeJsonLd(jsonLd) }}
+      />
+      <article
+        className={`journal-article journal ${homeFontClasses}`}
+        lang={article.contentLocale}
+      >
+        {entries.map((entry) => (
+          <LayoutSection key={entry.id} entry={entry}>
+            {entry.custom ? null : sections[entry.id as ArticleSectionId]}
+          </LayoutSection>
+        ))}
+      </article>
+    </main>
+  );
+}
+
+function sourceKindLabel(kind: NonNullable<Source["kind"]>, locale: string) {
+  const labels = {
+    en: {
+      primary: "Primary source",
+      scholarly: "Scholarly research",
+      institutional: "Museum or institutional source",
+      reference: "Reference work",
+    },
+    it: {
+      primary: "Fonte primaria",
+      scholarly: "Studio scientifico",
+      institutional: "Fonte museale o istituzionale",
+      reference: "Opera di consultazione",
+    },
+  };
+  return labels[locale === "it" ? "it" : "en"][kind];
+}

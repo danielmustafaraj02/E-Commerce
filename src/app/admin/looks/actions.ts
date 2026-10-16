@@ -6,6 +6,7 @@ import { db } from "@/lib/db";
 import { requireStaff } from "@/lib/require-admin";
 import { writeAuditLog } from "@/lib/audit-log";
 import { LOOK_SIZE } from "@/lib/looks";
+import { refreshCatalog } from "@/lib/cache-tags";
 
 const lookSchema = z.object({
   name: z.string().trim().min(1).max(200),
@@ -73,6 +74,8 @@ export async function createLook(_prevState: unknown, formData: FormData) {
     entityId: look.id,
     after: { ...look, productIds },
   });
+  // Looks show on the home page, product pages and /looks: all cached.
+  refreshCatalog();
   redirect("/admin/looks");
 }
 
@@ -102,6 +105,8 @@ export async function updateLook(lookId: string, _prevState: unknown, formData: 
     before,
     after: { ...lookFields(parsed.data), productIds },
   });
+  // Looks show on the home page, product pages and /looks: all cached.
+  refreshCatalog();
   redirect("/admin/looks");
 }
 
@@ -120,5 +125,7 @@ export async function deleteLook(lookId: string) {
     entityId: lookId,
     before,
   });
+  // Looks show on the home page, product pages and /looks: all cached.
+  refreshCatalog();
   redirect("/admin/looks");
 }

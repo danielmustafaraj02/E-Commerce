@@ -1,10 +1,11 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 afterEach(() => vi.unstubAllEnvs());
 
-async function policy(mode: string, available = "true") {
+async function policy(mode: string, source = "true") {
   vi.resetModules();
   vi.stubEnv("NODE_ENV", mode);
-  vi.stubEnv("NEXT_PUBLIC_LOCAL_ACCOUNTS", available);
+  vi.stubEnv("NEXT_PUBLIC_LOCAL_ACCOUNTS", "true");
+  vi.stubEnv("LOCAL_ADMIN_SOURCE", source);
   return (await import("./local-features")).isLocalAdminAccess;
 }
 describe("localhost admin access", () => {
@@ -26,5 +27,6 @@ describe("localhost admin access", () => {
   });
   it("does not enable access without the private local source", async () => {
     expect((await policy("development", "false"))("localhost:3000")).toBe(false);
+    expect((await policy("development", ""))("localhost:3000")).toBe(false);
   });
 });

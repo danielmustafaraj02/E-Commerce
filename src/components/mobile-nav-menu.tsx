@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
+import { useViewer } from "@/components/viewer";
 import { createPortal } from "react-dom";
 import { Link } from "@/components/localized-link";
 import Image from "next/image";
@@ -94,7 +95,8 @@ type MenuCategory = {
 const noopSubscribe = () => () => {};
 
 export function MobileNavMenu({
-  links,
+  links: signedOutLinks,
+  accountLabels,
   categories = [],
   menuLabel,
   closeLabel,
@@ -105,7 +107,11 @@ export function MobileNavMenu({
   legal,
   legalLabel,
 }: {
+  /** The menu as the cached page has it, for a signed-out visitor. */
   links: NavLink[];
+  /** Labels for the account's own wishlist and account rows, which replace
+   *  /wishlist and /login once /api/viewer says the visitor is signed in. */
+  accountLabels: { wishlist: string; account: string };
   /** Collections with their borrowed thumbnails, for the luxury rows. */
   categories?: MenuCategory[];
   menuLabel: string;
@@ -121,6 +127,23 @@ export function MobileNavMenu({
   legalLabel: string;
 }) {
   const [open, setOpen] = useState(false);
+  const viewer = useViewer();
+  const links = viewer?.signedIn
+    ? signedOutLinks.map((link) =>
+        link.href === "/wishlist"
+          ? {
+              ...link,
+              href: "/account/wishlist",
+              label:
+                viewer.wishlistCount > 0
+                  ? `${accountLabels.wishlist} (${viewer.wishlistCount})`
+                  : accountLabels.wishlist,
+            }
+          : link.href === "/login"
+            ? { ...link, href: "/account", label: accountLabels.account }
+            : link
+      )
+    : signedOutLinks;
   // False during the server render (no document.body for createPortal yet),
   // true once hydrated.
   const mounted = useSyncExternalStore(

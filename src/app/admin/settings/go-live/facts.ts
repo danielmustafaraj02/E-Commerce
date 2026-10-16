@@ -7,7 +7,6 @@ import { db } from "@/lib/db";
 import { getStoreSettings } from "@/lib/store-settings";
 import { isPlaceholderCompany } from "@/lib/json-ld";
 import { PHOTO_DIRS } from "@/lib/public-image";
-import { DRAFT_KEY_PREFIX } from "@/lib/section-drafts";
 import { stripeKeyMode, type KeyInfo, type ReadinessFacts, type SiteStatus } from "@/lib/go-live";
 
 const run = promisify(execFile);
@@ -121,7 +120,6 @@ export async function gatherReadinessFacts(): Promise<ReadinessFacts> {
     succeededPayments,
     staff,
     staffWithoutMfa,
-    drafts,
     site,
     git,
     vercel,
@@ -139,7 +137,6 @@ export async function gatherReadinessFacts(): Promise<ReadinessFacts> {
     db.payment.count({ where: { provider: "stripe", status: "succeeded" } }),
     db.user.count({ where: { role: { in: ["admin", "staff"] } } }),
     db.user.count({ where: { role: { in: ["admin", "staff"] }, mfaEnabled: false } }),
-    db.pageLayout.count({ where: { target: { startsWith: DRAFT_KEY_PREFIX } } }).catch(() => 0),
     siteStatus(settings.siteUrl ?? null),
     gitFacts(),
     vercelFacts(),
@@ -207,7 +204,6 @@ export async function gatherReadinessFacts(): Promise<ReadinessFacts> {
       siteVerification: !!settings.googleSiteVerification?.trim(),
       unconvertedImages: unconverted,
     },
-    content: { drafts },
     nextVersion: version,
   };
 }

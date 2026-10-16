@@ -4,7 +4,6 @@ import { db } from "@/lib/db";
 import { ARTICLES } from "@/lib/journal";
 import { locales, type Locale } from "@/lib/i18n/locale-constants";
 import type { Article, Block, JournalCategory } from "@/lib/journal/types";
-import { isOpeningTemplate, parseOpeningLayout } from "@/lib/journal/opening";
 import {
   JOURNAL_CATEGORIES,
   parseBody,
@@ -106,9 +105,6 @@ export function toArticle(post: PostWithProducts): Article {
     body: mapBody(parseBody(post.body), slugs, "Featured pieces"),
     published: date,
     updated: updated > date ? updated : undefined,
-    // Empty = the site-wide choice in Page layout > Article.
-    openingTemplate: isOpeningTemplate(post.openingTemplate) ? post.openingTemplate : undefined,
-    openingLayout: parseOpeningLayout(post.openingLayout),
     hero: {
       kind: "file",
       src: post.heroUrl,

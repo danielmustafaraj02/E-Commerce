@@ -17,7 +17,6 @@
     "db:payment-test-product": "tsx scripts/create-payment-test-product.ts",
     "test": "vitest run",
     "test:watch": "vitest",
-    "visual:review": "npm exec --yes --package=playwright -- node scripts/visual-review.mjs",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import { imageRemotePatterns } from "./src/lib/image-hosts";
+import { IMAGE_DEVICE_SIZES, IMAGE_QUALITIES, IMAGE_SMALL_SIZES } from "./src/lib/image-sizes";
 import { PHOTO_DIRS, legacyPhotoRewrite } from "./src/lib/public-image";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
@@ -24,8 +25,10 @@ const nextConfig: NextConfig = {
   // targets back to localhost and turning them into external requests.
   skipProxyUrlNormalize: true,
   // Customer accounts and the (MFA-gated) admin are public. The passwordless
-  // loopback admin still needs development mode — see src/lib/local-features.ts.
-  env: { NEXT_PUBLIC_LOCAL_ACCOUNTS: "true" },
+  // loopback admin needs development mode AND the private local source
+  // (LOCAL_ADMIN_SOURCE) — see src/lib/local-features.ts. Without that source
+  // there is no local session, so the loopback shortcut must stay off too.
+  env: { NEXT_PUBLIC_LOCAL_ACCOUNTS: "true", LOCAL_ADMIN_SOURCE: localAccounts ? "true" : "false" },
   typescript: {
     // Next resolves TypeScript paths before webpack aliases. Keep the exact
     // local mappings in the private tsconfig so both bundlers select them.
@@ -35,23 +38,26 @@ const nextConfig: NextConfig = {
     // An allowlist, not `**`: see src/lib/image-hosts.ts for why, and for how
     // to add another host.
     remotePatterns: imageRemotePatterns(),
-    // WebP is Next's default; AVIF is opt-in (costs more CPU to encode) but
-    // is smaller at equivalent quality. Next tries formats in this order and
-    // serves whichever the requesting browser's Accept header supports.
-    formats: ["image/avif", "image/webp"],
-    // Next 16 requires every quality a caller uses to be allowlisted here,
-    // otherwise it logs a warning and falls back to the default. The app uses
-    // 70 (carousel thumbs) and 90 (catalog/hero), plus 75 as the default, and
-    // 95 for the small nav-dropdown thumbnails, which are scaled *up* on
-    // retina and would look soft at 90.
-    qualities: [70, 75, 90, 95],
+    // WebP only. Every optimized copy counts against the host's image
+    // transformation quota, and with AVIF as well each photo, at each width,
+    // was encoded twice (one per format a visitor's browser asked for); AVIF
+    // also costs several times the CPU to encode. The source photos are WebP
+    // already, so WebP output is a resize, not a format conversion.
+    formats: ["image/webp"],
+    // Next 16 requires every quality a caller uses to be allowlisted. Each
+    // image always uses the same one, so this list doesn't multiply copies.
+    // The widths are kept short: each one is another copy of every photo.
+    // Both lists live in src/lib/image-sizes.ts, shared with optimized-image.ts.
+    qualities: [...IMAGE_QUALITIES],
+    deviceSizes: [...IMAGE_DEVICE_SIZES],
+    imageSizes: [...IMAGE_SMALL_SIZES],
     // Local images may not carry a query string (Next 16): a photo that
     // changes gets a new file name instead.
     localPatterns: [{ pathname: "/**", search: "" }],
-    // Optimized copies are kept a week (Next's default is 4 hours), so the
-    // same photo isn't re-encoded several times a day. A replaced photo needs
-    // a new file name to show before then.
-    minimumCacheTTL: 604800,
+    // Optimized copies are kept 31 days (Next's default is 4 hours), so the
+    // same photo isn't re-encoded, and re-counted, every few hours. Photos are
+    // never replaced in place: a changed photo gets a new file name.
+    minimumCacheTTL: 2678400,
   },
   // Renamed images keep working at their old addresses (search engines may
   // have indexed them).

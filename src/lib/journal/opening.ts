@@ -40,23 +40,11 @@ export const openingNumber = (id: ArticleOpeningTemplate) => ARTICLE_OPENING_TEM
  * The house opening: every article on the site opens this way (chosen by the
  * store owner from "Vetro di Murano, VI": Template 5, the title running across
  * the photograph, with its title at 89% and the photograph 38% tall, nudged up).
- * An article that already uses this template keeps its own drag adjustments;
- * every other article takes these, since adjustments made for a different
- * template would not fit this one.
  */
 export const HOUSE_OPENING = {
   template: "blended",
   layout: { title: { size: 89 }, image: { y: -0.5, h: 38 } },
 } as const satisfies { template: ArticleOpeningTemplate; layout: OpeningLayout };
-
-export function houseOpening(
-  template: ArticleOpeningTemplate | undefined,
-  layout: OpeningLayout | undefined
-): { template: ArticleOpeningTemplate; layout: OpeningLayout } {
-  return template === HOUSE_OPENING.template && layout
-    ? { template: HOUSE_OPENING.template, layout }
-    : { template: HOUSE_OPENING.template, layout: HOUSE_OPENING.layout };
-}
 
 export function isOpeningTemplate(value: unknown): value is ArticleOpeningTemplate {
   return (ARTICLE_OPENING_TEMPLATES as readonly unknown[]).includes(value);

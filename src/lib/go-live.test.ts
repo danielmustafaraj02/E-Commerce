@@ -45,7 +45,6 @@ const ready = (): ReadinessFacts => ({
   },
   admins: { total: 1, withoutMfa: 0 },
   seo: { metaDescription: true, ogImage: true, siteVerification: true, unconvertedImages: 0 },
-  content: { drafts: 0 },
   nextVersion: "16.3.8",
 });
 
@@ -101,14 +100,9 @@ describe("evaluateReadiness", () => {
     expect(find(facts, "legal").detail).toBe("Missing: privacy, returns, cookies.");
   });
 
-  it("keeps design publishing and code deployment apart", () => {
+  it("warns about code that isn't deployed yet", () => {
     const facts = ready();
-    facts.content.drafts = 2;
     facts.git.uncommitted = 5;
-    expect(find(facts, "content")).toMatchObject({
-      status: "warn",
-      href: "/admin/settings/page-layout",
-    });
     expect(find(facts, "code").status).toBe("warn");
     expect(find(facts, "code").fix).toContain("git push");
   });

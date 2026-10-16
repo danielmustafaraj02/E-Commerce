@@ -9,6 +9,7 @@ import { writeAuditLog } from "@/lib/audit-log";
 import { parseProductPageLayout } from "@/lib/page-layout";
 import { compareAtPriceError } from "@/lib/price-history";
 import { GIFT_STYLES, GIFT_OCCASIONS, GIFT_RECIPIENTS } from "@/lib/gift-finder";
+import { refreshCatalog } from "@/lib/cache-tags";
 
 const productSchema = z.object({
   name: z.string().min(1).max(200),
@@ -180,6 +181,7 @@ export async function createProduct(_prevState: unknown, formData: FormData) {
     after: product,
   });
 
+  refreshCatalog();
   redirect("/admin/products");
 }
 
@@ -303,6 +305,7 @@ export async function updateProduct(productId: string, _prevState: unknown, form
     after: product,
   });
 
+  refreshCatalog();
   redirect("/admin/products");
 }
 
@@ -317,6 +320,7 @@ export async function deactivateProduct(productId: string) {
     entityId: product.id,
   });
 
+  refreshCatalog();
   redirect("/admin/products");
 }
 
@@ -341,12 +345,12 @@ export async function deleteProduct(productId: string) {
     entityId: productId,
   });
 
+  refreshCatalog();
   redirect("/admin/products");
 }
 
-/** Per-product page overrides from the form's hidden JSON field. Normalised
- *  here so only known section ids and trimmed, capped blocks are stored; an
- *  empty result is stored as NULL ("follow the store-wide layout"). */
+/** The product's extra text blocks from the form's hidden JSON field,
+ *  trimmed and capped; none is stored as NULL. */
 function readPageLayout(formData: FormData) {
   let raw: unknown = null;
   try {
@@ -354,6 +358,6 @@ function readPageLayout(formData: FormData) {
   } catch {
     raw = null;
   }
-  const layout = parseProductPageLayout(raw);
-  return layout.hidden.length === 0 && layout.blocks.length === 0 ? Prisma.DbNull : layout;
+  const { blocks } = parseProductPageLayout(raw);
+  return blocks.length === 0 ? Prisma.DbNull : { hidden: [], blocks };
 }

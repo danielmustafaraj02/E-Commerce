@@ -20,6 +20,7 @@ import { getDictionary } from "@/lib/i18n/dictionaries";
 import { giftCardLines } from "@/lib/gift-card-lines";
 import { parseGiftCardBack } from "@/lib/gift-card";
 import { BACK_ART, CARD_GOLD, CARD_INK, CARD_STOCK } from "@/lib/gift-card-art";
+import { BRAND_COLORS } from "@/design/theme";
 
 // Resend's free plan caps out at 100/day — this stops just short of that
 // account-wide ceiling so a traffic spike (or a bug looping order-status
@@ -33,6 +34,26 @@ const DAILY_EMAIL_CAP = 80;
 // in dev and the gap is obvious rather than silent. Checks the DB (Admin >
 // Settings > Integrations) first, falling back to env vars of the same name.
 // Resolves to whether the email actually went out.
+/**
+ * Who the emails come from. Resend only sends from a domain verified in the
+ * Resend account, so there is no made-up default: an address set in Admin >
+ * Settings > Integrations or EMAIL_FROM, else "orders@" the domain the Vercel
+ * Resend integration provides (RESEND_EMAIL_DOMAIN). With none, null — and
+ * nothing is sent (it used to fall back to orders@example.com, which Resend
+ * rejected, so every email silently failed).
+ */
+export function senderAddress(
+  settings: { emailFrom?: string | null; storeName?: string | null },
+  env: Record<string, string | undefined> = process.env
+): string | null {
+  const explicit = settings.emailFrom?.trim() || env.EMAIL_FROM?.trim();
+  if (explicit) return explicit;
+  const domain = env.RESEND_EMAIL_DOMAIN?.trim().replace(/^@/, "");
+  if (!domain) return null;
+  const name = settings.storeName?.replace(/[<>"]/g, "").trim();
+  return name ? `${name} <orders@${domain}>` : `orders@${domain}`;
+}
+
 export async function sendEmail(input: {
   to: string;
   subject: string;
@@ -41,16 +62,16 @@ export async function sendEmail(input: {
 }) {
   const settings = await getStoreSettings();
   const apiKey = settings.resendApiKey || process.env.RESEND_API_KEY;
-  const from = settings.emailFrom || process.env.EMAIL_FROM || "orders@example.com";
+  const from = senderAddress(settings);
   // The `from` address (e.g. orders@perlamuranoglass.com) has no real inbox
   // behind it — inbound receiving isn't set up for it. Routing replies to
   // the real, human-monitored contact address (Admin > Settings > General)
   // is what makes "Reply" on an order email actually reach someone.
   const replyTo = settings.contactEmail || undefined;
 
-  if (!apiKey) {
+  if (!apiKey || !from) {
     console.warn(
-      `[email] Resend is not configured — skipping email to ${input.to}: ${input.subject}`
+      `[email] ${!apiKey ? "Resend is not configured" : "No sender address (EMAIL_FROM)"} — skipping email to ${input.to}: ${input.subject}`
     );
     return false;
   }
@@ -116,7 +137,7 @@ export async function sendVerificationEmailMessage(input: {
     locale,
     storeName: settings.storeName,
     logoUrl: emailAbsoluteUrl(settings.logoUrl, siteBaseUrl(settings)),
-    primaryColor: settings.primaryColor,
+    primaryColor: BRAND_COLORS.primary,
     verifyUrl: input.verifyUrl,
     expiresInHours: input.expiresInHours,
   });
@@ -143,7 +164,7 @@ export async function sendPasswordResetEmailMessage(input: {
     locale,
     storeName: settings.storeName,
     logoUrl: emailAbsoluteUrl(settings.logoUrl, siteBaseUrl(settings)),
-    primaryColor: settings.primaryColor,
+    primaryColor: BRAND_COLORS.primary,
     resetUrl: input.resetUrl,
     expiresInMinutes: input.expiresInMinutes,
   });
@@ -304,7 +325,7 @@ export async function sendOrderStatusEmail(order: {
     lang,
     storeName: settings.storeName,
     logoUrl: emailAbsoluteUrl(settings.logoUrl, siteBaseUrl(settings)),
-    primaryColor: settings.primaryColor,
+    primaryColor: BRAND_COLORS.primary,
     orderNumber: order.orderNumber,
     orderDate: new Intl.DateTimeFormat(formatLocale, {
       dateStyle: "long",

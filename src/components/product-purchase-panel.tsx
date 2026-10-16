@@ -40,8 +40,6 @@ export function ProductPurchasePanel({
     price: number;
     currency: string;
     imageUrl: string | null;
-    initialSaved: boolean;
-    isSignedIn: boolean;
     addLabel: string;
     removeLabel: string;
   };

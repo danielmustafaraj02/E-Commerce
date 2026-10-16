@@ -12,6 +12,8 @@ const mocks = vi.hoisted(() => ({
   redirect: vi.fn(),
 }));
 
+// Cache refresh needs a live Next request; these tests call the actions directly.
+vi.mock("@/lib/cache-tags", () => ({ refreshCatalog: vi.fn() }));
 vi.mock("next/navigation", () => ({
   redirect: (url: string) => {
     mocks.redirect(url);

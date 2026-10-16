@@ -1,23 +1,20 @@
 import { isOptimizableSrc } from "@/lib/image-hosts";
 import { publicImageSrc } from "@/lib/public-image";
+import { IMAGE_DEVICE_SIZES, IMAGE_SMALL_SIZES } from "@/lib/image-sizes";
 
 /**
  * Addresses on Next's image optimizer for images that next/image can't render:
  * the page builder's HTML, CSS backgrounds, e-mails and social previews. The
- * optimizer resizes, re-encodes (AVIF or WebP for browsers that accept them,
- * JPEG for clients that accept neither, such as desktop Outlook) and caches.
+ * optimizer resizes, re-encodes (WebP for browsers that accept it, the original
+ * format for clients that don't, such as desktop Outlook) and caches.
  *
- * It only serves the widths in images.deviceSizes/imageSizes and the qualities
- * in images.qualities (next.config.ts). The site keeps Next's default sizes,
- * listed here; optimized-image.test.ts checks they still match.
+ * It only serves the widths and qualities allowlisted in next.config.ts, which
+ * come from lib/image-sizes.ts, as these do.
  */
-export const IMAGE_WIDTHS = [
-  32, 48, 64, 96, 128, 256, 384, 640, 750, 828, 1080, 1200, 1920, 2048, 3840,
-] as const;
+export const IMAGE_WIDTHS = [...IMAGE_SMALL_SIZES, ...IMAGE_DEVICE_SIZES] as const;
 
-// Candidates offered to the browser in a srcset. Bundled photos are at most
-// 2560px wide, so 3840 would only repeat 2048's result.
-const SRCSET_WIDTHS = [640, 750, 828, 1080, 1200, 1920, 2048] as const;
+// Candidates offered to the browser in a srcset.
+const SRCSET_WIDTHS = IMAGE_DEVICE_SIZES;
 
 /** Whether the optimizer will take `src`: same-site paths without a query
  *  string (images.localPatterns) and allowlisted hosts; never SVG. */

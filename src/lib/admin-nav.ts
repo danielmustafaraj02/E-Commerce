@@ -35,8 +35,8 @@ export function buildAdminSections(opts: {
       label: "Sales",
       items: [
         { href: "/admin/orders", label: "Orders", badge: opts.newOrderCount },
-        { href: "/admin/discounts", label: "Discounts" },
         { href: "/admin/returns", label: "Returns" },
+        { href: "/admin/discounts", label: "Discounts" },
         { href: "/admin/shipping", label: "Shipping" },
         { href: "/admin/tax-rules", label: "Tax rules" },
       ],
@@ -49,22 +49,17 @@ export function buildAdminSections(opts: {
         { href: "/admin/newsletter", label: "Newsletter" },
       ],
     },
-    { id: "planning", label: "Planning", items: [{ href: "/admin/roadmap", label: "Roadmap" }] },
   ];
 
-  // Payments, integrations, roles and site content are admin-only (staff can't
-  // reach them — see require-admin.ts), so staff don't see the section at all.
+  // Store setup is admin-only (staff can't reach it — see require-admin.ts), so
+  // staff don't see the section at all. The site's look is not here: it is
+  // code (src/design/), the same for every page.
   if (opts.isAdmin) {
     sections.push({
       id: "settings",
       label: "Settings",
       items: [
         { href: "/admin/settings", label: "Store settings" },
-        { href: "/admin/settings/site-style", label: "Site style" },
-        { href: "/admin/settings/block-styles", label: "Block styles" },
-        { href: "/admin/settings/page-layout", label: "Page layout" },
-        { href: "/admin/settings/hero-concepts", label: "Hero concepts" },
-        { href: "/admin/settings/page-copy", label: "Page text" },
         { href: "/admin/settings/payments", label: "Payments" },
         { href: "/admin/settings/integrations", label: "Integrations" },
         { href: "/admin/team", label: "Team & roles" },

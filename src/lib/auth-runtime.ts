@@ -10,6 +10,7 @@ import { verifyMfaToken } from "@/lib/mfa";
 import { OAUTH_BLOCKED_REDIRECT, oauthSignInBlocked } from "@/lib/oauth-policy";
 import { refreshSessionToken } from "@/lib/session-refresh";
 import { getStoreSettings } from "@/lib/store-settings";
+import { authSessionConfig } from "@/lib/auth-session-config";
 
 const credentialsSchema = z.object({
   email: z.string().email(),
@@ -36,6 +37,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth(async () => {
   const googleClientSecret = settings.googleClientSecret || process.env.GOOGLE_CLIENT_SECRET;
 
   return {
+    ...authSessionConfig(),
     adapter: PrismaAdapter(db),
     // Derive the base URL from the actual incoming request (Vercel's proxy
     // sets a trustworthy Host header) instead of the fixed NEXTAUTH_URL env

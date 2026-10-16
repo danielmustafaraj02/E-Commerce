@@ -169,6 +169,9 @@ export function CollectionShowcase({
               data-scene={i}
               data-placement={item.scene}
               data-active={i === active ? "true" : "false"}
+              // Stacked for the crossfade, so the hidden scenes stay out of
+              // reach of keyboard and screen reader.
+              inert={i !== active}
               style={{ ...showcaseImageVars(item), ...showcaseElementVars(item) } as React.CSSProperties}
             >
               <div className="showcase-figure">

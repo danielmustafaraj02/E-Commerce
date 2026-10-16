@@ -54,7 +54,6 @@ export type ReadinessFacts = {
     siteVerification: boolean;
     unconvertedImages: number;
   };
-  content: { drafts: number };
   nextVersion: string;
 };
 
@@ -472,21 +471,6 @@ export function evaluateReadiness(f: ReadinessFacts): ReadinessStep[] {
       detail: blocking.length
         ? `${blocking.length} ${blocking.length === 1 ? "problem stops" : "problems stop"} the launch: ${blocking.map((c) => c.title).join(", ")}.`
         : "Nothing blocks the launch.",
-    },
-    {
-      id: "content",
-      title: "Design changes",
-      status: f.content.drafts > 0 ? "warn" : "pass",
-      detail:
-        f.content.drafts > 0
-          ? `${f.content.drafts} ${f.content.drafts === 1 ? "section has" : "sections have"} a draft that isn't on the site yet.`
-          : "Every section's design is published.",
-      ...(f.content.drafts > 0
-        ? {
-            fix: "Open each section marked Draft and publish it.",
-            href: "/admin/settings/page-layout",
-          }
-        : {}),
     },
     {
       id: "code",

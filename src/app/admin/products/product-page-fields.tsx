@@ -7,7 +7,6 @@ import {
   MAX_BLOCK_BODY,
   MAX_BLOCK_TITLE,
   MAX_CUSTOM_BLOCKS,
-  PRODUCT_SECTIONS,
   type CustomBlock,
   type ProductPageLayout,
 } from "@/lib/page-layout";
@@ -206,49 +205,20 @@ export function ProductImagesField({ initial }: { initial: string }) {
 }
 
 /**
- * Per-product page content: hide store-wide sections for this piece and write
- * extra titled text blocks (care notes, materials, sizing…). Serialised into
- * the `pageLayout` hidden input.
+ * Per-product page content: extra titled text blocks (care notes, materials,
+ * sizing…) shown on this piece's page. Serialised into the `pageLayout`
+ * hidden input. Which sections a product page shows is set in code
+ * (src/design/layouts.ts), the same for every product.
  */
 export function ProductPageContentField({ initial }: { initial: ProductPageLayout }) {
-  const [hidden, setHidden] = useState(initial.hidden);
   const [blocks, setBlocks] = useState<CustomBlock[]>(initial.blocks);
-  const configurable = PRODUCT_SECTIONS.filter(
-    (s) => s.id !== "customBlocks" && !("fixed" in s && s.fixed)
-  );
 
   return (
     <fieldset className="border-foreground/10 flex flex-col gap-4 rounded-lg border p-4">
-      <legend className="px-1 text-sm font-medium">Page content</legend>
-      <input type="hidden" name="pageLayout" value={JSON.stringify({ hidden, blocks })} />
+      <legend className="px-1 text-sm font-medium">Extra text blocks</legend>
+      <input type="hidden" name="pageLayout" value={JSON.stringify({ hidden: [], blocks })} />
 
       <div>
-        <p className="mb-2 text-sm font-medium">Sections shown on this product</p>
-        <p className="text-foreground/60 mb-2 text-xs">
-          Order is set for all products in Settings → Page layout. Untick to hide a section for this
-          piece only.
-        </p>
-        <div className="flex flex-wrap gap-x-5 gap-y-1.5">
-          {configurable.map((s) => (
-            <label key={s.id} className="flex cursor-pointer items-center gap-1.5 text-sm">
-              <input
-                type="checkbox"
-                className="field-checkbox"
-                checked={!hidden.includes(s.id)}
-                onChange={() =>
-                  setHidden(
-                    hidden.includes(s.id) ? hidden.filter((h) => h !== s.id) : [...hidden, s.id]
-                  )
-                }
-              />
-              {s.label}
-            </label>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <p className="mb-2 text-sm font-medium">Extra text blocks</p>
         <ul className="flex flex-col gap-3">
           {blocks.map((block, i) => (
             <li

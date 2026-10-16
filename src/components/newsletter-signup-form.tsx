@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useRef, useState, type FormEvent } from "react";
-import { subscribeToNewsletter } from "@/app/newsletter/actions";
+import { subscribeToNewsletter } from "@/app/[locale]/newsletter/actions";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
 export function NewsletterSignupForm({

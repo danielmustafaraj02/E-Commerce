@@ -1,5 +1,4 @@
 import { cache } from "react";
-import { applyHomeCopy, parseHomeCopy } from "@/lib/home-copy";
 import { formatMoney } from "@/lib/format";
 import { getHomepageData } from "@/lib/homepage-data";
 import { getLocale } from "@/lib/i18n/locale";
@@ -39,8 +38,7 @@ const context = cache(async () => {
     getLocale(),
     getHomepageData(),
   ]);
-  // Staff overrides from Admin > Settings > Page text, per language.
-  const dict = applyHomeCopy(getDictionary(locale), parseHomeCopy(settings.homeCopy)[locale]);
+  const dict = getDictionary(locale);
   return { settings, locale, data, dict };
 });
 

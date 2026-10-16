@@ -53,7 +53,7 @@ export async function GET(request: Request) {
       const name = localizedName(product, locale);
       const description = localizedDescription(product, locale) || name;
       const price = (product.price / 100).toFixed(2);
-      const availability = product.stockQty > 0 ? "in stock" : "out of stock";
+      const availability = !product.trackInventory || product.stockQty > 0 ? "in stock" : "out of stock";
       // Product images can be a relative path (self-hosted under /public) or
       // an admin-pasted absolute URL — Google requires fully-qualified links.
       // Named by their current .webp files: Merchant Center rejects an image

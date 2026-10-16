@@ -1,4 +1,6 @@
 import { cache } from "react";
+import { unstable_cache } from "next/cache";
+import { SHIPPING_TAG, STOREFRONT_DATA_TTL } from "@/lib/cache-tags";
 import { db } from "@/lib/db";
 import { applyTemplate } from "@/lib/i18n/format";
 
@@ -73,10 +75,11 @@ function formatPrice(cents: number, currency: string, locale: string) {
 }
 
 // The resolved banner text, or null (hide it) when the zones don't match it.
-// Cached per request: several components on one page render it.
-const loadZones = cache(() =>
-  db.shippingZone
-    .findMany({
+// Shared across requests (every page shows the banner) and cleared by the
+// shipping admin; a failed query is not cached, it just hides the banner.
+const cachedZones = unstable_cache(
+  () =>
+    db.shippingZone.findMany({
       where: { countries: { some: { country: { in: [EUROPE, NORTH_AMERICA, REST_OF_WORLD] } } } },
       select: {
         countries: {
@@ -96,9 +99,11 @@ const loadZones = cache(() =>
           },
         },
       },
-    })
-    .catch(() => [] as never[])
+    }),
+  ["shipping-banner-zones"],
+  { revalidate: STOREFRONT_DATA_TTL, tags: [SHIPPING_TAG] }
 );
+const loadZones = cache(() => cachedZones().catch(() => [] as never[]));
 
 // Shipping prices and delivery times for the FAQ, or nulls where the zones
 // don't describe the policy (the FAQ then points to checkout instead).

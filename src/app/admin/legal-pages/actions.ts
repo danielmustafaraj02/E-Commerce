@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/require-admin";
 import { writeAuditLog } from "@/lib/audit-log";
+import { revalidatePath } from "next/cache";
 
 const schema = z.object({
   title: z.string().min(1).max(200),
@@ -37,5 +38,7 @@ export async function updateLegalPage(slug: string, _prevState: unknown, formDat
     after: page,
   });
 
+  // The legal pages are cached, in every language.
+  revalidatePath("/[locale]/legal/[slug]", "page");
   redirect("/admin/legal-pages");
 }

@@ -14,6 +14,8 @@ type ShelfItemData = {
   compareAtPrice?: number | null;
   currency: string;
   stockQty: number;
+  // Optional so callers that never select it keep the old stock-only check.
+  trackInventory?: boolean;
   images: { url: string; altText: string }[];
 };
 
@@ -44,7 +46,7 @@ export function ShelfItem({
   // piece really is running low, so it is never invented here.
   scarcityLabel?: string;
 }) {
-  const outOfStock = product.stockQty <= 0;
+  const outOfStock = product.trackInventory !== false && product.stockQty <= 0;
   const image = product.images[0];
   const hasDiscount =
     product.compareAtPrice !== undefined &&

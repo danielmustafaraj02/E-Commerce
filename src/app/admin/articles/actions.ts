@@ -11,7 +11,6 @@ import { requireStaff } from "@/lib/require-admin";
 import { writeAuditLog } from "@/lib/audit-log";
 import { ARTICLES } from "@/lib/journal";
 import { articleToPostData } from "@/lib/journal/import-builtin";
-import { ARTICLE_OPENING_TEMPLATES, parseOpeningLayout } from "@/lib/journal/opening";
 import {
   JOURNAL_CATEGORIES,
   bodySchema,
@@ -42,7 +41,6 @@ const schema = z.object({
   intro: z.string().trim().min(10, "Add an introduction").max(2000),
   heroUrl: heroSrc,
   heroAlt: z.string().trim().max(300),
-  openingTemplate: z.union([z.enum(ARTICLE_OPENING_TEMPLATES), z.literal("")]).default(""),
   published: z.boolean(),
   publishedOn: z
     .string()
@@ -60,7 +58,6 @@ function parseForm(formData: FormData) {
     intro: formData.get("intro"),
     heroUrl: formData.get("heroUrl") ?? "",
     heroAlt: formData.get("heroAlt") ?? "",
-    openingTemplate: formData.get("openingTemplate") ?? "",
     published: formData.get("published") === "on",
     publishedOn: formData.get("publishedOn") || undefined,
   });
@@ -80,9 +77,7 @@ function parseForm(formData: FormData) {
 
   let rawSources: unknown;
   let rawTranslations: unknown;
-  let rawOpeningLayout: unknown;
   try {
-    rawOpeningLayout = JSON.parse(String(formData.get("openingLayout") || "{}"));
     rawSources = JSON.parse(String(formData.get("sources") ?? "[]"));
     rawTranslations = JSON.parse(String(formData.get("translations") ?? "{}"));
   } catch {
@@ -133,7 +128,6 @@ function parseForm(formData: FormData) {
       slug,
       body: body.data,
       sources: sources.data,
-      openingLayout: parseOpeningLayout(rawOpeningLayout),
       translations,
       productIds,
     },
@@ -182,13 +176,12 @@ async function saveTranslations(
   return null;
 }
 
-function revalidate(slug: string) {
-  revalidatePath("/blog");
-  revalidatePath(`/blog/${slug}`);
-  // Every article page in every language (the URLs are localized by rewrite).
-  revalidatePath("/blog/[slug]", "page");
-  revalidatePath("/");
-  revalidatePath("/products/[slug]", "page");
+function revalidate() {
+  revalidatePath("/[locale]/blog", "page");
+  // Every article page in every language.
+  revalidatePath("/[locale]/blog/[slug]", "page");
+  revalidatePath("/[locale]", "page");
+  revalidatePath("/[locale]/products/[slug]", "page");
   revalidatePath("/admin/articles");
 }
 
@@ -231,7 +224,7 @@ export async function createArticle(
     entityId: post.id,
     after: { slug: post.slug, published: post.published },
   });
-  revalidate(post.slug);
+  revalidate();
   redirect("/admin/articles");
 }
 
@@ -285,8 +278,7 @@ export async function updateArticle(
     entityId: id,
     after: { slug: post.slug, published: post.published },
   });
-  revalidate(before.slug);
-  revalidate(post.slug);
+  revalidate();
   redirect("/admin/articles");
 }
 
@@ -302,7 +294,7 @@ export async function deleteArticle(id: string) {
     entityId: id,
     before: { slug: post.slug },
   });
-  revalidate(post.slug);
+  revalidate();
   redirect("/admin/articles");
 }
 
@@ -332,7 +324,7 @@ export async function setProductArticle(
     entityId: articleId,
     after: { productId },
   });
-  revalidate(post.slug);
+  revalidate();
   revalidatePath(`/admin/products/${productId}/edit`);
 }
 

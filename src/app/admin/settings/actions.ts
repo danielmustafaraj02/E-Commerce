@@ -16,9 +16,6 @@ const imageUrl = z.union([
 const settingsSchema = z.object({
   storeName: z.string().min(1).max(200),
   logoUrl: imageUrl.optional().or(z.literal("")),
-  primaryColor: z.string().regex(/^#[0-9a-fA-F]{6}$/, "Use a hex color like #111827"),
-  secondaryColor: z.string().regex(/^#[0-9a-fA-F]{6}$/, "Use a hex color like #4F46E5"),
-  fontFamily: z.string().min(1).max(100),
   defaultCurrency: z.string().length(3),
   defaultLocale: z.string().min(2).max(20),
   contactEmail: z.string().email(),
@@ -50,9 +47,6 @@ export async function updateStoreSettings(_prevState: unknown, formData: FormDat
   const parsed = settingsSchema.safeParse({
     storeName: formData.get("storeName"),
     logoUrl: formData.get("logoUrl") || "",
-    primaryColor: formData.get("primaryColor"),
-    secondaryColor: formData.get("secondaryColor"),
-    fontFamily: formData.get("fontFamily"),
     defaultCurrency: formData.get("defaultCurrency"),
     defaultLocale: formData.get("defaultLocale"),
     contactEmail: formData.get("contactEmail"),
@@ -127,7 +121,8 @@ export async function updateStoreSettings(_prevState: unknown, formData: FormDat
 
   // Settings shape every page (and this form's own defaults): without this the
   // form resets to the old values after saving, as if nothing had been saved.
-  revalidatePath("/", "layout");
+  // Every storefront page (they are cached; settings show on all of them).
+  revalidatePath("/[locale]", "layout");
 
   return { error: null, success: true };
 }

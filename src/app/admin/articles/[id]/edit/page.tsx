@@ -2,7 +2,6 @@ import { ARTICLES } from "@/lib/journal";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { parseBody, parseSources, parseTranslationIt } from "@/lib/journal/db-articles";
-import { parseOpeningLayout } from "@/lib/journal/opening";
 import { ArticleForm, type TranslationDraft } from "../../article-form";
 import { updateArticle, deleteArticle } from "../../actions";
 
@@ -61,8 +60,6 @@ export default async function EditArticlePage({ params }: PageProps<"/admin/arti
           intro: post.intro,
           heroUrl: post.heroUrl,
           heroAlt: post.heroAlt,
-          openingTemplate: post.openingTemplate ?? "",
-          openingLayout: parseOpeningLayout(post.openingLayout),
           published: post.published,
           publishedOn: (post.publishedAt ?? post.createdAt).toISOString().slice(0, 10),
           overridesBuiltIn: ARTICLES.some((a) => a.slug === post.slug),

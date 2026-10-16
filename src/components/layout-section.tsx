@@ -87,22 +87,13 @@ async function LocalizedLayoutSection({
 export function LayoutSection({
   entry,
   children,
-  preview = false,
   localized = false,
 }: {
   entry: LayoutEntry;
   children?: ReactNode;
-  /** Admin live preview: an empty, unstyled wrapper the preview bridge fills in. */
-  preview?: boolean;
   /** Internal: the design's text has already been put in the visitor's language. */
   localized?: boolean;
 }) {
-  if (preview) {
-    // The section's own markup is always there: the preview bridge keeps it
-    // aside while a design replaces it, and fills a design's "original
-    // content" block with it.
-    return <div data-layout-id={entry.id}>{children}</div>;
-  }
   // A design in the visitor's language (site text and per-language wording).
   if (
     !localized &&

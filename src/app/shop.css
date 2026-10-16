@@ -3016,6 +3016,15 @@ a.look-piece-name:focus-visible {
   opacity: 0;
   transform: translateY(14px);
 }
+/* While fading or lifting (and on phones the scroll-linked entrance keeps
+   them mid-animation as you scroll), each block is an isolated group: the
+   photos' multiply would only mix with a transparent block and show their
+   white backgrounds as boxes. Painting the section's own ground inside the
+   blocks that hold photos gives the blend something to sink into. */
+.look-section .look-visual,
+.look-section .look-pieces {
+  background-color: var(--ivory);
+}
 .look-section .look-intro > *,
 .look-section .look-visual,
 .look-section .look-details > * {
@@ -5059,6 +5068,69 @@ a.look-piece-name:focus-visible {
   }
   .checkout-section {
     padding: 2rem 2rem 1.9rem;
+  }
+}
+
+/* -- Cart and checkout on phones ------------------------------------------------
+   Every pixel of width counts here: one frame instead of two, square photos
+   that show the whole piece, and headings sized for a narrow column. */
+@media (max-width: 42rem) {
+  /* Line photos: the whole piece, square, blended into the page (no box). */
+  .cart-flow .cart-items .shop-thumb--cart,
+  .checkout-summary .shop-thumb--cart {
+    width: 5.25rem;
+    aspect-ratio: 1;
+    border: 0;
+    border-radius: 0;
+    background: var(--ivory);
+    box-shadow: none;
+  }
+  .cart-flow .cart-items .shop-thumb--cart img,
+  .checkout-summary .shop-thumb--cart img {
+    object-fit: contain;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .cart-flow .cart-items .shop-cart-line {
+    align-items: center;
+  }
+
+  /* Quantity: one quiet outlined pill rather than two loose underlines. */
+  .cart-flow .shop-cart-controls > div {
+    height: 2.5rem;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+  }
+  .cart-flow .shop-cart-controls > div > button {
+    width: 2.5rem;
+    border: 0;
+  }
+
+  /* The tilted gift card stays inside the page margin. */
+  .cart-flow .cart-gift-invite-art {
+    margin-inline-start: 0.4rem;
+  }
+  .cart-flow .cart-gift-invite-art .gc-card--small {
+    transform: rotate(-2.5deg);
+  }
+
+  /* Checkout panels: a single hairline frame and slimmer padding. */
+  .checkout-section {
+    padding: 1.25rem 1rem;
+  }
+  .checkout-section::after {
+    display: none;
+  }
+  .checkout-step {
+    font-size: 1.15rem;
+    gap: 0.6rem;
+  }
+  .checkout-summary .shop-list > li {
+    align-items: center;
+    gap: 0.85rem;
+  }
+  .checkout-discount .btn-secondary {
+    padding-inline: 0.9rem;
   }
 }
 

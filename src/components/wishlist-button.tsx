@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { toggleWishlist } from "@/app/products/[slug]/wishlist-actions";
+import { useViewer } from "@/components/viewer";
+import { toggleWishlist } from "@/app/[locale]/products/[slug]/wishlist-actions";
 import { useWishlistStore } from "@/lib/wishlist-store";
 import { ConfettiBurst } from "@/components/confetti-burst";
 
@@ -40,8 +41,6 @@ export function WishlistButton({
   price,
   currency,
   imageUrl,
-  initialSaved,
-  isSignedIn,
   addLabel,
   removeLabel,
 }: {
@@ -51,12 +50,19 @@ export function WishlistButton({
   price: number;
   currency: string;
   imageUrl: string | null;
-  initialSaved: boolean;
-  isSignedIn: boolean;
   addLabel: string;
   removeLabel: string;
 }) {
-  const [saved, setSaved] = useState(initialSaved);
+  // The product page is cached and the same for everyone, so whether this
+  // visitor is signed in and has saved the piece comes from /api/viewer.
+  // Until it answers, the button acts as a guest's (the page's cached state).
+  const viewer = useViewer(productId);
+  const isSignedIn = viewer?.signedIn ?? false;
+  const [toggled, setToggled] = useState<boolean | null>(null);
+  const fromViewer = viewer?.product?.saved ?? false;
+  const saved = toggled ?? fromViewer;
+  const setSaved = (next: (previous: boolean) => boolean) =>
+    setToggled((previous) => next(previous ?? fromViewer));
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const [celebrate, setCelebrate] = useState(false);

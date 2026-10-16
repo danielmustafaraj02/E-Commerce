@@ -18,7 +18,6 @@ describe("buildAdminSections", () => {
       "catalog",
       "sales",
       "customers",
-      "planning",
       "settings",
     ]);
   });
@@ -33,17 +32,26 @@ describe("buildAdminSections", () => {
   it("lists every admin-only page under Settings for admins", () => {
     expect(section("settings").items.map((i) => i.href)).toEqual([
       "/admin/settings",
-      "/admin/settings/site-style",
-      "/admin/settings/block-styles",
-      "/admin/settings/page-layout",
-      "/admin/settings/hero-concepts",
-      "/admin/settings/page-copy",
       "/admin/settings/payments",
       "/admin/settings/integrations",
       "/admin/team",
       "/admin/legal-pages",
       "/admin/settings/go-live",
     ]);
+  });
+
+  it("has no design tools: the site's look is code (src/design/)", () => {
+    const hrefs = admin.flatMap((s) => s.items.map((i) => i.href));
+    for (const gone of [
+      "/admin/settings/site-style",
+      "/admin/settings/block-styles",
+      "/admin/settings/page-layout",
+      "/admin/settings/hero-concepts",
+      "/admin/settings/page-copy",
+      "/admin/roadmap",
+    ]) {
+      expect(hrefs).not.toContain(gone);
+    }
   });
 
   it("puts each page in exactly one section", () => {
@@ -61,7 +69,6 @@ describe("activeSection", () => {
     ["/admin/orders/ORD-1", "sales"],
     ["/admin/shipping/zones/new", "sales"],
     ["/admin/customers/42", "customers"],
-    ["/admin/roadmap", "planning"],
     ["/admin/settings", "settings"],
     ["/admin/settings/payments", "settings"],
     ["/admin/legal-pages/terms/edit", "settings"],
@@ -99,7 +106,9 @@ describe("badges and sidebars", () => {
 
   it("gives a section a sidebar only when it has more than one page", () => {
     expect(hasSidebar(section("catalog"))).toBe(true);
-    expect(hasSidebar(section("planning"))).toBe(false);
+    expect(
+      hasSidebar({ id: "solo", label: "Solo", items: [{ href: "/admin/solo", label: "Solo" }] })
+    ).toBe(false);
   });
 });
 
@@ -115,7 +124,7 @@ describe("locale-prefixed admin paths", () => {
 
   it.each([
     ["/it/admin/settings", "settings"],
-    ["/en/admin/settings/site-style", "settings"],
+    ["/en/admin/settings/payments", "settings"],
     ["/pt-BR/admin/orders", "sales"],
     ["/it/admin", "overview"],
     ["/admin/settings", "settings"],
@@ -124,8 +133,8 @@ describe("locale-prefixed admin paths", () => {
   });
 
   it("still finds the item itself, not just the section", () => {
-    const settings = activeSection(sections, "/it/admin/settings/site-style");
-    expect(activeItem(settings, "/it/admin/settings/site-style")?.label).toBe("Site style");
+    const settings = activeSection(sections, "/it/admin/settings/payments");
+    expect(activeItem(settings, "/it/admin/settings/payments")?.label).toBe("Payments");
   });
 
   it("does not mistake a non-locale first segment for one", () => {

@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { requireStaff } from "@/lib/require-admin";
 import { writeAuditLog } from "@/lib/audit-log";
+import { refreshShipping } from "@/lib/cache-tags";
 
 const methodSchema = z.object({
   name: z.string().min(1).max(200),
@@ -53,6 +54,7 @@ export async function createShippingMethod(_prevState: unknown, formData: FormDa
     after: method,
   });
 
+  refreshShipping();
   redirect("/admin/shipping/methods");
 }
 
@@ -92,6 +94,7 @@ export async function updateShippingMethod(
     after: method,
   });
 
+  refreshShipping();
   redirect("/admin/shipping/methods");
 }
 
@@ -114,5 +117,6 @@ export async function toggleShippingMethod(methodId: string) {
     after: { active: updated.active },
   });
 
+  refreshShipping();
   redirect("/admin/shipping/methods");
 }

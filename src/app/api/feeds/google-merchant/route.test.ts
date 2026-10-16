@@ -22,6 +22,7 @@ function product(overrides: Record<string, unknown> = {}) {
     price: 4061,
     currency: "EUR",
     stockQty: 0,
+    trackInventory: true,
     category: { name: "Bracciali", nameEn: "Bracelets" },
     images: [
       { url: "/products/main.png" },

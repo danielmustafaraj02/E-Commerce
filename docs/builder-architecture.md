@@ -1,36 +1,39 @@
-# Visual builder
+# Page design
 
-The editor runs in the private local admin. Visitors see only published layouts.
+The site's look is code. Page layouts, colours, fonts, block styles and the
+home hero live in `src/design/` and ship with each deploy; nothing about the
+look is read from the database, and the admin has no design tools. Every page
+of a kind (every product, every article) uses the same layout.
+
+To change the look, edit `src/design/`, check it locally and deploy.
 
 ## Main modules
 
 | Module                                                                      | Job                                                 |
 | --------------------------------------------------------------------------- | --------------------------------------------------- |
-| `src/app/admin/settings/page-layout/`                                       | Editor canvas and controls; private source          |
+| `src/design/layouts.ts`                                                     | Page layouts (home, product, article)               |
+| `src/design/theme.ts`                                                       | Colours, fonts, brand colours and block styles      |
+| `src/design/hero.ts`                                                        | The home page hero                                  |
 | `src/lib/section-builder.ts`                                                | Document types, validation and HTML/CSS compilation |
-| `src/lib/section-builder-editing.ts`                                        | Editing commands and canvas CSS                     |
 | `src/lib/section-templates.ts`                                              | Built-in designs                                    |
 | `src/lib/page-layout.ts`                                                    | Page targets, sections and layout options           |
-| `src/lib/page-layout-store.ts`                                              | Published layout reads                              |
-| `src/lib/section-drafts.ts`, `section-versions.ts`                          | Drafts and version history                          |
+| `src/lib/page-layout-store.ts`                                              | Reads a page's layout from `src/design/`            |
 | `src/components/layout-section.tsx`, `builder-view.tsx`, `builder-live.tsx` | Storefront rendering                                |
 
-A page is an ordered list of sections. Each section can use built-in content, custom markup or a `BuilderDoc` containing columns and blocks. Desktop properties are the base; phone properties override them. Tablet overrides are not yet part of this model.
+A page is an ordered list of sections. Each section can use built-in content, custom markup or a `BuilderDoc` containing columns and blocks. Desktop properties are the base; phone properties override them. A page not listed in `layouts.ts` uses its built-in layout.
 
-## Storage and publishing
+Layouts go through the same validation as before (`resolveLayout`), so a mistake in `layouts.ts` falls back to the built-in section instead of breaking the page.
 
-Home and product layouts live in `StoreSettings`. Other layouts use `PageLayout` rows keyed by page target. Section drafts use `sec-draft:<page>:<section>`; history uses `sec-hist:<page>:<section>` and keeps the latest 12 versions. Templates use `PageTemplate` and `SectionTemplate`.
+## The archived visual editor
 
-The editor autosaves a section draft after a short pause. **Publish** updates the visible section, records the old version and clears the draft. **Discard** restores the published version. Reopening resumes an existing draft.
-
-Page order and visibility still save directly. Two editors can overwrite each other's changes; there is no conflict detection yet.
+The admin's visual editor (Page layout, Site style, Block styles, Hero concepts, Page text, the article opening designer and the Roadmap) was removed on 2026-10-16 and kept outside the repository in `../E-Commerce-design-editor/`. Its README explains how to put it back. The old design data is still in the database (`PageLayout` rows and the design columns of `StoreSettings`); nothing reads it.
 
 ## Rules to preserve
 
 - Shared document logic has no browser, React or database dependency.
-- Public renderers never import the admin editor.
 - Documents are data: validate blocks, sanitize HTML, scope CSS and check media URLs. Never execute content scripts.
 - Product blocks reference catalog data; checkout prices and stock remain server-controlled.
-- Preserve saved document fields and CSS selectors during refactors.
+- Preserve document fields and CSS selectors during refactors.
+- A page states its own stylesheet order (base first, overrides last) rather than relying on the order other pages import them in.
 
 Remaining work is in the [roadmap](implementation-roadmap.md).

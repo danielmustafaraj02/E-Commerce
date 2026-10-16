@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import LoginForm from "@/app/login/login-form";
-import RegisterForm from "@/app/register/register-form";
+import LoginForm from "@/app/[locale]/login/login-form";
+import RegisterForm from "@/app/[locale]/register/register-form";
 import Image from "next/image";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 
@@ -121,6 +121,9 @@ export function AuthCard({
             {mode === "login" ? (
               <>
                 {dict.noAccount}{" "}
+                {/* Switches the card in place (onClick); the href is the
+                    no-JavaScript fallback. */}
+                {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
                 <a
                   href="/register"
                   onClick={(e) => {
@@ -135,6 +138,8 @@ export function AuthCard({
             ) : (
               <>
                 {dict.haveAccount}{" "}
+                {/* Same as the register link above. */}
+                {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
                 <a
                   href="/login"
                   onClick={(e) => {

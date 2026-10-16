@@ -1,9 +1,4 @@
-import { cache } from "react";
-import { db } from "@/lib/db";
 import { CONCEPTS, parseHeroConcepts, type ConceptId, type HeroConceptsConfig } from "./config";
-
-/** Where the published hero concept lives (a PageLayout row, like the draft). */
-export const HERO_CONCEPTS_LIVE_KEY = "hero-concepts:live";
 
 export type LiveHeroConcept = { concept: ConceptId; config: HeroConceptsConfig; at: string };
 
@@ -18,20 +13,3 @@ export function parseLiveHero(value: unknown): LiveHeroConcept | null {
     at: typeof raw.at === "string" ? raw.at : "",
   };
 }
-
-/**
- * The hero concept published from Admin > Settings > Hero concepts, or null
- * for the original hero. Any failure (missing table, bad data) falls back to
- * the original hero rather than breaking the home page.
- */
-export const getLiveHeroConcept = cache(async (): Promise<LiveHeroConcept | null> => {
-  try {
-    const row = await db.pageLayout.findUnique({
-      where: { target: HERO_CONCEPTS_LIVE_KEY },
-      select: { layout: true },
-    });
-    return parseLiveHero(row?.layout);
-  } catch {
-    return null;
-  }
-});

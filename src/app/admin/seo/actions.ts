@@ -69,6 +69,7 @@ export async function savePageMeta(
     entityId: key,
     after: saved,
   });
-  revalidatePath("/", "layout");
+  // Every storefront page (they are cached; settings show on all of them).
+  revalidatePath("/[locale]", "layout");
   return { ok: "Saved." };
 }

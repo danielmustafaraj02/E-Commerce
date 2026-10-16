@@ -30,6 +30,16 @@ Use Server Components by default. Add `"use client"` for interactions such as fo
 
 Use `src/lib/db.ts` for database access. Do not share-cache sessions, payments, checkout quotes or customer data. Keep cache invalidation with the operation that changes the underlying content.
 
+## Routes, rendering and caching
+
+The storefront lives under `src/app/[locale]/` (`/it/…`, `/en/…`); its root layout reads nothing from the request, and `getLocale()` reads the language from the URL (`next/root-params`). The admin is a separate root layout at `src/app/admin/`, without a language. Both render `SiteDocument` (`src/components/site-document.tsx`).
+
+Catalog pages are cached and served to everyone: the home page, products, articles, looks, about and legal pages are prerendered or rendered on first visit, then rebuilt every 5 minutes at most and immediately after an admin edit (`src/lib/cache-tags.ts`, `revalidatePath` in the admin actions). To keep them cacheable, they must not read cookies, headers, the session or search parameters. Visitor-specific parts (account links, wishlist, review form) load in the browser from `/api/viewer`.
+
+Pages that handle a visitor's own data or a payment (cart, checkout, account, login, order confirmation…) render per request. They are listed in `STRICT_CSP_PATH` in `src/proxy.ts` and marked `export const dynamic = "force-dynamic"`; they get the strict CSP with a per-request nonce. Cached pages cannot carry a nonce, so they get a CSP that allows inline scripts. A page added to the strict list must be dynamic, or its cached copy is blocked. Listing pages with filters read search parameters and also render per request.
+
+Do not put a `loading.tsx` above a page that can be a 404: it starts the response with status 200 before the page decides.
+
 ## Checkout
 
 1. `checkout-input.ts` validates the cart; `pricing.ts` calculates current server prices.
@@ -39,8 +49,8 @@ Use `src/lib/db.ts` for database access. Do not share-cache sessions, payments, 
 
 The browser never decides the payable amount or whether payment succeeded. Order cancellation and settlement must coordinate reservation release.
 
-## Visual builder
+## Page design
 
-The local editor produces validated documents; the storefront renders published content. Keep editor code out of visitor bundles. Saved selectors and document formats are compatibility contracts: preserve them when refactoring CSS or modules.
+Page layouts, colours, fonts and block styles are code in `src/design/`; the admin has no design tools. Layout documents and their CSS selectors are compatibility contracts: preserve them when refactoring CSS or modules.
 
-See [builder architecture](docs/builder-architecture.md) for storage and publishing.
+See [page design](docs/builder-architecture.md).

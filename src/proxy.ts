@@ -10,6 +10,7 @@ import {
 import { detectLocale } from "./lib/i18n/detect-locale";
 import { LOCAL_ACCOUNTS_ENABLED, isLocalAdminAccess } from "./lib/local-features";
 import { requestUrl } from "./lib/request-url";
+import { authSessionConfig } from "./lib/auth-session-config";
 
 // Coarse-grained gate only. Every admin route/API handler must also check
 // `role === "admin"` itself — proxy does not run for Server Functions, so it
@@ -55,6 +56,16 @@ const UNLOCALIZED_PATH_RE =
 // redirect ("isn't a valid image").
 const STATIC_FILE_RE = /\/[^/]+\.[a-z0-9]+$/i;
 
+// Pages that render per request (see `export const dynamic` in each route) and
+// handle a visitor's own data or a payment: they get the strict CSP with a
+// per-request nonce, and the session cookie is checked here. Every other page
+// (home, catalog, articles, looks…) is prerendered and cached, so it cannot
+// carry a nonce; those get a CSP that allows the framework's inline scripts
+// ('unsafe-inline') and the proxy does no session work for them. A page added
+// to this list MUST be dynamic, or its cached copy is blocked by the CSP.
+export const STRICT_CSP_PATH =
+  /^\/(admin|account|checkout|cart|login|register|forgot-password|reset-password|order-confirmation|wishlist|card|gift-card|personalised-gift-card|contact|newsletter)(\/|$)/;
+
 export default async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const incomingUrl = requestUrl(request);
@@ -92,6 +103,13 @@ export default async function proxy(request: NextRequest) {
     }
     locale = split.locale;
     logicalPathname = split.rest;
+    // The admin isn't under a locale (it has its own root layout at /admin):
+    // /it/admin/… is sent to /admin/….
+    if (/^\/admin(\/|$)/.test(logicalPathname)) {
+      const target = new URL(incomingUrl);
+      target.pathname = logicalPathname;
+      return withSecurityHeaders(NextResponse.redirect(target, 308));
+    }
   }
 
   // secureCookie must be forced rather than left to getToken()'s own
@@ -100,14 +118,39 @@ export default async function proxy(request: NextRequest) {
   // the plain "authjs.session-token" cookie instead of the
   // "__Secure-authjs.session-token" one NextAuth actually issues in
   // production — silently failing to find a perfectly valid session.
+  const strict = STRICT_CSP_PATH.test(logicalPathname);
+  const sessionConfig = authSessionConfig();
+  const cookieName = `${sessionConfig.useSecureCookies ? "__Secure-" : ""}authjs.session-token`;
+  const sessionCookies = request.cookies.getAll().filter(({ name }) =>
+    name === cookieName || name.startsWith(`${cookieName}.`)
+  );
+  // Only the per-request pages read the session; a cached page never does, so
+  // decrypting the JWT there would be wasted work on every page view.
   const token =
-    LOCAL_ACCOUNTS_ENABLED && !localAdmin
+    strict && LOCAL_ACCOUNTS_ENABLED && (!localAdmin || sessionCookies.length > 0)
       ? await getToken({
           req: request,
-          secret: process.env.AUTH_SECRET,
-          secureCookie: process.env.NODE_ENV === "production",
+          secret: sessionConfig.secret,
+          secureCookie: sessionConfig.useSecureCookies,
         })
       : null;
+  // Server Components cannot persist Auth.js's cookie cleanup. Remove stale
+  // JWTs from this render's request AND expire them in the browser, including
+  // chunked cookies. Do this even for the development-only local admin.
+  const staleCookies = strict && LOCAL_ACCOUNTS_ENABLED && !token ? sessionCookies : [];
+  for (const { name } of staleCookies) request.cookies.delete(name);
+  const finish = (response: NextResponse) => {
+    for (const { name } of staleCookies) {
+      response.cookies.set(name, "", {
+        path: "/",
+        httpOnly: true,
+        sameSite: "lax",
+        secure: sessionConfig.useSecureCookies,
+        maxAge: 0,
+      });
+    }
+    return withSecurityHeaders(response);
+  };
   const role = token?.role as string | undefined;
 
   if (logicalPathname.startsWith("/admin") && !localAdmin) {
@@ -119,7 +162,7 @@ export default async function proxy(request: NextRequest) {
       // staff sign-in doesn't need per-visitor language detection.
       const loginUrl = new URL(`/${defaultLocale}/login`, incomingUrl);
       loginUrl.searchParams.set("callbackUrl", logicalPathname);
-      return withSecurityHeaders(NextResponse.redirect(loginUrl));
+      return finish(NextResponse.redirect(loginUrl));
     }
 
     // MFA is mandatory for admin/staff — the highest-value account on the
@@ -129,14 +172,14 @@ export default async function proxy(request: NextRequest) {
     if (!token?.mfaEnabled) {
       const mfaUrl = new URL(`/${defaultLocale}/account/mfa`, incomingUrl);
       mfaUrl.searchParams.set("required", "1");
-      return withSecurityHeaders(NextResponse.redirect(mfaUrl));
+      return finish(NextResponse.redirect(mfaUrl));
     }
   }
 
   if (logicalPathname.startsWith("/account") && !token) {
     const loginUrl = new URL(`/${locale}/login`, incomingUrl);
     loginUrl.searchParams.set("callbackUrl", `/${locale}${logicalPathname}`);
-    return withSecurityHeaders(NextResponse.redirect(loginUrl));
+    return finish(NextResponse.redirect(loginUrl));
   }
 
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
@@ -158,19 +201,25 @@ export default async function proxy(request: NextRequest) {
   //
   // still SAQ-A (Stripe's Elements iframe tokenizes client-side, same
   // guarantee as Hosted Checkout's redirect), but it needs three narrow,
-  // Stripe-only additions: js.stripe.com can load *as* a script (also
+  // Stripe-only additions, per Stripe's CSP guide (docs.stripe.com/security/
+  // guide): *.js.stripe.com for the Express Checkout (Apple Pay / Google Pay)
+  // and Elements frames, and link.com for Link, which the same button offers.
+  // js.stripe.com can load *as* a script (also
   // covered by 'strict-dynamic' for browsers that support it, since
   // loadStripe() injects it from our own nonce'd code — listed explicitly
   // too for older browsers), its iframes need frame-src (default-src alone
   // would block them), and its own API/fraud-check calls need connect-src.
+  const scriptSrc = strict
+    ? `'self' 'nonce-${nonce}' 'strict-dynamic' https://js.stripe.com https://*.js.stripe.com`
+    : `'self' 'unsafe-inline' https://js.stripe.com https://*.js.stripe.com`;
   const csp = `
     default-src 'self';
-    script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://js.stripe.com${isDev ? " 'unsafe-eval'" : ""};
+    script-src ${scriptSrc}${isDev ? " 'unsafe-eval'" : ""};
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
     img-src 'self' https: data:;
     font-src 'self' data: https://fonts.gstatic.com;
-    connect-src 'self' https://api.stripe.com https://m.stripe.network${isDev ? ` ${devSocketOrigin}` : ""};
-    frame-src https://js.stripe.com https://hooks.stripe.com https://www.youtube-nocookie.com https://player.vimeo.com https://www.google.com/maps;
+    connect-src 'self' https://api.stripe.com https://m.stripe.network https://link.com https://*.link.com${isDev ? ` ${devSocketOrigin}` : ""};
+    frame-src https://js.stripe.com https://*.js.stripe.com https://hooks.stripe.com https://link.com https://*.link.com https://www.youtube-nocookie.com https://player.vimeo.com https://www.google.com/maps;
     media-src 'self' https://*.public.blob.vercel-storage.com;
     object-src 'none';
     base-uri 'self';
@@ -182,22 +231,20 @@ export default async function proxy(request: NextRequest) {
     .trim();
 
   const requestHeaders = new Headers(request.headers);
-  requestHeaders.set("x-nonce", nonce);
-  requestHeaders.set("Content-Security-Policy", csp);
+  // Next stamps the nonce on its scripts only when it renders per request and
+  // finds it in the request's CSP; cached pages get neither.
+  if (strict) {
+    requestHeaders.set("x-nonce", nonce);
+    requestHeaders.set("Content-Security-Policy", csp);
+  }
+  // The page reads its locale from the /[locale] segment; this is for Server
+  // Actions and Route Handlers, where that segment isn't available.
   if (!unlocalized) requestHeaders.set("x-locale", locale);
 
-  const response = unlocalized
-    ? NextResponse.next({ request: { headers: requestHeaders } })
-    : NextResponse.rewrite(
-        (() => {
-          const url = new URL(incomingUrl);
-          url.pathname = logicalPathname;
-          return url;
-        })(),
-        { request: { headers: requestHeaders } }
-      );
+  // Prefixed URLs map straight onto app/[locale]/…: no rewrite.
+  const response = NextResponse.next({ request: { headers: requestHeaders } });
   response.headers.set("Content-Security-Policy", csp);
-  return withSecurityHeaders(response);
+  return finish(response);
 }
 
 function withSecurityHeaders(response: NextResponse) {
@@ -227,10 +274,8 @@ function withSecurityHeaders(response: NextResponse) {
 
 export const config = {
   matcher: [
-    // Locale-prefixed URLs must be rewritten even for RSC prefetches from
-    // next/link. Skipping prefetch headers makes /en/cart and similar paths
-    // fall through to the filesystem router (which only has /cart), producing
-    // noisy 404s and preventing Next from warming the route correctly.
+    // Every page, including RSC prefetches from next/link: unprefixed URLs are
+    // redirected to their locale, and every page gets its CSP here.
     "/((?!api|_next/static|_next/image|favicon.ico).*)",
   ],
 };

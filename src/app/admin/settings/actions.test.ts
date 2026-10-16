@@ -54,7 +54,7 @@ describe("updateStoreSettings: personalised gift card", () => {
     expect(update.giftCardEnabled).toBe(true);
     expect(update.giftCardPrice).toBe(750);
     // Without this the form snaps back to the old values after saving.
-    expect(mocks.revalidatePath).toHaveBeenCalledWith("/", "layout");
+    expect(mocks.revalidatePath).toHaveBeenCalledWith("/[locale]", "layout");
   });
 
   it("turns it off when the box is unticked, keeping the price", async () => {

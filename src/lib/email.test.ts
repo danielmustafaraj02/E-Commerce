@@ -50,7 +50,12 @@ vi.mock("@/lib/i18n/locale", async (importOriginal) => ({
   },
 }));
 
-import { sendGiftCardEmail, sendOrderStatusEmail, sendPasswordChangedEmail } from "./email";
+import {
+  sendGiftCardEmail,
+  sendOrderStatusEmail,
+  sendPasswordChangedEmail,
+  senderAddress,
+} from "./email";
 
 const order = {
   orderNumber: "ORD-1",
@@ -237,5 +242,27 @@ describe("sendEmail error reporting", () => {
     await sendPasswordChangedEmail("user@example.com");
 
     expect(mocks.captureError).not.toHaveBeenCalled();
+  });
+});
+
+describe("senderAddress", () => {
+  it("uses the address set in admin, then EMAIL_FROM", () => {
+    expect(senderAddress({ emailFrom: "a@shop.it" }, { EMAIL_FROM: "b@shop.it" })).toBe(
+      "a@shop.it"
+    );
+    expect(senderAddress({ emailFrom: null }, { EMAIL_FROM: "b@shop.it" })).toBe("b@shop.it");
+  });
+
+  it("falls back to orders@ the Resend integration's domain, with the store's name", () => {
+    expect(
+      senderAddress(
+        { emailFrom: "", storeName: "Perla Murano Glass" },
+        { RESEND_EMAIL_DOMAIN: "perlamuranoglass.com" }
+      )
+    ).toBe("Perla Murano Glass <orders@perlamuranoglass.com>");
+  });
+
+  it("has no made-up default: no address means nothing is sent", () => {
+    expect(senderAddress({ emailFrom: null }, {})).toBeNull();
   });
 });

@@ -1,4 +1,5 @@
 import { unstable_cache } from "next/cache";
+import { HOMEPAGE_TAG, STOREFRONT_DATA_TTL } from "@/lib/cache-tags";
 import { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
 
@@ -198,5 +199,5 @@ export const getHomepageData = unstable_cache(
     return { products, specialSelection, categoriesWithImage, heroProduct, bestSellers, reviews, popularProducts };
   },
   ["homepage-data"],
-  { revalidate: 60, tags: ["homepage"] }
+  { revalidate: STOREFRONT_DATA_TTL, tags: [HOMEPAGE_TAG] }
 );

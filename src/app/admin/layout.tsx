@@ -3,10 +3,8 @@ import { requireStaff } from "@/lib/require-admin";
 import { AdminShell } from "@/components/admin-nav";
 import { buildAdminSections } from "@/lib/admin-nav";
 import { db } from "@/lib/db";
-import { getStoreSettings } from "@/lib/store-settings";
-import { COLOR_ROLES, CSS_VAR, resolveColors } from "@/lib/site-style";
-import { SitePaletteProvider, type Swatch } from "@/components/color-field";
 import { noIndexMetadata } from "@/lib/seo";
+import { SiteDocument, siteViewport } from "@/components/site-document";
 import "./admin.css";
 
 // Every other private/account-scoped route (cart, checkout, account, login,
@@ -14,6 +12,7 @@ import "./admin.css";
 // crawling — it doesn't stop Google from indexing the bare URL if it's ever
 // linked from somewhere else. This is the belt to that suspenders.
 export const metadata = noIndexMetadata;
+export const viewport = siteViewport;
 
 // Rolling 24h window rather than a per-admin "last seen" marker — no schema
 // change or per-user read state needed, at the cost of the badge not being
@@ -32,27 +31,11 @@ export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
 
   const sections = buildAdminSections({ isAdmin, newOrderCount, newCustomerCount });
 
-  // The store's own colours, offered first by every colour control in admin.
-  const colors = resolveColors(await getStoreSettings().catch(() => ({})));
-  const NAMES = [
-    "Background",
-    "Surface",
-    "Text",
-    "Secondary text",
-    "Primary",
-    "Text on primary",
-    "Accent",
-    "Border",
-  ];
-  const swatches: Swatch[] = COLOR_ROLES.map((role, i) => ({
-    name: NAMES[i],
-    hex: colors[role],
-    value: `var(${CSS_VAR[role]})`,
-  }));
-
+  // A root layout of its own (the storefront's is app/[locale]/layout.tsx),
+  // with the same document around it.
   return (
-    <SitePaletteProvider swatches={swatches}>
+    <SiteDocument>
       <AdminShell sections={sections}>{children}</AdminShell>
-    </SitePaletteProvider>
+    </SiteDocument>
   );
 }

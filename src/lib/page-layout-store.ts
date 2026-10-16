@@ -1,6 +1,4 @@
-import { cache } from "react";
-import { db } from "@/lib/db";
-import { getStoreSettings } from "@/lib/store-settings";
+import { PAGE_LAYOUTS } from "@/design/layouts";
 import {
   LOOKS_SECTIONS,
   SECTIONS_BY_TARGET,
@@ -12,43 +10,31 @@ import {
 } from "@/lib/page-layout";
 import { templateBody } from "@/lib/page-templates";
 
-/** The saved layout of a page, as stored (null = the built-in layout). Home and
- *  product pages live on StoreSettings, the others in the PageLayout table,
- *  which may not exist yet: that simply means the built-in layout. */
-export const getStoredLayout = cache(async (target: PageTarget): Promise<unknown> => {
-  if (target === "home") return (await getStoreSettings()).homeLayout;
-  if (target === "product") return (await getStoreSettings()).productPageLayout;
-  try {
-    const row = await db.pageLayout.findUnique({ where: { target }, select: { layout: true } });
-    return row?.layout ?? null;
-  } catch {
-    return null;
-  }
-});
+/** A page's layout as defined in code (src/design/layouts.ts); null means the
+ *  page's built-in layout. Nothing is read from the database. */
+export function getStoredLayout(target: PageTarget): unknown {
+  return PAGE_LAYOUTS[target] ?? null;
+}
 
-/** The sections to render for a page, in order. In admin preview every section
- *  is returned (hidden ones too) so the preview can show and move them. */
+/** The visible sections to render for a page, in order. */
 export async function pageEntries(
   target: PageTarget,
-  opts: { preview?: boolean; hidden?: readonly string[] } = {}
+  opts: { hidden?: readonly string[] } = {}
 ): Promise<LayoutEntry[]> {
-  const stored = await getStoredLayout(target);
+  const stored = getStoredLayout(target);
   const sections = SECTIONS_BY_TARGET[target];
-  const resolved = opts.preview
-    ? resolveLayout(stored, sections)
-    : visibleEntries(stored, sections, opts.hidden ?? []);
-  // The editorial examples are part of the home page's starting look, so the
-  // admin list shows them too (and can delete each one). Same rule as the
-  // storefront: an example already in the saved layout is left exactly as it
-  // is, so a deleted one does not come back.
+  const resolved = visibleEntries(stored, sections, opts.hidden ?? []);
+  // The editorial examples are part of the home page's look: any example the
+  // layout doesn't mention yet is added; one it already has (or has removed)
+  // is left exactly as it is.
   if (target !== "home") return resolved;
   return withEditorialExamples(resolved, (templateId) => templateBody(templateId));
 }
 
-/** The look layout and tuning (style, accent, density, alignment, button) as
- *  chosen in Page layout > Looks: the one place they are set. The home page's
- *  Looks section follows it, so both pages always show the same template. */
-export const getSharedLookOptions = cache(async (): Promise<Record<string, string>> => {
-  const entries = resolveLayout(await getStoredLayout("looks"), LOOKS_SECTIONS);
+/** The look layout and tuning (style, accent, density, alignment, button) of
+ *  the Looks page. The home page's Looks section follows it, so both pages
+ *  always show the same template. */
+export async function getSharedLookOptions(): Promise<Record<string, string>> {
+  const entries = resolveLayout(getStoredLayout("looks"), LOOKS_SECTIONS);
   return entries.find((entry) => entry.id === "list")?.options ?? {};
-});
+}

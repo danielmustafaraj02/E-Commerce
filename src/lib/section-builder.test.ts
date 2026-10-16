@@ -1,18 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { SECTION_TEMPLATES } from "@/lib/section-templates";
 import {
-  applyBlockDrop,
-  duplicateBlock,
-  freshBlock,
-  getRawField,
-  insertBlock,
-  isSingleLineField,
-  moveBlock,
-  patchBlockStyle,
-  setColumnWidths,
-  setRawField,
-} from "@/lib/section-builder-editing";
-import {
   builderNeedsRuntime,
   compileBuilder,
   guiElementsCss,
@@ -21,19 +9,39 @@ import {
 } from "./section-builder";
 import { sanitizeSectionHtml } from "./custom-section";
 import { ALL_TEMPLATES, PAGE_TEMPLATES } from "./page-templates";
-import { formatHtml, readableSectionHtml } from "./format-html";
 
 describe("section builder", () => {
   it("round trips rotation and per-element native-section transforms", () => {
-    const doc = parseBuilder({ columns: 1, cells: [[{ type: "heading", text: "Turned", style: { rotate: -25 } }, { type: "original", guiElements: { "article-title": { x: 12, y: -8, w: 125, rotate: 17 } } }]] });
+    const doc = parseBuilder({
+      columns: 1,
+      cells: [
+        [
+          { type: "heading", text: "Turned", style: { rotate: -25 } },
+          {
+            type: "original",
+            guiElements: { "article-title": { x: 12, y: -8, w: 125, rotate: 17 } },
+          },
+        ],
+      ],
+    });
     expect(doc?.cells[0][0]?.style?.rotate).toBe(-25);
-    expect(doc?.cells[0][1]?.guiElements?.["article-title"]).toEqual({ x: 12, y: -8, w: 125, rotate: 17 });
-    expect(compileBuilder(doc!, { edit: true }).html).toContain('data-gui-elements="{&quot;article-title&quot;:{&quot;x&quot;:12,&quot;y&quot;:-8,&quot;w&quot;:125,&quot;rotate&quot;:17}}');
+    expect(doc?.cells[0][1]?.guiElements?.["article-title"]).toEqual({
+      x: 12,
+      y: -8,
+      w: 125,
+      rotate: 17,
+    });
+    expect(compileBuilder(doc!, { edit: true }).html).toContain(
+      'data-gui-elements="{&quot;article-title&quot;:{&quot;x&quot;:12,&quot;y&quot;:-8,&quot;w&quot;:125,&quot;rotate&quot;:17}}'
+    );
     expect(compileBuilder(doc!).html).toContain("--bld-rotate:-25deg");
   });
 
   it("preserves collection frame width, height and position", () => {
-    const doc = parseBuilder({ columns: 1, cells: [[{ type: "showcase", style: { w: 75, x: 10, h: 35 } }]] });
+    const doc = parseBuilder({
+      columns: 1,
+      cells: [[{ type: "showcase", style: { w: 75, x: 10, h: 35 } }]],
+    });
     const html = compileBuilder(doc!, { edit: true }).html;
     expect(html).toContain("width:75%");
     expect(html).toContain("left:10%");
@@ -41,10 +49,24 @@ describe("section builder", () => {
   });
 
   it("preserves saved story picture size and position through rendering", () => {
-    const doc = parseBuilder({ columns: 1, cells: [[{
-      type: "story", title: "Murano", text: "", src: "/piece.png", alt: "Piece",
-      side: "right", imageScale: 75, imageX: 12, imageY: -8,
-    }]] });
+    const doc = parseBuilder({
+      columns: 1,
+      cells: [
+        [
+          {
+            type: "story",
+            title: "Murano",
+            text: "",
+            src: "/piece.png",
+            alt: "Piece",
+            side: "right",
+            imageScale: 75,
+            imageX: 12,
+            imageY: -8,
+          },
+        ],
+      ],
+    });
     expect(doc?.cells[0][0]).toMatchObject({ imageScale: 75, imageX: 12, imageY: -8 });
     const html = sanitizeSectionHtml(compileBuilder(doc!).html);
     expect(html).toContain("--story-scale:0.75");
@@ -53,13 +75,25 @@ describe("section builder", () => {
   });
 
   it("preserves an editable story picture background through parsing and sanitizing", () => {
-    const doc = parseBuilder({ columns: 1, cells: [[{
-      type: "story", title: "Murano", text: "Handmade", src: "/piece.png",
-      alt: "Glass earrings", side: "right", imageBackground: "#ffffff",
-    }]] });
+    const doc = parseBuilder({
+      columns: 1,
+      cells: [
+        [
+          {
+            type: "story",
+            title: "Murano",
+            text: "Handmade",
+            src: "/piece.png",
+            alt: "Glass earrings",
+            side: "right",
+            imageBackground: "#ffffff",
+          },
+        ],
+      ],
+    });
     expect(doc?.cells[0][0]).toHaveProperty("imageBackground", "#ffffff");
     const { html } = compileBuilder(doc!);
-    expect(sanitizeSectionHtml(html)).toContain('background:#ffffff');
+    expect(sanitizeSectionHtml(html)).toContain("background:#ffffff");
   });
 
   it("every template survives a parse round trip and compiles to clean HTML", () => {
@@ -100,31 +134,6 @@ describe("section builder", () => {
     expect(doc.columns).toBe(1);
     expect(doc.gap).toBe(6);
     expect(doc.cells[0]).toEqual([{ type: "spacer", height: 12 }]);
-  });
-});
-
-describe("formatHtml", () => {
-  it("indents and keeps short elements on one line", () => {
-    expect(
-      formatHtml(
-        '<div><h2 class="a">Title</h2><p>Hello <a href="/x">there</a></p><img src="/a.png"></div>'
-      )
-    ).toBe(
-      [
-        "<div>",
-        '  <h2 class="a">Title</h2>',
-        '  <p>Hello <a href="/x">there</a></p>',
-        '  <img src="/a.png">',
-        "</div>",
-      ].join("\n")
-    );
-  });
-  it("cleans framework noise from rendered markup", () => {
-    const out = readableSectionHtml(
-      '<section data-reveal="true"><img src="/_next/image?url=%2Fproducts%2Fa.png&w=640&q=75" srcset="x 1x" data-nimg="1" style="color:transparent"></section>'
-    );
-    expect(out).toContain('src="/products/a.png"');
-    expect(out).not.toMatch(/srcset|data-nimg|transparent|data-reveal/);
   });
 });
 
@@ -228,85 +237,6 @@ describe("builder: scroll-drawn lines, count-up toggle and phone controls", () =
     expect(css).toContain("flex-direction:column-reverse");
     expect(css).toContain(".bld-col:nth-child(2){display:none}");
     expect(css).not.toContain("nth-child(8)");
-  });
-});
-
-describe("builder: canvas editing helpers", () => {
-  const base = () =>
-    parseBuilder({
-      columns: 2,
-      cells: [
-        [
-          { type: "heading", text: "A", size: "l" },
-          { type: "text", text: "B" },
-          { type: "badge", text: "C", look: "solid" },
-        ],
-        [{ type: "quote", text: "D" }],
-      ],
-    })!;
-  const texts = (doc: ReturnType<typeof base>) =>
-    doc.cells.map((cell) => cell.map((b) => getRawField(b, "text") ?? b.type));
-
-  it("moves a block within a column", () => {
-    // Drop "A" before index 3 (the end): it lands last.
-    expect(texts(moveBlock(base(), { col: 0, idx: 0 }, { col: 0, idx: 3 }))).toEqual([
-      ["B", "C", "A"],
-      ["D"],
-    ]);
-    // Drop "C" before index 0.
-    expect(texts(moveBlock(base(), { col: 0, idx: 2 }, { col: 0, idx: 0 }))[0]).toEqual([
-      "C",
-      "A",
-      "B",
-    ]);
-    // Dropping a block on itself changes nothing.
-    expect(texts(moveBlock(base(), { col: 0, idx: 1 }, { col: 0, idx: 1 }))[0]).toEqual([
-      "A",
-      "B",
-      "C",
-    ]);
-  });
-
-  it("moves a block to another column", () => {
-    const moved = moveBlock(base(), { col: 0, idx: 1 }, { col: 1, idx: 0 });
-    expect(texts(moved)).toEqual([
-      ["A", "C"],
-      ["B", "D"],
-    ]);
-  });
-
-  it("inserts a new block and ignores bad targets", () => {
-    const doc = insertBlock(base(), { col: 1, idx: 1 }, freshBlock("divider"));
-    expect(doc.cells[1].map((b) => b.type)).toEqual(["quote", "divider"]);
-    expect(insertBlock(base(), { col: 9, idx: 0 }, freshBlock("text"))).toEqual(base());
-    expect(moveBlock(base(), { col: 5, idx: 0 }, { col: 0, idx: 0 })).toEqual(base());
-  });
-
-  it("reads and writes a text field without touching anything else", () => {
-    const doc = setRawField(base(), { col: 0, idx: 1 }, "text", "**new** text");
-    expect(getRawField(doc.cells[0][1], "text")).toBe("**new** text");
-    expect(doc.cells[0][0]).toEqual(base().cells[0][0]);
-    expect(setRawField(base(), { col: 0, idx: 1 }, "nope", "x")).toEqual(base());
-    expect(isSingleLineField("heading", "text")).toBe(true);
-    expect(isSingleLineField("text", "text")).toBe(false);
-  });
-
-  it("marks blocks and editable text only in edit mode", () => {
-    const doc = base();
-    const plain = compileBuilder(doc).html;
-    expect(plain).not.toMatch(/data-bi|draggable/);
-    const { html } = compileBuilder(doc, { edit: true });
-    expect(html).toContain('data-bi-col="0"');
-    expect(html).toContain('data-bi="0:2"');
-    expect(html).toContain('data-bi="1:0"');
-    expect(html).toContain('draggable="true"');
-    expect(html.match(/data-bi-field="text"/g)?.length).toBe(4);
-  });
-
-  it("shows a placeholder for blocks with nothing to draw", () => {
-    const doc = parseBuilder({ columns: 1, cells: [[{ type: "image", src: "", alt: "" }]] })!;
-    expect(compileBuilder(doc).html).not.toContain("bld-empty");
-    expect(compileBuilder(doc, { edit: true }).html).toContain("Empty image block");
   });
 });
 
@@ -498,12 +428,18 @@ describe("builder: phone friendliness", () => {
       [{ type: "heading", text: "Hi", size: "l" }],
       [{ type: "image", src: "/a.jpg", alt: "" }],
     ]);
-    expect(textLeft.mobile).toMatchObject({ layout: "overlay", overlayShade: 90, overlayHeight: 40 });
+    expect(textLeft.mobile).toMatchObject({
+      layout: "overlay",
+      overlayShade: 90,
+      overlayHeight: 40,
+    });
     const { css } = compileBuilder(textLeft);
     expect(css).toContain('grid-template-areas:"stack"');
     expect(css).toContain("min-height:40svh");
     expect(css).toContain(".bld-col:nth-child(2){position:relative;z-index:0");
-    expect(css).toContain(".bld-col:nth-child(1){position:relative;z-index:1;align-self:end;justify-self:start");
+    expect(css).toContain(
+      ".bld-col:nth-child(1){position:relative;z-index:1;align-self:end;justify-self:start"
+    );
     expect(css).toContain("rgb(0 0 0/0.9)");
 
     const textRight = compileBuilder(
@@ -516,8 +452,12 @@ describe("builder: phone friendliness", () => {
     expect(textRight).not.toContain("column-reverse");
 
     // Without any media the columns simply stack, and one column cannot overlay.
-    expect(compileBuilder(split({ layout: "overlay" }, [[{ type: "text", text: "a" }], []])).css).not.toContain('"stack"');
-    expect(parseBuilder({ columns: 1, mobile: { layout: "overlay" }, cells: [[]] })!.mobile).toBeUndefined();
+    expect(
+      compileBuilder(split({ layout: "overlay" }, [[{ type: "text", text: "a" }], []])).css
+    ).not.toContain('"stack"');
+    expect(
+      parseBuilder({ columns: 1, mobile: { layout: "overlay" }, cells: [[]] })!.mobile
+    ).toBeUndefined();
   });
 });
 
@@ -571,29 +511,6 @@ describe("builder: collections animation block", () => {
   });
 });
 
-describe("block size", () => {
-  it("keeps width and height, clamped, and compiles them", () => {
-    const doc = parseBuilder({
-      columns: 1,
-      cells: [[{ type: "image", src: "/a.png", alt: "", style: { w: 55.46, h: 500 } }]],
-    })!;
-    const style = doc.cells[0][0].style;
-    expect(style).toMatchObject({ w: 55.5, h: 60 });
-    const { html } = compileBuilder(doc);
-    expect(html).toContain("width:55.5%");
-    expect(html).toContain("height:60rem");
-    expect(html).toContain("bld-fit");
-  });
-
-  it("patchBlockStyle sets and clears", () => {
-    const doc = parseBuilder({ columns: 1, cells: [[{ type: "text", text: "x" }]] })!;
-    const sized = patchBlockStyle(doc, { col: 0, idx: 0 }, { w: 50 });
-    expect(sized.cells[0][0].style).toEqual({ w: 50 });
-    const cleared = patchBlockStyle(sized, { col: 0, idx: 0 }, { w: undefined });
-    expect(cleared.cells[0][0].style).toBeUndefined();
-  });
-});
-
 describe("block position", () => {
   it("compiles offsets and layer, clamped", () => {
     const doc = parseBuilder({
@@ -605,26 +522,6 @@ describe("block position", () => {
     expect(html).toContain("position:relative;left:-60%;top:2.5rem;z-index:3");
     expect(html).toContain("bld-moved");
     expect(css).toContain(".bld-moved");
-  });
-});
-
-describe("column widths", () => {
-  const doc = (widths: unknown) => parseBuilder({ columns: 2, widths, cells: [[], []] })!;
-
-  it("compiles unequal widths into the grid", () => {
-    const d = doc([1.5, 0.5]);
-    expect(d.widths).toEqual([1.5, 0.5]);
-    expect(compileBuilder(d).css).toContain("minmax(0,1.5fr) minmax(0,0.5fr)");
-  });
-
-  it("ignores equal, missing or mismatched widths", () => {
-    expect(doc([1, 1]).widths).toBeUndefined();
-    expect(doc([1, 2, 3]).widths).toBeUndefined();
-    expect(compileBuilder(doc(undefined)).css).toContain("repeat(2,minmax(0,1fr))");
-  });
-
-  it("setColumnWidths clears equal widths", () => {
-    expect(setColumnWidths(doc([2, 1]), [1, 1]).widths).toBeUndefined();
   });
 });
 
@@ -752,59 +649,6 @@ describe("collections animation block", () => {
       scroll: { transition: "fade", distance: 1, rail: false, accent: "#123456" },
     });
     expect(parseBuilder(JSON.parse(JSON.stringify(doc)))).toEqual(doc);
-  });
-});
-
-describe("editable shapes", () => {
-  it.each(["rectangle", "oval", "triangle", "diamond"])(
-    "preserves and renders %s shapes through saving and sanitization",
-    (kind) => {
-      const doc = parseBuilder({
-        columns: 1,
-        cells: [
-          [
-            {
-              type: "shape",
-              kind,
-              fill: "#abcdef",
-              style: { w: 40, h: 12, mx: 5, my: 2, mw: 80, mh: 6 },
-            },
-          ],
-        ],
-      })!;
-      expect(doc.cells[0][0]).toMatchObject({ type: "shape", kind, fill: "#abcdef" });
-      const { html } = compileBuilder(doc);
-      expect(html).toContain("height:12rem");
-      expect(html).toContain("background:#abcdef");
-      expect(html).toContain("--mh:6rem");
-      expect(html).toContain("bld-fit");
-      expect(sanitizeSectionHtml(html)).toBe(html);
-      if (kind === "oval") expect(html).toContain("border-radius:50%");
-      if (kind === "triangle" || kind === "diamond") expect(html).toContain("clip-path:polygon(");
-    }
-  );
-
-  it("rejects unsafe fills and unsupported shape kinds", () => {
-    const doc = parseBuilder({
-      columns: 1,
-      cells: [[{ type: "shape", kind: "bad", fill: "red;position:fixed" }]],
-    })!;
-    expect(doc.cells[0][0]).toEqual({ type: "shape", kind: "rectangle", fill: "#154230" });
-    expect(compileBuilder(doc).html).toContain("height:8rem");
-  });
-
-  it("adds shapes by drag payload and copies their independent controls", () => {
-    const empty = parseBuilder({ columns: 2, cells: [[], []] })!;
-    const added = applyBlockDrop(empty, "new:shape", { col: 0, idx: 0 });
-    expect(added.selected).toEqual({ col: 0, idx: 0 });
-    expect(added.doc.cells[0][0]).toEqual(freshBlock("shape"));
-    const copied = duplicateBlock(added.doc, { col: 0, idx: 0 });
-    const resized = patchBlockStyle(copied, { col: 0, idx: 1 }, { h: 20 });
-    expect(resized.cells[0][0].style?.h).toBe(8);
-    expect(resized.cells[0][1].style?.h).toBe(20);
-    const moved = applyBlockDrop(resized, "move:0:1", { col: 1, idx: 0 });
-    expect(moved.doc.cells[1][0].type).toBe("shape");
-    expect(moved.doc.cells[1][0].style?.h).toBe(20);
   });
 });
 

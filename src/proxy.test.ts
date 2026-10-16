@@ -34,7 +34,9 @@ describe("public routing without accounts", () => {
   it("keeps locale routing working for the guest storefront", async () => {
     const response = await proxy(new NextRequest("https://store.example/en/products"));
     expect(response.status).toBe(200);
-    expect(response.headers.get("x-middleware-rewrite")).toBe("https://store.example/products");
+    // Served in place from app/[locale]/products, with no session work.
+    expect(response.headers.get("x-middleware-rewrite")).toBeNull();
+    expect(response.headers.get("x-middleware-next")).toBe("1");
     expect(mocks.getToken).not.toHaveBeenCalled();
   });
 });

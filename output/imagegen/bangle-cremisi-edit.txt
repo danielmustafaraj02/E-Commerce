@@ -1,0 +1,4 @@
+Tool: built-in image_gen
+Prompt: Retouch the supplied Bangle Cremisi photograph with natural studio lighting. Preserve the bracelet geometry, two crimson glass beads, red and gold seed beads, silver loop and dangling red bead. Soften distracting reflections, retain translucent glass texture and natural metal reflections, add a subtle grounding shadow on a white seamless background. Center the entire bracelet in a square frame. No added jewelry, text, labels, or UI.
+Original backup: output/imagegen/bangle-cremisi-original.webp
+Final asset: public/products/bracciali-in-vetro-di-murano/bangle-cremisi-3c2860.webp

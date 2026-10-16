@@ -1526,9 +1526,13 @@
      The white plate itself is then multiplied into the band below, so on
      tinted sections the plate takes the band's colour instead of reading as
      a white rectangle pasted on it; the isolated stacking context keeps the
-     img's own multiply working against the white inside the plate. */
+     img's own multiply working against the white inside the plate.
+     Not blended any more: the plate simply takes the page colour, and the
+     photo's own multiply (inside this isolated plate) turns its white into
+     that colour. Blending the plate itself depended on what was behind it —
+     inside an animated shelf it blended with nothing and showed as a white
+     box, and a page-coloured plate multiplied onto the page came out darker. */
   background: var(--ivory);
-  mix-blend-mode: multiply;
 }
 .shelf-item-photo > button {
   pointer-events: auto;
@@ -4177,6 +4181,12 @@
 .shelf .shop-thumb:not(:has(.shop-photo--lifestyle)) img {
   scale: 1.12;
   filter: none;
+}
+/* Except the product page's own photos: there the piece is shown whole
+   (contain), and some are photographed edge to edge, so the zoom cut off the
+   outer beads of a bracelet. */
+.shelf .shop-gallery .shop-product-photo img {
+  scale: none;
 }
 /* Labels and buttons on the photo always sit above the picture. */
 .shelf .shelf-item-photo > :is(.shelf-badge, .shelf-discount-badge, button, a) {

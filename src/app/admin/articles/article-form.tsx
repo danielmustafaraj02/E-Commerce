@@ -12,9 +12,7 @@ import { locales, type Locale } from "@/lib/i18n/locale-constants";
 import { LOCALE_NAMES } from "@/lib/i18n/locale-names";
 import { uploadImage } from "../upload-image";
 import type { ArticleState } from "./actions";
-import { OpeningDesigner } from "./opening-designer";
 import { MediaLibrary } from "../media-library";
-import type { OpeningLayout } from "@/lib/journal/opening";
 
 type ProductOption = { id: string; name: string; slug: string };
 
@@ -27,8 +25,6 @@ type Initial = {
   intro: string;
   heroUrl: string;
   heroAlt: string;
-  openingTemplate: string;
-  openingLayout: OpeningLayout;
   published: boolean;
   publishedOn: string;
   overridesBuiltIn: boolean;
@@ -447,8 +443,6 @@ export function ArticleForm({
   const [slugTouched, setSlugTouched] = useState(Boolean(initial?.slug));
   const [heroUrl, setHeroUrl] = useState(initial?.heroUrl ?? "");
   const [published, setPublished] = useState(initial?.published ?? false);
-  const [openingTemplate, setOpeningTemplate] = useState(initial?.openingTemplate ?? "");
-  const [openingLayout, setOpeningLayout] = useState<OpeningLayout>(initial?.openingLayout ?? {});
   const [blocks, setBlocks] = useState<StoredBlock[]>(initial?.body ?? []);
   const [linked, setLinked] = useState<string[]>(initial?.productIds ?? defaultProductIds);
   const [search, setSearch] = useState("");
@@ -473,8 +467,6 @@ export function ArticleForm({
     <form action={formAction} className="flex flex-col gap-6">
       <input type="hidden" name="body" value={JSON.stringify(blocks)} />
       <input type="hidden" name="heroUrl" value={heroUrl} />
-      <input type="hidden" name="openingTemplate" value={openingTemplate} />
-      <input type="hidden" name="openingLayout" value={JSON.stringify(openingLayout)} />
       <input type="hidden" name="translations" value={JSON.stringify(translations)} />
       <input type="hidden" name="sources" value={JSON.stringify(sources)} />
       {linked.map((id) => (
@@ -591,18 +583,6 @@ export function ArticleForm({
               className="field"
             />
           </label>
-        </fieldset>
-
-        <fieldset className="border-foreground/10 flex flex-col gap-4 rounded-lg border p-4">
-          <legend className="px-1 text-sm font-medium">Opening design (title and main photo)</legend>
-          <OpeningDesigner
-            template={openingTemplate}
-            onTemplate={setOpeningTemplate}
-            layout={openingLayout}
-            onLayout={setOpeningLayout}
-            title={title}
-            heroUrl={heroUrl}
-          />
         </fieldset>
 
         <fieldset className="border-foreground/10 flex flex-col gap-4 rounded-lg border p-4">

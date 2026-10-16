@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { imageConfigDefault } from "next/dist/shared/lib/image-config";
+import nextConfig from "../../next.config";
 import {
   IMAGE_WIDTHS,
   canOptimize,
@@ -11,10 +11,9 @@ import {
 const BLOB = "https://abc.public.blob.vercel-storage.com/products/ring-x1.webp";
 
 describe("optimizer widths", () => {
-  it("match the sizes Next's optimizer accepts (next.config.ts keeps the defaults)", () => {
-    expect([...IMAGE_WIDTHS]).toEqual(
-      [...imageConfigDefault.imageSizes, ...imageConfigDefault.deviceSizes].sort((a, b) => a - b)
-    );
+  it("match the sizes the optimizer accepts (next.config.ts)", () => {
+    const { imageSizes = [], deviceSizes = [] } = nextConfig.images ?? {};
+    expect([...IMAGE_WIDTHS]).toEqual([...imageSizes, ...deviceSizes].sort((a, b) => a - b));
   });
 });
 
@@ -34,12 +33,12 @@ describe("canOptimize", () => {
 describe("optimizedImageUrl", () => {
   it("asks for the next width the optimizer offers, using the current file name", () => {
     expect(optimizedImageUrl("/products/a b.png", 1000)).toBe(
-      "/_next/image?url=%2Fproducts%2Fa%20b.webp&w=1080&q=75"
+      "/_next/image?url=%2Fproducts%2Fa%20b.webp&w=1200&q=75"
     );
     expect(optimizedImageUrl("/hero/x.webp", 1920, 90)).toBe(
       "/_next/image?url=%2Fhero%2Fx.webp&w=1920&q=90"
     );
-    expect(optimizedImageUrl("/hero/x.webp", 9999)).toContain("&w=3840&");
+    expect(optimizedImageUrl("/hero/x.webp", 9999)).toContain("&w=1920&");
   });
 
   it("returns what the optimizer can't take unchanged", () => {
@@ -51,9 +50,9 @@ describe("optimizedImageUrl", () => {
 describe("optimizedSrcSet", () => {
   it("lists optimized widths with descriptors", () => {
     const set = optimizedSrcSet("/products/a.png")!;
-    expect(set.split(", ")).toHaveLength(7);
+    expect(set.split(", ")).toHaveLength(4);
     expect(set).toMatch(/^\/_next\/image\?url=%2Fproducts%2Fa\.webp&w=640&q=75 640w, /);
-    expect(set).toMatch(/&w=2048&q=75 2048w$/);
+    expect(set).toMatch(/&w=1920&q=75 1920w$/);
   });
 
   it("is undefined when the optimizer can't take the picture", () => {

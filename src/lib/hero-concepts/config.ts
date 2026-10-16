@@ -1,10 +1,8 @@
-// The three alternative home-page heroes being compared in Admin > Settings >
-// Hero concepts, and everything they are made of: the transparent product
-// cut-outs (cutouts.json, made by scripts/hero-cutouts.ts), each concept's
-// settings with their limits and defaults, and the wallpaper's fixed layout.
-//
-// Nothing here touches the live hero. The admin's choices are stored as a draft
-// (see HERO_CONCEPTS_DRAFT_KEY) until someone decides to publish one.
+// The alternative home-page heroes and everything they are made of: the
+// transparent product cut-outs (cutouts.json, made by the archived
+// hero-cutouts script), each concept's settings with their limits and
+// defaults, and the wallpaper's fixed layout. Which concept is live, and its
+// settings, is code: src/design/hero.ts.
 import cutoutList from "./cutouts.json";
 
 export type CutoutKind = "necklace" | "bracelet" | "earrings" | "other";
@@ -35,10 +33,6 @@ export const isHeroGrade = (cutout: Cutout) =>
   Math.max(cutout.width, cutout.height) >= HERO_MIN_PIXELS && !isQuiet(cutout);
 /** The wallpaper's pieces when none are chosen: hero-grade ones only. */
 export const WALLPAPER_POOL = CUTOUTS.filter(isHeroGrade).map((c) => c.slug);
-
-/** Where the draft lives: a row of the PageLayout key/value table, like the
- *  section drafts and block presets. */
-export const HERO_CONCEPTS_DRAFT_KEY = "hero-concepts:draft";
 
 export const CONCEPTS = ["minimal", "rotating", "wallpaper"] as const;
 export type ConceptId = (typeof CONCEPTS)[number];
