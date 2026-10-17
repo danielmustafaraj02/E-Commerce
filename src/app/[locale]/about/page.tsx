@@ -22,6 +22,11 @@ const HERO_IMAGE = "/blog/burano-colorful-houses-canal.webp";
 const SEARCH_TITLE: Partial<Record<Locale, string>> = {
   en: "About Us: Murano Glass Jewelry, Chosen Piece by Piece",
   it: "Chi siamo: gioielli in vetro di Murano scelti uno a uno",
+  nl: "Over ons: Murano-glazen sieraden, stuk voor stuk geselecteerd",
+  pl: "O nas: biżuteria ze szkła z Murano, starannie wybrana",
+  cs: "O nás: šperky z muránského skla, pečlivě vybrané kus po kuse",
+  sv: "Om oss: smycken i Muranoglas, noggrant utvalda",
+  ro: "Despre noi: bijuterii din sticlă de Murano, alese cu grijă",
 };
 import { AnimatedHeading } from "@/components/animated-heading";
 import { Reveal } from "@/components/reveal";
@@ -50,6 +55,11 @@ async function baseMetadata(): Promise<Metadata> {
     pt: `A história por trás da ${settings.storeName} e da tradição de sete séculos da vidraria de Murano com que as suas peças são feitas.`,
     hi: `${settings.storeName} की कहानी और मुरानो की 700 साल पुरानी कांच-निर्माण परंपरा, जिससे इसके टुकड़े बनाए जाते हैं।`,
     ja: `${settings.storeName}の物語と、その作品が作られる700年の歴史を持つムラノガラス製造の伝統。`,
+    nl: `Wie er achter ${settings.storeName} zit, hoe we Murano-glazen sieraden selecteren en de geschiedenis van glas op Murano.`,
+    pl: `Poznaj ${settings.storeName}, dowiedz się, jak wybieramy biżuterię ze szkła z Murano, i odkryj historię szklarstwa na wyspie Murano.`,
+    cs: `Poznejte ${settings.storeName}, zjistěte, jak vybíráme šperky z muránského skla, a objevte historii sklářství na ostrově Murano.`,
+    sv: `Lär känna ${settings.storeName}, se hur vi väljer smycken i Muranoglas och upptäck glashantverkets historia på Murano.`,
+    ro: `Descoperă povestea ${settings.storeName}, cum alegem bijuteriile din sticlă de Murano și istoria sticlăriei de pe insulă.`,
   };
   const description = descriptionByLocale[locale];
   const title = SEARCH_TITLE[locale] ?? dict.about.title;

@@ -14,6 +14,11 @@ export const DESCRIPTION_FIELDS = [
   { key: "descriptionPt", label: "Portuguese" },
   { key: "descriptionHi", label: "Hindi" },
   { key: "descriptionJa", label: "Japanese" },
+  { key: "descriptionNl", label: "Dutch" },
+  { key: "descriptionPl", label: "Polish" },
+  { key: "descriptionCs", label: "Czech" },
+  { key: "descriptionSv", label: "Swedish" },
+  { key: "descriptionRo", label: "Romanian" },
 ] as const;
 
 export type DescriptionKey = (typeof DESCRIPTION_FIELDS)[number]["key"];

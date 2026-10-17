@@ -75,6 +75,11 @@ async function baseMetadata({
     pt: `${name} em Vidro de Murano`,
     hi: `मुरानो ग्लास ${name}`,
     ja: `ムラノガラスの${name}`,
+    nl: `${name} van Murano-glas`,
+    pl: `${name} ze szkła z Murano`,
+    cs: `${name} z muránského skla`,
+    sv: `${name} i Muranoglas`,
+    ro: `${name} din sticlă de Murano`,
   };
   const title = titleByLocale[locale];
   // English and Italian: each of the three collections gets its own line (one
@@ -115,6 +120,11 @@ async function baseMetadata({
     pt: `Compre ${name.toLowerCase()} em vidro de Murano feitos à mão na ${settings.storeName}, filtráveis por preço e disponibilidade.`,
     hi: `${settings.storeName} पर हाथ से बने मुरानो ग्लास ${name} खरीदें, कीमत और उपलब्धता के अनुसार फ़िल्टर करने योग्य।`,
     ja: `${settings.storeName}で手作りのムラノガラス${name}をお買い求めください。価格や在庫状況で絞り込めます。`,
+    nl: `Bekijk ${name.toLowerCase()} van Murano-glas bij ${settings.storeName}, met filters voor prijs en beschikbaarheid.`,
+    pl: `Odkryj ${name.toLowerCase()} ze szkła z Murano w ${settings.storeName}. Filtruj według ceny i dostępności.`,
+    cs: `Prohlédněte si ${name.toLowerCase()} z muránského skla v obchodě ${settings.storeName}. Filtrujte podle ceny a dostupnosti.`,
+    sv: `Upptäck ${name.toLowerCase()} i Muranoglas hos ${settings.storeName}. Filtrera efter pris och tillgänglighet.`,
+    ro: `Descoperă ${name.toLowerCase()} din sticlă de Murano la ${settings.storeName}, cu filtre după preț și disponibilitate.`,
   };
   // Copy written for this category (admin > Categories) makes a better snippet
   // than the generic line below, which is only the fallback.

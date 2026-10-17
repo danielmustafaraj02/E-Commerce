@@ -18,6 +18,11 @@ const LABELS: Record<Locale, string> = {
   pt: "Português",
   hi: "हिन्दी",
   ja: "日本語",
+  nl: "Nederlands",
+  pl: "Polski",
+  cs: "Čeština",
+  sv: "Svenska",
+  ro: "Română",
 };
 const CODES: Record<Locale, string> = {
   en: "EN",
@@ -31,6 +36,11 @@ const CODES: Record<Locale, string> = {
   pt: "PT",
   hi: "HI",
   ja: "JA",
+  nl: "NL",
+  pl: "PL",
+  cs: "CS",
+  sv: "SV",
+  ro: "RO",
 };
 // A language switcher, not a country switcher — these are the conventional
 // flag-per-language pairing most sites use where the two don't line up 1:1
@@ -48,9 +58,26 @@ const FLAGS: Record<Locale, string> = {
   pt: "🇵🇹",
   hi: "🇮🇳",
   ja: "🇯🇵",
+  nl: "🇳🇱",
+  pl: "🇵🇱",
+  cs: "🇨🇿",
+  sv: "🇸🇪",
+  ro: "🇷🇴",
 };
 
-export function LocaleSwitcher({ current }: { current: Locale }) {
+export function LocaleSwitcher({
+  current,
+  compact = false,
+  align = "auto",
+}: {
+  current: Locale;
+  /** Show the two-letter code instead of the full name on the trigger — for
+   *  the mobile menu's top row, where it has to share the width with the logo. */
+  compact?: boolean;
+  /** Which edge of the trigger the list hangs from. "auto" is the header's:
+   *  start on phones, end from sm up. */
+  align?: "auto" | "start" | "end";
+}) {
   const [pending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
   const [switchFrom, setSwitchFrom] = useState<Locale | null>(null);
@@ -114,12 +141,13 @@ export function LocaleSwitcher({ current }: { current: Locale }) {
         disabled={pending}
         aria-haspopup="listbox"
         aria-expanded={open}
+        aria-label={compact ? LABELS[current] : undefined}
         className="locale-switcher-trigger border-foreground/25 hover:border-primary/40 hover:text-primary flex items-center gap-1.5 rounded-(--radius-button) border px-2.5 py-1.5 text-sm font-medium transition-colors disabled:opacity-50"
       >
         <span key={current} className="locale-switcher-current-flag" aria-hidden="true">
           {FLAGS[current]}
         </span>
-        {LABELS[current]}
+        {compact ? CODES[current] : LABELS[current]}
         <svg
           width="12"
           height="12"
@@ -139,7 +167,9 @@ export function LocaleSwitcher({ current }: { current: Locale }) {
       {open && (
         <ul
           role="listbox"
-          className="locale-switcher-menu border-foreground/10 bg-background animate-pop-in absolute top-full z-50 mt-1.5 min-w-36 overflow-hidden rounded-lg border py-1 text-sm shadow-lg max-sm:start-0 sm:end-0"
+          className={`locale-switcher-menu border-foreground/10 bg-background animate-pop-in absolute top-full z-50 mt-1.5 min-w-36 overflow-hidden rounded-lg border py-1 text-sm shadow-lg ${
+            align === "start" ? "start-0" : align === "end" ? "end-0" : "max-sm:start-0 sm:end-0"
+          }`}
         >
           {locales.map((locale) => (
             <li key={locale}>
@@ -171,7 +201,7 @@ export function LocaleSwitcher({ current }: { current: Locale }) {
         ? createPortal(
             <div className="locale-transition-overlay" role="status" aria-live="polite">
               <div className="locale-transition-content">
-                <p className="locale-transition-kicker">LANGUAGE · LINGUA</p>
+                <p className="locale-transition-kicker">LANGUAGE · LANGUE · LINGUA · DEUTSCH · ESPAÑOL · العربية · हिन्दी · 日本語 · 中文 · РУССКИЙ · NEDERLANDS · POLSKI · ČEŠTINA · SVENSKA · ROMÂNĂ</p>
                 <span className="sr-only">{LABELS[switchTo]}</span>
                 <div className="locale-transition-stage" aria-hidden="true">
                   <span className="locale-transition-flag locale-transition-flag--from">

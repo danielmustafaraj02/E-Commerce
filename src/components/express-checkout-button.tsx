@@ -9,11 +9,11 @@ import {
 import { Elements, ExpressCheckoutElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { useCartStore } from "@/lib/cart-store";
 
-// This site's 11 locales aren't all locales Stripe's UI itself is
+// This site's 12 locales aren't all locales Stripe's UI itself is
 // translated into (notably Hindi isn't) — falls back to "auto" (Stripe
 // detects from the browser) rather than a TypeScript cast that could pass
 // through a locale Stripe would silently reject.
-const STRIPE_LOCALES = new Set(["ar", "de", "en", "es", "fr", "it", "ja", "pt", "ru", "zh"]);
+const STRIPE_LOCALES = new Set(["ar", "cs", "de", "en", "es", "fr", "it", "ja", "nl", "pl", "pt", "ro", "ru", "sv", "zh"]);
 function toStripeLocale(locale: string): StripeElementLocale {
   return STRIPE_LOCALES.has(locale) ? (locale as StripeElementLocale) : "auto";
 }

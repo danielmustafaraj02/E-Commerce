@@ -13,4 +13,9 @@ export const LOCALE_NAMES: Record<Locale, string> = {
   pt: "Português",
   hi: "हिन्दी",
   ja: "日本語",
+  nl: "Nederlands",
+  pl: "Polski",
+  cs: "Čeština",
+  sv: "Svenska",
+  ro: "Română",
 };

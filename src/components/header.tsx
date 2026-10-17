@@ -120,7 +120,7 @@ export async function Header({
   const clusterLinkClass = "link-underline text-foreground transition-colors";
 
   // Flyout copy, shared by the cart and wishlist panels. All of it already
-  // exists in the dictionary for the 11 locales — the panels are new, the
+  // exists in the dictionary for the 16 locales — the panels are new, the
   // words are the storefront's.
   const flyoutLabels = {
     title: dict.wishlist.title,
@@ -255,6 +255,7 @@ export async function Header({
               storeName={storeName}
               legal={legalLinks(dict)}
               legalLabel={dict.footer.legalNav}
+              locale={locale}
             />
           </div>
           <Link href="/" className="flex items-center justify-center">

@@ -7,6 +7,11 @@ import type { HeroCopy } from "@/components/hero-concepts/hero-concept";
 const HOLD_LABELS: Partial<Record<Locale, { pause: string; play: string; view: string }>> = {
   en: { pause: "Pause the jewellery", play: "Play the jewellery", view: "View the piece" },
   it: { pause: "Metti in pausa i gioielli", play: "Riprendi i gioielli", view: "Vedi il pezzo" },
+  nl: { pause: "Sieraden pauzeren", play: "Sieraden afspelen", view: "Bekijk het sieraad" },
+  pl: { pause: "Wstrzymaj pokaz biżuterii", play: "Wznów pokaz biżuterii", view: "Zobacz biżuterię" },
+  cs: { pause: "Pozastavit prezentaci šperků", play: "Spustit prezentaci šperků", view: "Prohlédnout šperk" },
+  sv: { pause: "Pausa smyckesvisningen", play: "Spela upp smyckesvisningen", view: "Visa smycket" },
+  ro: { pause: "Pune prezentarea bijuteriilor pe pauză", play: "Redă prezentarea bijuteriilor", view: "Vezi bijuteria" },
 };
 
 /**

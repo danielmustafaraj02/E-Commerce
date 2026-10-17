@@ -31,6 +31,11 @@ const GUIDE_ART_CAPTIONS: Record<Locale, { furnace: string }> = {
   pt: { furnace: "Dentro de um forno de Murano" },
   hi: { furnace: "मुरानो की भट्टी के भीतर" },
   ja: { furnace: "ムラーノのガラス窯" },
+  nl: { furnace: "In een glasoven op Murano" },
+  pl: { furnace: "W piecu szklarskim na Murano" },
+  cs: { furnace: "Uvnitř sklářské pece na Muranu" },
+  sv: { furnace: "Inuti en glasugn på Murano" },
+  ro: { furnace: "Într-un cuptor de sticlă din Murano" },
 };
 
 // Cycled across the numbered care-step badges below so the list reads as a

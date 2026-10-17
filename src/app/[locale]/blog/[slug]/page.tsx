@@ -421,6 +421,114 @@ function sourceKindLabel(kind: NonNullable<Source["kind"]>, locale: string) {
       institutional: "Fonte museale o istituzionale",
       reference: "Opera di consultazione",
     },
+    fr: {
+      primary: "Source primaire",
+      scholarly: "Recherche universitaire",
+      institutional: "Source muséale ou institutionnelle",
+      reference: "Ouvrage de référence",
+    },
+    de: {
+      primary: "Primärquelle",
+      scholarly: "Wissenschaftliche Studie",
+      institutional: "Museum oder institutionelle Quelle",
+      reference: "Nachschlagewerk",
+    },
+    hi: {
+      primary: "प्राथमिक स्रोत",
+      scholarly: "शोध अध्ययन",
+      institutional: "संग्रहालय या संस्थागत स्रोत",
+      reference: "संदर्भ ग्रंथ",
+    },
+    zh: {
+      primary: "一手资料",
+      scholarly: "学术研究",
+      institutional: "博物馆或机构资料",
+      reference: "参考资料",
+    },
+    ru: {
+      primary: "Первичный источник",
+      scholarly: "Научное исследование",
+      institutional: "Музейный или институциональный источник",
+      reference: "Справочное издание",
+    },
+    es: {
+      primary: "Fuente primaria",
+      scholarly: "Investigación académica",
+      institutional: "Fuente museística o institucional",
+      reference: "Obra de referencia",
+    },
+    ar: {
+      primary: "مصدر أولي",
+      scholarly: "دراسة أكاديمية",
+      institutional: "مصدر متحفي أو مؤسسي",
+      reference: "مرجع",
+    },
+    ja: {
+      primary: "一次資料",
+      scholarly: "学術研究",
+      institutional: "博物館・公的機関の資料",
+      reference: "参考資料",
+    },
+    nl: {
+      primary: "Primaire bron",
+      scholarly: "Wetenschappelijk onderzoek",
+      institutional: "Museum- of institutionele bron",
+      reference: "Naslagwerk",
+    },
+    pl: {
+      primary: "Źródło pierwotne",
+      scholarly: "Opracowanie naukowe",
+      institutional: "Źródło muzealne lub instytucjonalne",
+      reference: "Opracowanie informacyjne",
+    },
+    cs: {
+      primary: "Primární zdroj",
+      scholarly: "Odborná studie",
+      institutional: "Muzejní nebo institucionální zdroj",
+      reference: "Referenční publikace",
+    },
+    sv: {
+      primary: "Primärkälla",
+      scholarly: "Vetenskaplig studie",
+      institutional: "Musei- eller institutionskälla",
+      reference: "Referensverk",
+    },
+    ro: {
+      primary: "Sursă primară",
+      scholarly: "Studiu academic",
+      institutional: "Sursă muzeală sau instituțională",
+      reference: "Lucrare de referință",
+    },
   };
-  return labels[locale === "it" ? "it" : "en"][kind];
+  return labels[
+    locale === "it"
+      ? "it"
+      : locale === "fr"
+        ? "fr"
+        : locale === "de"
+          ? "de"
+          : locale === "hi"
+            ? "hi"
+            : locale === "zh"
+              ? "zh"
+              : locale === "ru"
+                ? "ru"
+                : locale === "es"
+                  ? "es"
+                  : locale === "ar"
+                    ? "ar"
+                    : locale === "ja"
+                      ? "ja"
+                      : locale === "nl"
+                        ? "nl"
+                        : locale === "pl"
+                          ? "pl"
+                          : locale === "cs"
+                            ? "cs"
+                            : locale === "sv"
+                              ? "sv"
+                              : locale === "ro"
+                                ? "ro"
+                      : "en"
+  ][kind];
 }

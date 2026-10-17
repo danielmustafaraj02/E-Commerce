@@ -14,7 +14,7 @@ export function hreflangAlternates(unprefixedPath: string): Record<string, strin
 }
 
 // The current page's own canonical URL — self-referencing per locale, as
-// distinct from the other 10 languages' versions in hreflangAlternates.
+// distinct from the other 15 languages' versions in hreflangAlternates.
 export function localizedCanonical(locale: Locale, unprefixedPath: string): string {
   return `/${locale}${unprefixedPath === "/" ? "" : unprefixedPath}`;
 }
@@ -32,6 +32,11 @@ const OG_LOCALES: Record<Locale, string> = {
   pt: "pt_PT",
   hi: "hi_IN",
   ja: "ja_JP",
+  nl: "nl_NL",
+  pl: "pl_PL",
+  cs: "cs_CZ",
+  sv: "sv_SE",
+  ro: "ro_RO",
 };
 
 export function ogLocale(locale: Locale): string {

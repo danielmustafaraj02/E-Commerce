@@ -98,7 +98,9 @@ export default async function proxy(request: NextRequest) {
         request.headers.get("accept-language") ?? undefined
       );
       const target = new URL(incomingUrl);
-      target.pathname = `/${preferred}${pathname}`;
+      // "/" goes to "/en", not "/en/": the trailing slash cost the homepage a
+      // second redirect (Next strips it), and Google counts every hop.
+      target.pathname = pathname === "/" ? `/${preferred}` : `/${preferred}${pathname}`;
       return withSecurityHeaders(NextResponse.redirect(target, 308));
     }
     locale = split.locale;

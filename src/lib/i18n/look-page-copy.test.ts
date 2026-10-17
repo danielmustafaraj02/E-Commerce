@@ -15,8 +15,8 @@ describe("getLookEditorialDescription", () => {
     "Perle Rosa · Ottobre 2026",
   ];
 
-  it("gives every look its own text, in English and Italian", () => {
-    for (const locale of ["en", "it"] as const) {
+  it("gives every look its own text in English, Italian, French, German, Hindi and Chinese", () => {
+    for (const locale of ["en", "it", "fr", "de", "hi", "zh"] as const) {
       const texts = names.map((name) => getLookEditorialDescription(name, locale));
       expect(new Set(texts).size).toBe(names.length);
       expect(texts).not.toContain(getLookPageCopy(locale).editorialDescription);

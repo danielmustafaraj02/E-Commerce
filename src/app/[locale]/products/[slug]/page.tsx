@@ -206,6 +206,11 @@ async function baseMetadata({ params }: PageProps<"/[locale]/products/[slug]">):
     pt: "Vidro de Murano",
     hi: "मुरानो ग्लास",
     ja: "ムラノガラス",
+    nl: "Murano-glas",
+    pl: "szkło z Murano",
+    cs: "muránské sklo",
+    sv: "Muranoglas",
+    ro: "sticlă de Murano",
   };
   const fallbackKeywordByLocale: Record<Locale, string> = {
     ...keywordByLocale,
@@ -228,6 +233,11 @@ async function baseMetadata({ params }: PageProps<"/[locale]/products/[slug]">):
     pt: `${name}, vidro de Murano feito à mão, da ${settings.storeName}.`,
     hi: `${name}, ${settings.storeName} का हाथ से बना मुरानो ग्लास।`,
     ja: `${name}、${settings.storeName}の手作りムラノガラス。`,
+    nl: `${name}, Murano-glas van ${settings.storeName}.`,
+    pl: `${name} ze szkła z Murano od ${settings.storeName}.`,
+    cs: `${name}, šperk z muránského skla od ${settings.storeName}.`,
+    sv: `${name}, smycke i Muranoglas från ${settings.storeName}.`,
+    ro: `${name}, bijuterie din sticlă de Murano de la ${settings.storeName}.`,
   };
   // Price and a call to action close the snippet (both lift click-through);
   // an out-of-stock product says so instead of inviting a purchase it can't take.

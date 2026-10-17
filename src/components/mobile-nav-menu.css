@@ -44,6 +44,17 @@
   height: 2.75rem;
   width: auto;
 }
+/* Language, at the start edge — the close button's mirror, on the same
+   2.75rem line so the two read as one row around the logo. */
+.mobile-menu-locale {
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0.6rem;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  height: 2.75rem;
+}
 .mobile-menu-close {
   position: absolute;
   inset-inline-end: -0.5rem;

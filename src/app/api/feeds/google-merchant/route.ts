@@ -34,7 +34,8 @@ export async function GET(request: Request) {
   if (!success) return NextResponse.json({ error: "Too many requests" }, { status: 429 });
 
   const { searchParams } = new URL(request.url);
-  const locale: Locale = searchParams.get("locale") === "en" ? "en" : "it";
+  const requestedLocale = searchParams.get("locale");
+  const locale: Locale = requestedLocale === "en" || requestedLocale === "nl" || requestedLocale === "pl" || requestedLocale === "cs" || requestedLocale === "sv" || requestedLocale === "ro" ? requestedLocale : "it";
 
   const settings = await getStoreSettings();
   const base = siteBaseUrl(settings);

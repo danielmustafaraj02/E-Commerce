@@ -6,6 +6,8 @@ import { createPortal } from "react-dom";
 import { Link } from "@/components/localized-link";
 import Image from "next/image";
 import { CatalogImage } from "@/components/catalog-image";
+import { LocaleSwitcher } from "@/components/locale-switcher";
+import type { Locale } from "@/lib/i18n/locale-constants";
 import "./mobile-nav-menu.css";
 
 type NavLink = {
@@ -106,6 +108,7 @@ export function MobileNavMenu({
   logoUrl,
   legal,
   legalLabel,
+  locale,
 }: {
   /** The menu as the cached page has it, for a signed-out visitor. */
   links: NavLink[];
@@ -125,6 +128,9 @@ export function MobileNavMenu({
   logoUrl: string | null;
   legal: { href: string; label: string }[];
   legalLabel: string;
+  /** The page's language, for the switcher in the menu's top row — the
+   *  header's own switcher is hidden below lg with the rest of its cluster. */
+  locale: Locale;
 }) {
   const [open, setOpen] = useState(false);
   const viewer = useViewer();
@@ -238,6 +244,11 @@ export function MobileNavMenu({
             className="mobile-menu animate-fade-up lg:hidden"
           >
             <div className="mobile-menu-top">
+              {/* Switching navigates to the new /<locale> URL, which remounts
+                  the [locale] layout and so closes the menu on its own. */}
+              <div className="mobile-menu-locale">
+                <LocaleSwitcher current={locale} compact align="start" />
+              </div>
               {/* The store's logo image, as in the header — the menu opens
                   onto the same brand mark instead of a text signature. */}
               <Link href="/" onClick={close} className="mobile-menu-logo">

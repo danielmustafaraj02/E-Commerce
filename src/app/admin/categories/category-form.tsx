@@ -29,6 +29,11 @@ export function CategoryForm({
     namePt: string | null;
     nameHi: string | null;
     nameJa: string | null;
+    nameNl: string | null;
+    namePl: string | null;
+    nameCs: string | null;
+    nameSv: string | null;
+    nameRo: string | null;
     slug: string;
     parentId: string | null;
     coverProductId?: string | null;
@@ -125,6 +130,36 @@ export function CategoryForm({
           Shown to visitors browsing in Japanese. Falls back to the English name, then the Italian
           name, if left blank.
         </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (Dutch)</span>
+        <input name="nameNl" defaultValue={initial?.nameNl ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in Dutch. Falls back to the English name, then the Italian
+          name, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (Polish)</span>
+        <input name="namePl" defaultValue={initial?.namePl ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in Polish. Falls back to the English name, then the Italian name, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (Czech)</span>
+        <input name="nameCs" defaultValue={initial?.nameCs ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">Shown in Czech; falls back to English, then Italian, if left blank.</span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (Swedish)</span>
+        <input name="nameSv" defaultValue={initial?.nameSv ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">Shown in Swedish; falls back to English, then Italian, if left blank.</span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (Romanian)</span>
+        <input name="nameRo" defaultValue={initial?.nameRo ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">Shown in Romanian; falls back to English, then Italian, if left blank.</span>
       </label>
       <fieldset className="border-foreground/15 flex flex-col gap-3 rounded-lg border p-4">
         <legend className="px-1 text-sm font-medium">Page description</legend>

@@ -18,6 +18,11 @@ type LocalizableName = {
   namePt?: string | null;
   nameHi?: string | null;
   nameJa?: string | null;
+  nameNl?: string | null;
+  namePl?: string | null;
+  nameCs?: string | null;
+  nameSv?: string | null;
+  nameRo?: string | null;
 };
 type LocalizableProduct = LocalizableName & {
   description?: string | null;
@@ -31,8 +36,18 @@ type LocalizableProduct = LocalizableName & {
   descriptionPt?: string | null;
   descriptionHi?: string | null;
   descriptionJa?: string | null;
+  descriptionNl?: string | null;
+  descriptionPl?: string | null;
+  descriptionCs?: string | null;
+  descriptionSv?: string | null;
+  descriptionRo?: string | null;
   story?: string | null;
   storyEn?: string | null;
+  storyNl?: string | null;
+  storyPl?: string | null;
+  storyCs?: string | null;
+  storySv?: string | null;
+  storyRo?: string | null;
 };
 
 // Every non-English, non-Italian locale falls back to the English field,
@@ -48,6 +63,11 @@ const NAME_FIELD: Partial<Record<Locale, keyof LocalizableName>> = {
   pt: "namePt",
   hi: "nameHi",
   ja: "nameJa",
+  nl: "nameNl",
+  pl: "namePl",
+  cs: "nameCs",
+  sv: "nameSv",
+  ro: "nameRo",
 };
 const DESCRIPTION_FIELD: Partial<Record<Locale, keyof LocalizableProduct>> = {
   fr: "descriptionFr",
@@ -59,6 +79,11 @@ const DESCRIPTION_FIELD: Partial<Record<Locale, keyof LocalizableProduct>> = {
   pt: "descriptionPt",
   hi: "descriptionHi",
   ja: "descriptionJa",
+  nl: "descriptionNl",
+  pl: "descriptionPl",
+  cs: "descriptionCs",
+  sv: "descriptionSv",
+  ro: "descriptionRo",
 };
 
 /** Remove the dated collection suffix from public catalog labels. */
@@ -79,32 +104,41 @@ export function localizedDescription(product: LocalizableProduct, locale: Locale
   return (field && product[field]) || product.descriptionEn || product.description || "";
 }
 
-// Only Italian + English exist so far (see prisma/schema.prisma) — every
-// other locale falls back to English, then Italian, same philosophy as
-// localizedDescription above but without a per-locale field map yet.
+// Italian and English share the original fields. Dutch, Polish, Czech, Swedish and Romanian have their own story
+// column; other locales still fall back to English, then Italian.
 export function localizedStory(product: LocalizableProduct, locale: Locale): string {
   if (locale === "it") return product.story || product.storyEn || "";
+  if (locale === "nl") return product.storyNl || product.storyEn || product.story || "";
+  if (locale === "pl") return product.storyPl || product.storyEn || product.story || "";
+  if (locale === "cs") return product.storyCs || product.storyEn || product.story || "";
+  if (locale === "sv") return product.storySv || product.storyEn || product.story || "";
+  if (locale === "ro") return product.storyRo || product.storyEn || product.story || "";
   return product.storyEn || product.story || "";
 }
 
 // Image search (Google Images, and AI engines that read alt text as a
 // signal) rewards a descriptive alt over a bare product name. "Murano glass"
 // is store-specific wording, deliberately baked in here the same way as
-// home.heroSubtitle. English and Italian no longer say "handmade": Perla
-// curates pieces from several makers, and that claim is not verified per
-// product (the other languages still carry it; see their translators).
+// home.heroSubtitle. English, Italian, Spanish, Arabic, Japanese and Russian no longer say "handmade":
+// Perla curates pieces from several makers, and that claim is not verified per
+// product (some other languages still carry it; see their translators).
 const IMAGE_ALT_SUFFIX: Record<Locale, string> = {
   it: "gioiello in vetro di Murano",
   en: "Murano glass jewelry",
-  fr: "bijou artisanal en verre de Murano",
+  fr: "bijou en verre de Murano",
   de: "handgefertigter Schmuck aus Muranoglas",
-  ar: "مجوهرات زجاج مورانو المصنوعة يدويًا",
-  zh: "穆拉诺手工玻璃饰品",
-  ru: "украшение ручной работы из муранского стекла",
-  es: "joya artesanal de vidrio de Murano",
+  ar: "مجوهرات من زجاج مورانو",
+  zh: "穆拉诺玻璃首饰",
+  ru: "украшение из муранского стекла",
+  es: "joya de vidrio de Murano",
   pt: "joia artesanal em vidro de Murano",
-  hi: "मुरानो ग्लास से हाथ से बनी ज्वेलरी",
-  ja: "ムラノガラスのハンドメイドジュエリー",
+  hi: "मुरानो ग्लास का आभूषण",
+  ja: "ムラーノガラスのジュエリー",
+  nl: "Murano-glazen sieraden",
+  pl: "biżuteria ze szkła z Murano",
+  cs: "šperky z muránského skla",
+  sv: "smycken i Muranoglas",
+  ro: "bijuterii din sticlă de Murano",
 };
 
 export function productImageAlt(name: string, locale: Locale): string {

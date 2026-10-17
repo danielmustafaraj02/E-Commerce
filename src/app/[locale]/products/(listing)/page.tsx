@@ -66,6 +66,11 @@ async function baseMetadata({ searchParams }: PageProps<"/[locale]/products">): 
     pt: `Explore o catálogo completo da ${settings.storeName}.`,
     hi: `${settings.storeName} का पूरा कैटलॉग देखें।`,
     ja: `${settings.storeName}の全カタログをご覧ください。`,
+    nl: `Bekijk de volledige collectie van ${settings.storeName}.`,
+    pl: `Odkryj całą kolekcję ${settings.storeName}: naszyjniki, bransoletki i kolczyki ze szkła z Murano.`,
+    cs: `Prohlédněte si celou kolekci ${settings.storeName}: náhrdelníky, náramky a náušnice z muránského skla.`,
+    sv: `Upptäck hela kollektionen från ${settings.storeName}: halsband, armband och örhängen i Muranoglas.`,
+    ro: `Descoperă întreaga colecție ${settings.storeName}: coliere, brățări și cercei din sticlă de Murano.`,
   };
   const description = descriptionByLocale[locale];
   const image = ogImage(settings);

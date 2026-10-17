@@ -3,7 +3,7 @@
 // (e.g. to render a list of language buttons) without pulling
 // next/headers's cookies()/headers() into the client bundle, which Next.js
 // refuses to build.
-export const locales = ["en", "it", "fr", "de", "ar", "zh", "ru", "es", "pt", "hi", "ja"] as const;
+export const locales = ["en", "it", "fr", "de", "ar", "zh", "ru", "es", "pt", "hi", "ja", "nl", "pl", "cs", "sv", "ro"] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = "en";
 export const LOCALE_COOKIE = "locale";

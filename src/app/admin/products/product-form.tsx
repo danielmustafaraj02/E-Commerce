@@ -21,6 +21,11 @@ export type ProductFormValues = {
   namePt: string | null;
   nameHi: string | null;
   nameJa: string | null;
+  nameNl: string | null;
+  namePl: string | null;
+  nameCs: string | null;
+  nameSv: string | null;
+  nameRo: string | null;
   slug: string;
   description: string;
   descriptionEn: string | null;
@@ -33,8 +38,18 @@ export type ProductFormValues = {
   descriptionPt: string | null;
   descriptionHi: string | null;
   descriptionJa: string | null;
+  descriptionNl: string | null;
+  descriptionPl: string | null;
+  descriptionCs: string | null;
+  descriptionSv: string | null;
+  descriptionRo: string | null;
   story: string;
   storyEn: string | null;
+  storyNl: string | null;
+  storyPl: string | null;
+  storyCs: string | null;
+  storySv: string | null;
+  storyRo: string | null;
   price: number; // cents
   compareAtPrice: number | null; // cents
   sku: string;
@@ -179,6 +194,34 @@ export function ProductForm({
           Shown to visitors browsing in Japanese. Falls back to the English name, then the Italian
           name, if left blank.
         </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (Dutch)</span>
+        <input name="nameNl" defaultValue={initial?.nameNl ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in Dutch. Falls back to the English name, then the Italian
+          name, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (Polish)</span>
+        <input name="namePl" defaultValue={initial?.namePl ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">Shown in Polish; falls back to English, then Italian, if left blank.</span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (Czech)</span>
+        <input name="nameCs" defaultValue={initial?.nameCs ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">Shown in Czech; falls back to English, then Italian, if left blank.</span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (Swedish)</span>
+        <input name="nameSv" defaultValue={initial?.nameSv ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">Shown in Swedish; falls back to English, then Italian, if left blank.</span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Name (Romanian)</span>
+        <input name="nameRo" defaultValue={initial?.nameRo ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">Shown in Romanian; falls back to English, then Italian, if left blank.</span>
       </label>
       <label className="flex flex-col gap-1.5 text-sm">
         <span className="font-medium">Slug</span>
@@ -333,6 +376,39 @@ export function ProductForm({
         </span>
       </label>
       <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Description / story (Dutch)</span>
+        <textarea
+          name="descriptionNl"
+          rows={4}
+          defaultValue={initial?.descriptionNl ?? ""}
+          className="field"
+        />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in Dutch. Falls back to the English description, then the
+          Italian one, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Description / story (Polish)</span>
+        <textarea name="descriptionPl" rows={5} defaultValue={initial?.descriptionPl ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">Shown in Polish; falls back to English, then Italian, if left blank.</span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Description / story (Czech)</span>
+        <textarea name="descriptionCs" rows={5} defaultValue={initial?.descriptionCs ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">Shown in Czech; falls back to English, then Italian, if left blank.</span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Description / story (Swedish)</span>
+        <textarea name="descriptionSv" rows={5} defaultValue={initial?.descriptionSv ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">Shown in Swedish; falls back to English, then Italian, if left blank.</span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Description / story (Romanian)</span>
+        <textarea name="descriptionRo" rows={5} defaultValue={initial?.descriptionRo ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">Shown in Romanian; falls back to English, then Italian, if left blank.</span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
         <span className="font-medium">Why this piece is special (Italian)</span>
         <textarea name="story" rows={4} defaultValue={initial?.story} className="field" />
         <span className="text-foreground/60 text-xs">
@@ -345,8 +421,35 @@ export function ProductForm({
         <textarea name="storyEn" rows={4} defaultValue={initial?.storyEn ?? ""} className="field" />
         <span className="text-foreground/60 text-xs">
           Shown to visitors browsing in English. Falls back to the Italian text above if left blank.
-          Other languages aren&apos;t translated yet, so they also fall back to this.
         </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Why this piece is special (Dutch)</span>
+        <textarea name="storyNl" rows={4} defaultValue={initial?.storyNl ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">
+          Shown to visitors browsing in Dutch. Falls back to the English story, then the Italian
+          one, if left blank.
+        </span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Why this piece is special (Polish)</span>
+        <textarea name="storyPl" rows={4} defaultValue={initial?.storyPl ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">Shown in Polish; falls back to English, then Italian, if left blank.</span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Why this piece is special (Czech)</span>
+        <textarea name="storyCs" rows={4} defaultValue={initial?.storyCs ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">Shown in Czech; falls back to English, then Italian, if left blank.</span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Why this piece is special (Swedish)</span>
+        <textarea name="storySv" rows={4} defaultValue={initial?.storySv ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">Shown in Swedish; falls back to English, then Italian, if left blank.</span>
+      </label>
+      <label className="flex flex-col gap-1.5 text-sm">
+        <span className="font-medium">Why this piece is special (Romanian)</span>
+        <textarea name="storyRo" rows={4} defaultValue={initial?.storyRo ?? ""} className="field" />
+        <span className="text-foreground/60 text-xs">Shown in Romanian; falls back to English, then Italian, if left blank.</span>
       </label>
       <div className="flex gap-3">
         <label className="flex flex-1 flex-col gap-1.5 text-sm">

@@ -66,15 +66,20 @@ async function baseMetadata(): Promise<Metadata> {
     // pieces are handmade in Venice: Perla curates from several makers.
     en: ["Murano Glass Jewelry: Necklaces, Bracelets & Earrings", "Murano Glass Jewelry"],
     it: ["Gioielli in vetro di Murano: collane, bracciali e orecchini", "Gioielli in vetro di Murano"],
-    fr: ["Bijoux en Verre de Murano, Faits Main à Venise", "Bijoux en Verre de Murano"],
-    de: ["Muranoglas-Schmuck, Handgefertigt in Venedig", "Muranoglas-Schmuck"],
-    ar: ["مجوهرات زجاج مورانو، صناعة يدوية في البندقية", "مجوهرات زجاج مورانو"],
-    zh: ["穆拉诺玻璃珠宝，威尼斯手工制作", "穆拉诺玻璃珠宝"],
-    ru: ["Ювелирные изделия из муранского стекла, Венеция", "Муранское стекло"],
-    es: ["Joyería de Vidrio de Murano, Hecha a Mano en Venecia", "Joyería de Vidrio de Murano"],
+    fr: ["Bijoux en verre de Murano : colliers, bracelets et boucles d’oreilles", "Bijoux en verre de Murano"],
+    de: ["Schmuck aus Muranoglas: Ketten, Armbänder und Ohrringe", "Schmuck aus Muranoglas"],
+    ar: ["مجوهرات زجاج مورانو: عقود وأساور وأقراط", "مجوهرات زجاج مورانو"],
+    zh: ["穆拉诺玻璃首饰：项链、手链与耳环", "穆拉诺玻璃首饰"],
+    ru: ["Украшения из муранского стекла: колье, браслеты и серьги", "Украшения из муранского стекла"],
+    es: ["Joyas de vidrio de Murano: collares, pulseras y pendientes", "Joyas de vidrio de Murano"],
     pt: ["Joias em Vidro de Murano, Feitas à Mão em Veneza", "Joias em Vidro de Murano"],
-    hi: ["मुरानो ग्लास ज्वेलरी, वेनिस में हस्तनिर्मित", "मुरानो ग्लास ज्वेलरी"],
-    ja: ["ムラノガラスジュエリー、ヴェネツィアで手作り", "ムラノガラスジュエリー"],
+    hi: ["मुरानो ग्लास के आभूषण: हार, कंगन और झुमके", "मुरानो ग्लास के आभूषण"],
+    ja: ["ムラーノガラスのジュエリー：ネックレス、ブレスレット、ピアス", "ムラーノガラスのジュエリー"],
+    nl: ["Murano-glazen sieraden: kettingen, armbanden en oorbellen", "Sieraden van Murano-glas"],
+    pl: ["Biżuteria ze szkła z Murano: naszyjniki, bransoletki i kolczyki", "Biżuteria ze szkła z Murano"],
+    cs: ["Šperky z muránského skla: náhrdelníky, náramky a náušnice", "Šperky z muránského skla"],
+    sv: ["Smycken i Muranoglas: halsband, armband och örhängen", "Smycken i Muranoglas"],
+    ro: ["Bijuterii din sticlă de Murano: coliere, brățări și cercei", "Bijuterii din sticlă de Murano"],
   };
   const candidates = titleCandidatesByLocale[locale];
   const title = fitTitle(candidates, settings.storeName);

@@ -39,4 +39,12 @@ describe("public routing without accounts", () => {
     expect(response.headers.get("x-middleware-next")).toBe("1");
     expect(mocks.getToken).not.toHaveBeenCalled();
   });
+  it.each([
+    ["/", "https://store.example/en"],
+    ["/products/vaso", "https://store.example/en/products/vaso"],
+  ])("sends unprefixed %s to its locale in one redirect", async (path, target) => {
+    const response = await proxy(new NextRequest(`https://store.example${path}`));
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe(target);
+  });
 });

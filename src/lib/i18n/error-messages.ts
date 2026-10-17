@@ -3,7 +3,7 @@ import { defaultLocale, localeDir, locales, LOCALE_COOKIE, type Locale } from ".
 
 // The error screens (app/error.tsx, app/global-error.tsx) render in the browser
 // after something has already gone wrong, so they can't call getDictionary():
-// that would ship all 11 languages to every visitor, and a broken page is the
+// that would ship all 16 languages to every visitor, and a broken page is the
 // worst place to depend on more code. These few strings live here instead.
 export type ErrorMessages = {
   title: string;
@@ -91,6 +91,23 @@ export const ERROR_MESSAGES: Record<Locale, ErrorMessages> = {
     retry: "もう一度試す",
     home: "トップページへ戻る",
   },
+  nl: {
+    title: "Er is iets misgegaan",
+    body: "Er is een onverwachte fout opgetreden. Probeer het opnieuw of ga terug naar de homepage.",
+    short: "Probeer het opnieuw.",
+    retry: "Opnieuw proberen",
+    home: "Terug naar de homepage",
+  },
+  pl: {
+    title: "Wystąpił błąd",
+    body: "Wystąpił nieoczekiwany błąd. Spróbuj ponownie lub wróć na stronę główną.",
+    short: "Spróbuj ponownie.",
+    retry: "Spróbuj ponownie",
+    home: "Wróć na stronę główną",
+  },
+  cs: { title: "Něco se pokazilo", body: "Došlo k neočekávané chybě. Zkuste to znovu nebo se vraťte na úvodní stránku.", short: "Zkuste to prosím znovu.", retry: "Zkusit znovu", home: "Zpět na úvodní stránku" },
+  sv: { title: "Något gick fel", body: "Ett oväntat fel inträffade. Försök igen eller gå tillbaka till startsidan.", short: "Försök igen.", retry: "Försök igen", home: "Till startsidan" },
+  ro: { title: "Ceva nu a mers bine", body: "A apărut o eroare neașteptată. Încearcă din nou sau revino la pagina principală.", short: "Te rugăm să încerci din nou.", retry: "Încearcă din nou", home: "Înapoi la pagina principală" },
 };
 
 // Browser-side: the visitor's chosen language (the same cookie the server reads),

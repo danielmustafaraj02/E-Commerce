@@ -123,6 +123,10 @@ export async function updateStoreSettings(_prevState: unknown, formData: FormDat
   // form resets to the old values after saving, as if nothing had been saved.
   // Every storefront page (they are cached; settings show on all of them).
   revalidatePath("/[locale]", "layout");
+  // Both are built from the Site URL and sit outside /[locale]: without this
+  // they kept advertising the old domain until the next deploy.
+  revalidatePath("/sitemap.xml");
+  revalidatePath("/robots.txt");
 
   return { error: null, success: true };
 }
